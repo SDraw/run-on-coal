@@ -1,0 +1,30 @@
+GLFW_ICON ICON "icon.ico"
+
+1 VERSIONINFO
+ FILEVERSION 0,7,0,0
+ PRODUCTVERSION 0,7,0,0
+ FILEFLAGSMASK 0x7fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040004b0"
+        BEGIN
+            VALUE "FileDescription", "RunOnCoal Demo"
+            VALUE "FileVersion", "0.7a"
+            VALUE "ProductName", "ROC"
+            VALUE "ProductVersion", "0.7a"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x400, 1200
+    END
+END
