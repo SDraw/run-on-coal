@@ -13,10 +13,10 @@ namespace Lua
 int geometryCreate(lua_State *f_vm)
 {
     std::string l_path;
-    bool l_comp;
+    bool l_comp = false;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadText(l_path);
-    argStream.ReadBoolean(l_comp);
+    argStream.ReadNextBoolean(l_comp);
     if(argStream.HasErrors() || !l_path.length())
     {
         lua_pushboolean(f_vm,0);

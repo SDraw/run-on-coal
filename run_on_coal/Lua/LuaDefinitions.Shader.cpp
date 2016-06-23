@@ -17,10 +17,10 @@ int shaderCreate(lua_State *f_vm)
 {
     std::string l_vsp,l_fsp,l_gsp;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    argStream.ReadNextText(l_vsp);
-    argStream.ReadNextText(l_fsp);
+    argStream.ReadText(l_vsp);
+    argStream.ReadText(l_fsp);
     argStream.ReadNextText(l_gsp);
-    if(argStream.HasErrors() || (!l_vsp.length() && !l_fsp.length() && !l_gsp.length()))
+    if(argStream.HasErrors() || (!l_vsp.length() && !l_fsp.length()))
     {
         lua_pushboolean(f_vm,0);
         return 1;
