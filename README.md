@@ -1,6 +1,6 @@
 ![](http://i.imgur.com/x3GSfPD.png)
 
-Simple and lightweight game engine that is being developed as graduate project. It provides simplified usage of OpenGL mostly via Lua scripts.
+Simple and lightweight game engine. It provides simplified usage of OpenGL mostly via Lua scripts.
 
 # Dependencies
 * [Lua 5.3](http://www.lua.org/start.html)
