@@ -27,15 +27,15 @@ bool ROC::EventManager::AddEvent(unsigned char f_event, int f_ref, void *f_point
 }
 bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
 {
-    if(f_event >= EventType::Last) return false;
-    auto &l_event = m_eventVector[f_event];
-    for(size_t i=0, j=l_event.size(); i < j; i++)
+    if (f_event >= EventType::Last) return false;
+    auto &eventMap = m_eventVector[f_event];
+    for(auto it = eventMap.begin(); it != eventMap.end(); it++)
     {
-        if(l_event[i].first == f_pointer)
+        if(it->first == f_pointer)
         {
-            m_luaManager->RemoveReference(l_event[i].second);
-            l_event.erase(l_event.begin()+i);
-            if(f_event == m_currentEvent) m_lastIteration--;
+            m_luaManager->RemoveReference(it->second);
+            it = eventMap.erase(it);
+            if (f_event == m_currentEvent) m_lastIteration--;
             break;
         }
     }

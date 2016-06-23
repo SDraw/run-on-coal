@@ -102,13 +102,12 @@ int cameraGetDirection(lua_State *f_vm)
 int cameraSetPerspective(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    lua_Number l_fov,l_near,l_far;
-    LUA_INTEGER l_width,l_height;
+    lua_Number l_fov,l_near,l_far,l_width,l_height;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
     argStream.ReadNumber(l_fov);
-    argStream.ReadInteger(l_width);
-    argStream.ReadInteger(l_height);
+    argStream.ReadNumber(l_width);
+    argStream.ReadNumber(l_height);
     argStream.ReadNumber(l_near);
     argStream.ReadNumber(l_far);
     if(argStream.HasErrors())
@@ -116,7 +115,7 @@ int cameraSetPerspective(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    l_camera->SetPerspective(static_cast<float>(l_fov),static_cast<int>(l_width),static_cast<int>(l_height),static_cast<float>(l_near),static_cast<float>(l_far));
+    l_camera->SetPerspective(static_cast<float>(l_fov),static_cast<float>(l_width),static_cast<float>(l_height),static_cast<float>(l_near),static_cast<float>(l_far));
     lua_pushboolean(f_vm,1);
     return 1;
 }

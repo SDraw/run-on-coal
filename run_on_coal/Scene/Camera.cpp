@@ -18,11 +18,9 @@ void ROC::Camera::UpdateViewMatrix()
     m_viewMatrix = glm::lookAt(m_viewPosition,m_viewPosition+m_viewDirection,glm::vec3(0.0f,1.0f,0.0f));
 }
 
-void ROC::Camera::SetPerspective(float f_fov,int f_width, int f_height, float f_near, float f_far)
+void ROC::Camera::SetPerspective(float f_fov, float f_width, float f_height, float f_near, float f_far)
 {
-    if(f_width <= 0) f_width = 1;
-    if(f_height <= 0) f_height = 1;
-    m_projectionMatrix = glm::perspectiveFov(f_fov, (float)f_width, (float)f_height, f_near, f_far);
+    m_projectionMatrix = glm::perspectiveFov(f_fov,f_width,f_height,f_near,f_far);
 }
 void ROC::Camera::SetOrtho(float l_left,float l_right,float f_bottom,float f_top,float l_near,float l_far)
 {

@@ -38,8 +38,8 @@ bool ROC::Animation::Load(std::string &f_path)
     m_animFile.read((char*)&m_bonesValue,sizeof(m_bonesValue));
     if(!m_animFile.good()) AnimationCleanAfterFail();
 
-    m_durationTotal = unsigned(long((1.0/double(m_fps)*double(m_duration))*1000.0));
-    m_frameDelta = unsigned(long((1.0/double(m_fps))*1000.0));
+    m_durationTotal = static_cast<unsigned long>(((1.0/double(m_fps)*double(m_duration))*1000.0));
+    m_frameDelta = static_cast<unsigned long>(((1.0/double(m_fps))*1000.0));
 
     m_frameSize = m_bonesValue*10*sizeof(float);
     m_frameVector.resize(m_bonesValue*10);

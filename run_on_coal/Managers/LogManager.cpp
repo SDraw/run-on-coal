@@ -12,9 +12,8 @@ ROC::LogManager::~LogManager()
 {
     if(m_enabled) 
     {
-        std::stringstream l_log;
-        l_log << "Application closed";
-        Log(l_log.str());
+        std::string l_log("Application closed");
+        Log(l_log);
         m_log.close();
     }
 }
