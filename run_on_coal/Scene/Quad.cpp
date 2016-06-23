@@ -23,7 +23,7 @@ ROC::Quad::Quad()
     glBufferData(GL_ARRAY_BUFFER,sizeof(l_uvs),l_uvs,GL_STATIC_DRAW);
     glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
 
-    for(int i=0; i < 6; i++) m_point[i] = glm::vec3(0.f,0.f,0.5f);
+    for(auto &iter : m_point) iter.z = 0.5f;
 }
 ROC::Quad::~Quad()
 {

@@ -31,7 +31,7 @@ bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
 size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
 {
     std::vector<char> l_data(f_lenght);
-    size_t l_read = unsigned(m_file->read(&l_data[0],f_lenght).gcount());
+    size_t l_read = static_cast<size_t>(m_file->read(&l_data[0],f_lenght).gcount());
     f_data.append(l_data.begin(),l_data.begin()+l_read);
     return l_read;
 }
@@ -42,7 +42,7 @@ size_t ROC::File::Write(std::string &f_data)
     m_file->write(&f_data[0],f_data.size());
     if(m_file->fail()) return 0U;
     l_start = m_file->tellg()-l_start;
-    return size_t(l_start);
+    return static_cast<size_t>(l_start);
 }
 size_t ROC::File::GetSize()
 {
@@ -51,14 +51,14 @@ size_t ROC::File::GetSize()
     {
         std::streampos l_last = m_file->tellg();
         m_file->seekg(SEEK_SET,std::ios::end);
-        l_size = unsigned(m_file->tellg());
+        l_size = static_cast<size_t>(m_file->tellg());
         m_file->seekg(l_last);
     }
     else
     {
         std::streampos l_last = m_file->tellp();
         m_file->seekp(SEEK_SET,std::ios::end);
-        l_size = unsigned(m_file->tellp());
+        l_size = static_cast<size_t>(m_file->tellp());
         m_file->seekp(l_last);
     }
     return l_size;
@@ -72,8 +72,7 @@ bool ROC::File::SetPosition(size_t f_pos)
 }
 size_t ROC::File::GetPosition()
 {
-    size_t l_pos = (m_type == Mode::ReadMode) ? unsigned(m_file->tellg()) : unsigned(m_file->tellp());
-    return l_pos;
+    return static_cast<size_t>((m_type == Mode::ReadMode) ? m_file->tellg() : m_file->tellp());
 }
 
 void ROC::File::GetPath(std::string &f_string)

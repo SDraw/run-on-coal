@@ -28,8 +28,8 @@ ROC::Font::Font()
     glBindBuffer(GL_ARRAY_BUFFER,0);
     glBindVertexArray(0);
 
-    m_vertices[0].z = m_vertices[1].z = m_vertices[3].z = 0.5f;
-    m_vertices[2].z = m_vertices[4].z = m_vertices[5].z = 0.5f;
+    
+    for(auto &iter : m_vertices) iter.z = 0.5f;
 }
 ROC::Font::~Font()
 {
@@ -91,6 +91,7 @@ bool ROC::Font::Draw(std::wstring &f_text,glm::vec2 &f_pos,bool f_bind)
         glActiveTexture(GL_TEXTURE0);
     }
     glm::vec2 l_pos(f_pos);
+    glm::vec2 l_result;
     GLuint l_lastTexture = 0U;
     for(auto iter : f_text)
     {
@@ -99,7 +100,6 @@ bool ROC::Font::Draw(std::wstring &f_text,glm::vec2 &f_pos,bool f_bind)
             if(!LoadChar(iter)) continue;
         }
         charData *l_charData = m_charMap[iter];
-        glm::vec2 l_result;
         l_result.x = l_pos.x+l_charData->m_breaing.x;
         l_result.y = l_pos.y-(l_charData->m_size.y-l_charData->m_breaing.y);
 
