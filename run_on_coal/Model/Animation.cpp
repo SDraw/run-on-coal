@@ -38,8 +38,8 @@ bool ROC::Animation::Load(std::string &f_path)
     m_animFile.read((char*)&m_bonesValue,sizeof(m_bonesValue));
     if(!m_animFile.good()) AnimationCleanAfterFail();
 
-    m_durationTotal = static_cast<unsigned long>(((1.0/double(m_fps)*double(m_duration))*1000.0));
-    m_frameDelta = static_cast<unsigned long>(((1.0/double(m_fps))*1000.0));
+    m_durationTotal = static_cast<unsigned long>(((1.0/static_cast<double>(m_fps)*static_cast<double>(m_duration))*1000.0));
+    m_frameDelta = static_cast<unsigned long>(((1.0/static_cast<double>(m_fps))*1000.0));
 
     m_frameSize = m_bonesValue*10*sizeof(float);
     m_frameVector.resize(m_bonesValue*10);
@@ -50,7 +50,7 @@ bool ROC::Animation::Load(std::string &f_path)
 
 bool ROC::Animation::GetFrameData(int f_frame, std::vector<float> &f_data)
 {
-    if(f_frame < 0 || f_frame >= int(m_duration)) return false;
+    if(f_frame < 0 || f_frame >= static_cast<int>(m_duration)) return false;
     m_animFile.seekg(12+f_frame*m_frameSize,std::ios::beg);
     if(!m_animFile.good()) return false;
     m_animFile.read((char*)m_frameVector.data(),m_frameSize);
@@ -62,9 +62,9 @@ bool ROC::Animation::GetFrameData(int f_frame, std::vector<float> &f_data)
 bool ROC::Animation::GetInterval(unsigned long f_tick, int &f_frameL, int &f_frameR, float &f_lerp)
 {
     unsigned long l_delta = f_tick%m_frameDelta;
-    f_lerp = float(l_delta)/float(m_frameDelta);
-    f_frameL = ((f_tick-l_delta)/m_frameDelta)%m_duration;
-    f_frameR = (f_frameL+1)%m_duration;
+    f_lerp = static_cast<float>(l_delta)/static_cast<float>(m_frameDelta);
+    f_frameL = static_cast<int>(((f_tick-l_delta)/m_frameDelta)%m_duration);
+    f_frameR = (f_frameL+1)%(static_cast<int>(m_duration));
     return true;
 }
 

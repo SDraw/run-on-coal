@@ -18,9 +18,9 @@ ROC::ArgReader::~ArgReader()
 
 void ROC::ArgReader::DecreaseArguments(int f_args)
 {
-    if(m_iArgNum > (unsigned int)f_args) 
+    if(m_iArgNum > f_args) 
     {
-        lua_pop(m_pVM,int(m_iArgNum)-f_args);
+        lua_pop(m_pVM,m_iArgNum-f_args);
         m_iArgNum = f_args;
     }
 }
@@ -119,7 +119,7 @@ void ROC::ArgReader::ReadUserdata(void **f_val, unsigned int f_type)
         m_hasErrors = true;
         return;
     }
-    void *a = (void*) lua_topointer(m_pVM,m_iArgIndex);
+    void *a = (void*)lua_topointer(m_pVM,m_iArgIndex);
     if(!m_core->GetMemoryManager()->CheckMemoryPointer(a,f_type))
     {
         m_error.append("Invalid userdata");
@@ -144,8 +144,7 @@ void ROC::ArgReader::ReadPointer(void **f_val)
         m_hasErrors = true;
         return;
     }
-    void *a = (void*) lua_topointer(m_pVM,m_iArgIndex);
-    *f_val = a;
+    *f_val = (void*)lua_topointer(m_pVM,m_iArgIndex);
     m_iArgIndex++;
 }
 void ROC::ArgReader::ReadFunction(int &f_val,void **f_pointer)
@@ -163,7 +162,7 @@ void ROC::ArgReader::ReadFunction(int &f_val,void **f_pointer)
         m_hasErrors = true;
         return;
     }
-    *f_pointer = (void*) lua_topointer(m_pVM,m_iArgIndex);
+    *f_pointer = (void*)lua_topointer(m_pVM,m_iArgIndex);
     f_val = luaL_ref(m_pVM,LUA_REGISTRYINDEX);
     m_iArgIndex++;
 }
@@ -212,7 +211,7 @@ void ROC::ArgReader::ReadNextUserdata(void **f_val, unsigned int f_type)
         m_hasErrors = true;
         return;
     }
-    void *a = (void*) lua_topointer(m_pVM,m_iArgIndex);
+    void *a = (void*)lua_topointer(m_pVM,m_iArgIndex);
     if(!m_core->GetMemoryManager()->CheckMemoryPointer(a,f_type))
     {
         m_error.append("Invalid userdata");
@@ -232,12 +231,11 @@ void ROC::ArgReader::ReadNextPointer(void **f_val)
         m_hasErrors = true;
         return;
     }
-    void *a = (void*) lua_topointer(m_pVM,m_iArgIndex);
-    *f_val = a;
+    *f_val = (void*)lua_topointer(m_pVM,m_iArgIndex);
     m_iArgIndex++;
 }
 
-void ROC::ArgReader::ReadTableNumbers(std::vector<double> &f_vec, unsigned int f_size)
+void ROC::ArgReader::ReadTableNumbers(std::vector<double> &f_vec, int f_size)
 {
     if(m_hasErrors) return;
     if(m_iArgNum < m_iArgIndex)
@@ -252,7 +250,7 @@ void ROC::ArgReader::ReadTableNumbers(std::vector<double> &f_vec, unsigned int f
         m_hasErrors = true;
         return;
     }
-    for(unsigned int i=0; i < f_size; i++)
+    for(int i=0; i < f_size; i++)
     {
         lua_pushnumber(m_pVM,i+1);
         lua_gettable(m_pVM,-2);
@@ -275,7 +273,7 @@ void ROC::ArgReader::ReadTableNumbers(std::vector<double> &f_vec, unsigned int f
     m_iArgIndex++;
 }
 
-void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, unsigned int f_size)
+void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
 {
     if(m_hasErrors) return;
     if(m_iArgNum < m_iArgIndex)
@@ -290,7 +288,7 @@ void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, unsigned in
         m_hasErrors = true;
         return;
     }
-    for(unsigned int i=0; i < f_size; i++)
+    for(int i=0; i < f_size; i++)
     {
         lua_pushnumber(m_pVM,i+1);
         lua_gettable(m_pVM,-2);
@@ -325,7 +323,7 @@ bool ROC::ArgReader::HasErrors()
     }
     return m_hasErrors;
 }
-unsigned int ROC::ArgReader::GetArgsValue()
+int ROC::ArgReader::GetArgsValue()
 {
     return m_iArgNum;
 }

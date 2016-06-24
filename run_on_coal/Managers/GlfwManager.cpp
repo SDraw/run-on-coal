@@ -103,7 +103,7 @@ ROC::GlfwManager::GlfwManager(Core *f_core)
     }
     glfwWindowHint(GLFW_DEPTH_BITS,32);
 
-    glm::uvec2 l_windowSize;
+    glm::ivec2 l_windowSize;
     f_core->GetConfigManager()->GetWindowSize(l_windowSize);
 
     glfwWindowHint(GLFW_SAMPLES,f_core->GetConfigManager()->GetAntialiasing());

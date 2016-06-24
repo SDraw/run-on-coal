@@ -11,7 +11,7 @@ ROC::Quad::Quad()
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER,m_vertexVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(float)*18, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(float)*18,NULL,GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),NULL);
 
     glEnableVertexAttribArray(1);
@@ -37,7 +37,7 @@ void ROC::Quad::SetProportions(glm::vec2 &f_size, bool f_bind)
     if(f_bind)
     {
         glBindVertexArray(m_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+        glBindBuffer(GL_ARRAY_BUFFER,m_vertexVBO);
     }
     if(!std::memcmp(&m_size,&f_size,sizeof(glm::vec2))) return;
     std::memcpy(&m_size,&f_size,sizeof(glm::vec2));
@@ -51,7 +51,7 @@ void ROC::Quad::SetProportions(glm::vec2 &f_size, bool f_bind)
 void ROC::Quad::Draw(bool f_bind)
 {
     if(f_bind) glBindVertexArray(m_VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES,0,6);
 }
 
 GLuint ROC::Quad::GetVAO()
