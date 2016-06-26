@@ -17,8 +17,8 @@ public:
     size_t GetPosition();
     void GetPath(std::string &f_string);
     bool IsEOF();
-    static bool Delete(std::string &f_path);
-    static bool Rename(std::string &f_old, std::string &f_new);
+    static bool Delete(Core *f_core, std::string &f_path);
+    static bool Rename(Core *f_core, std::string &f_old, std::string &f_new);
 protected:
     File();
     ~File();

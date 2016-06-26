@@ -85,19 +85,19 @@ bool ROC::File::IsEOF()
     return m_file->eof();
 }
 
-bool ROC::File::Delete(std::string &f_path)
+bool ROC::File::Delete(Core *f_core, std::string &f_path)
 {
     std::string l_path;
-    Core::GetCore()->GetWorkingDirectory(l_path);
+    f_core->GetWorkingDirectory(l_path);
     l_path.append("/");
     l_path.append(f_path);
     return !std::remove(l_path.c_str());
 }
 
-bool ROC::File::Rename(std::string &f_old, std::string &f_new)
+bool ROC::File::Rename(Core *f_core, std::string &f_old, std::string &f_new)
 {
     std::string l_oPath,l_nPath;
-    Core::GetCore()->GetWorkingDirectory(l_oPath);
+    f_core->GetWorkingDirectory(l_oPath);
     l_nPath.append(l_oPath);
     l_nPath.append("/");
     l_nPath.append(f_new);

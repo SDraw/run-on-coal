@@ -90,7 +90,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 lua_pushboolean(f_vm,0);
                 return 1;
             }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<GLint>(l_unif),static_cast<unsigned int>(l_val));
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<int>(l_unif),static_cast<unsigned int>(l_val));
         } break;
         case 1:
         {
@@ -102,7 +102,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::uvec2 l_vec(l_val[0],l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 2:
         {
@@ -114,7 +114,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::uvec3 l_vec(l_val[0],l_val[1],l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 3:
         {
@@ -126,7 +126,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::uvec4 l_vec(l_val[0],l_val[1],l_val[2],l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         // Integer
         case 4:
@@ -138,7 +138,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 lua_pushboolean(f_vm,0);
                 return 1;
             }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<GLint>(l_unif),static_cast<int>(l_val));
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<int>(l_unif),static_cast<int>(l_val));
         } break;
         case 5:
         {
@@ -150,7 +150,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::ivec2 l_vec(l_val[0],l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 6:
         {
@@ -162,7 +162,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::ivec3 l_vec(l_val[0],l_val[1],l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 7:
         {
@@ -174,7 +174,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::ivec4 l_vec(l_val[0],l_val[1],l_val[2],l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         // Float
         case 8:
@@ -186,7 +186,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 lua_pushboolean(f_vm,0);
                 return 1;
             }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<GLint>(l_unif),static_cast<float>(l_val));
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<int>(l_unif),static_cast<float>(l_val));
         } break;
         case 9:
         {
@@ -198,7 +198,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::vec2 l_vec(l_val[0],l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 10:
         {
@@ -210,7 +210,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::vec3 l_vec(l_val[0],l_val[1],l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 11:
         {
@@ -222,7 +222,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::vec4 l_vec(l_val[0],l_val[1],l_val[2],l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         }
         // Double
         case 12:
@@ -234,7 +234,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 lua_pushboolean(f_vm,0);
                 return 1;
             }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<GLint>(l_unif),l_val);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader,static_cast<int>(l_unif),l_val);
         } break;
         case 13:
         {
@@ -246,7 +246,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::dvec2 l_vec(l_val[0],l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 14:
         {
@@ -258,7 +258,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::dvec3 l_vec(l_val[0],l_val[1],l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         } break;
         case 15:
         {
@@ -270,7 +270,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::dvec4 l_vec(l_val[0],l_val[1],l_val[2],l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_vec);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_vec);
         }
         // Matrix 2x2
         case 16:
@@ -284,7 +284,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::mat2 l_mat(l_dvec[0],l_dvec[1],l_dvec[2],l_dvec[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_mat);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_mat);
         } break;
         // Matrix 3x3
         case 17:
@@ -298,7 +298,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 return 1;
             }
             glm::mat3 l_mat(l_dvec[0],l_dvec[1],l_dvec[2],l_dvec[3],l_dvec[4],l_dvec[5],l_dvec[6],l_dvec[7],l_dvec[8]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_mat);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_mat);
         } break;
         //Matrix 4x4
         case 18:
@@ -318,7 +318,7 @@ int shaderSetUniformValue(lua_State *f_vm)
                 l_dvec[8],l_dvec[9],l_dvec[10],l_dvec[11],
                 l_dvec[12],l_dvec[13],l_dvec[14],l_dvec[15]
             );
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<GLint>(l_unif),l_mat);
+            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_mat);
         } break;
     }
     lua_pushboolean(f_vm,1);

@@ -182,7 +182,7 @@ int fileDelete(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    bool result = File::Delete(l_path);
+    bool result = File::Delete(LuaManager::m_corePointer,l_path);
     lua_pushboolean(f_vm,result);
     return 1;
 }
@@ -197,7 +197,7 @@ int fileRename(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    bool result = File::Rename(l_old,l_new);
+    bool result = File::Rename(LuaManager::m_corePointer,l_old,l_new);
     lua_pushboolean(f_vm,result);
     return 1;
 }
