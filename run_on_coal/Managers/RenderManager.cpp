@@ -189,7 +189,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize)
         f_model->DrawMaterial(i,l_textureBind,l_vaoBind);
     }
 }
-void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_text)
+void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_text, glm::vec4 &f_color)
 {
     if(m_locked || !m_currentShader) return;
     EnableBlending();
@@ -197,9 +197,9 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_
 
     m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetProjectionUniformValue(m_screenProjection);
+    m_currentShader->SetColorUniformValue(f_color);
 
     bool l_bind = CompareLastVAO(f_font->GetVAO());
-    
     f_font->Draw(f_text,f_pos,l_bind);
 }
 void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot)

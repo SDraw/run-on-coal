@@ -66,7 +66,7 @@ public:
     void SetRenderTarget(RenderTarget *f_rt);
 
     void Render(Model *f_model, bool f_texturize);
-    void Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_text);
+    void Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_text, glm::vec4 &f_color);
     void Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot);
     void Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot);
 protected:

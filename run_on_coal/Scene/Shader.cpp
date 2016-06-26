@@ -21,6 +21,7 @@ ROC::Shader::Shader()
     m_bonesUniform = -1; 
     m_texture0Uniform = -1;
     m_timeUniform = -1;
+    m_colorUniform = -1;
 
     m_projectionUniformValue = glm::mat4(0.f);
     m_viewUniformValue = glm::mat4(0.f);
@@ -35,6 +36,7 @@ ROC::Shader::Shader()
     m_materialTypeUniformValue = 0;
     m_animatedUniformValue = 0U;
     m_timeUniformValue = 0.f;
+    m_colorUniformValue = glm::vec4(0.f);
 }
 ROC::Shader::~Shader()
 {
@@ -210,6 +212,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform,0);
     //Time
     m_timeUniform = glGetUniformLocation(m_program,"gTime");
+    m_colorUniform = glGetUniformLocation(m_program,"gFontColor");
 }
 
 GLint ROC::Shader::GetUniform(std::string &f_uname)
@@ -469,6 +472,13 @@ void ROC::Shader::SetTimeUniformValue(float f_value)
     if(m_timeUniformValue == f_value) return;
     m_timeUniformValue = f_value;
     SetUniformValue(m_timeUniform,m_timeUniformValue);
+}
+void ROC::Shader::SetColorUniformValue(glm::vec4 &f_value)
+{
+    if(m_colorUniform == -1) return;
+    if(!std::memcmp(&f_value,&m_colorUniformValue,sizeof(glm::vec4))) return;
+    std::memcpy(&m_colorUniformValue,&f_value,sizeof(glm::vec4));
+    SetUniformValue(m_colorUniform,m_colorUniformValue);
 }
 
 void ROC::Shader::GetError(std::string &f_str)

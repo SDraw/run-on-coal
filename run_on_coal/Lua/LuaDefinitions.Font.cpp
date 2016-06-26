@@ -44,21 +44,23 @@ int fontDestroy(lua_State *f_vm)
 int fontDraw(lua_State *f_vm)
 {
     Font *l_font;
-    lua_Number l_pos[2];
+    lua_Number l_pos[2],l_color[4];
     std::string l_text;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_font,ElementType::FontElement);
     for(int i=0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     argStream.ReadText(l_text);
+    for(int i=0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(argStream.HasErrors() || !l_text.length())
     {
         lua_pushboolean(f_vm,0);
         return 1;
     }
     glm::vec2 l_vPos(l_pos[0],l_pos[1]);
+    glm::vec4 l_vColor(l_color[0],l_color[1],l_color[2],l_color[3]);
     std::wstring l_converted;
     utf8::utf8to32(l_text.begin(),l_text.end(),std::back_inserter(l_converted));
-    LuaManager::m_corePointer->GetRenderManager()->Render(l_font,l_vPos,l_converted);
+    LuaManager::m_corePointer->GetRenderManager()->Render(l_font,l_vPos,l_converted,l_vColor);
     lua_pushboolean(f_vm,1);
     return 1;
 }

@@ -22,6 +22,7 @@ class Shader
     GLint m_bonesUniform;
     GLint m_texture0Uniform; //Useless to store?
     GLint m_timeUniform;
+    GLint m_colorUniform;
     
     glm::mat4 m_projectionUniformValue;
     glm::mat4 m_viewUniformValue;
@@ -36,6 +37,7 @@ class Shader
     int m_materialTypeUniformValue;
     unsigned int m_animatedUniformValue;
     float m_timeUniformValue;
+    glm::vec4 m_colorUniformValue;
 
     std::string m_error;
 
@@ -105,6 +107,7 @@ protected:
     void SetAnimatedUniformValue(unsigned int f_value);
     void SetBonesUniformValue(std::vector<glm::mat4> &f_value);
     void SetTimeUniformValue(float f_value);
+    void SetColorUniformValue(glm::vec4 &f_value);
 
     void GetError(std::string &f_str);
     friend class ElementManager;
