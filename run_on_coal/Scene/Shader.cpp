@@ -212,7 +212,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform,0);
     //Time
     m_timeUniform = glGetUniformLocation(m_program,"gTime");
-    m_colorUniform = glGetUniformLocation(m_program,"gFontColor");
+    m_colorUniform = glGetUniformLocation(m_program,"gColor");
 }
 
 GLint ROC::Shader::GetUniform(std::string &f_uname)

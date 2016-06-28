@@ -202,7 +202,7 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_
     bool l_bind = CompareLastVAO(f_font->GetVAO());
     f_font->Draw(f_text,f_pos,l_bind);
 }
-void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot)
+void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
 {
     if(m_locked || !m_currentShader || f_texture->IsCubic()) return;
 
@@ -211,6 +211,7 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
 
     m_currentShader->SetProjectionUniformValue(m_screenProjection);
     m_currentShader->SetTimeUniformValue(m_time);
+    m_currentShader->SetColorUniformValue(f_color);
 
     glm::mat4 l_identity(1.f);
     glm::mat4 l_model;
@@ -231,7 +232,7 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
     else DisableBlending();
     m_quad->Draw(l_vaoBind);
 }
-void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot)
+void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
 {
     if(m_locked || !m_currentShader || !f_rt->IsColored()) return;
 
@@ -240,6 +241,7 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
 
     m_currentShader->SetProjectionUniformValue(m_screenProjection);
     m_currentShader->SetTimeUniformValue(m_time);
+    m_currentShader->SetColorUniformValue(f_color);
 
     glm::mat4 l_identity(1.f);
     glm::mat4 l_model;
