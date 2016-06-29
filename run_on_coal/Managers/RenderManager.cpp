@@ -213,14 +213,17 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
     m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetColorUniformValue(f_color);
 
-    glm::mat4 l_identity(1.f);
-    glm::mat4 l_model;
+    glm::mat4 l_model(1.f);
+    btTransform l_transform;
+    l_transform.setIdentity();
+    l_transform.setOrigin((btVector3&)glm::vec3(f_pos+f_size/2.f,0.f));
     if(f_rot != 0.f)
     {
-        l_model = glm::rotate(l_identity,f_rot,glm::vec3(0.f,0.f,1.f));
-        l_model = glm::translate(l_identity,glm::vec3(f_pos+f_size/2.f,0.f))*l_model;
+        btQuaternion l_quat;
+        l_quat.setRotation(btVector3(0.f,0.f,1.f),f_rot);
+        l_transform.setRotation(l_quat);
     }
-    else l_model = glm::translate(l_identity,glm::vec3(f_pos+f_size/2.f,0.f));
+    l_transform.getOpenGLMatrix((float*)&l_model);
     m_currentShader->SetModelUniformValue(l_model);
 
     m_quad->SetProportions(f_size,l_vaoBind);
@@ -243,14 +246,17 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
     m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetColorUniformValue(f_color);
 
-    glm::mat4 l_identity(1.f);
-    glm::mat4 l_model;
+    glm::mat4 l_model(1.f);
+    btTransform l_transform;
+    l_transform.setIdentity();
+    l_transform.setOrigin((btVector3&)glm::vec3(f_pos+f_size/2.f,0.f));
     if(f_rot != 0.f)
     {
-        l_model = glm::rotate(l_identity,f_rot,glm::vec3(0.f,0.f,1.f));
-        l_model = glm::translate(l_identity,glm::vec3(f_pos+f_size/2.f,0.f))*l_model;
+        btQuaternion l_quat;
+        l_quat.setRotation(btVector3(0.f,0.f,1.f),f_rot);
+        l_transform.setRotation(l_quat);
     }
-    else l_model = glm::translate(l_identity,glm::vec3(f_pos+f_size/2.f,0.f));
+    l_transform.getOpenGLMatrix((float*)&l_model);
     m_currentShader->SetModelUniformValue(l_model);
 
     m_quad->SetProportions(f_size,l_vaoBind);
