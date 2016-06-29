@@ -11,9 +11,7 @@
 
 void ROC::GlfwManager::WindowResizeCallback(GLFWwindow *window, int width, int height)
 {
-    GlfwManager *l_glfwManager = (GlfwManager*)glfwGetWindowUserPointer(window);
-    if(!l_glfwManager) return;
-    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::WindowResize)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(width);
@@ -22,9 +20,7 @@ void ROC::GlfwManager::WindowResizeCallback(GLFWwindow *window, int width, int h
 }
 void ROC::GlfwManager::KeyboardCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-    GlfwManager *l_glfwManager = (GlfwManager*)glfwGetWindowUserPointer(window);
-    if(!l_glfwManager) return;
-    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::KeyPress)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(key);
@@ -35,9 +31,7 @@ void ROC::GlfwManager::KeyboardCallback(GLFWwindow *window, int key, int scancod
 }
 void ROC::GlfwManager::MouseKeyCallback(GLFWwindow *window, int button, int action, int mods)
 {
-    GlfwManager *l_glfwManager = (GlfwManager*)glfwGetWindowUserPointer(window);
-    if(!l_glfwManager) return;
-    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::MouseKeyPress)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(button);
@@ -47,9 +41,7 @@ void ROC::GlfwManager::MouseKeyCallback(GLFWwindow *window, int button, int acti
 }
 void ROC::GlfwManager::MouseScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
-    GlfwManager *l_glfwManager = (GlfwManager*)glfwGetWindowUserPointer(window);
-    if(!l_glfwManager) return;
-    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::MouseScroll)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(xoffset);
@@ -58,9 +50,7 @@ void ROC::GlfwManager::MouseScrollCallback(GLFWwindow *window, double xoffset, d
 }
 void ROC::GlfwManager::CursorPosCallback(GLFWwindow *window, double xpos, double ypos)
 {
-    GlfwManager *l_glfwManager = (GlfwManager*)glfwGetWindowUserPointer(window);
-    if(!l_glfwManager) return;
-    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::CursorMove)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(xpos);
@@ -69,9 +59,7 @@ void ROC::GlfwManager::CursorPosCallback(GLFWwindow *window, double xpos, double
 }
 void ROC::GlfwManager::CursorEnterCallback(GLFWwindow *window, int entered)
 {
-    GlfwManager *l_glfwManager = (GlfwManager*)glfwGetWindowUserPointer(window);
-    if(!l_glfwManager) return;
-    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::CursorEnter)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(entered);
@@ -79,9 +67,7 @@ void ROC::GlfwManager::CursorEnterCallback(GLFWwindow *window, int entered)
 }
 void ROC::GlfwManager::TextInputCallback(GLFWwindow* window, unsigned int codepoint)
 {
-    GlfwManager *l_glfwManager = (GlfwManager*)glfwGetWindowUserPointer(window);
-    if(!l_glfwManager) return;
-    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::TextInput)) return;
     ROC::LuaArguments l_args;
     std::string l_text;
@@ -205,8 +191,7 @@ void ROC::GlfwManager::SwapBuffers()
 
 void ROC::GlfwManager::SetCursor(Cursor *f_cursor)
 {
-    if(!f_cursor) glfwSetCursor(m_window,NULL);
-    else glfwSetCursor(m_window,f_cursor->GetCursor());
+    f_cursor ? glfwSetCursor(m_window,f_cursor->GetCursor()) : glfwSetCursor(m_window,NULL);
 }
 void ROC::GlfwManager::SetCursorMode(int f_mode)
 {

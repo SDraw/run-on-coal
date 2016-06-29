@@ -78,7 +78,7 @@ float ROC::Sound::GetTime()
 
 int ROC::Sound::GetState()
 {
-    return m_handle->getStatus()+1;
+    return m_handle->getStatus();
 }
 
 bool ROC::Sound::Set3DPositionEnabled(bool f_state)

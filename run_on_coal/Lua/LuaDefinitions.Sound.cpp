@@ -113,7 +113,7 @@ int soundGetState(lua_State *f_vm)
         return 1;
     }
     int l_state = l_sound->GetState();
-    lua_pushinteger(f_vm,l_state);
+    !l_state ? lua_pushstring(f_vm,"stopped") : ((l_state == 1) ? lua_pushstring(f_vm,"paused") : lua_pushstring(f_vm,"playing"));
     return 1;
 }
 
