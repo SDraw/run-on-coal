@@ -55,7 +55,7 @@ int modelGetType(lua_State *f_vm)
         return 1;
     }
     int l_type = l_model->GetType();
-    lua_pushinteger(f_vm,l_type);
+    (l_type > 0) ? ((l_type == 1) ? lua_pushstring(f_vm,"static") : lua_pushstring(f_vm,"animated")) : lua_pushstring(f_vm,"none");
     return 1;
 }
 int modelSetPosition(lua_State *f_vm)
