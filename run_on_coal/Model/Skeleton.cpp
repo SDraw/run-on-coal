@@ -44,7 +44,7 @@ ROC::Skeleton::~Skeleton()
     }
 }
 
-bool ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
+void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
 {
     skFastStoring l_leftData,l_rightData;
 
@@ -61,7 +61,6 @@ bool ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_rig
     }
     m_boneVector[0]->UpdateMatrix();
     for(size_t i=0, j=m_boneVector.size(); i < j; i++) std::memcpy(&m_boneMatrices[i],&m_boneVector[i]->m_offsetMatrix,sizeof(glm::mat4));
-    return true;
 }
 void ROC::Skeleton::Update()
 {

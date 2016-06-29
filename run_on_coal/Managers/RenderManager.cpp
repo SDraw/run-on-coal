@@ -215,8 +215,9 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
 
     glm::mat4 l_model(1.f);
     btTransform l_transform;
+    btVector3 l_origin(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
     l_transform.setIdentity();
-    l_transform.setOrigin((btVector3&)glm::vec3(f_pos+f_size/2.f,0.f));
+    l_transform.setOrigin(l_origin);
     if(f_rot != 0.f)
     {
         btQuaternion l_quat;
@@ -248,8 +249,9 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
 
     glm::mat4 l_model(1.f);
     btTransform l_transform;
+    btVector3 l_origin(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
     l_transform.setIdentity();
-    l_transform.setOrigin((btVector3&)glm::vec3(f_pos+f_size/2.f,0.f));
+    l_transform.setOrigin(l_origin);
     if(f_rot != 0.f)
     {
         btQuaternion l_quat;

@@ -78,8 +78,7 @@ bool ROC::Model::UpdateMatrix()
 }
 void ROC::Model::UpdateSkeleton()
 {
-    if(!m_animation) m_skeleton->Update();
-    else
+    if(m_animation)
     {
         int l_leftFrame,l_rightFrame;
         float l_lerpDelta;
@@ -88,8 +87,9 @@ void ROC::Model::UpdateSkeleton()
         std::vector<float> l_leftFrameData,l_rightFrameData;
         if(!m_animation->GetFrameData(l_leftFrame,l_leftFrameData)) return;
         if(!m_animation->GetFrameData(l_rightFrame,l_rightFrameData)) return;
-        if(!m_skeleton->Update(l_leftFrameData,l_rightFrameData,l_lerpDelta)) return;
+        m_skeleton->Update(l_leftFrameData,l_rightFrameData,l_lerpDelta);
     }
+    else m_skeleton->Update();
 }
 void ROC::Model::UpdateAnimationTick()
 {
