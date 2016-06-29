@@ -70,10 +70,10 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::ModelElement:
-                    ((Model*)f_child)->SetParent(NULL);
+                    static_cast<Model*>(f_child)->SetParent(NULL);
                     break;
                 case ElementType::GeometryElement:
-                    ((Model*)f_child)->SetGeometry(NULL);
+                    static_cast<Model*>(f_child)->SetGeometry(NULL);
                     break;
             }
         } break;
@@ -82,7 +82,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::SceneElement:
-                    ((Scene*)f_parent)->SetCamera(NULL);
+                    static_cast<Scene*>(f_parent)->SetCamera(NULL);
                     break;
             }
         } break;
@@ -91,7 +91,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::SceneElement:
-                    ((Scene*)f_parent)->SetLight(NULL);
+                    static_cast<Scene*>(f_parent)->SetLight(NULL);
                     break;
             }
         } break;

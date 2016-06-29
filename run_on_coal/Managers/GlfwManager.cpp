@@ -11,7 +11,7 @@
 
 void ROC::GlfwManager::WindowResizeCallback(GLFWwindow *window, int width, int height)
 {
-    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::WindowResize)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(width);
@@ -20,7 +20,7 @@ void ROC::GlfwManager::WindowResizeCallback(GLFWwindow *window, int width, int h
 }
 void ROC::GlfwManager::KeyboardCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::KeyPress)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(key);
@@ -31,7 +31,7 @@ void ROC::GlfwManager::KeyboardCallback(GLFWwindow *window, int key, int scancod
 }
 void ROC::GlfwManager::MouseKeyCallback(GLFWwindow *window, int button, int action, int mods)
 {
-    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::MouseKeyPress)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(button);
@@ -41,7 +41,7 @@ void ROC::GlfwManager::MouseKeyCallback(GLFWwindow *window, int button, int acti
 }
 void ROC::GlfwManager::MouseScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
-    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::MouseScroll)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(xoffset);
@@ -50,7 +50,7 @@ void ROC::GlfwManager::MouseScrollCallback(GLFWwindow *window, double xoffset, d
 }
 void ROC::GlfwManager::CursorPosCallback(GLFWwindow *window, double xpos, double ypos)
 {
-    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::CursorMove)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(xpos);
@@ -59,7 +59,7 @@ void ROC::GlfwManager::CursorPosCallback(GLFWwindow *window, double xpos, double
 }
 void ROC::GlfwManager::CursorEnterCallback(GLFWwindow *window, int entered)
 {
-    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::CursorEnter)) return;
     ROC::LuaArguments l_args;
     l_args.PushArgument(entered);
@@ -67,7 +67,7 @@ void ROC::GlfwManager::CursorEnterCallback(GLFWwindow *window, int entered)
 }
 void ROC::GlfwManager::TextInputCallback(GLFWwindow* window, unsigned int codepoint)
 {
-    EventManager *l_eventManager = ((GlfwManager*)glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::TextInput)) return;
     ROC::LuaArguments l_args;
     std::string l_text;

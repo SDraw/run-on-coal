@@ -394,46 +394,46 @@ void ROC::ElementManager::DestroyByPointer(void *f_pointer,unsigned char f_type)
     switch(f_type)
     {
         case ElementType::SceneElement:
-            delete ((Scene*)f_pointer);
+            delete static_cast<Scene*>(f_pointer);
             break;
         case ElementType::CameraElement:
-            delete ((Camera*)f_pointer);
+            delete static_cast<Camera*>(f_pointer);
             break;
         case ElementType::LightElement:
-            delete ((Light*)f_pointer);
+            delete static_cast<Light*>(f_pointer);
             break;
         case ElementType::ShaderElement:
-            delete ((Shader*)f_pointer);
+            delete static_cast<Shader*>(f_pointer);
             break;
         case ElementType::GeometryElement:
-            delete ((Geometry*)f_pointer);
+            delete static_cast<Geometry*>(f_pointer);
             break;
         case ElementType::ModelElement:
-            delete ((Model*)f_pointer);
+            delete static_cast<Model*>(f_pointer);
             break;
         case ElementType::AnimationElement:
-            delete ((Animation*)f_pointer);
+            delete static_cast<Animation*>(f_pointer);
             break;
         case ElementType::SoundElement:
-            delete ((Sound*)f_pointer);
+            delete static_cast<Sound*>(f_pointer);
             break;
         case ElementType::RenderTargetElement:
-            delete ((RenderTarget*)f_pointer);
+            delete static_cast<RenderTarget*>(f_pointer);
             break;
         case ElementType::TextureElement:
-            delete ((Texture*)f_pointer);
+            delete static_cast<Texture*>(f_pointer);
             break;
         case ElementType::FontElement:
-            delete ((Font*)f_pointer);
+            delete static_cast<Font*>(f_pointer);
             break;
         case ElementType::CursorElement:
-            delete ((Cursor*)f_pointer);
+            delete static_cast<Cursor*>(f_pointer);
             break;
         case ElementType::FileElement:
-            delete ((File*)f_pointer);
+            delete static_cast<File*>(f_pointer);
             break;
         case ElementType::CollisionElement:
-            delete ((Collision*)f_pointer);
+            delete static_cast<Collision*>(f_pointer);
             break;
     }
 }
