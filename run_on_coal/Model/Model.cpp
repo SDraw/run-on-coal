@@ -279,12 +279,12 @@ float ROC::Model::GetAnimationSpeed()
 bool ROC::Model::SetAnimationProgress(float f_val)
 {
     if(!m_animation || f_val < 0.f || f_val > 1.f) return false;
-    m_animCurrentTick = unsigned(long(double(m_animation->m_durationTotal)*double(f_val)));
+    m_animCurrentTick = static_cast<unsigned long>(double(m_animation->m_durationTotal)*double(f_val));
     return true;
 }
 float ROC::Model::GetAnimationProgress()
 {
-    return (m_animation ? float(double(m_animCurrentTick)/double(m_animation->m_durationTotal)) : -1.f);
+    return (m_animation ? static_cast<float>(double(m_animCurrentTick)/double(m_animation->m_durationTotal)) : -1.f);
 }
 
 bool ROC::Model::SetBonePosition(unsigned int f_bone, glm::vec3 &f_val)

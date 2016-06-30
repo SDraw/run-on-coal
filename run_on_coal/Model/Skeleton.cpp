@@ -59,8 +59,7 @@ void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_rig
         m_boneVector[i]->SetRotation(glm::slerp(l_leftData.m_rot,l_rightData.m_rot,f_lerp));
         m_boneVector[i]->SetScale(glm::lerp(l_leftData.m_scale,l_rightData.m_scale,f_lerp));
     }
-    m_boneVector[0]->UpdateMatrix();
-    for(size_t i=0, j=m_boneVector.size(); i < j; i++) std::memcpy(&m_boneMatrices[i],&m_boneVector[i]->m_offsetMatrix,sizeof(glm::mat4));
+    Update();
 }
 void ROC::Skeleton::Update()
 {

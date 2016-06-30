@@ -43,7 +43,6 @@ void ROC::Bone::UpdateMatrix()
     {
         glm::mat4 l_indent(1.f);
         m_localMatrix = glm::translate(l_indent,m_position)*glm::toMat4(m_rotation)*glm::scale(l_indent,m_scale);
-
         if(!m_parent) std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
         else m_matrix = m_parent->m_matrix*m_localMatrix;
         m_offsetMatrix = m_matrix*m_bindMatrix;
