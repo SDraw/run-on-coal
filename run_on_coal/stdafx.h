@@ -4,8 +4,6 @@
 #include <Windows.h>
 #include <direct.h>
 
-#include <locale>
-#include <codecvt>
 #include <string>
 #include <vector>
 #include <map>

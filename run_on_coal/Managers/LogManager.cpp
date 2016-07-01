@@ -24,8 +24,7 @@ void ROC::LogManager::Log(std::string &f_text)
     {
         std::time_t l_time = std::time(NULL);
         tm *l_tmTime = std::localtime(&l_time);
-        m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text.c_str() << '\n';
-        m_log.flush();
+        m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text.c_str() << std::endl;
         #ifdef _DEBUG
         std::cout << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text.c_str() << std::endl;
         #endif
