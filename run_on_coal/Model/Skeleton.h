@@ -13,6 +13,8 @@ class Skeleton
         glm::quat m_rot;
         glm::vec3 m_scale;
     };
+    skFastStoring m_leftData,m_rightData;
+
     std::vector<Bone*> m_boneVector;
 
     struct skChain
@@ -23,6 +25,7 @@ class Skeleton
     };
     std::vector<std::vector<skChain>> m_chainsVector;
     bool m_rigid;
+    glm::mat4 m_rigidBodyWorld;
 protected:
     std::vector<glm::mat4> m_boneMatrices;
     Skeleton(std::vector<Geometry::geometryBoneData> &f_data);

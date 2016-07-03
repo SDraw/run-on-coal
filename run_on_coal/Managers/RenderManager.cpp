@@ -38,6 +38,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_cullEnabled = true;
     m_time = 0.0;
     m_locked = true;
+    m_textureMatrix = glm::mat4(1.f);
 
     glm::ivec2 l_size;
     m_core->GetGlfwManager()->GetFramebufferSize(l_size);
@@ -143,18 +144,17 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize)
 {
     if(m_locked || !m_currentShader || !m_currentScene || !f_model->IsDrawable()) return;
 
-    glm::mat4 l_matrix;
-    f_model->GetMatrix(l_matrix);
-    m_currentShader->SetModelUniformValue(l_matrix);
+    f_model->GetMatrix(m_modelMatrix);
+    m_currentShader->SetModelUniformValue(m_modelMatrix);
 
     m_currentShader->SetTimeUniformValue(m_time);
 
     //Skeletal animation
     if(f_model->HasSkeleton())
     {
-        std::vector<glm::mat4> l_mats;
-        f_model->GetBoneMatrices(l_mats);
-        m_currentShader->SetBonesUniformValue(l_mats);
+        m_boneData.clear();
+        f_model->GetBoneMatrices(m_boneData);
+        m_currentShader->SetBonesUniformValue(m_boneData);
         m_currentShader->SetAnimatedUniformValue(1U);
     }
     else m_currentShader->SetAnimatedUniformValue(0U);
@@ -213,19 +213,19 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
     m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetColorUniformValue(f_color);
 
-    glm::mat4 l_model(1.f);
-    btTransform l_transform;
-    btVector3 l_origin(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
-    l_transform.setIdentity();
-    l_transform.setOrigin(l_origin);
+    btTransform l_textureTransform;
+    btVector3 l_textureTranslate(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
+    l_textureTransform.setIdentity();
+    l_textureTransform.setOrigin(l_textureTranslate);
     if(f_rot != 0.f)
     {
-        btQuaternion l_quat;
-        l_quat.setRotation(btVector3(0.f,0.f,1.f),f_rot);
-        l_transform.setRotation(l_quat);
+        btVector3 l_textureZAxis(0.f,0.f,1.f);
+        btQuaternion l_textureRotation;
+        l_textureRotation.setRotation(l_textureZAxis,f_rot);
+        l_textureTransform.setRotation(l_textureRotation);
     }
-    l_transform.getOpenGLMatrix((float*)&l_model);
-    m_currentShader->SetModelUniformValue(l_model);
+    l_textureTransform.getOpenGLMatrix((float*)&m_textureMatrix);
+    m_currentShader->SetModelUniformValue(m_textureMatrix);
 
     m_quad->SetProportions(f_size,l_vaoBind);
     if(l_vaoBind) l_vaoBind = false;
@@ -247,19 +247,19 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
     m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetColorUniformValue(f_color);
 
-    glm::mat4 l_model(1.f);
-    btTransform l_transform;
-    btVector3 l_origin(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
-    l_transform.setIdentity();
-    l_transform.setOrigin(l_origin);
+    btTransform l_textureTransform;
+    btVector3 l_textureTranslate(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
+    l_textureTransform.setIdentity();
+    l_textureTransform.setOrigin(l_textureTranslate);
     if(f_rot != 0.f)
     {
-        btQuaternion l_quat;
-        l_quat.setRotation(btVector3(0.f,0.f,1.f),f_rot);
-        l_transform.setRotation(l_quat);
+        btVector3 l_textureZAxis(0.f,0.f,1.f);
+        btQuaternion l_textureRotation;
+        l_textureRotation.setRotation(l_textureZAxis,f_rot);
+        l_textureTransform.setRotation(l_textureRotation);
     }
-    l_transform.getOpenGLMatrix((float*)&l_model);
-    m_currentShader->SetModelUniformValue(l_model);
+    l_textureTransform.getOpenGLMatrix((float*)&m_textureMatrix);
+    m_currentShader->SetModelUniformValue(m_textureMatrix);
 
     m_quad->SetProportions(f_size,l_vaoBind);
     if(l_vaoBind) l_vaoBind = false;

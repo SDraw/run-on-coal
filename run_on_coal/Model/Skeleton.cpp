@@ -46,18 +46,16 @@ ROC::Skeleton::~Skeleton()
 
 void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
 {
-    skFastStoring l_leftData,l_rightData;
-
     for(size_t i=0, j=m_boneVector.size(); i < j; i++)
     {
         int l_bonePos = i*10;
 
-        std::memcpy(&l_leftData,&f_left[l_bonePos],sizeof(skFastStoring));
-        std::memcpy(&l_rightData,&f_right[l_bonePos],sizeof(skFastStoring));
+        std::memcpy(&m_leftData,&f_left[l_bonePos],sizeof(skFastStoring));
+        std::memcpy(&m_rightData,&f_right[l_bonePos],sizeof(skFastStoring));
 
-        m_boneVector[i]->SetPosition(glm::lerp(l_leftData.m_pos,l_rightData.m_pos,f_lerp));
-        m_boneVector[i]->SetRotation(glm::slerp(l_leftData.m_rot,l_rightData.m_rot,f_lerp));
-        m_boneVector[i]->SetScale(glm::lerp(l_leftData.m_scale,l_rightData.m_scale,f_lerp));
+        m_boneVector[i]->SetPosition(glm::lerp(m_leftData.m_pos,m_rightData.m_pos,f_lerp));
+        m_boneVector[i]->SetRotation(glm::slerp(m_leftData.m_rot,m_rightData.m_rot,f_lerp));
+        m_boneVector[i]->SetScale(glm::lerp(m_leftData.m_scale,m_rightData.m_scale,f_lerp));
     }
     Update();
 }
@@ -108,16 +106,16 @@ void ROC::Skeleton::InitRigidity(std::vector<std::vector<Geometry::geometryChain
 void ROC::Skeleton::UpdateChains(glm::mat4 &f_model)
 {
     if(!m_rigid) return;
+    btTransform l_transform,l_bodyTransform;
+    btVector3 l_null(0.f,0.f,0.f);
     for(auto iter : m_chainsVector)
     {
         for(auto iter1 : iter)
         {
-            btVector3 l_null(0.f,0.f,0.f);
             btRigidBody *l_body = iter1.m_rigidBody;
-            glm::mat4 l_boneWorld = f_model*m_boneVector[iter1.m_boneID]->m_matrix;
-            btTransform l_transform;
-            l_transform.setFromOpenGLMatrix((float*)&l_boneWorld);
-            btTransform l_bodyTransform = l_body->getCenterOfMassTransform();
+            m_rigidBodyWorld = f_model*m_boneVector[iter1.m_boneID]->m_matrix;
+            l_transform.setFromOpenGLMatrix((float*)&m_rigidBodyWorld);
+            l_bodyTransform = l_body->getCenterOfMassTransform();
             l_transform.setRotation(l_bodyTransform.getRotation());
             l_body->setCenterOfMassTransform(l_transform);
             l_body->setLinearVelocity(l_null);
@@ -135,10 +133,8 @@ void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model)
         for(auto iter1 : iter)
         {
             Bone *l_bone = m_boneVector[iter1.m_boneID];
-            btTransform l_transform = iter1.m_rigidBody->getCenterOfMassTransform();
-            glm::mat4 l_bodyWorld(1.f);
-            l_transform.getOpenGLMatrix((float*)&l_bodyWorld);
-            l_bone->m_offsetMatrix = (l_modelInv*l_bodyWorld)*l_bone->m_bindMatrix;
+            iter1.m_rigidBody->getCenterOfMassTransform().getOpenGLMatrix((float*)&m_rigidBodyWorld);
+            l_bone->m_offsetMatrix = (l_modelInv*m_rigidBodyWorld)*l_bone->m_bindMatrix;
             std::memcpy(&m_boneMatrices[iter1.m_boneID],&l_bone->m_offsetMatrix,sizeof(glm::mat4));
         }
     }

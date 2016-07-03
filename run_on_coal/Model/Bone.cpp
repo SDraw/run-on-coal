@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Model/Bone.h"
 
+glm::mat4 ROC::Bone::m_identity = glm::mat4(1.f);
+
 ROC::Bone::Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale)
 {
     m_name = f_name;
@@ -29,8 +31,7 @@ void ROC::Bone::AddChild(Bone *f_bone)
 }
 void ROC::Bone::GenerateBindPose()
 {
-    glm::mat4 l_identity(1.f);
-    m_localMatrix = glm::translate(l_identity,m_position)*glm::mat4_cast(m_rotation)*glm::scale(l_identity,m_scale);
+    m_localMatrix = glm::translate(m_identity,m_position)*glm::mat4_cast(m_rotation)*glm::scale(m_identity,m_scale);
     if(m_parent == NULL) m_matrix = m_localMatrix;
     else m_matrix = m_parent->m_matrix*m_localMatrix;
     m_bindMatrix = glm::inverse(m_matrix);
@@ -41,8 +42,7 @@ void ROC::Bone::UpdateMatrix()
 {
     if(m_rebuildMatrix)
     {
-        glm::mat4 l_indent(1.f);
-        m_localMatrix = glm::translate(l_indent,m_position)*glm::toMat4(m_rotation)*glm::scale(l_indent,m_scale);
+        m_localMatrix = glm::translate(m_identity,m_position)*glm::toMat4(m_rotation)*glm::scale(m_identity,m_scale);
         if(!m_parent) std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
         else m_matrix = m_parent->m_matrix*m_localMatrix;
         m_offsetMatrix = m_matrix*m_bindMatrix;

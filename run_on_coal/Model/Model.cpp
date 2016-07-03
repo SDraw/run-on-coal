@@ -6,6 +6,7 @@
 #include "Model/Skeleton.h"
 #include "Utils/Utils.h"
 
+
 ROC::Model::Model(Geometry *f_geometry)
 {
     m_geometry = f_geometry;
@@ -52,8 +53,7 @@ bool ROC::Model::UpdateMatrix()
     bool l_updated = false;
     if(m_rebuildMatrix)
     {
-        glm::mat4 l_indent(1.f);
-        m_localMatrix = glm::translate(l_indent,m_position)*glm::toMat4(m_rotation)*glm::scale(l_indent,m_scale);
+        m_localMatrix = glm::translate(Bone::m_identity,m_position)*glm::toMat4(m_rotation)*glm::scale(Bone::m_identity,m_scale);
         l_updated = true;
         m_rebuildMatrix = false;
     }
@@ -80,21 +80,18 @@ void ROC::Model::UpdateSkeleton()
 {
     if(m_animation)
     {
-        int l_leftFrame,l_rightFrame;
+        unsigned int l_leftFrame,l_rightFrame;
         float l_lerpDelta;
-        if(!m_animation->GetInterval(m_animCurrentTick,l_leftFrame,l_rightFrame,l_lerpDelta)) return;
-
-        std::vector<float> l_leftFrameData,l_rightFrameData;
-        if(!m_animation->GetFrameData(l_leftFrame,l_leftFrameData)) return;
-        if(!m_animation->GetFrameData(l_rightFrame,l_rightFrameData)) return;
-        m_skeleton->Update(l_leftFrameData,l_rightFrameData,l_lerpDelta);
+        m_animation->GetInterval(m_animCurrentTick,l_leftFrame,l_rightFrame,l_lerpDelta);
+        if(!m_animation->GetFrameData(l_rightFrame,l_leftFrame)) return;
+        m_skeleton->Update(m_animation->m_leftFrame,m_animation->m_rightFrame,l_lerpDelta);
     }
     else m_skeleton->Update();
 }
 void ROC::Model::UpdateAnimationTick()
 {
     unsigned long l_sysTick = Utils::GetSystemTick();
-    unsigned long l_difTick = unsigned(long(double(l_sysTick-m_animLastTick)*double(m_animationSpeed)));
+    unsigned long l_difTick = static_cast<unsigned long>(static_cast<double>(l_sysTick-m_animLastTick)*static_cast<double>(m_animationSpeed));
     m_animLastTick = l_sysTick;
     m_animCurrentTick += l_difTick;
     m_animCurrentTick %= m_animation->m_durationTotal;

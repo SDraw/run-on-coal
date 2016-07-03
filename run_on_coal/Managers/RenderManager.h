@@ -22,6 +22,10 @@ class RenderManager
     glm::mat4 m_screenProjection;
     bool m_locked;
 
+    std::vector<glm::mat4> m_boneData;
+    glm::mat4 m_modelMatrix;
+    glm::mat4 m_textureMatrix;
+
     //OpenGL calls reducing
     GLuint m_lastVAO;
     GLuint m_lastTexture;

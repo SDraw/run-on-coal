@@ -15,7 +15,6 @@ class Animation
     unsigned long m_frameDelta;
 
     unsigned long m_frameSize;
-    std::vector<float> m_frameVector;
 
     bool m_loaded;
 
@@ -23,9 +22,11 @@ class Animation
 protected:
     Animation();
     ~Animation();
+    std::vector<float> m_leftFrame;
+    std::vector<float> m_rightFrame;
     bool Load(std::string &f_path);
-    bool GetFrameData(int f_frame, std::vector<float> &f_data);
-    bool GetInterval(unsigned long f_tick, int &f_frameL, int &f_frameR, float &f_lerp);
+    void GetInterval(unsigned long f_tick, unsigned int &f_frameL, unsigned int &f_frameR, float &f_lerp);
+    bool GetFrameData(unsigned int f_rightFrame, unsigned int f_leftFrame);
     unsigned int GetBonesCount();
     friend class Model;
     friend class ElementManager;

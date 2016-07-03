@@ -19,10 +19,10 @@ class Model
     unsigned long m_animCurrentTick;
     unsigned int m_animState;
     float m_animationSpeed;
+
     glm::vec3 m_position;
     glm::quat m_rotation;
     glm::vec3 m_scale;
-
     glm::mat4 m_localMatrix;
     glm::mat4 m_matrix;
     bool m_rebuildMatrix;

@@ -21,6 +21,7 @@ class Bone
     bool m_forcedPosition;
     bool m_forcedRotation;
     bool m_forcedScale;
+    static glm::mat4 m_identity;
 protected:
     Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale);
     ~Bone();
