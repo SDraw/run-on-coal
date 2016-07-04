@@ -10,8 +10,8 @@ class Model
 {
     Geometry *m_geometry; 
     Skeleton *m_skeleton;
-    btRigidBody* m_rigidBody;
     Animation *m_animation;
+    btRigidBody* m_rigidBody;
     Model *m_parent;
         
     int m_parentBone;

@@ -12,7 +12,7 @@ class Camera
     void UpdateViewMatrix();
 public:
     void SetPerspective(float f_fov, float f_width, float f_height, float f_near, float f_far);
-    void SetOrtho(float l_left,float l_right,float f_bottom,float f_top,float l_near,float l_far);
+    void SetOrtho(float l_left,float l_right,float f_bottom,float f_top,float f_near,float f_far);
 
     void SetPosition(glm::vec3 &f_pos);
     void GetPosition(glm::vec3 &f_pos);

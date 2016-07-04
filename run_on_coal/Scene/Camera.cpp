@@ -22,9 +22,9 @@ void ROC::Camera::SetPerspective(float f_fov, float f_width, float f_height, flo
 {
     m_projectionMatrix = glm::perspectiveFov(f_fov,f_width,f_height,f_near,f_far);
 }
-void ROC::Camera::SetOrtho(float l_left,float l_right,float f_bottom,float f_top,float l_near,float l_far)
+void ROC::Camera::SetOrtho(float l_left,float l_right,float f_bottom,float f_top,float f_near,float f_far)
 {
-    m_projectionMatrix = glm::ortho(l_left,l_right,f_bottom,f_top,l_near,l_far);
+    m_projectionMatrix = glm::ortho(l_left,l_right,f_bottom,f_top,f_near,f_far);
 }
 
 void ROC::Camera::SetPosition(glm::vec3& f_pos)

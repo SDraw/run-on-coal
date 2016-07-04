@@ -94,7 +94,7 @@ void ROC::RenderManager::SetCurrentScene(Scene *f_scene)
             Camera *l_camera = m_currentScene->GetCamera();
             if(l_camera)
             {
-                glm::mat4 l_matrix;
+                static glm::mat4 l_matrix;
                 glm::vec3 l_vec;
                 l_camera->GetProjectionMatrix(l_matrix);
                 m_currentShader->SetProjectionUniformValue(l_matrix);
@@ -159,12 +159,12 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize)
     }
     else m_currentShader->SetAnimatedUniformValue(0U);
 
+    std::bitset<8U> l_materialType;
     for(unsigned int i=0, j=f_model->GetMaterialCount(); i < j; i++)
     {
         bool l_vaoBind = (j == 1U) ? CompareLastVAO(f_model->GetMaterialVAO(i)) : true;
         bool l_textureBind = (j == 1U) ? (CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize) : f_texturize;
 
-        std::bitset<8U> l_materialType;
         f_model->GetMaterialType(i,l_materialType);
         if(!l_materialType.test(1))
         {
