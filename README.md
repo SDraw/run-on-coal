@@ -16,3 +16,4 @@ Simple and lightweight game engine. It provides simplified usage of OpenGL mostl
 
 Want to check it yourself? Just use [last release](https://github.com/SDraw/run-on-coal/releases). It's always accurate to current [wiki](https://github.com/SDraw/run-on-coal/wiki).
 If you have suggestions or bug report, use [issues page](https://github.com/SDraw/run-on-coal/issues).
+Also, you can check [demo scene resource](https://github.com/SDraw/roc-app-demo) to see how it works on Lua scripts level. 
