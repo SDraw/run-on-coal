@@ -30,29 +30,29 @@ ROC::Material::~Material()
     if(m_texture) delete m_texture;
 }
 
-void ROC::Material::SetType(std::bitset<8U> &f_type)
+void ROC::Material::SetType(unsigned char f_type)
 {
     m_type = f_type;
 }
-void ROC::Material::GetType(std::bitset<8U> &f_type)
+unsigned char ROC::Material::GetType()
 {
-    f_type = m_type;
+    return m_type;
 }
 bool ROC::Material::IsDoubleSided()
 {
-    return m_type.test(3);
+    return ((m_type&8U) == 8U);
 }
 bool ROC::Material::IsTransparent()
 {
-    return m_type.test(2);
+    return ((m_type&4U) == 4U);
 }
 bool ROC::Material::IsShady()
 {
-    return m_type.test(0);
+    return ((m_type&1U) == 1U);
 }
 bool ROC::Material::IsDepthable()
 {
-    return m_type.test(1);
+    return ((m_type&2U) == 2U);
 }
 void ROC::Material::GetParams(glm::vec4 &f_params)
 {

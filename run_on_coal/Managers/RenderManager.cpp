@@ -68,8 +68,7 @@ void ROC::RenderManager::DoPulse()
 void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)
 {
     if(m_locked) return;
-    std::bitset<sizeof(GLbitfield)*8> l_bit(f_params);
-    if(l_bit.test(8)) EnableDepth();
+    if((f_params&GL_DEPTH_BUFFER_BIT) == GL_DEPTH_BUFFER_BIT) EnableDepth();
     glClear(f_params);
 }
 void ROC::RenderManager::SetClearColour(glm::vec4 &f_color)
@@ -159,14 +158,14 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize)
     }
     else m_currentShader->SetAnimatedUniformValue(0U);
 
-    std::bitset<8U> l_materialType;
+    unsigned char l_materialType;
     for(unsigned int i=0, j=f_model->GetMaterialCount(); i < j; i++)
     {
         bool l_vaoBind = (j == 1U) ? CompareLastVAO(f_model->GetMaterialVAO(i)) : true;
         bool l_textureBind = (j == 1U) ? (CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize) : f_texturize;
 
-        f_model->GetMaterialType(i,l_materialType);
-        if(!l_materialType.test(1))
+        l_materialType = f_model->GetMaterialType(i);
+        if((l_materialType&2U) != 2U)
         {
             if(m_currentRT)
             {
@@ -175,13 +174,13 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize)
             DisableDepth();
         }
         else EnableDepth();
-        l_materialType.test(2) ? EnableBlending() : DisableBlending();
-        l_materialType.test(3) ? DisableCulling() : EnableCulling();
+        ((l_materialType&4U) == 4U) ? EnableBlending() : DisableBlending();
+        ((l_materialType&8U) == 8U) ? DisableCulling() : EnableCulling();
 
         if(l_vaoBind)
         {
             glm::vec4 l_mvec(1.f);
-            m_currentShader->SetMaterialTypeUniformValue(static_cast<int>(l_materialType.to_ulong()));
+            m_currentShader->SetMaterialTypeUniformValue(static_cast<int>(l_materialType));
             f_model->GetMaterialParam(i,l_mvec);
             m_currentShader->SetMaterialParamUniformValue(l_mvec);
         }

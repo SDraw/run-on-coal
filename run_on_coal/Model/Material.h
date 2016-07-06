@@ -24,12 +24,12 @@ class Material
     Texture *m_texture;
 
     glm::vec4 m_params;
-    std::bitset<8U> m_type;
+    unsigned char m_type;
 protected:
     Material();
     ~Material();
-    void SetType(std::bitset<8U> &f_type);
-    void GetType(std::bitset<8U> &f_type);
+    void SetType(unsigned char f_type);
+    unsigned char GetType();
     bool IsDoubleSided();
     bool IsTransparent();
     bool IsShady();

@@ -6,9 +6,9 @@ namespace Utils
 {
 
 bool ReadFile(std::string &path, std::string &f_cont);
-GLint CheckShader(GLuint f_shader, std::string &f_path);
+GLint CheckShader(GLuint f_shader);
 void GetScreenPosition(glm::vec3 &pos, glm::mat4 &proj, glm::mat4 &view, glm::ivec2 &window, glm::ivec2 &out);
-int ReadEnumString(std::string &f_val, std::string f_enum);
+int ReadEnumString(std::string &f_val, const std::string &f_enum);
 unsigned long GetSystemTick();
 void PathsJoin(std::string &f_out, std::string &f_path1, std::string &f_path2);
 

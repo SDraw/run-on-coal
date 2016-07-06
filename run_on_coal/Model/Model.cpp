@@ -189,10 +189,10 @@ unsigned int ROC::Model::GetMaterialCount()
 {
     return (m_geometry ? m_geometry->GetMaterialCount() : 0);
 }
-void ROC::Model::GetMaterialType(unsigned int f_material, std::bitset<8U> &f_type)
+unsigned char ROC::Model::GetMaterialType(unsigned int f_material)
 {
-    if(!m_geometry) return;
-    m_geometry->GetMaterialType(f_material,f_type);
+    if(!m_geometry) return 0;
+    return m_geometry->GetMaterialType(f_material);
 }
 void ROC::Model::GetMaterialParam(unsigned int f_material,glm::vec4 &f_vec)
 {

@@ -15,6 +15,7 @@ ROC::File::~File()
 bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
 {
     m_file = new std::fstream(f_path,std::ios::out|std::ios::binary);
+    if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = Mode::WriteMode;
     m_path.append(f_rPath);

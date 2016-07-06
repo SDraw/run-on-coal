@@ -58,12 +58,12 @@ bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_
         const char *l_source = l_data.c_str();
         glShaderSource (l_vertexShader, 1,&l_source,NULL);
         glCompileShader (l_vertexShader);
-        if(!Utils::CheckShader(l_vertexShader,f_vpath))
+        if(!Utils::CheckShader(l_vertexShader))
         {
             GLint l_logSize = 0;
             glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
             m_error.resize(l_logSize);
-            glGetShaderInfoLog(l_vertexShader,l_logSize, &l_logSize,(GLchar*)m_error.data());
+            glGetShaderInfoLog(l_vertexShader,l_logSize,&l_logSize,(GLchar*)m_error.data());
             glDeleteShader(l_vertexShader);
             return false;
         }
@@ -85,12 +85,12 @@ bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_
         const char *l_source = l_data.c_str();
         glShaderSource (l_fragmentShader, 1,&l_source,NULL);
         glCompileShader (l_fragmentShader);
-        if(!Utils::CheckShader(l_fragmentShader,f_fpath))
+        if(!Utils::CheckShader(l_fragmentShader))
         {
             GLint l_logSize = 0;
             glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
             m_error.resize(l_logSize);
-            glGetShaderInfoLog(l_fragmentShader,l_logSize, &l_logSize,(GLchar*)m_error.data());
+            glGetShaderInfoLog(l_fragmentShader,l_logSize,&l_logSize,(GLchar*)m_error.data());
             if(l_vertexShader) glDeleteShader(l_vertexShader);
             glDeleteShader(l_fragmentShader);
             return false;
@@ -113,14 +113,14 @@ bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_
             return false;
         }
         const char *l_source = l_data.c_str();
-        glShaderSource (l_geometryShader, 1,&l_source,NULL);
-        glCompileShader (l_geometryShader);
-        if(!Utils::CheckShader(l_geometryShader,f_gpath))
+        glShaderSource(l_geometryShader,1,&l_source,NULL);
+        glCompileShader(l_geometryShader);
+        if(!Utils::CheckShader(l_geometryShader))
         {
             GLint l_logSize = 0;
-            glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
+            glGetShaderiv(l_geometryShader,GL_INFO_LOG_LENGTH,&l_logSize);
             m_error.resize(l_logSize);
-            glGetShaderInfoLog(l_geometryShader,l_logSize, &l_logSize,(GLchar*)m_error.data());
+            glGetShaderInfoLog(l_geometryShader,l_logSize,&l_logSize,(GLchar*)m_error.data());
             if(l_vertexShader) glDeleteShader(l_vertexShader);
             if(l_fragmentShader) glDeleteShader(l_fragmentShader);
             glDeleteShader(l_geometryShader);
@@ -157,17 +157,17 @@ bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_
     }
     if(l_vertexShader) 
     {
-        glDetachShader (m_program,l_vertexShader);
+        glDetachShader(m_program,l_vertexShader);
         glDeleteShader(l_vertexShader);
     }
     if(l_fragmentShader) 
     {
-        glDetachShader (m_program,l_fragmentShader);
+        glDetachShader(m_program,l_fragmentShader);
         glDeleteShader(l_fragmentShader);
     }
     if(l_geometryShader) 
     {
-        glDetachShader (m_program, l_geometryShader);
+        glDetachShader(m_program,l_geometryShader);
         glDeleteShader(l_geometryShader);
     }
     SetupDefaultUniformsAndLocations();
@@ -212,6 +212,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform,0);
     //Time
     m_timeUniform = glGetUniformLocation(m_program,"gTime");
+    //Color (RenderTarget, Texture, Font)
     m_colorUniform = glGetUniformLocation(m_program,"gColor");
 }
 

@@ -44,7 +44,7 @@ public:
     void GetMatrix(glm::mat4 &f_mat);
 
     unsigned int GetMaterialCount();
-    void GetMaterialType(unsigned int f_material, std::bitset<8U> &f_type);
+    unsigned char GetMaterialType(unsigned int f_material);
     void GetMaterialParam(unsigned int f_material, glm::vec4 &f_vec);
 
     bool PlayAnimation();

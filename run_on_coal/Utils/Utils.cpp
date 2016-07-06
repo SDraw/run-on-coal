@@ -21,10 +21,10 @@ bool ReadFile(std::string &path, std::string &f_cont)
     return true;
 }
 
-GLint CheckShader(GLuint f_shader, std::string &f_path)
+GLint CheckShader(GLuint f_shader)
 {
-    GLint l_params = -1;
-    glGetShaderiv (f_shader, GL_COMPILE_STATUS, &l_params);
+    GLint l_params;
+    glGetShaderiv(f_shader,GL_COMPILE_STATUS,&l_params);
     return l_params;
 }
 
@@ -32,15 +32,15 @@ void GetScreenPosition(glm::vec3 &pos, glm::mat4 &proj, glm::mat4 &view, glm::iv
 {
     glm::vec4 l_result = proj*view*glm::vec4(pos,1.0f);
     l_result /= l_result.w;
-    out = glm::ivec2(window.x/2*(1.f+l_result.x),window.y/2*(1.f+l_result.y));
+    out.x = window.x/2*(1.f+l_result.x);
+    out.y = window.y/2*(1.f+l_result.y);
 }
 
-int ReadEnumString(std::string &f_val, std::string f_enum)
+int ReadEnumString(std::string &f_val, const std::string &f_enum)
 {
     size_t first = f_enum.find(f_val);
-    if (first == std::string::npos) return -1;
-    int l_ret = std::count(f_enum.begin(),f_enum.begin()+first,',');
-    return l_ret;
+    if(first == std::string::npos) return -1;
+    return std::count(f_enum.begin(),f_enum.begin()+first,',');
 }
 unsigned long GetSystemTick()
 {

@@ -214,7 +214,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
         }
 
         Material *l_material = new Material();
-        l_material->SetType(std::bitset<8U>(l_materialType));
+        l_material->SetType(l_materialType);
         l_material->SetParams(l_materialParam);
         l_material->LoadVertices(l_tempVertex);
         l_material->LoadUVs(l_tempUV);
@@ -340,10 +340,10 @@ unsigned int ROC::Geometry::GetMaterialCount()
 {
     return m_materialCount;
 }
-void ROC::Geometry::GetMaterialType(unsigned int f_material, std::bitset<8U> &f_type)
+unsigned char ROC::Geometry::GetMaterialType(unsigned int f_material)
 {
-    if(f_material >= m_materialCount) return;
-    m_materialVector[f_material]->GetType(f_type);
+    if(f_material >= m_materialCount) return 0;
+    return m_materialVector[f_material]->GetType();
 }
 void ROC::Geometry::GetMaterialParam(unsigned int f_material,glm::vec4 &f_vec)
 {
