@@ -212,19 +212,15 @@ int modelDraw(lua_State *f_vm)
 {
     Model *l_model;
     bool l_texturize = true;
-    bool l_frustum = false;
-    lua_Number l_radius = 1.0;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
     argStream.ReadNextBoolean(l_texturize);
-    argStream.ReadNextBoolean(l_frustum);
-    argStream.ReadNextNumber(l_radius);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    LuaManager::m_corePointer->GetRenderManager()->Render(l_model,l_texturize,l_frustum,static_cast<float>(l_radius));
+    LuaManager::m_corePointer->GetRenderManager()->Render(l_model,l_texturize);
     lua_pushboolean(f_vm,1);
     return 1;
 }

@@ -342,7 +342,7 @@ unsigned int ROC::Geometry::GetMaterialCount()
 }
 unsigned char ROC::Geometry::GetMaterialType(unsigned int f_material)
 {
-    if(f_material >= m_materialCount) return 0U;
+    if(f_material >= m_materialCount) return 0;
     return m_materialVector[f_material]->GetType();
 }
 void ROC::Geometry::GetMaterialParam(unsigned int f_material,glm::vec4 &f_vec)
