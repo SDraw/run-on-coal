@@ -18,8 +18,8 @@
 #define GLM_FORCE_INLINE
 #define GLM_FORCE_AVX
 #include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/matrix_access.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtx/compatibility.hpp"
 #include "glm/gtx/matrix_decompose.hpp"

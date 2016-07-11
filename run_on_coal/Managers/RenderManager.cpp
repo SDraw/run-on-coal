@@ -103,6 +103,7 @@ void ROC::RenderManager::SetCurrentScene(Scene *f_scene)
                 m_currentShader->SetCameraPositionUniformValue(l_vec);
                 l_camera->GetDirection(l_vec);
                 m_currentShader->SetCameraDirectionUniformValue(l_vec);
+                l_camera->UpdateFrustumPlanes();
             }
             Light *l_light = m_currentScene->GetLight();
             if(l_light)
@@ -139,10 +140,18 @@ void ROC::RenderManager::CheckShaderForCurrent(Shader *f_shader)
     if(m_currentShader == f_shader) m_currentShader = NULL;
 }
 
-void ROC::RenderManager::Render(Model *f_model, bool f_texturize)
+void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum, float f_radius)
 {
     if(m_locked || !m_currentShader || !m_currentScene || !f_model->IsDrawable()) return;
 
+    if(f_frustum)
+    {
+        Camera *l_camera = m_currentScene->GetCamera();
+        if(!l_camera) return;
+        glm::vec3 l_pos;
+        f_model->GetPosition(l_pos,true);
+        if(!l_camera->IsInFrustum(l_pos,f_radius)) return;
+    }
     f_model->GetMatrix(m_modelMatrix);
     m_currentShader->SetModelUniformValue(m_modelMatrix);
 
@@ -158,13 +167,11 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize)
     }
     else m_currentShader->SetAnimatedUniformValue(0U);
 
-    unsigned char l_materialType;
     for(unsigned int i=0, j=f_model->GetMaterialCount(); i < j; i++)
     {
         bool l_vaoBind = (j == 1U) ? CompareLastVAO(f_model->GetMaterialVAO(i)) : true;
         bool l_textureBind = (j == 1U) ? (CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize) : f_texturize;
-
-        l_materialType = f_model->GetMaterialType(i);
+        unsigned char l_materialType = f_model->GetMaterialType(i);
         if((l_materialType&2U) != 2U)
         {
             if(m_currentRT)
