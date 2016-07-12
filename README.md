@@ -11,6 +11,7 @@ Simple and lightweight game engine. It provides simplified usage of OpenGL mostl
 * Events system
 * Multi-language fonts support
 * Basic physics
+* Frustum culling
 
 ![Scene made with engine](http://i.imgur.com/VFUB7MN.png)
 
