@@ -54,6 +54,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Model
     lua_register(m_pVM,"modelCreate",Lua::modelCreate);
     lua_register(m_pVM,"modelDestroy",Lua::modelDestroy);
+    lua_register(m_pVM,"modelGetGeometry",Lua::modelGetGeometry);
     lua_register(m_pVM,"modelGetType",Lua::modelGetType);
     lua_register(m_pVM,"modelSetPosition",Lua::modelSetPosition);
     lua_register(m_pVM,"modelGetPosition",Lua::modelGetPosition);
@@ -65,7 +66,9 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"modelDraw",Lua::modelDraw);
     lua_register(m_pVM,"modelAttach",Lua::modelAttach);
     lua_register(m_pVM,"modelDettach",Lua::modelDettach);
+    lua_register(m_pVM,"modelGetParent",Lua::modelGetParent);
     lua_register(m_pVM,"modelSetAnimation",Lua::modelSetAnimation);
+    lua_register(m_pVM,"modelGetAnimation",Lua::modelGetAnimation);
     lua_register(m_pVM,"modelPlayAnimation",Lua::modelPlayAnimation);
     lua_register(m_pVM,"modelPauseAnimation",Lua::modelPauseAnimation);
     lua_register(m_pVM,"modelResetAnimation",Lua::modelResetAnimation);
@@ -96,7 +99,9 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"sceneCreate",Lua::sceneCreate);
     lua_register(m_pVM,"sceneDestroy",Lua::sceneDestroy);
     lua_register(m_pVM,"sceneSetCamera",Lua::sceneSetCamera);
+    lua_register(m_pVM,"sceneGetCamera",Lua::sceneGetCamera);
     lua_register(m_pVM,"sceneSetLight",Lua::sceneSetLight);
+    lua_register(m_pVM,"sceneGetLight",Lua::sceneGetLight);
 
     //Camera
     lua_register(m_pVM,"cameraCreate",Lua::cameraCreate);

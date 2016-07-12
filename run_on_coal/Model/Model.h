@@ -82,6 +82,7 @@ public:
     bool SetFriction(float f_val);
     float GetFriction();
 
+    Geometry* GetGeometry();
     Model* GetParent();
     Animation* GetAnimation();
 protected:

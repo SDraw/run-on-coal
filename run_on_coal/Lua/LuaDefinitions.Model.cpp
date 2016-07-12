@@ -44,6 +44,20 @@ int modelDestroy(lua_State *f_vm)
     lua_pushboolean(f_vm,result);
     return 1;
 }
+int modelGetGeometry(lua_State *f_vm)
+{
+    Model *l_model;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    Geometry *l_geometry = l_model->GetGeometry();
+    l_geometry ? lua_pushlightuserdata(f_vm,l_geometry) : lua_pushboolean(f_vm,0);
+    return 1;
+}
 int modelGetType(lua_State *f_vm)
 {
     Model *l_model;
@@ -260,6 +274,21 @@ int modelDettach(lua_State *f_vm)
     lua_pushboolean(f_vm,result);
     return 1;
 }
+int modelGetParent(lua_State *f_vm)
+{
+    Model *l_model;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    Model *l_parent = l_model->GetParent();
+    l_parent ? lua_pushlightuserdata(f_vm,l_parent) : lua_pushboolean(f_vm,0);
+    return 1;
+}
+
 int modelSetAnimation(lua_State *f_vm)
 {
     Model *l_model;
@@ -274,6 +303,20 @@ int modelSetAnimation(lua_State *f_vm)
     }
     bool result = LuaManager::m_corePointer->GetInheritManager()->SetModelAnimation(l_model,l_anim);
     lua_pushboolean(f_vm,result);
+    return 1;
+}
+int modelGetAnimation(lua_State *f_vm)
+{
+    Model *l_model;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    Animation *l_anim = l_model->GetAnimation();
+    l_anim ? lua_pushlightuserdata(f_vm,l_anim) : lua_pushboolean(f_vm,0);
     return 1;
 }
 int modelPlayAnimation(lua_State *f_vm)

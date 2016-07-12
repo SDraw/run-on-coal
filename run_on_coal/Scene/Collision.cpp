@@ -20,7 +20,7 @@ btRigidBody* ROC::Collision::GetRigidBody()
 }
 bool ROC::Collision::Create(unsigned int f_type, glm::vec3 &f_size)
 {
-    if(m_rigidBody || f_type >= 5U) return false;
+    if(m_rigidBody || f_type > COLLISION_TYPE_CONE) return false;
     btVector3 l_inertia;
     btCollisionShape *l_shape = NULL;
     switch(f_type)

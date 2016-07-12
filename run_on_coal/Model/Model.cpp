@@ -97,6 +97,11 @@ void ROC::Model::UpdateAnimationTick()
     m_animCurrentTick %= m_animation->m_durationTotal;
 }
 
+ROC::Geometry* ROC::Model::GetGeometry()
+{
+    return m_geometry;
+}
+
 bool ROC::Model::IsDrawable()
 {
     return (m_geometry != NULL);

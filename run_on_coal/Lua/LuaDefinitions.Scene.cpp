@@ -3,6 +3,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LuaManager.h"
+#include "Scene/Scene.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Scene.h"
 #include "Utils/Utils.h"
@@ -48,6 +49,20 @@ int sceneSetCamera(lua_State *f_vm)
     lua_pushboolean(f_vm,result);
     return 1;
 }
+int sceneGetCamera(lua_State *f_vm)
+{
+    Scene *l_scene;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_scene,ElementType::SceneElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    Camera *l_camera = l_scene->GetCamera();
+    l_camera ? lua_pushlightuserdata(f_vm,l_camera) : lua_pushboolean(f_vm,0);
+    return 1;
+}
 int sceneSetLight(lua_State *f_vm)
 {
     Scene *l_scene;
@@ -62,6 +77,20 @@ int sceneSetLight(lua_State *f_vm)
     }
     bool result = LuaManager::m_corePointer->GetInheritManager()->SetSceneLight(l_scene,l_light);
     lua_pushboolean(f_vm,result);
+    return 1;
+}
+int sceneGetLight(lua_State *f_vm)
+{
+    Scene *l_scene;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_scene,ElementType::SceneElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    Light *l_light = l_scene->GetLight();
+    l_light ? lua_pushlightuserdata(f_vm,l_light) : lua_pushboolean(f_vm,0);
     return 1;
 }
 
