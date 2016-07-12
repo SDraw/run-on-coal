@@ -1,4 +1,7 @@
 #pragma once
+#define FILEMODE_NONE -1
+#define FILEMODE_READ 0
+#define FILEMODE_WRITE 1
 
 namespace ROC
 {
@@ -7,8 +10,7 @@ class File
 {
     std::fstream *m_file;
     std::string m_path;
-    unsigned char m_type;
-    enum Mode { ReadMode = 1U, WriteMode };
+    int m_type;
 public:
     size_t Read(std::string &f_data, size_t f_lenght);
     size_t Write(std::string &f_data);

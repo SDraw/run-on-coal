@@ -54,7 +54,7 @@ public:
     Sound* CreateSound(std::string &f_path, bool f_loop);
     bool DestroySound(Sound *f_sound);
 
-    RenderTarget* CreateRenderTarget(unsigned int f_num,glm::ivec2 &f_size,unsigned int f_type);
+    RenderTarget* CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, unsigned int f_type);
     bool DestroyRenderTarget(RenderTarget *f_rt);
 
     Texture* CreateTexture(std::string &f_path, unsigned int f_type, bool f_compress = false);
@@ -71,7 +71,7 @@ public:
     File* OpenFile(std::string &f_path,bool f_ro);
     bool DestroyFile(File *f_file);
 
-    Collision* CreateCollision(unsigned char f_type, glm::vec3 &f_size);
+    Collision* CreateCollision(unsigned int f_type, glm::vec3 &f_size);
     bool DestroyCollision(Collision *f_col);
 protected:
     ElementManager(Core *f_core);

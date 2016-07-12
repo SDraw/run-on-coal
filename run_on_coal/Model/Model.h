@@ -1,4 +1,12 @@
 #pragma once
+#define MODEL_RIGIDITY_TYPE_SPHERE 0U
+#define MODEL_RIGIDITY_TYPE_BOX 1U
+#define MODEL_RIGIDITY_TYPE_CYLINDER 2U
+#define MODEL_RIGIDITY_TYPE_CAPSULE 3U
+#define MODEL_RIGIDITY_TYPE_CONE 4U
+#define MODEL_TYPE_NONE 0
+#define MODEL_TYPE_STATIC 1
+#define MODEL_TYPE_ANIMATED 2
 
 namespace ROC
 {
@@ -17,7 +25,8 @@ class Model
     int m_parentBone;
     unsigned long m_animLastTick;
     unsigned long m_animCurrentTick;
-    unsigned int m_animState;
+    enum AnimationState { None = 0U, Paused, Playing };
+    AnimationState m_animState;
     float m_animationSpeed;
 
     glm::vec3 m_position;
@@ -75,9 +84,6 @@ public:
 
     Model* GetParent();
     Animation* GetAnimation();
-
-    enum AnimationState { None = 0U, Paused, Playing };
-    enum RigidType { Sphere = 0U, Box, Cylinder, Capsule, Cone, Last };
 protected:
     Model(Geometry *f_geometry);
     ~Model();

@@ -1,4 +1,8 @@
 #pragma once
+#define MATERIAL_BIT_SHADING 1U
+#define MATERIAL_BIT_DEPTH 2U
+#define MATERIAL_BIT_TRANSPARENT 4U
+#define MATERIAL_BIT_DOUBLESIDE 8U
 
 namespace ROC
 {

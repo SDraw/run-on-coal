@@ -40,19 +40,19 @@ unsigned char ROC::Material::GetType()
 }
 bool ROC::Material::IsDoubleSided()
 {
-    return ((m_type&8U) == 8U);
+    return ((m_type&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE);
 }
 bool ROC::Material::IsTransparent()
 {
-    return ((m_type&4U) == 4U);
+    return ((m_type&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT);
 }
 bool ROC::Material::IsShady()
 {
-    return ((m_type&1U) == 1U);
+    return ((m_type&MATERIAL_BIT_SHADING) == MATERIAL_BIT_SHADING);
 }
 bool ROC::Material::IsDepthable()
 {
-    return ((m_type&2U) == 2U);
+    return ((m_type&MATERIAL_BIT_DEPTH) == MATERIAL_BIT_DEPTH);
 }
 void ROC::Material::GetParams(glm::vec4 &f_params)
 {
@@ -66,7 +66,7 @@ void ROC::Material::SetParams(glm::vec4 &f_params)
 void ROC::Material::LoadTexture(std::string &f_path, bool f_compressed)
 {
     m_texture = new Texture();
-    if(!m_texture->Load(f_path, IsTransparent() ? Texture::TextureType::RGBA:Texture::TextureType::RGB,f_compressed))
+    if(!m_texture->Load(f_path,IsTransparent() ? TEXTURE_TYPE_RGBA : TEXTURE_TYPE_RGB,f_compressed))
     {
         delete m_texture;
         m_texture = NULL;
@@ -77,80 +77,80 @@ void ROC::Material::LoadVertices(std::vector<glm::vec3> &f_vector)
 {
     if(m_bVertexVBO) return;
     m_verticesCount = f_vector.size();
-    glGenBuffers (1, &m_vertexVBO);
-    glBindBuffer (GL_ARRAY_BUFFER, m_vertexVBO);
-    glBufferData (GL_ARRAY_BUFFER, m_verticesCount*sizeof(glm::vec3),f_vector.data(),GL_STATIC_DRAW);
+    glGenBuffers(1,&m_vertexVBO);
+    glBindBuffer(GL_ARRAY_BUFFER,m_vertexVBO);
+    glBufferData(GL_ARRAY_BUFFER,m_verticesCount*sizeof(glm::vec3),f_vector.data(),GL_STATIC_DRAW);
     m_bVertexVBO = true;
 }
 void ROC::Material::LoadUVs(std::vector<glm::vec2> &f_vector)
 {
     if(m_bUvVBO) return;
-    glGenBuffers (1, &m_uvVBO);
-    glBindBuffer (GL_ARRAY_BUFFER, m_uvVBO);
-    glBufferData (GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec2),f_vector.data(),GL_STATIC_DRAW);
+    glGenBuffers(1,&m_uvVBO);
+    glBindBuffer(GL_ARRAY_BUFFER,m_uvVBO);
+    glBufferData(GL_ARRAY_BUFFER,f_vector.size()*sizeof(glm::vec2),f_vector.data(),GL_STATIC_DRAW);
     m_bUvVBO = true;
 }
 void ROC::Material::LoadNormals(std::vector<glm::vec3> &f_vector)
 {
     if(m_bNormalVBO) return;
-    glGenBuffers (1, &m_normalVBO);
-    glBindBuffer (GL_ARRAY_BUFFER, m_normalVBO);
-    glBufferData (GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec3),f_vector.data(),GL_STATIC_DRAW);
+    glGenBuffers(1,&m_normalVBO);
+    glBindBuffer(GL_ARRAY_BUFFER,m_normalVBO);
+    glBufferData(GL_ARRAY_BUFFER,f_vector.size()*sizeof(glm::vec3),f_vector.data(),GL_STATIC_DRAW);
     m_bNormalVBO = true;
 }
 void ROC::Material::LoadWeights(std::vector<glm::vec4> &f_vector)
 {
     if(m_bWeightVBO) return;
-    glGenBuffers (1, &m_weightVBO);
-    glBindBuffer (GL_ARRAY_BUFFER, m_weightVBO);
-    glBufferData (GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec4),f_vector.data(),GL_STATIC_DRAW);
+    glGenBuffers(1,&m_weightVBO);
+    glBindBuffer(GL_ARRAY_BUFFER,m_weightVBO);
+    glBufferData(GL_ARRAY_BUFFER,f_vector.size()*sizeof(glm::vec4),f_vector.data(),GL_STATIC_DRAW);
     m_bWeightVBO = true;
 }
 void ROC::Material::LoadIndices(std::vector<glm::ivec4> &f_vector)
 {
     if(m_bIndexVBO) return;
-    glGenBuffers (1, &m_indexVBO);
-    glBindBuffer (GL_ARRAY_BUFFER, m_indexVBO);
-    glBufferData (GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::ivec4),f_vector.data(), GL_STATIC_DRAW);
+    glGenBuffers(1,&m_indexVBO);
+    glBindBuffer(GL_ARRAY_BUFFER,m_indexVBO);
+    glBufferData(GL_ARRAY_BUFFER,f_vector.size()*sizeof(glm::ivec4),f_vector.data(),GL_STATIC_DRAW);
     m_bIndexVBO = true;
 }
 
 void ROC::Material::GenerateVAO()
 {
-    glGenVertexArrays (1, &m_VAO);
-    glBindVertexArray (m_VAO);
+    glGenVertexArrays(1,&m_VAO);
+    glBindVertexArray(m_VAO);
 
     if(m_bVertexVBO)
     {
-        glEnableVertexAttribArray (0);
-        glBindBuffer (GL_ARRAY_BUFFER, m_vertexVBO);
-        glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER,m_vertexVBO);
+        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
     }
     if(m_bUvVBO)
     {
-        glEnableVertexAttribArray (1);
-        glBindBuffer (GL_ARRAY_BUFFER, m_uvVBO);
-        glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER,m_uvVBO);
+        glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
     }
     if(m_bNormalVBO)
     {
-        glEnableVertexAttribArray (2);
-        glBindBuffer (GL_ARRAY_BUFFER, m_normalVBO);
-        glVertexAttribPointer (2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER,m_normalVBO);
+        glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,0,NULL);
     }
     if(m_bWeightVBO)
     {
-        glEnableVertexAttribArray (3);
-        glBindBuffer (GL_ARRAY_BUFFER, m_weightVBO);
-        glVertexAttribPointer (3, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+        glEnableVertexAttribArray(3);
+        glBindBuffer(GL_ARRAY_BUFFER,m_weightVBO);
+        glVertexAttribPointer(3,4,GL_FLOAT,GL_FALSE,0,NULL);
     }
     if(m_bIndexVBO)
     {
-        glEnableVertexAttribArray (4);
-        glBindBuffer (GL_ARRAY_BUFFER, m_indexVBO);
-        glVertexAttribIPointer (4, 4, GL_UNSIGNED_INT, 0, NULL);
+        glEnableVertexAttribArray(4);
+        glBindBuffer(GL_ARRAY_BUFFER,m_indexVBO);
+        glVertexAttribIPointer(4,4,GL_UNSIGNED_INT,0,NULL);
     }
-    glBindVertexArray (NULL);
+    glBindVertexArray(NULL);
 
     m_bVAO = true;
 }
@@ -162,7 +162,7 @@ void ROC::Material::Draw(bool f_texturize, bool f_binding)
     {
         if(m_texture) m_texture->Bind(0);
     }
-    if(f_binding) glBindVertexArray (m_VAO);
+    if(f_binding) glBindVertexArray(m_VAO);
     glDrawArrays(GL_TRIANGLES,0,m_verticesCount);
 }
 

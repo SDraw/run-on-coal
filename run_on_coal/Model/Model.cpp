@@ -103,8 +103,7 @@ bool ROC::Model::IsDrawable()
 }
 int ROC::Model::GetType()
 {
-    //0 - none, 1 - static, 2 - rigged/animated
-    return (m_geometry ? (m_skeleton ? 2 : 1) : 0);
+    return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE);
 }
 bool ROC::Model::IsRigid()
 {
@@ -363,26 +362,26 @@ GLuint ROC::Model::GetMaterialTexture(unsigned int f_material)
 bool ROC::Model::SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim)
 {
     if(m_rigidBody || m_parent || f_mass < 0.f) return false;
-    if(f_type >= RigidType::Last) return false;
+    if(f_type > MODEL_RIGIDITY_TYPE_CONE) return false;
 
     btVector3 l_inertia;
     btCollisionShape *l_shape = NULL;
 
     switch(f_type)
     {
-        case RigidType::Box:
-            l_shape = new btBoxShape((btVector3&)f_dim);
-            break;
-        case RigidType::Sphere:
+        case MODEL_RIGIDITY_TYPE_SPHERE:
             l_shape = new btSphereShape(f_dim.x);
             break;
-        case RigidType::Cylinder:
+        case MODEL_RIGIDITY_TYPE_BOX:
+            l_shape = new btBoxShape((btVector3&)f_dim);
+            break;
+        case MODEL_RIGIDITY_TYPE_CYLINDER:
             l_shape = new btCylinderShape((btVector3&)f_dim);
             break;
-        case RigidType::Capsule:
+        case MODEL_RIGIDITY_TYPE_CAPSULE:
             l_shape = new btCapsuleShape(f_dim.x,f_dim.y);
             break;
-        case RigidType::Cone:
+        case MODEL_RIGIDITY_TYPE_CONE:
             l_shape = new btConeShape(f_dim.x,f_dim.y);
             break;
     }

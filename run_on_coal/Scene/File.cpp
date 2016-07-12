@@ -5,7 +5,7 @@
 ROC::File::File()
 {
     m_file = NULL;
-    m_type = 0U;
+    m_type = FILEMODE_NONE;
 }
 ROC::File::~File()
 {
@@ -17,7 +17,7 @@ bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
     m_file = new std::fstream(f_path,std::ios::out|std::ios::binary);
     if(!m_file) return false;
     if(m_file->fail()) return false;
-    m_type = Mode::WriteMode;
+    m_type = FILEMODE_WRITE;
     m_path.append(f_rPath);
     return true;
 }
@@ -25,7 +25,7 @@ bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
 {
     m_file = new std::fstream(f_path,(f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
     if(m_file->fail()) return false;
-    m_type = f_ro ? Mode::ReadMode : Mode::WriteMode;
+    m_type = f_ro ? FILEMODE_READ : FILEMODE_WRITE;
     m_path.append(f_rPath);
     return true;
 }
@@ -38,7 +38,7 @@ size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
 }
 size_t ROC::File::Write(std::string &f_data)
 {
-    if(m_type != Mode::WriteMode) return 0U;
+    if(m_type != FILEMODE_WRITE) return 0U;
     std::streampos l_start = m_file->tellg();
     m_file->write(&f_data[0],f_data.size());
     if(m_file->fail()) return 0U;
@@ -48,7 +48,7 @@ size_t ROC::File::Write(std::string &f_data)
 size_t ROC::File::GetSize()
 {
     size_t l_size = 0U;
-    if(m_type == Mode::ReadMode)
+    if(m_type == FILEMODE_READ)
     {
         std::streampos l_last = m_file->tellg();
         m_file->seekg(SEEK_SET,std::ios::end);
@@ -67,13 +67,13 @@ size_t ROC::File::GetSize()
 
 bool ROC::File::SetPosition(size_t f_pos)
 {
-    if(m_type == Mode::ReadMode) m_file->seekg(SEEK_SET,f_pos);
+    if(m_type == FILEMODE_READ) m_file->seekg(SEEK_SET,f_pos);
     else m_file->seekp(SEEK_SET,f_pos);
     return !m_file->fail();
 }
 size_t ROC::File::GetPosition()
 {
-    return static_cast<size_t>((m_type == Mode::ReadMode) ? m_file->tellg() : m_file->tellp());
+    return static_cast<size_t>((m_type == FILEMODE_READ) ? m_file->tellg() : m_file->tellp());
 }
 
 void ROC::File::GetPath(std::string &f_string)

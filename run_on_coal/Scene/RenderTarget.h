@@ -1,4 +1,9 @@
 #pragma once
+#define RENDERTARGET_TYPE_NONE -1
+#define RENDERTARGET_TYPE_DEPTH 0
+#define RENDERTARGET_TYPE_RGB 1
+#define RENDERTARGET_TYPE_RGBA 2
+#define RENDERTARGET_TYPE_RGBF 3
 
 namespace ROC
 {
@@ -22,13 +27,10 @@ public:
     bool IsColored();
     bool IsTransparent();
     bool IsDepthable();
-    enum RenderTargetType {
-        Depth = 0U, RGB, RGBA, RGBF
-    };
 protected:
     RenderTarget();
     ~RenderTarget();
-    bool Create(unsigned int f_num,glm::ivec2 &f_size,unsigned int f_type);
+    bool Create(unsigned int f_num, glm::ivec2 &f_size, int f_type);
     void Enable();
     GLuint GetTexture();
     void GetError(std::string &f_str);

@@ -3,7 +3,7 @@
 
 ROC::Texture::Texture()
 {
-    m_type = 0U;
+    m_type = TEXTURE_TYPE_NONE;
     m_texture = 0U;
 }
 ROC::Texture::~Texture()
@@ -11,12 +11,12 @@ ROC::Texture::~Texture()
     if(m_texture) glDeleteTextures(1,&m_texture);
 }
 
-bool ROC::Texture::Load(std::string &f_path, unsigned int f_type, bool f_compress)
+bool ROC::Texture::Load(std::string &f_path, int f_type, bool f_compress)
 {
     unsigned l_width, l_height;
     std::vector<unsigned char> l_texture;
     bool l_fail = false;
-    if(lodepng::decode(l_texture,l_width,l_height,f_path,(f_type == TextureType::RGB) ? LCT_RGB:LCT_RGBA))
+    if(lodepng::decode(l_texture,l_width,l_height,f_path,(f_type == TEXTURE_TYPE_RGB) ? LCT_RGB:LCT_RGBA))
     {
         //Let's use grey and orange tile for failed texture
         for(int i=0; i < 3; i++) l_texture.push_back(0x7F);
@@ -28,7 +28,7 @@ bool ROC::Texture::Load(std::string &f_path, unsigned int f_type, bool f_compres
         }
         for(int i=0; i < 3; i++) l_texture.push_back(0x7F);
         l_width = l_height = 2U;
-        f_type = TextureType::RGB;
+        f_type = TEXTURE_TYPE_RGB;
         l_fail = true;
     }
     glGenTextures(1, &m_texture);
@@ -37,7 +37,7 @@ bool ROC::Texture::Load(std::string &f_path, unsigned int f_type, bool f_compres
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, l_fail ? GL_NEAREST:GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, l_fail ? GL_NEAREST:GL_LINEAR );
-    glTexImage2D(GL_TEXTURE_2D,0,(f_type == TextureType::RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA),l_width,l_height,0,(f_type == TextureType::RGB) ? GL_RGB:GL_RGBA,GL_UNSIGNED_BYTE,l_texture.data());
+    glTexImage2D(GL_TEXTURE_2D,0,(f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA),l_width,l_height,0,(f_type == TEXTURE_TYPE_RGB) ? GL_RGB:GL_RGBA,GL_UNSIGNED_BYTE,l_texture.data());
     l_texture.clear();
 
     m_type = f_type;
@@ -62,7 +62,7 @@ bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, bool f_compress
         l_texture.clear();
     }
 
-    m_type = TextureType::Cubemap;
+    m_type = TEXTURE_TYPE_CUBEMAP;
     return true;
 }
 
@@ -71,10 +71,10 @@ bool ROC::Texture::Bind(unsigned int f_bind)
     if(f_bind) glActiveTexture(GL_TEXTURE0+f_bind);
     switch(m_type)
     {
-        case TextureType::RGB: case TextureType::RGBA:
+        case TEXTURE_TYPE_RGB: case TEXTURE_TYPE_RGBA:
             glBindTexture(GL_TEXTURE_2D,m_texture);
             break;
-        case TextureType::Cubemap:
+        case TEXTURE_TYPE_CUBEMAP:
             glBindTexture(GL_TEXTURE_CUBE_MAP,m_texture);
             break;
     }
@@ -84,11 +84,11 @@ bool ROC::Texture::Bind(unsigned int f_bind)
 
 bool ROC::Texture::IsTransparent()
 {
-    return (m_type == TextureType::RGBA);
+    return (m_type == TEXTURE_TYPE_RGBA);
 }
 bool ROC::Texture::IsCubic()
 {
-    return (m_type == TextureType::Cubemap);
+    return (m_type == TEXTURE_TYPE_CUBEMAP);
 }
 
 GLuint ROC::Texture::GetTexture()

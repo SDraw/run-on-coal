@@ -18,26 +18,26 @@ btRigidBody* ROC::Collision::GetRigidBody()
 {
     return m_rigidBody;
 }
-bool ROC::Collision::Create(unsigned char f_type, glm::vec3 &f_size)
+bool ROC::Collision::Create(unsigned int f_type, glm::vec3 &f_size)
 {
-    if(m_rigidBody || f_type >= RigidType::Last) return false;
+    if(m_rigidBody || f_type >= 5U) return false;
     btVector3 l_inertia;
     btCollisionShape *l_shape = NULL;
     switch(f_type)
     {
-        case RigidType::Box:
-            l_shape = new btBoxShape((btVector3&)f_size);
-            break;
-        case RigidType::Sphere:
+        case COLLISION_TYPE_SPHERE:
             l_shape = new btSphereShape(f_size.x);
             break;
-        case RigidType::Cylinder:
+        case COLLISION_TYPE_BOX:
+            l_shape = new btBoxShape((btVector3&)f_size);
+            break;
+        case COLLISION_TYPE_CYLINDER:
             l_shape = new btCylinderShape((btVector3&)f_size);
             break;
-        case RigidType::Capsule:
+        case COLLISION_TYPE_CAPSULE:
             l_shape = new btCapsuleShape(f_size.x,f_size.y);
             break;
-        case RigidType::Cone:
+        case COLLISION_TYPE_CONE:
             l_shape = new btConeShape(f_size.x,f_size.y);
             break;
     }

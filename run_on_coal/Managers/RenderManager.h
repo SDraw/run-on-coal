@@ -11,6 +11,7 @@ class Quad;
 class RenderTarget;
 class Texture;
 class Font;
+class LuaArguments;
 class RenderManager
 {
     Core *m_core;
@@ -24,7 +25,15 @@ class RenderManager
 
     std::vector<glm::mat4> m_boneData;
     glm::mat4 m_modelMatrix;
+    glm::vec3 m_modelPosition;
+    glm::vec4 m_materialParam;
     glm::mat4 m_textureMatrix;
+    glm::ivec2 m_renderTargetSize;
+    glm::mat4 m_sceneMatrix;
+    glm::vec3 m_sceneVector;
+    glm::vec4 m_sceneParam;
+
+    static LuaArguments m_argument;
 
     //OpenGL calls reducing
     GLuint m_lastVAO;

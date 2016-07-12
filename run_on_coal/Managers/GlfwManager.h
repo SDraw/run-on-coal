@@ -5,11 +5,15 @@ namespace ROC
 
 class Core;
 class Cursor;
+class LuaArguments;
 class GlfwManager
 {
     Core *m_core;
 
     GLFWwindow *m_window;
+
+    static LuaArguments m_argument;
+    std::string m_input;
 public:
     static void WindowResizeCallback(GLFWwindow *window, int width, int height);
     static void KeyboardCallback(GLFWwindow *window, int key, int scancode, int action, int mods);

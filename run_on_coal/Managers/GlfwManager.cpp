@@ -9,71 +9,74 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
 
+ROC::LuaArguments ROC::GlfwManager::m_argument = ROC::LuaArguments();;
+
 void ROC::GlfwManager::WindowResizeCallback(GLFWwindow *window, int width, int height)
 {
     EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::WindowResize)) return;
-    ROC::LuaArguments l_args;
-    l_args.PushArgument(width);
-    l_args.PushArgument(height);
-    l_eventManager->CallEvent(EventType::WindowResize,l_args);
+    m_argument.PushArgument(width);
+    m_argument.PushArgument(height);
+    l_eventManager->CallEvent(EventType::WindowResize,m_argument);
+    m_argument.Clear();
 }
 void ROC::GlfwManager::KeyboardCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::KeyPress)) return;
-    ROC::LuaArguments l_args;
-    l_args.PushArgument(key);
-    l_args.PushArgument(scancode);
-    l_args.PushArgument(action);
-    l_args.PushArgument(mods);
-    l_eventManager->CallEvent(EventType::KeyPress,l_args);
+    m_argument.PushArgument(key);
+    m_argument.PushArgument(scancode);
+    m_argument.PushArgument(action);
+    m_argument.PushArgument(mods);
+    l_eventManager->CallEvent(EventType::KeyPress,m_argument);
+    m_argument.Clear();
 }
 void ROC::GlfwManager::MouseKeyCallback(GLFWwindow *window, int button, int action, int mods)
 {
     EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::MouseKeyPress)) return;
-    ROC::LuaArguments l_args;
-    l_args.PushArgument(button);
-    l_args.PushArgument(action);
-    l_args.PushArgument(mods);
-    l_eventManager->CallEvent(EventType::MouseKeyPress,l_args);
+    m_argument.PushArgument(button);
+    m_argument.PushArgument(action);
+    m_argument.PushArgument(mods);
+    l_eventManager->CallEvent(EventType::MouseKeyPress,m_argument);
+    m_argument.Clear();
 }
 void ROC::GlfwManager::MouseScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
     EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::MouseScroll)) return;
-    ROC::LuaArguments l_args;
-    l_args.PushArgument(xoffset);
-    l_args.PushArgument(yoffset);
-    l_eventManager->CallEvent(EventType::MouseScroll,l_args);
+    m_argument.PushArgument(xoffset);
+    m_argument.PushArgument(yoffset);
+    l_eventManager->CallEvent(EventType::MouseScroll,m_argument);
+    m_argument.Clear();
 }
 void ROC::GlfwManager::CursorPosCallback(GLFWwindow *window, double xpos, double ypos)
 {
     EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::CursorMove)) return;
-    ROC::LuaArguments l_args;
-    l_args.PushArgument(xpos);
-    l_args.PushArgument(ypos);
-    l_eventManager->CallEvent(EventType::CursorMove,l_args);
+    m_argument.PushArgument(xpos);
+    m_argument.PushArgument(ypos);
+    l_eventManager->CallEvent(EventType::CursorMove,m_argument);
+    m_argument.Clear();
 }
 void ROC::GlfwManager::CursorEnterCallback(GLFWwindow *window, int entered)
 {
     EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::CursorEnter)) return;
-    ROC::LuaArguments l_args;
-    l_args.PushArgument(entered);
-    l_eventManager->CallEvent(EventType::CursorEnter,l_args);
+    m_argument.PushArgument(entered);
+    l_eventManager->CallEvent(EventType::CursorEnter,m_argument);
+    m_argument.Clear();
 }
 void ROC::GlfwManager::TextInputCallback(GLFWwindow* window, unsigned int codepoint)
 {
-    EventManager *l_eventManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window))->m_core->GetLuaManager()->GetEventManager();
+    GlfwManager *l_glfwManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window));
+    EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::TextInput)) return;
-    ROC::LuaArguments l_args;
-    std::string l_text;
-    utf8::utf32to8(&codepoint,&codepoint+1,std::back_inserter(l_text));
-    l_args.PushArgument(l_text);
-    l_eventManager->CallEvent(EventType::TextInput,l_args);
+    utf8::utf32to8(&codepoint,&codepoint+1,std::back_inserter(l_glfwManager->m_input));
+    m_argument.PushArgument(l_glfwManager->m_input);
+    l_eventManager->CallEvent(EventType::TextInput,m_argument);
+    m_argument.Clear();
+    l_glfwManager->m_input.clear();
 }
 
 ROC::GlfwManager::GlfwManager(Core *f_core)
@@ -157,26 +160,20 @@ bool ROC::GlfwManager::DoPulse()
         EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
         if(l_eventManager->IsEventExists(EventType::Joypad))
         {
-            LuaArguments l_args;
-            std::string l_name;
             int l_count = 0;
             for(int i=GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST; i++)
             {
                 if(!glfwJoystickPresent(i)) break;
+                m_argument.PushArgument(i);
+
                 const unsigned char *l_padButtons = glfwGetJoystickButtons(i,&l_count);
-                std::vector<unsigned char> l_buttons{l_padButtons,l_padButtons+l_count};
+                m_argument.PushArgument(l_padButtons,static_cast<size_t>(l_count));
 
                 const float *l_padAxes = glfwGetJoystickAxes(i,&l_count);
-                std::vector<float> l_axes{l_padAxes,l_padAxes+l_count};
+                m_argument.PushArgument(l_padAxes,static_cast<size_t>(l_count));
 
-                l_args.PushArgument(i);
-                l_name.append(glfwGetJoystickName(i));
-                l_args.PushArgument(l_name);
-                l_args.PushArgument(l_buttons);
-                l_args.PushArgument(l_axes);
-                l_eventManager->CallEvent(EventType::Joypad,l_args);
-                l_args.Clear();
-                l_name.clear();
+                l_eventManager->CallEvent(EventType::Joypad,m_argument);
+                m_argument.Clear();
             }
         }
     }
