@@ -4,22 +4,21 @@
 #include <fstream>
 #include <sstream>
 #include <bitset>
-#include "sajson.h"
-#include "zlib.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include "sajson.h"
+#include "zlib.h"
 
 struct Face 
 {
     int m_materialIndices[9];
 };
 
-int ReadEnumString(std::string &f_val, std::string f_enum)
+int ReadEnumString(std::string &f_val, const std::string &f_enum)
 {
     size_t first = f_enum.find(f_val);
-    if (first == std::string::npos) return -1;
-    int l_ret = std::count(f_enum.begin(),f_enum.begin()+first,',');
-    return l_ret;
+    if(first == std::string::npos) return -1;
+    return std::count(f_enum.begin(),f_enum.begin()+first,',');
 }
 
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
@@ -518,36 +517,39 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
     int l_currentMaterial = -1;
     bool l_defaultMaterial = true;
 
-    FILE *l_objectFile = fopen((f_path+std::string(".obj")).c_str(),"r");
-    if(!l_objectFile) Error("Unable to load input file");
+    std::ifstream l_objectFile;
+    l_objectFile.open(f_path+".obj",std::ios::in);
+    if(l_objectFile.fail()) Error("Unable to load input file");
 
-    char l_buffer[256];
+    std::string l_buffer;
 
-    FILE *l_materialFile = fopen((f_path+std::string(".mtl")).c_str(),"r");
-    if(l_materialFile) 
+    std::ifstream l_materialFile;
+    l_materialFile.open(f_path+".mtl",std::ios::in);
+    if(!l_materialFile.fail()) 
     {
         l_defaultMaterial = false;
         //Materials parsing
-        while(fgets(l_buffer,256,l_materialFile))
+        while(std::getline(l_materialFile,l_buffer))
         {
             if(l_buffer[0] == 'n' && l_buffer[1] == 'e' && l_buffer[2] == 'w' && l_buffer[3] == 'm' && l_buffer[4] == 't' && l_buffer[5] == 'l') //new material
             {
                 char l_textureName[128];
-                if(sscanf(l_buffer,"%*s %s",l_textureName) == EOF) Error("Material name parse error");
+                if(sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Material name parse error");
                 l_materialNames.push_back(l_textureName);
-                while(fgets(l_buffer,256,l_materialFile))
+                while(std::getline(l_materialFile,l_buffer))
                 {
+                    std::cout << l_buffer << std::endl;
                     if(l_buffer[0] == 'N' || l_buffer[0] == 'K' || l_buffer[0] == 'd' || l_buffer[0] == 'i') continue;
                     if(l_buffer[0] == 't' && l_buffer[1] == 'y' && l_buffer[2] == 'p' && l_buffer[3] == 'e')
                     {
                         unsigned int l_mType;
-                        if(sscanf(l_buffer,"%*s %u",&l_mType) == EOF) Error("Unable to parse material type");
+                        if(sscanf(l_buffer.c_str(),"%*s %u",&l_mType) == EOF) Error("Unable to parse material type");
                         l_materialTypes.push_back(l_mType);
                         continue;
                     }
                     if(l_buffer[0] == 'm' && l_buffer[1] == 'a' && l_buffer[2] == 'p' && l_buffer[3] == '_' && (l_buffer[4] == 'K' || l_buffer[4] == 'k') && l_buffer[5] == 'd')
                     {
-                        if(sscanf(l_buffer,"%*s %s",l_textureName) == EOF) Error("Unable to parse diffuse map");
+                        if(sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Unable to parse diffuse map");
                         l_materialTextureNames.push_back(std::string("textures/")+l_textureName);
                         continue;
                     }
@@ -555,7 +557,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                 }
             }
         }
-        fclose(l_materialFile);
+        l_materialFile.close();
     }
     else Info("No .mtl file, assumed that all materials are default");
 
@@ -581,36 +583,37 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
         }
     }
 
-    FILE *l_outputFile = fopen(f_out.c_str(),"wb");
-    fwrite("ROC",sizeof(unsigned char)*3,1,l_outputFile);
+    std::ofstream l_outputFile(f_out.c_str(),std::ios::out|std::ios::binary);
+    if(l_outputFile.fail()) Error("Unable to create output file");
+    l_outputFile.write("ROC",3);
     unsigned char l_setter = 0x1;
-    fwrite(&l_setter,sizeof(unsigned char),1,l_outputFile);
+    l_outputFile.write((char*)&l_setter,sizeof(unsigned char));
     bool l_dataParsed = false;
     bool l_materialsSizeParsed = false;
     std::vector<Face> l_faceVector;
-    while(fgets(l_buffer,256,l_objectFile))
+    while(std::getline(l_objectFile,l_buffer))
     {
-        if(l_buffer[0] == '#' || l_buffer[0] == 's' || l_buffer[0] == 'm') continue;
+        if(l_buffer[0] == '#' || l_buffer[0] == 's' || l_buffer[0] == 'm' || l_buffer[0] == 'o') continue;
         if(l_buffer[0] == 'v') //vertex, uv or normal
         {
             if(l_buffer[1] == 'n') // normal
             {
                 float x,y,z;
-                if(sscanf(l_buffer,"%*s %f %f %f",&x,&y,&z) == EOF) Error("Normals parsing error");
+                if(sscanf(l_buffer.c_str(),"%*s %f %f %f",&x,&y,&z) == EOF) Error("Normals parsing error");
                 temp_normal.push_back(glm::vec3(x,y,z));
                 continue;
             }
             if(l_buffer[1] == 't') //uv
             {
                 float u,v;
-                if(sscanf(l_buffer,"%*s %f %f",&u,&v) == EOF) Error("UVs parsing error");
+                if(sscanf(l_buffer.c_str(),"%*s %f %f",&u,&v) == EOF) Error("UVs parsing error");
                 temp_uv.push_back(glm::vec2(u,1.0f-v));
                 continue;
             }
             if(l_buffer[1] == ' ')
             {
                 float x,y,z;
-                if(sscanf(l_buffer,"%*s %f %f %f",&x,&y,&z) == EOF) Error("Vertices parsing error");
+                if(sscanf(l_buffer.c_str(),"%*s %f %f %f",&x,&y,&z) == EOF) Error("Vertices parsing error");
                 temp_vertex.push_back(glm::vec3(x,y,z));
                 continue;
             }
@@ -624,9 +627,9 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             unsigned char *l_compressedData = new unsigned char[l_maxSize];
             int l_compressedSize = CompressData(temp_vertex.data(),l_origSize,l_compressedData,l_maxSize);
             if(l_compressedSize == -1) Error("Unable to compress vertices");
-            fwrite(&l_compressedSize,sizeof(int),1,l_outputFile);
-            fwrite(&l_origSize,sizeof(int),1,l_outputFile);
-            fwrite(l_compressedData,l_compressedSize,1,l_outputFile); 
+            l_outputFile.write((char*)&l_compressedSize,sizeof(int));
+            l_outputFile.write((char*)&l_origSize,sizeof(int));
+            l_outputFile.write((char*)l_compressedData,l_compressedSize); 
             delete[]l_compressedData;
             Info(temp_vertex.size() << " vertices");
 
@@ -635,9 +638,9 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             l_compressedData = new unsigned char[l_maxSize];
             l_compressedSize = CompressData(temp_uv.data(),l_origSize,l_compressedData,l_maxSize);
             if(l_compressedSize == -1) Error("Unable to compress UVs");
-            fwrite(&l_compressedSize,sizeof(int),1,l_outputFile);
-            fwrite(&l_origSize,sizeof(int),1,l_outputFile);
-            fwrite(l_compressedData,l_compressedSize,1,l_outputFile); 
+            l_outputFile.write((char*)&l_compressedSize,sizeof(int));
+            l_outputFile.write((char*)&l_origSize,sizeof(int));
+            l_outputFile.write((char*)l_compressedData,l_compressedSize); 
             delete[]l_compressedData;
             Info(temp_vertex.size() << " UVs");
 
@@ -646,9 +649,9 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             l_compressedData = new unsigned char[l_maxSize];
             l_compressedSize = CompressData(temp_normal.data(),l_origSize,l_compressedData,l_maxSize);
             if(l_compressedSize == -1) Error("Unable to compress normals");
-            fwrite(&l_compressedSize,sizeof(int),1,l_outputFile);
-            fwrite(&l_origSize,sizeof(int),1,l_outputFile);
-            fwrite(l_compressedData,l_compressedSize,1,l_outputFile); 
+            l_outputFile.write((char*)&l_compressedSize,sizeof(int));
+            l_outputFile.write((char*)&l_origSize,sizeof(int));
+            l_outputFile.write((char*)l_compressedData,l_compressedSize); 
             delete[]l_compressedData;
             Info(temp_vertex.size() << " normals");
         }
@@ -657,7 +660,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             if(!l_materialsSizeParsed)
             {
                 int l_materialsSizeI = l_materialNames.size();
-                fwrite(&l_materialsSizeI,sizeof(int),1,l_outputFile);
+                l_outputFile.write((char*)&l_materialsSizeI,sizeof(int));
                 l_materialsSizeParsed = true;
                 Info(l_materialsSizeI << " material(s)");
             }
@@ -688,27 +691,27 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                     } break;
                 }
                 l_setter = static_cast<unsigned char>(l_bType.to_ulong());
-                fwrite(&l_setter,sizeof(unsigned char),1,l_outputFile);
+                l_outputFile.write((char*)&l_setter,sizeof(unsigned char));
                 glm::vec4 l_params(1.f);
-                fwrite(&l_params,sizeof(glm::vec4),1,l_outputFile);
+                l_outputFile.write((char*)&l_params,sizeof(glm::vec4));
                 l_setter = l_materialTextureNames[l_currentMaterial].size();
-                fwrite(&l_setter,sizeof(unsigned char),1,l_outputFile);
-                if(l_setter) fwrite(l_materialTextureNames[l_currentMaterial].data(),l_setter,1,l_outputFile);
+                l_outputFile.write((char*)&l_setter,sizeof(unsigned char));
+                if(l_setter) l_outputFile.write(l_materialTextureNames[l_currentMaterial].data(),l_setter);
 
                 int l_origSize = l_faceVector.size()*sizeof(Face);
                 int l_maxSize = GetMaxCompressedLen(l_origSize);
                 unsigned char *l_compressedData = new unsigned char[l_maxSize];
                 int l_compressedSize = CompressData(l_faceVector.data(),l_origSize,l_compressedData,l_maxSize);
                 if(l_compressedSize == -1) Error("Unable to compress faces for material " << l_currentMaterial);
-                fwrite(&l_compressedSize,sizeof(int),1,l_outputFile);
-                fwrite(&l_origSize,sizeof(int),1,l_outputFile);
-                fwrite(l_compressedData,l_compressedSize,1,l_outputFile); 
+                l_outputFile.write((char*)&l_compressedSize,sizeof(int));
+                l_outputFile.write((char*)&l_origSize,sizeof(int));
+                l_outputFile.write((char*)l_compressedData,l_compressedSize); 
                 delete[]l_compressedData;
                 Info("Material " << l_currentMaterial << ", " << l_faceVector.size() << " faces");
                 l_faceVector.clear();
             }
             char l_textureName[128];
-            if(sscanf(l_buffer,"%*s %s",l_textureName) == EOF) Error("Unable to parse materials");
+            if(sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Unable to parse materials");
             l_currentMaterial = std::distance(l_materialNames.begin(),std::find(l_materialNames.begin(),l_materialNames.end(),l_textureName));
             if(l_currentMaterial >= int(l_materialNames.size()) || l_currentMaterial < 0) Error("Unable to parse materials");
             continue;
@@ -718,14 +721,14 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             if(!l_materialsSizeParsed)
             {
                 int l_materialsSizeI = l_materialNames.size();
-                fwrite(&l_materialsSizeI,sizeof(int),1,l_outputFile);
+                l_outputFile.write((char*)&l_materialsSizeI,sizeof(int));
                 l_materialsSizeParsed = true;
                 Info(l_materialsSizeI << " material(s)");
             }
             unsigned int v1,v2,v3;
             unsigned int t1,t2,t3;
             unsigned int n1,n2,n3;
-            if(sscanf(l_buffer,"%*s %u/%u/%u %u/%u/%u %u/%u/%u",&v1,&t1,&n1,&v2,&t2,&n2,&v3,&t3,&n3) == EOF) Error("Unable to parse faces for material" << l_currentMaterial)
+            if(sscanf(l_buffer.c_str(),"%*s %u/%u/%u %u/%u/%u %u/%u/%u",&v1,&t1,&n1,&v2,&t2,&n2,&v3,&t3,&n3) == EOF) Error("Unable to parse faces for material" << l_currentMaterial)
             Face l_face;
             l_face.m_materialIndices[0] = v1-1;
             l_face.m_materialIndices[1] = v2-1;
@@ -766,27 +769,28 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             } break;
         }
         l_setter = static_cast<unsigned char>(l_bType.to_ulong());
-        fwrite(&l_setter,sizeof(unsigned char),1,l_outputFile);
+        l_outputFile.write((char*)&l_setter,sizeof(unsigned char));
         glm::vec4 l_params(1.f);
-        fwrite(&l_params,sizeof(glm::vec4),1,l_outputFile);
+        l_outputFile.write((char*)&l_params,sizeof(glm::vec4));
         l_setter = l_materialTextureNames[l_currentMaterial].size();
-        fwrite(&l_setter,sizeof(unsigned char),1,l_outputFile);
-        if(l_setter) fwrite(l_materialTextureNames[l_currentMaterial].data(),l_setter,1,l_outputFile);
+        l_outputFile.write((char*)&l_setter,sizeof(unsigned char));
+        if(l_setter) l_outputFile.write(l_materialTextureNames[l_currentMaterial].data(),l_setter);
 
         int l_origSize = l_faceVector.size()*sizeof(Face);
         int l_maxSize = GetMaxCompressedLen(l_origSize);
         unsigned char *l_compressedData = new unsigned char[l_maxSize];
         int l_compressedSize = CompressData(l_faceVector.data(),l_origSize,l_compressedData,l_maxSize);
         if(l_compressedSize == -1) Error("Unable to compress faces for material " << l_currentMaterial);
-        fwrite(&l_compressedSize,sizeof(int),1,l_outputFile);
-        fwrite(&l_origSize,sizeof(int),1,l_outputFile);
-        fwrite(l_compressedData,l_compressedSize,1,l_outputFile); 
+        l_outputFile.write((char*)&l_compressedSize,sizeof(int));
+        l_outputFile.write((char*)&l_origSize,sizeof(int));
+        l_outputFile.write((char*)l_compressedData,l_compressedSize); 
         delete[]l_compressedData;
         Info("Material " << l_currentMaterial << ", " << l_faceVector.size() << " faces");
         l_faceVector.clear();
     }
-    fclose(l_objectFile);
-    fclose(l_outputFile);
+    l_objectFile.close();
+    l_outputFile.flush();
+    l_outputFile.close();
     Info("Model converted to " << f_out.c_str());
 }
 
@@ -799,7 +803,7 @@ int main(int argc, char *argv[])
     }
     std::string l_inputType(argv[1]);
     std::string l_inputFile(argv[2]);
-    std::string l_outputFile(argc >= 4 ? argv[3] : l_inputFile + ".rmf");
+    std::string l_outputFile(argc >= 4 ? argv[3] : l_inputFile+".rmf");
     switch(ReadEnumString(l_inputType,"obj,json"))
     {
         case 0:
