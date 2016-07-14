@@ -126,7 +126,11 @@ void ROC::RenderManager::SetCurrentShader(Shader *f_shader)
 {
     if(m_locked) return;
     m_currentShader = f_shader;
-    if(m_currentShader) m_currentShader->Enable();
+    if(m_currentShader)
+    {
+        m_currentShader->Enable();
+        m_currentShader->SetTimeUniformValue(m_time);
+    }
 }
 
 void ROC::RenderManager::CheckShaderForCurrent(Shader *f_shader)
@@ -148,8 +152,6 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
     f_model->GetMatrix(m_modelMatrix);
     m_currentShader->SetModelUniformValue(m_modelMatrix);
 
-    m_currentShader->SetTimeUniformValue(m_time);
-
     //Skeletal animation
     if(f_model->HasSkeleton())
     {
@@ -162,8 +164,8 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
 
     for(unsigned int i=0, j=f_model->GetMaterialCount(); i < j; i++)
     {
-        bool l_vaoBind = (j == 1U) ? CompareLastVAO(f_model->GetMaterialVAO(i)) : true;
-        bool l_textureBind = (j == 1U) ? (CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize) : f_texturize;
+        bool l_textureBind = CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize;
+        bool l_vaoBind = CompareLastVAO(f_model->GetMaterialVAO(i));
         unsigned char l_materialType = f_model->GetMaterialType(i);
         if((l_materialType&MATERIAL_BIT_DEPTH) != MATERIAL_BIT_DEPTH)
         {
@@ -193,7 +195,6 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_
     EnableBlending();
     DisableDepth();
 
-    m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetProjectionUniformValue(m_screenProjection);
     m_currentShader->SetColorUniformValue(f_color);
 
@@ -208,7 +209,6 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
     if(CompareLastTexture(f_texture->GetTexture())) f_texture->Bind(0U);
 
     m_currentShader->SetProjectionUniformValue(m_screenProjection);
-    m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetColorUniformValue(f_color);
 
     btTransform l_textureTransform;
@@ -242,7 +242,6 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
     if(CompareLastTexture(f_rt->GetTexture())) f_rt->BindTexture(0U);
 
     m_currentShader->SetProjectionUniformValue(m_screenProjection);
-    m_currentShader->SetTimeUniformValue(m_time);
     m_currentShader->SetColorUniformValue(f_color);
 
     btTransform l_textureTransform;

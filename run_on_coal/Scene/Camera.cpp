@@ -72,7 +72,7 @@ bool ROC::Camera::IsInFrustum(glm::vec3 &f_pos, float f_radius)
 {
     for(auto &iter : m_planes)
     {
-        if(iter.x*f_pos.x+iter.y*f_pos.y+iter.z*f_pos.z+iter.w <= -f_radius) return false;
+        if(iter.x*f_pos.x+iter.y*f_pos.y+iter.z*f_pos.z+iter.w < -f_radius) return false;
     }
     return true;
 }
@@ -87,10 +87,6 @@ void ROC::Camera::UpdateFrustumPlanes()
     m_planes[3] = glm::row(l_mat,3)-glm::row(l_mat,1);
     m_planes[4] = glm::row(l_mat,3)+glm::row(l_mat,2);
     m_planes[5] = glm::row(l_mat,3)-glm::row(l_mat,2);
-    for(auto &iter : m_planes)
-    {
-        float l_dist = glm::length(glm::vec3(iter.x,iter.y,iter.z));
-        iter /= l_dist;
-    }
+    for(auto &iter : m_planes) iter /= sqrtf(iter.x*iter.x+iter.y*iter.y+iter.z*iter.z);
     m_rebuildFrustumPlanes = false;
 }
