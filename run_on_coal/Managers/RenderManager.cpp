@@ -164,8 +164,6 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
 
     for(unsigned int i=0, j=f_model->GetMaterialCount(); i < j; i++)
     {
-        bool l_textureBind = CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize;
-        bool l_vaoBind = CompareLastVAO(f_model->GetMaterialVAO(i));
         unsigned char l_materialType = f_model->GetMaterialType(i);
         if((l_materialType&MATERIAL_BIT_DEPTH) != MATERIAL_BIT_DEPTH)
         {
@@ -178,6 +176,9 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
         else EnableDepth();
         ((l_materialType&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT) ? EnableBlending() : DisableBlending();
         ((l_materialType&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE) ? DisableCulling() : EnableCulling();
+
+        bool l_textureBind = CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize;
+        bool l_vaoBind = CompareLastVAO(f_model->GetMaterialVAO(i));
 
         if(l_vaoBind)
         {
