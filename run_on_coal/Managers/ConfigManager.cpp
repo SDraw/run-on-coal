@@ -55,7 +55,7 @@ ROC::ConfigManager::~ConfigManager()
 {
 }
 
-bool ROC::ConfigManager::IsLoggingEnabled_()
+bool ROC::ConfigManager::IsLogEnabled()
 {
     return m_logging;
 }

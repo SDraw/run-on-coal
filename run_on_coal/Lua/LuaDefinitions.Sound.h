@@ -24,8 +24,8 @@ int soundSet3DPosition(lua_State *f_vm);
 int soundGet3DPosition(lua_State *f_vm);
 int soundSet3DDistance(lua_State *f_vm);
 int soundGet3DDistance(lua_State *f_vm);
-int soundSetListener3DOrientation(lua_State *f_vm);
-int soundGetListener3DOrientation(lua_State *f_vm);
+int soundSetListenerOrientation(lua_State *f_vm);
+int soundGetListenerOrientation(lua_State *f_vm);
 
 }
 }

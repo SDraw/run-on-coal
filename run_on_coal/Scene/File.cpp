@@ -24,6 +24,7 @@ bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
 bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
 {
     m_file = new std::fstream(f_path,(f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
+    if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = f_ro ? FileMode::ReadMode : FileMode::WriteMode;
     m_path.append(f_rPath);
@@ -67,8 +68,8 @@ size_t ROC::File::GetSize()
 
 bool ROC::File::SetPosition(size_t f_pos)
 {
-    if(m_type == FileMode::ReadMode) m_file->seekg(SEEK_SET,f_pos);
-    else m_file->seekp(SEEK_SET,f_pos);
+    if(m_type == FileMode::ReadMode) m_file->seekg(f_pos);
+    else m_file->seekp(f_pos);
     return !m_file->fail();
 }
 size_t ROC::File::GetPosition()

@@ -149,8 +149,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"soundGet3DPosition",Lua::soundGet3DPosition);
     lua_register(m_pVM,"soundSet3DDistance",Lua::soundSet3DDistance);
     lua_register(m_pVM,"soundGet3DDistance",Lua::soundGet3DDistance);
-    lua_register(m_pVM,"soundSetListener3DOrientation",Lua::soundSetListener3DOrientation);
-    lua_register(m_pVM,"soundGetListener3DOrientation",Lua::soundSetListener3DOrientation);
+    lua_register(m_pVM,"soundSetListenerOrientation",Lua::soundSetListenerOrientation);
+    lua_register(m_pVM,"soundGetListenerOrientation",Lua::soundSetListenerOrientation);
 
     //Render Target
     lua_register(m_pVM,"rtCreate",Lua::rtCreate);

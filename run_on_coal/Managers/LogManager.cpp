@@ -5,7 +5,7 @@
 
 ROC::LogManager::LogManager(Core *f_core)
 {
-    m_enabled = f_core->GetConfigManager()->IsLoggingEnabled_();
+    m_enabled = f_core->GetConfigManager()->IsLogEnabled();
     if(m_enabled) m_log.open("log.txt",std::ofstream::out);
 }
 ROC::LogManager::~LogManager()

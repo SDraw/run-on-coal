@@ -320,7 +320,7 @@ int soundGet3DDistance(lua_State *f_vm)
     return 2;
 }
 
-int soundSetListener3DOrientation(lua_State *f_vm)
+int soundSetListenerOrientation(lua_State *f_vm)
 {
     lua_Number l_val[9];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
@@ -333,24 +333,27 @@ int soundSetListener3DOrientation(lua_State *f_vm)
     glm::vec3 l_pos(l_val[0],l_val[1],l_val[2]);
     glm::vec3 l_dir(l_val[3],l_val[4],l_val[5]);
     glm::vec3 l_up(l_val[6],l_val[7],l_val[8]);
-    LuaManager::m_corePointer->GetSoundManager()->SetListener3DOrientation(l_pos,l_dir,l_up);
+    SoundManager *l_soundManager = LuaManager::m_corePointer->GetSoundManager();
+    l_soundManager->SetListenerPosition(l_pos);
+    l_soundManager->SetListenerDirection(l_dir);
+    l_soundManager->SetListenerUp(l_up);
     lua_pushboolean(f_vm,1);
     return 1;
 }
 
-int soundGetListener3DOrientation(lua_State *f_vm)
+int soundGetListenerOrientation(lua_State *f_vm)
 {
-    glm::vec3 l_pos,l_dir,l_up;
-    LuaManager::m_corePointer->GetSoundManager()->GetListener3DOrientation(l_pos,l_dir,l_up);
-    lua_pushnumber(f_vm,l_pos.x);
-    lua_pushnumber(f_vm,l_pos.y);
-    lua_pushnumber(f_vm,l_pos.z);
-    lua_pushnumber(f_vm,l_dir.x);
-    lua_pushnumber(f_vm,l_dir.y);
-    lua_pushnumber(f_vm,l_dir.z);
-    lua_pushnumber(f_vm,l_up.x);
-    lua_pushnumber(f_vm,l_up.y);
-    lua_pushnumber(f_vm,l_up.z);
+    glm::vec3 l_vec[3];
+    SoundManager *l_soundManager = LuaManager::m_corePointer->GetSoundManager();
+    l_soundManager->GetListenerPosition(l_vec[0]);
+    l_soundManager->GetListenerDirection(l_vec[1]);
+    l_soundManager->GetListenerUp(l_vec[2]);
+    for(int i=0; i < 3; i++)
+    {
+        lua_pushnumber(f_vm,l_vec[i].x);
+        lua_pushnumber(f_vm,l_vec[i].y);
+        lua_pushnumber(f_vm,l_vec[i].z);
+    }
     return 9;
 }
 

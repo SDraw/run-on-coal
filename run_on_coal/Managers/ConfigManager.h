@@ -12,7 +12,7 @@ class ConfigManager
     int m_antialiasing;
     glm::ivec2 m_windowSize;
 public:
-    bool IsLoggingEnabled_();
+    bool IsLogEnabled();
     bool IsFullscreenEnabled();
     int GetAntialiasing();
     void GetWindowSize(glm::ivec2 &f_vec);

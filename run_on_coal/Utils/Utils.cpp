@@ -28,14 +28,6 @@ GLint CheckShader(GLuint f_shader)
     return l_params;
 }
 
-void GetScreenPosition(glm::vec3 &pos, glm::mat4 &proj, glm::mat4 &view, glm::ivec2 &window, glm::vec2 &out)
-{
-    glm::vec4 l_result = proj*view*glm::vec4(pos,1.0f);
-    l_result /= l_result.w;
-    out.x = static_cast<float>(window.x)/2*(1.f+l_result.x);
-    out.y = static_cast<float>(window.y)/2*(1.f+l_result.y);
-}
-
 int ReadEnumString(std::string &f_val, const std::string &f_enum)
 {
     size_t first = f_enum.find(f_val);

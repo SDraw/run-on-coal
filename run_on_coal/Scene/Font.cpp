@@ -13,7 +13,7 @@ ROC::Font::Font()
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER,m_vertexVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(float)*6*3, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(float)*6*3,NULL,GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),NULL);
 
     glEnableVertexAttribArray(1);
@@ -54,10 +54,10 @@ bool ROC::Font::LoadChar(wchar_t l_char)
     charData *l_charData = new charData();
     glGenTextures(1,&l_charData->m_texture);
     glBindTexture(GL_TEXTURE_2D,l_charData->m_texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D,0,GL_RED,m_face->glyph->bitmap.width,m_face->glyph->bitmap.rows,0,GL_RED,GL_UNSIGNED_BYTE,m_face->glyph->bitmap.buffer);
     l_charData->m_size = glm::ivec2(m_face->glyph->bitmap.width, m_face->glyph->bitmap.rows);
     l_charData->m_advance = m_face->glyph->advance.x;
@@ -70,7 +70,7 @@ bool ROC::Font::LoadTTF(std::string &f_path, int f_size)
 {
     if(m_loaded) return false;
     if(FT_Init_FreeType(&m_library)) return false;
-    if(FT_New_Face(m_library, f_path.c_str(), 0, &m_face))
+    if(FT_New_Face(m_library,f_path.c_str(),0,&m_face))
     {
         FT_Done_FreeType(m_library);
         return false;
