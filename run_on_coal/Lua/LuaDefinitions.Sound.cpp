@@ -210,7 +210,7 @@ int soundGetTime(lua_State *f_vm)
     return 1;
 }
 
-int soundSet3DPositionEnabled(lua_State *f_vm)
+int soundSet3DEnabled(lua_State *f_vm)
 {
     Sound *l_sound;
     bool l_state;
@@ -226,7 +226,7 @@ int soundSet3DPositionEnabled(lua_State *f_vm)
     lua_pushboolean(f_vm,result);
     return 1;
 }
-int soundGet3DPositionEnabled(lua_State *f_vm)
+int soundGet3DEnabled(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);

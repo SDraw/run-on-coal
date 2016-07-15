@@ -143,8 +143,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"soundGetVolume",Lua::soundGetVolume);
     lua_register(m_pVM,"soundSetTime",Lua::soundSetTime);
     lua_register(m_pVM,"soundGetTime",Lua::soundGetTime);
-    lua_register(m_pVM,"soundSet3DPositionEnabled",Lua::soundSet3DPositionEnabled);
-    lua_register(m_pVM,"soundGet3DPositionEnabled",Lua::soundGet3DPositionEnabled);
+    lua_register(m_pVM,"soundSet3DEnabled",Lua::soundSet3DEnabled);
+    lua_register(m_pVM,"soundGet3DEnabled",Lua::soundGet3DEnabled);
     lua_register(m_pVM,"soundSet3DPosition",Lua::soundSet3DPosition);
     lua_register(m_pVM,"soundGet3DPosition",Lua::soundGet3DPosition);
     lua_register(m_pVM,"soundSet3DDistance",Lua::soundSet3DDistance);
