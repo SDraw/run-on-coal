@@ -38,7 +38,7 @@ int textureCreate(lua_State *f_vm)
                 lua_pushboolean(f_vm,0);
                 return 1;
             }
-            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path,l_iType+1,l_compress);
+            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path,TEXTURE_TYPE_RGB+l_iType,l_compress);
         } break;
         case 2:
         {
@@ -82,8 +82,8 @@ int textureBind(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    bool result = l_tex->Bind(static_cast<unsigned int>(l_bind));
-    lua_pushboolean(f_vm,result);
+    l_tex->Bind(static_cast<unsigned int>(l_bind));
+    lua_pushboolean(f_vm,1);
     return 1;
 }
 int textureDraw(lua_State *f_vm)

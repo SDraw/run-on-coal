@@ -506,7 +506,7 @@ int modelSetRigidity(lua_State *f_vm)
         return 1;
     }
     glm::vec3 l_vSize(l_sizes[0],l_sizes[1],l_sizes[2]);
-    bool result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelRigidity(l_model,static_cast<unsigned char>(l_type),static_cast<float>(l_mass),l_vSize);
+    bool result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelRigidity(l_model,MODEL_RIGIDITY_TYPE_SPHERE+static_cast<unsigned char>(l_type),static_cast<float>(l_mass),l_vSize);
     lua_pushboolean(f_vm,result);
     return 1;
 }

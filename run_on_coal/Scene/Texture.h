@@ -1,8 +1,8 @@
 #pragma once
 #define TEXTURE_TYPE_NONE -1
 #define TEXTURE_TYPE_RGB 0
-#define TEXTURE_TYPE_RGBA 2
-#define TEXTURE_TYPE_CUBEMAP 3
+#define TEXTURE_TYPE_RGBA 1
+#define TEXTURE_TYPE_CUBEMAP 2
 
 namespace ROC
 {
@@ -12,7 +12,7 @@ class Texture
     GLuint m_texture;
     int m_type;
 public:
-    bool Bind(unsigned int f_bind);
+    void Bind(unsigned int f_bind);
     bool IsTransparent();
     bool IsCubic();
 protected:

@@ -31,7 +31,7 @@ int collisionCreate(lua_State *f_vm)
         return 1;
     }
     glm::vec3 l_vSize(l_size[0],l_size[1],l_size[2]);
-    Collision *l_col = LuaManager::m_corePointer->GetElementManager()->CreateCollision(l_type,l_vSize);
+    Collision *l_col = LuaManager::m_corePointer->GetElementManager()->CreateCollision(COLLISION_TYPE_SPHERE+static_cast<unsigned char>(l_type),l_vSize);
     l_col ? lua_pushlightuserdata(f_vm,l_col) : lua_pushboolean(f_vm,0);
     return 1;
 }

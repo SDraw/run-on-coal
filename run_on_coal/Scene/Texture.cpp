@@ -13,6 +13,7 @@ ROC::Texture::~Texture()
 
 bool ROC::Texture::Load(std::string &f_path, int f_type, bool f_compress)
 {
+    if(m_type != TEXTURE_TYPE_NONE || f_type <= TEXTURE_TYPE_NONE || f_type >= TEXTURE_TYPE_CUBEMAP) return false;
     unsigned l_width, l_height;
     std::vector<unsigned char> l_texture;
     bool l_fail = false;
@@ -45,7 +46,7 @@ bool ROC::Texture::Load(std::string &f_path, int f_type, bool f_compress)
 }
 bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, bool f_compress)
 {
-    if(f_path.size() != 6) return false;
+    if(m_type != TEXTURE_TYPE_NONE || f_path.size() != 6U) return false;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_CUBE_MAP,m_texture);
     glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_WRAP_S,GL_REPEAT );
@@ -66,8 +67,9 @@ bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, bool f_compress
     return true;
 }
 
-bool ROC::Texture::Bind(unsigned int f_bind)
+void ROC::Texture::Bind(unsigned int f_bind)
 {
+    if(m_type == TEXTURE_TYPE_NONE) return;
     if(f_bind) glActiveTexture(GL_TEXTURE0+f_bind);
     switch(m_type)
     {
@@ -79,7 +81,6 @@ bool ROC::Texture::Bind(unsigned int f_bind)
             break;
     }
     if(f_bind) glActiveTexture(GL_TEXTURE0);
-    return true;
 }
 
 bool ROC::Texture::IsTransparent()

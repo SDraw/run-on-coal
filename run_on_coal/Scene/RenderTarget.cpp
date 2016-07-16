@@ -15,7 +15,7 @@ ROC::RenderTarget::~RenderTarget()
 
 void ROC::RenderTarget::Clear()
 {
-    m_type = 0U;
+    m_type = RENDERTARGET_TYPE_NONE;
     if(m_bTexture)
     {
         glDeleteTextures(1,&m_texture);
@@ -35,6 +35,7 @@ void ROC::RenderTarget::Clear()
 
 bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_type)
 {
+    if(m_type != RENDERTARGET_TYPE_NONE || f_type <= RENDERTARGET_TYPE_NONE || f_type > RENDERTARGET_TYPE_RGBF) return false;
     m_type = f_type;
     m_bRenderBuffer = false;
 

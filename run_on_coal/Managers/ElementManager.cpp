@@ -212,12 +212,12 @@ bool ROC::ElementManager::DestroySound(Sound *f_sound)
     return true;
 }
 
-ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, unsigned int f_type)
+ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type)
 {
     RenderTarget *l_rt = new RenderTarget();
     if(!l_rt) return NULL;
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_rt->Create(f_num,f_size,static_cast<int>(f_type)))
+    if(!l_rt->Create(f_num,f_size,f_type))
     {
         std::string l_error;
         l_rt->GetError(l_error);
@@ -235,7 +235,7 @@ bool ROC::ElementManager::DestroyRenderTarget(RenderTarget *f_rt)
     return true;
 }
 
-ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, unsigned int f_type, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type, bool f_compress)
 {
     Texture *l_tex = new Texture();
     if(!l_tex) return NULL;
@@ -243,7 +243,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, unsigned i
     m_core->GetWorkingDirectory(l_wDir);
     Utils::PathsJoin(l_wDir,f_path,l_path);
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_tex->Load(l_path,static_cast<int>(f_type),f_compress))
+    if(!l_tex->Load(l_path,f_type,f_compress))
     {
         delete l_tex;
         return NULL;
@@ -367,7 +367,7 @@ bool ROC::ElementManager::DestroyFile(File *f_file)
     return true;
 }
 
-ROC::Collision* ROC::ElementManager::CreateCollision(unsigned int f_type, glm::vec3 &f_size)
+ROC::Collision* ROC::ElementManager::CreateCollision(unsigned char f_type, glm::vec3 &f_size)
 {
     Collision *l_col = new Collision();
     if(!l_col) return NULL;

@@ -32,7 +32,7 @@ int rtCreate(lua_State *f_vm)
         return 1;
     }
     glm::ivec2 l_size(l_par[0],l_par[1]);
-    RenderTarget *l_rt = LuaManager::m_corePointer->GetElementManager()->CreateRenderTarget(static_cast<unsigned int>(l_par[2]),l_size,static_cast<unsigned int>(l_etype));
+    RenderTarget *l_rt = LuaManager::m_corePointer->GetElementManager()->CreateRenderTarget(static_cast<unsigned int>(l_par[2]),l_size,RENDERTARGET_TYPE_DEPTH+l_etype);
     l_rt ? lua_pushlightuserdata(f_vm,l_rt) : lua_pushboolean(f_vm,0);
     return 1;
 }
