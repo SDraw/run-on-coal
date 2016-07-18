@@ -13,7 +13,7 @@ Simple and lightweight game engine. It provides simplified usage of OpenGL mostl
 * Basic physics
 * Frustum culling
 
-![Scene made with engine](http://i.imgur.com/VFUB7MN.png)
+[![alt text](http://i.imgur.com/uABPi2s.png "Skeletal animation, rigid bones chains")](https://www.youtube.com/watch?v=lDpUwM7fkKw)  [![alt text](http://i.imgur.com/p1LoxXA.png "Solid bodies physics")](https://www.youtube.com/watch?v=NP3ijUbu1oI)
 
 # Builds
 Latest build is always avaliable at [Dropbox shared folder](https://www.dropbox.com/sh/vowd9qzzy5hosen/AADyDIJJi7bYwbPFZ8rhvolZa?dl=0).
