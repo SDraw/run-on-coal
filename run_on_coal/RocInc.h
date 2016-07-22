@@ -29,4 +29,5 @@
 #include "Scene/Sound.h"
 #include "Scene/Texture.h"
 
+#include "Utils/Pool.h"
 #include "Utils/Utils.h"

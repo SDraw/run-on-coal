@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
+#include "Managers/InheritanceManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/RenderManager.h"
+#include "Scene/RenderTarget.h"
 #include "Scene/Shader.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Shader.h"
@@ -78,7 +80,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    switch(Utils::ReadEnumString(l_type,"unsigned,uvec2,uvec3,uvec4, int,ivec2,ivec3,ivec4, float,fvec2,fvec3,fvec4, double,dvec2,dvec3,dvec4, mat2,mat3,mat4"))
+    switch(Utils::ReadEnumString(l_type,"unsigned,uvec2,uvec3,uvec4, int,ivec2,ivec3,ivec4, float,fvec2,fvec3,fvec4, double,dvec2,dvec3,dvec4, mat2,mat3,mat4, texture,target"))
     {
         // Unsigned int
         case 0:
@@ -320,6 +322,32 @@ int shaderSetUniformValue(lua_State *f_vm)
             );
             LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader,static_cast<int>(l_unif),l_mat);
         } break;
+        //Texture
+        case 19:
+        {
+            Texture *l_texture;
+            argStream.ReadUserdata((void**)&l_texture,ElementType::TextureElement);
+            if(argStream.HasErrors())
+            {
+                
+                lua_pushboolean(f_vm,0);
+                return 1;
+            }
+            LuaManager::m_corePointer->GetInheritManager()->AttachTextureToShader(l_shader,l_texture,static_cast<int>(l_unif));
+        } break;
+        //Target
+        case 20:
+        {
+            RenderTarget *l_target;
+            argStream.ReadUserdata((void**)&l_target,ElementType::RenderTargetElement);
+            if(argStream.HasErrors())
+            {
+                
+                lua_pushboolean(f_vm,0);
+                return 1;
+            }
+            LuaManager::m_corePointer->GetInheritManager()->AttachRenderTargetToShader(l_shader,l_target,static_cast<int>(l_unif));
+        }
     }
     lua_pushboolean(f_vm,1);
     return 1;

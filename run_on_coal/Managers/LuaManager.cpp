@@ -155,13 +155,11 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Render Target
     lua_register(m_pVM,"rtCreate",Lua::rtCreate);
     lua_register(m_pVM,"rtDestroy",Lua::rtDestroy);
-    lua_register(m_pVM,"rtBind",Lua::rtBind);
     lua_register(m_pVM,"rtDraw",Lua::rtDraw);
 
     //Texture
     lua_register(m_pVM,"textureCreate",Lua::textureCreate);
     lua_register(m_pVM,"textureDestroy",Lua::textureDestroy);
-    lua_register(m_pVM,"textureBind",Lua::textureBind);
     lua_register(m_pVM,"textureDraw",Lua::textureDraw);
 
     //Font

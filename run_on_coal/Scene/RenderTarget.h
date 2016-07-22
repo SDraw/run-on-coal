@@ -22,7 +22,6 @@ class RenderTarget
     std::string m_error;
     void Clear();
 public:
-    void BindTexture(unsigned int f_bind);
     void GetSize(glm::ivec2 &f_size);
     bool IsColored();
     bool IsTransparent();
@@ -32,10 +31,12 @@ protected:
     ~RenderTarget();
     bool Create(unsigned int f_num, glm::ivec2 &f_size, int f_type);
     void Enable();
+    void BindTexture(unsigned int f_bind);
     GLuint GetTexture();
     void GetError(std::string &f_str);
     friend class ElementManager;
     friend class RenderManager;
+    friend class Shader;
 };
 
 }

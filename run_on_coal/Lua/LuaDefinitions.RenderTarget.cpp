@@ -50,22 +50,6 @@ int rtDestroy(lua_State *f_vm)
     lua_pushboolean(f_vm,result);
     return 1;
 }
-int rtBind(lua_State *f_vm)
-{
-    RenderTarget *l_rt;
-    LUA_INTEGER l_bind;
-    ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_rt,ElementType::RenderTargetElement);
-    argStream.ReadInteger(l_bind);
-    if(argStream.HasErrors() || l_bind < 3)
-    {
-        lua_pushboolean(f_vm,0);
-        return 1;
-    }
-    l_rt->BindTexture(static_cast<unsigned int>(l_bind));
-    lua_pushboolean(f_vm,1);
-    return 1;
-}
 int rtDraw(lua_State *f_vm)
 {
     RenderTarget *l_rt;

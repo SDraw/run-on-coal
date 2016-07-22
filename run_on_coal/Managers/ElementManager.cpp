@@ -230,6 +230,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, g
 }
 bool ROC::ElementManager::DestroyRenderTarget(RenderTarget *f_rt)
 {
+    m_core->GetInheritManager()->RemoveChildRelation(f_rt);
     m_core->GetMemoryManager()->RemoveMemoryPointer(f_rt,ElementType::RenderTargetElement);
     delete f_rt;
     return true;
@@ -275,6 +276,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
 }
 bool ROC::ElementManager::DestroyTexture(Texture *f_tex)
 {
+    m_core->GetInheritManager()->RemoveChildRelation(f_tex);
     m_core->GetMemoryManager()->RemoveMemoryPointer(f_tex,ElementType::TextureElement);
     delete f_tex;
     return true;

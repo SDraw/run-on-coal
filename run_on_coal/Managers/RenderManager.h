@@ -88,8 +88,24 @@ protected:
     void DoPulse();
     void ResetCallsReducing();
     void RestoreShader(Shader *f_shader);
+
+    template<typename T> bool AttachToShader(Shader *f_shader, T *f_element, int f_uniform)
+    {
+        CheckShader(f_shader);
+        bool l_result = f_shader->Attach(f_element,f_uniform);
+        RestoreShader(f_shader);
+        return l_result;
+    }
+    template<typename T> void DettachFromShader(Shader *f_shader, T *f_element)
+    {
+        CheckShader(f_shader);
+        f_shader->Dettach(f_element);
+        RestoreShader(f_shader);
+    }
+
     friend Core;
     friend class ElementManager;
+    friend class InheritanceManager;
 };
 
 }

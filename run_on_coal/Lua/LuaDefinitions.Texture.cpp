@@ -70,22 +70,6 @@ int textureDestroy(lua_State *f_vm)
     lua_pushboolean(f_vm,result);
     return 1;
 }
-int textureBind(lua_State *f_vm)
-{
-    Texture *l_tex;
-    LUA_INTEGER l_bind = 0;
-    ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_tex,ElementType::TextureElement);
-    argStream.ReadInteger(l_bind);
-    if(argStream.HasErrors() || l_bind < 0 || l_bind >= 32)
-    {
-        lua_pushboolean(f_vm,0);
-        return 1;
-    }
-    l_tex->Bind(static_cast<unsigned int>(l_bind));
-    lua_pushboolean(f_vm,1);
-    return 1;
-}
 int textureDraw(lua_State *f_vm)
 {
     Texture *l_tex;

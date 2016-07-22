@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "Scene/Shader.h"
+#include "Scene/Texture.h"
+#include "Scene/RenderTarget.h"
+#include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
 ROC::Shader::Shader()
@@ -37,10 +40,14 @@ ROC::Shader::Shader()
     m_animatedUniformValue = 0U;
     m_timeUniformValue = 0.f;
     m_colorUniformValue = glm::vec4(0.f);
+
+    m_bindPool = new Pool(31U);
 }
 ROC::Shader::~Shader()
 {
     if(m_program) glDeleteProgram(m_program);
+    delete m_bindPool;
+    m_textureBind.clear();
 }
 
 bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_gpath)
@@ -177,6 +184,8 @@ bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_
 void ROC::Shader::Enable()
 {
     glUseProgram(m_program);
+    for(auto iter : m_textureBind) iter.m_texture->Bind(iter.m_slot);
+    for(auto iter : m_targetBind) iter.m_target->BindTexture(iter.m_slot);
 }
 
 void ROC::Shader::SetupDefaultUniformsAndLocations()
@@ -480,6 +489,62 @@ void ROC::Shader::SetColorUniformValue(glm::vec4 &f_value)
     if(!std::memcmp(&f_value,&m_colorUniformValue,sizeof(glm::vec4))) return;
     std::memcpy(&m_colorUniformValue,&f_value,sizeof(glm::vec4));
     SetUniformValue(m_colorUniform,m_colorUniformValue);
+}
+
+bool ROC::Shader::Attach(Texture *f_texture, int f_uniform)
+{
+    for(auto iter : m_textureBind)
+    {
+        if(iter.m_texture == f_texture) return false;
+    }
+    int l_slot = m_bindPool->Allocate();
+    if(l_slot == -1) return false;
+    textureBindData l_bind { f_texture,l_slot+1,f_uniform };
+    m_textureBind.push_back(l_bind);
+    SetUniformValue(f_uniform,l_slot+1);
+    return true;
+}
+void ROC::Shader::Dettach(Texture *f_texture)
+{
+    for(unsigned int i=0U, j=m_textureBind.size(); i < j; i++)
+    {
+        textureBindData &l_bind = m_textureBind[i];
+        if(l_bind.m_texture == f_texture)
+        {
+            m_bindPool->Reset(static_cast<unsigned int>(l_bind.m_slot-1));
+            SetUniformValue(l_bind.m_uniform,-1);
+            m_textureBind.erase(m_textureBind.begin()+i);
+            break;
+        }
+    }
+}
+
+bool ROC::Shader::Attach(RenderTarget *f_target, int f_uniform)
+{
+    for(auto iter : m_targetBind)
+    {
+        if(iter.m_target == f_target) return false;
+    }
+    int l_slot = m_bindPool->Allocate();
+    if(l_slot == -1) return false;
+    targetBindData l_bind { f_target,l_slot+1,f_uniform };
+    m_targetBind.push_back(l_bind);
+    SetUniformValue(f_uniform,l_slot+1);
+    return true;
+}
+void ROC::Shader::Dettach(RenderTarget *f_target)
+{
+    for(unsigned int i=0U, j=m_targetBind.size(); i < j; i++)
+    {
+        targetBindData &l_bind = m_targetBind[i];
+        if(l_bind.m_target == f_target)
+        {
+            m_bindPool->Reset(static_cast<unsigned int>(l_bind.m_slot-1));
+            SetUniformValue(l_bind.m_uniform,-1);
+            m_targetBind.erase(m_targetBind.begin()+i);
+            break;
+        }
+    }
 }
 
 void ROC::Shader::GetError(std::string &f_str)

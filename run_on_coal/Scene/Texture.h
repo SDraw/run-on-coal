@@ -12,7 +12,6 @@ class Texture
     GLuint m_texture;
     int m_type;
 public:
-    void Bind(unsigned int f_bind);
     bool IsTransparent();
     bool IsCubic();
 protected:
@@ -20,10 +19,12 @@ protected:
     ~Texture();
     bool Load(std::string &f_path, int f_type, bool f_compress);
     bool LoadCubemap(std::vector<std::string> &f_path, bool f_compress);
+    void Bind(unsigned int f_bind);
     GLuint GetTexture();
     friend class ElementManager;
     friend class Material;
     friend class RenderManager;
+    friend class Shader;
 };
 
 }

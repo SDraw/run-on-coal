@@ -3,9 +3,13 @@
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/MemoryManager.h"
+#include "Managers/RenderManager.h"
 #include "Model/Animation.h"
 #include "Model/Model.h"
+#include "Scene/RenderTarget.h"
 #include "Scene/Scene.h"
+#include "Scene/Shader.h"
+#include "Scene/Texture.h"
 
 ROC::InheritanceManager::InheritanceManager(Core *f_core)
 {
@@ -95,6 +99,24 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
                     break;
             }
         } break;
+        case ElementType::TextureElement:
+        {
+            switch(f_parentType)
+            {
+                case ElementType::ShaderElement:
+                    m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent),static_cast<Texture*>(f_child));
+                    break;
+            }
+        } break;
+        case ElementType::RenderTargetElement:
+        {
+            switch(f_parentType)
+            {
+                case ElementType::ShaderElement:
+                    m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent),static_cast<RenderTarget*>(f_child));
+                    break;
+            }
+        } break;
     }
 }
 
@@ -154,4 +176,36 @@ bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
     f_scene->SetLight(f_light);
     m_inheritMap.insert(std::pair<void*,void*>(f_light,f_scene));
     return true;
+}
+
+bool ROC::InheritanceManager::AttachTextureToShader(Shader *f_shader, Texture *f_texture, int f_uniform)
+{
+    auto iter = m_inheritMap.equal_range(f_texture);
+    for(auto iter1 = iter.first; iter1 != iter.second; iter1++)
+    {
+        if(iter1->second == f_shader) return false;
+    }
+    if(!m_core->GetRenderManager()->AttachToShader(f_shader,f_texture,f_uniform)) return false;
+    m_inheritMap.insert(std::pair<void*,void*>(f_texture,f_shader));
+    return true;
+}
+void ROC::InheritanceManager::DettachTextureFromShader(Shader *f_shader, Texture *f_texture)
+{
+    RemoveInheritance(f_texture,f_shader);
+}
+
+bool ROC::InheritanceManager::AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform)
+{
+    auto iter = m_inheritMap.equal_range(f_target);
+    for(auto iter1 = iter.first; iter1 != iter.second; iter1++)
+    {
+        if(iter1->second == f_shader) return false;
+    }
+    if(!m_core->GetRenderManager()->AttachToShader(f_shader,f_target,f_uniform)) return false;
+    m_inheritMap.insert(std::pair<void*,void*>(f_target,f_shader));
+    return true;
+}
+void ROC::InheritanceManager::DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target)
+{
+    RemoveInheritance(f_target,f_shader);
 }

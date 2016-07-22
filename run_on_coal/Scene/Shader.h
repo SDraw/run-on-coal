@@ -3,6 +3,9 @@
 namespace ROC
 {
 
+class Pool;
+class Texture;
+class RenderTarget;
 class Shader
 {
     GLuint m_program;
@@ -38,6 +41,22 @@ class Shader
     unsigned int m_animatedUniformValue;
     float m_timeUniformValue;
     glm::vec4 m_colorUniformValue;
+
+    Pool *m_bindPool;
+    struct textureBindData
+    {
+        Texture *m_texture;
+        int m_slot;
+        int m_uniform;
+    };
+    struct targetBindData
+    {
+        RenderTarget *m_target;
+        int m_slot;
+        int m_uniform;
+    };
+    std::vector<textureBindData> m_textureBind;
+    std::vector<targetBindData> m_targetBind;
 
     std::string m_error;
 
@@ -109,8 +128,14 @@ protected:
     void SetTimeUniformValue(float f_value);
     void SetColorUniformValue(glm::vec4 &f_value);
 
+    bool Attach(Texture *f_texture, int f_uniform);
+    void Dettach(Texture *f_texture);
+    bool Attach(RenderTarget *f_target, int f_uniform);
+    void Dettach(RenderTarget *f_target);
+
     void GetError(std::string &f_str);
     friend class ElementManager;
+    friend class InheritanceManager;
     friend class RenderManager;
 };
 
