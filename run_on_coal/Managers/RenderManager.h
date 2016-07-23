@@ -16,9 +16,9 @@ class RenderManager
 {
     Core *m_core;
 
-    Scene *m_currentScene;
-    Shader *m_currentShader;
-    RenderTarget *m_currentRT;
+    Scene *m_activeScene;
+    Shader *m_activeShader;
+    RenderTarget *m_activeTarget;
     Quad *m_quad;
     glm::mat4 m_screenProjection;
     bool m_locked;
@@ -51,7 +51,7 @@ class RenderManager
     void EnableCulling();
     bool CompareLastVAO(GLuint f_vao);
     bool CompareLastTexture(GLuint f_texture);
-    void CheckShader(Shader *f_shader);
+    void EnableNonActiveShader(Shader *f_shader);
 public:
 
     void ClearRenderArea(GLbitfield f_params);
@@ -59,22 +59,23 @@ public:
     void SetViewport(glm::ivec4 &f_area);
     void SetPolygonMode(unsigned int f_mode);
 
-    void SetCurrentScene(Scene *f_scene);
-    void CheckAndRemoveSceneIfCurrent(Scene *f_scene);
-    void SetCurrentShader(Shader *f_shader);
+    void SetActiveScene(Scene *f_scene);
+    void RemoveAsActiveScene(Scene *f_scene);
+
+    void SetActiveShader(Shader *f_shader);
     template<typename T> void SetShaderUniformValueO(Shader *f_shader, GLint f_uValue, T f_value)
     {
-        CheckShader(f_shader);
+        EnableNonActiveShader(f_shader);
         f_shader->SetUniformValue(f_uValue,f_value);
-        RestoreShader(f_shader);
+        RestoreActiveShader(f_shader);
     };
     template<typename T> void SetShaderUniformValueM(Shader *f_shader, GLint f_uValue, T &f_value)
     {
-        CheckShader(f_shader);
+        EnableNonActiveShader(f_shader);
         f_shader->SetUniformValue(f_uValue,f_value);
-        RestoreShader(f_shader);
+        RestoreActiveShader(f_shader);
     };
-    void CheckShaderForCurrent(Shader *f_shader);
+    void RemoveAsActiveShader(Shader *f_shader);
 
     void SetRenderTarget(RenderTarget *f_rt);
 
@@ -87,20 +88,20 @@ protected:
     ~RenderManager();
     void DoPulse();
     void ResetCallsReducing();
-    void RestoreShader(Shader *f_shader);
 
+    void RestoreActiveShader(Shader *f_shader);
     template<typename T> bool AttachToShader(Shader *f_shader, T *f_element, int f_uniform)
     {
-        CheckShader(f_shader);
+        EnableNonActiveShader(f_shader);
         bool l_result = f_shader->Attach(f_element,f_uniform);
-        RestoreShader(f_shader);
+        RestoreActiveShader(f_shader);
         return l_result;
     }
     template<typename T> void DettachFromShader(Shader *f_shader, T *f_element)
     {
-        CheckShader(f_shader);
+        EnableNonActiveShader(f_shader);
         f_shader->Dettach(f_element);
-        RestoreShader(f_shader);
+        RestoreActiveShader(f_shader);
     }
 
     friend Core;

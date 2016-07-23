@@ -48,6 +48,7 @@ ROC::Shader::~Shader()
     if(m_program) glDeleteProgram(m_program);
     delete m_bindPool;
     m_textureBind.clear();
+    m_targetBind.clear();
 }
 
 bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_gpath)
@@ -181,11 +182,14 @@ bool ROC::Shader::Load(std::string &f_vpath,std::string &f_fpath,std::string &f_
     return true;
 }
 
-void ROC::Shader::Enable()
+void ROC::Shader::Enable(bool f_textureBind)
 {
     glUseProgram(m_program);
-    for(auto iter : m_textureBind) iter.m_texture->Bind(iter.m_slot);
-    for(auto iter : m_targetBind) iter.m_target->BindTexture(iter.m_slot);
+    if(f_textureBind)
+    {
+        for(auto iter : m_textureBind) iter.m_texture->Bind(iter.m_slot);
+        for(auto iter : m_targetBind) iter.m_target->BindTexture(iter.m_slot);
+    }
 }
 
 void ROC::Shader::SetupDefaultUniformsAndLocations()

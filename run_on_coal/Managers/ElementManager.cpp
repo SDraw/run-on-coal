@@ -44,7 +44,7 @@ ROC::Scene* ROC::ElementManager::CreateScene()
 }
 bool ROC::ElementManager::DestroyScene(Scene *f_scene)
 {
-    m_core->GetRenderManager()->CheckAndRemoveSceneIfCurrent(f_scene);
+    m_core->GetRenderManager()->RemoveAsActiveScene(f_scene);
     m_core->GetInheritManager()->RemoveParentRelation(f_scene);
     m_core->GetMemoryManager()->RemoveMemoryPointer(f_scene,ElementType::SceneElement);
     delete f_scene;
@@ -179,12 +179,12 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
         return NULL;
     }
     m_core->GetMemoryManager()->AddMemoryPointer(l_shader,ElementType::ShaderElement);
-    if(m_locked) m_core->GetRenderManager()->RestoreShader(NULL);
+    if(m_locked) m_core->GetRenderManager()->RestoreActiveShader(l_shader);
     return l_shader;
 }
 bool ROC::ElementManager::DestroyShader(Shader *f_shader)
 {
-    m_core->GetRenderManager()->CheckShaderForCurrent(f_shader);
+    m_core->GetRenderManager()->RemoveAsActiveShader(f_shader);
     m_core->GetMemoryManager()->RemoveMemoryPointer(f_shader,ElementType::ShaderElement);
     delete f_shader;
     return true;

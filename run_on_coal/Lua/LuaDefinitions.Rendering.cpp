@@ -21,7 +21,7 @@ int setActiveScene(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    LuaManager::m_corePointer->GetRenderManager()->SetCurrentScene(l_scene);
+    LuaManager::m_corePointer->GetRenderManager()->SetActiveScene(l_scene);
     lua_pushboolean(f_vm,1);
     return 1;
 }
@@ -35,7 +35,7 @@ int setActiveShader(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    LuaManager::m_corePointer->GetRenderManager()->SetCurrentShader(l_shader);
+    LuaManager::m_corePointer->GetRenderManager()->SetActiveShader(l_shader);
     lua_pushboolean(f_vm,1);
     return 1;
 }
