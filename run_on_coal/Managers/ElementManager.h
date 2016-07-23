@@ -28,7 +28,10 @@ class Collision;
 class ElementManager
 {
     Core *m_core;
+    std::regex m_regex;
     bool m_locked;
+    
+    void AnalyzePath(std::string &f_in, std::string &f_out);
 public:
     Scene* CreateScene();
     bool DestroyScene(Scene *f_scene);

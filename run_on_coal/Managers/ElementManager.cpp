@@ -25,9 +25,15 @@ ROC::ElementManager::ElementManager(Core *f_core)
 {
     m_core = f_core;
     m_locked = false;
+    m_regex = std::regex("(\\.\\.)+(\\/|\\\\)");
 }
 ROC::ElementManager::~ElementManager()
 {
+}
+
+void ROC::ElementManager::AnalyzePath(std::string &f_in, std::string &f_out)
+{
+    std::regex_replace(std::back_inserter(f_out),f_in.begin(),f_in.end(),m_regex,"");
 }
 
 void ROC::ElementManager::SetLock(bool f_lock)
@@ -85,10 +91,13 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(std::string &f_path)
 {
     Animation *l_anim = new Animation();
     if(!l_anim) return NULL;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    Utils::PathsJoin(l_wDir,f_path,l_path);
-    if(!l_anim->Load(l_path))
+
+    std::string l_work,l_path;
+    m_core->GetWorkingDirectory(l_work);
+    AnalyzePath(f_path,l_path);
+    Utils::JoinPaths(l_work,l_path);
+
+    if(!l_anim->Load(l_work))
     {
         delete l_anim;
         return NULL;
@@ -108,11 +117,14 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path, bool l_c
 {
     Geometry *l_geometry = new Geometry();
     if(!l_geometry) return NULL;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    Utils::PathsJoin(l_wDir,f_path,l_path);
+
+    std::string l_work,l_path;
+    m_core->GetWorkingDirectory(l_work);
+    AnalyzePath(f_path,l_path);
+    Utils::JoinPaths(l_work,l_path);
+
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_geometry->Load(l_path,l_comp))
+    if(!l_geometry->Load(l_work,l_comp))
     {
         delete l_geometry;
         return NULL;
@@ -154,11 +166,31 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
 {
     Shader *l_shader = new Shader();
     if(!l_shader) return NULL;
-    std::string l_path[3],l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    if(f_vpath.length()) Utils::PathsJoin(l_wDir,f_vpath,l_path[0]);
-    if(f_fpath.length()) Utils::PathsJoin(l_wDir,f_fpath,l_path[1]);
-    if(f_gpath.length()) Utils::PathsJoin(l_wDir,f_gpath,l_path[2]);
+
+    std::string l_path[3],l_work;
+    m_core->GetWorkingDirectory(l_work);
+
+    if(f_vpath.length())
+    {
+        std::string l_vertexPath;
+        AnalyzePath(f_vpath,l_vertexPath);
+        l_path[0].append(l_work);
+        Utils::JoinPaths(l_path[0],l_vertexPath);
+    }
+    if(f_fpath.length())
+    {
+        std::string l_fragmentPath;
+        AnalyzePath(f_fpath,l_fragmentPath);
+        l_path[1].append(l_work);
+        Utils::JoinPaths(l_path[1],l_fragmentPath);
+    }
+    if(f_gpath.length())
+    {
+        std::string l_geometryPath;
+        AnalyzePath(f_gpath,l_geometryPath);
+        l_path[2].append(l_work);
+        Utils::JoinPaths(l_path[2],l_geometryPath);
+    }
     if(!l_shader->Load(l_path[0],l_path[1],l_path[2]))
     {
         std::string l_shaderError;
@@ -194,10 +226,13 @@ ROC::Sound* ROC::ElementManager::CreateSound(std::string &f_path, bool f_loop)
 {
     Sound *l_sound = new Sound(f_loop);
     if(!l_sound) return NULL;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    Utils::PathsJoin(l_wDir,f_path,l_path);
-    if(!l_sound->Load(l_path))
+
+    std::string l_path,l_work;
+    m_core->GetWorkingDirectory(l_work);
+    AnalyzePath(f_path,l_path);
+    Utils::JoinPaths(l_work,l_path);
+
+    if(!l_sound->Load(l_work))
     {
         delete l_sound;
         return NULL;
@@ -240,11 +275,14 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
 {
     Texture *l_tex = new Texture();
     if(!l_tex) return NULL;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    Utils::PathsJoin(l_wDir,f_path,l_path);
+
+    std::string l_path,l_work;
+    m_core->GetWorkingDirectory(l_work);
+    AnalyzePath(f_path,l_path);
+    Utils::JoinPaths(l_work,l_path);
+
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_tex->Load(l_path,f_type,f_compress))
+    if(!l_tex->Load(l_work,f_type,f_compress))
     {
         delete l_tex;
         return NULL;
@@ -256,17 +294,22 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
 {
     Texture *l_tex = new Texture();
     if(!l_tex) return NULL;
-    std::vector<std::string> l_vPath;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
+
+    std::vector<std::string> l_path;
+    std::string l_work;
+    m_core->GetWorkingDirectory(l_work);
+
     for(auto iter : f_path)
     {
-        Utils::PathsJoin(l_wDir,iter,l_path);
-        l_vPath.push_back(l_path);
-        l_path.clear();
+        std::string l_iterPath;
+        std::string l_iterFullPath(l_work);
+        AnalyzePath(iter,l_iterPath);
+        Utils::JoinPaths(l_iterFullPath,l_iterPath);
+        l_path.push_back(l_iterFullPath);
     }
+
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_tex->LoadCubemap(l_vPath,f_compress))
+    if(!l_tex->LoadCubemap(l_path,f_compress))
     {
         delete l_tex;
         return NULL;
@@ -286,11 +329,14 @@ ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size)
 {
     Font *l_font = new Font();
     if(!l_font) return NULL;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    Utils::PathsJoin(l_wDir,f_path,l_path);
+
+    std::string l_path,l_work;
+    m_core->GetWorkingDirectory(l_work);
+    AnalyzePath(f_path,l_path);
+    Utils::JoinPaths(l_work,l_path);
+
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_font->LoadTTF(l_path,f_size))
+    if(!l_font->LoadTTF(l_work,f_size))
     {
         delete l_font;
         return NULL;
@@ -309,14 +355,17 @@ ROC::Cursor* ROC::ElementManager::CreateCursor(std::string &f_path, bool f_sys)
 {
     Cursor *l_cursor = new Cursor();
     if(!l_cursor) return NULL;
+
     std::string l_path;
     if(!f_sys)
     {
-        std::string l_wDir;
-        m_core->GetWorkingDirectory(l_wDir);
-        Utils::PathsJoin(l_wDir,f_path,l_path);
+        std::string l_work;
+        m_core->GetWorkingDirectory(l_work);
+        AnalyzePath(f_path,l_path);
+        Utils::JoinPaths(l_work,l_path);
     }
     else l_path.append(f_path);
+
     if(!l_cursor->Load(l_path,f_sys))
     {
         delete l_cursor;
@@ -336,10 +385,13 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
 {
     File *l_file = new File();
     if(!l_file) return NULL;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    Utils::PathsJoin(l_wDir,f_path,l_path);
-    if(!l_file->Create(l_path,f_path))
+
+    std::string l_path,l_work;
+    m_core->GetWorkingDirectory(l_work);
+    AnalyzePath(f_path,l_path);
+    Utils::JoinPaths(l_work,l_path);
+
+    if(!l_file->Create(l_work,f_path))
     {
         delete l_file;
         return NULL;
@@ -351,10 +403,13 @@ ROC::File* ROC::ElementManager::OpenFile(std::string &f_path,bool f_ro)
 {
     File *l_file = new File();
     if(!l_file) return NULL;
-    std::string l_path,l_wDir;
-    m_core->GetWorkingDirectory(l_wDir);
-    Utils::PathsJoin(l_wDir,f_path,l_path);
-    if(!l_file->Open(l_path,f_path,f_ro))
+
+    std::string l_path,l_work;
+    m_core->GetWorkingDirectory(l_work);
+    AnalyzePath(f_path,l_path);
+    Utils::JoinPaths(l_work,l_path);
+
+    if(!l_file->Open(l_work,f_path,f_ro))
     {
         delete l_file;
         return NULL;
