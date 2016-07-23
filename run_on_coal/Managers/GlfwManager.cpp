@@ -72,7 +72,14 @@ void ROC::GlfwManager::TextInputCallback(GLFWwindow* window, unsigned int codepo
     GlfwManager *l_glfwManager = static_cast<GlfwManager*>(glfwGetWindowUserPointer(window));
     EventManager *l_eventManager = l_glfwManager->m_core->GetLuaManager()->GetEventManager();
     if(!l_eventManager->IsEventExists(EventType::TextInput)) return;
-    utf8::utf32to8(&codepoint,&codepoint+1,std::back_inserter(l_glfwManager->m_input));
+    try
+    {
+        utf8::utf32to8(&codepoint,&codepoint+1,std::back_inserter(l_glfwManager->m_input));
+    }
+    catch(const std::exception &e)
+    {
+        l_glfwManager->m_input.push_back('\0');
+    }
     m_argument.PushArgument(l_glfwManager->m_input);
     l_eventManager->CallEvent(EventType::TextInput,m_argument);
     m_argument.Clear();

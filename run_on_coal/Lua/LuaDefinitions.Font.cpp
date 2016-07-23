@@ -60,7 +60,14 @@ int fontDraw(lua_State *f_vm)
     glm::vec2 l_vPos(l_pos[0],l_pos[1]);
     glm::vec4 l_vColor(l_color[0],l_color[1],l_color[2],l_color[3]);
     std::wstring l_converted;
-    utf8::utf8to32(l_text.begin(),l_text.end(),std::back_inserter(l_converted));
+    try
+    {
+        utf8::utf8to16(l_text.begin(),l_text.end(),std::back_inserter(l_converted));
+    }
+    catch(const std::exception &e)
+    {
+        l_converted.assign(l_text.length(),L'?');
+    }
     LuaManager::m_corePointer->GetRenderManager()->Render(l_font,l_vPos,l_converted,l_vColor);
     lua_pushboolean(f_vm,1);
     return 1;
