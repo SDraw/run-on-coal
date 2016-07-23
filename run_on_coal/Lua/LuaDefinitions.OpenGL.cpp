@@ -73,11 +73,10 @@ int oglViewport(lua_State *f_vm)
 }
 int oglPolygonMode(lua_State *f_vm)
 {
-    std::string l_face,l_mode;
+    std::string l_mode;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    argStream.ReadText(l_face);
     argStream.ReadText(l_mode);
-    if(argStream.HasErrors() || !l_face.length() || !l_mode.length())
+    if(argStream.HasErrors() || !l_mode.length())
     {
         lua_pushboolean(f_vm,0);
         return 1;

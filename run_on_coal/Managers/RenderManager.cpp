@@ -272,7 +272,7 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
 void ROC::RenderManager::SetPolygonMode(unsigned int f_mode)
 {
     if(f_mode > 2U) return;
-    glPolygonMode(GL_FRONT_AND_BACK,GL_POINT+f_mode);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_POINT+static_cast<int>(f_mode));
 }
 
 void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
