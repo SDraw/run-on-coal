@@ -39,11 +39,10 @@ unsigned long GetSystemTick()
     return GetTickCount();
 }
 
-void PathsJoin(std::string &f_path1, std::string &f_path2, std::string &f_out)
+void JoinPaths(std::string &f_result, std::string &f_path)
 {
-   f_out.append(f_path1);
-   f_out.append("/");
-   f_out.append(f_path2);
+    f_result.push_back('/');
+    f_result.append(f_path);
 }
 
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)

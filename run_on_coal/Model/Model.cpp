@@ -48,34 +48,29 @@ ROC::Model::~Model()
     RemoveRigidity();
 }
 
-bool ROC::Model::UpdateMatrix()
+void ROC::Model::UpdateMatrix()
 {
-    bool l_updated = false;
+    if(!m_parent && !m_rebuildMatrix) return;
     if(m_rebuildMatrix)
     {
         m_localMatrix = glm::translate(Bone::m_identity,m_position)*glm::toMat4(m_rotation)*glm::scale(Bone::m_identity,m_scale);
-        l_updated = true;
         m_rebuildMatrix = false;
     }
     if(m_parent)
     {
-        if(m_parent->UpdateMatrix() || m_parentBone != -1 || l_updated)
+        m_parent->UpdateMatrix();
+        glm::mat4 l_parentMatrix(m_parent->m_matrix);
+        if(m_parentBone != -1) 
         {
-            glm::mat4 l_parentMatrix;
-            m_parent->GetMatrix(l_parentMatrix);
-            if(m_parentBone != -1) 
-            {
-                glm::mat4 l_parentBoneMatrix;
-                m_parent->GetBoneMatrix(m_parentBone,l_parentBoneMatrix);
-                l_parentMatrix *= l_parentBoneMatrix;
-            }
-            m_matrix = l_parentMatrix*m_localMatrix;
-            l_updated = true;
+            glm::mat4 l_parentBoneMatrix;
+            m_parent->GetBoneMatrix(m_parentBone,l_parentBoneMatrix);
+            l_parentMatrix *= l_parentBoneMatrix;
         }
+        m_matrix = l_parentMatrix*m_localMatrix;
     }
     else std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
-    return l_updated;
 }
+
 void ROC::Model::UpdateSkeleton()
 {
     if(m_animation)
@@ -189,6 +184,7 @@ void ROC::Model::GetMatrix(glm::mat4 &f_mat)
 {
     std::memcpy(&f_mat,&m_matrix,sizeof(glm::mat4));
 }
+
 unsigned int ROC::Model::GetMaterialCount()
 {
     return (m_geometry ? m_geometry->GetMaterialCount() : 0);
@@ -466,4 +462,14 @@ void ROC::Model::UpdateSkeletonRigidBones()
 {
     if(!m_skeleton) return;
     m_skeleton->UpdateRigidBones(m_matrix);
+}
+
+void ROC::Model::UpdateRigidity()
+{
+    if(!m_rigidBody) return;
+    const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
+    std::memcpy(&m_position,l_transform.getOrigin(),sizeof(glm::vec3));
+    std::memcpy(&m_rotation,l_transform.getRotation(),sizeof(glm::quat));
+    l_transform.getOpenGLMatrix((float*)&m_localMatrix);
+    std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
 }

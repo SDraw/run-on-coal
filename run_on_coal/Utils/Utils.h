@@ -6,10 +6,14 @@ namespace Utils
 {
 
 bool ReadFile(std::string &path, std::string &f_cont);
+
 GLint CheckShader(GLuint f_shader);
-int ReadEnumString(std::string &f_val, const std::string &f_enum);
+
+
 unsigned long GetSystemTick();
-void PathsJoin(std::string &f_out, std::string &f_path1, std::string &f_path2);
+
+void JoinPaths(std::string &f_result, std::string &f_path);
+int ReadEnumString(std::string &f_val, const std::string &f_enum);
 
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen);
 int UncompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen);

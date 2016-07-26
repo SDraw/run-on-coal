@@ -45,20 +45,7 @@ void ROC::PhysicsManager::DoPulse()
     m_dynamicWorld->stepSimulation(1.0f/60.0f,10,1.0f/120.0f);
     //m_dynamicWorld->stepSimulation(1.0f/30.0f,10,1.0f/60.0f);
 
-    btTransform l_transform;
-    btVector3 l_transformPos;
-    btQuaternion l_transformRot;
-    for(auto iter : m_elementSet)
-    {
-        btRigidBody *l_rigidBody = iter->GetRidigBody();
-        if(!l_rigidBody->isActive()) continue;
-        l_transform = l_rigidBody->getWorldTransform();
-        l_transformPos = l_transform.getOrigin();
-        l_transformRot = l_transform.getRotation();
-
-        iter->SetPosition((glm::vec3&)l_transformPos,false);
-        iter->SetRotation((glm::quat&)l_transformRot,false);
-    }
+    for(auto iter : m_elementSet) iter->UpdateRigidity();
 }
 
 void ROC::PhysicsManager::SetPhysicsEnabled(bool f_value)

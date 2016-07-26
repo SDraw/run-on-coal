@@ -19,8 +19,8 @@ class Model
     Geometry *m_geometry; 
     Skeleton *m_skeleton;
     Animation *m_animation;
-    btRigidBody* m_rigidBody;
     Model *m_parent;
+    btRigidBody* m_rigidBody;
         
     int m_parentBone;
     unsigned long m_animLastTick;
@@ -92,7 +92,7 @@ protected:
     void SetParent(Model *f_model, int f_bone = -1);
     void SetAnimation(Animation *f_anim);
     void SetGeometry(Geometry *f_geometry);
-    bool UpdateMatrix();
+    void UpdateMatrix();
     void UpdateAnimation();
     GLuint GetMaterialVAO(unsigned int f_material);
     GLuint GetMaterialTexture(unsigned int f_material);
@@ -102,6 +102,7 @@ protected:
     void GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vector<btTypedConstraint*> &f_cs);
     void UpdateSkeletonChains();
     void UpdateSkeletonRigidBones();
+    void UpdateRigidity();
 
     friend class ElementManager;
     friend class InheritanceManager;
