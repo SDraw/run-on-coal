@@ -29,6 +29,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_window = new sf::Window();
     m_window->create(l_videoMode,"ROC",m_core->GetConfigManager()->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default,l_contextSettings);
     m_window->setFramerateLimit(60U);
+    m_window->setKeyRepeatEnabled(false);
 
     glewExperimental = true;
     GLenum l_error = glewInit();
@@ -204,8 +205,8 @@ void ROC::SfmlManager::CloseWindow()
     m_active = false;
 }
 
-double ROC::SfmlManager::GetTime()
+float ROC::SfmlManager::GetTime()
 {
-    sf::Time l_elapsed = m_clock.getElapsedTime();
-    return static_cast<double>(l_elapsed.asSeconds());
+    sf::Time l_time = m_clock.getElapsedTime();
+    return l_time.asSeconds();
 }

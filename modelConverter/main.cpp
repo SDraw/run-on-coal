@@ -534,7 +534,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             if(l_buffer[0] == 'n' && l_buffer[1] == 'e' && l_buffer[2] == 'w' && l_buffer[3] == 'm' && l_buffer[4] == 't' && l_buffer[5] == 'l') //new material
             {
                 char l_textureName[128];
-                if(sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Material name parse error");
+                if(std::sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Material name parse error");
                 l_materialNames.push_back(l_textureName);
                 while(std::getline(l_materialFile,l_buffer))
                 {
@@ -543,13 +543,13 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                     if(l_buffer[0] == 't' && l_buffer[1] == 'y' && l_buffer[2] == 'p' && l_buffer[3] == 'e')
                     {
                         unsigned int l_mType;
-                        if(sscanf(l_buffer.c_str(),"%*s %u",&l_mType) == EOF) Error("Unable to parse material type");
+                        if(std::sscanf(l_buffer.c_str(),"%*s %u",&l_mType) == EOF) Error("Unable to parse material type");
                         l_materialTypes.push_back(l_mType);
                         continue;
                     }
                     if(l_buffer[0] == 'm' && l_buffer[1] == 'a' && l_buffer[2] == 'p' && l_buffer[3] == '_' && (l_buffer[4] == 'K' || l_buffer[4] == 'k') && l_buffer[5] == 'd')
                     {
-                        if(sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Unable to parse diffuse map");
+                        if(std::sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Unable to parse diffuse map");
                         l_materialTextureNames.push_back(std::string("textures/")+l_textureName);
                         continue;
                     }
@@ -583,7 +583,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
         }
     }
 
-    std::ofstream l_outputFile(f_out.c_str(),std::ios::out|std::ios::binary);
+    std::ofstream l_outputFile(f_out,std::ios::out|std::ios::binary);
     if(l_outputFile.fail()) Error("Unable to create output file");
     l_outputFile.write("ROC",3);
     unsigned char l_setter = 0x1;
@@ -599,21 +599,21 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             if(l_buffer[1] == 'n') // normal
             {
                 float x,y,z;
-                if(sscanf(l_buffer.c_str(),"%*s %f %f %f",&x,&y,&z) == EOF) Error("Normals parsing error");
+                if(std::sscanf(l_buffer.c_str(),"%*s %f %f %f",&x,&y,&z) == EOF) Error("Normals parsing error");
                 temp_normal.push_back(glm::vec3(x,y,z));
                 continue;
             }
             if(l_buffer[1] == 't') //uv
             {
                 float u,v;
-                if(sscanf(l_buffer.c_str(),"%*s %f %f",&u,&v) == EOF) Error("UVs parsing error");
+                if(std::sscanf(l_buffer.c_str(),"%*s %f %f",&u,&v) == EOF) Error("UVs parsing error");
                 temp_uv.push_back(glm::vec2(u,1.0f-v));
                 continue;
             }
             if(l_buffer[1] == ' ')
             {
                 float x,y,z;
-                if(sscanf(l_buffer.c_str(),"%*s %f %f %f",&x,&y,&z) == EOF) Error("Vertices parsing error");
+                if(std::sscanf(l_buffer.c_str(),"%*s %f %f %f",&x,&y,&z) == EOF) Error("Vertices parsing error");
                 temp_vertex.push_back(glm::vec3(x,y,z));
                 continue;
             }
@@ -711,7 +711,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                 l_faceVector.clear();
             }
             char l_textureName[128];
-            if(sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Unable to parse materials");
+            if(std::sscanf(l_buffer.c_str(),"%*s %s",l_textureName) == EOF) Error("Unable to parse materials");
             l_currentMaterial = std::distance(l_materialNames.begin(),std::find(l_materialNames.begin(),l_materialNames.end(),l_textureName));
             if(l_currentMaterial >= int(l_materialNames.size()) || l_currentMaterial < 0) Error("Unable to parse materials");
             continue;
@@ -728,7 +728,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             unsigned int v1,v2,v3;
             unsigned int t1,t2,t3;
             unsigned int n1,n2,n3;
-            if(sscanf(l_buffer.c_str(),"%*s %u/%u/%u %u/%u/%u %u/%u/%u",&v1,&t1,&n1,&v2,&t2,&n2,&v3,&t3,&n3) == EOF) Error("Unable to parse faces for material" << l_currentMaterial)
+            if(std::sscanf(l_buffer.c_str(),"%*s %u/%u/%u %u/%u/%u %u/%u/%u",&v1,&t1,&n1,&v2,&t2,&n2,&v3,&t3,&n3) == EOF) Error("Unable to parse faces for material" << l_currentMaterial)
             Face l_face;
             l_face.m_materialIndices[0] = v1-1;
             l_face.m_materialIndices[1] = v2-1;

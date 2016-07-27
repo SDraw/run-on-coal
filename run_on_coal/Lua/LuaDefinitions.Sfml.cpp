@@ -87,8 +87,8 @@ int closeApp(lua_State *f_vm)
 
 int getTime(lua_State *f_vm)
 {
-    double l_time = LuaManager::m_corePointer->GetSfmlManager()->GetTime();
-    lua_pushnumber(f_vm,l_time);
+    float l_time = LuaManager::m_corePointer->GetSfmlManager()->GetTime();
+    lua_pushnumber(f_vm,static_cast<lua_Number>(l_time));
     return 1;
 }
 

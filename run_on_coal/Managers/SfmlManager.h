@@ -29,7 +29,7 @@ public:
     void GetWindowSize(glm::ivec2 &f_size);
     void CloseWindow();
 
-    double GetTime();
+    float GetTime();
 protected:
     SfmlManager(Core *f_core);
     ~SfmlManager();

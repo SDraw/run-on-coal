@@ -54,7 +54,7 @@ ROC::RenderManager::~RenderManager()
 void ROC::RenderManager::DoPulse()
 {
     SfmlManager *l_sfmlManager = m_core->GetSfmlManager();
-    m_time = float(l_sfmlManager->GetTime());
+    m_time = l_sfmlManager->GetTime();
 
     m_locked = false;
     EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();

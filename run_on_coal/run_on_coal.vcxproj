@@ -93,7 +93,13 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <MinimalRebuild>true</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <CallingConvention>Cdecl</CallingConvention>
+      <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,7 +108,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype26\lib;..\vendor\glew\lib\Release\Win32;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype262_dll.lib;lua53.lib;sfml-audio.lib;sfml-system.lib;sfml-window.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Command>
