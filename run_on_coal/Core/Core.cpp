@@ -39,7 +39,7 @@ ROC::Core::Core()
 
     m_configManager = new ConfigManager(this);
     m_logManager = new LogManager(this);
-    m_glfwManager = new SfmlManager(this);
+    m_sfmlManager = new SfmlManager(this);
     m_luaManager = new LuaManager(this);
     m_memoryManager = new MemoryManager(this);
     m_inheritManager = new InheritanceManager(this);
@@ -59,14 +59,14 @@ ROC::Core::~Core()
     delete m_inheritManager;
     delete m_memoryManager;
     delete m_luaManager;
-    delete m_glfwManager;
+    delete m_sfmlManager;
     delete m_logManager;
     delete m_configManager;
 }
 
 bool ROC::Core::DoPulse()
 {
-    bool l_result = m_glfwManager->DoPulse();
+    bool l_result = m_sfmlManager->DoPulse();
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();
     m_preRenderManager->DoPulse_S2();
@@ -87,7 +87,7 @@ ROC::ElementManager* ROC::Core::GetElementManager()
 }
 ROC::SfmlManager* ROC::Core::GetSfmlManager()
 {
-    return m_glfwManager;
+    return m_sfmlManager;
 }
 ROC::InheritanceManager* ROC::Core::GetInheritManager()
 { 

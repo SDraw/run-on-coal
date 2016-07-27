@@ -18,7 +18,7 @@ class Core
 {
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
-    SfmlManager *m_glfwManager;
+    SfmlManager *m_sfmlManager;
     InheritanceManager *m_inheritManager;
     LogManager *m_logManager;
     LuaManager *m_luaManager;
