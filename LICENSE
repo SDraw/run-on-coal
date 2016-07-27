@@ -20,7 +20,6 @@ freely, subject to the following restrictions:
 External libraries used by RunOnCoal
 ------------------------------------
 * OpenGL Extension Wrangler Library is under the Modified BSD License, the Mesa 3-D License (MIT) and the Khronos License (MIT).
-* GLFW is licensed under the zlib/libpng license.
 * Lua is licensed under the terms of the MIT license.
 * GLM is licensed under the Happy Bunny License (Modified MIT) or the MIT License.
 * Bullet Physics is licensed under zlib license.
@@ -30,5 +29,4 @@ External libraries used by RunOnCoal
 * pugixml is licensed under MIT license.
 * lodepng is licensed under MIT license.
 * zlib is licensed under zlib license.
-* utf8cpp is licensed under Boost Software License.
 * luautf8 is licensed under the terms of the MIT license.
