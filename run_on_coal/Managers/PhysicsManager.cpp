@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Core/Core.h"
-#include "Managers/GlfwManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/RenderManager.h"
 #include "Model/Model.h"

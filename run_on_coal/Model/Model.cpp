@@ -467,6 +467,7 @@ void ROC::Model::UpdateSkeletonRigidBones()
 void ROC::Model::UpdateRigidity()
 {
     if(!m_rigidBody) return;
+    if(!m_rigidBody->isActive()) return;
     const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
     std::memcpy(&m_position,l_transform.getOrigin(),sizeof(glm::vec3));
     std::memcpy(&m_rotation,l_transform.getRotation(),sizeof(glm::quat));

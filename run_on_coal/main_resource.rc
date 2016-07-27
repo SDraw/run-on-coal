@@ -1,8 +1,8 @@
-GLFW_ICON ICON "icon.ico"
+SFML_ICON ICON "icon.ico"
 
 1 VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
+ FILEVERSION 1,1,0,0
+ PRODUCTVERSION 1,1,0,0
  FILEFLAGSMASK 0x1fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -18,9 +18,9 @@ BEGIN
         BLOCK "040004b0"
         BEGIN
             VALUE "FileDescription", "RunOnCoal Engine Application"
-            VALUE "FileVersion", "1.0"
+            VALUE "FileVersion", "1.1"
             VALUE "ProductName", "ROC"
-            VALUE "ProductVersion", "1.0"
+            VALUE "ProductVersion", "1.1"
         END
     END
     BLOCK "VarFileInfo"

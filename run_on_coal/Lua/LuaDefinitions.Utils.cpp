@@ -95,9 +95,6 @@ int getElementType(lua_State *f_vm)
         case ElementType::FontElement:
             l_text.append("font");
             break;
-        case ElementType::CursorElement:
-            l_text.append("cursor");
-            break;
         case ElementType::FileElement:
             l_text.append("file");
             break;

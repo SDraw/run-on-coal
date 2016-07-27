@@ -4,9 +4,6 @@
     <ClCompile Include="Managers\EventManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\GlfwManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\InheritanceManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -104,9 +101,6 @@
     <ClCompile Include="Lua\LuaDefinitions.Font.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Glfw.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.Light.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
@@ -146,14 +140,8 @@
     <ClCompile Include="Lua\LuaDefinitions.Geometry.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Cursor.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\File.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Cursor.cpp">
-      <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.File.cpp">
       <Filter>Lua</Filter>
@@ -174,13 +162,19 @@
     <ClCompile Include="Lua\LuaDefinitions.Collision.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Pool.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\SfmlManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Managers\EventManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\GlfwManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\InheritanceManager.h">
@@ -276,9 +270,6 @@
     <ClInclude Include="Lua\LuaDefinitions.Font.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Glfw.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Light.h">
       <Filter>Lua</Filter>
     </ClInclude>
@@ -315,14 +306,8 @@
     <ClInclude Include="Lua\LuaDefinitions.Geometry.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Cursor.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\File.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Cursor.h">
-      <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.File.h">
       <Filter>Lua</Filter>
@@ -338,6 +323,15 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Collision.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Pool.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\SfmlManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Sfml.h">
       <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>

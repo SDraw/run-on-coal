@@ -7,7 +7,7 @@ enum ElementType
 {
     GeometryElement = 1U, ModelElement, AnimationElement, SceneElement,
     CameraElement, LightElement, RenderTargetElement, ShaderElement,
-    SoundElement, TextureElement, FontElement, CursorElement, FileElement, CollisionElement
+    SoundElement, TextureElement, FontElement, FileElement, CollisionElement
 };
 
 class Core;
@@ -22,7 +22,6 @@ class Shader;
 class Sound;
 class Texture;
 class Font;
-class Cursor;
 class File;
 class Collision;
 class ElementManager
@@ -66,9 +65,6 @@ public:
 
     Font* CreateFont_(std::string &f_path, int f_size);
     bool DestroyFont(Font *f_font);
-
-    Cursor* CreateCursor(std::string &f_path, bool f_sys);
-    bool DestroyCursor(Cursor *f_cursor);
 
     File* CreateFile_(std::string &f_path);
     File* OpenFile(std::string &f_path,bool f_ro);

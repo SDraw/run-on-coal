@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/ConfigManager.h"
-#include "Managers/GlfwManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
@@ -10,6 +9,7 @@
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager.h"
+#include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
 
 ROC::Core* ROC::Core::m_instance = NULL;
@@ -39,7 +39,7 @@ ROC::Core::Core()
 
     m_configManager = new ConfigManager(this);
     m_logManager = new LogManager(this);
-    m_glfwManager = new GlfwManager(this);
+    m_glfwManager = new SfmlManager(this);
     m_luaManager = new LuaManager(this);
     m_memoryManager = new MemoryManager(this);
     m_inheritManager = new InheritanceManager(this);
@@ -85,7 +85,7 @@ ROC::ElementManager* ROC::Core::GetElementManager()
 {
     return m_elementManager;
 }
-ROC::GlfwManager* ROC::Core::GetGlfwManager()
+ROC::SfmlManager* ROC::Core::GetSfmlManager()
 {
     return m_glfwManager;
 }

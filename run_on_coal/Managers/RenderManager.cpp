@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/EventManager.h"
-#include "Managers/GlfwManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/RenderManager.h"
+#include "Managers/SfmlManager.h"
 #include "Model/Material.h"
 #include "Model/Model.h"
 #include "Scene/Font.h"
@@ -43,7 +43,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_textureMatrix = glm::mat4(1.f);
 
     glm::ivec2 l_size;
-    m_core->GetGlfwManager()->GetFramebufferSize(l_size);
+    m_core->GetSfmlManager()->GetWindowSize(l_size);
     m_screenProjection = glm::ortho(0.f,static_cast<float>(l_size.x),0.f,static_cast<float>(l_size.y));
 }
 ROC::RenderManager::~RenderManager()
@@ -53,14 +53,14 @@ ROC::RenderManager::~RenderManager()
 
 void ROC::RenderManager::DoPulse()
 {
-    GlfwManager *l_glfwManager = m_core->GetGlfwManager();
-    m_time = float(l_glfwManager->GetTime());
+    SfmlManager *l_sfmlManager = m_core->GetSfmlManager();
+    m_time = float(l_sfmlManager->GetTime());
 
     m_locked = false;
     EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
     if(l_eventManager->IsEventExists(EventType::Render)) l_eventManager->CallEvent(EventType::Render,m_argument);
     m_locked = true;
-    l_glfwManager->SwapBuffers();
+    l_sfmlManager->SwapBuffers();
 }
 
 void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)
@@ -189,7 +189,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
         f_model->DrawMaterial(i,l_textureBind,l_vaoBind);
     }
 }
-void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, std::wstring &f_text, glm::vec4 &f_color)
+void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color)
 {
     if(m_locked || !m_activeShader) return;
     EnableBlending();
@@ -281,7 +281,7 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
     if(!m_activeTarget)
     {
         glBindFramebuffer(GL_FRAMEBUFFER,NULL);
-        m_core->GetGlfwManager()->GetFramebufferSize(m_renderTargetSize);
+        m_core->GetSfmlManager()->GetWindowSize(m_renderTargetSize);
     }
     else
     {

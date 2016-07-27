@@ -5,7 +5,7 @@ namespace ROC
 
 class ConfigManager;
 class ElementManager;
-class GlfwManager;
+class SfmlManager;
 class InheritanceManager;
 class LogManager;
 class LuaManager;
@@ -18,7 +18,7 @@ class Core
 {
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
-    GlfwManager *m_glfwManager;
+    SfmlManager *m_glfwManager;
     InheritanceManager *m_inheritManager;
     LogManager *m_logManager;
     LuaManager *m_luaManager;
@@ -40,7 +40,7 @@ public:
 
     ConfigManager* GetConfigManager();
     ElementManager* GetElementManager();
-    GlfwManager* GetGlfwManager();
+    SfmlManager* GetSfmlManager();
     InheritanceManager* GetInheritManager();
     LogManager* GetLogManager();
     LuaManager* GetLuaManager();

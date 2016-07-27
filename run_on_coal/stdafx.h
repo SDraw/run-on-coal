@@ -4,18 +4,21 @@
 #include <Windows.h>
 #include <direct.h>
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <map>
 #include <unordered_map>
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <ctime>
 #include <regex>
 
 #include "GL/glew.h"
-#include "GLFW/glfw3.h"
+
+#include "SFML/Audio.hpp"
+#include "SFML/Window.hpp"
+
 #define GLM_FORCE_INLINE
 #define GLM_FORCE_AVX
 #include "glm/glm.hpp"
@@ -25,12 +28,12 @@
 #include "glm/gtx/compatibility.hpp"
 #include "glm/gtx/matrix_decompose.hpp"
 #include "glm/gtx/quaternion.hpp"
-#include "SFML/Audio.hpp"
+
 #include "btBulletDynamicsCommon.h"
+
 #include "lodepng.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 #include "lua.hpp"
 #include "pugixml.hpp"
 #include "zlib.h"
-#include "utf8.h"

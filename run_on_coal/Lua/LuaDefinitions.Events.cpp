@@ -5,7 +5,7 @@
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Events.h"
 #include "Utils/Utils.h"
-#define EVENTS_STRING "onOGLPreRender,onOGLRender,onWindowResize,onKeyPress,onMouseKeyPress,onMouseScroll,onCursorMove,onCursorEnter,onJoypadEvent,onTextInput"
+#define EVENTS_STRING "onOGLPreRender,onOGLRender,onWindowResize,onKeyPress,onMouseKeyPress,onMouseScroll,onCursorMove,onCursorEnter,onJoypadConnect,onJoypadButton,onJoypadAxis,onTextInput"
 
 namespace ROC
 {

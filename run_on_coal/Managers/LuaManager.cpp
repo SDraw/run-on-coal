@@ -9,7 +9,6 @@
 #include "Lua/LuaDefinitions.Collision.h"
 #include "Lua/LuaDefinitions.Events.h"
 #include "Lua/LuaDefinitions.Font.h"
-#include "Lua/LuaDefinitions.Glfw.h"
 #include "Lua/LuaDefinitions.Light.h"
 #include "Lua/LuaDefinitions.Geometry.h"
 #include "Lua/LuaDefinitions.Model.h"
@@ -18,10 +17,10 @@
 #include "Lua/LuaDefinitions.Rendering.h"
 #include "Lua/LuaDefinitions.RenderTarget.h"
 #include "Lua/LuaDefinitions.Scene.h"
+#include "Lua/LuaDefinitions.Sfml.h"
 #include "Lua/LuaDefinitions.Shader.h"
 #include "Lua/LuaDefinitions.Sound.h"
 #include "Lua/LuaDefinitions.Texture.h"
-#include "Lua/LuaDefinitions.Cursor.h"
 #include "Lua/LuaDefinitions.File.h"
 #include "Lua/LuaDefinitions.Utils.h"
 
@@ -167,10 +166,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"fontDestroy",Lua::fontDestroy);
     lua_register(m_pVM,"fontDraw",Lua::fontDraw);
 
-    //Cursor
-    lua_register(m_pVM,"cursorCreate",Lua::cursorCreate);
-    lua_register(m_pVM,"cursorDestroy",Lua::cursorDestroy);
-
     //File
     lua_register(m_pVM,"fileCreate",Lua::fileCreate);
     lua_register(m_pVM,"fileOpen",Lua::fileOpen);
@@ -208,8 +203,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"oglViewport",Lua::oglViewport);
     lua_register(m_pVM,"oglPolygonMode",Lua::oglPolygonMode);
 
-    //GLFW
-    lua_register(m_pVM,"setCursor",Lua::setCursor);
+    //Sfml
     lua_register(m_pVM,"setCursorMode",Lua::setCursorMode);
     lua_register(m_pVM,"setCursorPosition",Lua::setCursorPosition);
     lua_register(m_pVM,"getCursorPosition",Lua::getCursorPosition);

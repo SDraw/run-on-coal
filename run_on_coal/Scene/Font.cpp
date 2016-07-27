@@ -48,7 +48,7 @@ ROC::Font::~Font()
     }
 }
 
-bool ROC::Font::LoadChar(wchar_t l_char)
+bool ROC::Font::LoadChar(unsigned int l_char)
 {
     if(FT_Load_Char(m_face,l_char,FT_LOAD_RENDER)) return false;
     charData *l_charData = new charData();
@@ -62,7 +62,7 @@ bool ROC::Font::LoadChar(wchar_t l_char)
     l_charData->m_size = glm::ivec2(m_face->glyph->bitmap.width, m_face->glyph->bitmap.rows);
     l_charData->m_advance = m_face->glyph->advance.x;
     l_charData->m_breaing = glm::ivec2(m_face->glyph->bitmap_left,m_face->glyph->bitmap_top);
-    m_charMap.insert(std::pair<wchar_t,charData*>(l_char,l_charData));
+    m_charMap.insert(std::pair<unsigned int,charData*>(l_char,l_charData));
     return true;
 }
 
@@ -81,7 +81,7 @@ bool ROC::Font::LoadTTF(std::string &f_path, int f_size)
     return true;
 }
 
-bool ROC::Font::Draw(std::wstring &f_text,glm::vec2 &f_pos,bool f_bind)
+bool ROC::Font::Draw(sf::String &f_text,glm::vec2 &f_pos,bool f_bind)
 {
     if(!m_loaded) return false;
     if(f_bind)

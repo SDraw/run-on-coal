@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-enum EventType {
+enum EventType : unsigned char {
     PreRender = 0U, //onOGLPreRender
     Render, //onOGLRender
     WindowResize, //onWindowResize
@@ -12,7 +12,9 @@ enum EventType {
     MouseScroll, //onMouseScroll
     CursorMove, //onCursorMove
     CursorEnter, //onCursorEnter
-    Joypad, //onJoypadEvent
+    JoypadConnect, //onJoypadConnect
+    JoypadButton, //onJoypadButton
+    JoypadAxis, //onJoypadAxis
     TextInput, //onTextInput
     Last // None
 };

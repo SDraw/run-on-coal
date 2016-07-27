@@ -3,7 +3,6 @@
 #include "Managers/ConfigManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/EventManager.h"
-#include "Managers/GlfwManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
@@ -11,6 +10,7 @@
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager.h"
+#include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
 
 #include "Model/Animation.h"
@@ -19,7 +19,6 @@
 
 #include "Scene/Camera.h"
 #include "Scene/Collision.h"
-#include "Scene/Cursor.h"
 #include "Scene/File.h"
 #include "Scene/Font.h"
 #include "Scene/Light.h"

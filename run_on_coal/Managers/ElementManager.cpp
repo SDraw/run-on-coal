@@ -11,7 +11,6 @@
 #include "Model/Geometry.h"
 #include "Model/Model.h"
 #include "Scene/Collision.h"
-#include "Scene/Cursor.h"
 #include "Scene/File.h"
 #include "Scene/Font.h"
 #include "Scene/RenderTarget.h"
@@ -351,36 +350,6 @@ bool ROC::ElementManager::DestroyFont(Font *f_font)
     return true;
 }
 
-ROC::Cursor* ROC::ElementManager::CreateCursor(std::string &f_path, bool f_sys)
-{
-    Cursor *l_cursor = new Cursor();
-    if(!l_cursor) return NULL;
-
-    std::string l_path;
-    if(!f_sys)
-    {
-        std::string l_work;
-        m_core->GetWorkingDirectory(l_work);
-        AnalyzePath(f_path,l_path);
-        Utils::JoinPaths(l_work,l_path);
-    }
-    else l_path.append(f_path);
-
-    if(!l_cursor->Load(l_path,f_sys))
-    {
-        delete l_cursor;
-        return NULL;
-    }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_cursor,ElementType::CursorElement);
-    return l_cursor;
-}
-bool ROC::ElementManager::DestroyCursor(Cursor *f_cursor)
-{
-    m_core->GetMemoryManager()->RemoveMemoryPointer(f_cursor,ElementType::CursorElement);
-    delete f_cursor;
-    return true;
-}
-
 ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
 {
     File *l_file = new File();
@@ -482,9 +451,6 @@ void ROC::ElementManager::DestroyByPointer(void *f_pointer,unsigned char f_type)
             break;
         case ElementType::FontElement:
             delete static_cast<Font*>(f_pointer);
-            break;
-        case ElementType::CursorElement:
-            delete static_cast<Cursor*>(f_pointer);
             break;
         case ElementType::FileElement:
             delete static_cast<File*>(f_pointer);

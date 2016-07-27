@@ -15,7 +15,7 @@ class Font
         glm::ivec2 m_breaing;
         FT_Pos m_advance;
     };
-    std::map<wchar_t,charData*> m_charMap;
+    std::map<unsigned int,charData*> m_charMap;
 
     glm::vec3 m_vertices[6];
     GLuint m_vertexVBO;
@@ -24,12 +24,12 @@ class Font
 
     bool m_loaded;
     void Clear();
-    bool LoadChar(wchar_t l_char);
+    bool LoadChar(unsigned int l_char);
 protected:
     Font();
     ~Font();
     bool LoadTTF(std::string &f_path, int f_size);
-    bool Draw(std::wstring &f_text,glm::vec2 &f_pos, bool f_bind);
+    bool Draw(sf::String &f_text,glm::vec2 &f_pos, bool f_bind);
     GLuint GetVAO();
     friend class ElementManager;
     friend class RenderManager;
