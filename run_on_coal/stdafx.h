@@ -30,7 +30,6 @@
 #include "glm/gtx/quaternion.hpp"
 
 #include "btBulletDynamicsCommon.h"
-#include "btBulletCollisionCommon.h"
 
 #include "lodepng.h"
 #include "ft2build.h"

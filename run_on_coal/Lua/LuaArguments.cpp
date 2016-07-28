@@ -3,6 +3,7 @@
 
 ROC::LuaArguments::LuaArguments()
 {
+    m_argCount = 0U;
 }
 ROC::LuaArguments::~LuaArguments()
 {
@@ -36,51 +37,60 @@ void ROC::LuaArguments::Clear()
         }
     }
     m_vArgs.clear();
+    m_argCount = 0U;
 }
 
 void ROC::LuaArguments::PushArgument(int f_val)
 {
     int *l_temp = new int(f_val);
     m_vArgs.push_back(std::pair<void*,ArgumentType>(l_temp,ArgumentType::Integer));
+    m_argCount++;
 }
 
 void ROC::LuaArguments::PushArgument(unsigned char f_val)
 {
     unsigned char *l_temp = new unsigned char(f_val);
     m_vArgs.push_back(std::pair<void*,ArgumentType>(l_temp,ArgumentType::UnsignedChar));
+    m_argCount++;
 }
 void ROC::LuaArguments::PushArgument(const unsigned char *f_pointer, size_t f_count)
 {
     std::vector<unsigned char> *l_vector = new std::vector<unsigned char>{f_pointer,f_pointer+f_count};
     m_vArgs.push_back(std::pair<void*,ArgumentType>(l_vector,ArgumentType::VectorUnsignedChar));
+    m_argCount++;
 }
 
 void ROC::LuaArguments::PushArgument(double f_val)
 {
     double *l_temp = new double(f_val);
     m_vArgs.push_back(std::pair<void*,ArgumentType>(l_temp,ArgumentType::Double));
+    m_argCount++;
 }
 
 void ROC::LuaArguments::PushArgument(float f_val)
 {
     float *l_temp = new float(f_val);
     m_vArgs.push_back(std::pair<void*,ArgumentType>(l_temp,ArgumentType::Float));
+    m_argCount++;
 }
 void ROC::LuaArguments::PushArgument(const float *f_pointer, size_t f_count)
 {
     std::vector<float> *l_vector = new std::vector<float>{f_pointer,f_pointer+f_count};
     m_vArgs.push_back(std::pair<void*,ArgumentType>(l_vector,ArgumentType::VectorFloat));
+    m_argCount++;
 }
 
 void ROC::LuaArguments::PushArgument(void *f_val)
 {
     m_vArgs.push_back(std::pair<void*,ArgumentType>(f_val,ArgumentType::Pointer));
+    m_argCount++;
 }
 
 void ROC::LuaArguments::PushArgument(std::string &f_arg)
 {
     std::string *l_temp = new std::string(f_arg);
     m_vArgs.push_back(std::pair<void*,ArgumentType>(l_temp,ArgumentType::String));
+    m_argCount++;
 }
 
 void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
@@ -135,5 +145,5 @@ void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
 
 unsigned int ROC::LuaArguments::GetArgumentsValue()
 {
-    return static_cast<unsigned int>(m_vArgs.size());
+    return m_argCount;
 }

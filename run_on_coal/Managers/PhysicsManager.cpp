@@ -23,7 +23,6 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
     m_enabled = false;
 
     m_timeStep = 1.f/static_cast<float>(m_core->GetConfigManager()->GetFPSLimit());
-    m_timeStepFixed = m_timeStep/2.f;
 }
 ROC::PhysicsManager::~PhysicsManager()
 {
@@ -44,7 +43,7 @@ ROC::PhysicsManager::~PhysicsManager()
 void ROC::PhysicsManager::DoPulse()
 {
     if(!m_enabled) return;
-    m_dynamicWorld->stepSimulation(m_timeStep,10,m_timeStepFixed);
+    m_dynamicWorld->stepSimulation(m_timeStep,1,m_timeStep);
     for(auto iter : m_elementSet) iter->UpdateRigidity();
 }
 

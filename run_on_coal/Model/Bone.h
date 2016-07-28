@@ -27,11 +27,13 @@ protected:
     ~Bone();
     void SetParent(Bone *f_bone);
     void AddChild(Bone *f_bone);
-    void UpdateMatrix();
     void GenerateBindPose();
+    void GenerateFastTree(std::vector<Bone*> &f_vec);
     void SetPosition(glm::vec3 &f_pos, bool f_forced = false);
     void SetRotation(glm::quat &f_rot, bool f_forced = false);
     void SetScale(glm::vec3 &f_scale, bool f_forced = false);
+    void UpdateMatrix();
+    void Reset();
     friend class Skeleton;
     friend class Model;
 };

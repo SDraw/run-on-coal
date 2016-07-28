@@ -38,33 +38,10 @@ void ROC::Bone::GenerateBindPose()
     m_offsetMatrix = m_matrix*m_bindMatrix;
     for(auto iter : m_childBoneVector) iter->GenerateBindPose();
 }
-void ROC::Bone::UpdateMatrix()
+void ROC::Bone::GenerateFastTree(std::vector<Bone*> &f_vec)
 {
-    if(m_rebuildMatrix)
-    {
-        m_localMatrix = glm::translate(m_identity,m_position)*glm::toMat4(m_rotation)*glm::scale(m_identity,m_scale);
-        if(!m_parent) std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
-        else m_matrix = m_parent->m_matrix*m_localMatrix;
-        m_offsetMatrix = m_matrix*m_bindMatrix;
-    }
-    else
-    {
-        if(m_parent)
-        {
-            if(m_parent->m_rebuildMatrix)
-            {
-                m_matrix = m_parent->m_matrix*m_localMatrix;
-                m_offsetMatrix = m_matrix*m_bindMatrix;
-                m_rebuildMatrix = true;
-            }
-        }
-    }
-
-    for(auto iter : m_childBoneVector) iter->UpdateMatrix();
-    m_rebuildMatrix = false;
-    m_forcedPosition = false;
-    m_forcedRotation = false;
-    m_forcedScale = false;
+    f_vec.push_back(this);
+    for(auto iter : m_childBoneVector) iter->GenerateFastTree(f_vec);
 }
 
 void ROC::Bone::SetPosition(glm::vec3 &f_pos, bool f_forced)
@@ -90,4 +67,35 @@ void ROC::Bone::SetScale(glm::vec3 &f_scale, bool f_forced)
     if(!std::memcmp(&m_scale,&f_scale,sizeof(glm::vec3))) return;
     std::memcpy(&m_scale,&f_scale,sizeof(glm::vec3));
     m_rebuildMatrix = true;
+}
+
+void ROC::Bone::UpdateMatrix()
+{
+    if(m_rebuildMatrix)
+    {
+        m_localMatrix = glm::translate(m_identity,m_position)*glm::toMat4(m_rotation)*glm::scale(m_identity,m_scale);
+        if(!m_parent) std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
+        else m_matrix = m_parent->m_matrix*m_localMatrix;
+        m_offsetMatrix = m_matrix*m_bindMatrix;
+    }
+    else
+    {
+        if(m_parent)
+        {
+            if(m_parent->m_rebuildMatrix)
+            {
+                m_matrix = m_parent->m_matrix*m_localMatrix;
+                m_offsetMatrix = m_matrix*m_bindMatrix;
+                m_rebuildMatrix = true;
+            }
+        }
+    }
+}
+
+void ROC::Bone::Reset()
+{
+    m_rebuildMatrix = false;
+    m_forcedPosition = false;
+    m_forcedRotation = false;
+    m_forcedScale = false;
 }

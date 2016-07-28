@@ -57,7 +57,6 @@ class Shader
     };
     std::vector<textureBindData> m_textureBind;
     std::vector<targetBindData> m_targetBind;
-
     std::string m_error;
 
     void SetupDefaultUniformsAndLocations();

@@ -11,6 +11,7 @@ class LuaArguments
         VectorUnsignedChar, VectorFloat
     };
     std::vector<std::pair<void*,ArgumentType>> m_vArgs;
+    size_t m_argCount;
 public:
     LuaArguments();
     ~LuaArguments();

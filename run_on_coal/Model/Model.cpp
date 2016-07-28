@@ -289,21 +289,21 @@ float ROC::Model::GetAnimationProgress()
 bool ROC::Model::SetBonePosition(unsigned int f_bone, glm::vec3 &f_val)
 {
     if(!m_skeleton) return false;
-    if(m_skeleton->m_boneVector.size() <= f_bone) return false;
+    if(m_skeleton->m_bonesCount <= f_bone) return false;
     m_skeleton->m_boneVector[f_bone]->SetPosition(f_val,true);
     return true;
 }
 bool ROC::Model::SetBoneRotation(unsigned int f_bone, glm::quat &f_val)
 {
     if(!m_skeleton) return false;
-    if(m_skeleton->m_boneVector.size() <= f_bone) return false;
+    if(m_skeleton->m_bonesCount <= f_bone) return false;
     m_skeleton->m_boneVector[f_bone]->SetRotation(f_val,true);
     return true;
 }
 bool ROC::Model::SetBoneScale(unsigned int f_bone, glm::vec3 &f_val)
 {
     if(!m_skeleton) return false;
-    if(m_skeleton->m_boneVector.size() <= f_bone) return false;
+    if(m_skeleton->m_bonesCount <= f_bone) return false;
     m_skeleton->m_boneVector[f_bone]->SetScale(f_val,true);
     return true;
 }
@@ -318,7 +318,7 @@ bool ROC::Model::HasRigidSkeleton()
 }
 int ROC::Model::GetBonesCount()
 {
-    return (m_skeleton ? static_cast<int>(m_skeleton->m_boneVector.size()) : -1);
+    return (m_skeleton ? static_cast<int>(m_skeleton->m_bonesCount) : -1);
 }
 void ROC::Model::GetBoneMatrices(std::vector<glm::mat4> &f_mat)
 {
@@ -341,7 +341,7 @@ void ROC::Model::GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vect
 bool ROC::Model::GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat)
 {
     if(!m_skeleton) return false;
-    if(f_bone >= m_skeleton->m_boneVector.size()) return false;
+    if(f_bone >= m_skeleton->m_bonesCount) return false;
     std::memcpy(&f_mat,&m_skeleton->m_boneVector[f_bone]->m_matrix,sizeof(glm::mat4));
     return true;
 }

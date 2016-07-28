@@ -16,6 +16,8 @@ class Skeleton
     skFastStoring m_leftData,m_rightData;
 
     std::vector<Bone*> m_boneVector;
+    std::vector<Bone*> m_fastBoneVector;
+    size_t m_bonesCount;
 
     struct skChain
     {
@@ -25,6 +27,7 @@ class Skeleton
     };
     std::vector<std::vector<skChain>> m_chainsVector;
     std::vector<btRigidBody*> m_jointVector;
+    size_t m_jointsCount;
     bool m_rigid;
 protected:
     std::vector<glm::mat4> m_boneMatrices;

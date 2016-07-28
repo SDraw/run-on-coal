@@ -28,7 +28,6 @@ class PhysicsManager
     btRigidBody* m_groundBody;
 
     float m_timeStep;
-    float m_timeStepFixed;
 public:
     void SetPhysicsEnabled(bool f_value);
     bool GetPhysicsEnabled();

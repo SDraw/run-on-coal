@@ -12,6 +12,7 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
         Bone *l_bone = new Bone(iter->m_name,iter->m_rotation,iter->m_position,iter->m_scale);
         m_boneVector.push_back(l_bone);
     }
+    m_bonesCount = m_boneVector.size();
     for(size_t i=0, j=f_data.size(); i < j; i++)
     {
         if(f_data[i]->m_parent != -1)
@@ -21,7 +22,8 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
         }
     }
     m_boneVector[0]->GenerateBindPose();
-    m_boneMatrices.resize(m_boneVector.size());
+    m_boneVector[0]->GenerateFastTree(m_fastBoneVector);
+    m_boneMatrices.resize(m_bonesCount);
     m_rigid = false;
 }
 ROC::Skeleton::~Skeleton()
@@ -50,7 +52,7 @@ ROC::Skeleton::~Skeleton()
 
 void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
 {
-    for(size_t i=0, j=m_boneVector.size(), l_bonePos=0; i < j; i++, l_bonePos+=10)
+    for(size_t i=0, j=m_bonesCount, l_bonePos=0; i < j; i++, l_bonePos+=10)
     {
         std::memcpy(&m_leftData,&f_left[l_bonePos],sizeof(skFastStoring));
         std::memcpy(&m_rightData,&f_right[l_bonePos],sizeof(skFastStoring));
@@ -63,12 +65,18 @@ void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_rig
 }
 void ROC::Skeleton::Update()
 {
-    m_boneVector[0]->UpdateMatrix();
-    for(size_t i=0, j=m_boneVector.size(); i < j; i++) std::memcpy(&m_boneMatrices[i],&m_boneVector[i]->m_offsetMatrix,sizeof(glm::mat4));
+    for(auto iter : m_fastBoneVector) iter->UpdateMatrix();
+    for(size_t i=0; i < m_bonesCount; i++)
+    {
+        Bone *l_bone = m_boneVector[i];
+        l_bone->Reset();
+        std::memcpy(&m_boneMatrices[i],&l_bone->m_offsetMatrix,sizeof(glm::mat4));
+    }
 }
 
 void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
 {
+    if(m_rigid) return;
     m_chainsVector.resize(f_vec.size());
     for(size_t i=0, ii=m_chainsVector.size(); i < ii; i++)
     {
@@ -119,6 +127,7 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
             m_chainsVector[i].push_back(l_skChain);
         }
     }
+    m_jointsCount = m_jointVector.size();
     m_rigid = true;
 }
 
@@ -129,7 +138,7 @@ void ROC::Skeleton::UpdateChains(glm::mat4 &f_model)
     btTransform l_transform,l_jointTransform;
     btVector3 l_null(0.f,0.f,0.f);
     
-    for(size_t i=0, ii=m_jointVector.size(); i < ii; i++)
+    for(size_t i=0; i < m_jointsCount; i++)
     {
         skChain &l_chain = m_chainsVector[i][0];
         l_rigidBodyWorld = f_model*m_boneVector[l_chain.m_boneID]->m_matrix;
