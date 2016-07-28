@@ -20,7 +20,7 @@
 #include "SFML/Window.hpp"
 
 #define GLM_FORCE_INLINE
-#define GLM_FORCE_AVX
+#define GLM_FORCE_SSE2
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_access.hpp"
 #include "glm/gtc/matrix_transform.hpp"
