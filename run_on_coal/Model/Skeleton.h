@@ -3,8 +3,8 @@
 namespace ROC
 {
 
-class Geometry;
 class Bone;
+class BoneChainGroup;
 class Skeleton
 {
     struct skFastStoring
@@ -24,12 +24,13 @@ class Skeleton
         int m_boneID;
     };
     std::vector<std::vector<skChain>> m_chainsVector;
+    std::vector<btRigidBody*> m_jointVector;
     bool m_rigid;
 protected:
     std::vector<glm::mat4> m_boneMatrices;
-    Skeleton(std::vector<Geometry::geometryBoneData> &f_data);
+    Skeleton(std::vector<BoneData*> &f_data);
     ~Skeleton();
-    void InitRigidity(std::vector<std::vector<Geometry::geometryChainData>> &f_vec);
+    void InitRigidity(std::vector<BoneChainGroup*> &f_vec);
     void Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp);
     void Update();
     void UpdateChains(glm::mat4 &f_model);

@@ -16,19 +16,21 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     std::string l_log;
 
+    ConfigManager *l_configManager = m_core->GetConfigManager();
     glm::ivec2 l_windowSize;
-    m_core->GetConfigManager()->GetWindowSize(l_windowSize);
+    l_configManager->GetWindowSize(l_windowSize);
     sf::VideoMode l_videoMode(l_windowSize.x,l_windowSize.y);
 
     sf::ContextSettings l_contextSettings = sf::ContextSettings();
-    l_contextSettings.antialiasingLevel = static_cast<unsigned int>(m_core->GetConfigManager()->GetAntialiasing());
+    l_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
     l_contextSettings.depthBits = 32U;
     l_contextSettings.majorVersion = 4U;
     l_contextSettings.minorVersion = 0U;
     
     m_window = new sf::Window();
-    m_window->create(l_videoMode,"ROC",m_core->GetConfigManager()->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default,l_contextSettings);
-    m_window->setFramerateLimit(60U);
+    m_window->create(l_videoMode,"ROC",l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default,l_contextSettings);
+    m_window->setFramerateLimit(l_configManager->GetFPSLimit());
+    m_window->setVerticalSyncEnabled(l_configManager->GetVSync());
     m_window->setKeyRepeatEnabled(false);
 
     glewExperimental = true;

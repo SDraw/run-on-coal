@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#include "Model/BoneData.h"
+#include "Model/BoneChainData.h"
+#include "Model/BoneChainGroup.h"
 #include "Model/Geometry.h"
 #include "Model/Material.h"
 #include "Utils/Utils.h"
@@ -9,16 +12,21 @@ ROC::Geometry::Geometry()
 }
 ROC::Geometry::~Geometry()
 {
-    for(auto iter : m_materialVector) delete iter;
-    m_materialVector.clear();
-    m_bonesData.clear();
+    Clear();
 }
 void ROC::Geometry::Clear()
 {
     for(auto iter : m_materialVector) delete iter;
     m_materialVector.clear();
     m_materialCount = 0U;
+    for(auto iter : m_bonesData) delete iter;
     m_bonesData.clear();
+    for(auto iter : m_chainsData)
+    {
+        for(auto iter1 : iter->m_boneChainDataVector) delete iter1;
+        delete iter;
+    }
+    m_chainsData.clear();
     m_loaded = false;
 }
 
@@ -244,10 +252,10 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
             Clear();
             return false;
         }
-        m_bonesData.resize(l_bonesSize);
 
         for(int i=0; i < l_bonesSize; i++)
         {
+            BoneData *l_boneData = new BoneData();
             unsigned char l_boneNameLength;
 
             l_file.read((char*)&l_boneNameLength,sizeof(unsigned char));
@@ -258,38 +266,39 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
             }
             if(l_boneNameLength)
             {
-                m_bonesData[i].m_name.resize(l_boneNameLength);
-                l_file.read((char*)m_bonesData[i].m_name.data(),l_boneNameLength);
+                l_boneData->m_name.resize(l_boneNameLength);
+                l_file.read((char*)l_boneData->m_name.data(),l_boneNameLength);
                 if(l_file.fail())
                 {
                     Clear();
                     return false;
                 }
             }
-            l_file.read((char*)&m_bonesData[i].m_parent,sizeof(int));
+            l_file.read((char*)&l_boneData->m_parent,sizeof(int));
             if(l_file.fail())
             {
                 Clear();
                 return false;
             }
-            l_file.read((char*)&m_bonesData[i].m_position,sizeof(glm::vec3));
+            l_file.read((char*)&l_boneData->m_position,sizeof(glm::vec3));
             if(l_file.fail())
             {
                 Clear();
                 return false;
             }
-            l_file.read((char*)&m_bonesData[i].m_rotation,sizeof(glm::quat));
+            l_file.read((char*)&l_boneData->m_rotation,sizeof(glm::quat));
             if(l_file.fail())
             {
                 Clear();
                 return false;
             }
-            l_file.read((char*)&m_bonesData[i].m_scale,sizeof(glm::vec3));
+            l_file.read((char*)&l_boneData->m_scale,sizeof(glm::vec3));
             if(l_file.fail())
             {
                 Clear();
                 return false;
             }
+            m_bonesData.push_back(l_boneData);
         }
     }
     unsigned char l_physicBlock = 0U;
@@ -298,20 +307,21 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
     {
         unsigned int l_chainsCount = 0U;
         l_file.read((char*)&l_chainsCount,sizeof(unsigned int));
-        m_chainsData.resize(l_chainsCount);
         for(size_t i=0; i < l_chainsCount; i++)
         {
+            BoneChainGroup *l_group = new BoneChainGroup();
             unsigned int l_chainParts = 0U;
             l_file.read((char*)&l_chainParts,sizeof(unsigned int));
             for(size_t j=0; j < l_chainParts; j++)
             {
-                geometryChainData l_chain;
-                l_file.read((char*)&l_chain.m_type,sizeof(unsigned char));
-                l_file.read((char*)&l_chain.m_mass,sizeof(float));
-                l_file.read((char*)&l_chain.m_size,sizeof(glm::vec3));
-                l_file.read((char*)&l_chain.m_boneID,sizeof(int));
-                m_chainsData[i].push_back(l_chain);
+                BoneChainData *l_chain = new BoneChainData();
+                l_file.read((char*)&l_chain->m_type,sizeof(unsigned char));
+                l_file.read((char*)&l_chain->m_mass,sizeof(float));
+                l_file.read((char*)&l_chain->m_size,sizeof(glm::vec3));
+                l_file.read((char*)&l_chain->m_boneID,sizeof(int));
+                l_group->m_boneChainDataVector.push_back(l_chain);
             }
+            m_chainsData.push_back(l_group);
         }
     }
     m_loaded = true;
@@ -322,7 +332,7 @@ bool ROC::Geometry::HasBonesData()
 {
     return (m_bonesData.size() > 0U);
 }
-void ROC::Geometry::GetBonesData(std::vector<geometryBoneData> &f_vec)
+void ROC::Geometry::GetBonesData(std::vector<BoneData*> &f_vec)
 {
     f_vec.insert(f_vec.begin(),m_bonesData.begin(),m_bonesData.end());
 }
@@ -331,7 +341,7 @@ bool ROC::Geometry::HasChainsData()
 {
     return (m_chainsData.size() > 0U);
 }
-void ROC::Geometry::GetChainsData(std::vector<std::vector<geometryChainData>> &f_vec)
+void ROC::Geometry::GetChainsData(std::vector<BoneChainGroup*> &f_vec)
 {
     f_vec.insert(f_vec.begin(),m_chainsData.begin(),m_chainsData.end());
 }

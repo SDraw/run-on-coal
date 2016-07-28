@@ -11,6 +11,8 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
     m_fullscreen = false;
     m_antialiasing = 0;
     m_windowSize = glm::ivec2(854,480);
+    m_fpsLimit = 60U;
+    m_vsync = false;
 
     pugi::xml_document *l_settings = new pugi::xml_document();
     if(l_settings->load_file("settings.xml"))
@@ -27,7 +29,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                     l_attrib = l_node.attribute("value");
                     if(l_attrib)
                     {
-                        switch(Utils::ReadEnumString(l_param,"antialiasing,dimension,fullscreen,logging"))
+                        switch(Utils::ReadEnumString(l_param,"antialiasing,dimension,fullscreen,logging,fpslimit,vsync"))
                         {
                             case 0:
                                 m_antialiasing = l_attrib.as_int(0);
@@ -43,6 +45,11 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                             case 3:
                                 m_logging = l_attrib.as_bool(true);
                                 break;
+                            case 4:
+                                m_fpsLimit = l_attrib.as_uint(60U);
+                                break;
+                            case 5:
+                                m_vsync = l_attrib.as_bool(false);
                         }
                     }
                 }
@@ -70,4 +77,14 @@ int ROC::ConfigManager::GetAntialiasing()
 void ROC::ConfigManager::GetWindowSize(glm::ivec2 &f_vec)
 {
     std::memcpy(&f_vec,&m_windowSize,sizeof(glm::ivec2));
+}
+
+unsigned int ROC::ConfigManager::GetFPSLimit()
+{
+    return m_fpsLimit;
+}
+
+bool ROC::ConfigManager::GetVSync()
+{
+    return m_vsync;
 }

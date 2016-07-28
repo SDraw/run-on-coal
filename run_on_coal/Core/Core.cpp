@@ -77,51 +77,6 @@ bool ROC::Core::DoPulse()
     return l_result;
 }
 
-ROC::ConfigManager* ROC::Core::GetConfigManager()
-{
-    return m_configManager;
-}
-ROC::ElementManager* ROC::Core::GetElementManager()
-{
-    return m_elementManager;
-}
-ROC::SfmlManager* ROC::Core::GetSfmlManager()
-{
-    return m_sfmlManager;
-}
-ROC::InheritanceManager* ROC::Core::GetInheritManager()
-{ 
-    return m_inheritManager; 
-}
-ROC::LogManager* ROC::Core::GetLogManager() 
-{ 
-    return m_logManager; 
-}
-ROC::LuaManager* ROC::Core::GetLuaManager() 
-{ 
-    return m_luaManager;
-}
-ROC::MemoryManager* ROC::Core::GetMemoryManager() 
-{ 
-    return m_memoryManager; 
-}
-ROC::PhysicsManager* ROC::Core::GetPhysicsManager()
-{
-    return m_physicsManager;
-}
-ROC::RenderManager* ROC::Core::GetRenderManager()
-{ 
-    return m_renderManager; 
-}
-ROC::PreRenderManager* ROC::Core::GetPreRenderManager()
-{
-    return m_preRenderManager;
-}
-ROC::SoundManager* ROC::Core::GetSoundManager()
-{ 
-    return m_soundManager; 
-}
-
 void ROC::Core::GetWorkingDirectory(std::string &f_path)
 {
     f_path.append(m_workingDir);

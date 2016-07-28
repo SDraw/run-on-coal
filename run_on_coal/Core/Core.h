@@ -38,17 +38,17 @@ public:
     bool DoPulse();
     void GetWorkingDirectory(std::string &f_path);
 
-    ConfigManager* GetConfigManager();
-    ElementManager* GetElementManager();
-    SfmlManager* GetSfmlManager();
-    InheritanceManager* GetInheritManager();
-    LogManager* GetLogManager();
-    LuaManager* GetLuaManager();
-    MemoryManager* GetMemoryManager();
-    PhysicsManager* GetPhysicsManager();
-    RenderManager* GetRenderManager();
-    PreRenderManager* GetPreRenderManager();
-    SoundManager* GetSoundManager();
+    inline ConfigManager* GetConfigManager() { return m_configManager; }
+    inline ElementManager* GetElementManager() { return m_elementManager; }
+    inline SfmlManager* GetSfmlManager() { return m_sfmlManager; }
+    inline InheritanceManager* GetInheritManager() { return m_inheritManager; }
+    inline LogManager* GetLogManager() { return m_logManager; }
+    inline LuaManager* GetLuaManager() { return m_luaManager; }
+    inline MemoryManager* GetMemoryManager() { return m_memoryManager; }
+    inline PhysicsManager* GetPhysicsManager() { return m_physicsManager; }
+    inline RenderManager* GetRenderManager() { return m_renderManager; }
+    inline PreRenderManager* GetPreRenderManager() { return m_preRenderManager; }
+    inline SoundManager* GetSoundManager() { return m_soundManager; }
 };
 
 }

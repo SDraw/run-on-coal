@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Core/Core.h"
+#include "Managers/ConfigManager.h"
 #include "Managers/PhysicsManager.h"
-#include "Managers/RenderManager.h"
 #include "Model/Model.h"
 #include "Scene/Collision.h"
 
@@ -21,6 +21,9 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
     m_groundBody = NULL;
 
     m_enabled = false;
+
+    m_timeStep = 1.f/static_cast<float>(m_core->GetConfigManager()->GetFPSLimit());
+    m_timeStepFixed = m_timeStep/2.f;
 }
 ROC::PhysicsManager::~PhysicsManager()
 {
@@ -41,9 +44,7 @@ ROC::PhysicsManager::~PhysicsManager()
 void ROC::PhysicsManager::DoPulse()
 {
     if(!m_enabled) return;
-    m_dynamicWorld->stepSimulation(1.0f/60.0f,10,1.0f/120.0f);
-    //m_dynamicWorld->stepSimulation(1.0f/30.0f,10,1.0f/60.0f);
-
+    m_dynamicWorld->stepSimulation(m_timeStep,10,m_timeStepFixed);
     for(auto iter : m_elementSet) iter->UpdateRigidity();
 }
 

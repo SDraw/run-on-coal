@@ -24,7 +24,7 @@ public:
     void PushArgument(void *f_val);
     void PushArgument(std::string &f_arg);
     void ProccessArguments(lua_State *f_vm);
-    size_t GetArgumentsValue();
+    unsigned int GetArgumentsValue();
 };
 
 }

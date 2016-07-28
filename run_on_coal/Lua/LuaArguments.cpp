@@ -133,7 +133,7 @@ void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
     }
 }
 
-size_t ROC::LuaArguments::GetArgumentsValue()
+unsigned int ROC::LuaArguments::GetArgumentsValue()
 {
-    return m_vArgs.size();
+    return static_cast<unsigned int>(m_vArgs.size());
 }

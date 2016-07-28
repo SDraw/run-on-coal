@@ -4,6 +4,7 @@ namespace ROC
 {
 
 class Core;
+class SfmlManager;
 class Constraint;
 class Model;
 class Collision;
@@ -25,6 +26,9 @@ class PhysicsManager
     
     bool m_floorEnabled;
     btRigidBody* m_groundBody;
+
+    float m_timeStep;
+    float m_timeStepFixed;
 public:
     void SetPhysicsEnabled(bool f_value);
     bool GetPhysicsEnabled();

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Model/Animation.h"
 #include "Model/Bone.h"
+#include "Model/BoneData.h"
+#include "Model/BoneChainGroup.h"
 #include "Model/Geometry.h"
 #include "Model/Model.h"
 #include "Model/Skeleton.h"
@@ -14,14 +16,14 @@ ROC::Model::Model(Geometry *f_geometry)
 
     if(m_geometry->HasBonesData())
     {
-        std::vector<Geometry::geometryBoneData> l_bonesData;
+        std::vector<BoneData*> l_bonesData;
         m_geometry->GetBonesData(l_bonesData);
         m_skeleton = new Skeleton(l_bonesData);
         if(m_geometry->HasChainsData())
         {
-            std::vector<std::vector<Geometry::geometryChainData>> l_chains;
-            m_geometry->GetChainsData(l_chains);
-            m_skeleton->InitRigidity(l_chains);
+            std::vector<BoneChainGroup*> l_chainGroups;
+            m_geometry->GetChainsData(l_chainGroups);
+            m_skeleton->InitRigidity(l_chainGroups);
         }
     }
     else m_skeleton = NULL;
@@ -333,6 +335,7 @@ void ROC::Model::GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vect
             if(iter1.m_constraint) f_cs.push_back(iter1.m_constraint);
         }
     }
+    f_rb.insert(f_rb.end(),m_skeleton->m_jointVector.begin(),m_skeleton->m_jointVector.end());
 }
 
 bool ROC::Model::GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat)
