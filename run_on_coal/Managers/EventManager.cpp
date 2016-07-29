@@ -53,9 +53,3 @@ void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments &f_args)
         m_luaManager->CallFunction(l_event[m_lastIteration].second,f_args);
     }
 }
-
-bool ROC::EventManager::IsEventExists(unsigned char f_event)
-{
-    if(f_event >= EventType::Last) return false;
-    return (m_eventVector[f_event].size() != 0);
-}

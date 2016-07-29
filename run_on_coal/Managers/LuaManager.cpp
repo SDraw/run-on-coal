@@ -75,9 +75,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"modelGetAnimationSpeed",Lua::modelGetAnimationSpeed);
     lua_register(m_pVM,"modelSetAnimationProgress",Lua::modelSetAnimationProgress);
     lua_register(m_pVM,"modelGetAnimationProgress",Lua::modelGetAnimationProgress);
-    lua_register(m_pVM,"modelSetBonePosition",Lua::modelSetBonePosition);
-    lua_register(m_pVM,"modelSetBoneRotation",Lua::modelSetBoneRotation);
-    lua_register(m_pVM,"modelSetBoneScale",Lua::modelSetBoneScale);
     lua_register(m_pVM,"modelSetRigidity",Lua::modelSetRigidity);
     lua_register(m_pVM,"modelRemoveRigidity",Lua::modelRemoveRigidity);
     lua_register(m_pVM,"modelGetMass",Lua::modelGetMass);
@@ -257,14 +254,4 @@ void ROC::LuaManager::CallFunction(int f_func,LuaArguments &f_args)
         l_log.append(lua_tostring(m_pVM,-1));
         m_core->GetLogManager()->Log(l_log);
     }
-}
-
-ROC::EventManager* ROC::LuaManager::GetEventManager() 
-{
-    return m_eventManager;
-}
-
-void ROC::LuaManager::RemoveReference(int f_ref)
-{
-    luaL_unref(m_pVM,LUA_REGISTRYINDEX,f_ref);
 }

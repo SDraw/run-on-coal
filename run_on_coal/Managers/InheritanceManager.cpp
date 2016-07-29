@@ -120,10 +120,6 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
     }
 }
 
-void ROC::InheritanceManager::SetModelGeometry(Model *f_model, Geometry *f_geometry)
-{
-    m_inheritMap.insert(std::pair<void*,void*>(f_model,f_geometry));
-}
 bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_anim)
 {
     if(!f_model->HasSkeleton()) return false;
@@ -189,11 +185,6 @@ bool ROC::InheritanceManager::AttachTextureToShader(Shader *f_shader, Texture *f
     m_inheritMap.insert(std::pair<void*,void*>(f_texture,f_shader));
     return true;
 }
-void ROC::InheritanceManager::DettachTextureFromShader(Shader *f_shader, Texture *f_texture)
-{
-    RemoveInheritance(f_texture,f_shader);
-}
-
 bool ROC::InheritanceManager::AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform)
 {
     auto iter = m_inheritMap.equal_range(f_target);
@@ -204,8 +195,4 @@ bool ROC::InheritanceManager::AttachRenderTargetToShader(Shader *f_shader, Rende
     if(!m_core->GetRenderManager()->AttachToShader(f_shader,f_target,f_uniform)) return false;
     m_inheritMap.insert(std::pair<void*,void*>(f_target,f_shader));
     return true;
-}
-void ROC::InheritanceManager::DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target)
-{
-    RemoveInheritance(f_target,f_shader);
 }

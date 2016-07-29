@@ -29,11 +29,6 @@ int modelSetAnimationSpeed(lua_State *f_vm);
 int modelGetAnimationSpeed(lua_State *f_vm);
 int modelSetAnimationProgress(lua_State *f_vm);
 int modelGetAnimationProgress(lua_State *f_vm);
-
-int modelSetBonePosition(lua_State *f_vm);
-int modelSetBoneRotation(lua_State *f_vm);
-int modelSetBoneScale(lua_State *f_vm);
-
 int modelSetRigidity(lua_State *f_vm);
 int modelRemoveRigidity(lua_State *f_vm);
 int modelGetMass(lua_State *f_vm);

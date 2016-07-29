@@ -161,11 +161,6 @@ bool ROC::SfmlManager::DoPulse()
     return m_active;
 }
 
-void ROC::SfmlManager::SwapBuffers()
-{
-    m_window->display();
-}
-
 void ROC::SfmlManager::SetCursorMode(int f_mode)
 {
     if(f_mode < 2)
@@ -188,6 +183,7 @@ void ROC::SfmlManager::GetCursorPosition(glm::dvec2 &f_pos)
 void ROC::SfmlManager::SetCursorPosition(glm::dvec2 &f_pos)
 {
     sf::Vector2i l_position(static_cast<int>(f_pos.x),static_cast<int>(f_pos.y));
+    sf::Mouse::setPosition(l_position);
 }
 
 void ROC::SfmlManager::GetWindowPosition(glm::ivec2 &f_pos)

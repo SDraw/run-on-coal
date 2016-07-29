@@ -8,14 +8,14 @@ class Light
     glm::vec3 m_color;
     glm::vec4 m_params;
 public:
-    void SetParams(glm::vec4 &f_val);
-    void GetParams(glm::vec4 &f_val);
+    inline void SetParams(glm::vec4 &f_val) { std::memcpy(&m_params,&f_val,sizeof(glm::vec4)); }
+    inline void GetParams(glm::vec4 &f_val) { std::memcpy(&f_val,&m_params,sizeof(glm::vec4)); }
 
-    void SetColor(glm::vec3 &f_vec);
-    void GetColor(glm::vec3 &f_vec);
+    inline void SetColor(glm::vec3 &f_vec) { std::memcpy(&m_color,&f_vec,sizeof(glm::vec3)); }
+    inline void GetColor(glm::vec3 &f_vec) { std::memcpy(&f_vec,&m_color,sizeof(glm::vec3)); }
 
-    void SetDirection(glm::vec3 &f_vec);
-    void GetDirection(glm::vec3 &f_vec);
+    inline void SetDirection(glm::vec3 &f_vec) { std::memcpy(&m_direction,&f_vec,sizeof(glm::vec3)); }
+    inline void GetDirection(glm::vec3 &f_vec) { std::memcpy(&f_vec,&m_direction,sizeof(glm::vec3)); }
 protected:
     Light();
     ~Light();

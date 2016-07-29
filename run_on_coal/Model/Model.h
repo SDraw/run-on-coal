@@ -39,9 +39,9 @@ class Model
     void UpdateSkeleton();
     void UpdateAnimationTick();
 public:
-    bool IsDrawable();
-    int GetType();
-    bool IsRigid();
+    inline bool IsDrawable() { return (m_geometry != NULL); }
+    inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
+    inline bool IsRigid() { return (m_rigidBody != NULL); }
     //Manipulation
     void SetPosition(glm::vec3 &f_pos, bool f_uRb = true);
     void GetPosition(glm::vec3 &f_pos, bool f_global = false);
@@ -50,7 +50,7 @@ public:
     void SetScale(glm::vec3 &f_scl);
     void GetScale(glm::vec3 &f_scl, bool f_global = false);
 
-    void GetMatrix(glm::mat4 &f_mat);
+    inline void GetMatrix(glm::mat4 &f_mat) { std::memcpy(&f_mat,&m_matrix,sizeof(glm::mat4)); }
 
     unsigned int GetMaterialCount();
     unsigned char GetMaterialType(unsigned int f_material);
@@ -60,14 +60,11 @@ public:
     bool PauseAnimation();
     bool ResetAnimation();
     bool SetAnimationSpeed(float f_val);
-    float GetAnimationSpeed();
+    inline float GetAnimationSpeed() { return (m_animation ? m_animationSpeed : -1.f); }
     bool SetAnimationProgress(float f_val);
     float GetAnimationProgress();
-    bool SetBonePosition(unsigned int f_bone, glm::vec3 &f_val);
-    bool SetBoneRotation(unsigned int f_bone, glm::quat &f_val);
-    bool SetBoneScale(unsigned int f_bone, glm::vec3 &f_val);
 
-    bool HasSkeleton();
+    inline bool HasSkeleton() { return (m_skeleton != NULL); }
     bool HasRigidSkeleton();
     int GetBonesCount();
     void GetBoneMatrices(std::vector<glm::mat4> &f_mat);
@@ -80,25 +77,25 @@ public:
     bool GetAngularVelocity(glm::vec3 &f_val);
     float GetMass();
     bool SetFriction(float f_val);
-    float GetFriction();
+    inline float GetFriction() { return (m_rigidBody ? m_rigidBody->getFriction() : -1.f); }
 
-    Geometry* GetGeometry();
-    Model* GetParent();
-    Animation* GetAnimation();
+    inline Geometry* GetGeometry() { return m_geometry; }
+    inline Model* GetParent() { return m_parent; }
+    inline Animation* GetAnimation() { return m_animation; }
 protected:
     Model(Geometry *f_geometry);
     ~Model();
     void DrawMaterial(unsigned int f_material, bool f_texturize, bool f_binding);
     void SetParent(Model *f_model, int f_bone = -1);
     void SetAnimation(Animation *f_anim);
-    void SetGeometry(Geometry *f_geometry);
+    inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
     void UpdateMatrix();
     void UpdateAnimation();
     GLuint GetMaterialVAO(unsigned int f_material);
     GLuint GetMaterialTexture(unsigned int f_material);
     bool SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveRigidity();
-    btRigidBody* GetRidigBody();
+    inline btRigidBody* GetRidigBody() { return m_rigidBody; }
     void GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vector<btTypedConstraint*> &f_cs);
     void UpdateSkeletonChains();
     void UpdateSkeletonRigidBones();

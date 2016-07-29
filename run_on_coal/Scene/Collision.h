@@ -20,7 +20,7 @@ protected:
     Collision();
     ~Collision();
     bool Create(unsigned char f_type, glm::vec3 &f_size);
-    btRigidBody* GetRigidBody();
+    inline btRigidBody* GetRigidBody() { return m_rigidBody; }
     friend class ElementManager;
     friend class PhysicsManager;
 };

@@ -30,11 +30,6 @@ ROC::ElementManager::~ElementManager()
 {
 }
 
-void ROC::ElementManager::AnalyzePath(std::string &f_in, std::string &f_out)
-{
-    std::regex_replace(std::back_inserter(f_out),f_in.begin(),f_in.end(),m_regex,"");
-}
-
 void ROC::ElementManager::SetLock(bool f_lock)
 {
     m_locked = f_lock;

@@ -94,24 +94,6 @@ void ROC::Model::UpdateAnimationTick()
     m_animCurrentTick %= m_animation->m_durationTotal;
 }
 
-ROC::Geometry* ROC::Model::GetGeometry()
-{
-    return m_geometry;
-}
-
-bool ROC::Model::IsDrawable()
-{
-    return (m_geometry != NULL);
-}
-int ROC::Model::GetType()
-{
-    return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE);
-}
-bool ROC::Model::IsRigid()
-{
-    return (m_rigidBody != NULL);
-}
-
 void ROC::Model::SetPosition(glm::vec3 &f_pos, bool f_uRb)
 {
     if(!std::memcmp(&m_position,&f_pos,sizeof(glm::vec3))) return;
@@ -182,29 +164,21 @@ void ROC::Model::GetScale(glm::vec3 &f_scl, bool f_global)
     else std::memcpy(&f_scl,&m_scale,sizeof(glm::vec3));
 }
 
-void ROC::Model::GetMatrix(glm::mat4 &f_mat)
-{
-    std::memcpy(&f_mat,&m_matrix,sizeof(glm::mat4));
-}
-
 unsigned int ROC::Model::GetMaterialCount()
 {
-    return (m_geometry ? m_geometry->GetMaterialCount() : 0);
+    return (m_geometry ? m_geometry->GetMaterialCount() : 0U);
 }
 unsigned char ROC::Model::GetMaterialType(unsigned int f_material)
 {
-    if(!m_geometry) return 0U;
-    return m_geometry->GetMaterialType(f_material);
+    return (m_geometry ? m_geometry->GetMaterialType(f_material) : 0U);
 }
 void ROC::Model::GetMaterialParam(unsigned int f_material,glm::vec4 &f_vec)
 {
-    if(!m_geometry) return;
-    m_geometry->GetMaterialParam(f_material,f_vec);
+    if(m_geometry) m_geometry->GetMaterialParam(f_material,f_vec);
 }
 void ROC::Model::DrawMaterial(unsigned int f_material, bool f_texturize, bool f_binding)
 {
-    if(!m_geometry) return;
-    m_geometry->DrawMaterial(f_material,f_texturize,f_binding);
+    if(m_geometry) m_geometry->DrawMaterial(f_material,f_texturize,f_binding);
 }
 
 void ROC::Model::SetParent(Model *f_model, int f_bone)
@@ -213,15 +187,7 @@ void ROC::Model::SetParent(Model *f_model, int f_bone)
     m_parentBone = f_bone;
     m_rebuildMatrix = true;
 }
-ROC::Model* ROC::Model::GetParent()
-{
-    return m_parent;
-}
 
-ROC::Animation* ROC::Model::GetAnimation()
-{
-    return m_animation;
-}
 void ROC::Model::SetAnimation(Animation *f_anim)
 {
     m_animation = f_anim;
@@ -239,8 +205,8 @@ void ROC::Model::UpdateAnimation()
     {
         if(m_animState == AnimationState::Paused) return;
         UpdateAnimationTick();
+        UpdateSkeleton();
     }
-    UpdateSkeleton();
 }
 bool ROC::Model::PlayAnimation()
 {
@@ -271,47 +237,17 @@ bool ROC::Model::SetAnimationSpeed(float f_val)
     m_animationSpeed = f_val;
     return true;
 }
-float ROC::Model::GetAnimationSpeed()
-{
-    return m_animation ? m_animationSpeed : -1.f;
-}
 bool ROC::Model::SetAnimationProgress(float f_val)
 {
     if(!m_animation || f_val < 0.f || f_val > 1.f) return false;
     m_animCurrentTick = static_cast<unsigned long>(double(m_animation->m_durationTotal)*double(f_val));
     return true;
 }
-float ROC::Model::GetAnimationProgress()
-{
-    return (m_animation ? static_cast<float>(double(m_animCurrentTick)/double(m_animation->m_durationTotal)) : -1.f);
+float ROC::Model::GetAnimationProgress() 
+{ 
+    return (m_animation ? static_cast<float>(double(m_animCurrentTick)/double(m_animation->m_durationTotal)) : -1.f); 
 }
 
-bool ROC::Model::SetBonePosition(unsigned int f_bone, glm::vec3 &f_val)
-{
-    if(!m_skeleton) return false;
-    if(m_skeleton->m_bonesCount <= f_bone) return false;
-    m_skeleton->m_boneVector[f_bone]->SetPosition(f_val,true);
-    return true;
-}
-bool ROC::Model::SetBoneRotation(unsigned int f_bone, glm::quat &f_val)
-{
-    if(!m_skeleton) return false;
-    if(m_skeleton->m_bonesCount <= f_bone) return false;
-    m_skeleton->m_boneVector[f_bone]->SetRotation(f_val,true);
-    return true;
-}
-bool ROC::Model::SetBoneScale(unsigned int f_bone, glm::vec3 &f_val)
-{
-    if(!m_skeleton) return false;
-    if(m_skeleton->m_bonesCount <= f_bone) return false;
-    m_skeleton->m_boneVector[f_bone]->SetScale(f_val,true);
-    return true;
-}
-
-bool ROC::Model::HasSkeleton()
-{
-    return (m_skeleton != NULL);
-}
 bool ROC::Model::HasRigidSkeleton()
 {
     return (m_skeleton ? m_skeleton->m_rigid : false);
@@ -322,8 +258,7 @@ int ROC::Model::GetBonesCount()
 }
 void ROC::Model::GetBoneMatrices(std::vector<glm::mat4> &f_mat)
 {
-    if(!m_skeleton) return;
-    f_mat.insert(f_mat.begin(),m_skeleton->m_boneMatrices.begin(),m_skeleton->m_boneMatrices.end());
+    if(m_skeleton) f_mat.insert(f_mat.begin(),m_skeleton->m_boneMatrices.begin(),m_skeleton->m_boneMatrices.end());
 }
 void ROC::Model::GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vector<btTypedConstraint*> &f_cs)
 {
@@ -346,20 +281,13 @@ bool ROC::Model::GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat)
     return true;
 }
 
-void ROC::Model::SetGeometry(Geometry *f_geometry)
-{
-    m_geometry = f_geometry;
-}
-
 GLuint ROC::Model::GetMaterialVAO(unsigned int f_material)
 {
-    if(!m_geometry) return 0U;
-    return m_geometry->GetMaterialVAO(f_material);
+    return (m_geometry ? m_geometry->GetMaterialVAO(f_material) : 0U);
 }
 GLuint ROC::Model::GetMaterialTexture(unsigned int f_material)
 {
-    if(!m_geometry) return 0U;
-    return m_geometry->GetMaterialTexture(f_material);
+    return (m_geometry ? m_geometry->GetMaterialTexture(f_material) : 0U);
 }
 
 //Physics
@@ -446,34 +374,27 @@ bool ROC::Model::SetFriction(float f_val)
     m_rigidBody->activate(true);
     return true;
 }
-float ROC::Model::GetFriction()
-{
-    return (m_rigidBody ? m_rigidBody->getFriction() : -1.f);
-}
-
-btRigidBody* ROC::Model::GetRidigBody()
-{
-    return m_rigidBody;
-}
 
 void ROC::Model::UpdateSkeletonChains()
 {
-    if(!m_skeleton) return;
-    m_skeleton->UpdateChains(m_matrix);
+    if(m_skeleton) m_skeleton->UpdateChains(m_matrix);
 }
 void ROC::Model::UpdateSkeletonRigidBones()
 {
-    if(!m_skeleton) return;
-    m_skeleton->UpdateRigidBones(m_matrix);
+    if(m_skeleton) m_skeleton->UpdateRigidBones(m_matrix);
 }
 
 void ROC::Model::UpdateRigidity()
 {
-    if(!m_rigidBody) return;
-    if(!m_rigidBody->isActive()) return;
-    const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
-    std::memcpy(&m_position,l_transform.getOrigin(),sizeof(glm::vec3));
-    std::memcpy(&m_rotation,l_transform.getRotation(),sizeof(glm::quat));
-    l_transform.getOpenGLMatrix((float*)&m_localMatrix);
-    std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
+    if(m_rigidBody)
+    {
+        if(m_rigidBody->isActive())
+        {
+            const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
+            std::memcpy(&m_position,l_transform.getOrigin(),sizeof(glm::vec3));
+            std::memcpy(&m_rotation,l_transform.getRotation(),sizeof(glm::quat));
+            l_transform.getOpenGLMatrix((float*)&m_localMatrix);
+            std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
+        }
+    }
 }

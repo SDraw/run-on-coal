@@ -22,18 +22,18 @@ class RenderTarget
     std::string m_error;
     void Clear();
 public:
-    void GetSize(glm::ivec2 &f_size);
-    bool IsColored();
-    bool IsTransparent();
-    bool IsDepthable();
+    inline void GetSize(glm::ivec2 &f_size) { std::memcpy(&f_size,&m_size,sizeof(glm::ivec2)); }
+    inline bool IsColored() { return (m_type >= RENDERTARGET_TYPE_RGB && m_type <= RENDERTARGET_TYPE_RGBF); }
+    inline bool IsTransparent() { return (m_type == RENDERTARGET_TYPE_RGBA); }
+    inline bool IsDepthable() { return (m_type == RENDERTARGET_TYPE_DEPTH); }
 protected:
     RenderTarget();
     ~RenderTarget();
     bool Create(unsigned int f_num, glm::ivec2 &f_size, int f_type);
     void Enable();
     void BindTexture(unsigned int f_bind);
-    GLuint GetTexture();
-    void GetError(std::string &f_str);
+    inline GLuint GetTexture() { return m_texture; }
+    inline void GetError(std::string &f_str) { f_str.append(m_error); }
     friend class ElementManager;
     friend class RenderManager;
     friend class Shader;

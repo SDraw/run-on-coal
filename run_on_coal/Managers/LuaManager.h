@@ -15,12 +15,12 @@ class LuaManager
 public:
     static Core *m_corePointer;
     bool OpenFile(std::string &f_path);
-    EventManager* GetEventManager();
+    inline EventManager* GetEventManager() { return m_eventManager; }
 protected:
     LuaManager(Core *f_core);
     ~LuaManager();
     void CallFunction(int f_func,LuaArguments &f_args);
-    void RemoveReference(int f_ref);
+    inline void RemoveReference(int f_ref) { luaL_unref(m_pVM,LUA_REGISTRYINDEX,f_ref); }
     friend Core;
     friend EventManager;
 };

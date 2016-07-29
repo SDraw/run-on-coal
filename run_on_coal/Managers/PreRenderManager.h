@@ -5,11 +5,14 @@ namespace ROC
 
 class Core;
 class Model;
+class LuaArguments;
 class PreRenderManager
 {
     Core *m_core;
     std::set<Model*> m_staticModelSet;
     std::set<Model*> m_animatedModelSet;
+    
+    static LuaArguments m_argument;
 public:
     void AddModel(Model *f_model);
     void RemoveModel(Model *f_model);

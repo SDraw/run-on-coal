@@ -114,30 +114,3 @@ void ROC::RenderTarget::Enable()
     if(m_type == RENDERTARGET_TYPE_NONE) return;
     glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
 }
-void ROC::RenderTarget::GetSize(glm::ivec2 &f_size)
-{
-    std::memcpy(&f_size,&m_size,sizeof(glm::ivec2));
-}
-
-bool ROC::RenderTarget::IsColored()
-{
-    return (m_type >= RENDERTARGET_TYPE_RGB && m_type <= RENDERTARGET_TYPE_RGBF);
-}
-bool ROC::RenderTarget::IsTransparent()
-{
-    return (m_type == RENDERTARGET_TYPE_RGBA);
-}
-bool ROC::RenderTarget::IsDepthable()
-{
-    return (m_type == RENDERTARGET_TYPE_DEPTH);
-}
-
-GLuint ROC::RenderTarget::GetTexture()
-{
-    return m_texture;
-}
-
-void ROC::RenderTarget::GetError(std::string &f_str)
-{
-    f_str.append(m_error);
-}

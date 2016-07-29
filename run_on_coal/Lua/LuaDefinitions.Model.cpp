@@ -422,67 +422,6 @@ int modelGetAnimationProgress(lua_State *f_vm)
     return 1;
 }
 
-
-int modelSetBonePosition(lua_State *f_vm)
-{
-    Model *l_model;
-    LUA_INTEGER l_bone = 0;
-    lua_Number l_pos[3];
-    ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    argStream.ReadInteger(l_bone);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
-    if(argStream.HasErrors() || l_bone < 0)
-    {
-        lua_pushboolean(f_vm,0);
-        return 1;
-    }
-    glm::vec3 l_vPos(l_pos[0],l_pos[1],l_pos[2]);
-    bool result = l_model->SetBonePosition(static_cast<unsigned int>(l_bone),l_vPos);
-    lua_pushboolean(f_vm,result);
-    return 1;
-}
-int modelSetBoneRotation(lua_State *f_vm)
-{
-    Model *l_model;
-    LUA_INTEGER l_bone = 0;
-    lua_Number l_rot[4];
-    l_rot[3] = std::nan("0");
-    ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    argStream.ReadInteger(l_bone);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
-    argStream.ReadNextNumber(l_rot[3]);
-    if(argStream.HasErrors() || l_bone < 0)
-    {
-        lua_pushboolean(f_vm,0);
-        return 1;
-    }
-    glm::quat l_qRot = std::isnan(l_rot[3]) ? glm::quat(glm::vec3(l_rot[0],l_rot[1],l_rot[2])) : glm::quat(static_cast<float>(l_rot[3]),static_cast<float>(l_rot[0]),static_cast<float>(l_rot[1]),static_cast<float>(l_rot[2]));
-    bool result = l_model->SetBoneRotation(static_cast<unsigned int>(l_bone),l_qRot);
-    lua_pushboolean(f_vm,result);
-    return 1;
-}
-int modelSetBoneScale(lua_State *f_vm)
-{
-    Model *l_model;
-    LUA_INTEGER l_bone = 0;
-    lua_Number l_scl[3];
-    ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    argStream.ReadInteger(l_bone);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(l_scl[i]);
-    if(argStream.HasErrors() || l_bone < 0)
-    {
-        lua_pushboolean(f_vm,0);
-        return 1;
-    }
-    glm::vec3 l_vScale(l_scl[0],l_scl[1],l_scl[2]);
-    bool result = l_model->SetBoneScale(static_cast<unsigned int>(l_bone),l_vScale);
-    lua_pushboolean(f_vm,result);
-    return 1;
-}
-
 int modelSetRigidity(lua_State *f_vm)
 {
     Model *l_model;

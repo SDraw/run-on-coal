@@ -30,39 +30,6 @@ ROC::Material::~Material()
     if(m_texture) delete m_texture;
 }
 
-void ROC::Material::SetType(unsigned char f_type)
-{
-    m_type = f_type;
-}
-unsigned char ROC::Material::GetType()
-{
-    return m_type;
-}
-bool ROC::Material::IsDoubleSided()
-{
-    return ((m_type&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE);
-}
-bool ROC::Material::IsTransparent()
-{
-    return ((m_type&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT);
-}
-bool ROC::Material::IsShady()
-{
-    return ((m_type&MATERIAL_BIT_SHADING) == MATERIAL_BIT_SHADING);
-}
-bool ROC::Material::IsDepthable()
-{
-    return ((m_type&MATERIAL_BIT_DEPTH) == MATERIAL_BIT_DEPTH);
-}
-void ROC::Material::GetParams(glm::vec4 &f_params)
-{
-    std::memcpy(&f_params,&m_params,sizeof(glm::vec4));
-}
-void ROC::Material::SetParams(glm::vec4 &f_params)
-{
-    std::memcpy(&m_params,&f_params,sizeof(glm::vec4));
-}
-
 void ROC::Material::LoadTexture(std::string &f_path, bool f_compressed)
 {
     m_texture = new Texture();
@@ -166,12 +133,7 @@ void ROC::Material::Draw(bool f_texturize, bool f_binding)
     glDrawArrays(GL_TRIANGLES,0,m_verticesCount);
 }
 
-GLuint ROC::Material::GetVAO()
-{
-    return m_VAO;
-}
 GLuint ROC::Material::GetTexture()
 {
-    if(!m_texture) return 0U;
-    return m_texture->GetTexture();
+    return (m_texture ? m_texture->GetTexture() : 0U);
 }

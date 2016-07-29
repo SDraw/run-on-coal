@@ -43,17 +43,8 @@ ROC::PhysicsManager::~PhysicsManager()
 void ROC::PhysicsManager::DoPulse()
 {
     if(!m_enabled) return;
-    m_dynamicWorld->stepSimulation(m_timeStep,1,m_timeStep);
+    m_dynamicWorld->stepSimulation(m_timeStep,2,m_timeStep);
     for(auto iter : m_elementSet) iter->UpdateRigidity();
-}
-
-void ROC::PhysicsManager::SetPhysicsEnabled(bool f_value)
-{
-    m_enabled = f_value;
-}
-bool ROC::PhysicsManager::GetPhysicsEnabled()
-{
-    return m_enabled;
 }
 
 void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
@@ -76,15 +67,10 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
         m_groundBody = NULL;
     }
 }
-bool ROC::PhysicsManager::GetFloorEnabled()
-{
-    return m_floorEnabled;
-}
 
 void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
 {
-    btVector3 l_grav(f_grav.x,f_grav.y,f_grav.z);
-    m_dynamicWorld->setGravity(l_grav);
+    m_dynamicWorld->setGravity((btVector3&)f_grav);
 }
 void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 {

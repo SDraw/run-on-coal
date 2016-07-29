@@ -13,7 +13,7 @@ class Skeleton
         glm::quat m_rot;
         glm::vec3 m_scale;
     };
-    skFastStoring m_leftData,m_rightData;
+    skFastStoring m_leftData,m_rightData,m_interpolated;
 
     std::vector<Bone*> m_boneVector;
     std::vector<Bone*> m_fastBoneVector;

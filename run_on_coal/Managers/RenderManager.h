@@ -55,12 +55,12 @@ class RenderManager
 public:
 
     void ClearRenderArea(GLbitfield f_params);
-    void SetClearColour(glm::vec4 &f_color);
-    void SetViewport(glm::ivec4 &f_area);
-    void SetPolygonMode(unsigned int f_mode);
+    inline void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r,f_color.g,f_color.b,f_color.a); }
+    inline void SetViewport(glm::ivec4 &f_area) { if(!m_locked) glViewport(f_area.r,f_area.g,f_area.b,f_area.a); }
+    inline void SetPolygonMode(unsigned int f_mode) { if(f_mode <= 2U) glPolygonMode(GL_FRONT_AND_BACK,GL_POINT+static_cast<int>(f_mode)); }
 
     void SetActiveScene(Scene *f_scene);
-    void RemoveAsActiveScene(Scene *f_scene);
+    inline void RemoveAsActiveScene(Scene *f_scene) { if(m_activeScene == f_scene) m_activeScene = NULL; }
 
     void SetActiveShader(Shader *f_shader);
     template<typename T> void SetShaderUniformValueO(Shader *f_shader, GLint f_uValue, T f_value)
@@ -75,7 +75,7 @@ public:
         f_shader->SetUniformValue(f_uValue,f_value);
         RestoreActiveShader(f_shader);
     };
-    void RemoveAsActiveShader(Shader *f_shader);
+    inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader == f_shader) m_activeShader = NULL; }
 
     void SetRenderTarget(RenderTarget *f_rt);
 

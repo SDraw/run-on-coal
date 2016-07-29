@@ -30,7 +30,7 @@ class ElementManager
     std::regex m_regex;
     bool m_locked;
     
-    void AnalyzePath(std::string &f_in, std::string &f_out);
+    inline void AnalyzePath(std::string &f_in, std::string &f_out) { std::regex_replace(std::back_inserter(f_out),f_in.begin(),f_in.end(),m_regex,""); }
 public:
     Scene* CreateScene();
     bool DestroyScene(Scene *f_scene);

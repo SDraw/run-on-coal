@@ -72,20 +72,6 @@ bool ROC::File::SetPosition(size_t f_pos)
     else m_file->seekp(f_pos);
     return !m_file->fail();
 }
-size_t ROC::File::GetPosition()
-{
-    return static_cast<size_t>((m_type == FileMode::ReadMode) ? m_file->tellg() : m_file->tellp());
-}
-
-void ROC::File::GetPath(std::string &f_string)
-{
-    f_string.append(m_path);
-}
-
-bool ROC::File::IsEOF()
-{
-    return m_file->eof();
-}
 
 bool ROC::File::Delete(Core *f_core, std::string &f_path)
 {

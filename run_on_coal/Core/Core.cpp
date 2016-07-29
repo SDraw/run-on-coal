@@ -76,8 +76,3 @@ bool ROC::Core::DoPulse()
     m_elementManager->SetLock(false);
     return l_result;
 }
-
-void ROC::Core::GetWorkingDirectory(std::string &f_path)
-{
-    f_path.append(m_workingDir);
-}

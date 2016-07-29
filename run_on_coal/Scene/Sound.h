@@ -15,17 +15,17 @@ class Sound
     glm::vec3 m_v3DPosition;
     glm::vec2 m_v3DDistance;
 public:
-    void Play();
-    void Pause();
-    void Stop();
+    inline void Play() { m_handle->play(); }
+    inline void Pause() { m_handle->pause(); }
+    inline void Stop() { m_handle->stop(); }
 
-    bool IsLooped();
+    inline bool IsLooped() { return m_looped; }
 
     void SetSpeed(float f_speed);
-    float GetSpeed();
+    inline float GetSpeed() { return m_speed; }
 
     void SetVolume(float f_volume);
-    float GetVolume();
+    inline float GetVolume() { return m_volume; }
 
     void SetTime(float f_time);
     float GetTime();
@@ -39,7 +39,7 @@ public:
     bool Set3DDistance(glm::vec2 &f_dist);
     bool Get3DDistance(glm::vec2 &f_dist);
 
-    int GetState();
+    inline int GetState() { return m_handle->getStatus(); }
 protected:
     Sound(bool f_loop);
     ~Sound();

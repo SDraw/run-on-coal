@@ -132,7 +132,7 @@ protected:
     bool Attach(RenderTarget *f_target, int f_uniform);
     void Dettach(RenderTarget *f_target);
 
-    void GetError(std::string &f_str);
+    inline void GetError(std::string &f_str) { f_str.append(m_error); }
     friend class ElementManager;
     friend class InheritanceManager;
     friend class RenderManager;

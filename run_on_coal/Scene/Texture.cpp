@@ -82,17 +82,3 @@ void ROC::Texture::Bind(unsigned int f_bind)
     }
     if(f_bind) glActiveTexture(GL_TEXTURE0);
 }
-
-bool ROC::Texture::IsTransparent()
-{
-    return (m_type == TEXTURE_TYPE_RGBA);
-}
-bool ROC::Texture::IsCubic()
-{
-    return (m_type == TEXTURE_TYPE_CUBEMAP);
-}
-
-GLuint ROC::Texture::GetTexture()
-{
-    return m_texture;
-}

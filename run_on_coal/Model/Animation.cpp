@@ -65,8 +65,3 @@ void ROC::Animation::GetInterval(unsigned long f_tick, unsigned int &f_frameL, u
     f_frameL = ((f_tick-l_delta)/m_frameDelta)%m_duration;
     f_frameR = (f_frameL+1)%m_duration;
 }
-
-unsigned int ROC::Animation::GetBonesCount()
-{
-    return m_bonesValue;
-}

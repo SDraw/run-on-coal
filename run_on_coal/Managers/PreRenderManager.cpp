@@ -7,6 +7,8 @@
 #include "Model/Model.h"
 #include "Lua/LuaArguments.h"
 
+ROC::LuaArguments ROC::PreRenderManager::m_argument = ROC::LuaArguments();
+
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
@@ -45,14 +47,13 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
 void ROC::PreRenderManager::DoPulse_S1()
 {
     EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
-    if(l_eventManager->IsEventExists(EventType::PreRender))
-    {
-        LuaArguments l_args;
-        l_eventManager->CallEvent(EventType::PreRender,l_args);
-    }
+    if(l_eventManager->IsEventExists(EventType::PreRender)) l_eventManager->CallEvent(EventType::PreRender,m_argument);
     for(auto iter : m_animatedModelSet) iter->UpdateAnimation();
     for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
-    for(auto iter : m_animatedModelSet) iter->UpdateSkeletonChains();
+    if(m_core->GetPhysicsManager()->GetPhysicsEnabled())
+    {
+        for(auto iter : m_animatedModelSet) iter->UpdateSkeletonChains();
+    }
 }
 void ROC::PreRenderManager::DoPulse_S2()
 {

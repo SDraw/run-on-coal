@@ -33,7 +33,7 @@ public:
 protected:
     SfmlManager(Core *f_core);
     ~SfmlManager();
-    void SwapBuffers();
+    inline void SwapBuffers() { m_window->display(); }
     bool DoPulse();
     friend Core;
     friend class RenderManager;

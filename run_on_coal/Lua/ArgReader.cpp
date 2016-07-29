@@ -323,10 +323,6 @@ bool ROC::ArgReader::HasErrors()
     }
     return m_hasErrors;
 }
-int ROC::ArgReader::GetArgsValue()
-{
-    return m_iArgNum;
-}
 
 void ROC::ArgReader::CustomError(std::string &f_string)
 {

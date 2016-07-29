@@ -27,7 +27,7 @@ protected:
     bool Load(std::string &f_path);
     void GetInterval(unsigned long f_tick, unsigned int &f_frameL, unsigned int &f_frameR, float &f_lerp);
     bool GetFrameData(unsigned int f_rightFrame, unsigned int f_leftFrame);
-    unsigned int GetBonesCount();
+    inline unsigned int GetBonesCount() { return m_bonesValue; }
     friend class Model;
     friend class ElementManager;
     friend class InheritanceManager;

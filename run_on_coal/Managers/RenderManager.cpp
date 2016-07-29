@@ -69,16 +69,6 @@ void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)
     if((f_params&GL_DEPTH_BUFFER_BIT) == GL_DEPTH_BUFFER_BIT) EnableDepth();
     glClear(f_params);
 }
-void ROC::RenderManager::SetClearColour(glm::vec4 &f_color)
-{
-    glClearColor(f_color.r,f_color.g,f_color.b,f_color.a);
-}
-
-void ROC::RenderManager::SetViewport(glm::ivec4 &f_area)
-{
-    if(m_locked) return;
-    glViewport(f_area.r,f_area.g,f_area.b,f_area.a);
-}
 
 void ROC::RenderManager::SetActiveScene(Scene *f_scene)
 {
@@ -116,10 +106,6 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
         }
     }
 }
-void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
-{
-    if(m_activeScene == f_scene) m_activeScene = NULL;
-}
 
 void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 {
@@ -130,11 +116,6 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
         m_activeShader->Enable(true);
         m_activeShader->SetTimeUniformValue(m_time);
     }
-}
-
-void ROC::RenderManager::RemoveAsActiveShader(Shader *f_shader)
-{
-    if(m_activeShader == f_shader) m_activeShader = NULL;
 }
 
 void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum, float f_radius)
@@ -268,12 +249,6 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
     m_quad->Draw(l_vaoBind);
 }
 
-void ROC::RenderManager::SetPolygonMode(unsigned int f_mode)
-{
-    if(f_mode > 2U) return;
-    glPolygonMode(GL_FRONT_AND_BACK,GL_POINT+static_cast<int>(f_mode));
-}
-
 void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
 {
     if(m_locked || m_activeTarget == f_rt) return;
@@ -298,10 +273,7 @@ void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader)
 }
 void ROC::RenderManager::RestoreActiveShader(Shader *f_shader)
 {
-    if(m_activeShader)
-    {
-        if(m_activeShader != f_shader) m_activeShader->Enable();
-    }
+    if(m_activeShader != f_shader && m_activeShader) m_activeShader->Enable();
 }
 
 void ROC::RenderManager::DisableDepth()

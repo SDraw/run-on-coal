@@ -52,26 +52,27 @@ ROC::Skeleton::~Skeleton()
 
 void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
 {
-    for(size_t i=0, j=m_bonesCount, l_bonePos=0; i < j; i++, l_bonePos+=10)
+    for(size_t i=0, l_bonePos=0; i < m_bonesCount; i++, l_bonePos+=10)
     {
         std::memcpy(&m_leftData,&f_left[l_bonePos],sizeof(skFastStoring));
         std::memcpy(&m_rightData,&f_right[l_bonePos],sizeof(skFastStoring));
 
-        m_boneVector[i]->SetPosition(glm::lerp(m_leftData.m_pos,m_rightData.m_pos,f_lerp));
-        m_boneVector[i]->SetRotation(glm::slerp(m_leftData.m_rot,m_rightData.m_rot,f_lerp));
-        m_boneVector[i]->SetScale(glm::lerp(m_leftData.m_scale,m_rightData.m_scale,f_lerp));
+        m_interpolated.m_pos = glm::lerp(m_leftData.m_pos,m_rightData.m_pos,f_lerp);
+        m_interpolated.m_rot = glm::slerp(m_leftData.m_rot,m_rightData.m_rot,f_lerp);
+        m_interpolated.m_scale = glm::lerp(m_leftData.m_scale,m_rightData.m_scale,f_lerp);
+        m_boneVector[i]->SetData(&m_interpolated);
     }
     Update();
 }
 void ROC::Skeleton::Update()
 {
-    for(auto iter : m_fastBoneVector) iter->UpdateMatrix();
     for(size_t i=0; i < m_bonesCount; i++)
     {
         Bone *l_bone = m_boneVector[i];
-        l_bone->Reset();
+        l_bone->UpdateMatrix();
         std::memcpy(&m_boneMatrices[i],&l_bone->m_offsetMatrix,sizeof(glm::mat4));
     }
+    for(auto iter : m_boneVector) iter->m_rebuildMatrix = false;
 }
 
 void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)

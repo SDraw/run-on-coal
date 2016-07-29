@@ -26,9 +26,9 @@ public:
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool SetSceneLight(Scene *f_scene, Light *f_light);
     bool AttachTextureToShader(Shader *f_shader, Texture *f_texture, int f_uniform);
-    void DettachTextureFromShader(Shader *f_shader, Texture *f_texture);
+    inline void DettachTextureFromShader(Shader *f_shader, Texture *f_texture) { RemoveInheritance(f_texture,f_shader); }
     bool AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform);
-    void DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target);
+    inline void DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target) { RemoveInheritance(f_target,f_shader); }
 protected:
     InheritanceManager(Core *f_core);
     ~InheritanceManager();
@@ -36,7 +36,7 @@ protected:
     void RemoveChildRelation(void *f_child);
     void RemoveParentRelation(void *f_parent);
 
-    void SetModelGeometry(Model *f_model, Geometry *f_geometry);
+    inline void SetModelGeometry(Model *f_model, Geometry *f_geometry) { m_inheritMap.insert(std::pair<void*,void*>(f_model,f_geometry)); }
     friend Core;
     friend class ElementManager;
 };

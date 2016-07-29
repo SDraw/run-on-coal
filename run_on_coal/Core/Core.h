@@ -36,7 +36,7 @@ public:
     static void Terminate();
 
     bool DoPulse();
-    void GetWorkingDirectory(std::string &f_path);
+    inline void GetWorkingDirectory(std::string &f_path) { f_path.append(m_workingDir); }
 
     inline ConfigManager* GetConfigManager() { return m_configManager; }
     inline ElementManager* GetElementManager() { return m_elementManager; }

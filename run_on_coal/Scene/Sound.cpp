@@ -27,42 +27,16 @@ bool ROC::Sound::Load(std::string &f_path)
     return true;
 }
 
-void ROC::Sound::Play()
-{
-    m_handle->play();
-}
-void ROC::Sound::Pause()
-{
-    m_handle->pause();
-}
-void ROC::Sound::Stop()
-{
-    m_handle->stop();
-}
-
-bool ROC::Sound::IsLooped()
-{
-    return m_looped;
-}
-
 void ROC::Sound::SetSpeed(float f_speed)
 {
     m_speed = f_speed;
     m_handle->setPitch(m_speed);
-}
-float ROC::Sound::GetSpeed()
-{
-    return m_speed;
 }
 
 void ROC::Sound::SetVolume(float f_volume)
 {
     m_volume = f_volume;
     m_handle->setVolume(m_volume);
-}
-float ROC::Sound::GetVolume()
-{
-    return m_volume;
 }
 
 void ROC::Sound::SetTime(float f_time)
@@ -74,11 +48,6 @@ float ROC::Sound::GetTime()
 {
     sf::Time l_time = m_handle->getPlayingOffset();
     return l_time.asSeconds();
-}
-
-int ROC::Sound::GetState()
-{
-    return m_handle->getStatus();
 }
 
 bool ROC::Sound::Set3DPositionEnabled(bool f_state)

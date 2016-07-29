@@ -550,8 +550,3 @@ void ROC::Shader::Dettach(RenderTarget *f_target)
         }
     }
 }
-
-void ROC::Shader::GetError(std::string &f_str)
-{
-    f_str.append(m_error);
-}

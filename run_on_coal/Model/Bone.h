@@ -8,32 +8,28 @@ class Bone
     std::vector<Bone*> m_childBoneVector;
 
     std::string m_name;
-    glm::quat m_rotation;
-    glm::vec3 m_position;
-    glm::vec3 m_scale;
+    struct bnStoring
+    {
+        glm::vec3 m_pos;
+        glm::quat m_rot;
+        glm::vec3 m_scl;
+    } m_data;
 
     glm::mat4 m_matrix;
     glm::mat4 m_localMatrix;
     glm::mat4 m_bindMatrix;
     glm::mat4 m_offsetMatrix;
-
     bool m_rebuildMatrix;
-    bool m_forcedPosition;
-    bool m_forcedRotation;
-    bool m_forcedScale;
     static glm::mat4 m_identity;
 protected:
     Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale);
     ~Bone();
-    void SetParent(Bone *f_bone);
-    void AddChild(Bone *f_bone);
+    inline void SetParent(Bone *f_bone) { m_parent = f_bone; }
+    inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
+    void SetData(void *f_data);
     void GenerateBindPose();
     void GenerateFastTree(std::vector<Bone*> &f_vec);
-    void SetPosition(glm::vec3 &f_pos, bool f_forced = false);
-    void SetRotation(glm::quat &f_rot, bool f_forced = false);
-    void SetScale(glm::vec3 &f_scale, bool f_forced = false);
     void UpdateMatrix();
-    void Reset();
     friend class Skeleton;
     friend class Model;
 };

@@ -32,14 +32,14 @@ class Material
 protected:
     Material();
     ~Material();
-    void SetType(unsigned char f_type);
-    unsigned char GetType();
-    bool IsDoubleSided();
-    bool IsTransparent();
-    bool IsShady();
-    bool IsDepthable();
-    void GetParams(glm::vec4 &f_params);
-    void SetParams(glm::vec4 &f_params);
+    inline void SetType(unsigned char f_type) { m_type = f_type; };
+    inline unsigned char GetType() { return m_type; }
+    inline bool IsDoubleSided() { return ((m_type&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE); }
+    inline bool IsTransparent() { return ((m_type&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT); }
+    inline bool IsShady() { return ((m_type&MATERIAL_BIT_SHADING) == MATERIAL_BIT_SHADING); }
+    inline bool IsDepthable() {  return ((m_type&MATERIAL_BIT_DEPTH) == MATERIAL_BIT_DEPTH); }
+    inline void GetParams(glm::vec4 &f_params) { std::memcpy(&f_params,&m_params,sizeof(glm::vec4)); }
+    inline void SetParams(glm::vec4 &f_params) { std::memcpy(&m_params,&f_params,sizeof(glm::vec4)); }
     void LoadVertices(std::vector<glm::vec3> &f_vector);
     void LoadUVs(std::vector<glm::vec2> &f_vector);
     void LoadNormals(std::vector<glm::vec3> &f_vector);
@@ -48,7 +48,7 @@ protected:
     void LoadTexture(std::string &f_path, bool f_compressed = false);
     void GenerateVAO();
     void Draw(bool f_texturize, bool f_binding);
-    GLuint GetVAO();
+    inline GLuint GetVAO() { return m_VAO; }
     GLuint GetTexture();
     friend class Geometry;
 };

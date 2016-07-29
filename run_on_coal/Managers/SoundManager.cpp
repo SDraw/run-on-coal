@@ -23,10 +23,6 @@ void ROC::SoundManager::SetListenerPosition(glm::vec3 &f_pos)
     std::memcpy(&m_listenerPosition,&f_pos,sizeof(glm::vec3));
     m_updatePosition = true;
 }
-void ROC::SoundManager::GetListenerPosition(glm::vec3 &f_pos)
-{
-    std::memcpy(&f_pos,&m_listenerPosition,sizeof(glm::vec3));
-}
 
 void ROC::SoundManager::SetListenerDirection(glm::vec3 &f_dir)
 {
@@ -34,20 +30,12 @@ void ROC::SoundManager::SetListenerDirection(glm::vec3 &f_dir)
     std::memcpy(&m_listenerDirection,&f_dir,sizeof(glm::vec3));
     m_updateDirection = true;
 }
-void ROC::SoundManager::GetListenerDirection(glm::vec3 &f_dir)
-{
-    std::memcpy(&f_dir,&m_listenerDirection,sizeof(glm::vec3));
-}
 
 void ROC::SoundManager::SetListenerUp(glm::vec3 &f_up)
 {
     if(!std::memcmp(&f_up,&m_listenerUp,sizeof(glm::vec3))) return;
     std::memcpy(&m_listenerUp,&f_up,sizeof(glm::vec3));
     m_updateUp = true;
-}
-void ROC::SoundManager::GetListenerUp(glm::vec3 &f_up)
-{
-    std::memcpy(&f_up,&m_listenerUp,sizeof(glm::vec3));
 }
 
 void ROC::SoundManager::DoPulse()

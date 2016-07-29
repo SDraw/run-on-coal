@@ -14,10 +14,6 @@ ROC::Collision::~Collision()
     }
 }
 
-btRigidBody* ROC::Collision::GetRigidBody()
-{
-    return m_rigidBody;
-}
 bool ROC::Collision::Create(unsigned char f_type, glm::vec3 &f_size)
 {
     if(m_rigidBody || f_type > COLLISION_TYPE_CONE) return false;
