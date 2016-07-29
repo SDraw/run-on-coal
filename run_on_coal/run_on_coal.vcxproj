@@ -49,7 +49,6 @@
     <TargetName>$(ProjectName)_d</TargetName>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -85,22 +84,16 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet;../vendor/pugixml;../vendor/lodepng;../vendor/SFML/include;../vendor/freetype26/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <MinimalRebuild>true</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <CallingConvention>Cdecl</CallingConvention>
-      <OmitFramePointers>false</OmitFramePointers>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,8 +102,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype26\lib;..\vendor\glew\lib\Release\Win32;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype262_dll.lib;lua53.lib;sfml-audio.lib;sfml-system.lib;sfml-window.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalOptions>/SAFESEH:NO %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>
