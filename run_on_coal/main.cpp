@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "RocInc.h"
 
-#ifdef _DEBUG || __linux__
+#ifdef _WIN32
+    #ifdef _DEBUG
 int main(int argc, char *argv[])
-#elif _WIN32
+    #else
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+    #endif
+#elif __linux__
+int main(int argc, char *argv[])
 #endif
 {
     ROC::Core *l_core = ROC::Core::GetCore();
