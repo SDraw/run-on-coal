@@ -1,8 +1,14 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
+#ifdef _WIN32
 #include <Windows.h>
 #include <direct.h>
+#elif __linux__
+#include <unistd.h>
+#include <sys/time.h>
+#define _getcwd getcwd
+#endif
 
 #include <iostream>
 #include <string>

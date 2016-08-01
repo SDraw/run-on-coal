@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "RocInc.h"
 
-#ifdef _DEBUG
+#ifdef _DEBUG || __linux__
 int main(int argc, char *argv[])
-#else
+#elif _WIN32
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 #endif
 {

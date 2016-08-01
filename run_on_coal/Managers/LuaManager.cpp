@@ -223,7 +223,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     m_eventManager = new EventManager(this);
 }
-
 ROC::LuaManager::~LuaManager()
 {
     lua_close(m_pVM);

@@ -105,7 +105,8 @@ int physicsRayCast(lua_State *f_vm)
     lua_pushnumber(f_vm,l_hitNormal.x);
     lua_pushnumber(f_vm,l_hitNormal.y);
     lua_pushnumber(f_vm,l_hitNormal.z);
-    l_hitElement ? lua_pushlightuserdata(f_vm,l_hitElement) : lua_pushstring(f_vm,"floor");
+    if(l_hitElement != NULL) lua_pushlightuserdata(f_vm,l_hitElement);
+    else lua_pushstring(f_vm,"floor");
     return 7;
 }
 

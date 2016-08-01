@@ -79,6 +79,9 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
                 case ElementType::GeometryElement:
                     static_cast<Model*>(f_child)->SetGeometry(NULL);
                     break;
+                case ElementType::AnimationElement:
+                    static_cast<Model*>(f_child)->SetAnimation(NULL);
+                    break;
             }
         } break;
         case ElementType::CameraElement:
