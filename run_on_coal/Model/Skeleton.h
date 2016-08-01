@@ -14,11 +14,12 @@ class Skeleton
         glm::vec3 m_scale;
     };
     skFastStoring m_leftData,m_rightData,m_interpolated;
-
-    std::vector<Bone*> m_boneVector;
     std::vector<Bone*> m_fastBoneVector;
+    size_t m_jointsCount;
+protected:
     size_t m_bonesCount;
-
+    std::vector<Bone*> m_boneVector;
+    std::vector<glm::mat4> m_boneMatrices;
     struct skChain
     {
         btRigidBody *m_rigidBody;
@@ -27,10 +28,7 @@ class Skeleton
     };
     std::vector<std::vector<skChain>> m_chainsVector;
     std::vector<btRigidBody*> m_jointVector;
-    size_t m_jointsCount;
     bool m_rigid;
-protected:
-    std::vector<glm::mat4> m_boneMatrices;
     Skeleton(std::vector<BoneData*> &f_data);
     ~Skeleton();
     void InitRigidity(std::vector<BoneChainGroup*> &f_vec);
@@ -38,7 +36,7 @@ protected:
     void Update();
     void UpdateChains(glm::mat4 &f_model);
     void UpdateRigidBones(glm::mat4 &f_model);
-
+    void ResetBonesInterpolation();
     friend class Model;
 };
 

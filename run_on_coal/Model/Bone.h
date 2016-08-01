@@ -18,10 +18,12 @@ class Bone
     glm::mat4 m_matrix;
     glm::mat4 m_localMatrix;
     glm::mat4 m_bindMatrix;
-    glm::mat4 m_offsetMatrix;
-    bool m_rebuildMatrix;
     static glm::mat4 m_identity;
 protected:
+    glm::mat4 m_offsetMatrix;
+    bool m_rebuildMatrix;
+    bool m_interpolation;
+    float m_interpolationValue;
     Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale);
     ~Bone();
     inline void SetParent(Bone *f_bone) { m_parent = f_bone; }

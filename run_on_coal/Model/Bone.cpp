@@ -11,6 +11,8 @@ ROC::Bone::Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::ve
     std::memcpy(&m_data.m_scl,&f_scale,sizeof(glm::vec3));
     m_parent = NULL;
     m_rebuildMatrix = false;
+    m_interpolation = true;
+    m_interpolationValue = 0.f;
 }
 ROC::Bone::~Bone()
 {
@@ -35,9 +37,22 @@ void ROC::Bone::GenerateFastTree(std::vector<Bone*> &f_vec)
 
 void ROC::Bone::SetData(void *f_data)
 {
-    if(!std::memcmp(&m_data,f_data,sizeof(bnStoring))) return;
-    std::memcpy(&m_data,f_data,sizeof(bnStoring));
-    m_rebuildMatrix = true;
+    if(m_interpolation)
+    {
+        bnStoring *l_data = static_cast<bnStoring*>(f_data);
+        m_interpolationValue += 0.1f;
+        m_data.m_pos = glm::lerp(m_data.m_pos,l_data->m_pos,m_interpolationValue);
+        m_data.m_rot = glm::slerp(m_data.m_rot,l_data->m_rot,m_interpolationValue);
+        m_data.m_scl = glm::lerp(m_data.m_scl,l_data->m_scl,m_interpolationValue);
+        if(m_interpolationValue >= 0.9f) m_interpolation = false;
+        m_rebuildMatrix = true;
+    }
+    else
+    {
+        if(!std::memcmp(&m_data,f_data,sizeof(bnStoring))) return;
+        std::memcpy(&m_data,f_data,sizeof(bnStoring));
+        m_rebuildMatrix = true;
+    }
 }
 
 void ROC::Bone::UpdateMatrix()

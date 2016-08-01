@@ -195,6 +195,7 @@ void ROC::Model::SetAnimation(Animation *f_anim)
     {
         m_animState = AnimationState::Paused;
         m_animCurrentTick = 0U;
+        m_skeleton->ResetBonesInterpolation();
         UpdateSkeleton();
     }
 }

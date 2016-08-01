@@ -167,3 +167,12 @@ void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model)
         }
     }
 }
+
+void ROC::Skeleton::ResetBonesInterpolation()
+{
+    for(auto iter : m_boneVector)
+    {
+        iter->m_interpolation = true;
+        iter->m_interpolationValue = 0.f;
+    }
+}
