@@ -65,7 +65,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\vendor\lua\include;..\vendor\sajson;..\vendor\bullet;..\vendor\pugixml;..\vendor\lodepng;..\vendor\freetype265\include;..\vendor\glm;..\vendor\glew\include;..\vendor\SFML\include;..\vendor\zlib\include;..\vendor\luauft8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\vendor\lua\include;..\vendor\sajson;..\vendor\bullet\include;..\vendor\pugixml;..\vendor\lodepng;..\vendor\freetype265\include;..\vendor\glm;..\vendor\glew\include;..\vendor\SFML\include;..\vendor\zlib\include;..\vendor\luauft8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,7 +86,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet;../vendor/pugixml;../vendor/lodepng;../vendor/SFML/include;../vendor/freetype265/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/lodepng;../vendor/SFML/include;../vendor/freetype265/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
