@@ -127,8 +127,8 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseWheelScrolled:
             {
-                m_argument.PushArgument(m_event.mouseWheelScroll.x);
-                m_argument.PushArgument(m_event.mouseWheelScroll.y);
+                m_argument.PushArgument(m_event.mouseWheelScroll.wheel);
+                m_argument.PushArgument(m_event.mouseWheelScroll.delta);
                 m_eventManager->CallEvent(EventType::MouseScroll,m_argument);
                 m_argument.Clear();
             } break;
