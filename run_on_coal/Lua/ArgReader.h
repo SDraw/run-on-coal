@@ -36,7 +36,6 @@ public:
     void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);
 
     bool HasErrors();
-    void CustomError(std::string &f_string);
     inline int GetArgsValue() { return m_iArgNum; }
 };
 

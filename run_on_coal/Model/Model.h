@@ -66,9 +66,9 @@ public:
 
     inline bool HasSkeleton() { return (m_skeleton != NULL); }
     bool HasRigidSkeleton();
-    int GetBonesCount();
+    unsigned int GetBonesCount();
     void GetBoneMatrices(std::vector<glm::mat4> &f_mat);
-    bool GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat);
+    void GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat);
 
     //Physics
     bool SetVelocity(glm::vec3 &f_val);

@@ -268,13 +268,8 @@ int soundGet3DPosition(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    glm::vec3 l_pos;
-    bool result = l_sound->Get3DPosition(l_pos);
-    if(!result)
-    {
-        lua_pushboolean(f_vm,0);
-        return 1;
-    }
+    glm::vec3 l_pos(0.f);
+    l_sound->Get3DPosition(l_pos);
     lua_pushnumber(f_vm,l_pos.x);
     lua_pushnumber(f_vm,l_pos.y);
     lua_pushnumber(f_vm,l_pos.z);
@@ -308,13 +303,8 @@ int soundGet3DDistance(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    glm::vec2 l_pos;
-    bool result = l_sound->Get3DDistance(l_pos);
-    if(!result)
-    {
-        lua_pushboolean(f_vm,0);
-        return 1;
-    }
+    glm::vec2 l_pos(0.f);
+    l_sound->Get3DDistance(l_pos);
     lua_pushnumber(f_vm,l_pos.x);
     lua_pushnumber(f_vm,l_pos.y);
     return 2;

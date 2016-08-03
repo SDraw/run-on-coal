@@ -14,12 +14,12 @@ class ConfigManager
     unsigned int m_fpsLimit;
     bool m_vsync;
 public:
-    bool IsLogEnabled();
-    bool IsFullscreenEnabled();
-    int GetAntialiasing();
-    void GetWindowSize(glm::ivec2 &f_vec);
-    unsigned int GetFPSLimit();
-    bool GetVSync();
+    inline bool IsLogEnabled() { return m_logging; }
+    inline bool IsFullscreenEnabled() { return m_fullscreen; }
+    inline int GetAntialiasing() { return m_antialiasing; }
+    inline void GetWindowSize(glm::ivec2 &f_vec) { std::memcpy(&f_vec,&m_windowSize,sizeof(glm::ivec2)); }
+    inline unsigned int GetFPSLimit() { return m_fpsLimit; }
+    inline bool GetVSync() { return m_vsync; }
 protected:
     ConfigManager(Core *f_core);
     ~ConfigManager();

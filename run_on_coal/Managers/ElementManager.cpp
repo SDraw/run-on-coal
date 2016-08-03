@@ -30,11 +30,6 @@ ROC::ElementManager::~ElementManager()
 {
 }
 
-void ROC::ElementManager::SetLock(bool f_lock)
-{
-    m_locked = f_lock;
-}
-
 ROC::Scene* ROC::ElementManager::CreateScene()
 {
     ROC::Scene *l_scene= new Scene();

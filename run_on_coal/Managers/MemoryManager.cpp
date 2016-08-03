@@ -13,11 +13,6 @@ ROC::MemoryManager::~MemoryManager()
     for(auto iter : m_memoryMap) l_elementManager->DestroyByPointer(iter.first,iter.second);
 }
 
-void ROC::MemoryManager::AddMemoryPointer(void *f_pointer, unsigned char f_type)
-{
-    m_memoryMap.insert(std::pair<void*,unsigned int>(f_pointer,f_type));
-}
-
 bool ROC::MemoryManager::CheckMemoryPointer(void *f_pointer, unsigned char f_type)
 {
     auto l_checkIterator = m_memoryMap.find(f_pointer);
@@ -40,11 +35,4 @@ int ROC::MemoryManager::GetMemoryPointerType(void *f_pointer)
     auto iter = m_memoryMap.find(f_pointer);
     if(iter == m_memoryMap.end()) return -1;
     return iter->second;
-}
-
-bool ROC::MemoryManager::IsValidMemoryPointer(void *f_pointer)
-{
-    auto iter = m_memoryMap.find(f_pointer);
-    if(iter == m_memoryMap.end()) return false;
-    return true;
 }

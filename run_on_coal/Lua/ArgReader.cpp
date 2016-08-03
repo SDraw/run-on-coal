@@ -323,17 +323,3 @@ bool ROC::ArgReader::HasErrors()
     }
     return m_hasErrors;
 }
-
-void ROC::ArgReader::CustomError(std::string &f_string)
-{
-    std::string l_log("Error at ");
-    lua_Debug l_ar;
-    lua_getstack(m_pVM, 1, &l_ar);
-    lua_getinfo(m_pVM, "nSl", &l_ar);
-    l_log.append(l_ar.source);
-    l_log.append(":");
-    l_log.append(std::to_string(l_ar.currentline));
-    l_log.append(": ");
-    l_log.append(f_string);
-    m_core->GetLogManager()->Log(l_log);
-}

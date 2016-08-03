@@ -75,7 +75,7 @@ public:
 protected:
     ElementManager(Core *f_core);
     ~ElementManager();
-    void SetLock(bool f_lock);
+    inline void SetLock(bool f_lock) { m_locked = f_lock; }
     void DestroyByPointer(void* f_pointer,unsigned char f_type);
     friend Core;
     friend class MemoryManager;

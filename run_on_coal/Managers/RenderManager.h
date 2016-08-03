@@ -52,11 +52,11 @@ class RenderManager
     void EnableBlending();
     void DisableCulling();
     void EnableCulling();
+
     bool CompareLastVAO(GLuint f_vao);
     bool CompareLastTexture(GLuint f_texture);
     void EnableNonActiveShader(Shader *f_shader);
 public:
-
     void ClearRenderArea(GLbitfield f_params);
     static void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r,f_color.g,f_color.b,f_color.a); }
     inline void SetViewport(glm::ivec4 &f_area) { if(!m_locked) glViewport(f_area.r,f_area.g,f_area.b,f_area.a); }

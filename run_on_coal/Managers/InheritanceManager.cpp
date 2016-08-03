@@ -143,7 +143,7 @@ bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent
         if(l_treeParent == f_model) return false;
         l_treeParent = l_treeParent->GetParent();
     }
-    if(f_bone < -1 || f_bone >= f_parent->GetBonesCount()) f_bone = -1;
+    if(f_bone < -1 || f_bone >= static_cast<int>(f_parent->GetBonesCount())) f_bone = -1;
     f_model->SetParent(f_parent,f_bone);
     m_inheritMap.insert(std::pair<void*,void*>(f_model,f_parent));
     return true;

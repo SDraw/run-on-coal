@@ -119,8 +119,3 @@ bool ROC::Font::Draw(sf::String &f_text,glm::vec2 &f_pos,bool f_bind)
     }
     return true;
 }
-
-GLuint ROC::Font::GetVAO()
-{
-    return m_VAO;
-}

@@ -77,10 +77,8 @@ void ROC::Model::UpdateSkeleton()
 {
     if(m_animation)
     {
-        unsigned int l_leftFrame,l_rightFrame;
         float l_lerpDelta;
-        m_animation->GetInterval(m_animCurrentTick,l_leftFrame,l_rightFrame,l_lerpDelta);
-        if(!m_animation->GetFrameData(l_rightFrame,l_leftFrame)) return;
+        if(!m_animation->CacheData(m_animCurrentTick,l_lerpDelta)) return;
         m_skeleton->Update(m_animation->m_leftFrame,m_animation->m_rightFrame,l_lerpDelta);
     }
     else m_skeleton->Update();
@@ -253,9 +251,9 @@ bool ROC::Model::HasRigidSkeleton()
 {
     return (m_skeleton ? m_skeleton->m_rigid : false);
 }
-int ROC::Model::GetBonesCount()
+unsigned int ROC::Model::GetBonesCount()
 {
-    return (m_skeleton ? static_cast<int>(m_skeleton->m_bonesCount) : -1);
+    return (m_skeleton ? m_skeleton->m_bonesCount : 0U);
 }
 void ROC::Model::GetBoneMatrices(std::vector<glm::mat4> &f_mat)
 {
@@ -263,6 +261,7 @@ void ROC::Model::GetBoneMatrices(std::vector<glm::mat4> &f_mat)
 }
 void ROC::Model::GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vector<btTypedConstraint*> &f_cs)
 {
+    if(!m_skeleton) return;
     for(auto iter : m_skeleton->m_chainsVector)
     {
         for(auto iter1 : iter)
@@ -274,12 +273,10 @@ void ROC::Model::GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vect
     f_rb.insert(f_rb.end(),m_skeleton->m_jointVector.begin(),m_skeleton->m_jointVector.end());
 }
 
-bool ROC::Model::GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat)
+void ROC::Model::GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat)
 {
-    if(!m_skeleton) return false;
-    if(f_bone >= m_skeleton->m_bonesCount) return false;
-    std::memcpy(&f_mat,&m_skeleton->m_boneVector[f_bone]->m_matrix,sizeof(glm::mat4));
-    return true;
+    if(!m_skeleton) return;
+    if(f_bone < m_skeleton->m_bonesCount) std::memcpy(&f_mat,&m_skeleton->m_boneVector[f_bone]->m_matrix,sizeof(glm::mat4));
 }
 
 GLuint ROC::Model::GetMaterialVAO(unsigned int f_material)
@@ -370,7 +367,7 @@ float ROC::Model::GetMass()
 }
 bool ROC::Model::SetFriction(float f_val)
 {
-    if(!m_rigidBody || f_val < 0.f) return false;
+    if(m_rigidBody || f_val < 0.f) return false;
     m_rigidBody->setFriction(f_val);
     m_rigidBody->activate(true);
     return true;

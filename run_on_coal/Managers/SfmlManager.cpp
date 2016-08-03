@@ -198,10 +198,6 @@ void ROC::SfmlManager::GetWindowSize(glm::ivec2 &f_size)
     f_size.x = static_cast<int>(l_size.x);
     f_size.y = static_cast<int>(l_size.y);
 }
-void ROC::SfmlManager::CloseWindow()
-{
-    m_active = false;
-}
 
 float ROC::SfmlManager::GetTime()
 {

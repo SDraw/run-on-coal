@@ -9,7 +9,6 @@ bool ReadFile(std::string &path, std::string &f_cont);
 
 GLint CheckShader(GLuint f_shader);
 
-
 unsigned long GetSystemTick();
 
 void JoinPaths(std::string &f_result, std::string &f_path);

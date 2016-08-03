@@ -61,30 +61,3 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
 ROC::ConfigManager::~ConfigManager()
 {
 }
-
-bool ROC::ConfigManager::IsLogEnabled()
-{
-    return m_logging;
-}
-bool ROC::ConfigManager::IsFullscreenEnabled()
-{
-    return m_fullscreen;
-}
-int ROC::ConfigManager::GetAntialiasing()
-{
-    return m_antialiasing;
-}
-void ROC::ConfigManager::GetWindowSize(glm::ivec2 &f_vec)
-{
-    std::memcpy(&f_vec,&m_windowSize,sizeof(glm::ivec2));
-}
-
-unsigned int ROC::ConfigManager::GetFPSLimit()
-{
-    return m_fpsLimit;
-}
-
-bool ROC::ConfigManager::GetVSync()
-{
-    return m_vsync;
-}

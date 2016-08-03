@@ -49,19 +49,16 @@ bool ROC::Animation::Load(std::string &f_path)
     return true;
 }
 
-bool ROC::Animation::GetFrameData(unsigned int f_rightFrame, unsigned int f_leftFrame)
-{
-    m_animFile.seekg(12+(f_leftFrame%m_duration)*m_frameSize,std::ios::beg);
-    m_animFile.read((char*)m_leftFrame.data(),m_frameSize);
-    m_animFile.seekg(12+(f_rightFrame%m_duration)*m_frameSize,std::ios::beg);
-    m_animFile.read((char*)m_rightFrame.data(),m_frameSize);
-    return m_animFile.good();
-}
-
-void ROC::Animation::GetInterval(unsigned long f_tick, unsigned int &f_frameL, unsigned int &f_frameR, float &f_lerp)
+bool ROC::Animation::CacheData(unsigned long f_tick, float &f_lerp)
 {
     unsigned long l_delta = f_tick%m_frameDelta;
+    unsigned int l_frameL = ((f_tick-l_delta)/m_frameDelta)%m_duration;
+    unsigned int l_frameR = (l_frameL+1)%m_duration;
     f_lerp = static_cast<float>(l_delta)/static_cast<float>(m_frameDelta);
-    f_frameL = ((f_tick-l_delta)/m_frameDelta)%m_duration;
-    f_frameR = (f_frameL+1)%m_duration;
+
+    m_animFile.seekg(12+(l_frameL%m_duration)*m_frameSize,std::ios::beg);
+    m_animFile.read((char*)m_leftFrame.data(),m_frameSize);
+    m_animFile.seekg(12+(l_frameR%m_duration)*m_frameSize,std::ios::beg);
+    m_animFile.read((char*)m_rightFrame.data(),m_frameSize);
+    return m_animFile.good();
 }

@@ -27,7 +27,7 @@ public:
 
     void GetWindowPosition(glm::ivec2 &f_pos);
     void GetWindowSize(glm::ivec2 &f_size);
-    void CloseWindow();
+    inline void CloseWindow() { m_active = false; }
 
     float GetTime();
 protected:
