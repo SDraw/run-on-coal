@@ -1,17 +1,18 @@
 ![](http://i.imgur.com/x3GSfPD.png)
 
-Simple and lightweight game engine. It provides simplified usage of OpenGL mostly via Lua scripts.
+Simple and lightweight 3D game engine.
 
 # Features
-* Static/skeletal animation
-* Multiple render targets
-* Directional lighting
-* Shaders manipulation
-* Sound manipulation
-* Events system
-* Multi-language fonts support
-* Basic physics
+* OpenGL 3.0+ rendering
+* GLSL shaders
+* Skeletal animation with hardware skinning
+* Directional lights
 * Frustum culling
+* Keyboard, mouse and joypad input
+* Physics using Bullet Physics
+* Scripting using Lua
+* Audio playback with spatialization (Ogg, WAV, FLAC)
+* TrueType font rendering with Unicode characters support
 
 [![alt text](http://i.imgur.com/uABPi2s.png "Skeletal animation, rigid bones chains")](https://www.youtube.com/watch?v=lDpUwM7fkKw)  [![alt text](http://i.imgur.com/p1LoxXA.png "Solid bodies physics")](https://www.youtube.com/watch?v=NP3ijUbu1oI)
 
