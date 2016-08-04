@@ -97,8 +97,8 @@ protected:
     bool RemoveRigidity();
     inline btRigidBody* GetRidigBody() { return m_rigidBody; }
     void GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vector<btTypedConstraint*> &f_cs);
-    void UpdateSkeletonChains();
-    void UpdateSkeletonRigidBones();
+    void UpdateSkeletonJoints(bool f_enabled);
+    void UpdateSkeletonRigidBones(bool f_enabled);
     void UpdateRigidity();
 
     friend class ElementManager;

@@ -12,6 +12,7 @@ ROC::LuaArguments ROC::PreRenderManager::m_argument = ROC::LuaArguments();
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
+    m_physicsManager = m_core->GetPhysicsManager();
 }
 ROC::PreRenderManager::~PreRenderManager()
 {
@@ -50,17 +51,13 @@ void ROC::PreRenderManager::DoPulse_S1()
     if(l_eventManager->IsEventExists(EventType::PreRender)) l_eventManager->CallEvent(EventType::PreRender,m_argument);
     for(auto iter : m_animatedModelSet) iter->UpdateAnimation();
     for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
-    if(m_core->GetPhysicsManager()->GetPhysicsEnabled())
-    {
-        for(auto iter : m_animatedModelSet) iter->UpdateSkeletonChains();
-    }
+    bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
+    for(auto iter : m_animatedModelSet) iter->UpdateSkeletonJoints(l_physicsState);
 }
 void ROC::PreRenderManager::DoPulse_S2()
 {
-    if(m_core->GetPhysicsManager()->GetPhysicsEnabled())
-    {
-        for(auto iter : m_animatedModelSet) iter->UpdateSkeletonRigidBones();
-    }
+    bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
     for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
+    for(auto iter : m_animatedModelSet) iter->UpdateSkeletonRigidBones(l_physicsState);
     for(auto iter : m_staticModelSet) iter->UpdateMatrix();
 }

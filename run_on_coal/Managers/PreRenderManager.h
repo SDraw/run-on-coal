@@ -4,11 +4,13 @@ namespace ROC
 {
 
 class Core;
+class PhysicsManager;
 class Model;
 class LuaArguments;
 class PreRenderManager
 {
     Core *m_core;
+    PhysicsManager *m_physicsManager;
     std::set<Model*> m_staticModelSet;
     std::set<Model*> m_animatedModelSet;
     

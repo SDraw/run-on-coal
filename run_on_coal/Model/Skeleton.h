@@ -34,8 +34,8 @@ protected:
     void InitRigidity(std::vector<BoneChainGroup*> &f_vec);
     void Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp);
     void Update();
-    void UpdateChains(glm::mat4 &f_model);
-    void UpdateRigidBones(glm::mat4 &f_model);
+    void UpdateJoints(glm::mat4 &f_model, bool f_enabled);
+    void UpdateRigidBones(glm::mat4 &f_model, bool f_enabled);
     void ResetBonesInterpolation();
     friend class Model;
 };

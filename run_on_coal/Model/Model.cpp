@@ -373,13 +373,13 @@ bool ROC::Model::SetFriction(float f_val)
     return true;
 }
 
-void ROC::Model::UpdateSkeletonChains()
+void ROC::Model::UpdateSkeletonJoints(bool f_enabled)
 {
-    if(m_skeleton) m_skeleton->UpdateChains(m_matrix);
+    if(m_skeleton) m_skeleton->UpdateJoints(m_matrix,f_enabled);
 }
-void ROC::Model::UpdateSkeletonRigidBones()
+void ROC::Model::UpdateSkeletonRigidBones(bool f_enabled)
 {
-    if(m_skeleton) m_skeleton->UpdateRigidBones(m_matrix);
+    if(m_skeleton) m_skeleton->UpdateRigidBones(m_matrix,f_enabled);
 }
 
 void ROC::Model::UpdateRigidity()
