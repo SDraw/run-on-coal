@@ -9,8 +9,8 @@ Simple and lightweight 3D game engine.
 * Directional lights
 * Frustum culling
 * Keyboard, mouse and joypad input
-* Physics using Bullet Physics
-* Scripting using Lua
+* Physics using [Bullet Physics](https://github.com/bulletphysics/bullet3)
+* Scripting using [Lua](https://www.lua.org)
 * Audio playback with spatialization (Ogg, WAV, FLAC)
 * TrueType font rendering with Unicode characters support
 
