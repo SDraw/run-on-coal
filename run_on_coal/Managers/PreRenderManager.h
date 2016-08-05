@@ -14,7 +14,7 @@ class PreRenderManager
     std::set<Model*> m_staticModelSet;
     std::set<Model*> m_animatedModelSet;
     
-    static LuaArguments m_argument;
+    LuaArguments *m_argument;
 public:
     void AddModel(Model *f_model);
     void RemoveModel(Model *f_model);

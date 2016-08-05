@@ -8,8 +8,6 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
 
-ROC::LuaArguments ROC::SfmlManager::m_argument = ROC::LuaArguments();
-
 ROC::SfmlManager::SfmlManager(Core *f_core)
 {
     m_core = f_core;
@@ -57,12 +55,15 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_active = true;
     m_cursorDisabled = false;
     m_cursorCenter = sf::Vector2i(l_windowSize.x/2,l_windowSize.y/2);
+
+    m_argument = new LuaArguments();
 }
 
 ROC::SfmlManager::~SfmlManager()
 {
     m_window->close();
     delete m_window;
+    delete m_argument;
 }
 
 bool ROC::SfmlManager::DoPulse()
@@ -80,17 +81,17 @@ bool ROC::SfmlManager::DoPulse()
             {
                 m_cursorCenter.x = m_event.size.width/2;
                 m_cursorCenter.y = m_event.size.height/2;
-                m_argument.PushArgument(static_cast<int>(m_event.size.width));
-                m_argument.PushArgument(static_cast<int>(m_event.size.height));
+                m_argument->PushArgument(static_cast<int>(m_event.size.width));
+                m_argument->PushArgument(static_cast<int>(m_event.size.height));
                 m_eventManager->CallEvent(EventType::WindowResize,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::KeyPressed: case sf::Event::KeyReleased:
             {
-                m_argument.PushArgument(m_event.key.code);
-                m_argument.PushArgument(m_event.type == sf::Event::KeyPressed ? 1:0);
+                m_argument->PushArgument(m_event.key.code);
+                m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1:0);
                 m_eventManager->CallEvent(EventType::KeyPress,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::TextEntered:
             {
@@ -99,61 +100,61 @@ bool ROC::SfmlManager::DoPulse()
                     sf::String l_text(m_event.text.unicode);
                     auto l_utf8 = l_text.toUtf8();
                     m_input.insert(m_input.begin(),l_utf8.begin(),l_utf8.end());
-                    m_argument.PushArgument(m_input);
+                    m_argument->PushArgument(m_input);
                     m_eventManager->CallEvent(EventType::TextInput,m_argument);
-                    m_argument.Clear();
+                    m_argument->Clear();
                     m_input.clear();
                 }
             } break;
             case sf::Event::MouseMoved:
             {
-                m_argument.PushArgument(m_event.mouseMove.x-m_cursorCenter.x);
-                m_argument.PushArgument(m_event.mouseMove.y-m_cursorCenter.y);
+                m_argument->PushArgument(m_event.mouseMove.x-m_cursorCenter.x);
+                m_argument->PushArgument(m_event.mouseMove.y-m_cursorCenter.y);
                 m_eventManager->CallEvent(EventType::CursorMove,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::MouseEntered: case sf::Event::MouseLeft:
             {
-                m_argument.PushArgument(m_event.type == sf::Event::MouseEntered? 1:0);
+                m_argument->PushArgument(m_event.type == sf::Event::MouseEntered? 1:0);
                 m_eventManager->CallEvent(EventType::CursorEnter,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
-                m_argument.PushArgument(m_event.mouseButton.button);
-                m_argument.PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1:0);
+                m_argument->PushArgument(m_event.mouseButton.button);
+                m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1:0);
                 m_eventManager->CallEvent(EventType::MouseKeyPress,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::MouseWheelScrolled:
             {
-                m_argument.PushArgument(m_event.mouseWheelScroll.wheel);
-                m_argument.PushArgument(m_event.mouseWheelScroll.delta);
+                m_argument->PushArgument(m_event.mouseWheelScroll.wheel);
+                m_argument->PushArgument(m_event.mouseWheelScroll.delta);
                 m_eventManager->CallEvent(EventType::MouseScroll,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
             {
-                m_argument.PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
-                m_argument.PushArgument(m_event.type == sf::Event::JoystickConnected ? 1:0);
+                m_argument->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
+                m_argument->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1:0);
                 m_eventManager->CallEvent(EventType::JoypadConnect,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
             {
-                m_argument.PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
-                m_argument.PushArgument(static_cast<int>(m_event.joystickButton.button));
-                m_argument.PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1:0);
+                m_argument->PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
+                m_argument->PushArgument(static_cast<int>(m_event.joystickButton.button));
+                m_argument->PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1:0);
                 m_eventManager->CallEvent(EventType::JoypadButton,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
             case sf::Event::JoystickMoved:
             {
-                m_argument.PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
-                m_argument.PushArgument(static_cast<int>(m_event.joystickMove.axis));
-                m_argument.PushArgument(m_event.joystickMove.position);
+                m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
+                m_argument->PushArgument(static_cast<int>(m_event.joystickMove.axis));
+                m_argument->PushArgument(m_event.joystickMove.position);
                 m_eventManager->CallEvent(EventType::JoypadAxis,m_argument);
-                m_argument.Clear();
+                m_argument->Clear();
             } break;
         }
     }

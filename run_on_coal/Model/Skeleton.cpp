@@ -135,53 +135,57 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
 void ROC::Skeleton::UpdateJoints(glm::mat4 &f_model,bool f_enabled)
 {
     if(!m_rigid) return;
-    static glm::mat4 l_rigidBodyWorld;
-    btTransform l_transform,l_jointTransform;
-    btVector3 l_null(0.f,0.f,0.f);
+    btTransform l_transform,l_model,l_bone;
+    l_model.setFromOpenGLMatrix((float*)&f_model);
     
     for(size_t i=0; i < m_jointsCount; i++)
     {
         skChain &l_chain = m_chainsVector[i][0];
-        l_rigidBodyWorld = f_model*m_boneVector[l_chain.m_boneID]->m_matrix;
-        l_transform.setFromOpenGLMatrix((float*)&l_rigidBodyWorld);
+        btRigidBody *l_joint = m_jointVector[i];
+        l_bone.setFromOpenGLMatrix((float*)&m_boneVector[l_chain.m_boneID]->m_matrix);
+        l_transform.mult(l_model,l_bone);
         if(f_enabled)
         {
-            l_jointTransform = m_jointVector[i]->getCenterOfMassTransform();
+            const btTransform &l_jointTransform = l_joint->getCenterOfMassTransform();
             l_transform.setRotation(l_jointTransform.getRotation());
-            m_jointVector[i]->setCenterOfMassTransform(l_transform);
+            l_joint->setCenterOfMassTransform(l_transform);
         }
-        m_jointVector[i]->setCenterOfMassTransform(l_transform);
+        l_joint->setCenterOfMassTransform(l_transform);
     }
 }
 
 void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model, bool f_enabled)
 {
     if(!m_rigid) return;
-    static glm::mat4 l_modelInv;
-    static glm::mat4 l_rigidBodyWorld;
+    btTransform l_model;
+    l_model.setFromOpenGLMatrix((float*)&f_model);
     if(f_enabled)
     {
-        l_modelInv = glm::inverse(f_model);
+        btTransform l_modelInv = l_model.inverse();
+        btTransform l_boneBind,l_bodyLocal,l_result;
         for(auto iter : m_chainsVector)
         {
             for(auto iter1 : iter)
             {
                 Bone *l_bone = m_boneVector[iter1.m_boneID];
-                iter1.m_rigidBody->getCenterOfMassTransform().getOpenGLMatrix((float*)&l_rigidBodyWorld);
-                l_bone->m_offsetMatrix = (l_modelInv*l_rigidBodyWorld)*l_bone->m_bindMatrix;
+                const btTransform &l_bodyTransform = iter1.m_rigidBody->getCenterOfMassTransform();
+                l_boneBind.setFromOpenGLMatrix((float*)&l_bone->m_bindMatrix);
+                l_bodyLocal.mult(l_modelInv,l_bodyTransform);
+                l_result.mult(l_bodyLocal,l_boneBind);
+                l_result.getOpenGLMatrix((float*)&l_bone->m_offsetMatrix);
                 std::memcpy(&m_boneMatrices[iter1.m_boneID],&l_bone->m_offsetMatrix,sizeof(glm::mat4));
             }
         }
     }
     else
     {
-        btTransform l_transform;
+        btTransform l_transform,l_bone;
         for(auto iter : m_chainsVector)
         {
             for(auto iter1 : iter)
             {
-                l_rigidBodyWorld = f_model*m_boneVector[iter1.m_boneID]->m_matrix;
-                l_transform.setFromOpenGLMatrix((float*)&l_rigidBodyWorld);
+                l_bone.setFromOpenGLMatrix((float*)&m_boneVector[iter1.m_boneID]->m_matrix);
+                l_transform.mult(l_model,l_bone);
                 iter1.m_rigidBody->setCenterOfMassTransform(l_transform);
             }
         }

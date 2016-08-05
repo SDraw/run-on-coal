@@ -19,7 +19,7 @@ public:
 protected:
     LuaManager(Core *f_core);
     ~LuaManager();
-    void CallFunction(int f_func,LuaArguments &f_args);
+    void CallFunction(int f_func,LuaArguments *f_args);
     inline void RemoveReference(int f_ref) { luaL_unref(m_pVM,LUA_REGISTRYINDEX,f_ref); }
     friend Core;
     friend EventManager;

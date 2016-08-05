@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
         pugi::xml_node l_metaRoot = l_meta->child("meta");
         if(l_metaRoot)
         {
+            unsigned int l_counter = 0U;
             for(pugi::xml_node l_node = l_metaRoot.child("script"); l_node; l_node = l_node.next_sibling("script"))
             {
                 pugi::xml_attribute l_attrib = l_node.attribute("src");
@@ -28,8 +29,31 @@ int main(int argc, char *argv[])
                     l_path.append(l_attrib.as_string());
                     l_luaManager->OpenFile(l_path);
                 }
+                else
+                {
+                    std::string l_text("Unable to find attribute 'src' at 'script' subnodes with ID ");
+                    l_text.append(std::to_string(l_counter));
+                    l_text.append(" in 'scripts/meta.xml'");
+                    l_core->GetLogManager()->Log(l_text);
+                }
+                l_counter++;
+            }
+            if(!l_counter)
+            {
+                std::string l_text("Unable to find any 'script' subnode in 'scripts/meta.xml'");
+                l_core->GetLogManager()->Log(l_text);
             }
         }
+        else
+        {
+            std::string l_text("Unable to find root node 'meta' in 'scripts/meta.xml'.");
+            l_core->GetLogManager()->Log(l_text);
+        }
+    }
+    else
+    {
+        std::string l_text("Unable to find 'scripts/meta.xml'.");
+        l_core->GetLogManager()->Log(l_text);
     }
     delete l_meta;
     while(l_core->DoPulse());

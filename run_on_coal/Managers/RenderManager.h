@@ -36,7 +36,7 @@ class RenderManager
     glm::vec3 m_sceneVector;
     glm::vec4 m_sceneParam;
 
-    static LuaArguments m_argument;
+    LuaArguments *m_argument;
 
     //OpenGL calls reducing
     GLuint m_lastVAO;

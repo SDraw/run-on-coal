@@ -42,7 +42,7 @@ bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
     return true;
 }
 
-void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments &f_args)
+void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments *f_args)
 {
     if(f_event >= EventType::Last) return;
     m_currentEvent = f_event;

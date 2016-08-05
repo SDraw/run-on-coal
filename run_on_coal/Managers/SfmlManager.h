@@ -13,7 +13,7 @@ class SfmlManager
     sf::Event m_event;
     sf::Clock m_clock;
 
-    static LuaArguments m_argument;
+    LuaArguments *m_argument;
     std::string m_input;
 
     bool m_active;

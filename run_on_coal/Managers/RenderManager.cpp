@@ -14,8 +14,6 @@
 #include "Scene/Texture.h"
 #include "Lua/LuaArguments.h"
 
-ROC::LuaArguments ROC::RenderManager::m_argument = ROC::LuaArguments();
-
 ROC::RenderManager::RenderManager(Core *f_core)
 {
     m_core = f_core;
@@ -45,10 +43,13 @@ ROC::RenderManager::RenderManager(Core *f_core)
     glm::ivec2 l_size;
     m_core->GetSfmlManager()->GetWindowSize(l_size);
     m_screenProjection = glm::ortho(0.f,static_cast<float>(l_size.x),0.f,static_cast<float>(l_size.y));
+
+    m_argument = new LuaArguments();
 }
 ROC::RenderManager::~RenderManager()
 {
     delete m_quad;
+    delete m_argument;
 }
 
 void ROC::RenderManager::DoPulse()

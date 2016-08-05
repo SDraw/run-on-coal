@@ -7,17 +7,17 @@
 #include "Model/Model.h"
 #include "Lua/LuaArguments.h"
 
-ROC::LuaArguments ROC::PreRenderManager::m_argument = ROC::LuaArguments();
-
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
     m_physicsManager = m_core->GetPhysicsManager();
+    m_argument = new LuaArguments();
 }
 ROC::PreRenderManager::~PreRenderManager()
 {
     m_staticModelSet.clear();
     m_animatedModelSet.clear();
+    delete m_argument;
 }
 
 void ROC::PreRenderManager::AddModel(Model *f_model)
