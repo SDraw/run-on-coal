@@ -1,34 +1,58 @@
 #pragma once
+#define CAMERA_PROJECTION_PERSPECTIVE 0U
+#define CAMERA_PROJECTION_ORTHOGONAL 1U
+
 namespace ROC
 {
 
 class Camera
 {
-    glm::vec3 m_viewPosition;
-    glm::vec3 m_viewDirection;
-    glm::mat4 m_viewMatrix,m_projectionMatrix;
+    float m_fov;
+    glm::vec2 m_perspectiveSize;
+    glm::vec4 m_orthogonalSize;
+    glm::vec2 m_depth;
+    unsigned char m_projectionType;
 
     glm::vec4 m_planes[6];
-    
-    bool m_rebuildViewMatrix;
-    bool m_rebuildFrustumPlanes;
-    inline void UpdateViewMatrix() { m_viewMatrix = glm::lookAt(m_viewPosition,m_viewPosition+m_viewDirection,glm::vec3(0.0f,1.0f,0.0f)); }
+
+    bool m_rebuildView;
+    bool m_rebuildProjection;
 public:
-    void SetPerspective(float f_fov, float f_width, float f_height, float f_near, float f_far);
-    void SetOrtho(float l_left,float l_right,float f_bottom,float f_top,float f_near,float f_far);
+    inline void SetType(unsigned char f_type) { m_projectionType = f_type; }
+    inline unsigned char GetType() { return m_projectionType; }
+
+    void SetFOV(float f_fov);
+    inline float GetFOV() { return m_fov; }
+
+    void SetPerspectiveSize(glm::vec2 &f_size);
+    inline void GetPerspectiveSize(glm::vec2 &f_size) { std::memcpy(&f_size,&m_perspectiveSize,sizeof(glm::vec2)); }
+
+    void SetOrthoSize(glm::vec4 &f_size);
+    inline void GetOrthoSize(glm::vec4 &f_size) { std::memcpy(&f_size,&m_orthogonalSize,sizeof(glm::vec4)); }
+
+    void SetDepth(glm::vec2 &f_depth);
+    inline void GetDepth(glm::vec2 &f_depth) { std::memcpy(&f_depth,&m_depth,sizeof(glm::vec2)); }
 
     void SetPosition(glm::vec3 &f_pos);
-    void GetPosition(glm::vec3 &f_pos);
+    inline void GetPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos,&m_viewPosition,sizeof(glm::vec3)); }
+
     void SetDirection(glm::vec3 &f_dir);
-    void GetDirection(glm::vec3 &f_dir);
+    inline void GetDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir,&m_viewDirection,sizeof(glm::vec3)); }
+
+    bool IsInFrustum(glm::vec3 &f_pos, float f_radius);
 
     void GetViewMatrix(glm::mat4 &f_mat);
-    inline void GetProjectionMatrix(glm::mat4 &f_mat) { std::memcpy(&f_mat,&m_projectionMatrix,sizeof(glm::mat4)); }
+    void GetProjectionMatrix(glm::mat4 &f_mat);
 protected:
+    glm::vec3 m_viewPosition;
+    glm::vec3 m_viewDirection;
+
+    glm::mat4 m_viewMatrix;
+    glm::mat4 m_projectionMatrix;
+
     Camera();
     ~Camera();
-    void UpdateFrustumPlanes();
-    bool IsInFrustum(glm::vec3 &f_pos, float f_radius);
+    void UpdateMatrices();
     friend class ElementManager;
     friend class RenderManager;
 };

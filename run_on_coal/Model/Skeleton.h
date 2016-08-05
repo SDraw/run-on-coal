@@ -5,6 +5,7 @@ namespace ROC
 
 class Bone;
 class BoneChainGroup;
+class BoneData;
 class Skeleton
 {
     struct skFastStoring
@@ -38,6 +39,10 @@ protected:
     void UpdateRigidBones(glm::mat4 &f_model, bool f_enabled);
     void ResetBonesInterpolation();
     friend class Model;
+    friend class InheritanceManager;
+    friend class PreRenderManager;
+    friend class RenderManager;
+    friend class PhysicsManager;
 };
 
 }

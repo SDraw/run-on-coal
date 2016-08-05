@@ -5,6 +5,7 @@
 #include "Scene/Camera.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Camera.h"
+#include "Utils/Utils.h"
 
 namespace ROC
 {
@@ -31,6 +32,7 @@ int cameraDestroy(lua_State *f_vm)
     lua_pushboolean(f_vm,1);
     return 1;
 }
+
 int cameraSetPosition(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
@@ -65,6 +67,7 @@ int cameraGetPosition(lua_State *f_vm)
     lua_pushnumber(f_vm,l_vPos.z);
     return 3;
 }
+
 int cameraSetDirection(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
@@ -99,42 +102,186 @@ int cameraGetDirection(lua_State *f_vm)
     lua_pushnumber(f_vm,l_vDir.z);
     return 3;
 }
-int cameraSetPerspective(lua_State *f_vm)
+
+int cameraSetType(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    lua_Number l_fov,l_near,l_far,l_width,l_height;
+    std::string l_text;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    argStream.ReadText(l_text);
+    if(argStream.HasErrors() || !l_text.length())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    int l_type = Utils::ReadEnumString(l_text,"perspective,orthogonal");
+    if(l_type == -1)
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    l_camera->SetType(CAMERA_PROJECTION_PERSPECTIVE+static_cast<unsigned char>(l_type));
+    lua_pushboolean(f_vm,1);
+    return 1;
+}
+int cameraGetType(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    switch(l_camera->GetType())
+    {
+        case CAMERA_PROJECTION_PERSPECTIVE:
+            lua_pushstring(f_vm,"perspective");
+            break;
+        case CAMERA_PROJECTION_ORTHOGONAL:
+            lua_pushstring(f_vm,"orthogonal");
+            break;
+    }
+    return 1;
+}
+
+int cameraSetFOV(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    lua_Number l_fov;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
     argStream.ReadNumber(l_fov);
-    argStream.ReadNumber(l_width);
-    argStream.ReadNumber(l_height);
-    argStream.ReadNumber(l_near);
-    argStream.ReadNumber(l_far);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    l_camera->SetPerspective(static_cast<float>(l_fov),static_cast<float>(l_width),static_cast<float>(l_height),static_cast<float>(l_near),static_cast<float>(l_far));
+    l_camera->SetFOV(static_cast<float>(l_fov));
     lua_pushboolean(f_vm,1);
     return 1;
 }
-int cameraSetOrtho(lua_State *f_vm)
+int cameraGetFOV(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    lua_Number l_val[6];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
-    for(int i=0; i < 6; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    l_camera->SetOrtho(static_cast<float>(l_val[0]),static_cast<float>(l_val[1]),static_cast<float>(l_val[2]),static_cast<float>(l_val[3]),static_cast<float>(l_val[4]),static_cast<float>(l_val[5]));
+    float l_fov = l_camera->GetFOV();
+    lua_pushnumber(f_vm,l_fov);
+    return 1;
+}
+
+int cameraSetPerspectiveSize(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    lua_Number l_size[2];
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    for(int i=0; i < 2; i++) argStream.ReadNumber(l_size[i]);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    glm::vec2 l_vSize(l_size[0],l_size[1]);
+    l_camera->SetPerspectiveSize(l_vSize);
     lua_pushboolean(f_vm,1);
     return 1;
 }
+int cameraGetPerspectiveSize(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    glm::vec2 l_size;
+    l_camera->GetPerspectiveSize(l_size);
+    lua_pushnumber(f_vm,l_size.x);
+    lua_pushnumber(f_vm,l_size.y);
+    return 2;
+}
+
+int cameraSetOrthoSize(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    lua_Number l_size[4];
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    for(int i=0; i < 4; i++) argStream.ReadNumber(l_size[i]);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    glm::vec4 l_vSize(l_size[0],l_size[1],l_size[2],l_size[3]);
+    l_camera->SetOrthoSize(l_vSize);
+    lua_pushboolean(f_vm,1);
+    return 1;
+}
+int cameraGetOrthoSize(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    glm::vec4 l_size;
+    l_camera->GetOrthoSize(l_size);
+    lua_pushnumber(f_vm,l_size.x);
+    lua_pushnumber(f_vm,l_size.y);
+    lua_pushnumber(f_vm,l_size.z);
+    lua_pushnumber(f_vm,l_size.w);
+    return 4;
+}
+
+int cameraSetDepth(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    lua_Number l_depth[2];
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    for(int i=0; i < 2; i++) argStream.ReadNumber(l_depth[i]);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    glm::vec2 l_vDepth(l_depth[0],l_depth[1]);
+    l_camera->SetDepth(l_vDepth);
+    lua_pushboolean(f_vm,1);
+    return 1;
+}
+int cameraGetDepth(lua_State *f_vm)
+{
+    Camera *l_camera = NULL;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    glm::vec2 l_depth;
+    l_camera->GetDepth(l_depth);
+    lua_pushnumber(f_vm,l_depth.x);
+    lua_pushnumber(f_vm,l_depth.y);
+    return 2;
+}
+
 int cameraGetViewMatrix(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
@@ -157,6 +304,7 @@ int cameraGetViewMatrix(lua_State *f_vm)
     }
     return 1;
 }
+
 int cameraGetProjectionMatrix(lua_State *f_vm)
 {
     Camera *l_camera = NULL;

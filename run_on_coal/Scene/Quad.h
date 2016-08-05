@@ -10,13 +10,12 @@ class Quad
 
     GLuint m_vertexVBO;
     GLuint m_uvVBO;
-    GLuint m_VAO;
 protected:
+    GLuint m_VAO;
     Quad();
     ~Quad();
     void SetProportions(glm::vec2 &f_size, bool f_bind);
     void Draw(bool f_bind);
-    inline GLuint GetVAO() { return m_VAO; }
     friend class RenderManager;
 };
 

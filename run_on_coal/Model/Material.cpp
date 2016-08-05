@@ -132,8 +132,3 @@ void ROC::Material::Draw(bool f_texturize, bool f_binding)
     if(f_binding) glBindVertexArray(m_VAO);
     glDrawArrays(GL_TRIANGLES,0,m_verticesCount);
 }
-
-GLuint ROC::Material::GetTexture()
-{
-    return (m_texture ? m_texture->GetTexture() : 0U);
-}

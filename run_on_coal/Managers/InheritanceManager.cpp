@@ -6,6 +6,7 @@
 #include "Managers/RenderManager.h"
 #include "Model/Animation.h"
 #include "Model/Model.h"
+#include "Model/Skeleton.h"
 #include "Scene/RenderTarget.h"
 #include "Scene/Scene.h"
 #include "Scene/Shader.h"
@@ -128,7 +129,7 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
     if(!f_model->HasSkeleton()) return false;
     Animation *l_modelAnim = f_model->GetAnimation();
     if(l_modelAnim == f_anim) return true;
-    if(f_model->GetBonesCount() != f_anim->GetBonesCount()) return false;
+    if(f_model->m_skeleton->m_bonesCount != f_anim->m_bonesValue) return false;
     if(l_modelAnim) RemoveInheritance(f_model,l_modelAnim);
     f_model->SetAnimation(f_anim);
     m_inheritMap.insert(std::pair<void*,void*>(f_model,f_anim));
@@ -143,7 +144,8 @@ bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent
         if(l_treeParent == f_model) return false;
         l_treeParent = l_treeParent->GetParent();
     }
-    if(f_bone < -1 || f_bone >= static_cast<int>(f_parent->GetBonesCount())) f_bone = -1;
+    if(!f_parent->HasSkeleton()) f_bone = -1;
+    else if(static_cast<int>(f_parent->m_skeleton->m_bonesCount) >= f_bone) f_bone = -1;
     f_model->SetParent(f_parent,f_bone);
     m_inheritMap.insert(std::pair<void*,void*>(f_model,f_parent));
     return true;

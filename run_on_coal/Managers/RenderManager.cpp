@@ -4,8 +4,10 @@
 #include "Managers/LuaManager.h"
 #include "Managers/RenderManager.h"
 #include "Managers/SfmlManager.h"
+#include "Model/Geometry.h"
 #include "Model/Material.h"
 #include "Model/Model.h"
+#include "Model/Skeleton.h"
 #include "Scene/Font.h"
 #include "Scene/Quad.h"
 #include "Scene/RenderTarget.h"
@@ -82,26 +84,19 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             Camera *l_camera = m_activeScene->GetCamera();
             if(l_camera)
             {
-                l_camera->GetProjectionMatrix(m_sceneMatrix);
-                m_activeShader->SetProjectionUniformValue(m_sceneMatrix);
-                l_camera->GetViewMatrix(m_sceneMatrix);
-                m_activeShader->SetViewUniformValue(m_sceneMatrix);
-                l_camera->GetPosition(m_sceneVector);
-                m_activeShader->SetCameraPositionUniformValue(m_sceneVector);
-                l_camera->GetDirection(m_sceneVector);
-                m_activeShader->SetCameraDirectionUniformValue(m_sceneVector);
-                l_camera->UpdateFrustumPlanes();
+                l_camera->UpdateMatrices();
+                m_activeShader->SetProjectionUniformValue(l_camera->m_projectionMatrix);
+                m_activeShader->SetViewUniformValue(l_camera->m_viewMatrix);
+                m_activeShader->SetCameraPositionUniformValue(l_camera->m_viewPosition);
+                m_activeShader->SetCameraDirectionUniformValue(l_camera->m_viewDirection);
             }
             Light *l_light = m_activeScene->GetLight();
             if(l_light)
             {
                 m_activeShader->SetLightingUniformValue(1U);
-                l_light->GetColor(m_sceneVector);
-                m_activeShader->SetLightColorUniformValue(m_sceneVector);
-                l_light->GetDirection(m_sceneVector);
-                m_activeShader->SetLightDirectionUniformValue(m_sceneVector);
-                l_light->GetParams(m_sceneParam);
-                m_activeShader->SetLightParamUniformValue(m_sceneParam);
+                m_activeShader->SetLightColorUniformValue(l_light->m_color);
+                m_activeShader->SetLightDirectionUniformValue(l_light->m_direction);
+                m_activeShader->SetLightParamUniformValue(l_light->m_params);
             }
             else m_activeShader->SetLightingUniformValue(0U);
         }
@@ -130,22 +125,19 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
         f_model->GetPosition(m_modelPosition,true);
         if(!l_camera->IsInFrustum(m_modelPosition,f_radius)) return;
     }
-    f_model->GetMatrix(m_modelMatrix);
-    m_activeShader->SetModelUniformValue(m_modelMatrix);
+    m_activeShader->SetModelUniformValue(f_model->m_matrix);
 
     //Skeletal animation
     if(f_model->HasSkeleton())
     {
-        m_boneData.clear();
-        f_model->GetBoneMatrices(m_boneData);
-        m_activeShader->SetBonesUniformValue(m_boneData);
+        m_activeShader->SetBonesUniformValue(f_model->m_skeleton->m_boneMatrices);
         m_activeShader->SetAnimatedUniformValue(1U);
     }
     else m_activeShader->SetAnimatedUniformValue(0U);
 
-    for(unsigned int i=0, j=f_model->GetMaterialCount(); i < j; i++)
+    for(auto iter : f_model->m_geometry->m_materialVector)
     {
-        unsigned char l_materialType = f_model->GetMaterialType(i);
+        unsigned char l_materialType = iter->m_type;
         if((l_materialType&MATERIAL_BIT_DEPTH) != MATERIAL_BIT_DEPTH)
         {
             if(m_activeTarget)
@@ -158,17 +150,15 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
         ((l_materialType&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT) ? EnableBlending() : DisableBlending();
         ((l_materialType&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE) ? DisableCulling() : EnableCulling();
 
-        bool l_textureBind = CompareLastTexture(f_model->GetMaterialTexture(i)) && f_texturize;
-        bool l_vaoBind = CompareLastVAO(f_model->GetMaterialVAO(i));
+        bool l_textureBind = CompareLastTexture(iter->m_texture->m_texture) && f_texturize;
+        bool l_vaoBind = CompareLastVAO(iter->m_VAO);
 
         if(l_vaoBind)
         {
             m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(l_materialType));
-            f_model->GetMaterialParam(i,m_materialParam);
-            m_activeShader->SetMaterialParamUniformValue(m_materialParam);
+            m_activeShader->SetMaterialParamUniformValue(iter->m_params);
         }
-
-        f_model->DrawMaterial(i,l_textureBind,l_vaoBind);
+        iter->Draw(l_textureBind,l_vaoBind);
     }
 }
 void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color)
@@ -180,15 +170,15 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_te
     m_activeShader->SetProjectionUniformValue(m_screenProjection);
     m_activeShader->SetColorUniformValue(f_color);
 
-    bool l_bind = CompareLastVAO(f_font->GetVAO());
+    bool l_bind = CompareLastVAO(f_font->m_VAO);
     f_font->Draw(f_text,f_pos,l_bind);
 }
 void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
 {
     if(m_locked || !m_activeShader || f_texture->IsCubic()) return;
 
-    bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
-    if(CompareLastTexture(f_texture->GetTexture())) f_texture->Bind(0U);
+    bool l_vaoBind = CompareLastVAO(m_quad->m_VAO);
+    if(CompareLastTexture(f_texture->m_texture)) f_texture->Bind(0U);
 
     m_activeShader->SetProjectionUniformValue(m_screenProjection);
     m_activeShader->SetColorUniformValue(f_color);
@@ -220,8 +210,8 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
 {
     if(m_locked || !m_activeShader || !f_rt->IsColored()) return;
 
-    bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
-    if(CompareLastTexture(f_rt->GetTexture())) f_rt->BindTexture(0U);
+    bool l_vaoBind = CompareLastVAO(m_quad->m_VAO);
+    if(CompareLastTexture(f_rt->m_texture)) f_rt->BindTexture(0U);
 
     m_activeShader->SetProjectionUniformValue(m_screenProjection);
     m_activeShader->SetColorUniformValue(f_color);

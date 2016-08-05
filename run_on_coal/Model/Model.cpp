@@ -62,12 +62,7 @@ void ROC::Model::UpdateMatrix()
     {
         m_parent->UpdateMatrix();
         glm::mat4 l_parentMatrix(m_parent->m_matrix);
-        if(m_parentBone != -1) 
-        {
-            glm::mat4 l_parentBoneMatrix;
-            m_parent->GetBoneMatrix(m_parentBone,l_parentBoneMatrix);
-            l_parentMatrix *= l_parentBoneMatrix;
-        }
+        if(m_parentBone != -1) l_parentMatrix *= m_parent->m_skeleton->m_boneMatrices[m_parentBone];
         m_matrix = l_parentMatrix*m_localMatrix;
     }
     else std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
@@ -162,23 +157,6 @@ void ROC::Model::GetScale(glm::vec3 &f_scl, bool f_global)
     else std::memcpy(&f_scl,&m_scale,sizeof(glm::vec3));
 }
 
-unsigned int ROC::Model::GetMaterialCount()
-{
-    return (m_geometry ? m_geometry->GetMaterialCount() : 0U);
-}
-unsigned char ROC::Model::GetMaterialType(unsigned int f_material)
-{
-    return (m_geometry ? m_geometry->GetMaterialType(f_material) : 0U);
-}
-void ROC::Model::GetMaterialParam(unsigned int f_material,glm::vec4 &f_vec)
-{
-    if(m_geometry) m_geometry->GetMaterialParam(f_material,f_vec);
-}
-void ROC::Model::DrawMaterial(unsigned int f_material, bool f_texturize, bool f_binding)
-{
-    if(m_geometry) m_geometry->DrawMaterial(f_material,f_texturize,f_binding);
-}
-
 void ROC::Model::SetParent(Model *f_model, int f_bone)
 {
     m_parent = f_model;
@@ -250,42 +228,6 @@ float ROC::Model::GetAnimationProgress()
 bool ROC::Model::HasRigidSkeleton()
 {
     return (m_skeleton ? m_skeleton->m_rigid : false);
-}
-unsigned int ROC::Model::GetBonesCount()
-{
-    return (m_skeleton ? m_skeleton->m_bonesCount : 0U);
-}
-void ROC::Model::GetBoneMatrices(std::vector<glm::mat4> &f_mat)
-{
-    if(m_skeleton) f_mat.insert(f_mat.begin(),m_skeleton->m_boneMatrices.begin(),m_skeleton->m_boneMatrices.end());
-}
-void ROC::Model::GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vector<btTypedConstraint*> &f_cs)
-{
-    if(!m_skeleton) return;
-    for(auto iter : m_skeleton->m_chainsVector)
-    {
-        for(auto iter1 : iter)
-        {
-            if(iter1.m_rigidBody) f_rb.push_back(iter1.m_rigidBody);
-            if(iter1.m_constraint) f_cs.push_back(iter1.m_constraint);
-        }
-    }
-    f_rb.insert(f_rb.end(),m_skeleton->m_jointVector.begin(),m_skeleton->m_jointVector.end());
-}
-
-void ROC::Model::GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat)
-{
-    if(!m_skeleton) return;
-    if(f_bone < m_skeleton->m_bonesCount) std::memcpy(&f_mat,&m_skeleton->m_boneVector[f_bone]->m_matrix,sizeof(glm::mat4));
-}
-
-GLuint ROC::Model::GetMaterialVAO(unsigned int f_material)
-{
-    return (m_geometry ? m_geometry->GetMaterialVAO(f_material) : 0U);
-}
-GLuint ROC::Model::GetMaterialTexture(unsigned int f_material)
-{
-    return (m_geometry ? m_geometry->GetMaterialTexture(f_material) : 0U);
 }
 
 //Physics
@@ -371,15 +313,6 @@ bool ROC::Model::SetFriction(float f_val)
     m_rigidBody->setFriction(f_val);
     m_rigidBody->activate(true);
     return true;
-}
-
-void ROC::Model::UpdateSkeletonJoints(bool f_enabled)
-{
-    if(m_skeleton) m_skeleton->UpdateJoints(m_matrix,f_enabled);
-}
-void ROC::Model::UpdateSkeletonRigidBones(bool f_enabled)
-{
-    if(m_skeleton) m_skeleton->UpdateRigidBones(m_matrix,f_enabled);
 }
 
 void ROC::Model::UpdateRigidity()

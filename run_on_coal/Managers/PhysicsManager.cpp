@@ -3,6 +3,7 @@
 #include "Managers/ConfigManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Model/Model.h"
+#include "Model/Skeleton.h"
 #include "Scene/Collision.h"
 
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
@@ -93,20 +94,18 @@ bool ROC::PhysicsManager::SetModelRigidity(Model *f_model, unsigned char f_type,
 {
     if(f_model->HasRigidSkeleton()) return false;
     if(!f_model->SetRigidity(f_type,f_mass,f_dim)) return false;
-    btRigidBody *l_rigidBody = f_model->GetRidigBody();
     m_elementSet.insert(f_model);
-    m_bodyMap.insert(std::pair<void*,Model*>(l_rigidBody,f_model));
-    m_dynamicWorld->addRigidBody(l_rigidBody);
+    m_bodyMap.insert(std::pair<void*,Model*>(f_model->m_rigidBody,f_model));
+    m_dynamicWorld->addRigidBody(f_model->m_rigidBody);
     return true;
 }
 bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
 {
     auto iter = m_elementSet.find(f_model);
     if(iter == m_elementSet.end()) return false;
-    btRigidBody *l_rigidBody = f_model->GetRidigBody();
-    auto iter1 = m_bodyMap.find(l_rigidBody);
+    auto iter1 = m_bodyMap.find(f_model->m_rigidBody);
     if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
-    m_dynamicWorld->removeRigidBody(l_rigidBody);
+    m_dynamicWorld->removeRigidBody(f_model->m_rigidBody);
     m_elementSet.erase(iter);
     if(!f_model->RemoveRigidity()) return false;
     return true;
@@ -114,36 +113,42 @@ bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
 
 void ROC::PhysicsManager::AddRigidSkeleton(Model *f_model)
 {
-    std::vector<btRigidBody*> f_rigidBodies;
-    std::vector<btTypedConstraint*> l_constraints;
-    f_model->GetSkeletonRigidData(f_rigidBodies,l_constraints);
-    for(auto iter : f_rigidBodies) m_dynamicWorld->addRigidBody(iter);
-    for(auto iter : l_constraints) m_dynamicWorld->addConstraint(iter);
+    for(auto iter : f_model->m_skeleton->m_chainsVector)
+    {
+        for(auto iter1 : iter)
+        {
+            m_dynamicWorld->addRigidBody(iter1.m_rigidBody);
+            m_dynamicWorld->addConstraint(iter1.m_constraint);
+        }
+    }
+    for(auto iter : f_model->m_skeleton->m_jointVector) m_dynamicWorld->addRigidBody(iter);
 }
 void ROC::PhysicsManager::RemoveRigidSkeleton(Model *f_model)
 {
-    std::vector<btRigidBody*> f_rigidBodies;
-    std::vector<btTypedConstraint*> l_constraints;
-    f_model->GetSkeletonRigidData(f_rigidBodies,l_constraints);
-    for(auto iter : l_constraints) m_dynamicWorld->removeConstraint(iter);
-    for(auto iter : f_rigidBodies) m_dynamicWorld->removeRigidBody(iter);
+    for(auto iter : f_model->m_skeleton->m_chainsVector)
+    {
+        for(auto iter1 : iter)
+        {
+            m_dynamicWorld->removeRigidBody(iter1.m_rigidBody);
+            m_dynamicWorld->removeConstraint(iter1.m_constraint);
+        }
+    }
+    for(auto iter : f_model->m_skeleton->m_jointVector) m_dynamicWorld->removeRigidBody(iter);
 }
 
 void ROC::PhysicsManager::AddCollision(Collision *f_col)
 {
     if(m_collisionSet.find(f_col) != m_collisionSet.end()) return;
-    btRigidBody *l_rigidBody = f_col->GetRigidBody();
-    m_dynamicWorld->addRigidBody(l_rigidBody);
+    m_dynamicWorld->addRigidBody(f_col->m_rigidBody);
     m_collisionSet.insert(f_col);
-    m_bodyMap.insert(std::pair<void*,void*>(l_rigidBody,f_col));
+    m_bodyMap.insert(std::pair<void*,void*>(f_col->m_rigidBody,f_col));
 }
 void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
 {
     auto iter = m_collisionSet.find(f_col);
     if(iter == m_collisionSet.end()) return;
-    btRigidBody *l_rigidBody = f_col->GetRigidBody();
-    auto iter1 = m_bodyMap.find(l_rigidBody);
+    auto iter1 = m_bodyMap.find(f_col->m_rigidBody);
     if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
-    m_dynamicWorld->removeRigidBody(l_rigidBody);
+    m_dynamicWorld->removeRigidBody(f_col->m_rigidBody);
     m_collisionSet.erase(iter);
 }

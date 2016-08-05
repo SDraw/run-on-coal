@@ -9,7 +9,6 @@ class Animation
 
     unsigned int m_duration;
     unsigned int m_fps;
-    unsigned int m_bonesValue;
 
     unsigned long m_durationTotal;
     unsigned long m_frameDelta;
@@ -20,6 +19,7 @@ class Animation
 
     void Clean();
 protected:
+    unsigned int m_bonesValue;
     Animation();
     ~Animation();
 
@@ -29,7 +29,6 @@ protected:
     bool Load(std::string &f_path);
 
     bool CacheData(unsigned long f_tick, float &f_lerp);
-    inline unsigned int GetBonesCount() { return m_bonesValue; }
     friend class Model;
     friend class ElementManager;
     friend class InheritanceManager;

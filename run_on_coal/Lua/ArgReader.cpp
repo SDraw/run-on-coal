@@ -61,7 +61,7 @@ void ROC::ArgReader::ReadNumber(lua_Number &f_val)
     lua_Number l_val = lua_tonumber(m_pVM,m_iArgIndex);
     if(std::isnan(l_val) || std::isinf(l_val))
     {
-        m_error.append("Got NaN or Inf");
+        m_error.append("Got NaN/Inf");
         m_hasErrors = true;
         return;
     }
@@ -308,7 +308,7 @@ bool ROC::ArgReader::HasErrors()
 {
     if(m_hasErrors)
     {
-        std::string l_log("Error at ");
+        std::string l_log("Warning at ");
         lua_Debug l_ar;
         lua_getstack(m_pVM, 1, &l_ar);
         lua_getinfo(m_pVM, "nSl", &l_ar);

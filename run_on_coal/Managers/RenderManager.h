@@ -26,15 +26,9 @@ class RenderManager
     glm::mat4 m_screenProjection;
     bool m_locked;
 
-    std::vector<glm::mat4> m_boneData;
-    glm::mat4 m_modelMatrix;
     glm::vec3 m_modelPosition;
-    glm::vec4 m_materialParam;
     glm::mat4 m_textureMatrix;
     glm::ivec2 m_renderTargetSize;
-    glm::mat4 m_sceneMatrix;
-    glm::vec3 m_sceneVector;
-    glm::vec4 m_sceneParam;
 
     LuaArguments *m_argument;
 

@@ -144,12 +144,7 @@ void ROC::Skeleton::UpdateJoints(glm::mat4 &f_model,bool f_enabled)
         btRigidBody *l_joint = m_jointVector[i];
         l_bone.setFromOpenGLMatrix((float*)&m_boneVector[l_chain.m_boneID]->m_matrix);
         l_transform.mult(l_model,l_bone);
-        if(f_enabled)
-        {
-            const btTransform &l_jointTransform = l_joint->getCenterOfMassTransform();
-            l_transform.setRotation(l_jointTransform.getRotation());
-            l_joint->setCenterOfMassTransform(l_transform);
-        }
+        if(f_enabled) l_transform.setRotation(l_joint->getCenterOfMassTransform().getRotation());
         l_joint->setCenterOfMassTransform(l_transform);
     }
 }

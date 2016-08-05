@@ -3,7 +3,7 @@
 
 ROC::LuaArguments::LuaArguments()
 {
-    m_argCount = 0U;
+    m_argCount = 0;
 }
 ROC::LuaArguments::~LuaArguments()
 {
@@ -31,7 +31,7 @@ void ROC::LuaArguments::Clear()
         }
     }
     m_vArgs.clear();
-    m_argCount = 0U;
+    m_argCount = 0;
 }
 
 void ROC::LuaArguments::PushArgument(int f_val)

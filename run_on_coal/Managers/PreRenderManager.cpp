@@ -5,6 +5,7 @@
 #include "Managers/PreRenderManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Model/Model.h"
+#include "Model/Skeleton.h"
 #include "Lua/LuaArguments.h"
 
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
@@ -52,12 +53,12 @@ void ROC::PreRenderManager::DoPulse_S1()
     for(auto iter : m_animatedModelSet) iter->UpdateAnimation();
     for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
     bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
-    for(auto iter : m_animatedModelSet) iter->UpdateSkeletonJoints(l_physicsState);
+    for(auto iter : m_animatedModelSet) iter->m_skeleton->UpdateJoints(iter->m_matrix,l_physicsState);
 }
 void ROC::PreRenderManager::DoPulse_S2()
 {
     bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
     for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
-    for(auto iter : m_animatedModelSet) iter->UpdateSkeletonRigidBones(l_physicsState);
+    for(auto iter : m_animatedModelSet) iter->m_skeleton->UpdateRigidBones(iter->m_matrix,l_physicsState);
     for(auto iter : m_staticModelSet) iter->UpdateMatrix();
 }

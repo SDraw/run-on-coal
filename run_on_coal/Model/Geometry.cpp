@@ -222,8 +222,8 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
         }
 
         Material *l_material = new Material();
-        l_material->SetType(l_materialType);
-        l_material->SetParams(l_materialParam);
+        std::memcpy(&l_material->m_type,&l_materialType,sizeof(unsigned char));
+        std::memcpy(&l_material->m_params,&l_materialParam,sizeof(glm::vec4));
         l_material->LoadVertices(l_tempVertex);
         l_material->LoadUVs(l_tempUV);
         l_material->LoadNormals(l_tempNormal);
@@ -344,32 +344,4 @@ bool ROC::Geometry::HasChainsData()
 void ROC::Geometry::GetChainsData(std::vector<BoneChainGroup*> &f_vec)
 {
     f_vec.insert(f_vec.begin(),m_chainsData.begin(),m_chainsData.end());
-}
-
-unsigned int ROC::Geometry::GetMaterialCount()
-{
-    return m_materialCount;
-}
-unsigned char ROC::Geometry::GetMaterialType(unsigned int f_material)
-{
-    if(f_material >= m_materialCount) return 0U;
-    return m_materialVector[f_material]->GetType();
-}
-void ROC::Geometry::GetMaterialParam(unsigned int f_material,glm::vec4 &f_vec)
-{
-    if(f_material >= m_materialCount) return;
-    m_materialVector[f_material]->GetParams(f_vec);
-}
-void ROC::Geometry::DrawMaterial(unsigned int f_material, bool f_texturize, bool f_binding)
-{
-    if(f_material >= m_materialCount) return;
-    m_materialVector[f_material]->Draw(f_texturize,f_binding);
-}
-GLuint ROC::Geometry::GetMaterialVAO(unsigned int f_material)
-{
-    return ((f_material < m_materialCount) ? m_materialVector[f_material]->GetVAO() : 0);
-}
-GLuint ROC::Geometry::GetMaterialTexture(unsigned int f_material)
-{
-    return ((f_material < m_materialCount) ? m_materialVector[f_material]->GetTexture() : 0);
 }

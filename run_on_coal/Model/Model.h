@@ -16,11 +16,8 @@ class Skeleton;
 class Animation; 
 class Model
 {
-    Geometry *m_geometry; 
-    Skeleton *m_skeleton;
     Animation *m_animation;
     Model *m_parent;
-    btRigidBody* m_rigidBody;
         
     int m_parentBone;
     unsigned long m_animLastTick;
@@ -33,7 +30,6 @@ class Model
     glm::quat m_rotation;
     glm::vec3 m_scale;
     glm::mat4 m_localMatrix;
-    glm::mat4 m_matrix;
     bool m_rebuildMatrix;
 
     void UpdateSkeleton();
@@ -50,12 +46,6 @@ public:
     void SetScale(glm::vec3 &f_scl);
     void GetScale(glm::vec3 &f_scl, bool f_global = false);
 
-    inline void GetMatrix(glm::mat4 &f_mat) { std::memcpy(&f_mat,&m_matrix,sizeof(glm::mat4)); }
-
-    unsigned int GetMaterialCount();
-    unsigned char GetMaterialType(unsigned int f_material);
-    void GetMaterialParam(unsigned int f_material, glm::vec4 &f_vec);
-
     bool PlayAnimation();
     bool PauseAnimation();
     bool ResetAnimation();
@@ -66,9 +56,6 @@ public:
 
     inline bool HasSkeleton() { return (m_skeleton != NULL); }
     bool HasRigidSkeleton();
-    unsigned int GetBonesCount();
-    void GetBoneMatrices(std::vector<glm::mat4> &f_mat);
-    void GetBoneMatrix(unsigned int f_bone,glm::mat4 &f_mat);
 
     //Physics
     bool SetVelocity(glm::vec3 &f_val);
@@ -83,22 +70,19 @@ public:
     inline Model* GetParent() { return m_parent; }
     inline Animation* GetAnimation() { return m_animation; }
 protected:
+    Geometry *m_geometry; 
+    Skeleton *m_skeleton;
+    btRigidBody* m_rigidBody;
+    glm::mat4 m_matrix;
     Model(Geometry *f_geometry);
     ~Model();
-    void DrawMaterial(unsigned int f_material, bool f_texturize, bool f_binding);
     void SetParent(Model *f_model, int f_bone = -1);
     void SetAnimation(Animation *f_anim);
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
     void UpdateMatrix();
     void UpdateAnimation();
-    GLuint GetMaterialVAO(unsigned int f_material);
-    GLuint GetMaterialTexture(unsigned int f_material);
     bool SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveRigidity();
-    inline btRigidBody* GetRidigBody() { return m_rigidBody; }
-    void GetSkeletonRigidData(std::vector<btRigidBody*> &f_rb, std::vector<btTypedConstraint*> &f_cs);
-    void UpdateSkeletonJoints(bool f_enabled);
-    void UpdateSkeletonRigidBones(bool f_enabled);
     void UpdateRigidity();
 
     friend class ElementManager;

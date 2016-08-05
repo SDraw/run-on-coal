@@ -20,17 +20,16 @@ class Font
     glm::vec3 m_vertices[6];
     GLuint m_vertexVBO;
     GLuint m_uvVBO;
-    GLuint m_VAO;
 
     bool m_loaded;
     void Clear();
     bool LoadChar(unsigned int l_char);
 protected:
+    GLuint m_VAO;
     Font();
     ~Font();
     bool LoadTTF(std::string &f_path, int f_size);
     bool Draw(sf::String &f_text,glm::vec2 &f_pos, bool f_bind);
-    inline GLuint GetVAO() { return m_VAO; }
     friend class ElementManager;
     friend class RenderManager;
 };
