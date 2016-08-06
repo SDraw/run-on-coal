@@ -8,8 +8,8 @@ namespace ROC
 class Camera
 {
     float m_fov;
-    glm::vec2 m_perspectiveSize;
-    glm::vec4 m_orthogonalSize;
+    float m_aspectRatio;
+    glm::vec4 m_orthoParams;
     glm::vec2 m_depth;
     unsigned char m_type;
 
@@ -24,11 +24,11 @@ public:
     void SetFOV(float f_fov);
     inline float GetFOV() { return m_fov; }
 
-    void SetPerspectiveSize(glm::vec2 &f_size);
-    inline void GetPerspectiveSize(glm::vec2 &f_size) { std::memcpy(&f_size,&m_perspectiveSize,sizeof(glm::vec2)); }
+    void SetAspectRatio(float f_ratio);
+    inline float GetAspectRatio() { return m_aspectRatio; }
 
-    void SetOrthoSize(glm::vec4 &f_size);
-    inline void GetOrthoSize(glm::vec4 &f_size) { std::memcpy(&f_size,&m_orthogonalSize,sizeof(glm::vec4)); }
+    void SetOrthoParams(glm::vec4 &f_size);
+    inline void GetOrthoParams(glm::vec4 &f_size) { std::memcpy(&f_size,&m_orthoParams,sizeof(glm::vec4)); }
 
     void SetDepth(glm::vec2 &f_depth);
     inline void GetDepth(glm::vec2 &f_depth) { std::memcpy(&f_depth,&m_depth,sizeof(glm::vec2)); }

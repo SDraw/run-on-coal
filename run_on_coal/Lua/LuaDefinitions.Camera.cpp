@@ -192,24 +192,23 @@ int cameraGetFOV(lua_State *f_vm)
     return 1;
 }
 
-int cameraSetPerspectiveSize(lua_State *f_vm)
+int cameraSetAspectRatio(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    lua_Number l_size[2];
+    lua_Number l_ratio;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_camera,ElementType::CameraElement);
-    for(int i=0; i < 2; i++) argStream.ReadNumber(l_size[i]);
+    argStream.ReadNumber(l_ratio);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    glm::vec2 l_vSize(l_size[0],l_size[1]);
-    l_camera->SetPerspectiveSize(l_vSize);
+    l_camera->SetAspectRatio(static_cast<float>(l_ratio));
     lua_pushboolean(f_vm,1);
     return 1;
 }
-int cameraGetPerspectiveSize(lua_State *f_vm)
+int cameraGetAspectRatio(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
@@ -219,14 +218,12 @@ int cameraGetPerspectiveSize(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    glm::vec2 l_size;
-    l_camera->GetPerspectiveSize(l_size);
-    lua_pushnumber(f_vm,l_size.x);
-    lua_pushnumber(f_vm,l_size.y);
-    return 2;
+    float l_ratio = l_camera->GetAspectRatio();
+    lua_pushnumber(f_vm,l_ratio);
+    return 1;
 }
 
-int cameraSetOrthoSize(lua_State *f_vm)
+int cameraSetOrthoParams(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     lua_Number l_size[4];
@@ -239,11 +236,11 @@ int cameraSetOrthoSize(lua_State *f_vm)
         return 1;
     }
     glm::vec4 l_vSize(l_size[0],l_size[1],l_size[2],l_size[3]);
-    l_camera->SetOrthoSize(l_vSize);
+    l_camera->SetOrthoParams(l_vSize);
     lua_pushboolean(f_vm,1);
     return 1;
 }
-int cameraGetOrthoSize(lua_State *f_vm)
+int cameraGetOrthoParams(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
@@ -254,7 +251,7 @@ int cameraGetOrthoSize(lua_State *f_vm)
         return 1;
     }
     glm::vec4 l_size;
-    l_camera->GetOrthoSize(l_size);
+    l_camera->GetOrthoParams(l_size);
     lua_pushnumber(f_vm,l_size.x);
     lua_pushnumber(f_vm,l_size.y);
     lua_pushnumber(f_vm,l_size.z);

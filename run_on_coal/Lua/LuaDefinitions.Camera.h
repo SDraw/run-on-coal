@@ -20,11 +20,11 @@ int cameraGetType(lua_State *f_vm);
 int cameraSetFOV(lua_State *f_vm);
 int cameraGetFOV(lua_State *f_vm);
 
-int cameraSetPerspectiveSize(lua_State *f_vm);
-int cameraGetPerspectiveSize(lua_State *f_vm);
+int cameraSetAspectRatio(lua_State *f_vm);
+int cameraGetAspectRatio(lua_State *f_vm);
 
-int cameraSetOrthoSize(lua_State *f_vm);
-int cameraGetOrthoSize(lua_State *f_vm);
+int cameraSetOrthoParams(lua_State *f_vm);
+int cameraGetOrthoParams(lua_State *f_vm);
 
 int cameraSetDepth(lua_State *f_vm);
 int cameraGetDepth(lua_State *f_vm);

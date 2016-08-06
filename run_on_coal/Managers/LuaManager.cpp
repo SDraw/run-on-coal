@@ -132,11 +132,11 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM,"cameraSetFOV",Lua::cameraSetFOV);
     lua_register(m_pVM,"cameraGetFOV",Lua::cameraGetFOV);
 
-    lua_register(m_pVM,"cameraSetPerspectiveSize",Lua::cameraSetPerspectiveSize);
-    lua_register(m_pVM,"cameraGetPerspectiveSize",Lua::cameraGetPerspectiveSize);
+    lua_register(m_pVM,"cameraSetAspectRatio",Lua::cameraSetAspectRatio);
+    lua_register(m_pVM,"cameraGetAspectRatio",Lua::cameraGetAspectRatio);
 
-    lua_register(m_pVM,"cameraSetOrthoSize",Lua::cameraSetOrthoSize);
-    lua_register(m_pVM,"cameraGetOrthoSize",Lua::cameraGetOrthoSize);
+    lua_register(m_pVM,"cameraSetOrthoParams",Lua::cameraSetOrthoParams);
+    lua_register(m_pVM,"cameraGetOrthoParams",Lua::cameraGetOrthoParams);
 
     lua_register(m_pVM,"cameraSetDepth",Lua::cameraSetDepth);
     lua_register(m_pVM,"cameraGetDepth",Lua::cameraGetDepth);

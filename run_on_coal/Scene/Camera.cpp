@@ -8,12 +8,12 @@ ROC::Camera::Camera(unsigned char f_type)
     m_viewMatrix = glm::lookAt(m_viewPosition,m_viewPosition+m_viewDirection,glm::vec3(0.0f,1.0f,0.0f));
 
     m_fov = glm::pi<float>()/4.0f;
-    m_perspectiveSize = glm::vec2(640.f,480.f);
-    m_orthogonalSize = glm::vec4(-1.f,1.f,-1.f,1.f);
+    m_aspectRatio = 640.f/480.f;
+    m_orthoParams = glm::vec4(-1.f,1.f,-1.f,1.f);
     m_depth = glm::vec2(1.f,10.f);
 
     m_type = f_type;
-    m_projectionMatrix = glm::perspectiveFov(m_fov,m_perspectiveSize.x,m_perspectiveSize.y,m_depth.x,m_depth.y);
+    m_projectionMatrix = glm::perspective(m_fov,m_aspectRatio,m_depth.x,m_depth.y);
 
     m_rebuildView = false;
     m_rebuildProjection = false;
@@ -41,16 +41,17 @@ void ROC::Camera::SetFOV(float f_fov)
     m_fov = f_fov;
     m_rebuildProjection = true;
 }
-void ROC::Camera::SetPerspectiveSize(glm::vec2 &f_size)
+
+void ROC::Camera::SetAspectRatio(float f_ratio)
 {
-    if(!std::memcmp(&f_size,&m_perspectiveSize,sizeof(glm::vec2))) return;
-    std::memcpy(&m_perspectiveSize,&f_size,sizeof(glm::vec2));
+    if(m_aspectRatio == f_ratio) return;
+    m_aspectRatio = f_ratio;
     m_rebuildProjection = true;
 }
-void ROC::Camera::SetOrthoSize(glm::vec4 &f_size)
+void ROC::Camera::SetOrthoParams(glm::vec4 &f_size)
 {
-    if(!std::memcmp(&f_size,&m_orthogonalSize,sizeof(glm::vec4))) return;
-    std::memcpy(&m_orthogonalSize,&f_size,sizeof(glm::vec4));
+    if(!std::memcmp(&f_size,&m_orthoParams,sizeof(glm::vec4))) return;
+    std::memcpy(&m_orthoParams,&f_size,sizeof(glm::vec4));
     m_rebuildProjection = true;
 }
 void ROC::Camera::SetDepth(glm::vec2 &f_depth)
@@ -88,10 +89,10 @@ void ROC::Camera::UpdateMatrices()
         switch(m_type)
         {
             case CAMERA_PROJECTION_PERSPECTIVE:
-                m_projectionMatrix = glm::perspectiveFov(m_fov,m_perspectiveSize.x,m_perspectiveSize.y,m_depth.x,m_depth.y);
+                m_projectionMatrix = glm::perspective(m_fov,m_aspectRatio,m_depth.x,m_depth.y);
                 break;
             case CAMERA_PROJECTION_ORTHOGONAL:
-                m_projectionMatrix = glm::ortho(m_orthogonalSize.x,m_orthogonalSize.y,m_orthogonalSize.z,m_orthogonalSize.w,m_depth.x,m_depth.y);
+                m_projectionMatrix = glm::ortho(m_orthoParams.x,m_orthoParams.y,m_orthoParams.z,m_orthoParams.w,m_depth.x,m_depth.y);
                 break;
         }
     }
