@@ -14,7 +14,21 @@ namespace Lua
 
 int cameraCreate(lua_State *f_vm)
 {
-    Camera *l_camera = LuaManager::m_corePointer->GetElementManager()->CreateCamera();
+    std::string l_text;
+    ArgReader argStream(f_vm,LuaManager::m_corePointer);
+    argStream.ReadText(l_text);
+    if(argStream.HasErrors() || !l_text.length())
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    int l_type = Utils::ReadEnumString(l_text,"perspective,orthogonal");
+    if(l_type == -1)
+    {
+        lua_pushboolean(f_vm,0);
+        return 1;
+    }
+    Camera *l_camera = LuaManager::m_corePointer->GetElementManager()->CreateCamera(CAMERA_PROJECTION_PERSPECTIVE+static_cast<unsigned char>(l_type));
     l_camera ? lua_pushlightuserdata(f_vm,l_camera) : lua_pushboolean(f_vm,0);
     return 1;
 }

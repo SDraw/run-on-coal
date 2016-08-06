@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Scene/Camera.h"
 
-ROC::Camera::Camera()
+ROC::Camera::Camera(unsigned char f_type)
 {
     m_viewPosition = glm::vec3(0.f);
     m_viewDirection = glm::vec3(0.f,0.f,1.f);
@@ -9,10 +9,10 @@ ROC::Camera::Camera()
 
     m_fov = glm::pi<float>()/4.0f;
     m_perspectiveSize = glm::vec2(640.f,480.f);
-    m_orthogonalSize = glm::vec4(-1.f,1.f,1.f,-1.f);
-    m_depth = glm::vec2(0.2f,100.f);
+    m_orthogonalSize = glm::vec4(-1.f,1.f,-1.f,1.f);
+    m_depth = glm::vec2(1.f,10.f);
 
-    m_projectionType = CAMERA_PROJECTION_PERSPECTIVE;
+    m_type = f_type;
     m_projectionMatrix = glm::perspectiveFov(m_fov,m_perspectiveSize.x,m_perspectiveSize.y,m_depth.x,m_depth.y);
 
     m_rebuildView = false;
@@ -85,7 +85,7 @@ void ROC::Camera::UpdateMatrices()
     if(m_rebuildView) m_viewMatrix = glm::lookAt(m_viewPosition,m_viewPosition+m_viewDirection,glm::vec3(0.f,1.f,0.f));
     if(m_rebuildProjection)
     {
-        switch(m_projectionType)
+        switch(m_type)
         {
             case CAMERA_PROJECTION_PERSPECTIVE:
                 m_projectionMatrix = glm::perspectiveFov(m_fov,m_perspectiveSize.x,m_perspectiveSize.y,m_depth.x,m_depth.y);

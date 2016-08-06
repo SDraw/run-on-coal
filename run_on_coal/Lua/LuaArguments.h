@@ -5,7 +5,7 @@ namespace ROC
 
 class LuaArguments
 {
-    enum ArgumentType : char { Integer = 0U, Double, Float, Pointer, String };
+    enum ArgumentType : unsigned char { Integer = 0U, Double, Float, Pointer, String };
     std::vector<std::pair<void*,ArgumentType>> m_vArgs;
     int m_argCount;
 public:

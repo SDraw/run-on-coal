@@ -11,15 +11,15 @@ class Camera
     glm::vec2 m_perspectiveSize;
     glm::vec4 m_orthogonalSize;
     glm::vec2 m_depth;
-    unsigned char m_projectionType;
+    unsigned char m_type;
 
     glm::vec4 m_planes[6];
 
     bool m_rebuildView;
     bool m_rebuildProjection;
 public:
-    inline void SetType(unsigned char f_type) { m_projectionType = f_type; }
-    inline unsigned char GetType() { return m_projectionType; }
+    inline void SetType(unsigned char f_type) { m_type = f_type; }
+    inline unsigned char GetType() { return m_type; }
 
     void SetFOV(float f_fov);
     inline float GetFOV() { return m_fov; }
@@ -50,7 +50,7 @@ protected:
     glm::mat4 m_viewMatrix;
     glm::mat4 m_projectionMatrix;
 
-    Camera();
+    Camera(unsigned char f_type);
     ~Camera();
     void UpdateMatrices();
     friend class ElementManager;

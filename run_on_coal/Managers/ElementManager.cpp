@@ -46,9 +46,9 @@ bool ROC::ElementManager::DestroyScene(Scene *f_scene)
     return true;
 }
 
-ROC::Camera* ROC::ElementManager::CreateCamera()
+ROC::Camera* ROC::ElementManager::CreateCamera(unsigned char f_type)
 {
-    Camera *l_camera = new Camera();
+    Camera *l_camera = new Camera(f_type);
     if(!l_camera) return NULL;
     m_core->GetMemoryManager()->AddMemoryPointer(l_camera,ElementType::CameraElement);
     return l_camera;

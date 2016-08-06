@@ -35,7 +35,7 @@ public:
     Scene* CreateScene();
     bool DestroyScene(Scene *f_scene);
 
-    Camera* CreateCamera();
+    Camera* CreateCamera(unsigned char f_type);
     bool DestroyCamera(Camera *f_cam);
 
     Light* CreateLight();
