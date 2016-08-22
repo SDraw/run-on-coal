@@ -30,7 +30,7 @@ ROC::Material::~Material()
     if(m_texture) delete m_texture;
 }
 
-void ROC::Material::LoadTexture(std::string &f_path, bool f_compressed)
+void ROC::Material::LoadTexture(std::string &f_path,bool f_compressed)
 {
     m_texture = new Texture();
     if(!m_texture->Load(f_path,IsTransparent() ? TEXTURE_TYPE_RGBA : TEXTURE_TYPE_RGB,f_compressed))
@@ -122,7 +122,7 @@ void ROC::Material::GenerateVAO()
     m_bVAO = true;
 }
 
-void ROC::Material::Draw(bool f_texturize, bool f_binding)
+void ROC::Material::Draw(bool f_texturize,bool f_binding)
 {
     if(!m_bVAO) return;
     if(f_texturize)

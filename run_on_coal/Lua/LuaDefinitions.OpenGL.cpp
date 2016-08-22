@@ -8,7 +8,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int oglClear(lua_State *f_vm)
@@ -29,14 +29,14 @@ int oglClear(lua_State *f_vm)
     bool l_result = true;
     switch(Utils::ReadEnumString(l_param,"color,depth"))
     {
-        case 0:
-            LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(GL_COLOR_BUFFER_BIT);
-            break;
-        case 1:
-            LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(GL_DEPTH_BUFFER_BIT);
-            break;
-        default:
-            l_result = false;
+    case 0:
+        LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(GL_COLOR_BUFFER_BIT);
+        break;
+    case 1:
+        LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(GL_DEPTH_BUFFER_BIT);
+        break;
+    default:
+        l_result = false;
     }
     lua_pushboolean(f_vm,l_result);
     return 1;
@@ -45,7 +45,7 @@ int oglClearColor(lua_State *f_vm)
 {
     lua_Number l_color[4];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i=0; i < 4; i++) argStream.ReadNumber(l_color[i]);
+    for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -60,7 +60,7 @@ int oglViewport(lua_State *f_vm)
 {
     LUA_INTEGER l_params[4];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i=0; i < 4; i++) argStream.ReadInteger(l_params[i]);
+    for(int i = 0; i < 4; i++) argStream.ReadInteger(l_params[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);

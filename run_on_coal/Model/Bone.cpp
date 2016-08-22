@@ -3,7 +3,7 @@
 
 glm::mat4 ROC::Bone::m_identity = glm::mat4(1.f);
 
-ROC::Bone::Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale)
+ROC::Bone::Bone(std::string &f_name,glm::quat &f_rot,glm::vec3 &f_pos,glm::vec3 &f_scale)
 {
     m_name = f_name;
     std::memcpy(&m_data.m_rot,&f_rot,sizeof(glm::quat));

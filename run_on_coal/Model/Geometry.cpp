@@ -48,7 +48,7 @@ void ROC::Geometry::SortMaterials()
     m_materialVector.insert(m_materialVector.end(),l_matVecDefTransp.begin(),l_matVecDefTransp.end());
 }
 
-bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
+bool ROC::Geometry::Load(std::string &f_path,bool f_compressed)
 {
     if(m_loaded) return false;
     std::ifstream l_file;
@@ -64,7 +64,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
     l_file.read((char*)&l_type,sizeof(unsigned char));
     if(l_file.fail()) return false;
 
-    int l_compressedSize, l_uncompressedSize;
+    int l_compressedSize,l_uncompressedSize;
 
     std::vector<unsigned char> l_tempData;
     std::vector<glm::vec3> l_vertexData;
@@ -81,7 +81,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
     l_tempData.resize(l_compressedSize);
     l_file.read((char*)l_tempData.data(),l_compressedSize);
     if(l_file.fail()) return false;
-    l_vertexData.resize(l_uncompressedSize/sizeof(glm::vec3));
+    l_vertexData.resize(l_uncompressedSize / sizeof(glm::vec3));
     if(Utils::UncompressData(l_tempData.data(),l_compressedSize,l_vertexData.data(),l_uncompressedSize) == -1) return false;
 
     //UVs
@@ -92,7 +92,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
     l_tempData.resize(l_compressedSize);
     l_file.read((char*)l_tempData.data(),l_compressedSize);
     if(l_file.fail()) return false;
-    l_uvData.resize(l_uncompressedSize/sizeof(glm::vec2));
+    l_uvData.resize(l_uncompressedSize / sizeof(glm::vec2));
     if(Utils::UncompressData(l_tempData.data(),l_compressedSize,l_uvData.data(),l_uncompressedSize) == -1) return false;
 
     //Normals
@@ -103,7 +103,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
     l_tempData.resize(l_compressedSize);
     l_file.read((char*)l_tempData.data(),l_compressedSize);
     if(l_file.fail()) return false;
-    l_normalData.resize(l_uncompressedSize/sizeof(glm::vec3));
+    l_normalData.resize(l_uncompressedSize / sizeof(glm::vec3));
     if(Utils::UncompressData(l_tempData.data(),l_compressedSize,l_normalData.data(),l_uncompressedSize) == -1) return false;
 
     if(l_type == 0x2) // If has skeletal animation
@@ -116,7 +116,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
         l_tempData.resize(l_compressedSize);
         l_file.read((char*)l_tempData.data(),l_compressedSize);
         if(l_file.fail()) return false;
-        l_weightData.resize(l_uncompressedSize/sizeof(glm::vec4));
+        l_weightData.resize(l_uncompressedSize / sizeof(glm::vec4));
         if(Utils::UncompressData(l_tempData.data(),l_compressedSize,l_weightData.data(),l_uncompressedSize) == -1) return false;
 
         //Indices
@@ -127,7 +127,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
         l_tempData.resize(l_compressedSize);
         l_file.read((char*)l_tempData.data(),l_compressedSize);
         if(l_file.fail()) return false;
-        l_indexData.resize(l_uncompressedSize/sizeof(glm::vec4));
+        l_indexData.resize(l_uncompressedSize / sizeof(glm::vec4));
         if(Utils::UncompressData(l_tempData.data(),l_compressedSize,l_indexData.data(),l_uncompressedSize) == -1) return false;
     }
 
@@ -136,7 +136,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
     l_file.read((char*)&l_materialSize,sizeof(int));
     if(l_file.fail()) return false;
     if(l_materialSize < 1) return false;
-    for(int i=0; i < l_materialSize; i++)
+    for(int i = 0; i < l_materialSize; i++)
     {
         unsigned char l_materialType;
         glm::vec4 l_materialParam;
@@ -150,7 +150,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
         std::vector<glm::ivec4> l_tempIndex;
 
         l_file.read((char*)&l_materialType,sizeof(unsigned char));
-        if(l_file.fail()) 
+        if(l_file.fail())
         {
             Clear();
             return false;
@@ -196,28 +196,28 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
             Clear();
             return false;
         }
-        l_faceIndex.resize(l_uncompressedSize/sizeof(int));
+        l_faceIndex.resize(l_uncompressedSize / sizeof(int));
         if(Utils::UncompressData(l_tempData.data(),l_compressedSize,l_faceIndex.data(),l_uncompressedSize) == -1) return false;
 
-        for(int j=0, k=int(l_faceIndex.size()); j < k; j += 9)
+        for(int j = 0,k = int(l_faceIndex.size()); j < k; j += 9)
         {
             l_tempVertex.push_back(l_vertexData[l_faceIndex[j]]);
-            l_tempVertex.push_back(l_vertexData[l_faceIndex[j+1]]);
-            l_tempVertex.push_back(l_vertexData[l_faceIndex[j+2]]);
-            l_tempUV.push_back(l_uvData[l_faceIndex[j+3]]);
-            l_tempUV.push_back(l_uvData[l_faceIndex[j+4]]);
-            l_tempUV.push_back(l_uvData[l_faceIndex[j+5]]);
-            l_tempNormal.push_back(l_normalData[l_faceIndex[j+6]]);
-            l_tempNormal.push_back(l_normalData[l_faceIndex[j+7]]);
-            l_tempNormal.push_back(l_normalData[l_faceIndex[j+8]]);
+            l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 1]]);
+            l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 2]]);
+            l_tempUV.push_back(l_uvData[l_faceIndex[j + 3]]);
+            l_tempUV.push_back(l_uvData[l_faceIndex[j + 4]]);
+            l_tempUV.push_back(l_uvData[l_faceIndex[j + 5]]);
+            l_tempNormal.push_back(l_normalData[l_faceIndex[j + 6]]);
+            l_tempNormal.push_back(l_normalData[l_faceIndex[j + 7]]);
+            l_tempNormal.push_back(l_normalData[l_faceIndex[j + 8]]);
             if(l_type == 0x2)
             {
                 l_tempWeight.push_back(l_weightData[l_faceIndex[j]]);
-                l_tempWeight.push_back(l_weightData[l_faceIndex[j+1]]);
-                l_tempWeight.push_back(l_weightData[l_faceIndex[j+2]]);
+                l_tempWeight.push_back(l_weightData[l_faceIndex[j + 1]]);
+                l_tempWeight.push_back(l_weightData[l_faceIndex[j + 2]]);
                 l_tempIndex.push_back(l_indexData[l_faceIndex[j]]);
-                l_tempIndex.push_back(l_indexData[l_faceIndex[j+1]]);
-                l_tempIndex.push_back(l_indexData[l_faceIndex[j+2]]);
+                l_tempIndex.push_back(l_indexData[l_faceIndex[j + 1]]);
+                l_tempIndex.push_back(l_indexData[l_faceIndex[j + 2]]);
             }
         }
 
@@ -247,13 +247,13 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
             Clear();
             return false;
         }
-        if(l_bonesSize < 1) 
+        if(l_bonesSize < 1)
         {
             Clear();
             return false;
         }
 
-        for(int i=0; i < l_bonesSize; i++)
+        for(int i = 0; i < l_bonesSize; i++)
         {
             BoneData *l_boneData = new BoneData();
             unsigned char l_boneNameLength;
@@ -307,12 +307,12 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
     {
         unsigned int l_chainsCount = 0U;
         l_file.read((char*)&l_chainsCount,sizeof(unsigned int));
-        for(size_t i=0; i < l_chainsCount; i++)
+        for(size_t i = 0; i < l_chainsCount; i++)
         {
             BoneChainGroup *l_group = new BoneChainGroup();
             unsigned int l_chainParts = 0U;
             l_file.read((char*)&l_chainParts,sizeof(unsigned int));
-            for(size_t j=0; j < l_chainParts; j++)
+            for(size_t j = 0; j < l_chainParts; j++)
             {
                 BoneChainData *l_chain = new BoneChainData();
                 l_file.read((char*)&l_chain->m_type,sizeof(unsigned char));

@@ -8,7 +8,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int lightCreate(lua_State *f_vm)
@@ -37,7 +37,7 @@ int lightSetParams(lua_State *f_vm)
     lua_Number l_params[4];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_light,ElementType::LightElement);
-    for(int i=0; i < 4; i++) argStream.ReadNumber(l_params[i]);
+    for(int i = 0; i < 4; i++) argStream.ReadNumber(l_params[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -72,7 +72,7 @@ int lightSetColor(lua_State *f_vm)
     lua_Number f_inten[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_light,ElementType::LightElement);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(f_inten[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(f_inten[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -106,7 +106,7 @@ int lightSetDirection(lua_State *f_vm)
     lua_Number l_dir[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_light,ElementType::LightElement);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);

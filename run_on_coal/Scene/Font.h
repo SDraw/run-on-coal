@@ -28,8 +28,8 @@ protected:
     GLuint m_VAO;
     Font();
     ~Font();
-    bool LoadTTF(std::string &f_path, int f_size);
-    bool Draw(sf::String &f_text,glm::vec2 &f_pos, bool f_bind);
+    bool LoadTTF(std::string &f_path,int f_size);
+    bool Draw(sf::String &f_text,glm::vec2 &f_pos,bool f_bind);
     friend class ElementManager;
     friend class RenderManager;
 };

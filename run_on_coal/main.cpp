@@ -2,13 +2,13 @@
 #include "RocInc.h"
 
 #ifdef _WIN32
-    #ifdef _DEBUG
-int main(int argc, char *argv[])
-    #else
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
-    #endif
+#ifdef _DEBUG
+int main(int argc,char *argv[])
+#else
+int WINAPI wWinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,PWSTR pCmdLine,int nCmdShow)
+#endif
 #elif __linux__
-int main(int argc, char *argv[])
+int main(int argc,char *argv[])
 #endif
 {
     ROC::Core *l_core = ROC::Core::GetCore();

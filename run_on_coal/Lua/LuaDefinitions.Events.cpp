@@ -9,7 +9,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 int addEvent(lua_State *f_vm)
 {

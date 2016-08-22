@@ -13,7 +13,7 @@ ROC::MemoryManager::~MemoryManager()
     for(auto iter : m_memoryMap) l_elementManager->DestroyByPointer(iter.first,iter.second);
 }
 
-bool ROC::MemoryManager::CheckMemoryPointer(void *f_pointer, unsigned char f_type)
+bool ROC::MemoryManager::CheckMemoryPointer(void *f_pointer,unsigned char f_type)
 {
     auto l_checkIterator = m_memoryMap.find(f_pointer);
     if(l_checkIterator == m_memoryMap.end()) return false;
@@ -21,7 +21,7 @@ bool ROC::MemoryManager::CheckMemoryPointer(void *f_pointer, unsigned char f_typ
     return true;
 }
 
-void ROC::MemoryManager::RemoveMemoryPointer(void *f_pointer, unsigned char f_type)
+void ROC::MemoryManager::RemoveMemoryPointer(void *f_pointer,unsigned char f_type)
 {
     auto l_checkIterator = m_memoryMap.find(f_pointer);
     if(l_checkIterator != m_memoryMap.end())

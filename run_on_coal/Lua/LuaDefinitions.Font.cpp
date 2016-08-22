@@ -8,7 +8,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int fontCreate(lua_State *f_vm)
@@ -45,13 +45,13 @@ int fontDraw(lua_State *f_vm)
 {
     Font *l_font;
     lua_Number l_pos[2];
-    lua_Number l_color[4] = { 1.0,1.0,1.0,1.0 };
+    lua_Number l_color[4] = {1.0,1.0,1.0,1.0};
     std::string l_text;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_font,ElementType::FontElement);
-    for(int i=0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
+    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     argStream.ReadText(l_text);
-    for(int i=0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
+    for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
     if(argStream.HasErrors() || !l_text.length())
     {
         lua_pushboolean(f_vm,0);

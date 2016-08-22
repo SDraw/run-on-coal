@@ -12,16 +12,16 @@ ROC::File::~File()
     if(m_file) delete m_file;
 }
 
-bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
+bool ROC::File::Create(std::string &f_path,std::string &f_rPath)
 {
-    m_file = new std::fstream(f_path,std::ios::out|std::ios::binary);
+    m_file = new std::fstream(f_path,std::ios::out | std::ios::binary);
     if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = FileMode::WriteMode;
     m_path.append(f_rPath);
     return true;
 }
-bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
+bool ROC::File::Open(std::string &f_path,std::string &f_rPath,bool f_ro)
 {
     m_file = new std::fstream(f_path,(f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
     if(!m_file) return false;
@@ -30,11 +30,11 @@ bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
     m_path.append(f_rPath);
     return true;
 }
-size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
+size_t ROC::File::Read(std::string &f_data,size_t f_lenght)
 {
     std::vector<char> l_data(f_lenght);
     size_t l_read = static_cast<size_t>(m_file->read(&l_data[0],f_lenght).gcount());
-    f_data.append(l_data.begin(),l_data.begin()+l_read);
+    f_data.append(l_data.begin(),l_data.begin() + l_read);
     return l_read;
 }
 size_t ROC::File::Write(std::string &f_data)
@@ -43,7 +43,7 @@ size_t ROC::File::Write(std::string &f_data)
     std::streampos l_start = m_file->tellg();
     m_file->write(&f_data[0],f_data.size());
     if(m_file->fail()) return 0U;
-    l_start = m_file->tellg()-l_start;
+    l_start = m_file->tellg() - l_start;
     return static_cast<size_t>(l_start);
 }
 size_t ROC::File::GetSize()
@@ -73,7 +73,7 @@ bool ROC::File::SetPosition(size_t f_pos)
     return !m_file->fail();
 }
 
-bool ROC::File::Delete(Core *f_core, std::string &f_path)
+bool ROC::File::Delete(Core *f_core,std::string &f_path)
 {
     std::string l_path;
     f_core->GetWorkingDirectory(l_path);
@@ -82,7 +82,7 @@ bool ROC::File::Delete(Core *f_core, std::string &f_path)
     return !std::remove(l_path.c_str());
 }
 
-bool ROC::File::Rename(Core *f_core, std::string &f_old, std::string &f_new)
+bool ROC::File::Rename(Core *f_core,std::string &f_old,std::string &f_new)
 {
     std::string l_oPath,l_nPath;
     f_core->GetWorkingDirectory(l_oPath);

@@ -6,19 +6,19 @@ ROC::Font::Font()
     m_loaded = false;
 
     glGenVertexArrays(1,&m_VAO);
-    glGenBuffers(1, &m_vertexVBO);
+    glGenBuffers(1,&m_vertexVBO);
     glGenBuffers(1,&m_uvVBO);
 
     glBindVertexArray(m_VAO);
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER,m_vertexVBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(float)*6*3,NULL,GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),NULL);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(float) * 6 * 3,NULL,GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3 * sizeof(float),NULL);
 
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER,m_uvVBO);
-    GLfloat l_uvs[6][2]= {
+    GLfloat l_uvs[6][2] = {
         {0.0,0.0},{0.0,1.0},{1.0,1.0},
         {0.0,0.0},{1.0,1.0},{1.0,0.0}
     };
@@ -28,7 +28,7 @@ ROC::Font::Font()
     glBindBuffer(GL_ARRAY_BUFFER,0);
     glBindVertexArray(0);
 
-    
+
     for(auto &iter : m_vertices) iter.z = 0.5f;
 }
 ROC::Font::~Font()
@@ -59,14 +59,14 @@ bool ROC::Font::LoadChar(unsigned int l_char)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D,0,GL_RED,m_face->glyph->bitmap.width,m_face->glyph->bitmap.rows,0,GL_RED,GL_UNSIGNED_BYTE,m_face->glyph->bitmap.buffer);
-    l_charData->m_size = glm::ivec2(m_face->glyph->bitmap.width, m_face->glyph->bitmap.rows);
+    l_charData->m_size = glm::ivec2(m_face->glyph->bitmap.width,m_face->glyph->bitmap.rows);
     l_charData->m_advance = m_face->glyph->advance.x;
     l_charData->m_breaing = glm::ivec2(m_face->glyph->bitmap_left,m_face->glyph->bitmap_top);
     m_charMap.insert(std::pair<unsigned int,charData*>(l_char,l_charData));
     return true;
 }
 
-bool ROC::Font::LoadTTF(std::string &f_path, int f_size)
+bool ROC::Font::LoadTTF(std::string &f_path,int f_size)
 {
     if(m_loaded) return false;
     if(FT_Init_FreeType(&m_library)) return false;
@@ -87,7 +87,7 @@ bool ROC::Font::Draw(sf::String &f_text,glm::vec2 &f_pos,bool f_bind)
     if(f_bind)
     {
         glBindVertexArray(m_VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+        glBindBuffer(GL_ARRAY_BUFFER,m_vertexVBO);
         glActiveTexture(GL_TEXTURE0);
     }
     glm::vec2 l_pos(f_pos);
@@ -100,20 +100,20 @@ bool ROC::Font::Draw(sf::String &f_text,glm::vec2 &f_pos,bool f_bind)
             if(!LoadChar(iter)) continue;
         }
         charData *l_charData = m_charMap[iter];
-        l_result.x = l_pos.x+l_charData->m_breaing.x;
-        l_result.y = l_pos.y-(l_charData->m_size.y-l_charData->m_breaing.y);
+        l_result.x = l_pos.x + l_charData->m_breaing.x;
+        l_result.y = l_pos.y - (l_charData->m_size.y - l_charData->m_breaing.y);
 
         m_vertices[0].x = m_vertices[1].x = m_vertices[3].x = l_result.x;
         m_vertices[1].y = m_vertices[2].y = m_vertices[4].y = l_result.y;
-        m_vertices[2].x = m_vertices[4].x = m_vertices[5].x = l_result.x+l_charData->m_size.x;
-        m_vertices[0].y = m_vertices[3].y = m_vertices[5].y = l_result.y+l_charData->m_size.y;
+        m_vertices[2].x = m_vertices[4].x = m_vertices[5].x = l_result.x + l_charData->m_size.x;
+        m_vertices[0].y = m_vertices[3].y = m_vertices[5].y = l_result.y + l_charData->m_size.y;
 
         if(l_lastTexture != l_charData->m_texture)
         {
             l_lastTexture = l_charData->m_texture;
             glBindTexture(GL_TEXTURE_2D,l_charData->m_texture);
         }
-        glBufferSubData(GL_ARRAY_BUFFER,0,sizeof(m_vertices),m_vertices); 
+        glBufferSubData(GL_ARRAY_BUFFER,0,sizeof(m_vertices),m_vertices);
         glDrawArrays(GL_TRIANGLES,0,6);
         l_pos.x += (l_charData->m_advance >> 6);
     }

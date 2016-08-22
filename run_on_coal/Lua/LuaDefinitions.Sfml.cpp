@@ -10,7 +10,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int setCursorMode(lua_State *f_vm)
@@ -50,7 +50,7 @@ int setCursorPosition(lua_State *f_vm)
 {
     lua_Number l_val[2];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i=0; i < 2; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);

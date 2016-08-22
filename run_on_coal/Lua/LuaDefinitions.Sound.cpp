@@ -10,7 +10,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int soundCreate(lua_State *f_vm)
@@ -247,7 +247,7 @@ int soundSet3DPosition(lua_State *f_vm)
     lua_Number l_val[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_sound,ElementType::SoundElement);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -282,7 +282,7 @@ int soundSet3DDistance(lua_State *f_vm)
     lua_Number l_val[2];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_sound,ElementType::SoundElement);
-    for(int i=0; i < 2; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -314,7 +314,7 @@ int soundSetListenerOrientation(lua_State *f_vm)
 {
     lua_Number l_val[9];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i=0; i < 9; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 9; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -338,7 +338,7 @@ int soundGetListenerOrientation(lua_State *f_vm)
     l_soundManager->GetListenerPosition(l_vec[0]);
     l_soundManager->GetListenerDirection(l_vec[1]);
     l_soundManager->GetListenerUp(l_vec[2]);
-    for(int i=0; i < 3; i++)
+    for(int i = 0; i < 3; i++)
     {
         lua_pushnumber(f_vm,l_vec[i].x);
         lua_pushnumber(f_vm,l_vec[i].y);

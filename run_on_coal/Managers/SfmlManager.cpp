@@ -24,7 +24,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     l_contextSettings.depthBits = 32U;
     l_contextSettings.majorVersion = 4U;
     l_contextSettings.minorVersion = 0U;
-    
+
     m_window = new sf::Window();
     m_window->create(l_videoMode,"ROC",l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default,l_contextSettings);
     m_window->setFramerateLimit(l_configManager->GetFPSLimit());
@@ -33,7 +33,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     glewExperimental = true;
     GLenum l_error = glewInit();
-    if (l_error != GLEW_OK)
+    if(l_error != GLEW_OK)
     {
         l_log.append((char*)glewGetErrorString(l_error));
         f_core->GetLogManager()->Log(l_log);
@@ -54,7 +54,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_active = true;
     m_cursorDisabled = false;
-    m_cursorCenter = sf::Vector2i(l_windowSize.x/2,l_windowSize.y/2);
+    m_cursorCenter = sf::Vector2i(l_windowSize.x / 2,l_windowSize.y / 2);
 
     m_argument = new LuaArguments();
 }
@@ -74,88 +74,88 @@ bool ROC::SfmlManager::DoPulse()
     {
         switch(m_event.type)
         {
-            case sf::Event::Closed:
-                m_active = false;
-                break;
-            case sf::Event::Resized:
+        case sf::Event::Closed:
+            m_active = false;
+            break;
+        case sf::Event::Resized:
+        {
+            m_cursorCenter.x = m_event.size.width / 2;
+            m_cursorCenter.y = m_event.size.height / 2;
+            m_argument->PushArgument(static_cast<int>(m_event.size.width));
+            m_argument->PushArgument(static_cast<int>(m_event.size.height));
+            m_eventManager->CallEvent(EventType::WindowResize,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::KeyPressed: case sf::Event::KeyReleased:
+        {
+            m_argument->PushArgument(m_event.key.code);
+            m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
+            m_eventManager->CallEvent(EventType::KeyPress,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::TextEntered:
+        {
+            if(m_event.text.unicode > 31 && !(m_event.text.unicode >= 127 && m_event.text.unicode <= 160))
             {
-                m_cursorCenter.x = m_event.size.width/2;
-                m_cursorCenter.y = m_event.size.height/2;
-                m_argument->PushArgument(static_cast<int>(m_event.size.width));
-                m_argument->PushArgument(static_cast<int>(m_event.size.height));
-                m_eventManager->CallEvent(EventType::WindowResize,m_argument);
+                sf::String l_text(m_event.text.unicode);
+                auto l_utf8 = l_text.toUtf8();
+                m_input.insert(m_input.begin(),l_utf8.begin(),l_utf8.end());
+                m_argument->PushArgument(m_input);
+                m_eventManager->CallEvent(EventType::TextInput,m_argument);
                 m_argument->Clear();
-            } break;
-            case sf::Event::KeyPressed: case sf::Event::KeyReleased:
-            {
-                m_argument->PushArgument(m_event.key.code);
-                m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1:0);
-                m_eventManager->CallEvent(EventType::KeyPress,m_argument);
-                m_argument->Clear();
-            } break;
-            case sf::Event::TextEntered:
-            {
-                if(m_event.text.unicode > 31 && !(m_event.text.unicode >= 127 && m_event.text.unicode <= 160))
-                {
-                    sf::String l_text(m_event.text.unicode);
-                    auto l_utf8 = l_text.toUtf8();
-                    m_input.insert(m_input.begin(),l_utf8.begin(),l_utf8.end());
-                    m_argument->PushArgument(m_input);
-                    m_eventManager->CallEvent(EventType::TextInput,m_argument);
-                    m_argument->Clear();
-                    m_input.clear();
-                }
-            } break;
-            case sf::Event::MouseMoved:
-            {
-                m_argument->PushArgument(m_event.mouseMove.x-m_cursorCenter.x);
-                m_argument->PushArgument(m_event.mouseMove.y-m_cursorCenter.y);
-                m_eventManager->CallEvent(EventType::CursorMove,m_argument);
-                m_argument->Clear();
-            } break;
-            case sf::Event::MouseEntered: case sf::Event::MouseLeft:
-            {
-                m_argument->PushArgument(m_event.type == sf::Event::MouseEntered? 1:0);
-                m_eventManager->CallEvent(EventType::CursorEnter,m_argument);
-                m_argument->Clear();
-            } break;
-            case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
-            {
-                m_argument->PushArgument(m_event.mouseButton.button);
-                m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1:0);
-                m_eventManager->CallEvent(EventType::MouseKeyPress,m_argument);
-                m_argument->Clear();
-            } break;
-            case sf::Event::MouseWheelScrolled:
-            {
-                m_argument->PushArgument(m_event.mouseWheelScroll.wheel);
-                m_argument->PushArgument(m_event.mouseWheelScroll.delta);
-                m_eventManager->CallEvent(EventType::MouseScroll,m_argument);
-                m_argument->Clear();
-            } break;
-            case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
-            {
-                m_argument->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
-                m_argument->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1:0);
-                m_eventManager->CallEvent(EventType::JoypadConnect,m_argument);
-                m_argument->Clear();
-            } break;
-            case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
-            {
-                m_argument->PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
-                m_argument->PushArgument(static_cast<int>(m_event.joystickButton.button));
-                m_argument->PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1:0);
-                m_eventManager->CallEvent(EventType::JoypadButton,m_argument);
-                m_argument->Clear();
-            } break;
-            case sf::Event::JoystickMoved:
-            {
-                m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
-                m_argument->PushArgument(static_cast<int>(m_event.joystickMove.axis));
-                m_argument->PushArgument(m_event.joystickMove.position);
-                m_eventManager->CallEvent(EventType::JoypadAxis,m_argument);
-                m_argument->Clear();
-            } break;
+                m_input.clear();
+            }
+        } break;
+        case sf::Event::MouseMoved:
+        {
+            m_argument->PushArgument(m_event.mouseMove.x - m_cursorCenter.x);
+            m_argument->PushArgument(m_event.mouseMove.y - m_cursorCenter.y);
+            m_eventManager->CallEvent(EventType::CursorMove,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::MouseEntered: case sf::Event::MouseLeft:
+        {
+            m_argument->PushArgument(m_event.type == sf::Event::MouseEntered ? 1 : 0);
+            m_eventManager->CallEvent(EventType::CursorEnter,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
+        {
+            m_argument->PushArgument(m_event.mouseButton.button);
+            m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
+            m_eventManager->CallEvent(EventType::MouseKeyPress,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::MouseWheelScrolled:
+        {
+            m_argument->PushArgument(m_event.mouseWheelScroll.wheel);
+            m_argument->PushArgument(m_event.mouseWheelScroll.delta);
+            m_eventManager->CallEvent(EventType::MouseScroll,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
+        {
+            m_argument->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
+            m_argument->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
+            m_eventManager->CallEvent(EventType::JoypadConnect,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
+        {
+            m_argument->PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
+            m_argument->PushArgument(static_cast<int>(m_event.joystickButton.button));
+            m_argument->PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
+            m_eventManager->CallEvent(EventType::JoypadButton,m_argument);
+            m_argument->Clear();
+        } break;
+        case sf::Event::JoystickMoved:
+        {
+            m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
+            m_argument->PushArgument(static_cast<int>(m_event.joystickMove.axis));
+            m_argument->PushArgument(m_event.joystickMove.position);
+            m_eventManager->CallEvent(EventType::JoypadAxis,m_argument);
+            m_argument->Clear();
+        } break;
         }
     }
     if(m_cursorDisabled && m_window->hasFocus()) sf::Mouse::setPosition(m_cursorCenter,*m_window);

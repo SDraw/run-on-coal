@@ -13,12 +13,12 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
         m_boneVector.push_back(l_bone);
     }
     m_bonesCount = m_boneVector.size();
-    for(size_t i=0, j=f_data.size(); i < j; i++)
+    for(size_t i = 0,j = f_data.size(); i < j; i++)
     {
         if(f_data[i]->m_parent != -1)
         {
-             m_boneVector[i]->SetParent(m_boneVector[f_data[i]->m_parent]);
-             m_boneVector[f_data[i]->m_parent]->AddChild(m_boneVector[i]);
+            m_boneVector[i]->SetParent(m_boneVector[f_data[i]->m_parent]);
+            m_boneVector[f_data[i]->m_parent]->AddChild(m_boneVector[i]);
         }
     }
     m_boneVector[0]->GenerateBindPose();
@@ -50,9 +50,9 @@ ROC::Skeleton::~Skeleton()
     }
 }
 
-void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
+void ROC::Skeleton::Update(std::vector<float> &f_left,std::vector<float> &f_right,float f_lerp)
 {
-    for(size_t i=0, l_bonePos=0; i < m_bonesCount; i++, l_bonePos+=10)
+    for(size_t i = 0,l_bonePos = 0; i < m_bonesCount; i++,l_bonePos += 10)
     {
         std::memcpy(&m_leftData,&f_left[l_bonePos],sizeof(skFastStoring));
         std::memcpy(&m_rightData,&f_right[l_bonePos],sizeof(skFastStoring));
@@ -66,7 +66,7 @@ void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_rig
 }
 void ROC::Skeleton::Update()
 {
-    for(size_t i=0; i < m_bonesCount; i++)
+    for(size_t i = 0; i < m_bonesCount; i++)
     {
         Bone *l_bone = m_boneVector[i];
         l_bone->UpdateMatrix();
@@ -79,9 +79,9 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
 {
     if(m_rigid) return;
     m_chainsVector.resize(f_vec.size());
-    for(size_t i=0, ii=m_chainsVector.size(); i < ii; i++)
+    for(size_t i = 0,ii = m_chainsVector.size(); i < ii; i++)
     {
-        for(size_t j=0, jj=f_vec[i]->m_boneChainDataVector.size(); j < jj; j++)
+        for(size_t j = 0,jj = f_vec[i]->m_boneChainDataVector.size(); j < jj; j++)
         {
             BoneChainData *l_chainData = f_vec[i]->m_boneChainDataVector[j];
             skChain l_skChain;
@@ -102,11 +102,11 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
             {
                 l_skChain.m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
                 btVector3 l_pivotA(0.f,0.f,0.f);
-                btTransform l_parentTransform = m_chainsVector[i][j-1].m_rigidBody->getWorldTransform();
+                btTransform l_parentTransform = m_chainsVector[i][j - 1].m_rigidBody->getWorldTransform();
                 btTransform l_offsetTransform = l_parentTransform.inverse()*l_transform;
-                l_skChain.m_rigidBody->setIgnoreCollisionCheck(m_chainsVector[i][j-1].m_rigidBody,true);
-                m_chainsVector[i][j-1].m_rigidBody->setIgnoreCollisionCheck(l_skChain.m_rigidBody,true);
-                l_skChain.m_constraint = new btPoint2PointConstraint(*l_skChain.m_rigidBody,*m_chainsVector[i][j-1].m_rigidBody,l_pivotA,l_offsetTransform.getOrigin());
+                l_skChain.m_rigidBody->setIgnoreCollisionCheck(m_chainsVector[i][j - 1].m_rigidBody,true);
+                m_chainsVector[i][j - 1].m_rigidBody->setIgnoreCollisionCheck(l_skChain.m_rigidBody,true);
+                l_skChain.m_constraint = new btPoint2PointConstraint(*l_skChain.m_rigidBody,*m_chainsVector[i][j - 1].m_rigidBody,l_pivotA,l_offsetTransform.getOrigin());
             }
             else
             {
@@ -137,8 +137,8 @@ void ROC::Skeleton::UpdateJoints(glm::mat4 &f_model,bool f_enabled)
     if(!m_rigid) return;
     btTransform l_transform,l_model,l_bone;
     l_model.setFromOpenGLMatrix((float*)&f_model);
-    
-    for(size_t i=0; i < m_jointsCount; i++)
+
+    for(size_t i = 0; i < m_jointsCount; i++)
     {
         skChain &l_chain = m_chainsVector[i][0];
         btRigidBody *l_joint = m_jointVector[i];
@@ -149,7 +149,7 @@ void ROC::Skeleton::UpdateJoints(glm::mat4 &f_model,bool f_enabled)
     }
 }
 
-void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model, bool f_enabled)
+void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model,bool f_enabled)
 {
     if(!m_rigid) return;
     btTransform l_model;

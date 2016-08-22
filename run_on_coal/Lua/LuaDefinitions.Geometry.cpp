@@ -7,7 +7,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int geometryCreate(lua_State *f_vm)

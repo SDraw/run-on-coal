@@ -20,7 +20,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 {
     m_core = f_core;
 
-    glEnable (GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     glEnable(GL_CULL_FACE); // [ default culling
@@ -114,7 +114,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
     }
 }
 
-void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum, float f_radius)
+void ROC::RenderManager::Render(Model *f_model,bool f_texturize,bool f_frustum,float f_radius)
 {
     if(m_locked || !m_activeShader || !m_activeScene || !f_model->IsDrawable()) return;
 
@@ -161,7 +161,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
         iter->Draw(l_textureBind,l_vaoBind);
     }
 }
-void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color)
+void ROC::RenderManager::Render(Font *f_font,glm::vec2 &f_pos,sf::String &f_text,glm::vec4 &f_color)
 {
     if(m_locked || !m_activeShader) return;
     EnableBlending();
@@ -173,7 +173,7 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_te
     bool l_bind = CompareLastVAO(f_font->m_VAO);
     f_font->Draw(f_text,f_pos,l_bind);
 }
-void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
+void ROC::RenderManager::Render(Texture *f_texture,glm::vec2 &f_pos,glm::vec2 &f_size,float f_rot,glm::vec4 &f_color)
 {
     if(m_locked || !m_activeShader || f_texture->IsCubic()) return;
 
@@ -184,7 +184,7 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
     m_activeShader->SetColorUniformValue(f_color);
 
     btTransform l_textureTransform;
-    btVector3 l_textureTranslate(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
+    btVector3 l_textureTranslate(f_pos.x + f_size.x / 2.f,f_pos.y + f_size.y / 2.f,0.f);
     l_textureTransform.setIdentity();
     l_textureTransform.setOrigin(l_textureTranslate);
     if(f_rot != 0.f)
@@ -206,7 +206,7 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
     else DisableBlending();
     m_quad->Draw(l_vaoBind);
 }
-void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
+void ROC::RenderManager::Render(RenderTarget *f_rt,glm::vec2 &f_pos,glm::vec2 &f_size,float f_rot,glm::vec4 &f_color)
 {
     if(m_locked || !m_activeShader || !f_rt->IsColored()) return;
 
@@ -217,7 +217,7 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
     m_activeShader->SetColorUniformValue(f_color);
 
     btTransform l_textureTransform;
-    btVector3 l_textureTranslate(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
+    btVector3 l_textureTranslate(f_pos.x + f_size.x / 2.f,f_pos.y + f_size.y / 2.f,0.f);
     l_textureTransform.setIdentity();
     l_textureTransform.setOrigin(l_textureTranslate);
     if(f_rot != 0.f)
@@ -296,7 +296,7 @@ void ROC::RenderManager::EnableBlending()
     if(!m_blendEnabled)
     {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         m_blendEnabled = true;
     }
 }

@@ -10,7 +10,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int disabledFunction(lua_State *f_vm)
@@ -62,48 +62,48 @@ int getElementType(lua_State *f_vm)
     std::string l_text;
     switch(l_type)
     {
-        case ElementType::GeometryElement:
-            l_text.append("geometry");
-            break;
-        case ElementType::ModelElement:
-            l_text.append("model");
-            break;
-        case ElementType::AnimationElement:
-            l_text.append("animation");
-            break;
-        case ElementType::SceneElement:
-            l_text.append("scene");
-            break;
-        case ElementType::CameraElement:
-            l_text.append("camera");
-            break;
-        case ElementType::LightElement:
-            l_text.append("light");
-            break;
-        case ElementType::RenderTargetElement:
-            l_text.append("rendertarget");
-            break;
-        case ElementType::ShaderElement:
-            l_text.append("shader");
-            break;
-        case ElementType::SoundElement:
-            l_text.append("sound");
-            break;
-        case ElementType::TextureElement:
-            l_text.append("texture");
-            break;
-        case ElementType::FontElement:
-            l_text.append("font");
-            break;
-        case ElementType::FileElement:
-            l_text.append("file");
-            break;
-        case ElementType::CollisionElement:
-            l_text.append("collision");
-            break;
-        default:
-            l_text.append("invalid");
-            break;
+    case ElementType::GeometryElement:
+        l_text.append("geometry");
+        break;
+    case ElementType::ModelElement:
+        l_text.append("model");
+        break;
+    case ElementType::AnimationElement:
+        l_text.append("animation");
+        break;
+    case ElementType::SceneElement:
+        l_text.append("scene");
+        break;
+    case ElementType::CameraElement:
+        l_text.append("camera");
+        break;
+    case ElementType::LightElement:
+        l_text.append("light");
+        break;
+    case ElementType::RenderTargetElement:
+        l_text.append("rendertarget");
+        break;
+    case ElementType::ShaderElement:
+        l_text.append("shader");
+        break;
+    case ElementType::SoundElement:
+        l_text.append("sound");
+        break;
+    case ElementType::TextureElement:
+        l_text.append("texture");
+        break;
+    case ElementType::FontElement:
+        l_text.append("font");
+        break;
+    case ElementType::FileElement:
+        l_text.append("file");
+        break;
+    case ElementType::CollisionElement:
+        l_text.append("collision");
+        break;
+    default:
+        l_text.append("invalid");
+        break;
     }
     lua_pushstring(f_vm,l_text.c_str());
     return 1;

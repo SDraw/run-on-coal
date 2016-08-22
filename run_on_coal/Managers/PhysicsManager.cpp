@@ -23,7 +23,7 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
 
     m_enabled = false;
 
-    m_timeStep = 1.f/static_cast<float>(m_core->GetConfigManager()->GetFPSLimit());
+    m_timeStep = 1.f / static_cast<float>(m_core->GetConfigManager()->GetFPSLimit());
 }
 ROC::PhysicsManager::~PhysicsManager()
 {
@@ -75,7 +75,7 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
     std::memcpy(&f_grav,l_grav,sizeof(glm::vec3));
 }
 
-bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
+bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start,glm::vec3 &f_end,glm::vec3 &f_normal,void **f_model)
 {
     if(!std::memcmp(&f_start,&f_end,sizeof(glm::vec3))) return false;
     btCollisionWorld::ClosestRayResultCallback l_result((btVector3&)f_start,(btVector3&)f_end);
@@ -90,7 +90,7 @@ bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec
     return true;
 }
 
-bool ROC::PhysicsManager::SetModelRigidity(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
+bool ROC::PhysicsManager::SetModelRigidity(Model *f_model,unsigned char f_type,float f_mass,glm::vec3 &f_dim)
 {
     if(f_model->HasRigidSkeleton()) return false;
     if(!f_model->SetRigidity(f_type,f_mass,f_dim)) return false;

@@ -10,7 +10,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int physicsSetEnabled(lua_State *f_vm)
@@ -59,7 +59,7 @@ int physicsSetGravity(lua_State *f_vm)
 {
     lua_Number l_val[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -84,7 +84,7 @@ int physicsRayCast(lua_State *f_vm)
 {
     lua_Number l_val[6];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i=0; i < 6; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 6; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);

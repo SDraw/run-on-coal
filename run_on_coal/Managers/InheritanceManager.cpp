@@ -26,7 +26,7 @@ void ROC::InheritanceManager::RemoveInheritance(void *f_child,void *f_parent)
     auto iter = m_inheritMap.equal_range(f_child);
     for(auto iter1 = iter.first; iter1 != iter.second; iter1++)
     {
-        if(iter1->second == f_parent) 
+        if(iter1->second == f_parent)
         {
             MemoryManager *l_memoryManager = m_core->GetMemoryManager();
             int l_cType = l_memoryManager->GetMemoryPointerType(f_child);
@@ -66,65 +66,65 @@ void ROC::InheritanceManager::RemoveParentRelation(void *f_parent)
     }
 }
 
-void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_parent, unsigned char f_childType, unsigned char f_parentType)
+void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child,void *f_parent,unsigned char f_childType,unsigned char f_parentType)
 {
     switch(f_childType)
     {
+    case ElementType::ModelElement:
+    {
+        switch(f_parentType)
+        {
         case ElementType::ModelElement:
+            static_cast<Model*>(f_child)->SetParent(NULL);
+            break;
+        case ElementType::GeometryElement:
+            static_cast<Model*>(f_child)->SetGeometry(NULL);
+            break;
+        case ElementType::AnimationElement:
+            static_cast<Model*>(f_child)->SetAnimation(NULL);
+            break;
+        }
+    } break;
+    case ElementType::CameraElement:
+    {
+        switch(f_parentType)
         {
-            switch(f_parentType)
-            {
-                case ElementType::ModelElement:
-                    static_cast<Model*>(f_child)->SetParent(NULL);
-                    break;
-                case ElementType::GeometryElement:
-                    static_cast<Model*>(f_child)->SetGeometry(NULL);
-                    break;
-                case ElementType::AnimationElement:
-                    static_cast<Model*>(f_child)->SetAnimation(NULL);
-                    break;
-            }
-        } break;
-        case ElementType::CameraElement:
+        case ElementType::SceneElement:
+            static_cast<Scene*>(f_parent)->SetCamera(NULL);
+            break;
+        }
+    } break;
+    case ElementType::LightElement:
+    {
+        switch(f_parentType)
         {
-            switch(f_parentType)
-            {
-                case ElementType::SceneElement:
-                    static_cast<Scene*>(f_parent)->SetCamera(NULL);
-                    break;
-            }
-        } break;
-        case ElementType::LightElement:
+        case ElementType::SceneElement:
+            static_cast<Scene*>(f_parent)->SetLight(NULL);
+            break;
+        }
+    } break;
+    case ElementType::TextureElement:
+    {
+        switch(f_parentType)
         {
-            switch(f_parentType)
-            {
-                case ElementType::SceneElement:
-                    static_cast<Scene*>(f_parent)->SetLight(NULL);
-                    break;
-            }
-        } break;
-        case ElementType::TextureElement:
+        case ElementType::ShaderElement:
+            m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent),static_cast<Texture*>(f_child));
+            break;
+        }
+    } break;
+    case ElementType::RenderTargetElement:
+    {
+        switch(f_parentType)
         {
-            switch(f_parentType)
-            {
-                case ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent),static_cast<Texture*>(f_child));
-                    break;
-            }
-        } break;
-        case ElementType::RenderTargetElement:
-        {
-            switch(f_parentType)
-            {
-                case ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent),static_cast<RenderTarget*>(f_child));
-                    break;
-            }
-        } break;
+        case ElementType::ShaderElement:
+            m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent),static_cast<RenderTarget*>(f_child));
+            break;
+        }
+    } break;
     }
 }
 
-bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_anim)
+bool ROC::InheritanceManager::SetModelAnimation(Model *f_model,Animation *f_anim)
 {
     if(!f_model->HasSkeleton()) return false;
     Animation *l_modelAnim = f_model->GetAnimation();
@@ -135,7 +135,7 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
     m_inheritMap.insert(std::pair<void*,void*>(f_model,f_anim));
     return true;
 }
-bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent, int f_bone)
+bool ROC::InheritanceManager::AttachModelToModel(Model *f_model,Model *f_parent,int f_bone)
 {
     if(f_model->IsRigid() || f_model == f_parent || f_model->GetParent()) return false;
     Model *l_treeParent = f_parent->GetParent();
@@ -158,7 +158,7 @@ bool ROC::InheritanceManager::DettachModel(Model *f_model)
     return true;
 }
 
-bool ROC::InheritanceManager::SetSceneCamera(Scene *f_scene, Camera *f_camera)
+bool ROC::InheritanceManager::SetSceneCamera(Scene *f_scene,Camera *f_camera)
 {
     Camera *l_sceneCamera = f_scene->GetCamera();
     if(l_sceneCamera == f_camera) return true;
@@ -168,7 +168,7 @@ bool ROC::InheritanceManager::SetSceneCamera(Scene *f_scene, Camera *f_camera)
     m_inheritMap.insert(std::pair<void*,void*>(f_camera,f_scene));
     return true;
 }
-bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
+bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene,Light *f_light)
 {
     Light *l_sceneLight = f_scene->GetLight();
     if(l_sceneLight == f_light) return true;
@@ -179,7 +179,7 @@ bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
     return true;
 }
 
-bool ROC::InheritanceManager::AttachTextureToShader(Shader *f_shader, Texture *f_texture, int f_uniform)
+bool ROC::InheritanceManager::AttachTextureToShader(Shader *f_shader,Texture *f_texture,int f_uniform)
 {
     auto iter = m_inheritMap.equal_range(f_texture);
     for(auto iter1 = iter.first; iter1 != iter.second; iter1++)
@@ -190,7 +190,7 @@ bool ROC::InheritanceManager::AttachTextureToShader(Shader *f_shader, Texture *f
     m_inheritMap.insert(std::pair<void*,void*>(f_texture,f_shader));
     return true;
 }
-bool ROC::InheritanceManager::AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform)
+bool ROC::InheritanceManager::AttachRenderTargetToShader(Shader *f_shader,RenderTarget *f_target,int f_uniform)
 {
     auto iter = m_inheritMap.equal_range(f_target);
     for(auto iter1 = iter.first; iter1 != iter.second; iter1++)

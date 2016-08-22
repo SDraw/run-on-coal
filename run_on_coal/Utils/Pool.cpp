@@ -15,7 +15,7 @@ ROC::Pool::~Pool()
 int ROC::Pool::Allocate()
 {
     int l_allocated = -1;
-    for(unsigned int i=m_minimal; i < m_size; i++)
+    for(unsigned int i = m_minimal; i < m_size; i++)
     {
         if(m_poolData[i] == 0U)
         {
@@ -26,7 +26,7 @@ int ROC::Pool::Allocate()
     }
     if(l_allocated == -1)
     {
-        for(unsigned int i=0; i < m_minimal; i++)
+        for(unsigned int i = 0; i < m_minimal; i++)
         {
             if(m_poolData[i] == 0U)
             {
@@ -38,7 +38,7 @@ int ROC::Pool::Allocate()
     }
     if(l_allocated != -1)
     {
-        for(unsigned int i=static_cast<int>(l_allocated+1); i < m_size; i++)
+        for(unsigned int i = static_cast<int>(l_allocated + 1); i < m_size; i++)
         {
             if(m_poolData[i] == 0U)
             {

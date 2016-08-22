@@ -30,7 +30,7 @@ protected:
     GLuint m_texture;
     RenderTarget();
     ~RenderTarget();
-    bool Create(unsigned int f_num, glm::ivec2 &f_size, int f_type);
+    bool Create(unsigned int f_num,glm::ivec2 &f_size,int f_type);
     void Enable();
     void BindTexture(unsigned int f_bind);
     inline void GetError(std::string &f_str) { f_str.append(m_error); }

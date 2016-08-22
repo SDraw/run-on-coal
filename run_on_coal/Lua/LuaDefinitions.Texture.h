@@ -1,8 +1,8 @@
 #pragma once
 
-namespace ROC 
+namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int textureCreate(lua_State *f_vm);

@@ -13,7 +13,7 @@ class PreRenderManager
     PhysicsManager *m_physicsManager;
     std::set<Model*> m_staticModelSet;
     std::set<Model*> m_animatedModelSet;
-    
+
     LuaArguments *m_argument;
 public:
     void AddModel(Model *f_model);

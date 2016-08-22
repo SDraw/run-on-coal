@@ -24,7 +24,7 @@ protected:
     bool m_rebuildMatrix;
     bool m_interpolation;
     float m_interpolationValue;
-    Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale);
+    Bone(std::string &f_name,glm::quat &f_rot,glm::vec3 &f_pos,glm::vec3 &f_scale);
     ~Bone();
     inline void SetParent(Bone *f_bone) { m_parent = f_bone; }
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }

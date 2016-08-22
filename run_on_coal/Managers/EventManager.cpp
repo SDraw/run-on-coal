@@ -14,7 +14,7 @@ ROC::EventManager::~EventManager()
 {
 }
 
-bool ROC::EventManager::AddEvent(unsigned char f_event, int f_ref, void *f_pointer)
+bool ROC::EventManager::AddEvent(unsigned char f_event,int f_ref,void *f_pointer)
 {
     if(f_event >= EventType::Last) return false;
     auto &l_event = m_eventVector[f_event];
@@ -25,9 +25,9 @@ bool ROC::EventManager::AddEvent(unsigned char f_event, int f_ref, void *f_point
     l_event.push_back(std::pair<void*,int>(f_pointer,f_ref));
     return true;
 }
-bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
+bool ROC::EventManager::RemoveEvent(unsigned char f_event,void *f_pointer)
 {
-    if (f_event >= EventType::Last) return false;
+    if(f_event >= EventType::Last) return false;
     auto &eventMap = m_eventVector[f_event];
     for(auto it = eventMap.begin(); it != eventMap.end(); it++)
     {
@@ -35,14 +35,14 @@ bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
         {
             m_luaManager->RemoveReference(it->second);
             it = eventMap.erase(it);
-            if (f_event == m_currentEvent) m_lastIteration--;
+            if(f_event == m_currentEvent) m_lastIteration--;
             break;
         }
     }
     return true;
 }
 
-void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments *f_args)
+void ROC::EventManager::CallEvent(unsigned char f_event,LuaArguments *f_args)
 {
     if(f_event >= EventType::Last) return;
     m_currentEvent = f_event;

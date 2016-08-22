@@ -39,7 +39,7 @@ public:
     void SetDirection(glm::vec3 &f_dir);
     inline void GetDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir,&m_viewDirection,sizeof(glm::vec3)); }
 
-    bool IsInFrustum(glm::vec3 &f_pos, float f_radius);
+    bool IsInFrustum(glm::vec3 &f_pos,float f_radius);
 
     void GetViewMatrix(glm::mat4 &f_mat);
     void GetProjectionMatrix(glm::mat4 &f_mat);

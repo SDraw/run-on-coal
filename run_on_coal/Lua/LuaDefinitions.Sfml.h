@@ -1,8 +1,8 @@
 #pragma once
 
-namespace ROC 
+namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int setCursorMode(lua_State *f_vm);

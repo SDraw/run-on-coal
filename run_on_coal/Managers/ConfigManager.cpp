@@ -31,25 +31,25 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                     {
                         switch(Utils::ReadEnumString(l_param,"antialiasing,dimension,fullscreen,logging,fpslimit,vsync"))
                         {
-                            case 0:
-                                m_antialiasing = l_attrib.as_int(0);
-                                break;
-                            case 1:
-                            {
-                                std::string l_param = l_attrib.as_string("854x480");
-                                if(l_param.length()) sscanf(l_param.c_str(),"%dx%d",&m_windowSize.x,&m_windowSize.y);
-                            } break;
-                            case 2:
-                                m_fullscreen = l_attrib.as_bool(false);
-                                break;
-                            case 3:
-                                m_logging = l_attrib.as_bool(true);
-                                break;
-                            case 4:
-                                m_fpsLimit = l_attrib.as_uint(60U);
-                                break;
-                            case 5:
-                                m_vsync = l_attrib.as_bool(false);
+                        case 0:
+                            m_antialiasing = l_attrib.as_int(0);
+                            break;
+                        case 1:
+                        {
+                            std::string l_param = l_attrib.as_string("854x480");
+                            if(l_param.length()) sscanf(l_param.c_str(),"%dx%d",&m_windowSize.x,&m_windowSize.y);
+                        } break;
+                        case 2:
+                            m_fullscreen = l_attrib.as_bool(false);
+                            break;
+                        case 3:
+                            m_logging = l_attrib.as_bool(true);
+                            break;
+                        case 4:
+                            m_fpsLimit = l_attrib.as_uint(60U);
+                            break;
+                        case 5:
+                            m_vsync = l_attrib.as_bool(false);
                         }
                     }
                 }

@@ -19,7 +19,7 @@ protected:
     btRigidBody *m_rigidBody;
     Collision();
     ~Collision();
-    bool Create(unsigned char f_type, glm::vec3 &f_size);
+    bool Create(unsigned char f_type,glm::vec3 &f_size);
     friend class ElementManager;
     friend class PhysicsManager;
 };

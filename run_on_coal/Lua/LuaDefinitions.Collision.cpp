@@ -9,16 +9,16 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int collisionCreate(lua_State *f_vm)
 {
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     std::string l_typeString;
-    lua_Number l_size[3] = { 1.0, 1.0, 1.0 };
+    lua_Number l_size[3] = {1.0,1.0,1.0};
     argStream.ReadText(l_typeString);
-    for(int i=0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -31,7 +31,7 @@ int collisionCreate(lua_State *f_vm)
         return 1;
     }
     glm::vec3 l_vSize(l_size[0],l_size[1],l_size[2]);
-    Collision *l_col = LuaManager::m_corePointer->GetElementManager()->CreateCollision(COLLISION_TYPE_SPHERE+static_cast<unsigned char>(l_type),l_vSize);
+    Collision *l_col = LuaManager::m_corePointer->GetElementManager()->CreateCollision(COLLISION_TYPE_SPHERE + static_cast<unsigned char>(l_type),l_vSize);
     l_col ? lua_pushlightuserdata(f_vm,l_col) : lua_pushboolean(f_vm,0);
     return 1;
 }
@@ -56,7 +56,7 @@ int collisionSetPosition(lua_State *f_vm)
     Collision *l_col;
     lua_Number l_val[3];
     argStream.ReadUserdata((void**)&l_col,ElementType::CollisionElement);
-    for(int i=0; i < 3; i++) argStream.ReadNextNumber(l_val[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -92,7 +92,7 @@ int collisionSetRotation(lua_State *f_vm)
     lua_Number l_val[4];
     l_val[3] = std::nan("0");
     argStream.ReadUserdata((void**)&l_col,ElementType::CollisionElement);
-    for(int i=0; i < 3; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
     argStream.ReadNextNumber(l_val[3]);
     if(argStream.HasErrors())
     {

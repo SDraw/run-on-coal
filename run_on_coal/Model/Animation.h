@@ -28,7 +28,7 @@ protected:
 
     bool Load(std::string &f_path);
 
-    bool CacheData(unsigned long f_tick, float &f_lerp);
+    bool CacheData(unsigned long f_tick,float &f_lerp);
     friend class Model;
     friend class ElementManager;
     friend class InheritanceManager;

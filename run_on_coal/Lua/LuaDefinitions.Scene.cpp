@@ -10,7 +10,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int sceneCreate(lua_State *f_vm)

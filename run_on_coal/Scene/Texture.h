@@ -17,8 +17,8 @@ protected:
     GLuint m_texture;
     Texture();
     ~Texture();
-    bool Load(std::string &f_path, int f_type, bool f_compress);
-    bool LoadCubemap(std::vector<std::string> &f_path, bool f_compress);
+    bool Load(std::string &f_path,int f_type,bool f_compress);
+    bool LoadCubemap(std::vector<std::string> &f_path,bool f_compress);
     void Bind(unsigned int f_bind);
     friend class ElementManager;
     friend class Material;

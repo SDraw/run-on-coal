@@ -8,7 +8,7 @@
 
 namespace ROC
 {
-namespace Lua 
+namespace Lua
 {
 
 int setActiveScene(lua_State *f_vm)
