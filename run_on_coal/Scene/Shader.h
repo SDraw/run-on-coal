@@ -22,13 +22,11 @@ class Shader
     GLint m_materialParamUniform;
     GLint m_materialTypeUniform;
     GLint m_animatedUniform;
-    //GLint m_bonesUniform;
+    GLint m_bonesUniform;
     GLint m_texture0Uniform; //Useless to store?
     GLint m_timeUniform;
     GLint m_colorUniform;
-
-	GLuint m_boneUBO;
-
+    
     glm::mat4 m_projectionUniformValue;
     glm::mat4 m_viewUniformValue;
     glm::mat4 m_modelUniformValue;
@@ -125,7 +123,7 @@ protected:
     void SetMaterialParamUniformValue(glm::vec4 &f_value);
     void SetMaterialTypeUniformValue(int f_value);
     void SetAnimatedUniformValue(unsigned int f_value);
-	void SetBonesData(std::vector<glm::mat4> &f_value);
+    void SetBonesUniformValue(std::vector<glm::mat4> &f_value);
     void SetTimeUniformValue(float f_value);
     void SetColorUniformValue(glm::vec4 &f_value);
 

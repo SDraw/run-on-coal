@@ -130,7 +130,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
     //Skeletal animation
     if(f_model->HasSkeleton())
     {
-		m_activeShader->SetBonesData(f_model->m_skeleton->m_boneMatrices);
+        m_activeShader->SetBonesUniformValue(f_model->m_skeleton->m_boneMatrices);
         m_activeShader->SetAnimatedUniformValue(1U);
     }
     else m_activeShader->SetAnimatedUniformValue(0U);
