@@ -5,6 +5,8 @@
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
+ROC::Pool ROC::Shader::m_bonesBindPool = ROC::Pool(64U);
+
 ROC::Shader::Shader()
 {
     m_program = 0;
@@ -21,7 +23,9 @@ ROC::Shader::Shader()
     m_materialParamUniform = -1;
     m_materialTypeUniform = -1;
     m_animatedUniform = -1;
-    m_bonesUniform = -1; 
+    //m_bonesUniform = -1;
+	m_bonesUBO = 0xFFFFFFFF;
+	m_boneBindIndex = -1;
     m_texture0Uniform = -1;
     m_timeUniform = -1;
     m_colorUniform = -1;
@@ -47,6 +51,11 @@ ROC::Shader::~Shader()
 {
     if(m_program) glDeleteProgram(m_program);
     delete m_bindPool;
+	if(m_bonesUBO != 0xFFFFFFFF)
+	{
+		glDeleteBuffers(1,&m_bonesUBO);
+		m_bonesBindPool.Reset(m_boneBindIndex);
+	}
     m_textureBind.clear();
     m_targetBind.clear();
 }
@@ -219,7 +228,21 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     m_materialTypeUniform = glGetUniformLocation(m_program,"gMaterialType");
     //Animation
     m_animatedUniform = glGetUniformLocation(m_program,"gAnimated");
-    m_bonesUniform = glGetUniformLocation(m_program,"gBoneMatrix");
+    //m_bonesUniform = glGetUniformLocation(m_program,"gBoneMatrix");
+	unsigned int l_boneUniform = glGetUniformBlockIndex(m_program,"gBonesUniform");
+	if(l_boneUniform != GL_INVALID_INDEX)
+	{
+		m_boneBindIndex = m_bonesBindPool.Allocate();
+		if(m_boneBindIndex != -1)
+		{
+			glGenBuffers(1,&m_bonesUBO);
+			glBindBuffer(GL_UNIFORM_BUFFER,m_bonesUBO);
+			glBufferData(GL_UNIFORM_BUFFER,sizeof(glm::mat4)*255,NULL,GL_DYNAMIC_DRAW);
+			glBindBufferBase(GL_UNIFORM_BUFFER,m_boneBindIndex,m_bonesUBO);
+			glUniformBlockBinding(m_program,l_boneUniform,m_boneBindIndex);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		}
+	}
     //Samplers
     m_texture0Uniform = glGetUniformLocation(m_program,"gTexture0");
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform,0);
@@ -477,8 +500,13 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
 }
 void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value)
 {
-    if(m_bonesUniform == -1) return;
-    SetUniformValue(m_bonesUniform,f_value);
+    //if(m_bonesUniform == -1) return;
+    //SetUniformValue(m_bonesUniform,f_value);
+	if(m_bonesUBO == 0xFFFFFFFF) return;
+	glBindBuffer(GL_UNIFORM_BUFFER,m_bonesUBO);
+	void *l_data = glMapBuffer(GL_UNIFORM_BUFFER,GL_WRITE_ONLY);
+	std::memcpy(l_data,f_value.data(),f_value.size()*sizeof(glm::mat4));
+	glUnmapBuffer(GL_UNIFORM_BUFFER);
 }
 void ROC::Shader::SetTimeUniformValue(float f_value)
 {

@@ -22,10 +22,14 @@ class Shader
     GLint m_materialParamUniform;
     GLint m_materialTypeUniform;
     GLint m_animatedUniform;
-    GLint m_bonesUniform;
+    //GLint m_bonesUniform;
     GLint m_texture0Uniform; //Useless to store?
     GLint m_timeUniform;
     GLint m_colorUniform;
+	
+	GLuint m_bonesUBO;
+	static Pool m_bonesBindPool;
+	int m_boneBindIndex;
     
     glm::mat4 m_projectionUniformValue;
     glm::mat4 m_viewUniformValue;
@@ -41,6 +45,7 @@ class Shader
     unsigned int m_animatedUniformValue;
     float m_timeUniformValue;
     glm::vec4 m_colorUniformValue;
+
 
     Pool *m_bindPool;
     struct textureBindData
