@@ -23,7 +23,7 @@ bool ROC::Sound::Load(std::string &f_path)
     if(!m_handle) return false;
     if(!m_handle->openFromFile(f_path)) return false;
     if(m_looped) m_handle->setLoop(true);
-    m_mono = (m_handle->getChannelCount() == 1);
+    m_mono = (m_handle->getChannelCount()==1);
     return true;
 }
 
@@ -53,7 +53,7 @@ float ROC::Sound::GetTime()
 bool ROC::Sound::Set3DPositionEnabled(bool f_state)
 {
     if(!m_mono) return false;
-    if(m_b3D == f_state) return true;
+    if(m_b3D==f_state) return true;
     m_b3D = f_state;
     if(m_b3D)
     {

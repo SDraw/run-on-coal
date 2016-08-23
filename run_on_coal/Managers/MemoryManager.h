@@ -12,7 +12,7 @@ class MemoryManager
 public:
     bool CheckMemoryPointer(void *f_pointer,unsigned char f_type);
     int GetMemoryPointerType(void *f_pointer);
-    inline bool IsValidMemoryPointer(void *f_pointer) { return (m_memoryMap.find(f_pointer) != m_memoryMap.end()); }
+    inline bool IsValidMemoryPointer(void *f_pointer) { return (m_memoryMap.find(f_pointer)!=m_memoryMap.end()); }
 protected:
     MemoryManager(Core *f_core);
     ~MemoryManager();

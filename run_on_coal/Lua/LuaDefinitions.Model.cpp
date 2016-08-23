@@ -69,7 +69,7 @@ int modelGetType(lua_State *f_vm)
         return 1;
     }
     int l_type = l_model->GetType();
-    (l_type > 0) ? ((l_type == 1) ? lua_pushstring(f_vm,"static") : lua_pushstring(f_vm,"animated")) : lua_pushstring(f_vm,"none");
+    (l_type>0) ? ((l_type==1) ? lua_pushstring(f_vm,"static") : lua_pushstring(f_vm,"animated")) : lua_pushstring(f_vm,"none");
     return 1;
 }
 int modelSetPosition(lua_State *f_vm)
@@ -78,7 +78,7 @@ int modelSetPosition(lua_State *f_vm)
     lua_Number l_pos[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
+    for(int i = 0; i<3; i++) argStream.ReadNumber(l_pos[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -115,7 +115,7 @@ int modelSetRotation(lua_State *f_vm)
     l_rot[3] = std::nan("0");
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
+    for(int i = 0; i<3; i++) argStream.ReadNumber(l_rot[i]);
     argStream.ReadNextNumber(l_rot[3]);
     if(argStream.HasErrors())
     {
@@ -176,7 +176,7 @@ int modelSetScale(lua_State *f_vm)
     lua_Number l_scl[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_scl[i]);
+    for(int i = 0; i<3; i++) argStream.ReadNumber(l_scl[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -255,7 +255,7 @@ int modelAttach(lua_State *f_vm)
         lua_pushboolean(f_vm,0);
         return 1;
     }
-    if(l_bone < -1) l_bone = -1;
+    if(l_bone<-1) l_bone = -1;
     bool result = LuaManager::m_corePointer->GetCore()->GetInheritManager()->AttachModelToModel(l_model,l_parent,static_cast<int>(l_bone));
     lua_pushboolean(f_vm,result);
     return 1;
@@ -432,20 +432,20 @@ int modelSetRigidity(lua_State *f_vm)
     argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
     argStream.ReadText(l_textType);
     argStream.ReadNextNumber(l_mass);
-    for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_sizes[i]);
-    if(argStream.HasErrors() || !l_textType.length() || l_mass < 0.0)
+    for(int i = 0; i<3; i++) argStream.ReadNextNumber(l_sizes[i]);
+    if(argStream.HasErrors()||!l_textType.length()||l_mass<0.0)
     {
         lua_pushboolean(f_vm,0);
         return 1;
     }
     int l_type = Utils::ReadEnumString(l_textType,"sphere,box,cylinder,capsule,cone");
-    if(l_type == -1)
+    if(l_type==-1)
     {
         lua_pushboolean(f_vm,0);
         return 1;
     }
     glm::vec3 l_vSize(l_sizes[0],l_sizes[1],l_sizes[2]);
-    bool result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelRigidity(l_model,MODEL_RIGIDITY_TYPE_SPHERE + static_cast<unsigned char>(l_type),static_cast<float>(l_mass),l_vSize);
+    bool result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelRigidity(l_model,MODEL_RIGIDITY_TYPE_SPHERE+static_cast<unsigned char>(l_type),static_cast<float>(l_mass),l_vSize);
     lua_pushboolean(f_vm,result);
     return 1;
 }
@@ -474,7 +474,7 @@ int modelGetMass(lua_State *f_vm)
         return 1;
     }
     float l_mass = l_model->GetMass();
-    (l_mass == -1.f) ? lua_pushboolean(f_vm,0) : lua_pushnumber(f_vm,l_mass);
+    (l_mass==-1.f) ? lua_pushboolean(f_vm,0) : lua_pushnumber(f_vm,l_mass);
     return 1;
 }
 int modelSetFriction(lua_State *f_vm)
@@ -504,7 +504,7 @@ int modelGetFriction(lua_State *f_vm)
         return 1;
     }
     float l_friction = l_model->GetFriction();
-    (l_friction == -1.f) ? lua_pushboolean(f_vm,0) : lua_pushnumber(f_vm,l_friction);
+    (l_friction==-1.f) ? lua_pushboolean(f_vm,0) : lua_pushnumber(f_vm,l_friction);
     return 1;
 }
 int modelSetVelocity(lua_State *f_vm)
@@ -513,7 +513,7 @@ int modelSetVelocity(lua_State *f_vm)
     lua_Number l_velocity[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_velocity[i]);
+    for(int i = 0; i<3; i++) argStream.ReadNumber(l_velocity[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -552,7 +552,7 @@ int modelSetAngularVelocity(lua_State *f_vm)
     lua_Number l_velocity[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_model,ElementType::ModelElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_velocity[i]);
+    for(int i = 0; i<3; i++) argStream.ReadNumber(l_velocity[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);

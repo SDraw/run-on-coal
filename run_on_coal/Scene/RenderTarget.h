@@ -23,9 +23,9 @@ class RenderTarget
     void Clear();
 public:
     inline void GetSize(glm::ivec2 &f_size) { std::memcpy(&f_size,&m_size,sizeof(glm::ivec2)); }
-    inline bool IsColored() { return (m_type >= RENDERTARGET_TYPE_RGB && m_type <= RENDERTARGET_TYPE_RGBF); }
-    inline bool IsTransparent() { return (m_type == RENDERTARGET_TYPE_RGBA); }
-    inline bool IsDepthable() { return (m_type == RENDERTARGET_TYPE_DEPTH); }
+    inline bool IsColored() { return (m_type>=RENDERTARGET_TYPE_RGB && m_type<=RENDERTARGET_TYPE_RGBF); }
+    inline bool IsTransparent() { return (m_type==RENDERTARGET_TYPE_RGBA); }
+    inline bool IsDepthable() { return (m_type==RENDERTARGET_TYPE_DEPTH); }
 protected:
     GLuint m_texture;
     RenderTarget();

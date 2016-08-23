@@ -294,7 +294,7 @@ ROC::LuaManager::~LuaManager()
 
 bool ROC::LuaManager::OpenFile(std::string &f_path)
 {
-    int error = luaL_loadfile(m_pVM,f_path.c_str()) || lua_pcall(m_pVM,0,0,0);
+    int error = luaL_loadfile(m_pVM,f_path.c_str())||lua_pcall(m_pVM,0,0,0);
     if(error)
     {
         std::string l_log;

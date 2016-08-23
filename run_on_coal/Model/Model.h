@@ -35,9 +35,9 @@ class Model
     void UpdateSkeleton();
     void UpdateAnimationTick();
 public:
-    inline bool IsDrawable() { return (m_geometry != NULL); }
+    inline bool IsDrawable() { return (m_geometry!=NULL); }
     inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
-    inline bool IsRigid() { return (m_rigidBody != NULL); }
+    inline bool IsRigid() { return (m_rigidBody!=NULL); }
     //Manipulation
     void SetPosition(glm::vec3 &f_pos,bool f_uRb = true);
     void GetPosition(glm::vec3 &f_pos,bool f_global = false);
@@ -54,7 +54,7 @@ public:
     bool SetAnimationProgress(float f_val);
     float GetAnimationProgress();
 
-    inline bool HasSkeleton() { return (m_skeleton != NULL); }
+    inline bool HasSkeleton() { return (m_skeleton!=NULL); }
     bool HasRigidSkeleton();
 
     //Physics

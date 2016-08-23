@@ -35,7 +35,7 @@ void ROC::RenderTarget::Clear()
 
 bool ROC::RenderTarget::Create(unsigned int f_num,glm::ivec2 &f_size,int f_type)
 {
-    if(m_type != RENDERTARGET_TYPE_NONE || f_type <= RENDERTARGET_TYPE_NONE || f_type > RENDERTARGET_TYPE_RGBF) return false;
+    if(m_type!=RENDERTARGET_TYPE_NONE||f_type<=RENDERTARGET_TYPE_NONE||f_type>RENDERTARGET_TYPE_RGBF) return false;
     m_type = f_type;
     m_bRenderBuffer = false;
 
@@ -50,25 +50,25 @@ bool ROC::RenderTarget::Create(unsigned int f_num,glm::ivec2 &f_size,int f_type)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     switch(m_type)
     {
-    case RENDERTARGET_TYPE_DEPTH:
-    {
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_COMPARE_MODE,GL_COMPARE_REF_TO_TEXTURE);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_COMPARE_FUNC,GL_LEQUAL);
-        glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT32F,f_size.x,f_size.y,0,GL_DEPTH_COMPONENT,GL_FLOAT,0);
-    } break;
-    case RENDERTARGET_TYPE_RGB:
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,f_size.x,f_size.y,0,GL_RGB,GL_UNSIGNED_BYTE,0);
-        break;
-    case RENDERTARGET_TYPE_RGBA:
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,f_size.x,f_size.y,0,GL_RGB,GL_UNSIGNED_BYTE,0);
-        break;
-    case RENDERTARGET_TYPE_RGBF:
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB32F,f_size.x,f_size.y,0,GL_RGB,GL_FLOAT,NULL);
-        break;
+        case RENDERTARGET_TYPE_DEPTH:
+        {
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_COMPARE_MODE,GL_COMPARE_REF_TO_TEXTURE);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_COMPARE_FUNC,GL_LEQUAL);
+            glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT32F,f_size.x,f_size.y,0,GL_DEPTH_COMPONENT,GL_FLOAT,0);
+        } break;
+        case RENDERTARGET_TYPE_RGB:
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,f_size.x,f_size.y,0,GL_RGB,GL_UNSIGNED_BYTE,0);
+            break;
+        case RENDERTARGET_TYPE_RGBA:
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,f_size.x,f_size.y,0,GL_RGB,GL_UNSIGNED_BYTE,0);
+            break;
+        case RENDERTARGET_TYPE_RGBF:
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB32F,f_size.x,f_size.y,0,GL_RGB,GL_FLOAT,NULL);
+            break;
     }
     m_bTexture = true;
 
-    if(m_type > RENDERTARGET_TYPE_DEPTH)
+    if(m_type>RENDERTARGET_TYPE_DEPTH)
     {
         glGenRenderbuffers(1,&m_renderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER,m_renderBuffer);
@@ -76,8 +76,8 @@ bool ROC::RenderTarget::Create(unsigned int f_num,glm::ivec2 &f_size,int f_type)
         glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,m_renderBuffer);
         m_bRenderBuffer = true;
 
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER,GL_COLOR_ATTACHMENT0 + f_num,GL_TEXTURE_2D,m_texture,0);
-        glDrawBuffer(GL_COLOR_ATTACHMENT0 + f_num);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER,GL_COLOR_ATTACHMENT0+f_num,GL_TEXTURE_2D,m_texture,0);
+        glDrawBuffer(GL_COLOR_ATTACHMENT0+f_num);
         glReadBuffer(GL_NONE);
     }
     else
@@ -87,7 +87,7 @@ bool ROC::RenderTarget::Create(unsigned int f_num,glm::ivec2 &f_size,int f_type)
         glReadBuffer(GL_NONE);
     }
 
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER)!=GL_FRAMEBUFFER_COMPLETE)
     {
         m_error.append("Unable to create RT, framebuffer status ");
         m_error.append(std::to_string(glCheckFramebufferStatus(GL_FRAMEBUFFER)));
@@ -103,14 +103,14 @@ bool ROC::RenderTarget::Create(unsigned int f_num,glm::ivec2 &f_size,int f_type)
 
 void ROC::RenderTarget::BindTexture(unsigned int f_bind)
 {
-    if(m_type == RENDERTARGET_TYPE_NONE) return;
-    if(f_bind) glActiveTexture(GL_TEXTURE0 + f_bind);
+    if(m_type==RENDERTARGET_TYPE_NONE) return;
+    if(f_bind) glActiveTexture(GL_TEXTURE0+f_bind);
     glBindTexture(GL_TEXTURE_2D,m_texture);
     if(f_bind) glActiveTexture(GL_TEXTURE0);
 }
 
 void ROC::RenderTarget::Enable()
 {
-    if(m_type == RENDERTARGET_TYPE_NONE) return;
+    if(m_type==RENDERTARGET_TYPE_NONE) return;
     glBindFramebuffer(GL_FRAMEBUFFER,m_frameBuffer);
 }

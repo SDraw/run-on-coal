@@ -23,16 +23,16 @@ ROC::Bone::~Bone()
 void ROC::Bone::GenerateBindPose()
 {
     m_localMatrix = glm::translate(m_identity,m_data.m_pos)*glm::mat4_cast(m_data.m_rot)*glm::scale(m_identity,m_data.m_scl);
-    if(m_parent == NULL) m_matrix = m_localMatrix;
+    if(m_parent==NULL) m_matrix = m_localMatrix;
     else m_matrix = m_parent->m_matrix*m_localMatrix;
     m_bindMatrix = glm::inverse(m_matrix);
     m_offsetMatrix = m_matrix*m_bindMatrix;
-    for(auto iter : m_childBoneVector) iter->GenerateBindPose();
+    for(auto iter:m_childBoneVector) iter->GenerateBindPose();
 }
 void ROC::Bone::GenerateFastTree(std::vector<Bone*> &f_vec)
 {
     f_vec.push_back(this);
-    for(auto iter : m_childBoneVector) iter->GenerateFastTree(f_vec);
+    for(auto iter:m_childBoneVector) iter->GenerateFastTree(f_vec);
 }
 
 void ROC::Bone::SetData(void *f_data)
@@ -44,7 +44,7 @@ void ROC::Bone::SetData(void *f_data)
         m_data.m_pos = glm::lerp(m_data.m_pos,l_data->m_pos,m_interpolationValue);
         m_data.m_rot = glm::slerp(m_data.m_rot,l_data->m_rot,m_interpolationValue);
         m_data.m_scl = glm::lerp(m_data.m_scl,l_data->m_scl,m_interpolationValue);
-        if(m_interpolationValue >= 0.9f) m_interpolation = false;
+        if(m_interpolationValue>=0.9f) m_interpolation = false;
         m_rebuildMatrix = true;
     }
     else

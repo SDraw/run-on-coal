@@ -59,7 +59,7 @@ int physicsSetGravity(lua_State *f_vm)
 {
     lua_Number l_val[3];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i<3; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -84,7 +84,7 @@ int physicsRayCast(lua_State *f_vm)
 {
     lua_Number l_val[6];
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
-    for(int i = 0; i < 6; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i<6; i++) argStream.ReadNumber(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);
@@ -105,7 +105,7 @@ int physicsRayCast(lua_State *f_vm)
     lua_pushnumber(f_vm,l_hitNormal.x);
     lua_pushnumber(f_vm,l_hitNormal.y);
     lua_pushnumber(f_vm,l_hitNormal.z);
-    if(l_hitElement != NULL) lua_pushlightuserdata(f_vm,l_hitElement);
+    if(l_hitElement!=NULL) lua_pushlightuserdata(f_vm,l_hitElement);
     else lua_pushstring(f_vm,"floor");
     return 7;
 }

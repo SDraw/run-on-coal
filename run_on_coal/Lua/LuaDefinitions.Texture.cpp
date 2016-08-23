@@ -20,7 +20,7 @@ int textureCreate(lua_State *f_vm)
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadText(l_type);
     argStream.ReadBoolean(l_compress);
-    if(argStream.HasErrors() || !l_type.length())
+    if(argStream.HasErrors()||!l_type.length())
     {
         lua_pushboolean(f_vm,0);
         return 1;
@@ -29,29 +29,29 @@ int textureCreate(lua_State *f_vm)
     int l_iType = Utils::ReadEnumString(l_type,"rgb,rgba,cube");
     switch(l_iType)
     {
-    case 0: case 1:
-    {
-        std::string l_path;
-        argStream.ReadText(l_path);
-        if(argStream.HasErrors() || !l_path.length())
+        case 0: case 1:
         {
-            lua_pushboolean(f_vm,0);
-            return 1;
-        }
-        l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path,TEXTURE_TYPE_RGB + l_iType,l_compress);
-    } break;
-    case 2:
-    {
-        argStream.DecreaseArguments(3);
-        std::vector<std::string> l_path;
-        argStream.ReadTableTexts(l_path,6);
-        if(argStream.HasErrors())
+            std::string l_path;
+            argStream.ReadText(l_path);
+            if(argStream.HasErrors()||!l_path.length())
+            {
+                lua_pushboolean(f_vm,0);
+                return 1;
+            }
+            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path,TEXTURE_TYPE_RGB+l_iType,l_compress);
+        } break;
+        case 2:
         {
-            lua_pushboolean(f_vm,0);
-            return 1;
-        }
-        l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path,l_compress);
-    } break;
+            argStream.DecreaseArguments(3);
+            std::vector<std::string> l_path;
+            argStream.ReadTableTexts(l_path,6);
+            if(argStream.HasErrors())
+            {
+                lua_pushboolean(f_vm,0);
+                return 1;
+            }
+            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path,l_compress);
+        } break;
     }
     l_tex ? lua_pushlightuserdata(f_vm,l_tex) : lua_pushboolean(f_vm,0);
     return 1;
@@ -78,9 +78,9 @@ int textureDraw(lua_State *f_vm)
     l_val[4] = 0.0;
     ArgReader argStream(f_vm,LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_tex,ElementType::TextureElement);
-    for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i<4; i++) argStream.ReadNumber(l_val[i]);
     argStream.ReadNextNumber(l_val[4]);
-    for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
+    for(int i = 0; i<4; i++) argStream.ReadNextNumber(l_color[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm,0);

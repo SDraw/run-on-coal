@@ -62,7 +62,7 @@ void ROC::Model::UpdateMatrix()
     {
         m_parent->UpdateMatrix();
         glm::mat4 l_parentMatrix(m_parent->m_matrix);
-        if(m_parentBone != -1) l_parentMatrix *= m_parent->m_skeleton->m_boneMatrices[m_parentBone];
+        if(m_parentBone!=-1) l_parentMatrix *= m_parent->m_skeleton->m_boneMatrices[m_parentBone];
         m_matrix = l_parentMatrix*m_localMatrix;
     }
     else std::memcpy(&m_matrix,&m_localMatrix,sizeof(glm::mat4));
@@ -81,7 +81,7 @@ void ROC::Model::UpdateSkeleton()
 void ROC::Model::UpdateAnimationTick()
 {
     unsigned long l_sysTick = Utils::GetSystemTick();
-    unsigned long l_difTick = static_cast<unsigned long>(static_cast<double>(l_sysTick - m_animLastTick)*static_cast<double>(m_animationSpeed));
+    unsigned long l_difTick = static_cast<unsigned long>(static_cast<double>(l_sysTick-m_animLastTick)*static_cast<double>(m_animationSpeed));
     m_animLastTick = l_sysTick;
     m_animCurrentTick += l_difTick;
     m_animCurrentTick %= m_animation->m_durationTotal;
@@ -180,7 +180,7 @@ void ROC::Model::UpdateAnimation()
     if(!m_skeleton) return;
     if(m_animation)
     {
-        if(m_animState == AnimationState::Paused) return;
+        if(m_animState==AnimationState::Paused) return;
         UpdateAnimationTick();
         UpdateSkeleton();
     }
@@ -188,21 +188,21 @@ void ROC::Model::UpdateAnimation()
 bool ROC::Model::PlayAnimation()
 {
     if(!m_animation) return false;
-    if(m_animState == AnimationState::Playing) return true;
-    if(m_animState == AnimationState::Paused || m_animLastTick == 0) m_animLastTick = Utils::GetSystemTick();
+    if(m_animState==AnimationState::Playing) return true;
+    if(m_animState==AnimationState::Paused||m_animLastTick==0) m_animLastTick = Utils::GetSystemTick();
     m_animState = AnimationState::Playing;
     return true;
 }
 bool ROC::Model::PauseAnimation()
 {
-    if(!m_skeleton || !m_animation) return false;
-    if(m_animState == AnimationState::Paused) return true;
+    if(!m_skeleton||!m_animation) return false;
+    if(m_animState==AnimationState::Paused) return true;
     m_animState = AnimationState::Paused;
     return true;
 }
 bool ROC::Model::ResetAnimation()
 {
-    if(!m_skeleton || !m_animation) return false;
+    if(!m_skeleton||!m_animation) return false;
     m_animCurrentTick = 0U;
     m_animLastTick = Utils::GetSystemTick();
     UpdateSkeleton();
@@ -210,19 +210,19 @@ bool ROC::Model::ResetAnimation()
 }
 bool ROC::Model::SetAnimationSpeed(float f_val)
 {
-    if(!m_animation || f_val < 0.f) return false;
+    if(!m_animation||f_val<0.f) return false;
     m_animationSpeed = f_val;
     return true;
 }
 bool ROC::Model::SetAnimationProgress(float f_val)
 {
-    if(!m_animation || f_val < 0.f || f_val > 1.f) return false;
+    if(!m_animation||f_val < 0.f||f_val > 1.f) return false;
     m_animCurrentTick = static_cast<unsigned long>(double(m_animation->m_durationTotal)*double(f_val));
     return true;
 }
 float ROC::Model::GetAnimationProgress()
 {
-    return (m_animation ? static_cast<float>(double(m_animCurrentTick) / double(m_animation->m_durationTotal)) : -1.f);
+    return (m_animation ? static_cast<float>(double(m_animCurrentTick)/double(m_animation->m_durationTotal)) : -1.f);
 }
 
 bool ROC::Model::HasRigidSkeleton()
@@ -233,29 +233,29 @@ bool ROC::Model::HasRigidSkeleton()
 //Physics
 bool ROC::Model::SetRigidity(unsigned char f_type,float f_mass,glm::vec3 &f_dim)
 {
-    if(m_rigidBody || m_parent || f_mass < 0.f) return false;
-    if(f_type > MODEL_RIGIDITY_TYPE_CONE) return false;
+    if(m_rigidBody||m_parent||f_mass<0.f) return false;
+    if(f_type>MODEL_RIGIDITY_TYPE_CONE) return false;
 
     btVector3 l_inertia;
     btCollisionShape *l_shape = NULL;
 
     switch(f_type)
     {
-    case MODEL_RIGIDITY_TYPE_SPHERE:
-        l_shape = new btSphereShape(f_dim.x);
-        break;
-    case MODEL_RIGIDITY_TYPE_BOX:
-        l_shape = new btBoxShape((btVector3&)f_dim);
-        break;
-    case MODEL_RIGIDITY_TYPE_CYLINDER:
-        l_shape = new btCylinderShape((btVector3&)f_dim);
-        break;
-    case MODEL_RIGIDITY_TYPE_CAPSULE:
-        l_shape = new btCapsuleShape(f_dim.x,f_dim.y);
-        break;
-    case MODEL_RIGIDITY_TYPE_CONE:
-        l_shape = new btConeShape(f_dim.x,f_dim.y);
-        break;
+        case MODEL_RIGIDITY_TYPE_SPHERE:
+            l_shape = new btSphereShape(f_dim.x);
+            break;
+        case MODEL_RIGIDITY_TYPE_BOX:
+            l_shape = new btBoxShape((btVector3&)f_dim);
+            break;
+        case MODEL_RIGIDITY_TYPE_CYLINDER:
+            l_shape = new btCylinderShape((btVector3&)f_dim);
+            break;
+        case MODEL_RIGIDITY_TYPE_CAPSULE:
+            l_shape = new btCapsuleShape(f_dim.x,f_dim.y);
+            break;
+        case MODEL_RIGIDITY_TYPE_CONE:
+            l_shape = new btConeShape(f_dim.x,f_dim.y);
+            break;
     }
     l_shape->calculateLocalInertia(f_mass,l_inertia);
     btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(btTransform((btQuaternion&)m_rotation,(btVector3&)m_position));
@@ -305,11 +305,11 @@ float ROC::Model::GetMass()
 {
     if(!m_rigidBody) return -1.f;
     float l_invMass = m_rigidBody->getInvMass();
-    return ((l_invMass == 0.f) ? 0.f : (1.f / l_invMass));
+    return ((l_invMass==0.f) ? 0.f : (1.f/l_invMass));
 }
 bool ROC::Model::SetFriction(float f_val)
 {
-    if(m_rigidBody || f_val < 0.f) return false;
+    if(m_rigidBody||f_val<0.f) return false;
     m_rigidBody->setFriction(f_val);
     m_rigidBody->activate(true);
     return true;

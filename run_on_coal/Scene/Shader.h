@@ -22,8 +22,7 @@ class Shader
     GLint m_materialParamUniform;
     GLint m_materialTypeUniform;
     GLint m_animatedUniform;
-    //GLint m_bonesUniform;
-    GLint m_texture0Uniform; //Useless to store?
+    GLint m_texture0Uniform;
     GLint m_timeUniform;
     GLint m_colorUniform;
 
@@ -46,7 +45,6 @@ class Shader
     float m_timeUniformValue;
     glm::vec4 m_colorUniformValue;
 
-
     Pool *m_bindPool;
     struct textureBindData
     {
@@ -62,6 +60,7 @@ class Shader
     };
     std::vector<textureBindData> m_textureBind;
     std::vector<targetBindData> m_targetBind;
+
     std::string m_error;
 
     void SetupDefaultUniformsAndLocations();

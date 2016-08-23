@@ -15,20 +15,20 @@ ROC::Pool::~Pool()
 int ROC::Pool::Allocate()
 {
     int l_allocated = -1;
-    for(unsigned int i = m_minimal; i < m_size; i++)
+    for(unsigned int i = m_minimal; i<m_size; i++)
     {
-        if(m_poolData[i] == 0U)
+        if(m_poolData[i]==0U)
         {
             m_poolData[i] = 1U;
             l_allocated = static_cast<int>(i);
             break;
         }
     }
-    if(l_allocated == -1)
+    if(l_allocated==-1)
     {
-        for(unsigned int i = 0; i < m_minimal; i++)
+        for(unsigned int i = 0; i<m_minimal; i++)
         {
-            if(m_poolData[i] == 0U)
+            if(m_poolData[i]==0U)
             {
                 m_poolData[i] = 1U;
                 l_allocated = static_cast<int>(i);
@@ -36,11 +36,11 @@ int ROC::Pool::Allocate()
             }
         }
     }
-    if(l_allocated != -1)
+    if(l_allocated!=-1)
     {
-        for(unsigned int i = static_cast<int>(l_allocated + 1); i < m_size; i++)
+        for(unsigned int i = static_cast<int>(l_allocated+1); i<m_size; i++)
         {
-            if(m_poolData[i] == 0U)
+            if(m_poolData[i]==0U)
             {
                 m_minimal = i;
                 break;
@@ -51,7 +51,7 @@ int ROC::Pool::Allocate()
 }
 void ROC::Pool::Reset(unsigned int f_id)
 {
-    if(f_id >= m_size) return;
+    if(f_id>=m_size) return;
     m_poolData[f_id] = 0U;
-    if(f_id < m_minimal) m_minimal = f_id;
+    if(f_id<m_minimal) m_minimal = f_id;
 }

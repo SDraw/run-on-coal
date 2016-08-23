@@ -288,7 +288,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
     std::string l_work;
     m_core->GetWorkingDirectory(l_work);
 
-    for(auto iter : f_path)
+    for(auto iter:f_path)
     {
         std::string l_iterPath;
         std::string l_iterFullPath(l_work);
@@ -409,44 +409,44 @@ void ROC::ElementManager::DestroyByPointer(void *f_pointer,unsigned char f_type)
     //Called only at the end of work
     switch(f_type)
     {
-    case ElementType::SceneElement:
-        delete static_cast<Scene*>(f_pointer);
-        break;
-    case ElementType::CameraElement:
-        delete static_cast<Camera*>(f_pointer);
-        break;
-    case ElementType::LightElement:
-        delete static_cast<Light*>(f_pointer);
-        break;
-    case ElementType::ShaderElement:
-        delete static_cast<Shader*>(f_pointer);
-        break;
-    case ElementType::GeometryElement:
-        delete static_cast<Geometry*>(f_pointer);
-        break;
-    case ElementType::ModelElement:
-        delete static_cast<Model*>(f_pointer);
-        break;
-    case ElementType::AnimationElement:
-        delete static_cast<Animation*>(f_pointer);
-        break;
-    case ElementType::SoundElement:
-        delete static_cast<Sound*>(f_pointer);
-        break;
-    case ElementType::RenderTargetElement:
-        delete static_cast<RenderTarget*>(f_pointer);
-        break;
-    case ElementType::TextureElement:
-        delete static_cast<Texture*>(f_pointer);
-        break;
-    case ElementType::FontElement:
-        delete static_cast<Font*>(f_pointer);
-        break;
-    case ElementType::FileElement:
-        delete static_cast<File*>(f_pointer);
-        break;
-    case ElementType::CollisionElement:
-        delete static_cast<Collision*>(f_pointer);
-        break;
+        case ElementType::SceneElement:
+            delete static_cast<Scene*>(f_pointer);
+            break;
+        case ElementType::CameraElement:
+            delete static_cast<Camera*>(f_pointer);
+            break;
+        case ElementType::LightElement:
+            delete static_cast<Light*>(f_pointer);
+            break;
+        case ElementType::ShaderElement:
+            delete static_cast<Shader*>(f_pointer);
+            break;
+        case ElementType::GeometryElement:
+            delete static_cast<Geometry*>(f_pointer);
+            break;
+        case ElementType::ModelElement:
+            delete static_cast<Model*>(f_pointer);
+            break;
+        case ElementType::AnimationElement:
+            delete static_cast<Animation*>(f_pointer);
+            break;
+        case ElementType::SoundElement:
+            delete static_cast<Sound*>(f_pointer);
+            break;
+        case ElementType::RenderTargetElement:
+            delete static_cast<RenderTarget*>(f_pointer);
+            break;
+        case ElementType::TextureElement:
+            delete static_cast<Texture*>(f_pointer);
+            break;
+        case ElementType::FontElement:
+            delete static_cast<Font*>(f_pointer);
+            break;
+        case ElementType::FileElement:
+            delete static_cast<File*>(f_pointer);
+            break;
+        case ElementType::CollisionElement:
+            delete static_cast<Collision*>(f_pointer);
+            break;
     }
 }

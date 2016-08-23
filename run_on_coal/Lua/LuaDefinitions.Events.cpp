@@ -26,7 +26,7 @@ int addEvent(lua_State *f_vm)
         return 1;
     }
     int l_enumValue = Utils::ReadEnumString(l_event,EVENTS_STRING);
-    if(l_enumValue == -1)
+    if(l_enumValue==-1)
     {
         lua_pushboolean(f_vm,0);
         return 1;
@@ -50,7 +50,7 @@ int removeEvent(lua_State *f_vm)
         return 1;
     }
     int l_enumValue = Utils::ReadEnumString(l_event,EVENTS_STRING);
-    if(l_enumValue == -1)
+    if(l_enumValue==-1)
     {
         lua_pushboolean(f_vm,0);
         return 1;

@@ -16,26 +16,26 @@ ROC::Collision::~Collision()
 
 bool ROC::Collision::Create(unsigned char f_type,glm::vec3 &f_size)
 {
-    if(m_rigidBody || f_type > COLLISION_TYPE_CONE) return false;
+    if(m_rigidBody||f_type>COLLISION_TYPE_CONE) return false;
     btVector3 l_inertia;
     btCollisionShape *l_shape = NULL;
     switch(f_type)
     {
-    case COLLISION_TYPE_SPHERE:
-        l_shape = new btSphereShape(f_size.x);
-        break;
-    case COLLISION_TYPE_BOX:
-        l_shape = new btBoxShape((btVector3&)f_size);
-        break;
-    case COLLISION_TYPE_CYLINDER:
-        l_shape = new btCylinderShape((btVector3&)f_size);
-        break;
-    case COLLISION_TYPE_CAPSULE:
-        l_shape = new btCapsuleShape(f_size.x,f_size.y);
-        break;
-    case COLLISION_TYPE_CONE:
-        l_shape = new btConeShape(f_size.x,f_size.y);
-        break;
+        case COLLISION_TYPE_SPHERE:
+            l_shape = new btSphereShape(f_size.x);
+            break;
+        case COLLISION_TYPE_BOX:
+            l_shape = new btBoxShape((btVector3&)f_size);
+            break;
+        case COLLISION_TYPE_CYLINDER:
+            l_shape = new btCylinderShape((btVector3&)f_size);
+            break;
+        case COLLISION_TYPE_CAPSULE:
+            l_shape = new btCapsuleShape(f_size.x,f_size.y);
+            break;
+        case COLLISION_TYPE_CONE:
+            l_shape = new btConeShape(f_size.x,f_size.y);
+            break;
     }
     l_shape->calculateLocalInertia(0.f,l_inertia);
     btTransform l_transform;

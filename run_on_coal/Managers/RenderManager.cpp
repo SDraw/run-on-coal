@@ -69,7 +69,7 @@ void ROC::RenderManager::DoPulse()
 void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)
 {
     if(m_locked) return;
-    if((f_params&GL_DEPTH_BUFFER_BIT) == GL_DEPTH_BUFFER_BIT) EnableDepth();
+    if((f_params&GL_DEPTH_BUFFER_BIT)==GL_DEPTH_BUFFER_BIT) EnableDepth();
     glClear(f_params);
 }
 
@@ -116,7 +116,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 
 void ROC::RenderManager::Render(Model *f_model,bool f_texturize,bool f_frustum,float f_radius)
 {
-    if(m_locked || !m_activeShader || !m_activeScene || !f_model->IsDrawable()) return;
+    if(m_locked||!m_activeShader||!m_activeScene||!f_model->IsDrawable()) return;
 
     if(f_frustum)
     {
@@ -135,10 +135,10 @@ void ROC::RenderManager::Render(Model *f_model,bool f_texturize,bool f_frustum,f
     }
     else m_activeShader->SetAnimatedUniformValue(0U);
 
-    for(auto iter : f_model->m_geometry->m_materialVector)
+    for(auto iter:f_model->m_geometry->m_materialVector)
     {
         unsigned char l_materialType = iter->m_type;
-        if((l_materialType&MATERIAL_BIT_DEPTH) != MATERIAL_BIT_DEPTH)
+        if((l_materialType&MATERIAL_BIT_DEPTH)!=MATERIAL_BIT_DEPTH)
         {
             if(m_activeTarget)
             {
@@ -147,10 +147,10 @@ void ROC::RenderManager::Render(Model *f_model,bool f_texturize,bool f_frustum,f
             DisableDepth();
         }
         else EnableDepth();
-        ((l_materialType&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT) ? EnableBlending() : DisableBlending();
-        ((l_materialType&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE) ? DisableCulling() : EnableCulling();
+        ((l_materialType&MATERIAL_BIT_TRANSPARENT)==MATERIAL_BIT_TRANSPARENT) ? EnableBlending() : DisableBlending();
+        ((l_materialType&MATERIAL_BIT_DOUBLESIDE)==MATERIAL_BIT_DOUBLESIDE) ? DisableCulling() : EnableCulling();
 
-        bool l_textureBind = CompareLastTexture(iter->m_texture->m_texture) && f_texturize;
+        bool l_textureBind = CompareLastTexture(iter->m_texture->m_texture)&&f_texturize;
         bool l_vaoBind = CompareLastVAO(iter->m_VAO);
 
         if(l_vaoBind)
@@ -163,7 +163,7 @@ void ROC::RenderManager::Render(Model *f_model,bool f_texturize,bool f_frustum,f
 }
 void ROC::RenderManager::Render(Font *f_font,glm::vec2 &f_pos,sf::String &f_text,glm::vec4 &f_color)
 {
-    if(m_locked || !m_activeShader) return;
+    if(m_locked||!m_activeShader) return;
     EnableBlending();
     DisableDepth();
 
@@ -175,7 +175,7 @@ void ROC::RenderManager::Render(Font *f_font,glm::vec2 &f_pos,sf::String &f_text
 }
 void ROC::RenderManager::Render(Texture *f_texture,glm::vec2 &f_pos,glm::vec2 &f_size,float f_rot,glm::vec4 &f_color)
 {
-    if(m_locked || !m_activeShader || f_texture->IsCubic()) return;
+    if(m_locked||!m_activeShader||f_texture->IsCubic()) return;
 
     bool l_vaoBind = CompareLastVAO(m_quad->m_VAO);
     if(CompareLastTexture(f_texture->m_texture)) f_texture->Bind(0U);
@@ -184,10 +184,10 @@ void ROC::RenderManager::Render(Texture *f_texture,glm::vec2 &f_pos,glm::vec2 &f
     m_activeShader->SetColorUniformValue(f_color);
 
     btTransform l_textureTransform;
-    btVector3 l_textureTranslate(f_pos.x + f_size.x / 2.f,f_pos.y + f_size.y / 2.f,0.f);
+    btVector3 l_textureTranslate(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
     l_textureTransform.setIdentity();
     l_textureTransform.setOrigin(l_textureTranslate);
-    if(f_rot != 0.f)
+    if(f_rot!=0.f)
     {
         btVector3 l_textureZAxis(0.f,0.f,1.f);
         btQuaternion l_textureRotation;
@@ -208,7 +208,7 @@ void ROC::RenderManager::Render(Texture *f_texture,glm::vec2 &f_pos,glm::vec2 &f
 }
 void ROC::RenderManager::Render(RenderTarget *f_rt,glm::vec2 &f_pos,glm::vec2 &f_size,float f_rot,glm::vec4 &f_color)
 {
-    if(m_locked || !m_activeShader || !f_rt->IsColored()) return;
+    if(m_locked||!m_activeShader||!f_rt->IsColored()) return;
 
     bool l_vaoBind = CompareLastVAO(m_quad->m_VAO);
     if(CompareLastTexture(f_rt->m_texture)) f_rt->BindTexture(0U);
@@ -217,10 +217,10 @@ void ROC::RenderManager::Render(RenderTarget *f_rt,glm::vec2 &f_pos,glm::vec2 &f
     m_activeShader->SetColorUniformValue(f_color);
 
     btTransform l_textureTransform;
-    btVector3 l_textureTranslate(f_pos.x + f_size.x / 2.f,f_pos.y + f_size.y / 2.f,0.f);
+    btVector3 l_textureTranslate(f_pos.x+f_size.x/2.f,f_pos.y+f_size.y/2.f,0.f);
     l_textureTransform.setIdentity();
     l_textureTransform.setOrigin(l_textureTranslate);
-    if(f_rot != 0.f)
+    if(f_rot!=0.f)
     {
         btVector3 l_textureZAxis(0.f,0.f,1.f);
         btQuaternion l_textureRotation;
@@ -242,7 +242,7 @@ void ROC::RenderManager::Render(RenderTarget *f_rt,glm::vec2 &f_pos,glm::vec2 &f
 
 void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
 {
-    if(m_locked || m_activeTarget == f_rt) return;
+    if(m_locked||m_activeTarget==f_rt) return;
     m_activeTarget = f_rt;
     if(!m_activeTarget)
     {
@@ -260,11 +260,11 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
 
 void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader)
 {
-    if(m_activeShader != f_shader) f_shader->Enable();
+    if(m_activeShader!=f_shader) f_shader->Enable();
 }
 void ROC::RenderManager::RestoreActiveShader(Shader *f_shader)
 {
-    if(m_activeShader != f_shader && m_activeShader) m_activeShader->Enable();
+    if(m_activeShader!=f_shader && m_activeShader) m_activeShader->Enable();
 }
 
 void ROC::RenderManager::DisableDepth()
@@ -303,13 +303,13 @@ void ROC::RenderManager::EnableBlending()
 
 bool ROC::RenderManager::CompareLastVAO(GLuint f_vao)
 {
-    if(f_vao == m_lastVAO) return false;
+    if(f_vao==m_lastVAO) return false;
     m_lastVAO = f_vao;
     return true;
 }
 bool ROC::RenderManager::CompareLastTexture(GLuint f_texture)
 {
-    if(f_texture == m_lastTexture) return false;
+    if(f_texture==m_lastTexture) return false;
     m_lastTexture = f_texture;
     return true;
 }

@@ -3,7 +3,8 @@
 namespace ROC
 {
 
-enum EventType : unsigned char {
+enum EventType : unsigned char
+{
     PreRender = 0U, //onOGLPreRender
     Render, //onOGLRender
     WindowResize, //onWindowResize
@@ -30,7 +31,7 @@ class EventManager
     unsigned char m_currentEvent;
 public:
     void CallEvent(unsigned char f_event,LuaArguments *f_args);
-    inline bool IsEventExists(unsigned char f_event) { return ((f_event < EventType::Last) ? (m_eventVector[f_event].size() > 0U) : false); }
+    inline bool IsEventExists(unsigned char f_event) { return ((f_event<EventType::Last) ? (m_eventVector[f_event].size() > 0U) : false); }
     bool AddEvent(unsigned char f_event,int f_ref,void *f_pointer);
     bool RemoveEvent(unsigned char f_event,void *f_pointer);
 protected:

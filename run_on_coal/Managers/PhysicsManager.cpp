@@ -23,7 +23,7 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
 
     m_enabled = false;
 
-    m_timeStep = 1.f / static_cast<float>(m_core->GetConfigManager()->GetFPSLimit());
+    m_timeStep = 1.f/static_cast<float>(m_core->GetConfigManager()->GetFPSLimit());
 }
 ROC::PhysicsManager::~PhysicsManager()
 {
@@ -45,12 +45,12 @@ void ROC::PhysicsManager::DoPulse()
 {
     if(!m_enabled) return;
     m_dynamicWorld->stepSimulation(m_timeStep,2,m_timeStep);
-    for(auto iter : m_elementSet) iter->UpdateRigidity();
+    for(auto iter:m_elementSet) iter->UpdateRigidity();
 }
 
 void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
 {
-    if(m_floorEnabled == f_value) return;
+    if(m_floorEnabled==f_value) return;
     m_floorEnabled = f_value;
     if(m_floorEnabled)
     {
@@ -84,7 +84,7 @@ bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start,glm::vec3 &f_end,glm::vec3 
     btVector3 l_hitEnd = l_result.m_hitPointWorld;
     btVector3 l_hitNormal = l_result.m_hitNormalWorld;
     auto iter = m_bodyMap.find((void*)l_result.m_collisionObject);
-    if(iter != m_bodyMap.end()) *f_model = iter->second;
+    if(iter!=m_bodyMap.end()) *f_model = iter->second;
     std::memcpy(&f_end,l_hitEnd,sizeof(glm::vec3));
     std::memcpy(&f_normal,l_hitNormal,sizeof(glm::vec3));
     return true;
@@ -102,9 +102,9 @@ bool ROC::PhysicsManager::SetModelRigidity(Model *f_model,unsigned char f_type,f
 bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
 {
     auto iter = m_elementSet.find(f_model);
-    if(iter == m_elementSet.end()) return false;
+    if(iter==m_elementSet.end()) return false;
     auto iter1 = m_bodyMap.find(f_model->m_rigidBody);
-    if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
+    if(iter1!=m_bodyMap.end()) m_bodyMap.erase(iter1);
     m_dynamicWorld->removeRigidBody(f_model->m_rigidBody);
     m_elementSet.erase(iter);
     if(!f_model->RemoveRigidity()) return false;
@@ -113,32 +113,32 @@ bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
 
 void ROC::PhysicsManager::AddRigidSkeleton(Model *f_model)
 {
-    for(auto iter : f_model->m_skeleton->m_chainsVector)
+    for(auto iter:f_model->m_skeleton->m_chainsVector)
     {
-        for(auto iter1 : iter)
+        for(auto iter1:iter)
         {
             m_dynamicWorld->addRigidBody(iter1.m_rigidBody);
             m_dynamicWorld->addConstraint(iter1.m_constraint);
         }
     }
-    for(auto iter : f_model->m_skeleton->m_jointVector) m_dynamicWorld->addRigidBody(iter);
+    for(auto iter:f_model->m_skeleton->m_jointVector) m_dynamicWorld->addRigidBody(iter);
 }
 void ROC::PhysicsManager::RemoveRigidSkeleton(Model *f_model)
 {
-    for(auto iter : f_model->m_skeleton->m_chainsVector)
+    for(auto iter:f_model->m_skeleton->m_chainsVector)
     {
-        for(auto iter1 : iter)
+        for(auto iter1:iter)
         {
             m_dynamicWorld->removeRigidBody(iter1.m_rigidBody);
             m_dynamicWorld->removeConstraint(iter1.m_constraint);
         }
     }
-    for(auto iter : f_model->m_skeleton->m_jointVector) m_dynamicWorld->removeRigidBody(iter);
+    for(auto iter:f_model->m_skeleton->m_jointVector) m_dynamicWorld->removeRigidBody(iter);
 }
 
 void ROC::PhysicsManager::AddCollision(Collision *f_col)
 {
-    if(m_collisionSet.find(f_col) != m_collisionSet.end()) return;
+    if(m_collisionSet.find(f_col)!=m_collisionSet.end()) return;
     m_dynamicWorld->addRigidBody(f_col->m_rigidBody);
     m_collisionSet.insert(f_col);
     m_bodyMap.insert(std::pair<void*,void*>(f_col->m_rigidBody,f_col));
@@ -146,9 +146,9 @@ void ROC::PhysicsManager::AddCollision(Collision *f_col)
 void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
 {
     auto iter = m_collisionSet.find(f_col);
-    if(iter == m_collisionSet.end()) return;
+    if(iter==m_collisionSet.end()) return;
     auto iter1 = m_bodyMap.find(f_col->m_rigidBody);
-    if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
+    if(iter1!=m_bodyMap.end()) m_bodyMap.erase(iter1);
     m_dynamicWorld->removeRigidBody(f_col->m_rigidBody);
     m_collisionSet.erase(iter);
 }

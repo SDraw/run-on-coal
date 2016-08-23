@@ -14,7 +14,7 @@ ROC::File::~File()
 
 bool ROC::File::Create(std::string &f_path,std::string &f_rPath)
 {
-    m_file = new std::fstream(f_path,std::ios::out | std::ios::binary);
+    m_file = new std::fstream(f_path,std::ios::out|std::ios::binary);
     if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = FileMode::WriteMode;
@@ -23,7 +23,7 @@ bool ROC::File::Create(std::string &f_path,std::string &f_rPath)
 }
 bool ROC::File::Open(std::string &f_path,std::string &f_rPath,bool f_ro)
 {
-    m_file = new std::fstream(f_path,(f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
+    m_file = new std::fstream(f_path,(f_ro ? std::ios::in : std::ios::out)|std::ios::binary);
     if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = f_ro ? FileMode::ReadMode : FileMode::WriteMode;
@@ -34,22 +34,22 @@ size_t ROC::File::Read(std::string &f_data,size_t f_lenght)
 {
     std::vector<char> l_data(f_lenght);
     size_t l_read = static_cast<size_t>(m_file->read(&l_data[0],f_lenght).gcount());
-    f_data.append(l_data.begin(),l_data.begin() + l_read);
+    f_data.append(l_data.begin(),l_data.begin()+l_read);
     return l_read;
 }
 size_t ROC::File::Write(std::string &f_data)
 {
-    if(m_type != FileMode::WriteMode) return 0U;
+    if(m_type!=FileMode::WriteMode) return 0U;
     std::streampos l_start = m_file->tellg();
     m_file->write(&f_data[0],f_data.size());
     if(m_file->fail()) return 0U;
-    l_start = m_file->tellg() - l_start;
+    l_start = m_file->tellg()-l_start;
     return static_cast<size_t>(l_start);
 }
 size_t ROC::File::GetSize()
 {
     size_t l_size = 0U;
-    if(m_type == FileMode::ReadMode)
+    if(m_type==FileMode::ReadMode)
     {
         std::streampos l_last = m_file->tellg();
         m_file->seekg(SEEK_SET,std::ios::end);
@@ -68,7 +68,7 @@ size_t ROC::File::GetSize()
 
 bool ROC::File::SetPosition(size_t f_pos)
 {
-    if(m_type == FileMode::ReadMode) m_file->seekg(f_pos);
+    if(m_type==FileMode::ReadMode) m_file->seekg(f_pos);
     else m_file->seekp(f_pos);
     return !m_file->fail();
 }

@@ -15,7 +15,7 @@ int animationCreate(lua_State *f_vm)
     ArgReader argStream(f_vm,ROC::LuaManager::m_corePointer);
     std::string l_path;
     argStream.ReadText(l_path);
-    if(argStream.HasErrors() || !l_path.length())
+    if(argStream.HasErrors()||!l_path.length())
     {
         lua_pushboolean(f_vm,0);
         return 1;

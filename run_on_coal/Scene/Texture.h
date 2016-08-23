@@ -11,8 +11,8 @@ class Texture
 {
     int m_type;
 public:
-    inline bool IsTransparent() { return (m_type == TEXTURE_TYPE_RGBA); }
-    inline bool IsCubic() { return (m_type == TEXTURE_TYPE_CUBEMAP); }
+    inline bool IsTransparent() { return (m_type==TEXTURE_TYPE_RGBA); }
+    inline bool IsCubic() { return (m_type==TEXTURE_TYPE_CUBEMAP); }
 protected:
     GLuint m_texture;
     Texture();
