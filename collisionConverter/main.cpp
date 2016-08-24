@@ -4,9 +4,9 @@
 #include "pugixml.hpp"
 
 #define Error(first) { std::cout << first << std::endl; return EXIT_FAILURE; }
-int main(int argc, char *argv[])
+int main(int argc,char *argv[])
 {
-    if(argc < 2) return EXIT_FAILURE;
+    if(argc<2) return EXIT_FAILURE;
     pugi::xml_document l_meta;
     if(!l_meta.load_file(argv[1])) Error("Not XML file\n");
     pugi::xml_node l_root = l_meta.child("chains");
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
             if(!l_attr) Error("No 'bType' attribute at part node\n");
             unsigned char l_type = l_attr.as_uint();
             l_file.write((char*)&l_type,sizeof(unsigned char));
-            
+
             l_attr = l_part.attribute("mass");
             if(!l_attr) Error("No 'mass' attribute at part node\n");
             float l_fVal = l_attr.as_float();
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     }
     l_file.flush();
     l_file.close();
-    std::cout << "File converted" << std::endl;
+    std::cout<<"File converted"<<std::endl;
     getchar();
     return EXIT_SUCCESS;
 }
