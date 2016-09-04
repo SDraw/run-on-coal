@@ -30,12 +30,12 @@ void ROC::Core::Terminate()
 ROC::Core::Core()
 {
     char *l_pathBuf = new char[FILENAME_MAX];
-    _getcwd(l_pathBuf,FILENAME_MAX);
+    _getcwd(l_pathBuf, FILENAME_MAX);
 
     std::string l_appPath(l_pathBuf);
     delete[]l_pathBuf;
     std::regex l_regex("\\\\");
-    std::regex_replace(std::back_inserter(m_workingDir),l_appPath.begin(),l_appPath.end(),l_regex,"/");
+    std::regex_replace(std::back_inserter(m_workingDir), l_appPath.begin(), l_appPath.end(), l_regex, "/");
 
     m_configManager = new ConfigManager(this);
     m_logManager = new LogManager(this);

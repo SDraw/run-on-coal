@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class BoneData
 {
 protected:
@@ -16,5 +15,4 @@ protected:
     friend class Geometry;
     friend class Skeleton;
 };
-
 }

@@ -4,7 +4,6 @@
 
 namespace ROC
 {
-
 class Scene
 {
     Camera *m_mainCamera;
@@ -20,5 +19,4 @@ protected:
     friend class ElementManager;
     friend class InheritanceManager;
 };
-
 }

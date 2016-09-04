@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class Sound
 {
     sf::Music* m_handle;
@@ -34,10 +33,10 @@ public:
     inline bool Get3DPositionEnabled() { return m_b3D; }
 
     bool Set3DPosition(glm::vec3 &f_pos);
-    inline void Get3DPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos,&m_v3DPosition,sizeof(glm::vec3)); }
+    inline void Get3DPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_v3DPosition, sizeof(glm::vec3)); }
 
     bool Set3DDistance(glm::vec2 &f_dist);
-    inline void Get3DDistance(glm::vec2 &f_dist) { std::memcpy(&f_dist,&m_v3DDistance,sizeof(glm::vec2)); }
+    inline void Get3DDistance(glm::vec2 &f_dist) { std::memcpy(&f_dist, &m_v3DDistance, sizeof(glm::vec2)); }
 
     inline int GetState() { return m_handle->getStatus(); }
 protected:
@@ -46,5 +45,4 @@ protected:
     bool Load(std::string &f_path);
     friend class ElementManager;
 };
-
 }

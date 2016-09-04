@@ -4,7 +4,6 @@ namespace ROC
 {
 namespace Lua
 {
-
 int cameraCreate(lua_State *f_vm);
 int cameraDestroy(lua_State *f_vm);
 
@@ -31,6 +30,5 @@ int cameraGetDepth(lua_State *f_vm);
 
 int cameraGetViewMatrix(lua_State *f_vm);
 int cameraGetProjectionMatrix(lua_State *f_vm);
-
 }
 }

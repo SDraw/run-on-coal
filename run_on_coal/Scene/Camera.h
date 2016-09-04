@@ -4,7 +4,6 @@
 
 namespace ROC
 {
-
 class Camera
 {
     float m_fov;
@@ -28,18 +27,18 @@ public:
     inline float GetAspectRatio() { return m_aspectRatio; }
 
     void SetOrthoParams(glm::vec4 &f_size);
-    inline void GetOrthoParams(glm::vec4 &f_size) { std::memcpy(&f_size,&m_orthoParams,sizeof(glm::vec4)); }
+    inline void GetOrthoParams(glm::vec4 &f_size) { std::memcpy(&f_size, &m_orthoParams, sizeof(glm::vec4)); }
 
     void SetDepth(glm::vec2 &f_depth);
-    inline void GetDepth(glm::vec2 &f_depth) { std::memcpy(&f_depth,&m_depth,sizeof(glm::vec2)); }
+    inline void GetDepth(glm::vec2 &f_depth) { std::memcpy(&f_depth, &m_depth, sizeof(glm::vec2)); }
 
     void SetPosition(glm::vec3 &f_pos);
-    inline void GetPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos,&m_viewPosition,sizeof(glm::vec3)); }
+    inline void GetPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_viewPosition, sizeof(glm::vec3)); }
 
     void SetDirection(glm::vec3 &f_dir);
-    inline void GetDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir,&m_viewDirection,sizeof(glm::vec3)); }
+    inline void GetDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir, &m_viewDirection, sizeof(glm::vec3)); }
 
-    bool IsInFrustum(glm::vec3 &f_pos,float f_radius);
+    bool IsInFrustum(glm::vec3 &f_pos, float f_radius);
 
     void GetViewMatrix(glm::mat4 &f_mat);
     void GetProjectionMatrix(glm::mat4 &f_mat);
@@ -56,5 +55,4 @@ protected:
     friend class ElementManager;
     friend class RenderManager;
 };
-
 }

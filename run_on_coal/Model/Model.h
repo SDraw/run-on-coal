@@ -10,7 +10,6 @@
 
 namespace ROC
 {
-
 class Geometry;
 class Skeleton;
 class Animation;
@@ -22,7 +21,7 @@ class Model
     int m_parentBone;
     unsigned long m_animLastTick;
     unsigned long m_animCurrentTick;
-    enum AnimationState { None = 0U,Paused,Playing };
+    enum AnimationState { None = 0U, Paused, Playing };
     AnimationState m_animState;
     float m_animationSpeed;
 
@@ -35,16 +34,16 @@ class Model
     void UpdateSkeleton();
     void UpdateAnimationTick();
 public:
-    inline bool IsDrawable() { return (m_geometry!=NULL); }
+    inline bool IsDrawable() { return (m_geometry != NULL); }
     inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
-    inline bool IsRigid() { return (m_rigidBody!=NULL); }
+    inline bool IsRigid() { return (m_rigidBody != NULL); }
     //Manipulation
-    void SetPosition(glm::vec3 &f_pos,bool f_uRb = true);
-    void GetPosition(glm::vec3 &f_pos,bool f_global = false);
-    void SetRotation(glm::quat &f_rot,bool f_uRb = true);
-    void GetRotation(glm::quat &f_rot,bool f_global = false);
+    void SetPosition(glm::vec3 &f_pos, bool f_uRb = true);
+    void GetPosition(glm::vec3 &f_pos, bool f_global = false);
+    void SetRotation(glm::quat &f_rot, bool f_uRb = true);
+    void GetRotation(glm::quat &f_rot, bool f_global = false);
     void SetScale(glm::vec3 &f_scl);
-    void GetScale(glm::vec3 &f_scl,bool f_global = false);
+    void GetScale(glm::vec3 &f_scl, bool f_global = false);
 
     bool PlayAnimation();
     bool PauseAnimation();
@@ -54,7 +53,7 @@ public:
     bool SetAnimationProgress(float f_val);
     float GetAnimationProgress();
 
-    inline bool HasSkeleton() { return (m_skeleton!=NULL); }
+    inline bool HasSkeleton() { return (m_skeleton != NULL); }
     bool HasRigidSkeleton();
 
     //Physics
@@ -76,12 +75,12 @@ protected:
     glm::mat4 m_matrix;
     Model(Geometry *f_geometry);
     ~Model();
-    void SetParent(Model *f_model,int f_bone = -1);
+    void SetParent(Model *f_model, int f_bone = -1);
     void SetAnimation(Animation *f_anim);
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
     void UpdateMatrix();
     void UpdateAnimation();
-    bool SetRigidity(unsigned char f_type,float f_mass,glm::vec3 &f_dim);
+    bool SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveRigidity();
     void UpdateRigidity();
 
@@ -91,5 +90,4 @@ protected:
     friend class PreRenderManager;
     friend class RenderManager;
 };
-
 }

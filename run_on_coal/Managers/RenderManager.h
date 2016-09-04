@@ -5,7 +5,6 @@
 
 namespace ROC
 {
-
 class Core;
 class Model;
 class Scene;
@@ -52,34 +51,34 @@ class RenderManager
     void EnableNonActiveShader(Shader *f_shader);
 public:
     void ClearRenderArea(GLbitfield f_params);
-    static void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r,f_color.g,f_color.b,f_color.a); }
-    inline void SetViewport(glm::ivec4 &f_area) { if(!m_locked) glViewport(f_area.r,f_area.g,f_area.b,f_area.a); }
-    static void SetPolygonMode(unsigned int f_mode) { glPolygonMode(GL_FRONT_AND_BACK,GL_POINT+static_cast<int>(f_mode)); }
+    static void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
+    inline void SetViewport(glm::ivec4 &f_area) { if(!m_locked) glViewport(f_area.r, f_area.g, f_area.b, f_area.a); }
+    static void SetPolygonMode(unsigned int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + static_cast<int>(f_mode)); }
 
     void SetActiveScene(Scene *f_scene);
-    inline void RemoveAsActiveScene(Scene *f_scene) { if(m_activeScene==f_scene) m_activeScene = NULL; }
+    inline void RemoveAsActiveScene(Scene *f_scene) { if(m_activeScene == f_scene) m_activeScene = NULL; }
 
     void SetActiveShader(Shader *f_shader);
-    template<typename T> void SetShaderUniformValueO(Shader *f_shader,GLint f_uValue,T f_value)
+    template<typename T> void SetShaderUniformValueO(Shader *f_shader, GLint f_uValue, T f_value)
     {
         EnableNonActiveShader(f_shader);
-        f_shader->SetUniformValue(f_uValue,f_value);
+        f_shader->SetUniformValue(f_uValue, f_value);
         RestoreActiveShader(f_shader);
     };
-    template<typename T> void SetShaderUniformValueM(Shader *f_shader,GLint f_uValue,T &f_value)
+    template<typename T> void SetShaderUniformValueM(Shader *f_shader, GLint f_uValue, T &f_value)
     {
         EnableNonActiveShader(f_shader);
-        f_shader->SetUniformValue(f_uValue,f_value);
+        f_shader->SetUniformValue(f_uValue, f_value);
         RestoreActiveShader(f_shader);
     };
-    inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader==f_shader) m_activeShader = NULL; }
+    inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader == f_shader) m_activeShader = NULL; }
 
     void SetRenderTarget(RenderTarget *f_rt);
 
-    void Render(Model *f_model,bool f_texturize,bool f_frustum = false,float f_radius = 1.f);
-    void Render(Font *f_font,glm::vec2 &f_pos,sf::String &f_text,glm::vec4 &f_color);
-    void Render(Texture *f_texture,glm::vec2 &f_pos,glm::vec2 &f_size,float f_rot,glm::vec4 &f_color);
-    void Render(RenderTarget *f_rt,glm::vec2 &f_pos,glm::vec2 &f_size,float f_rot,glm::vec4 &f_color);
+    void Render(Model *f_model, bool f_texturize, bool f_frustum = false, float f_radius = 1.f);
+    void Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color);
+    void Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
+    void Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
 protected:
     RenderManager(Core *f_core);
     ~RenderManager();
@@ -87,14 +86,14 @@ protected:
     void ResetCallsReducing();
 
     void RestoreActiveShader(Shader *f_shader);
-    template<typename T> bool AttachToShader(Shader *f_shader,T *f_element,int f_uniform)
+    template<typename T> bool AttachToShader(Shader *f_shader, T *f_element, int f_uniform)
     {
         EnableNonActiveShader(f_shader);
-        bool l_result = f_shader->Attach(f_element,f_uniform);
+        bool l_result = f_shader->Attach(f_element, f_uniform);
         RestoreActiveShader(f_shader);
         return l_result;
     }
-    template<typename T> void DettachFromShader(Shader *f_shader,T *f_element)
+    template<typename T> void DettachFromShader(Shader *f_shader, T *f_element)
     {
         EnableNonActiveShader(f_shader);
         f_shader->Dettach(f_element);
@@ -105,5 +104,4 @@ protected:
     friend class ElementManager;
     friend class InheritanceManager;
 };
-
 }

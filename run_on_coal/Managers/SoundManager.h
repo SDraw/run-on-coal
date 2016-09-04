@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class Core;
 class SoundManager
 {
@@ -16,16 +15,15 @@ class SoundManager
     bool m_updateUp;
 public:
     void SetListenerPosition(glm::vec3 &f_pos);
-    inline void GetListenerPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos,&m_listenerPosition,sizeof(glm::vec3)); }
+    inline void GetListenerPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_listenerPosition, sizeof(glm::vec3)); }
     void SetListenerDirection(glm::vec3 &f_dir);
-    inline void GetListenerDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir,&m_listenerDirection,sizeof(glm::vec3)); }
+    inline void GetListenerDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir, &m_listenerDirection, sizeof(glm::vec3)); }
     void SetListenerUp(glm::vec3 &f_up);
-    inline void GetListenerUp(glm::vec3 &f_up) { std::memcpy(&f_up,&m_listenerUp,sizeof(glm::vec3)); }
+    inline void GetListenerUp(glm::vec3 &f_up) { std::memcpy(&f_up, &m_listenerUp, sizeof(glm::vec3)); }
 protected:
     SoundManager(Core *f_core);
     ~SoundManager();
     void DoPulse();
     friend Core;
 };
-
 }

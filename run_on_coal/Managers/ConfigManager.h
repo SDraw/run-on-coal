@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class Core;
 class ConfigManager
 {
@@ -17,7 +16,7 @@ public:
     inline bool IsLogEnabled() { return m_logging; }
     inline bool IsFullscreenEnabled() { return m_fullscreen; }
     inline int GetAntialiasing() { return m_antialiasing; }
-    inline void GetWindowSize(glm::ivec2 &f_vec) { std::memcpy(&f_vec,&m_windowSize,sizeof(glm::ivec2)); }
+    inline void GetWindowSize(glm::ivec2 &f_vec) { std::memcpy(&f_vec, &m_windowSize, sizeof(glm::ivec2)); }
     inline unsigned int GetFPSLimit() { return m_fpsLimit; }
     inline bool GetVSync() { return m_vsync; }
 protected:
@@ -25,5 +24,4 @@ protected:
     ~ConfigManager();
     friend Core;
 };
-
 }

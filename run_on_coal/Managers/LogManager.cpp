@@ -6,7 +6,7 @@
 ROC::LogManager::LogManager(Core *f_core)
 {
     m_enabled = f_core->GetConfigManager()->IsLogEnabled();
-    if(m_enabled) m_log.open("log.txt",std::ofstream::out);
+    if(m_enabled) m_log.open("log.txt", std::ofstream::out);
 }
 ROC::LogManager::~LogManager()
 {
@@ -24,9 +24,9 @@ void ROC::LogManager::Log(std::string &f_text)
     {
         std::time_t l_time = std::time(NULL);
         tm *l_tmTime = std::localtime(&l_time);
-        m_log<<"["<<l_tmTime->tm_hour<<":"<<l_tmTime->tm_min<<":"<<l_tmTime->tm_sec<<"] "<<f_text.c_str()<<std::endl;
+        m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text.c_str() << std::endl;
 #ifdef _DEBUG
-        std::cout<<"["<<l_tmTime->tm_hour<<":"<<l_tmTime->tm_min<<":"<<l_tmTime->tm_sec<<"] "<<f_text.c_str()<<std::endl;
+        std::cout << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text.c_str() << std::endl;
 #endif
     }
 }

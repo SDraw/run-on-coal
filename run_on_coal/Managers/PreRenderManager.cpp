@@ -25,11 +25,11 @@ void ROC::PreRenderManager::AddModel(Model *f_model)
 {
     if(f_model->HasSkeleton())
     {
-        if(m_animatedModelSet.find(f_model)==m_animatedModelSet.end()) m_animatedModelSet.insert(f_model);
+        if(m_animatedModelSet.find(f_model) == m_animatedModelSet.end()) m_animatedModelSet.insert(f_model);
     }
     else
     {
-        if(m_staticModelSet.find(f_model)==m_staticModelSet.end()) m_staticModelSet.insert(f_model);
+        if(m_staticModelSet.find(f_model) == m_staticModelSet.end()) m_staticModelSet.insert(f_model);
     }
 }
 void ROC::PreRenderManager::RemoveModel(Model *f_model)
@@ -37,28 +37,28 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
     if(f_model->HasSkeleton())
     {
         auto iter = m_animatedModelSet.find(f_model);
-        if(iter!=m_animatedModelSet.end()) m_animatedModelSet.erase(iter);
+        if(iter != m_animatedModelSet.end()) m_animatedModelSet.erase(iter);
     }
     else
     {
         auto iter = m_staticModelSet.find(f_model);
-        if(iter!=m_staticModelSet.end()) m_staticModelSet.erase(iter);
+        if(iter != m_staticModelSet.end()) m_staticModelSet.erase(iter);
     }
 }
 
 void ROC::PreRenderManager::DoPulse_S1()
 {
     EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
-    if(l_eventManager->IsEventExists(EventType::PreRender)) l_eventManager->CallEvent(EventType::PreRender,m_argument);
-    for(auto iter:m_animatedModelSet) iter->UpdateAnimation();
-    for(auto iter:m_animatedModelSet) iter->UpdateMatrix();
+    if(l_eventManager->IsEventExists(EventType::PreRender)) l_eventManager->CallEvent(EventType::PreRender, m_argument);
+    for(auto iter : m_animatedModelSet) iter->UpdateAnimation();
+    for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
     bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
-    for(auto iter:m_animatedModelSet) iter->m_skeleton->UpdateJoints(iter->m_matrix,l_physicsState);
+    for(auto iter : m_animatedModelSet) iter->m_skeleton->UpdateJoints(iter->m_matrix, l_physicsState);
 }
 void ROC::PreRenderManager::DoPulse_S2()
 {
     bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
-    for(auto iter:m_animatedModelSet) iter->UpdateMatrix();
-    for(auto iter:m_animatedModelSet) iter->m_skeleton->UpdateRigidBones(iter->m_matrix,l_physicsState);
-    for(auto iter:m_staticModelSet) iter->UpdateMatrix();
+    for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
+    for(auto iter : m_animatedModelSet) iter->m_skeleton->UpdateRigidBones(iter->m_matrix, l_physicsState);
+    for(auto iter : m_staticModelSet) iter->UpdateMatrix();
 }

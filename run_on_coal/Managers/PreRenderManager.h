@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class Core;
 class PhysicsManager;
 class Model;
@@ -26,5 +25,4 @@ protected:
     friend Core;
     friend class ElementManager;
 };
-
 }

@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class Bone;
 class BoneChainGroup;
 class BoneData;
@@ -14,7 +13,7 @@ class Skeleton
         glm::quat m_rot;
         glm::vec3 m_scale;
     };
-    skFastStoring m_leftData,m_rightData,m_interpolated;
+    skFastStoring m_leftData, m_rightData, m_interpolated;
     std::vector<Bone*> m_fastBoneVector;
     size_t m_jointsCount;
 protected:
@@ -33,10 +32,10 @@ protected:
     Skeleton(std::vector<BoneData*> &f_data);
     ~Skeleton();
     void InitRigidity(std::vector<BoneChainGroup*> &f_vec);
-    void Update(std::vector<float> &f_left,std::vector<float> &f_right,float f_lerp);
+    void Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp);
     void Update();
-    void UpdateJoints(glm::mat4 &f_model,bool f_enabled);
-    void UpdateRigidBones(glm::mat4 &f_model,bool f_enabled);
+    void UpdateJoints(glm::mat4 &f_model, bool f_enabled);
+    void UpdateRigidBones(glm::mat4 &f_model, bool f_enabled);
     void ResetBonesInterpolation();
     friend class Model;
     friend class InheritanceManager;
@@ -44,5 +43,4 @@ protected:
     friend class RenderManager;
     friend class PhysicsManager;
 };
-
 }

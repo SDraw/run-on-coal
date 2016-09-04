@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class Pool;
 class Texture;
 class RenderTarget;
@@ -69,51 +68,51 @@ public:
 protected:
     Shader();
     ~Shader();
-    bool Load(std::string &f_vpath,std::string &f_fpath,std::string &f_gpath);
+    bool Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath);
     void Enable(bool f_textureBind = false);
 
-    void SetUniformValue(GLint f_uValue,unsigned int f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<unsigned int> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::uvec2 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::uvec2> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::uvec3 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::uvec3> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::uvec4 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::uvec4> &f_value);
+    void SetUniformValue(GLint f_uValue, unsigned int f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<unsigned int> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::uvec2 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::uvec2> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::uvec3 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::uvec3> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::uvec4 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::uvec4> &f_value);
 
-    void SetUniformValue(GLint f_uValue,int f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<int> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::ivec2 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::ivec2> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::ivec3 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::ivec3> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::ivec4 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::ivec4> &f_value);
+    void SetUniformValue(GLint f_uValue, int f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<int> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::ivec2 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::ivec2> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::ivec3 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::ivec3> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::ivec4 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::ivec4> &f_value);
 
-    void SetUniformValue(GLint f_uValue,float f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<float> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::vec2 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::vec2> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::vec3 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::vec3> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::vec4 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::vec4> &f_value);
+    void SetUniformValue(GLint f_uValue, float f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<float> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::vec2 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::vec2> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::vec3 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::vec3> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::vec4 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::vec4> &f_value);
 
-    void SetUniformValue(GLint f_uValue,double f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<double> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::dvec2 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::dvec2> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::dvec3 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::dvec3> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::dvec4 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::dvec4> &f_value);
+    void SetUniformValue(GLint f_uValue, double f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<double> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::dvec2 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::dvec2> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::dvec3 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::dvec3> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::dvec4 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::dvec4> &f_value);
 
-    void SetUniformValue(GLint f_uValue,glm::mat2 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::mat2> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::mat3 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::mat3> &f_value);
-    void SetUniformValue(GLint f_uValue,glm::mat4 &f_value);
-    void SetUniformValue(GLint f_uValue,std::vector<glm::mat4> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::mat2 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::mat2> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::mat3 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::mat3> &f_value);
+    void SetUniformValue(GLint f_uValue, glm::mat4 &f_value);
+    void SetUniformValue(GLint f_uValue, std::vector<glm::mat4> &f_value);
 
     void SetProjectionUniformValue(glm::mat4 &f_value);
     void SetViewUniformValue(glm::mat4 &f_value);
@@ -131,9 +130,9 @@ protected:
     void SetTimeUniformValue(float f_value);
     void SetColorUniformValue(glm::vec4 &f_value);
 
-    bool Attach(Texture *f_texture,int f_uniform);
+    bool Attach(Texture *f_texture, int f_uniform);
     void Dettach(Texture *f_texture);
-    bool Attach(RenderTarget *f_target,int f_uniform);
+    bool Attach(RenderTarget *f_target, int f_uniform);
     void Dettach(RenderTarget *f_target);
 
     inline void GetError(std::string &f_str) { f_str.append(m_error); }
@@ -141,5 +140,4 @@ protected:
     friend class InheritanceManager;
     friend class RenderManager;
 };
-
 }

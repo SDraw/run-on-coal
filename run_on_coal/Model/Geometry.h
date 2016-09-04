@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class BoneData;
 class BoneChainGroup;
 class Material;
@@ -22,7 +21,7 @@ protected:
     unsigned int m_materialCount;
     Geometry();
     ~Geometry();
-    bool Load(std::string &f_path,bool f_compressed);
+    bool Load(std::string &f_path, bool f_compressed);
     void GetBonesData(std::vector<BoneData*> &f_vec);
     void GetChainsData(std::vector<BoneChainGroup*> &f_vec);
     friend class ElementManager;
@@ -30,5 +29,4 @@ protected:
     friend class Model;
     friend class Skeleton;
 };
-
 }

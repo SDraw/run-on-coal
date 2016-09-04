@@ -2,7 +2,6 @@
 
 namespace ROC
 {
-
 class Pool
 {
     unsigned int m_size;
@@ -14,5 +13,4 @@ public:
     int Allocate();
     void Reset(unsigned int f_id);
 };
-
 }

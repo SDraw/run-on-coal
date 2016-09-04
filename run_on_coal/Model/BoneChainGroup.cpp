@@ -2,7 +2,6 @@
 #include "Model/BoneChainData.h"
 #include "Model/BoneChainGroup.h"
 
-
 ROC::BoneChainGroup::BoneChainGroup()
 {
 }
