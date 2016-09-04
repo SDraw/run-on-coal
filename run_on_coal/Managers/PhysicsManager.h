@@ -32,7 +32,7 @@ public:
     inline bool GetPhysicsEnabled() { return m_enabled; }
     void SetFloorEnabled(bool f_value);
     inline bool GetFloorEnabled() { return m_floorEnabled; }
-    inline void SetGravity(glm::vec3 &f_grav) { m_dynamicWorld->setGravity((btVector3&)f_grav); }
+    void SetGravity(glm::vec3 &f_grav);
     void GetGravity(glm::vec3 &f_grav);
     bool SetModelRigidity(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveModelRigidity(Model *f_model);

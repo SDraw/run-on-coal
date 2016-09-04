@@ -69,6 +69,15 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
     }
 }
 
+void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
+{
+    m_dynamicWorld->setGravity((btVector3&)f_grav);
+    for(auto iter : m_elementSet)
+    {
+        iter->m_rigidBody->setGravity((btVector3&)f_grav);
+        iter->m_rigidBody->activate(true);
+    }
+}
 void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 {
     btVector3 l_grav = m_dynamicWorld->getGravity();

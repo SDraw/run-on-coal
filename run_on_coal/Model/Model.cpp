@@ -86,12 +86,12 @@ void ROC::Model::UpdateAnimationTick()
     m_animCurrentTick %= m_animation->m_durationTotal;
 }
 
-void ROC::Model::SetPosition(glm::vec3 &f_pos, bool f_uRb)
+void ROC::Model::SetPosition(glm::vec3 &f_pos)
 {
     if(!std::memcmp(&m_position, &f_pos, sizeof(glm::vec3))) return;
     std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
     m_rebuildMatrix = true;
-    if(f_uRb && m_rigidBody)
+    if(m_rigidBody)
     {
         btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
         l_transform.setOrigin((btVector3&)m_position);
@@ -111,12 +111,12 @@ void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
     else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
 }
 
-void ROC::Model::SetRotation(glm::quat &f_rot, bool f_uRb)
+void ROC::Model::SetRotation(glm::quat &f_rot)
 {
     if(!std::memcmp(&m_rotation, &f_rot, sizeof(glm::quat))) return;
     std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
     m_rebuildMatrix = true;
-    if(f_uRb && m_rigidBody)
+    if(m_rigidBody)
     {
         btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
         l_transform.setRotation((btQuaternion&)m_rotation);

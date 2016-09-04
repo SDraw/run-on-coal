@@ -38,9 +38,9 @@ public:
     inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
     inline bool IsRigid() { return (m_rigidBody != NULL); }
     //Manipulation
-    void SetPosition(glm::vec3 &f_pos, bool f_uRb = true);
+    void SetPosition(glm::vec3 &f_pos);
     void GetPosition(glm::vec3 &f_pos, bool f_global = false);
-    void SetRotation(glm::quat &f_rot, bool f_uRb = true);
+    void SetRotation(glm::quat &f_rot);
     void GetRotation(glm::quat &f_rot, bool f_global = false);
     void SetScale(glm::vec3 &f_scl);
     void GetScale(glm::vec3 &f_scl, bool f_global = false);
