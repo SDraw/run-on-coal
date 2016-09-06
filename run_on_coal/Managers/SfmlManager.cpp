@@ -69,6 +69,8 @@ bool ROC::SfmlManager::DoPulse()
 {
     ROC::EventManager *m_eventManager = m_core->GetLuaManager()->GetEventManager();
 
+    bool l_mouseFix = false;
+
     while(m_window->pollEvent(m_event))
     {
         switch(m_event.type)
@@ -105,10 +107,14 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseMoved:
             {
-                m_argument->PushArgument(m_event.mouseMove.x);
-                m_argument->PushArgument(m_event.mouseMove.y);
-                m_eventManager->CallEvent(EventType::CursorMove, m_argument);
-                m_argument->Clear();
+                if(!l_mouseFix)
+                {
+                    m_argument->PushArgument(m_event.mouseMove.x);
+                    m_argument->PushArgument(m_event.mouseMove.y);
+                    m_eventManager->CallEvent(EventType::CursorMove, m_argument);
+                    m_argument->Clear();
+                    l_mouseFix = true;
+                }
             } break;
             case sf::Event::MouseEntered: case sf::Event::MouseLeft:
             {
