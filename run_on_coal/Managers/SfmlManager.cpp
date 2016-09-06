@@ -53,10 +53,9 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     f_core->GetLogManager()->Log(l_log);
 
     m_active = true;
-    m_cursorDisabled = false;
-    m_cursorCenter = sf::Vector2i(l_windowSize.x / 2, l_windowSize.y / 2);
-
     m_argument = new LuaArguments();
+
+    m_cursorMode = CURSOR_VISIBILITY_BIT;
 }
 
 ROC::SfmlManager::~SfmlManager()
@@ -79,8 +78,6 @@ bool ROC::SfmlManager::DoPulse()
                 break;
             case sf::Event::Resized:
             {
-                m_cursorCenter.x = m_event.size.width / 2;
-                m_cursorCenter.y = m_event.size.height / 2;
                 m_argument->PushArgument(static_cast<int>(m_event.size.width));
                 m_argument->PushArgument(static_cast<int>(m_event.size.height));
                 m_eventManager->CallEvent(EventType::WindowResize, m_argument);
@@ -108,8 +105,8 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseMoved:
             {
-                m_argument->PushArgument(m_event.mouseMove.x - m_cursorCenter.x);
-                m_argument->PushArgument(m_event.mouseMove.y - m_cursorCenter.y);
+                m_argument->PushArgument(m_event.mouseMove.x);
+                m_argument->PushArgument(m_event.mouseMove.y);
                 m_eventManager->CallEvent(EventType::CursorMove, m_argument);
                 m_argument->Clear();
             } break;
@@ -158,33 +155,24 @@ bool ROC::SfmlManager::DoPulse()
             } break;
         }
     }
-    if(m_cursorDisabled && m_window->hasFocus()) sf::Mouse::setPosition(m_cursorCenter, *m_window);
     return m_active;
 }
 
-void ROC::SfmlManager::SetCursorMode(int f_mode)
+void ROC::SfmlManager::SetCursorMode(unsigned char f_mode)
 {
-    if(f_mode < 2)
-    {
-        m_cursorDisabled = false;
-        m_window->setMouseCursorVisible(f_mode == 1);
-    }
-    else
-    {
-        m_cursorDisabled = true;
-        m_window->setMouseCursorVisible(false);
-    }
+    if(f_mode == m_cursorMode) return;
+    m_cursorMode = f_mode;
+    m_window->setMouseCursorGrabbed((m_cursorMode & CURSOR_LOCK_BIT) == CURSOR_LOCK_BIT);
+    m_window->setMouseCursorVisible((m_cursorMode & CURSOR_VISIBILITY_BIT) == CURSOR_VISIBILITY_BIT);
 }
-void ROC::SfmlManager::GetCursorPosition(glm::dvec2 &f_pos)
+void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos)
 {
     sf::Vector2i l_position = sf::Mouse::getPosition();
-    f_pos.x = static_cast<double>(l_position.x);
-    f_pos.y = static_cast<double>(l_position.y);
+    std::memcpy(&f_pos, &l_position, sizeof(glm::ivec2));
 }
-void ROC::SfmlManager::SetCursorPosition(glm::dvec2 &f_pos)
+void ROC::SfmlManager::SetCursorPosition(glm::ivec2 &f_pos)
 {
-    sf::Vector2i l_position(static_cast<int>(f_pos.x), static_cast<int>(f_pos.y));
-    sf::Mouse::setPosition(l_position);
+    sf::Mouse::setPosition((sf::Vector2i&)f_pos, *m_window);
 }
 
 void ROC::SfmlManager::GetWindowPosition(glm::ivec2 &f_pos)

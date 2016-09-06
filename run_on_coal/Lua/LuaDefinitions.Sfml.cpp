@@ -27,19 +27,19 @@ int setCursorMode(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_type = Utils::ReadEnumString(l_state, "hidden,normal,disabled");
+    int l_type = Utils::ReadEnumString(l_state, "hu,hl,vu,vl");
     if(l_type == -1)
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    LuaManager::m_corePointer->GetSfmlManager()->SetCursorMode(l_type);
+    LuaManager::m_corePointer->GetSfmlManager()->SetCursorMode(static_cast<unsigned char>(l_type));
     lua_pushboolean(f_vm, 1);
     return 1;
 }
 int getCursorPosition(lua_State *f_vm)
 {
-    glm::dvec2 l_pos;
+    glm::ivec2 l_pos;
     LuaManager::m_corePointer->GetSfmlManager()->GetCursorPosition(l_pos);
     lua_pushnumber(f_vm, l_pos.x);
     lua_pushnumber(f_vm, l_pos.y);
@@ -47,15 +47,15 @@ int getCursorPosition(lua_State *f_vm)
 }
 int setCursorPosition(lua_State *f_vm)
 {
-    lua_Number l_val[2];
+    LUA_INTEGER l_val[2];
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
+    for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
     if(argStream.HasErrors())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    glm::dvec2 l_pos(l_val[0], l_val[1]);
+    glm::ivec2 l_pos(l_val[0], l_val[1]);
     LuaManager::m_corePointer->GetSfmlManager()->SetCursorPosition(l_pos);
     lua_pushboolean(f_vm, 1);
     return 1;
