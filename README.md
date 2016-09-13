@@ -1,6 +1,6 @@
 ![](http://i.imgur.com/x3GSfPD.png)
 
-Simple and lightweight 3D game engine.
+Simple and light-weight 3D game engine.
 
 # Features
 * OpenGL 3.1+ rendering
@@ -25,4 +25,4 @@ Latest build is always avaliable at [Dropbox shared folder](https://www.dropbox.
 All information about modeling and Lua is avaliable at [wiki](https://github.com/SDraw/run-on-coal/wiki).
 
 # Demo scene
-Check [demo scene resource](https://github.com/SDraw/roc-app-demo) to see how it works on Lua scripts level. 
+Check [demo scene resource](https://github.com/SDraw/roc-app-demo) to see how it works on Lua scripts level.
