@@ -65,13 +65,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\vendor\lua\include;..\vendor\sajson;..\vendor\bullet\include;..\vendor\pugixml;..\vendor\lodepng;..\vendor\freetype265\include;..\vendor\glm;..\vendor\glew\include;..\vendor\SFML\include;..\vendor\zlib\include;..\vendor\luauft8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\vendor\lua\include;..\vendor\sajson;..\vendor\bullet\include;..\vendor\pugixml;..\vendor\lodepng;..\vendor\freetype27\include;..\vendor\glm;..\vendor\glew\include;..\vendor\SFML\include;..\vendor\zlib\include;..\vendor\luauft8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype265d.lib;liblua53.a;sfml-audio-d.lib;sfml-system-d.lib;sfml-window-d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype265\lib;..\vendor\glew\lib;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype27d.lib;liblua53.a;sfml-audio-d.lib;sfml-system-d.lib;sfml-window-d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype27\lib;..\vendor\glew\lib;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -86,7 +86,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/lodepng;../vendor/SFML/include;../vendor/freetype265/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/lodepng;../vendor/SFML/include;../vendor/freetype27/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -102,8 +102,8 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype265\lib;..\vendor\glew\lib;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype265.lib;liblua53.a;sfml-audio.lib;sfml-system.lib;sfml-window.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype27\lib;..\vendor\glew\lib;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype27.lib;liblua53.a;sfml-audio.lib;sfml-system.lib;sfml-window.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>

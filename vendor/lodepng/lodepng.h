@@ -1,5 +1,5 @@
 /*
-LodePNG version 20160409
+LodePNG version 20160501
 
 Copyright (c) 2005-2016 Lode Vandevenne
 
@@ -896,6 +896,7 @@ TODO:
 [X] let the "isFullyOpaque" function check color keys and transparent palettes too
 [X] better name for the variables "codes", "codesD", "codelengthcodes", "clcl" and "lldl"
 [ ] don't stop decoding on errors like 69, 57, 58 (make warnings)
+[ ] make warnings like: oob palette, checksum fail, data after iend, wrong/unknown crit chunk, no null terminator in text, ...
 [ ] let the C++ wrapper catch exceptions coming from the standard library and return LodePNG error codes
 [ ] allow user to provide custom color conversion functions, e.g. for premultiplied alpha, padding bits or not, ...
 [ ] allow user to give data (void*) to custom allocator
@@ -1607,6 +1608,7 @@ yyyymmdd.
 Some changes aren't backwards compatible. Those are indicated with a (!)
 symbol.
 
+*) 18 apr 2016: Changed qsort to custom stable sort (for platforms w/o qsort).
 *) 09 apr 2016: Fixed colorkey usage detection, and better file loading (within
    the limits of pure C90).
 *) 08 dec 2015: Made load_file function return error if file can't be opened.

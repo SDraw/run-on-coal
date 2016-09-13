@@ -1,5 +1,5 @@
 /*
-LodePNG version 20160409
+LodePNG version 20160501
 
 Copyright (c) 2005-2016 Lode Vandevenne
 
@@ -39,7 +39,7 @@ Rename this file to lodepng.cpp to use it for C++, or to lodepng.c to use it for
 #pragma warning( disable : 4996 ) /*VS does not like fopen, but fopen_s is not standard C so unusable here*/
 #endif /*_MSC_VER */
 
-const char* LODEPNG_VERSION_STRING = "20160409";
+const char* LODEPNG_VERSION_STRING = "20160501";
 
 /*
 This source file is built up in the following large parts. The code sections
@@ -727,14 +727,31 @@ static BPMNode* bpmnode_create(BPMLists* lists, int weight, unsigned index, BPMN
   return result;
 }
 
-static int bpmnode_compare(const void* a, const void* b)
+/*sort the leaves with stable mergesort*/
+static void bpmnode_sort(BPMNode* leaves, size_t num)
 {
-  int wa = ((const BPMNode*)a)->weight;
-  int wb = ((const BPMNode*)b)->weight;
-  if(wa < wb) return -1;
-  if(wa > wb) return 1;
-  /*make the qsort a stable sort*/
-  return ((const BPMNode*)a)->index < ((const BPMNode*)b)->index ? 1 : -1;
+  BPMNode* mem = (BPMNode*)lodepng_malloc(sizeof(*leaves) * num);
+  size_t width, counter = 0;
+  for(width = 1; width < num; width *= 2)
+  {
+    BPMNode* a = (counter & 1) ? mem : leaves;
+    BPMNode* b = (counter & 1) ? leaves : mem;
+    size_t p;
+    for(p = 0; p < num; p += 2 * width)
+    {
+      size_t q = (p + width > num) ? num : (p + width);
+      size_t r = (p + 2 * width > num) ? num : (p + 2 * width);
+      size_t i = p, j = q, k;
+      for(k = p; k < r; k++)
+      {
+        if(i < q && (j >= r || a[i].weight <= a[j].weight)) b[k] = a[i++];
+        else b[k] = a[j++];
+      }
+    }
+    counter++;
+  }
+  if(counter & 1) memcpy(leaves, mem, sizeof(*leaves) * num);
+  lodepng_free(mem);
 }
 
 /*Boundary Package Merge step, numpresent is the amount of leaves, and c is the current chain.*/
@@ -814,7 +831,7 @@ unsigned lodepng_huffman_code_lengths(unsigned* lengths, const unsigned* frequen
     BPMLists lists;
     BPMNode* node;
 
-    qsort(leaves, numpresent, sizeof(BPMNode), bpmnode_compare);
+    bpmnode_sort(leaves, numpresent);
 
     lists.listsize = maxbitlen;
     lists.memsize = 2 * maxbitlen * (maxbitlen + 1);
@@ -2368,9 +2385,10 @@ static unsigned readBitsFromReversedStream(size_t* bitpointer, const unsigned ch
 {
   unsigned result = 0;
   size_t i;
-  for(i = nbits - 1; i < nbits; --i)
+  for(i = 0 ; i < nbits; ++i)
   {
-    result += (unsigned)readBitFromReversedStream(bitpointer, bitstream) << i;
+    result <<= 1;
+    result |= (unsigned)readBitFromReversedStream(bitpointer, bitstream);
   }
   return result;
 }
@@ -4506,7 +4524,7 @@ static void decodeGeneric(unsigned char** out, unsigned* w, unsigned* h,
   ucvector scanlines;
   size_t predict;
   size_t numpixels;
-  size_t outsize;
+  size_t outsize = 0;
 
   /*for unknown chunk order*/
   unsigned unknown = 0;
@@ -5660,7 +5678,7 @@ unsigned lodepng_encode(unsigned char** out, size_t* outsize,
   if(!lodepng_color_mode_equal(&state->info_raw, &info.color))
   {
     unsigned char* converted;
-    size_t size = (w * h * lodepng_get_bpp(&info.color) + 7) / 8;
+    size_t size = (w * h * (size_t)lodepng_get_bpp(&info.color) + 7) / 8;
 
     converted = (unsigned char*)lodepng_malloc(size);
     if(!converted && size) state->error = 83; /*alloc fail*/
