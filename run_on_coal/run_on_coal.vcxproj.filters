@@ -80,9 +80,6 @@
     <ClCompile Include="Scene\Font.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\vendor\lodepng\lodepng.cpp">
-      <Filter>vendor\lodepng</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\Quad.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -374,9 +371,6 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{00cfde40-a03e-4a92-af64-8eba29925623}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\lodepng">
-      <UniqueIdentifier>{4e770ace-bb25-4a85-80c9-eca34f0d68b2}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\pugixml">
       <UniqueIdentifier>{8d9d0999-a8cd-424e-8e6d-7027214a0f77}</UniqueIdentifier>

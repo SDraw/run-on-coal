@@ -23,6 +23,7 @@
 #include "GL/glew.h"
 
 #include "SFML/Audio.hpp"
+#include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 
 #define GLM_FORCE_INLINE
@@ -37,7 +38,6 @@
 
 #include "btBulletDynamicsCommon.h"
 
-#include "lodepng.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 #include "lua.hpp"

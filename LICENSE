@@ -27,6 +27,5 @@ External libraries used by RunOnCoal
 * freetype is under the FreeType license or the GPL license.
 * sajson is licensed under MIT license.
 * pugixml is licensed under MIT license.
-* lodepng is licensed under MIT license.
 * zlib is licensed under zlib license.
 * luautf8 is licensed under the terms of the MIT license.

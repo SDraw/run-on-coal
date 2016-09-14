@@ -9,6 +9,7 @@ namespace ROC
 class Texture
 {
     int m_type;
+    void GenerateBrokenTexture();
 public:
     inline bool IsTransparent() { return (m_type == TEXTURE_TYPE_RGBA); }
     inline bool IsCubic() { return (m_type == TEXTURE_TYPE_CUBEMAP); }

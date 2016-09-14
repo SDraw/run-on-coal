@@ -11,37 +11,44 @@ ROC::Texture::~Texture()
     if(m_texture) glDeleteTextures(1, &m_texture);
 }
 
-bool ROC::Texture::Load(std::string &f_path, int f_type, bool f_compress)
+void ROC::Texture::GenerateBrokenTexture()
 {
-    if(m_type != TEXTURE_TYPE_NONE || f_type <= TEXTURE_TYPE_NONE || f_type >= TEXTURE_TYPE_CUBEMAP) return false;
-    unsigned l_width, l_height;
-    std::vector<unsigned char> l_texture;
-    bool l_fail = false;
-    if(lodepng::decode(l_texture, l_width, l_height, f_path, (f_type == TEXTURE_TYPE_RGB) ? LCT_RGB : LCT_RGBA))
+    std::vector<unsigned char> l_brokenImage;
+    for(int i = 0; i < 3; i++) l_brokenImage.push_back(0x7FU);
+    for(int i = 0; i < 2; i++)
     {
-        //Let's use grey and orange tile for failed texture
-        for(int i = 0; i < 3; i++) l_texture.push_back(0x7F);
-        for(int i = 0; i < 2; i++)
-        {
-            l_texture.push_back(0xF7);
-            l_texture.push_back(0x94);
-            l_texture.push_back(0x1D);
-        }
-        for(int i = 0; i < 3; i++) l_texture.push_back(0x7F);
-        l_width = l_height = 2U;
-        f_type = TEXTURE_TYPE_RGB;
-        l_fail = true;
+        l_brokenImage.push_back(0xF7U);
+        l_brokenImage.push_back(0x94U);
+        l_brokenImage.push_back(0x1DU);
     }
+    for(int i = 0; i < 3; i++) l_brokenImage.push_back(0x7FU);
+    m_type = TEXTURE_TYPE_RGB;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, l_fail ? GL_NEAREST : GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, l_fail ? GL_NEAREST : GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), l_width, l_height, 0, (f_type == TEXTURE_TYPE_RGB) ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, l_texture.data());
-    l_texture.clear();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2U, 2U, 0, GL_RGB, GL_UNSIGNED_BYTE, l_brokenImage.data());
+}
 
+bool ROC::Texture::Load(std::string &f_path, int f_type, bool f_compress)
+{
+    if(m_type != TEXTURE_TYPE_NONE || f_type <= TEXTURE_TYPE_NONE || f_type >= TEXTURE_TYPE_CUBEMAP) return false;
+    sf::Image l_image;
     m_type = f_type;
+    if(l_image.loadFromFile(f_path))
+    {
+        sf::Vector2u l_imageSize = l_image.getSize();
+        glGenTextures(1, &m_texture);
+        glBindTexture(GL_TEXTURE_2D, m_texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+    }
+    else GenerateBrokenTexture();
     return true;
 }
 bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, bool f_compress)
@@ -54,16 +61,22 @@ bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, bool f_compress
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    unsigned l_width, l_height;
-    std::vector<unsigned char> l_texture;
+    m_type = TEXTURE_TYPE_CUBEMAP;
     for(int i = 0; i < 6; i++)
     {
-        if(lodepng::decode(l_texture, l_width, l_height, f_path[i], LCT_RGB)) return false;
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_width, l_height, 0, GL_RGB, GL_UNSIGNED_BYTE, l_texture.data());
-        l_texture.clear();
+        sf::Image l_image;
+        if(l_image.loadFromFile(f_path[i]))
+        {
+            sf::Vector2u l_imageSize = l_image.getSize();
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+        }
+        else
+        {
+            glDeleteTextures(1, &m_texture);
+            GenerateBrokenTexture();
+            break;
+        }
     }
-
-    m_type = TEXTURE_TYPE_CUBEMAP;
     return true;
 }
 
