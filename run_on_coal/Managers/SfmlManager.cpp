@@ -8,6 +8,28 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
 
+namespace ROC
+{
+std::vector<std::string> g_keysTable
+{
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+    "esc", "lctrl", "lshift", "lalt", "lsys", "rctrl", "rshift", "ralt", "rsys", "menu",
+    "lbracket", "rbracket", "semicolon", "comma", "period", "quote", "slash", "backslash", "tilde", "equal", "dash",
+    "space", "return", "backspace", "tab", "pgup", "pgdn", "end", "home", "insert", "delete",
+    "num+", "num-", "num*", "num/",
+    "arrow_l", "arrow_r", "arrow_u", "arrow_d",
+    "num0", "num1", "num2", "num3", "num4", "num5", "num6", "num7", "num8", "num9",
+    "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
+    "pause"
+};
+std::vector<std::string> g_mouseKeysTable
+{
+    "left", "right", "middle",
+    "x1", "x2"
+};
+}
+
 ROC::SfmlManager::SfmlManager(Core *f_core)
 {
     m_core = f_core;
@@ -86,10 +108,13 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::KeyPressed: case sf::Event::KeyReleased:
             {
-                m_argument->PushArgument(m_event.key.code);
-                m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
-                m_eventManager->CallEvent(EventType::KeyPress, m_argument);
-                m_argument->Clear();
+                if(m_event.key.code != -1)
+                {
+                    m_argument->PushArgument(g_keysTable[m_event.key.code]);
+                    m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
+                    m_eventManager->CallEvent(EventType::KeyPress, m_argument);
+                    m_argument->Clear();
+                }
             } break;
             case sf::Event::TextEntered:
             {
@@ -123,7 +148,7 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
-                m_argument->PushArgument(m_event.mouseButton.button);
+                m_argument->PushArgument(g_mouseKeysTable[m_event.mouseButton.button]);
                 m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
                 m_eventManager->CallEvent(EventType::MouseKeyPress, m_argument);
                 m_argument->Clear();
