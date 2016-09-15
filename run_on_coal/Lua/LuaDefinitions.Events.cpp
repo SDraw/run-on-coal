@@ -5,12 +5,20 @@
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Events.h"
 #include "Utils/Utils.h"
-#define EVENTS_STRING "onOGLPreRender,onOGLRender,onWindowResize,onKeyPress,onMouseKeyPress,onMouseScroll,onCursorMove,onCursorEnter,onJoypadConnect,onJoypadButton,onJoypadAxis,onTextInput"
 
 namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_eventNamesTable
+{
+    "onOGLPreRender", "onOGLRender",
+    "onWindowResize",
+    "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
+    "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
+    "onTextInput"
+};
+
 int addEvent(lua_State *f_vm)
 {
     std::string l_event;
@@ -20,12 +28,12 @@ int addEvent(lua_State *f_vm)
     argStream.DecreaseArguments(2);
     argStream.ReadText(l_event);
     argStream.ReadFunction(l_func, &l_point);
-    if(argStream.HasErrors())
+    if(argStream.HasErrors() || l_event.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_enumValue = Utils::ReadEnumString(l_event, EVENTS_STRING);
+    int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
     if(l_enumValue == -1)
     {
         lua_pushboolean(f_vm, 0);
@@ -44,12 +52,12 @@ int removeEvent(lua_State *f_vm)
     argStream.DecreaseArguments(2);
     argStream.ReadText(l_event);
     argStream.ReadFunction(l_func, &l_point);
-    if(argStream.HasErrors())
+    if(argStream.HasErrors() || l_event.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_enumValue = Utils::ReadEnumString(l_event, EVENTS_STRING);
+    int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
     if(l_enumValue == -1)
     {
         lua_pushboolean(f_vm, 0);

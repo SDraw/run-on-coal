@@ -17,7 +17,7 @@ int fontCreate(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_path);
     argStream.ReadInteger(l_size);
-    if(argStream.HasErrors() || !l_path.length() || l_size < 1)
+    if(argStream.HasErrors() || l_path.empty() || l_size < 1)
     {
         lua_pushboolean(f_vm, 0);
         return 1;
@@ -51,7 +51,7 @@ int fontDraw(lua_State *f_vm)
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     argStream.ReadText(l_text);
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
-    if(argStream.HasErrors() || !l_text.length())
+    if(argStream.HasErrors() || l_text.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;

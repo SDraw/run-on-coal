@@ -11,6 +11,7 @@
 ROC::SfmlManager::SfmlManager(Core *f_core)
 {
     m_core = f_core;
+    m_eventManager = m_core->GetLuaManager()->GetEventManager();
 
     std::string l_log;
 
@@ -67,8 +68,6 @@ ROC::SfmlManager::~SfmlManager()
 
 bool ROC::SfmlManager::DoPulse()
 {
-    ROC::EventManager *m_eventManager = m_core->GetLuaManager()->GetEventManager();
-
     bool l_mouseMoveEventFix = false;
 
     while(m_window->pollEvent(m_event))
@@ -198,4 +197,13 @@ float ROC::SfmlManager::GetTime()
 {
     sf::Time l_time = m_clock.getElapsedTime();
     return l_time.asSeconds();
+}
+
+bool ROC::SfmlManager::IsKeyPressed(int f_key)
+{
+    return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(f_key));
+}
+bool ROC::SfmlManager::IsMouseKeyPressed(int f_key)
+{
+    return sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(f_key));
 }

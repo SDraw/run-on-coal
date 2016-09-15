@@ -12,6 +12,11 @@ namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_textureTypesTable
+{
+    "rgb", "rgba", "cube"
+};
+
 int textureCreate(lua_State *f_vm)
 {
     std::string l_type;
@@ -19,20 +24,20 @@ int textureCreate(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_type);
     argStream.ReadBoolean(l_compress);
-    if(argStream.HasErrors() || !l_type.length())
+    if(argStream.HasErrors() || l_type.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
     Texture *l_tex = NULL;
-    int l_iType = Utils::ReadEnumString(l_type, "rgb,rgba,cube");
+    int l_iType = Utils::ReadEnumVector(g_textureTypesTable, l_type);
     switch(l_iType)
     {
         case 0: case 1:
         {
             std::string l_path;
             argStream.ReadText(l_path);
-            if(argStream.HasErrors() || !l_path.length())
+            if(argStream.HasErrors() || l_path.empty())
             {
                 lua_pushboolean(f_vm, 0);
                 return 1;

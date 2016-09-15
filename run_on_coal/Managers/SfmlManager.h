@@ -5,10 +5,12 @@
 namespace ROC
 {
 class Core;
+class EventManager;
 class LuaArguments;
 class SfmlManager
 {
     Core *m_core;
+    EventManager *m_eventManager;
 
     sf::Window *m_window;
     bool m_active;
@@ -28,6 +30,9 @@ public:
     inline void CloseWindow() { m_active = false; }
 
     float GetTime();
+
+    bool IsKeyPressed(int f_key);
+    bool IsMouseKeyPressed(int f_key);
 protected:
     SfmlManager(Core *f_core);
     ~SfmlManager();

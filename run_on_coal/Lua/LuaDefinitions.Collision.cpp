@@ -11,6 +11,11 @@ namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_collisionTypesTable
+{
+    "sphere", "box", "cylinder", "capsule", "cone"
+};
+
 int collisionCreate(lua_State *f_vm)
 {
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
@@ -18,12 +23,12 @@ int collisionCreate(lua_State *f_vm)
     lua_Number l_size[3] = { 1.0, 1.0, 1.0 };
     argStream.ReadText(l_typeString);
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
-    if(argStream.HasErrors())
+    if(argStream.HasErrors() || l_typeString.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_type = Utils::ReadEnumString(l_typeString, "sphere,box,cylinder,capsule,cone");
+    int l_type = Utils::ReadEnumVector(g_collisionTypesTable, l_typeString);
     if(l_type == -1)
     {
         lua_pushboolean(f_vm, 0);

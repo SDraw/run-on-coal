@@ -27,12 +27,20 @@ GLint CheckShader(GLuint f_shader)
     return l_params;
 }
 
-int ReadEnumString(std::string &f_val, const std::string &f_enum)
+int ReadEnumVector(std::vector<std::string> &f_vec, std::string &f_val)
 {
-    size_t first = f_enum.find(f_val);
-    if(first == std::string::npos) return -1;
-    return std::count(f_enum.begin(), f_enum.begin() + first, ',');
+    int l_return = -1;
+    for(std::vector<std::string>::const_iterator iter = f_vec.begin(); iter != f_vec.end(); ++iter)
+    {
+        if(!iter->compare(f_val))
+        {
+            l_return = iter - f_vec.begin();
+            break;
+        }
+    }
+    return l_return;
 }
+
 unsigned long GetSystemTick()
 {
 #ifdef _WIN32

@@ -15,6 +15,11 @@ namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_modelRigidityTable
+{
+    "sphere", "box", "cylinder", "capsule", "cone"
+};
+
 int modelCreate(lua_State *f_vm)
 {
     Geometry *l_geometry;
@@ -432,12 +437,12 @@ int modelSetRigidity(lua_State *f_vm)
     argStream.ReadText(l_textType);
     argStream.ReadNextNumber(l_mass);
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_sizes[i]);
-    if(argStream.HasErrors() || !l_textType.length() || l_mass < 0.0)
+    if(argStream.HasErrors() || l_textType.empty() || l_mass < 0.0)
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_type = Utils::ReadEnumString(l_textType, "sphere,box,cylinder,capsule,cone");
+    int l_type = Utils::ReadEnumVector(g_modelRigidityTable, l_textType);
     if(l_type == -1)
     {
         lua_pushboolean(f_vm, 0);

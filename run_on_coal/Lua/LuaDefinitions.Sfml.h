@@ -11,5 +11,7 @@ int getWindowPosition(lua_State *f_vm);
 int getWindowSize(lua_State *f_vm);
 int closeApp(lua_State *f_vm);
 int getTime(lua_State *f_vm);
+int isKeyPressed(lua_State *f_vm);
+int isMouseKeyPressed(lua_State *f_vm);
 }
 }

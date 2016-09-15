@@ -12,6 +12,11 @@ namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_targetTypesTable
+{
+    "depth", "rgb", "rgba", "rgbf"
+};
+
 int rtCreate(lua_State *f_vm)
 {
     LUA_INTEGER l_par[3];
@@ -19,12 +24,12 @@ int rtCreate(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     for(int i = 0; i < 3; i++) argStream.ReadInteger(l_par[i]);
     argStream.ReadText(l_type);
-    if(argStream.HasErrors() || l_par[0] < 1 || l_par[1] < 1 || l_par[2] < 0 || !l_type.length())
+    if(argStream.HasErrors() || l_par[0] < 1 || l_par[1] < 1 || l_par[2] < 0 || l_type.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_etype = Utils::ReadEnumString(l_type, "depth,rgb,rgba,rgbf");
+    int l_etype = Utils::ReadEnumVector(g_targetTypesTable, l_type);
     if(l_etype == -1)
     {
         lua_pushboolean(f_vm, 0);

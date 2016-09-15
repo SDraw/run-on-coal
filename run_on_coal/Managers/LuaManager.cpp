@@ -262,6 +262,9 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "setCursorPosition", Lua::setCursorPosition);
     lua_register(m_pVM, "getCursorPosition", Lua::getCursorPosition);
 
+    lua_register(m_pVM, "isKeyPressed", Lua::isKeyPressed);
+    lua_register(m_pVM, "isMouseKeyPressed", Lua::isMouseKeyPressed);
+
     lua_register(m_pVM, "getTime", Lua::getTime);
 
     lua_register(m_pVM, "getWindowSize", Lua::getWindowSize);

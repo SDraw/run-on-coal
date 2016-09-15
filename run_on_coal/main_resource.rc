@@ -12,18 +12,18 @@ FILEOS 0x40004L
 FILETYPE 0x1L
 FILESUBTYPE 0x0L
 BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904B0"
-        BEGIN
-            VALUE "FileDescription", "RunOnCoal Engine Application"
-            VALUE "FileVersion", "1.0"
-            VALUE "ProductName", "ROC"
-            VALUE "ProductVersion", "1.0"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x0409, 1200
-    END
+BLOCK "StringFileInfo"
+BEGIN
+BLOCK "040904B0"
+BEGIN
+VALUE "FileDescription", "RunOnCoal Engine Application"
+VALUE "FileVersion", "1.0"
+VALUE "ProductName", "ROC"
+VALUE "ProductVersion", "1.0"
+END
+END
+BLOCK "VarFileInfo"
+BEGIN
+VALUE "Translation", 0x0409, 1200
+END
 END

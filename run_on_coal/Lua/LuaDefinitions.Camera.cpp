@@ -11,17 +11,22 @@ namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_cameraTypesTable
+{
+    "perspective", "orthogonal"
+};
+
 int cameraCreate(lua_State *f_vm)
 {
     std::string l_text;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_text);
-    if(argStream.HasErrors() || !l_text.length())
+    if(argStream.HasErrors() || l_text.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_type = Utils::ReadEnumString(l_text, "perspective,orthogonal");
+    int l_type = Utils::ReadEnumVector(g_cameraTypesTable, l_text);
     if(l_type == -1)
     {
         lua_pushboolean(f_vm, 0);
@@ -123,12 +128,12 @@ int cameraSetType(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_camera, ElementType::CameraElement);
     argStream.ReadText(l_text);
-    if(argStream.HasErrors() || !l_text.length())
+    if(argStream.HasErrors() || l_text.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_type = Utils::ReadEnumString(l_text, "perspective,orthogonal");
+    int l_type = Utils::ReadEnumVector(g_cameraTypesTable, l_text);
     if(l_type == -1)
     {
         lua_pushboolean(f_vm, 0);

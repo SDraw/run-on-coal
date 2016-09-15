@@ -14,6 +14,16 @@ namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_uniformTypesTable
+{
+    "uint", "uvec2", "uvec3", "uvec4",
+    "int", "ivec2", "ivec3", "ivec4",
+    "float", "vec2", "vec3", "vec4",
+    "double", "dvec2", "dvec3", "dvec4",
+    "mat2", "mat3", "mat4",
+    "texture", "target"
+};
+
 int shaderCreate(lua_State *f_vm)
 {
     std::string l_vsp, l_fsp, l_gsp;
@@ -21,7 +31,7 @@ int shaderCreate(lua_State *f_vm)
     argStream.ReadText(l_vsp);
     argStream.ReadText(l_fsp);
     argStream.ReadNextText(l_gsp);
-    if(argStream.HasErrors() || (!l_vsp.length() && !l_fsp.length()))
+    if(argStream.HasErrors() || (l_vsp.empty() && l_fsp.empty()))
     {
         lua_pushboolean(f_vm, 0);
         return 1;
@@ -51,12 +61,7 @@ int shaderGetUniform(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_shader, ElementType::ShaderElement);
     argStream.ReadText(l_unif);
-    if(argStream.HasErrors())
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    if(!l_unif.length())
+    if(argStream.HasErrors() || l_unif.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
@@ -74,12 +79,12 @@ int shaderSetUniformValue(lua_State *f_vm)
     argStream.ReadUserdata((void**)&l_shader, ElementType::ShaderElement);
     argStream.ReadInteger(l_unif);
     argStream.ReadText(l_type);
-    if(argStream.HasErrors() || l_unif < 0 || l_unif > 255 || !l_type.length())
+    if(argStream.HasErrors() || l_unif < 0 || l_unif > 255 || l_type.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    switch(Utils::ReadEnumString(l_type, "unsigned,uvec2,uvec3,uvec4, int,ivec2,ivec3,ivec4, float,fvec2,fvec3,fvec4, double,dvec2,dvec3,dvec4, mat2,mat3,mat4, texture,target"))
+    switch(Utils::ReadEnumVector(g_uniformTypesTable, l_type))
     {
         // Unsigned int
         case 0:

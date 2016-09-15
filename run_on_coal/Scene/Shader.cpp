@@ -65,7 +65,7 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
     GLuint l_vertexShader = 0;
     GLuint l_fragmentShader = 0;
     GLuint l_geometryShader = 0;
-    if(f_vpath.length())
+    if(!f_vpath.empty())
     {
         std::string l_data;
         if(!Utils::ReadFile(f_vpath, l_data)) return false;
@@ -84,7 +84,7 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
             return false;
         }
     }
-    if(f_fpath.length())
+    if(!f_fpath.empty())
     {
         std::string l_data;
         if(!Utils::ReadFile(f_fpath, l_data))
@@ -112,7 +112,7 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
             return false;
         }
     }
-    if(f_gpath.length())
+    if(!f_gpath.empty())
     {
         std::string l_data;
         if(!Utils::ReadFile(f_gpath, l_data))

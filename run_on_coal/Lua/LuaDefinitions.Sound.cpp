@@ -19,7 +19,7 @@ int soundCreate(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_path);
     argStream.ReadNextBoolean(l_loop);
-    if(argStream.HasErrors() || !l_path.length())
+    if(argStream.HasErrors() || l_path.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;

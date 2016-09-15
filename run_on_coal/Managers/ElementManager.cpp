@@ -159,21 +159,21 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
     std::string l_path[3], l_work;
     m_core->GetWorkingDirectory(l_work);
 
-    if(f_vpath.length())
+    if(!f_vpath.empty())
     {
         std::string l_vertexPath;
         AnalyzePath(f_vpath, l_vertexPath);
         l_path[0].append(l_work);
         Utils::JoinPaths(l_path[0], l_vertexPath);
     }
-    if(f_fpath.length())
+    if(!f_fpath.empty())
     {
         std::string l_fragmentPath;
         AnalyzePath(f_fpath, l_fragmentPath);
         l_path[1].append(l_work);
         Utils::JoinPaths(l_path[1], l_fragmentPath);
     }
-    if(f_gpath.length())
+    if(!f_gpath.empty())
     {
         std::string l_geometryPath;
         AnalyzePath(f_gpath, l_geometryPath);
@@ -184,7 +184,7 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
     {
         std::string l_shaderError;
         l_shader->GetError(l_shaderError);
-        if(l_shaderError.length())
+        if(!l_shaderError.empty())
         {
             std::string l_error("[");
             l_error.append(f_vpath);

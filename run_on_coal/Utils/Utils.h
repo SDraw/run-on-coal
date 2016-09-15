@@ -11,7 +11,7 @@ GLint CheckShader(GLuint f_shader);
 unsigned long GetSystemTick();
 
 void JoinPaths(std::string &f_result, std::string &f_path);
-int ReadEnumString(std::string &f_val, const std::string &f_enum);
+int ReadEnumVector(std::vector<std::string> &f_vec, std::string &f_val);
 
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen);
 int UncompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen);

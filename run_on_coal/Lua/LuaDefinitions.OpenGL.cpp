@@ -10,23 +10,27 @@ namespace ROC
 {
 namespace Lua
 {
+std::vector<std::string> g_buffersTable
+{
+    "color", "depth"
+};
+std::vector<std::string> g_drawingTable
+{
+    "point", "line", "fill"
+};
+
 int oglClear(lua_State *f_vm)
 {
     std::string l_param;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_param);
-    if(argStream.HasErrors())
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    if(l_param.length() == 0)
+    if(argStream.HasErrors() || l_param.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
     bool l_result = true;
-    switch(Utils::ReadEnumString(l_param, "color,depth"))
+    switch(Utils::ReadEnumVector(g_buffersTable, l_param))
     {
         case 0:
             LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(GL_COLOR_BUFFER_BIT);
@@ -75,12 +79,12 @@ int oglPolygonMode(lua_State *f_vm)
     std::string l_mode;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_mode);
-    if(argStream.HasErrors() || !l_mode.length())
+    if(argStream.HasErrors() || l_mode.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_type = Utils::ReadEnumString(l_mode, "point,line,fill");
+    int l_type = Utils::ReadEnumVector(g_drawingTable, l_mode);
     if(l_type == -1)
     {
         lua_pushboolean(f_vm, 0);
