@@ -49,7 +49,7 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
 void ROC::PreRenderManager::DoPulse_S1()
 {
     EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
-    if(l_eventManager->IsEventExists(EventType::PreRender)) l_eventManager->CallEvent(EventType::PreRender, m_argument);
+    l_eventManager->CallEvent(EventType::PreRender, m_argument);
     for(auto iter : m_animatedModelSet) iter->UpdateAnimation();
     for(auto iter : m_animatedModelSet) iter->UpdateMatrix();
     bool l_physicsState = m_physicsManager->GetPhysicsEnabled();

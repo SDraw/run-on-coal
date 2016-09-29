@@ -60,8 +60,7 @@ void ROC::RenderManager::DoPulse()
     m_time = l_sfmlManager->GetTime();
 
     m_locked = false;
-    EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
-    if(l_eventManager->IsEventExists(EventType::Render)) l_eventManager->CallEvent(EventType::Render, m_argument);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::Render, m_argument);
     m_locked = true;
     l_sfmlManager->SwapBuffers();
 }

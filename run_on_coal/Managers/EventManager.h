@@ -21,17 +21,17 @@ enum EventType : unsigned char
 
 class LuaManager;
 class LuaArguments;
+class Event;
 class EventManager
 {
     LuaManager *m_luaManager;
-
-    std::vector<std::pair<void*, int>> m_eventVector[EventType::Last];
-    size_t m_lastIteration;
-    unsigned char m_currentEvent;
+    std::vector<Event*> m_eventsVector[EventType::Last];
+    std::vector<Event*>::iterator m_iter;
+    unsigned char m_activeEvent;
 public:
     void CallEvent(unsigned char f_event, LuaArguments *f_args);
-    inline bool IsEventExists(unsigned char f_event) { return ((f_event < EventType::Last) ? (m_eventVector[f_event].size() > 0U) : false); }
     bool AddEvent(unsigned char f_event, int f_ref, void *f_pointer);
+    bool SetEventMute(unsigned char f_event, void *f_pointer, bool f_mute);
     bool RemoveEvent(unsigned char f_event, void *f_pointer);
 protected:
     EventManager(LuaManager *f_luaManager);
