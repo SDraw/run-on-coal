@@ -46,14 +46,12 @@ int addEvent(lua_State *f_vm)
 int setEventMute(lua_State *f_vm)
 {
     std::string l_event;
-    int l_func;
     void *l_point;
     bool l_mute;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.DecreaseArguments(3);
     argStream.ReadText(l_event);
+    argStream.ReadFunctionPointer(&l_point);
     argStream.ReadBoolean(l_mute);
-    argStream.ReadFunction(l_func, &l_point);
     if(argStream.HasErrors() || l_event.empty())
     {
         lua_pushboolean(f_vm, 0);
@@ -72,12 +70,10 @@ int setEventMute(lua_State *f_vm)
 int removeEvent(lua_State *f_vm)
 {
     std::string l_event;
-    int l_func;
     void *l_point;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.DecreaseArguments(2);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_func, &l_point);
+    argStream.ReadFunctionPointer(&l_point);
     if(argStream.HasErrors() || l_event.empty())
     {
         lua_pushboolean(f_vm, 0);

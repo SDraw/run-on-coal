@@ -23,6 +23,7 @@ public:
     void ReadUserdata(void **f_val, unsigned int f_type);
     void ReadPointer(void **f_val);
     void ReadFunction(int &f_val, void **f_pointer);
+    void ReadFunctionPointer(void **f_pointer);
 
     void ReadNextBoolean(bool &f_val);
     void ReadNextNumber(lua_Number &f_val);

@@ -166,6 +166,24 @@ void ROC::ArgReader::ReadFunction(int &f_val, void **f_pointer)
     f_val = luaL_ref(m_pVM, LUA_REGISTRYINDEX);
     m_iArgIndex++;
 }
+void ROC::ArgReader::ReadFunctionPointer(void **f_pointer)
+{
+    if(m_hasErrors) return;
+    if(m_iArgNum < m_iArgIndex)
+    {
+        m_error.append("Not enough arguments");
+        m_hasErrors = true;
+        return;
+    }
+    if(!lua_isfunction(m_pVM, m_iArgIndex))
+    {
+        m_error.append("Expected function");
+        m_hasErrors = true;
+        return;
+    }
+    *f_pointer = (void*)lua_topointer(m_pVM, m_iArgIndex);
+    m_iArgIndex++;
+}
 
 void ROC::ArgReader::ReadNextBoolean(bool &f_val)
 {
