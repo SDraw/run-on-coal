@@ -281,7 +281,7 @@ void ROC::ArgReader::ReadTableNumbers(std::vector<double> &f_vec, int f_size)
         lua_Number l_val = lua_tonumber(m_pVM, -1);
         if(std::isnan(l_val) || std::isinf(l_val))
         {
-            m_error.append("Got NaN or Inf");
+            m_error.append("Got NaN/Inf");
             m_hasErrors = true;
             return;
         }

@@ -5,7 +5,9 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/SfmlManager.h"
+#include "Scene/Shader.h"
 #include "Lua/LuaArguments.h"
+#include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
 namespace ROC
@@ -75,6 +77,10 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     l_log.append((char*)glewGetString(GLEW_VERSION));
     f_core->GetLogManager()->Log(l_log);
 
+    int l_maxBindings = 0;
+    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &l_maxBindings);
+    Shader::m_uboBindPool = new Pool(l_maxBindings);
+
     m_active = true;
     m_argument = new LuaArguments();
 
@@ -86,6 +92,7 @@ ROC::SfmlManager::~SfmlManager()
     m_window->close();
     delete m_window;
     delete m_argument;
+    delete Shader::m_uboBindPool;
 }
 
 bool ROC::SfmlManager::DoPulse()

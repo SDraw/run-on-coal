@@ -5,7 +5,7 @@
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
-ROC::Pool ROC::Shader::m_bonesBindPool = ROC::Pool(64U);
+ROC::Pool *ROC::Shader::m_uboBindPool = NULL;
 
 ROC::Shader::Shader()
 {
@@ -53,7 +53,7 @@ ROC::Shader::~Shader()
     if(m_bonesUBO != 0xFFFFFFFF)
     {
         glDeleteBuffers(1, &m_bonesUBO);
-        m_bonesBindPool.Reset(m_boneBindIndex);
+        m_uboBindPool->Reset(m_boneBindIndex);
     }
     m_textureBind.clear();
     m_targetBind.clear();
@@ -230,12 +230,12 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     unsigned int l_boneUniform = glGetUniformBlockIndex(m_program, "gBonesUniform");
     if(l_boneUniform != GL_INVALID_INDEX)
     {
-        m_boneBindIndex = m_bonesBindPool.Allocate();
+        m_boneBindIndex = m_uboBindPool->Allocate();
         if(m_boneBindIndex != -1)
         {
             glGenBuffers(1, &m_bonesUBO);
             glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
-            glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * 255, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * MAX_BONES_PER_MODEL, NULL, GL_DYNAMIC_DRAW);
             glBindBufferBase(GL_UNIFORM_BUFFER, m_boneBindIndex, m_bonesUBO);
             glUniformBlockBinding(m_program, l_boneUniform, m_boneBindIndex);
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -499,9 +499,11 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
 void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value)
 {
     if(m_bonesUBO == 0xFFFFFFFF) return;
+    size_t l_vectorSize = f_value.size();
+    if(l_vectorSize > MAX_BONES_PER_MODEL) return;
     glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
     void *l_data = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
-    std::memcpy(l_data, f_value.data(), f_value.size()*sizeof(glm::mat4));
+    std::memcpy(l_data, f_value.data(), l_vectorSize*sizeof(glm::mat4));
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 }
 void ROC::Shader::SetTimeUniformValue(float f_value)

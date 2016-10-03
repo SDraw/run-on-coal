@@ -1,4 +1,5 @@
 #pragma once
+#define MAX_BONES_PER_MODEL 227U
 
 namespace ROC
 {
@@ -26,7 +27,6 @@ class Shader
     GLint m_colorUniform;
 
     GLuint m_bonesUBO;
-    static Pool m_bonesBindPool;
     int m_boneBindIndex;
 
     glm::mat4 m_projectionUniformValue;
@@ -66,6 +66,8 @@ class Shader
 public:
     GLint GetUniform(std::string &f_uname);
 protected:
+    static Pool *m_uboBindPool;
+
     Shader();
     ~Shader();
     bool Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath);
@@ -139,5 +141,6 @@ protected:
     friend class ElementManager;
     friend class InheritanceManager;
     friend class RenderManager;
+    friend class SfmlManager;
 };
 }
