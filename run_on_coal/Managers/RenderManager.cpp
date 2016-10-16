@@ -15,6 +15,7 @@
 #include "Scene/Shader.h"
 #include "Scene/Texture.h"
 #include "Lua/LuaArguments.h"
+#include "Utils/Pool.h"
 
 ROC::RenderManager::RenderManager(Core *f_core)
 {
@@ -28,6 +29,10 @@ ROC::RenderManager::RenderManager(Core *f_core)
 
     glClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    int l_maxBindings = 0;
+    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &l_maxBindings);
+    Shader::m_uboBindPool = new Pool(l_maxBindings);
 
     m_activeScene = NULL;
     m_activeShader = NULL;
@@ -51,6 +56,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 ROC::RenderManager::~RenderManager()
 {
     delete m_quad;
+    delete Shader::m_uboBindPool;
     delete m_argument;
 }
 

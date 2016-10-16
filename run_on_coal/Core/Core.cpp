@@ -50,14 +50,14 @@ ROC::Core::Core()
 }
 ROC::Core::~Core()
 {
-    delete m_renderManager;
-    delete m_preRenderManager;
-    delete m_physicsManager;
     delete m_soundManager;
-    delete m_elementManager;
+    delete m_physicsManager;
     delete m_inheritManager;
     delete m_memoryManager;
+    delete m_elementManager;
     delete m_luaManager;
+    delete m_renderManager;
+    delete m_preRenderManager;
     delete m_sfmlManager;
     delete m_logManager;
     delete m_configManager;

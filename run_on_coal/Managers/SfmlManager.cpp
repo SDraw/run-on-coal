@@ -5,9 +5,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/SfmlManager.h"
-#include "Scene/Shader.h"
 #include "Lua/LuaArguments.h"
-#include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
 namespace ROC
@@ -46,9 +44,12 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     sf::ContextSettings l_contextSettings = sf::ContextSettings();
     l_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
-    l_contextSettings.depthBits = 32U;
+    l_contextSettings.depthBits = 24U;
     l_contextSettings.majorVersion = 4U;
     l_contextSettings.minorVersion = 0U;
+#ifdef _DEBUG
+    l_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Debug;
+#endif
 
     m_window = new sf::Window();
     m_window->create(l_videoMode, "ROC", l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default, l_contextSettings);
@@ -56,7 +57,6 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_window->setVerticalSyncEnabled(l_configManager->GetVSync());
     m_window->setKeyRepeatEnabled(false);
 
-    glewExperimental = true;
     GLenum l_error = glewInit();
     if(l_error != GLEW_OK)
     {
@@ -77,10 +77,6 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     l_log.append((char*)glewGetString(GLEW_VERSION));
     f_core->GetLogManager()->Log(l_log);
 
-    int l_maxBindings = 0;
-    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &l_maxBindings);
-    Shader::m_uboBindPool = new Pool(l_maxBindings);
-
     m_active = true;
     m_argument = new LuaArguments();
 
@@ -92,7 +88,6 @@ ROC::SfmlManager::~SfmlManager()
     m_window->close();
     delete m_window;
     delete m_argument;
-    delete Shader::m_uboBindPool;
 }
 
 bool ROC::SfmlManager::DoPulse()

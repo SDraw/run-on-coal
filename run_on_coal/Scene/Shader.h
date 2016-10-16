@@ -141,6 +141,5 @@ protected:
     friend class ElementManager;
     friend class InheritanceManager;
     friend class RenderManager;
-    friend class SfmlManager;
 };
 }
