@@ -169,6 +169,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\Event.h" />
     <ClInclude Include="Utils\Pool.h" />
+    <ClInclude Include="Utils\SystemTick.h" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +242,7 @@
     </ClCompile>
     <ClCompile Include="Utils\Event.cpp" />
     <ClCompile Include="Utils\Pool.cpp" />
+    <ClCompile Include="Utils\SystemTick.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
     <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

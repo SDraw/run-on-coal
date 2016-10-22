@@ -6,6 +6,7 @@
 namespace ROC
 {
 class Core;
+class SfmlManager;
 class Model;
 class Scene;
 class Shader;
@@ -17,6 +18,7 @@ class LuaArguments;
 class RenderManager
 {
     Core *m_core;
+    SfmlManager *m_sfmlManager;
 
     Scene *m_activeScene;
     Shader *m_activeShader;

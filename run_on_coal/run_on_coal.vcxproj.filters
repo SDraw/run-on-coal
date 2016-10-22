@@ -180,6 +180,9 @@
     <ClCompile Include="Utils\Event.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\SystemTick.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -353,6 +356,9 @@
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Event.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\SystemTick.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>

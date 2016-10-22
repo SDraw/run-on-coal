@@ -9,8 +9,6 @@ bool ReadFile(std::string &path, std::string &f_cont);
 GLint CheckShader(GLuint f_shader);
 void GetShaderInfoLog(GLuint f_shader, std::string &f_log);
 
-unsigned long GetSystemTick();
-
 void JoinPaths(std::string &f_result, std::string &f_path);
 int ReadEnumVector(std::vector<std::string> &f_vec, std::string &f_val);
 

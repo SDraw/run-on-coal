@@ -6,6 +6,7 @@
 #include "Model/Geometry.h"
 #include "Model/Model.h"
 #include "Model/Skeleton.h"
+#include "Utils/SystemTick.h"
 #include "Utils/Utils.h"
 
 ROC::Model::Model(Geometry *f_geometry)
@@ -79,7 +80,8 @@ void ROC::Model::UpdateSkeleton()
 }
 void ROC::Model::UpdateAnimationTick()
 {
-    unsigned long l_sysTick = Utils::GetSystemTick();
+    unsigned long l_sysTick;
+    SystemTick::GetTick(l_sysTick);
     unsigned long l_difTick = static_cast<unsigned long>(static_cast<double>(l_sysTick - m_animLastTick)*static_cast<double>(m_animationSpeed));
     m_animLastTick = l_sysTick;
     m_animCurrentTick += l_difTick;
@@ -188,7 +190,7 @@ bool ROC::Model::PlayAnimation()
 {
     if(!m_animation) return false;
     if(m_animState == AnimationState::Playing) return true;
-    if(m_animState == AnimationState::Paused || m_animLastTick == 0) m_animLastTick = Utils::GetSystemTick();
+    if(m_animState == AnimationState::Paused || m_animLastTick == 0) SystemTick::GetTick(m_animLastTick);
     m_animState = AnimationState::Playing;
     return true;
 }
@@ -203,7 +205,7 @@ bool ROC::Model::ResetAnimation()
 {
     if(!m_skeleton || !m_animation) return false;
     m_animCurrentTick = 0U;
-    m_animLastTick = Utils::GetSystemTick();
+    SystemTick::GetTick(m_animLastTick);
     UpdateSkeleton();
     return true;
 }

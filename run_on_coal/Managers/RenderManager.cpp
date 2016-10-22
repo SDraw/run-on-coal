@@ -20,6 +20,7 @@
 ROC::RenderManager::RenderManager(Core *f_core)
 {
     m_core = f_core;
+    m_sfmlManager = m_core->GetSfmlManager();
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -62,13 +63,12 @@ ROC::RenderManager::~RenderManager()
 
 void ROC::RenderManager::DoPulse()
 {
-    SfmlManager *l_sfmlManager = m_core->GetSfmlManager();
-    m_time = l_sfmlManager->GetTime();
+    m_time = m_sfmlManager->GetTime();
 
     m_locked = false;
     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::Render, m_argument);
     m_locked = true;
-    l_sfmlManager->SwapBuffers();
+    m_sfmlManager->SwapBuffers();
 }
 
 void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)

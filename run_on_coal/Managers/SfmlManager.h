@@ -16,6 +16,7 @@ class SfmlManager
     bool m_active;
     sf::Event m_event;
     sf::Clock m_clock;
+    float m_time;
     unsigned char m_cursorMode;
 
     LuaArguments *m_argument;
@@ -29,7 +30,7 @@ public:
     void GetWindowSize(glm::ivec2 &f_size);
     inline void CloseWindow() { m_active = false; }
 
-    float GetTime();
+    inline float GetTime() { return m_time; }
 
     bool IsKeyPressed(int f_key);
     bool IsMouseKeyPressed(int f_key);

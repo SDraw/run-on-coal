@@ -94,6 +94,8 @@ bool ROC::SfmlManager::DoPulse()
 {
     bool l_mouseMoveEventFix = false;
 
+    m_time = m_clock.getElapsedTime().asSeconds();
+
     while(m_window->pollEvent(m_event))
     {
         switch(m_event.type)
@@ -218,12 +220,6 @@ void ROC::SfmlManager::GetWindowSize(glm::ivec2 &f_size)
     sf::Vector2u l_size = m_window->getSize();
     f_size.x = static_cast<int>(l_size.x);
     f_size.y = static_cast<int>(l_size.y);
-}
-
-float ROC::SfmlManager::GetTime()
-{
-    sf::Time l_time = m_clock.getElapsedTime();
-    return l_time.asSeconds();
 }
 
 bool ROC::SfmlManager::IsKeyPressed(int f_key)

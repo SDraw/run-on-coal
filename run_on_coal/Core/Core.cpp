@@ -11,6 +11,7 @@
 #include "Managers/RenderManager.h"
 #include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
+#include "Utils/SystemTick.h"
 
 ROC::Core* ROC::Core::m_instance = NULL;
 ROC::Core* ROC::Core::GetCore()
@@ -65,6 +66,7 @@ ROC::Core::~Core()
 
 bool ROC::Core::DoPulse()
 {
+    SystemTick::UpdateTick();
     bool l_result = m_sfmlManager->DoPulse();
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();

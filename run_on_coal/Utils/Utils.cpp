@@ -47,17 +47,6 @@ int ReadEnumVector(std::vector<std::string> &f_vec, std::string &f_val)
     return l_return;
 }
 
-unsigned long GetSystemTick()
-{
-#ifdef _WIN32
-    return GetTickCount();
-#elif __linux__
-    struct timeval tv;
-    if(gettimeofday(&tv, NULL) != 0) return 0;
-    return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-#endif
-}
-
 void JoinPaths(std::string &f_result, std::string &f_path)
 {
     f_result.push_back('/');
