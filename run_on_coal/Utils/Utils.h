@@ -7,6 +7,7 @@ namespace Utils
 bool ReadFile(std::string &path, std::string &f_cont);
 
 GLint CheckShader(GLuint f_shader);
+void GetShaderInfoLog(GLuint f_shader, std::string &f_log);
 
 unsigned long GetSystemTick();
 

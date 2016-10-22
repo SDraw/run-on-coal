@@ -13,10 +13,9 @@ bool ReadFile(std::string &path, std::string &f_cont)
     l_file.open(path, std::ios::in);
     if(l_file.fail()) return false;
 
-    std::ostringstream l_data;
-    l_data << l_file.rdbuf();
-    l_file.close();
-    f_cont.append(l_data.str());
+    std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
+    std::back_insert_iterator<std::string> l_stringInsert(f_cont);
+    std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
     return true;
 }
 
@@ -25,6 +24,13 @@ GLint CheckShader(GLuint f_shader)
     GLint l_params;
     glGetShaderiv(f_shader, GL_COMPILE_STATUS, &l_params);
     return l_params;
+}
+void GetShaderInfoLog(GLuint f_shader, std::string &f_log)
+{
+    GLint l_logSize = 0;
+    glGetShaderiv(f_shader, GL_INFO_LOG_LENGTH, &l_logSize);
+    f_log.resize(l_logSize);
+    glGetShaderInfoLog(f_shader, l_logSize, &l_logSize, (GLchar*)f_log.data());
 }
 
 int ReadEnumVector(std::vector<std::string> &f_vec, std::string &f_val)

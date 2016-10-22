@@ -4,6 +4,7 @@
 
 ROC::Animation::Animation()
 {
+    m_animFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     m_duration = 0U;
     m_fps = 0U;
     m_durationTotal = 0U;
@@ -25,28 +26,32 @@ void ROC::Animation::Clean()
     m_loaded = false;
 }
 
-#define AnimationCleanAfterFail() { Clean(); return false; }
 bool ROC::Animation::Load(std::string &f_path)
 {
     if(m_loaded) return false;
-    m_animFile.open(f_path, std::ios::binary | std::ios::in);
-    if(m_animFile.fail()) return false;
-    m_animFile.read((char*)&m_fps, sizeof(m_fps));
-    if(!m_animFile.good()) AnimationCleanAfterFail();
-    m_animFile.read((char*)&m_duration, sizeof(m_duration));
-    if(!m_animFile.good()) AnimationCleanAfterFail();
-    m_animFile.read((char*)&m_bonesValue, sizeof(m_bonesValue));
-    if(!m_animFile.good()) AnimationCleanAfterFail();
+    bool l_result = true;
 
-    m_durationTotal = static_cast<unsigned long>(((1.0 / static_cast<double>(m_fps)*static_cast<double>(m_duration))*1000.0));
-    m_frameDelta = static_cast<unsigned long>(((1.0 / static_cast<double>(m_fps))*1000.0));
+    try
+    {
+        m_animFile.open(f_path, std::ios::binary | std::ios::in);
+        m_animFile.read((char*)&m_fps, sizeof(m_fps));
+        m_animFile.read((char*)&m_duration, sizeof(m_duration));
+        m_animFile.read((char*)&m_bonesValue, sizeof(m_bonesValue));
 
-    m_frameSize = m_bonesValue * 10 * sizeof(float);
-    m_rightFrame.resize(m_bonesValue * 10);
-    m_leftFrame.resize(m_bonesValue * 10);
+        m_durationTotal = static_cast<unsigned long>(((1.0 / static_cast<double>(m_fps)*static_cast<double>(m_duration))*1000.0));
+        m_frameDelta = static_cast<unsigned long>(((1.0 / static_cast<double>(m_fps))*1000.0));
 
-    m_loaded = true;
-    return true;
+        m_frameSize = m_bonesValue * 10 * sizeof(float);
+        m_rightFrame.resize(m_bonesValue * 10);
+        m_leftFrame.resize(m_bonesValue * 10);
+    }
+    catch(std::ifstream::failure e)
+    {
+        Clean();
+        l_result = false;
+    }
+    m_loaded = l_result;
+    return l_result;
 }
 
 bool ROC::Animation::CacheData(unsigned long f_tick, float &f_lerp)

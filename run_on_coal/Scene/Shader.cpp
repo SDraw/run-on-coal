@@ -62,132 +62,104 @@ ROC::Shader::~Shader()
 bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath)
 {
     if(m_program) return false;
-    GLuint l_vertexShader = 0;
-    GLuint l_fragmentShader = 0;
-    GLuint l_geometryShader = 0;
+    GLuint l_vertexShader = 0U;
+    GLuint l_fragmentShader = 0U;
+    GLuint l_geometryShader = 0U;
+    bool l_result = false;
     if(!f_vpath.empty())
     {
         std::string l_data;
-        if(!Utils::ReadFile(f_vpath, l_data)) return false;
-        l_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        if(!l_vertexShader) return false;
-        const char *l_source = l_data.c_str();
-        glShaderSource(l_vertexShader, 1, &l_source, NULL);
-        glCompileShader(l_vertexShader);
-        if(!Utils::CheckShader(l_vertexShader))
+        if(Utils::ReadFile(f_vpath, l_data))
         {
-            GLint l_logSize = 0;
-            glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
-            m_error.resize(l_logSize);
-            glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, (GLchar*)m_error.data());
-            glDeleteShader(l_vertexShader);
-            return false;
+            l_vertexShader = glCreateShader(GL_VERTEX_SHADER);
+            if(l_vertexShader)
+            {
+                const char *l_source = l_data.c_str();
+                glShaderSource(l_vertexShader, 1, &l_source, NULL);
+                glCompileShader(l_vertexShader);
+                if(!Utils::CheckShader(l_vertexShader))
+                {
+                    Utils::GetShaderInfoLog(l_vertexShader, m_error);
+                    glDeleteShader(l_vertexShader);
+                    l_vertexShader = 0U;
+                }
+            }
         }
     }
     if(!f_fpath.empty())
     {
         std::string l_data;
-        if(!Utils::ReadFile(f_fpath, l_data))
+        if(Utils::ReadFile(f_fpath, l_data))
         {
-            if(l_vertexShader) glDeleteShader(l_vertexShader);
-            return false;
-        }
-        l_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        if(!l_fragmentShader)
-        {
-            if(l_vertexShader) glDeleteShader(l_vertexShader);
-            return false;
-        }
-        const char *l_source = l_data.c_str();
-        glShaderSource(l_fragmentShader, 1, &l_source, NULL);
-        glCompileShader(l_fragmentShader);
-        if(!Utils::CheckShader(l_fragmentShader))
-        {
-            GLint l_logSize = 0;
-            glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
-            m_error.resize(l_logSize);
-            glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, (GLchar*)m_error.data());
-            if(l_vertexShader) glDeleteShader(l_vertexShader);
-            glDeleteShader(l_fragmentShader);
-            return false;
+            l_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+            if(l_fragmentShader)
+            {
+                const char *l_source = l_data.c_str();
+                glShaderSource(l_fragmentShader, 1, &l_source, NULL);
+                glCompileShader(l_fragmentShader);
+                if(!Utils::CheckShader(l_fragmentShader))
+                {
+                    Utils::GetShaderInfoLog(l_fragmentShader, m_error);
+                    glDeleteShader(l_fragmentShader);
+                    l_fragmentShader = 0U;
+                }
+            }
         }
     }
     if(!f_gpath.empty())
     {
         std::string l_data;
-        if(!Utils::ReadFile(f_gpath, l_data))
+        if(Utils::ReadFile(f_gpath, l_data))
         {
-            if(l_vertexShader) glDeleteShader(l_vertexShader);
-            if(l_fragmentShader) glDeleteShader(l_fragmentShader);
-            return false;
-        }
-        l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-        if(!l_geometryShader)
-        {
-            if(l_vertexShader) glDeleteShader(l_vertexShader);
-            if(l_fragmentShader) glDeleteShader(l_fragmentShader);
-            return false;
-        }
-        const char *l_source = l_data.c_str();
-        glShaderSource(l_geometryShader, 1, &l_source, NULL);
-        glCompileShader(l_geometryShader);
-        if(!Utils::CheckShader(l_geometryShader))
-        {
-            GLint l_logSize = 0;
-            glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
-            m_error.resize(l_logSize);
-            glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, (GLchar*)m_error.data());
-            if(l_vertexShader) glDeleteShader(l_vertexShader);
-            if(l_fragmentShader) glDeleteShader(l_fragmentShader);
-            glDeleteShader(l_geometryShader);
-            return false;
+            l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+            if(l_geometryShader)
+            {
+                const char *l_source = l_data.c_str();
+                glShaderSource(l_geometryShader, 1, &l_source, NULL);
+                glCompileShader(l_geometryShader);
+                if(!Utils::CheckShader(l_geometryShader))
+                {
+                    Utils::GetShaderInfoLog(l_geometryShader, m_error);
+                    glDeleteShader(l_geometryShader);
+                    l_geometryShader = 0U;
+                }
+            }
         }
     }
-    if(!(l_vertexShader | l_fragmentShader | l_geometryShader)) return false;
-    m_program = glCreateProgram();
-    if(!m_program)
+    if(l_vertexShader && l_fragmentShader)
     {
-        if(l_vertexShader) glDeleteShader(l_vertexShader);
-        if(l_fragmentShader) glDeleteShader(l_fragmentShader);
-        if(l_geometryShader) glDeleteShader(l_geometryShader);
-        return false;
+        m_program = glCreateProgram();
+        if(m_program)
+        {
+            glAttachShader(m_program, l_vertexShader);
+            glAttachShader(m_program, l_fragmentShader);
+            if(l_geometryShader) glAttachShader(m_program, l_geometryShader);
+            GLint l_link = 0;
+            glLinkProgram(m_program);
+            glGetProgramiv(m_program, GL_LINK_STATUS, &l_link);
+            if(!l_link)
+            {
+                GLint l_logLength = 0;
+                glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &l_logLength);
+                m_error.resize(l_logLength);
+                glGetProgramInfoLog(m_program, l_logLength, &l_logLength, (GLchar*)m_error.data());
+                glDeleteProgram(m_program);
+                m_program = 0U;
+            }
+            else
+            {
+                glDetachShader(m_program, l_vertexShader);
+                glDetachShader(m_program, l_fragmentShader);
+                if(l_geometryShader) glDetachShader(m_program, l_vertexShader);
+                SetupDefaultUniformsAndLocations();
+                l_result = true;
+            }
+            glDeleteShader(l_vertexShader);
+            glDeleteShader(l_fragmentShader);
+            if(l_geometryShader) glDeleteShader(l_geometryShader);
+        }
     }
-    if(l_vertexShader) glAttachShader(m_program, l_vertexShader);
-    if(l_fragmentShader) glAttachShader(m_program, l_fragmentShader);
-    if(l_geometryShader) glAttachShader(m_program, l_geometryShader);
-    GLint l_link = 0;
-    glLinkProgram(m_program);
-    glGetProgramiv(m_program, GL_LINK_STATUS, &l_link);
-    if(!l_link)
-    {
-        GLint l_logLength = 0;
-        glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &l_logLength);
-        m_error.resize(l_logLength);
-        glGetProgramInfoLog(m_program, l_logLength, &l_logLength, (GLchar*)m_error.data());
-        glDeleteProgram(m_program);
-        m_program = 0;
-        if(l_vertexShader) glDeleteShader(l_vertexShader);
-        if(l_fragmentShader) glDeleteShader(l_fragmentShader);
-        if(l_geometryShader) glDeleteShader(l_geometryShader);
-        return false;
-    }
-    if(l_vertexShader)
-    {
-        glDetachShader(m_program, l_vertexShader);
-        glDeleteShader(l_vertexShader);
-    }
-    if(l_fragmentShader)
-    {
-        glDetachShader(m_program, l_fragmentShader);
-        glDeleteShader(l_fragmentShader);
-    }
-    if(l_geometryShader)
-    {
-        glDetachShader(m_program, l_geometryShader);
-        glDeleteShader(l_geometryShader);
-    }
-    SetupDefaultUniformsAndLocations();
-    return true;
+    return l_result;
 }
 
 void ROC::Shader::Enable(bool f_textureBind)

@@ -65,17 +65,13 @@ bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, bool f_compress
     for(int i = 0; i < 6; i++)
     {
         sf::Image l_image;
-        if(l_image.loadFromFile(f_path[i]))
-        {
-            sf::Vector2u l_imageSize = l_image.getSize();
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
-        }
-        else
+        if(!l_image.loadFromFile(f_path[i]))
         {
             glDeleteTextures(1, &m_texture);
-            GenerateBrokenTexture();
-            break;
+            return false;
         }
+        sf::Vector2u l_imageSize = l_image.getSize();
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
     }
     return true;
 }
