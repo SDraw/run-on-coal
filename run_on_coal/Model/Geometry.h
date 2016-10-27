@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class BoneData;
 class BoneChainGroup;
 class Material;
@@ -29,4 +30,5 @@ protected:
     friend class Model;
     friend class Skeleton;
 };
+
 }

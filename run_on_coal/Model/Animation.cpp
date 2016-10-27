@@ -38,8 +38,8 @@ bool ROC::Animation::Load(std::string &f_path)
         m_animFile.read((char*)&m_duration, sizeof(m_duration));
         m_animFile.read((char*)&m_bonesValue, sizeof(m_bonesValue));
 
-        m_durationTotal = static_cast<unsigned long>(((1.0 / static_cast<double>(m_fps)*static_cast<double>(m_duration))*1000.0));
-        m_frameDelta = static_cast<unsigned long>(((1.0 / static_cast<double>(m_fps))*1000.0));
+        m_durationTotal = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps)*static_cast<float>(m_duration))*1000.f));
+        m_frameDelta = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps))*1000.0));
 
         m_frameSize = m_bonesValue * 10 * sizeof(float);
         m_rightFrame.resize(m_bonesValue * 10);
@@ -54,9 +54,9 @@ bool ROC::Animation::Load(std::string &f_path)
     return l_result;
 }
 
-bool ROC::Animation::CacheData(unsigned long f_tick, float &f_lerp)
+bool ROC::Animation::CacheData(unsigned int f_tick, float &f_lerp)
 {
-    unsigned long l_delta = f_tick%m_frameDelta;
+    unsigned int l_delta = f_tick%m_frameDelta;
     unsigned int l_frameL = ((f_tick - l_delta) / m_frameDelta) % m_duration;
     unsigned int l_frameR = (l_frameL + 1) % m_duration;
     f_lerp = static_cast<float>(l_delta) / static_cast<float>(m_frameDelta);

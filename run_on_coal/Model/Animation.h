@@ -9,10 +9,10 @@ class Animation
     unsigned int m_duration;
     unsigned int m_fps;
 
-    unsigned long m_durationTotal;
-    unsigned long m_frameDelta;
+    unsigned int m_durationTotal;
+    unsigned int m_frameDelta;
 
-    unsigned long m_frameSize;
+    unsigned int m_frameSize;
 
     bool m_loaded;
 
@@ -27,7 +27,7 @@ protected:
 
     bool Load(std::string &f_path);
 
-    bool CacheData(unsigned long f_tick, float &f_lerp);
+    bool CacheData(unsigned int f_tick, float &f_lerp);
     friend class Model;
     friend class ElementManager;
     friend class InheritanceManager;

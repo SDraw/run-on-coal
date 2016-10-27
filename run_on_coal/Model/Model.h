@@ -19,8 +19,8 @@ class Model
     Model *m_parent;
 
     int m_parentBone;
-    unsigned long m_animLastTick;
-    unsigned long m_animCurrentTick;
+    unsigned int m_animLastTick;
+    unsigned int m_animCurrentTick;
     enum AnimationState { None = 0U, Paused, Playing };
     AnimationState m_animState;
     float m_animationSpeed;

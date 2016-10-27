@@ -107,5 +107,18 @@ int getElementType(lua_State *f_vm)
     lua_pushstring(f_vm, l_text.c_str());
     return 1;
 }
+int getTickCount(lua_State *f_vm)
+{
+    LUA_INTEGER l_tick = 0;
+#ifdef _WIN32
+    l_tick = static_cast<LUA_INTEGER>(GetTickCount64());
+#elif __linux__
+    struct timeval tv;
+    if(!gettimeofday(&tv, NULL)) l_tick = static_cast<LUA_INTEGER>((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+#endif
+    lua_pushinteger(f_vm, l_tick);
+    return 1;
+}
+
 }
 }

@@ -147,7 +147,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
                 l_faceIndex.resize(l_uncompressedSize / sizeof(int));
                 Utils::UncompressData(l_tempData.data(), l_compressedSize, l_faceIndex.data(), l_uncompressedSize);
 
-                for(int j = 0, k = int(l_faceIndex.size()); j < k; j += 9)
+                for(int j = 0, k = static_cast<int>(l_faceIndex.size()); j < k; j += 9)
                 {
                     l_tempVertex.push_back(l_vertexData[l_faceIndex[j]]);
                     l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 1]]);
@@ -186,6 +186,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
             }
             SortMaterials();
             m_materialCount = static_cast<unsigned int>(m_materialVector.size());
+
             if(l_type == 0x2)
             {
                 int l_bonesSize;

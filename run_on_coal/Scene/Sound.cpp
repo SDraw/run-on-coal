@@ -49,6 +49,11 @@ float ROC::Sound::GetTime()
     sf::Time l_time = m_handle->getPlayingOffset();
     return l_time.asSeconds();
 }
+float ROC::Sound::GetDuration()
+{
+    sf::Time l_duration = m_handle->getDuration();
+    return l_duration.asSeconds();
+}
 
 bool ROC::Sound::Set3DPositionEnabled(bool f_state)
 {

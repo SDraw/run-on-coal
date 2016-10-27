@@ -208,6 +208,20 @@ int soundGetTime(lua_State *f_vm)
     lua_pushnumber(f_vm, l_time);
     return 1;
 }
+int soundGetDuration(lua_State *f_vm)
+{
+    Sound *l_sound;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadUserdata((void**)&l_sound, ElementType::SoundElement);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    float l_duration = l_sound->GetDuration();
+    lua_pushnumber(f_vm, l_duration);
+    return 1;
+}
 
 int soundSet3DEnabled(lua_State *f_vm)
 {

@@ -17,6 +17,7 @@ int soundSetVolume(lua_State *f_vm);
 int soundGetVolume(lua_State *f_vm);
 int soundSetTime(lua_State *f_vm);
 int soundGetTime(lua_State *f_vm);
+int soundGetDuration(lua_State *f_vm);
 int soundSet3DEnabled(lua_State *f_vm);
 int soundGet3DEnabled(lua_State *f_vm);
 int soundSet3DPosition(lua_State *f_vm);

@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "Utils/SystemTick.h"
 
-unsigned long ROC::SystemTick::m_tick = GetTickCount();
+unsigned int ROC::SystemTick::m_tick = GetTickCount();
 
-void ROC::SystemTick::GetTick(unsigned long &f_tick)
+unsigned int ROC::SystemTick::GetTick()
 {
-    f_tick = m_tick;
+    return m_tick;
 }
 void ROC::SystemTick::UpdateTick()
 {

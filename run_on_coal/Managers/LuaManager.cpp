@@ -180,6 +180,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     lua_register(m_pVM, "soundSetTime", Lua::soundSetTime);
     lua_register(m_pVM, "soundGetTime", Lua::soundGetTime);
+    lua_register(m_pVM, "soundGetDuration", Lua::soundGetDuration);
 
     lua_register(m_pVM, "soundSet3DEnabled", Lua::soundSet3DEnabled);
     lua_register(m_pVM, "soundGet3DEnabled", Lua::soundGet3DEnabled);
@@ -287,6 +288,9 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Elements
     lua_register(m_pVM, "isElement", Lua::isElement);
     lua_register(m_pVM, "getElementType", Lua::getElementType);
+
+    //System
+    lua_register(m_pVM, "getTickCount", Lua::getTickCount);
 
     m_eventManager = new EventManager(this);
 }

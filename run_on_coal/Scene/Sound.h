@@ -28,6 +28,7 @@ public:
 
     void SetTime(float f_time);
     float GetTime();
+    float GetDuration();
 
     bool Set3DPositionEnabled(bool f_state);
     inline bool Get3DPositionEnabled() { return m_b3D; }

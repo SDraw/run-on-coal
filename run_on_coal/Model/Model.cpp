@@ -80,9 +80,8 @@ void ROC::Model::UpdateSkeleton()
 }
 void ROC::Model::UpdateAnimationTick()
 {
-    unsigned long l_sysTick;
-    SystemTick::GetTick(l_sysTick);
-    unsigned long l_difTick = static_cast<unsigned long>(static_cast<double>(l_sysTick - m_animLastTick)*static_cast<double>(m_animationSpeed));
+    unsigned int l_sysTick = SystemTick::GetTick();
+    unsigned int l_difTick = static_cast<unsigned int>(static_cast<float>(l_sysTick - m_animLastTick)*m_animationSpeed);
     m_animLastTick = l_sysTick;
     m_animCurrentTick += l_difTick;
     m_animCurrentTick %= m_animation->m_durationTotal;
@@ -190,7 +189,7 @@ bool ROC::Model::PlayAnimation()
 {
     if(!m_animation) return false;
     if(m_animState == AnimationState::Playing) return true;
-    if(m_animState == AnimationState::Paused || m_animLastTick == 0) SystemTick::GetTick(m_animLastTick);
+    if(m_animState == AnimationState::Paused || m_animLastTick == 0) m_animLastTick = SystemTick::GetTick();
     m_animState = AnimationState::Playing;
     return true;
 }
@@ -205,7 +204,7 @@ bool ROC::Model::ResetAnimation()
 {
     if(!m_skeleton || !m_animation) return false;
     m_animCurrentTick = 0U;
-    SystemTick::GetTick(m_animLastTick);
+    m_animLastTick = SystemTick::GetTick();
     UpdateSkeleton();
     return true;
 }
@@ -218,12 +217,12 @@ bool ROC::Model::SetAnimationSpeed(float f_val)
 bool ROC::Model::SetAnimationProgress(float f_val)
 {
     if(!m_animation || f_val < 0.f || f_val > 1.f) return false;
-    m_animCurrentTick = static_cast<unsigned long>(double(m_animation->m_durationTotal)*double(f_val));
+    m_animCurrentTick = static_cast<unsigned int>(float(m_animation->m_durationTotal)*f_val);
     return true;
 }
 float ROC::Model::GetAnimationProgress()
 {
-    return (m_animation ? static_cast<float>(double(m_animCurrentTick) / double(m_animation->m_durationTotal)) : -1.f);
+    return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->m_durationTotal)) : -1.f);
 }
 
 bool ROC::Model::HasRigidSkeleton()
