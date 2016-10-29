@@ -134,5 +134,6 @@ int isMouseKeyPressed(lua_State *f_vm)
     lua_pushboolean(f_vm, l_result);
     return 1;
 }
+
 }
 }

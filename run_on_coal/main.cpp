@@ -11,7 +11,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 int main(int argc, char *argv[])
 #endif
 {
-    std::cout << sizeof(unsigned long) << std::endl;
     ROC::Core *l_core = ROC::Core::GetCore();
     ROC::LogManager *l_logManager = l_core->GetLogManager();
     pugi::xml_document *l_meta = new pugi::xml_document();

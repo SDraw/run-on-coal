@@ -96,6 +96,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
