@@ -14,6 +14,8 @@ class Animation
 
     unsigned int m_frameSize;
 
+    unsigned int m_cachedFrame;
+
     bool m_loaded;
 
     void Clean();
