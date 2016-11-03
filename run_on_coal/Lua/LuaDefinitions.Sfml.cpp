@@ -135,5 +135,69 @@ int isMouseKeyPressed(lua_State *f_vm)
     return 1;
 }
 
+int setWindowVSync(lua_State *f_vm)
+{
+    bool l_sync;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadBoolean(l_sync);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    LuaManager::m_corePointer->GetSfmlManager()->SetVSync(l_sync);
+    lua_pushboolean(f_vm, 1);
+    return 1;
+}
+int setWindowFramelimit(lua_State *f_vm)
+{
+    LUA_INTEGER l_fps;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadInteger(l_fps);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    LuaManager::m_corePointer->GetSfmlManager()->SetFramelimit(static_cast<unsigned int>(l_fps));
+    lua_pushboolean(f_vm, 1);
+    return 1;
+}
+int setWindowTitle(lua_State *f_vm)
+{
+    std::string l_title;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadText(l_title);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    sf::String l_title32 = sf::String::fromUtf8(l_title.begin(), l_title.end());
+    LuaManager::m_corePointer->GetSfmlManager()->SetTitle(l_title32);
+    lua_pushboolean(f_vm, 1);
+    return 1;
+}
+int setWindowIcon(lua_State *f_vm)
+{
+    std::string l_path;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadText(l_path);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    bool l_result = LuaManager::m_corePointer->GetSfmlManager()->SetIcon(l_path);
+    lua_pushboolean(f_vm, l_result);
+    return 1;
+}
+int requestWindowFocus(lua_State *f_vm)
+{
+    LuaManager::m_corePointer->GetSfmlManager()->RequestFocus();
+    lua_pushboolean(f_vm, 1);
+    return 1;
+}
+
 }
 }

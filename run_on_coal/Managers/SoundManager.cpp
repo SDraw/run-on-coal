@@ -55,3 +55,12 @@ void ROC::SoundManager::DoPulse()
         m_updateUp = false;
     }
 }
+
+void ROC::SoundManager::SetGlobalVolume(float f_val)
+{
+    if(f_val != m_globalVolume)
+    {
+        sf::Listener::setGlobalVolume(f_val);
+        m_globalVolume = f_val;
+    }
+}

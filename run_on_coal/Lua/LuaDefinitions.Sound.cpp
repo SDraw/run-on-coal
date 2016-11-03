@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
@@ -359,5 +360,27 @@ int soundGetListenerOrientation(lua_State *f_vm)
     }
     return 9;
 }
+
+int soundSetGlobalVolume(lua_State *f_vm)
+{
+    lua_Number l_volume;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadNumber(l_volume);
+    if(argStream.HasErrors())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    LuaManager::m_corePointer->GetSoundManager()->SetGlobalVolume(static_cast<float>(l_volume));
+    lua_pushboolean(f_vm, 0);
+    return 1;
+}
+int soundGetGlobalVolume(lua_State *f_vm)
+{
+    float l_volume = LuaManager::m_corePointer->GetSoundManager()->GetGlobalVolume();
+    lua_pushnumber(f_vm, l_volume);
+    return 1;
+}
+
 }
 }

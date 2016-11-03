@@ -194,6 +194,9 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "soundSetListenerOrientation", Lua::soundSetListenerOrientation);
     lua_register(m_pVM, "soundGetListenerOrientation", Lua::soundSetListenerOrientation);
 
+    lua_register(m_pVM, "soundSetGlobalVolume", Lua::soundSetGlobalVolume);
+    lua_register(m_pVM, "soundGetGlobalVolume", Lua::soundGetGlobalVolume);
+
     //Render Target
     lua_register(m_pVM, "rtCreate", Lua::rtCreate);
     lua_register(m_pVM, "rtDestroy", Lua::rtDestroy);
@@ -269,7 +272,13 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     lua_register(m_pVM, "getTime", Lua::getTime);
 
+    lua_register(m_pVM, "getWindowPosition", Lua::getWindowPosition);
     lua_register(m_pVM, "getWindowSize", Lua::getWindowSize);
+    lua_register(m_pVM, "setWindowVSync", Lua::setWindowVSync);
+    lua_register(m_pVM, "setWindowFramelimit", Lua::setWindowFramelimit);
+    lua_register(m_pVM, "setWindowTitle", Lua::setWindowTitle);
+    lua_register(m_pVM, "setWindowIcon", Lua::setWindowIcon);
+    lua_register(m_pVM, "requestWindowFocus", Lua::requestWindowFocus);
 
     lua_register(m_pVM, "closeApplication", Lua::closeApp);
 

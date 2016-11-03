@@ -83,7 +83,7 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(std::string &f_path)
 
     std::string l_work, l_path;
     m_core->GetWorkingDirectory(l_work);
-    AnalyzePath(f_path, l_path);
+    Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
     if(!l_anim->Load(l_work))
@@ -109,7 +109,7 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path, bool l_c
 
     std::string l_work, l_path;
     m_core->GetWorkingDirectory(l_work);
-    AnalyzePath(f_path, l_path);
+    Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
@@ -162,21 +162,21 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
     if(!f_vpath.empty())
     {
         std::string l_vertexPath;
-        AnalyzePath(f_vpath, l_vertexPath);
+        Utils::AnalyzePath(f_vpath, l_vertexPath);
         l_path[0].append(l_work);
         Utils::JoinPaths(l_path[0], l_vertexPath);
     }
     if(!f_fpath.empty())
     {
         std::string l_fragmentPath;
-        AnalyzePath(f_fpath, l_fragmentPath);
+        Utils::AnalyzePath(f_fpath, l_fragmentPath);
         l_path[1].append(l_work);
         Utils::JoinPaths(l_path[1], l_fragmentPath);
     }
     if(!f_gpath.empty())
     {
         std::string l_geometryPath;
-        AnalyzePath(f_gpath, l_geometryPath);
+        Utils::AnalyzePath(f_gpath, l_geometryPath);
         l_path[2].append(l_work);
         Utils::JoinPaths(l_path[2], l_geometryPath);
     }
@@ -218,7 +218,7 @@ ROC::Sound* ROC::ElementManager::CreateSound(std::string &f_path, bool f_loop)
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
-    AnalyzePath(f_path, l_path);
+    Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
     if(!l_sound->Load(l_work))
@@ -267,7 +267,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
-    AnalyzePath(f_path, l_path);
+    Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
@@ -292,7 +292,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
     {
         std::string l_iterPath;
         std::string l_iterFullPath(l_work);
-        AnalyzePath(iter, l_iterPath);
+        Utils::AnalyzePath(iter, l_iterPath);
         Utils::JoinPaths(l_iterFullPath, l_iterPath);
         l_path.push_back(l_iterFullPath);
     }
@@ -321,7 +321,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size)
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
-    AnalyzePath(f_path, l_path);
+    Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
@@ -347,7 +347,7 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
-    AnalyzePath(f_path, l_path);
+    Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
     if(!l_file->Create(l_work, f_path))
@@ -365,7 +365,7 @@ ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
-    AnalyzePath(f_path, l_path);
+    Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
     if(!l_file->Open(l_work, f_path, f_ro))

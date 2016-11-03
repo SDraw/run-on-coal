@@ -7,6 +7,7 @@ enum EventType : unsigned char
     PreRender = 0U, //onOGLPreRender
     Render, //onOGLRender
     WindowResize, //onWindowResize
+    WindowFocus, //onWindowFocus
     KeyPress, //onKeyPress
     MouseKeyPress, //onMouseKeyPress
     MouseScroll, //onMouseScroll

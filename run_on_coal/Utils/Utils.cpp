@@ -7,6 +7,9 @@ namespace ROC
 {
 namespace Utils
 {
+
+std::regex g_upRegex("(\\.\\.)+(\\/|\\\\)");
+
 bool ReadFile(std::string &path, std::string &f_cont)
 {
     std::ifstream l_file;
@@ -47,6 +50,10 @@ int ReadEnumVector(std::vector<std::string> &f_vec, std::string &f_val)
     return l_return;
 }
 
+void AnalyzePath(std::string &f_in, std::string &f_out)
+{ 
+    std::regex_replace(std::back_inserter(f_out), f_in.begin(), f_in.end(), g_upRegex, ""); 
+}
 void JoinPaths(std::string &f_result, std::string &f_path)
 {
     f_result.push_back('/');

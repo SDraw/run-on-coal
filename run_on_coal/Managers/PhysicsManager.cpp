@@ -23,7 +23,8 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
 
     m_enabled = false;
 
-    m_timeStep = 1.f / static_cast<float>(m_core->GetConfigManager()->GetFPSLimit());
+    unsigned int l_fpsLimit = m_core->GetConfigManager()->GetFPSLimit();
+    m_timeStep = (l_fpsLimit == 0U) ? (1.f / 60.f) : (1.f / static_cast<float>(l_fpsLimit));
     m_substeps = static_cast<int>(m_timeStep / (1.f / 60.f)) + 1;
 }
 ROC::PhysicsManager::~PhysicsManager()
@@ -161,4 +162,10 @@ void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
     if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
     m_dynamicWorld->removeRigidBody(f_col->m_rigidBody);
     m_collisionSet.erase(iter);
+}
+
+void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
+{
+    m_timeStep = (f_fps == 0U) ? (1.f / 60.f) : (1.f / static_cast<float>(f_fps));
+    m_substeps = static_cast<int>(m_timeStep / (1.f / 60.f)) + 1;
 }

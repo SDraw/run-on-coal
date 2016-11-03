@@ -46,7 +46,9 @@ protected:
     void RemoveRigidSkeleton(Model *f_model);
     void AddCollision(Collision *f_col);
     void RemoveCollision(Collision *f_col);
+    void UpdateWorldSteps(unsigned int f_fps);
     friend Core;
     friend class ElementManager;
+    friend class SfmlManager;
 };
 }

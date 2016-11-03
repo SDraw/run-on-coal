@@ -13,7 +13,7 @@ namespace Lua
 std::vector<std::string> g_eventNamesTable
 {
     "onOGLPreRender", "onOGLRender",
-    "onWindowResize",
+    "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
     "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
     "onTextInput"

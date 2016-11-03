@@ -41,6 +41,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                         {
                             case 0:
                                 m_antialiasing = l_attrib.as_int(0);
+                                if(m_antialiasing < 0) m_antialiasing = 0;
                                 break;
                             case 1:
                             {
@@ -55,6 +56,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                                 break;
                             case 4:
                                 m_fpsLimit = l_attrib.as_uint(60U);
+                                if(m_fpsLimit == 0U) m_fpsLimit = 60U;
                                 break;
                             case 5:
                                 m_vsync = l_attrib.as_bool(false);

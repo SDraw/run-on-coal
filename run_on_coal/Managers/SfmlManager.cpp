@@ -4,6 +4,7 @@
 #include "Managers/EventManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/PhysicsManager.h"
 #include "Managers/SfmlManager.h"
 #include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
@@ -108,6 +109,12 @@ bool ROC::SfmlManager::DoPulse()
                 m_argument->PushArgument(static_cast<int>(m_event.size.width));
                 m_argument->PushArgument(static_cast<int>(m_event.size.height));
                 m_eventManager->CallEvent(EventType::WindowResize, m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::GainedFocus: case sf::Event::LostFocus:
+            {
+                m_argument->PushArgument(m_event.type == sf::Event::GainedFocus ? 1 : 0);
+                m_eventManager->CallEvent(EventType::WindowFocus, m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::KeyPressed: case sf::Event::KeyReleased:
@@ -229,4 +236,26 @@ bool ROC::SfmlManager::IsKeyPressed(int f_key)
 bool ROC::SfmlManager::IsMouseKeyPressed(int f_key)
 {
     return sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(f_key));
+}
+
+void ROC::SfmlManager::SetFramelimit(unsigned int f_fps)
+{
+    m_window->setFramerateLimit(f_fps);
+    m_core->GetPhysicsManager()->UpdateWorldSteps(f_fps);
+}
+
+bool ROC::SfmlManager::SetIcon(std::string &f_path)
+{
+    bool l_result = false;
+    std::string l_work, l_path;
+    m_core->GetWorkingDirectory(l_work);
+    Utils::AnalyzePath(f_path, l_path);
+    Utils::JoinPaths(l_work, l_path);
+    if(m_icon.loadFromFile(l_work))
+    {
+        sf::Vector2u l_size = m_icon.getSize();
+        m_window->setIcon(l_size.x, l_size.y, m_icon.getPixelsPtr());
+        l_result = true;
+    }
+    return l_result;
 }
