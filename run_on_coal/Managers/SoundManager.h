@@ -10,10 +10,6 @@ class SoundManager
     glm::vec3 m_listenerPosition;
     glm::vec3 m_listenerDirection;
     glm::vec3 m_listenerUp;
-    bool m_updatePosition;
-    bool m_updateDirection;
-    bool m_updateUp;
-
     float m_globalVolume;
 public:
     void SetListenerPosition(glm::vec3 &f_pos);
@@ -28,7 +24,6 @@ public:
 protected:
     SoundManager(Core *f_core);
     ~SoundManager();
-    void DoPulse();
     friend Core;
 };
 }
