@@ -279,6 +279,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "setWindowTitle", Lua::setWindowTitle);
     lua_register(m_pVM, "setWindowIcon", Lua::setWindowIcon);
     lua_register(m_pVM, "requestWindowFocus", Lua::requestWindowFocus);
+    lua_register(m_pVM, "getWindowFocus", Lua::getWindowFocus);
 
     lua_register(m_pVM, "closeApplication", Lua::closeApp);
 

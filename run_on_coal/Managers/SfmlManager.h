@@ -41,6 +41,7 @@ public:
     inline void SetTitle(sf::String &f_title) { m_window->setTitle(f_title); }
     bool SetIcon(std::string &f_path);
     inline void RequestFocus() { m_window->requestFocus(); }
+    inline bool GetFocusState() { return m_window->hasFocus(); }
 protected:
     SfmlManager(Core *f_core);
     ~SfmlManager();

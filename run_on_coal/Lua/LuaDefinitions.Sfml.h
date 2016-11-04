@@ -18,5 +18,6 @@ int setWindowFramelimit(lua_State *f_vm);
 int setWindowTitle(lua_State *f_vm);
 int setWindowIcon(lua_State *f_vm);
 int requestWindowFocus(lua_State *f_vm);
+int getWindowFocus(lua_State *f_vm);
 }
 }

@@ -198,6 +198,12 @@ int requestWindowFocus(lua_State *f_vm)
     lua_pushboolean(f_vm, 1);
     return 1;
 }
+int getWindowFocus(lua_State *f_vm)
+{
+    bool l_focus = LuaManager::m_corePointer->GetSfmlManager()->GetFocusState();
+    lua_pushboolean(f_vm, l_focus);
+    return 1;
+}
 
 }
 }
