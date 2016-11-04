@@ -62,6 +62,7 @@ class Shader
 
     std::string m_error;
 
+    Shader(const Shader& that);
     void SetupDefaultUniformsAndLocations();
 public:
     GLint GetUniform(std::string &f_uname);

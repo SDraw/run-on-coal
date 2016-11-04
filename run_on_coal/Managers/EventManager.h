@@ -35,7 +35,7 @@ public:
     bool SetEventMute(unsigned char f_event, void *f_pointer, bool f_mute);
     bool RemoveEvent(unsigned char f_event, void *f_pointer);
 protected:
-    EventManager(LuaManager *f_luaManager);
+    explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();
     friend LuaManager;
 };

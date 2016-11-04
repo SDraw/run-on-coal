@@ -22,7 +22,7 @@ public:
     void SetGlobalVolume(float f_val);
     inline float GetGlobalVolume() { return m_globalVolume; }
 protected:
-    SoundManager(Core *f_core);
+    explicit SoundManager(Core *f_core);
     ~SoundManager();
     friend Core;
 };

@@ -51,6 +51,8 @@ class RenderManager
     bool CompareLastVAO(GLuint f_vao);
     bool CompareLastTexture(GLuint f_texture);
     void EnableNonActiveShader(Shader *f_shader);
+
+    RenderManager(const RenderManager& that);
 public:
     void ClearRenderArea(GLbitfield f_params);
     static void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
@@ -82,7 +84,7 @@ public:
     void Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
     void Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
 protected:
-    RenderManager(Core *f_core);
+    explicit RenderManager(Core *f_core);
     ~RenderManager();
     void DoPulse();
     void ResetCallsReducing();

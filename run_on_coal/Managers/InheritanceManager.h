@@ -29,7 +29,7 @@ public:
     bool AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform);
     inline void DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target) { RemoveInheritance(f_target, f_shader); }
 protected:
-    InheritanceManager(Core *f_core);
+    explicit InheritanceManager(Core *f_core);
     ~InheritanceManager();
     void RemoveInheritance(void *f_child, void *f_parent);
     void RemoveChildRelation(void *f_child);

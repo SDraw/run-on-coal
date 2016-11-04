@@ -80,7 +80,7 @@ void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments *f_args)
     if(f_event >= EventType::Last) return;
     m_activeEvent = f_event;
     auto &l_event = m_eventsVector[f_event];
-    for(m_iter = l_event.begin(); m_iter != l_event.end(); m_iter++)
+    for(m_iter = l_event.begin(); m_iter != l_event.end(); ++m_iter)
     {
         Event *l_eventObj = (*m_iter);
         if(!l_eventObj->m_muted && !l_eventObj->m_deleted) m_luaManager->CallFunction(l_eventObj->m_luaRef, f_args);

@@ -14,13 +14,15 @@ class PreRenderManager
     std::set<Model*> m_animatedModelSet;
 
     LuaArguments *m_argument;
+
+    PreRenderManager(const PreRenderManager& that);
 public:
     void AddModel(Model *f_model);
     void RemoveModel(Model *f_model);
 protected:
     void DoPulse_S1();
     void DoPulse_S2();
-    PreRenderManager(Core *f_core);
+    explicit PreRenderManager(Core *f_core);
     ~PreRenderManager();
     friend Core;
     friend class ElementManager;

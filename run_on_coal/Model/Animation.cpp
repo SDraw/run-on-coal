@@ -52,7 +52,7 @@ bool ROC::Animation::Load(std::string &f_path)
         m_animFile.seekg(12U + m_frameSize, std::ios::beg);
         m_animFile.read((char*)m_rightFrame.data(), m_frameSize);
     }
-    catch(std::ifstream::failure e)
+    catch(const std::ifstream::failure &e)
     {
         Clean();
         l_result = false;

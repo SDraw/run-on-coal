@@ -41,7 +41,7 @@ public:
 
     inline int GetState() { return m_handle->getStatus(); }
 protected:
-    Sound(bool f_loop);
+    explicit Sound(bool f_loop);
     ~Sound();
     bool Load(std::string &f_path);
     friend class ElementManager;

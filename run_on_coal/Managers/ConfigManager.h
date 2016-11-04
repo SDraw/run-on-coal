@@ -20,7 +20,7 @@ public:
     inline unsigned int GetFPSLimit() { return m_fpsLimit; }
     inline bool GetVSync() { return m_vsync; }
 protected:
-    ConfigManager(Core *f_core);
+    explicit ConfigManager(Core *f_core);
     ~ConfigManager();
     friend Core;
 };

@@ -29,7 +29,7 @@ protected:
     std::vector<std::vector<skChain>> m_chainsVector;
     std::vector<btRigidBody*> m_jointVector;
     bool m_rigid;
-    Skeleton(std::vector<BoneData*> &f_data);
+    explicit Skeleton(std::vector<BoneData*> &f_data);
     ~Skeleton();
     void InitRigidity(std::vector<BoneChainGroup*> &f_vec);
     void Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp);

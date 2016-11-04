@@ -28,6 +28,8 @@ class PhysicsManager
 
     float m_timeStep;
     int m_substeps;
+
+    PhysicsManager(const PhysicsManager& that);
 public:
     inline void SetPhysicsEnabled(bool f_value) { m_enabled = f_value; }
     inline bool GetPhysicsEnabled() { return m_enabled; }
@@ -39,7 +41,7 @@ public:
     bool RemoveModelRigidity(Model *f_model);
     bool RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model);
 protected:
-    PhysicsManager(Core *f_core);
+    explicit PhysicsManager(Core *f_core);
     ~PhysicsManager();
     void DoPulse();
     void AddRigidSkeleton(Model *f_model);

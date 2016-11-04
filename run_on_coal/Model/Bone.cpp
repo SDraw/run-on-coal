@@ -5,11 +5,11 @@ glm::mat4 ROC::Bone::m_identity = glm::mat4(1.f);
 
 ROC::Bone::Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale)
 {
-    m_name = f_name;
+    m_parent = NULL;
+    m_name.insert(m_name.begin(),f_name.begin(),f_name.end());
     std::memcpy(&m_data.m_rot, &f_rot, sizeof(glm::quat));
     std::memcpy(&m_data.m_pos, &f_pos, sizeof(glm::vec3));
     std::memcpy(&m_data.m_scl, &f_scale, sizeof(glm::vec3));
-    m_parent = NULL;
     m_rebuildMatrix = false;
     m_interpolation = true;
     m_interpolationValue = 0.f;

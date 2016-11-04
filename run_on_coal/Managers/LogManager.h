@@ -10,7 +10,7 @@ class LogManager
 public:
     void Log(std::string &f_text);
 protected:
-    LogManager(Core *f_core);
+    explicit LogManager(Core *f_core);
     ~LogManager();
     friend Core;
 };

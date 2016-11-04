@@ -3,6 +3,7 @@
 
 ROC::BoneData::BoneData()
 {
+    m_parent = -1;
 }
 ROC::BoneData::~BoneData()
 {

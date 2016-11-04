@@ -33,6 +33,8 @@ class Model
 
     void UpdateSkeleton();
     void UpdateAnimationTick();
+
+    Model(const Model& that);
 public:
     inline bool IsDrawable() { return (m_geometry != NULL); }
     inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
@@ -73,7 +75,7 @@ protected:
     Skeleton *m_skeleton;
     btRigidBody* m_rigidBody;
     glm::mat4 m_matrix;
-    Model(Geometry *f_geometry);
+    explicit Model(Geometry *f_geometry);
     ~Model();
     void SetParent(Model *f_model, int f_bone = -1);
     void SetAnimation(Animation *f_anim);

@@ -49,7 +49,7 @@ protected:
     glm::mat4 m_viewMatrix;
     glm::mat4 m_projectionMatrix;
 
-    Camera(unsigned char f_type);
+    explicit Camera(unsigned char f_type);
     ~Camera();
     void UpdateMatrices();
     friend class ElementManager;

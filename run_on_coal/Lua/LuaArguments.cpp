@@ -36,22 +36,19 @@ void ROC::LuaArguments::Clear()
 
 void ROC::LuaArguments::PushArgument(int f_val)
 {
-    int *l_temp = new int(f_val);
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(l_temp, ArgumentType::Integer));
+    m_vArgs.push_back(std::pair<void*, ArgumentType>(new int(f_val), ArgumentType::Integer));
     m_argCount++;
 }
 
 void ROC::LuaArguments::PushArgument(double f_val)
 {
-    double *l_temp = new double(f_val);
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(l_temp, ArgumentType::Double));
+    m_vArgs.push_back(std::pair<void*, ArgumentType>(new double(f_val), ArgumentType::Double));
     m_argCount++;
 }
 
 void ROC::LuaArguments::PushArgument(float f_val)
 {
-    float *l_temp = new float(f_val);
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(l_temp, ArgumentType::Float));
+    m_vArgs.push_back(std::pair<void*, ArgumentType>(new float(f_val), ArgumentType::Float));
     m_argCount++;
 }
 
@@ -63,8 +60,7 @@ void ROC::LuaArguments::PushArgument(void *f_val)
 
 void ROC::LuaArguments::PushArgument(std::string &f_arg)
 {
-    std::string *l_temp = new std::string(f_arg);
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(l_temp, ArgumentType::String));
+    m_vArgs.push_back(std::pair<void*, ArgumentType>(new std::string(f_arg), ArgumentType::String));
     m_argCount++;
 }
 

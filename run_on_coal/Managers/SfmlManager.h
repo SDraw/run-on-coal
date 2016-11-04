@@ -22,6 +22,8 @@ class SfmlManager
 
     LuaArguments *m_argument;
     std::string m_input;
+
+    SfmlManager(const SfmlManager& that);
 public:
     void SetCursorMode(unsigned char f_mode);
     void GetCursorPosition(glm::ivec2 &f_pos);
@@ -43,7 +45,7 @@ public:
     inline void RequestFocus() { m_window->requestFocus(); }
     inline bool GetFocusState() { return m_window->hasFocus(); }
 protected:
-    SfmlManager(Core *f_core);
+    explicit SfmlManager(Core *f_core);
     ~SfmlManager();
     inline void SwapBuffers() { m_window->display(); }
     bool DoPulse();

@@ -70,7 +70,7 @@ public:
     Collision* CreateCollision(unsigned char f_type, glm::vec3 &f_size);
     bool DestroyCollision(Collision *f_col);
 protected:
-    ElementManager(Core *f_core);
+    explicit ElementManager(Core *f_core);
     ~ElementManager();
     inline void SetLock(bool f_lock) { m_locked = f_lock; }
     void DestroyByPointer(void* f_pointer, unsigned char f_type);

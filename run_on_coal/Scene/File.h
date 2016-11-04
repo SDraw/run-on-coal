@@ -7,7 +7,7 @@ class File
     std::fstream *m_file;
     std::string m_path;
     enum FileMode { NoneMode = -1, ReadMode, WriteMode };
-    FileMode m_type;
+    FileMode m_type = FileMode::NoneMode;
 public:
     size_t Read(std::string &f_data, size_t f_lenght);
     size_t Write(std::string &f_data);

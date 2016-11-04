@@ -15,7 +15,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
 {
     m_core = f_core;
 
-    m_logging = true;
+    m_logging = false;
     m_fullscreen = false;
     m_antialiasing = 0;
     m_windowSize = glm::ivec2(854, 480);
@@ -52,7 +52,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                                 m_fullscreen = l_attrib.as_bool(false);
                                 break;
                             case 3:
-                                m_logging = l_attrib.as_bool(true);
+                                m_logging = l_attrib.as_bool(false);
                                 break;
                             case 4:
                                 m_fpsLimit = l_attrib.as_uint(60U);

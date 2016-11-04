@@ -309,7 +309,7 @@ float ROC::Model::GetMass()
 }
 bool ROC::Model::SetFriction(float f_val)
 {
-    if(m_rigidBody || f_val < 0.f) return false;
+    if(!m_rigidBody || f_val < 0.f) return false;
     m_rigidBody->setFriction(f_val);
     m_rigidBody->activate(true);
     return true;

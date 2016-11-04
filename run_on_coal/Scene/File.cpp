@@ -5,7 +5,6 @@
 ROC::File::File()
 {
     m_file = NULL;
-    m_type = FileMode::NoneMode;
 }
 ROC::File::~File()
 {

@@ -9,6 +9,7 @@
 ROC::Geometry::Geometry()
 {
     m_loaded = false;
+    m_materialCount = 0U;
 }
 ROC::Geometry::~Geometry()
 {
@@ -213,7 +214,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
         }
         else l_result = false;
     }
-    catch(std::ifstream::failure e)
+    catch(const std::ifstream::failure &e)
     {
         Clear();
         l_result = false;
@@ -247,7 +248,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
                 }
             }
         }
-        catch(std::ifstream::failure e)
+        catch(const std::ifstream::failure &e)
         {
             for(auto iter : m_chainsData)
             {
