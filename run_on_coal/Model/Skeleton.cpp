@@ -2,7 +2,6 @@
 #include "Model/Bone.h"
 #include "Model/BoneData.h"
 #include "Model/BoneChainGroup.h"
-#include "Model/BoneChainData.h"
 #include "Model/Skeleton.h"
 
 ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
@@ -48,6 +47,7 @@ ROC::Skeleton::~Skeleton()
             delete iter;
         }
     }
+    m_fastBoneVector.clear();
 }
 
 void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
@@ -66,13 +66,9 @@ void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_rig
 }
 void ROC::Skeleton::Update()
 {
-    for(size_t i = 0; i < m_bonesCount; i++)
-    {
-        Bone *l_bone = m_boneVector[i];
-        l_bone->UpdateMatrix();
-        std::memcpy(&m_boneMatrices[i], &l_bone->m_offsetMatrix, sizeof(glm::mat4));
-    }
-    for(auto iter : m_boneVector) iter->m_rebuildMatrix = false;
+    for(auto iter : m_fastBoneVector) iter->UpdateMatrix();
+    for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_boneMatrices[i], &m_boneVector[i]->m_offsetMatrix, sizeof(glm::mat4));
+    for(auto iter : m_fastBoneVector) iter->m_rebuildMatrix = false;
 }
 
 void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
@@ -83,7 +79,7 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
     {
         for(size_t j = 0, jj = f_vec[i]->m_boneChainDataVector.size(); j < jj; j++)
         {
-            BoneChainData *l_chainData = f_vec[i]->m_boneChainDataVector[j];
+            BoneChainGroup::BoneChainData *l_chainData = f_vec[i]->m_boneChainDataVector[j];
             skChain l_skChain;
             l_skChain.m_boneID = l_chainData->m_boneID;
             btVector3 l_inertia;

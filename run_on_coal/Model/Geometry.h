@@ -13,7 +13,6 @@ class Geometry
 
     bool m_loaded;
     void Clear();
-    void SortMaterials();
 public:
     bool HasBonesData();
     bool HasChainsData();

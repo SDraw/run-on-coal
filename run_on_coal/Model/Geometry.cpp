@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Model/BoneData.h"
-#include "Model/BoneChainData.h"
 #include "Model/BoneChainGroup.h"
 #include "Model/Geometry.h"
 #include "Model/Material.h"
@@ -22,31 +21,9 @@ void ROC::Geometry::Clear()
     m_materialCount = 0U;
     for(auto iter : m_bonesData) delete iter;
     m_bonesData.clear();
-    for(auto iter : m_chainsData)
-    {
-        for(auto iter1 : iter->m_boneChainDataVector) delete iter1;
-        delete iter;
-    }
+    for(auto iter : m_chainsData) delete iter;
     m_chainsData.clear();
     m_loaded = false;
-}
-
-void ROC::Geometry::SortMaterials()
-{
-    std::vector<Material*> l_matVecDef, l_matVecDefDouble, l_matVecDefTransp;
-    for(auto iter : m_materialVector)
-    {
-        if(iter->IsTransparent() || !iter->IsDepthable()) l_matVecDefTransp.push_back(iter);
-        else
-        {
-            if(iter->IsDoubleSided()) l_matVecDefDouble.push_back(iter);
-            else l_matVecDef.push_back(iter);
-        }
-    }
-    m_materialVector.clear();
-    m_materialVector.insert(m_materialVector.end(), l_matVecDefDouble.begin(), l_matVecDefDouble.end());
-    m_materialVector.insert(m_materialVector.end(), l_matVecDef.begin(), l_matVecDef.end());
-    m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
 }
 
 bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
@@ -171,6 +148,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
                 }
 
                 Material *l_material = new Material();
+                m_materialVector.push_back(l_material);
                 std::memcpy(&l_material->m_type, &l_materialType, sizeof(unsigned char));
                 std::memcpy(&l_material->m_params, &l_materialParam, sizeof(glm::vec4));
                 l_material->LoadVertices(l_tempVertex);
@@ -183,10 +161,21 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
                 }
                 l_material->GenerateVAO();
                 l_material->LoadTexture(l_difTexture, f_compressed);
-                m_materialVector.push_back(l_material);
             }
-            SortMaterials();
             m_materialCount = static_cast<unsigned int>(m_materialVector.size());
+            if(m_materialCount)
+            {
+                std::vector<Material*> l_matVecDef, l_matVecDefDouble, l_matVecDefTransp;
+                for(auto iter : m_materialVector)
+                {
+                    if(iter->IsTransparent() || !iter->IsDepthable()) l_matVecDefTransp.push_back(iter);
+                    else iter->IsDoubleSided() ? l_matVecDefDouble.push_back(iter) : l_matVecDef.push_back(iter);
+                }
+                m_materialVector.clear();
+                m_materialVector.insert(m_materialVector.end(), l_matVecDefDouble.begin(), l_matVecDefDouble.end());
+                m_materialVector.insert(m_materialVector.end(), l_matVecDef.begin(), l_matVecDef.end());
+                m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
+            }
 
             if(l_type == 0x2)
             {
@@ -230,20 +219,23 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
             {
                 unsigned int l_chainsCount = 0U;
                 l_file.read((char*)&l_chainsCount, sizeof(unsigned int));
-                for(size_t i = 0; i < l_chainsCount; i++)
+                for(unsigned int i = 0; i < l_chainsCount; i++)
                 {
                     BoneChainGroup *l_group = new BoneChainGroup();
                     m_chainsData.push_back(l_group);
                     unsigned int l_chainParts = 0U;
                     l_file.read((char*)&l_chainParts, sizeof(unsigned int));
-                    for(size_t j = 0; j < l_chainParts; j++)
+                    for(unsigned int j = 0; j < l_chainParts; j++)
                     {
-                        BoneChainData *l_chain = new BoneChainData();
-                        l_group->m_boneChainDataVector.push_back(l_chain);
-                        l_file.read((char*)&l_chain->m_type, sizeof(unsigned char));
-                        l_file.read((char*)&l_chain->m_mass, sizeof(float));
-                        l_file.read((char*)&l_chain->m_size, sizeof(glm::vec3));
-                        l_file.read((char*)&l_chain->m_boneID, sizeof(int));
+                        unsigned char l_chainType;
+                        float l_chainMass;
+                        glm::vec3 l_chainSize;
+                        int l_chainBoneID;
+                        l_file.read((char*)&l_chainType, sizeof(unsigned char));
+                        l_file.read((char*)&l_chainMass, sizeof(float));
+                        l_file.read((char*)&l_chainSize, sizeof(glm::vec3));
+                        l_file.read((char*)&l_chainBoneID, sizeof(int));
+                        l_group->AddChain(l_chainType, l_chainMass, l_chainSize, l_chainBoneID);
                     }
                 }
             }

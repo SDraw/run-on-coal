@@ -168,9 +168,6 @@
     <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Model\BoneChainData.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Model\BoneChainGroup.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -345,9 +342,6 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Sfml.h">
       <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\BoneChainData.h">
-      <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\BoneChainGroup.h">
       <Filter>Model</Filter>
