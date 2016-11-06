@@ -10,7 +10,7 @@ namespace ROC
 {
 namespace Lua
 {
-std::vector<std::string> g_eventNamesTable
+const std::vector<std::string> g_eventNamesTable
 {
     "onOGLPreRender", "onOGLRender",
     "onWindowResize", "onWindowFocus",

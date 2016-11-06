@@ -10,11 +10,11 @@ namespace ROC
 {
 namespace Lua
 {
-std::vector<std::string> g_buffersTable
+const std::vector<std::string> g_buffersTable
 {
     "color", "depth"
 };
-std::vector<std::string> g_drawingTable
+const std::vector<std::string> g_drawingTable
 {
     "point", "line", "fill"
 };

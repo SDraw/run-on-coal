@@ -12,7 +12,7 @@ namespace ROC
 {
 namespace Lua
 {
-std::vector<std::string> g_textureTypesTable
+const std::vector<std::string> g_textureTypesTable
 {
     "rgb", "rgba", "cube"
 };

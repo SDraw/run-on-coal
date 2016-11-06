@@ -58,7 +58,7 @@ void ROC::LuaArguments::PushArgument(void *f_val)
     m_argCount++;
 }
 
-void ROC::LuaArguments::PushArgument(std::string &f_arg)
+void ROC::LuaArguments::PushArgument(const std::string &f_arg)
 {
     m_vArgs.push_back(std::pair<void*, ArgumentType>(new std::string(f_arg), ArgumentType::String));
     m_argCount++;

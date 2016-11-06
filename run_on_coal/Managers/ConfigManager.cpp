@@ -5,7 +5,7 @@
 
 namespace ROC
 {
-std::vector<std::string> g_attributeTable
+const std::vector<std::string> g_attributeTable
 {
     "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync"
 };

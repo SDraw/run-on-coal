@@ -15,7 +15,7 @@ public:
     void PushArgument(double f_val);
     void PushArgument(float f_val);
     void PushArgument(void *f_val);
-    void PushArgument(std::string &f_arg);
+    void PushArgument(const std::string &f_arg);
     void ProccessArguments(lua_State *f_vm);
     inline int GetArgumentsValue() { return m_argCount; }
 };

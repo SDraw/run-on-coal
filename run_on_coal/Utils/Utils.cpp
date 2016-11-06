@@ -36,7 +36,7 @@ void GetShaderInfoLog(GLuint f_shader, std::string &f_log)
     glGetShaderInfoLog(f_shader, l_logSize, &l_logSize, (GLchar*)f_log.data());
 }
 
-int ReadEnumVector(std::vector<std::string> &f_vec, std::string &f_val)
+int ReadEnumVector(const std::vector<std::string> &f_vec, std::string &f_val)
 {
     int l_return = -1;
     for(std::vector<std::string>::const_iterator iter = f_vec.begin(); iter != f_vec.end(); ++iter)

@@ -11,7 +11,7 @@
 
 namespace ROC
 {
-std::vector<std::string> g_keysTable
+extern const std::vector<std::string> g_keysTable
 {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
     "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
@@ -24,12 +24,12 @@ std::vector<std::string> g_keysTable
     "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
     "pause"
 };
-std::vector<std::string> g_mouseKeysTable
+extern const std::vector<std::string> g_mouseKeysTable
 {
     "left", "right", "middle",
     "x1", "x2"
 };
-std::vector<std::string> g_axisNames
+extern const std::vector<std::string> g_axisNames
 {
     "X", "Y", "Z",
     "R", "U", "V",

@@ -11,7 +11,7 @@ namespace ROC
 {
 namespace Lua
 {
-std::vector<std::string> g_cameraTypesTable
+const std::vector<std::string> g_cameraTypesTable
 {
     "perspective", "orthogonal"
 };

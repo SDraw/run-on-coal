@@ -14,7 +14,7 @@ namespace ROC
 {
 namespace Lua
 {
-std::vector<std::string> g_uniformTypesTable
+const std::vector<std::string> g_uniformTypesTable
 {
     "uint", "uvec2", "uvec3", "uvec4",
     "int", "ivec2", "ivec3", "ivec4",

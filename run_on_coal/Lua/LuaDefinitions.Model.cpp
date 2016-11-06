@@ -15,7 +15,7 @@ namespace ROC
 {
 namespace Lua
 {
-std::vector<std::string> g_modelRigidityTable
+const std::vector<std::string> g_modelRigidityTable
 {
     "sphere", "box", "cylinder", "capsule", "cone"
 };
