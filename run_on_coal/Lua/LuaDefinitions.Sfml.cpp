@@ -12,6 +12,7 @@ namespace ROC
 {
 extern std::vector<std::string> g_keysTable;
 extern std::vector<std::string> g_mouseKeysTable;
+extern std::vector<std::string> g_axisNames;
 
 namespace Lua
 {
@@ -50,7 +51,7 @@ int getCursorPosition(lua_State *f_vm)
 }
 int setCursorPosition(lua_State *f_vm)
 {
-    LUA_INTEGER l_val[2];
+    lua_Integer l_val[2];
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
     if(argStream.HasErrors())
@@ -151,7 +152,7 @@ int setWindowVSync(lua_State *f_vm)
 }
 int setWindowFramelimit(lua_State *f_vm)
 {
-    LUA_INTEGER l_fps;
+    lua_Integer l_fps;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadInteger(l_fps);
     if(argStream.HasErrors())
@@ -202,6 +203,95 @@ int getWindowFocus(lua_State *f_vm)
 {
     bool l_focus = LuaManager::m_corePointer->GetSfmlManager()->GetFocusState();
     lua_pushboolean(f_vm, l_focus);
+    return 1;
+}
+
+int isJoypadConnected(lua_State *f_vm)
+{
+    lua_Integer l_joypad = 0;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadInteger(l_joypad);
+    if(argStream.HasErrors() || l_joypad < 0)
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    bool l_result = LuaManager::m_corePointer->GetSfmlManager()->IsJoypadConnected(static_cast<unsigned int>(l_joypad));
+    lua_pushboolean(f_vm, l_result);
+    return 1;
+}
+int joypadGetButtonCount(lua_State *f_vm)
+{
+    lua_Integer l_joypad = 0;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadInteger(l_joypad);
+    if(argStream.HasErrors() || l_joypad < 0)
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    unsigned int l_count = LuaManager::m_corePointer->GetSfmlManager()->GetJoypadButtonCount(static_cast<unsigned int>(l_joypad));
+    lua_pushinteger(f_vm, static_cast<lua_Integer>(l_count));
+    return 1;
+}
+int joypadGetButtonState(lua_State *f_vm)
+{
+    lua_Integer l_joypad = 0;
+    lua_Integer l_button = 0;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadInteger(l_joypad);
+    argStream.ReadInteger(l_button);
+    if(argStream.HasErrors() || l_joypad < 0 || l_button < 0)
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    bool l_state = LuaManager::m_corePointer->GetSfmlManager()->GetJoypadButtonState(static_cast<unsigned int>(l_joypad),static_cast<unsigned int>(l_button));
+    lua_pushboolean(f_vm, l_state);
+    return 1;
+}
+int joypadHasAxis(lua_State *f_vm)
+{
+    lua_Integer l_joypad = 0;
+    std::string l_axis;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadInteger(l_joypad);
+    argStream.ReadText(l_axis);
+    if(argStream.HasErrors() || l_joypad < 0 || l_axis.empty())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    int l_axisID = Utils::ReadEnumVector(g_axisNames, l_axis);
+    if(l_axisID == -1)
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    bool l_result = LuaManager::m_corePointer->GetSfmlManager()->CheckJoypadAxis(static_cast<unsigned int>(l_joypad), static_cast<unsigned int>(l_axisID));
+    lua_pushboolean(f_vm, l_result);
+    return 1;
+}
+int joypadGetAxisValue(lua_State *f_vm)
+{
+    lua_Integer l_joypad = 0;
+    std::string l_axis;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadInteger(l_joypad);
+    argStream.ReadText(l_axis);
+    if(argStream.HasErrors() || l_joypad < 0 || l_axis.empty())
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    int l_axisID = Utils::ReadEnumVector(g_axisNames, l_axis);
+    if(l_axisID == -1)
+    {
+        lua_pushboolean(f_vm, 0);
+        return 1;
+    }
+    float l_value = LuaManager::m_corePointer->GetSfmlManager()->GetJoypadAxisValue(static_cast<unsigned int>(l_joypad), static_cast<unsigned int>(l_axisID));
+    lua_pushnumber(f_vm, l_value);
     return 1;
 }
 

@@ -281,6 +281,12 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "requestWindowFocus", Lua::requestWindowFocus);
     lua_register(m_pVM, "getWindowFocus", Lua::getWindowFocus);
 
+    lua_register(m_pVM, "isJoypadConnected", Lua::isJoypadConnected);
+    lua_register(m_pVM, "joypadGetButtonCount", Lua::joypadGetButtonCount);
+    lua_register(m_pVM, "joypadGetButtonState", Lua::joypadGetButtonState);
+    lua_register(m_pVM, "joypadHasAxis", Lua::joypadHasAxis);
+    lua_register(m_pVM, "joypadGetAxisValue", Lua::joypadGetAxisValue);
+
     lua_register(m_pVM, "closeApplication", Lua::closeApp);
 
     //Bullet Physics

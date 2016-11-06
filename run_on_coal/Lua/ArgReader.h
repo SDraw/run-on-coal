@@ -18,7 +18,7 @@ public:
 
     void ReadBoolean(bool &f_val);
     void ReadNumber(lua_Number &f_val);
-    void ReadInteger(LUA_INTEGER &f_val);
+    void ReadInteger(lua_Integer &f_val);
     void ReadText(std::string &f_val);
     void ReadUserdata(void **f_val, unsigned int f_type);
     void ReadPointer(void **f_val);
@@ -27,7 +27,7 @@ public:
 
     void ReadNextBoolean(bool &f_val);
     void ReadNextNumber(lua_Number &f_val);
-    void ReadNextInteger(LUA_INTEGER &f_val);
+    void ReadNextInteger(lua_Integer &f_val);
     void ReadNextText(std::string &f_val);
     void ReadNextUserdata(void **f_val, unsigned int f_type);
     void ReadNextPointer(void **f_val);

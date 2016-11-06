@@ -66,14 +66,14 @@ int shaderGetUniform(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    LUA_INTEGER l_result = l_shader->GetUniform(l_unif);
+    lua_Integer l_result = l_shader->GetUniform(l_unif);
     (l_result == -1) ? lua_pushboolean(f_vm, 0) : lua_pushinteger(f_vm, l_result);
     return 1;
 }
 int shaderSetUniformValue(lua_State *f_vm)
 {
     Shader *l_shader = NULL;
-    LUA_INTEGER l_unif;
+    lua_Integer l_unif;
     std::string l_type;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_shader, ElementType::ShaderElement);
@@ -89,7 +89,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         // Unsigned int
         case 0:
         {
-            LUA_INTEGER l_val;
+            lua_Integer l_val;
             argStream.ReadInteger(l_val);
             if(argStream.HasErrors() || l_val < 0)
             {
@@ -100,7 +100,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         } break;
         case 1:
         {
-            LUA_INTEGER l_val[2];
+            lua_Integer l_val[2];
             for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
             if(argStream.HasErrors() || l_val[0] < 0 || l_val[1] < 0)
             {
@@ -112,7 +112,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         } break;
         case 2:
         {
-            LUA_INTEGER l_val[3];
+            lua_Integer l_val[3];
             for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
             if(argStream.HasErrors() || l_val[0] < 0 || l_val[1] < 0 || l_val[2] < 0)
             {
@@ -124,7 +124,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         } break;
         case 3:
         {
-            LUA_INTEGER l_val[4];
+            lua_Integer l_val[4];
             for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
             if(argStream.HasErrors() || l_val[0] < 0 || l_val[1] < 0 || l_val[2] < 0 || l_val[3] < 0)
             {
@@ -137,7 +137,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         // Integer
         case 4:
         {
-            LUA_INTEGER l_val;
+            lua_Integer l_val;
             argStream.ReadInteger(l_val);
             if(argStream.HasErrors())
             {
@@ -148,7 +148,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         } break;
         case 5:
         {
-            LUA_INTEGER l_val[2];
+            lua_Integer l_val[2];
             for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
             if(argStream.HasErrors())
             {
@@ -160,7 +160,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         } break;
         case 6:
         {
-            LUA_INTEGER l_val[3];
+            lua_Integer l_val[3];
             for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
             if(argStream.HasErrors())
             {
@@ -172,7 +172,7 @@ int shaderSetUniformValue(lua_State *f_vm)
         } break;
         case 7:
         {
-            LUA_INTEGER l_val[4];
+            lua_Integer l_val[4];
             for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
             if(argStream.HasErrors())
             {

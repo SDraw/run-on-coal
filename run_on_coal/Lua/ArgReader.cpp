@@ -68,7 +68,7 @@ void ROC::ArgReader::ReadNumber(lua_Number &f_val)
     f_val = l_val;
     m_iArgIndex++;
 }
-void ROC::ArgReader::ReadInteger(LUA_INTEGER &f_val)
+void ROC::ArgReader::ReadInteger(lua_Integer &f_val)
 {
     if(m_hasErrors) return;
     if(m_iArgNum < m_iArgIndex)
@@ -203,7 +203,7 @@ void ROC::ArgReader::ReadNextNumber(lua_Number &f_val)
     f_val = l_val;
     m_iArgIndex++;
 }
-void ROC::ArgReader::ReadNextInteger(LUA_INTEGER &f_val)
+void ROC::ArgReader::ReadNextInteger(lua_Integer &f_val)
 {
     if(m_hasErrors) return;
     if(m_iArgNum < m_iArgIndex) return;

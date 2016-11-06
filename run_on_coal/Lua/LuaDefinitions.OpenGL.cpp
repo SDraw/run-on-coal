@@ -61,7 +61,7 @@ int oglClearColor(lua_State *f_vm)
 }
 int oglViewport(lua_State *f_vm)
 {
-    LUA_INTEGER l_params[4];
+    lua_Integer l_params[4];
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     for(int i = 0; i < 4; i++) argStream.ReadInteger(l_params[i]);
     if(argStream.HasErrors())

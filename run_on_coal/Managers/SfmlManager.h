@@ -44,6 +44,12 @@ public:
     bool SetIcon(std::string &f_path);
     inline void RequestFocus() { m_window->requestFocus(); }
     inline bool GetFocusState() { return m_window->hasFocus(); }
+
+    inline bool IsJoypadConnected(unsigned int f_jp) { return sf::Joystick::isConnected(f_jp); }
+    inline bool GetJoypadButtonState(unsigned int f_jp, unsigned int f_button) { return sf::Joystick::isButtonPressed(f_jp, f_button); }
+    inline unsigned int GetJoypadButtonCount(unsigned int f_jp) { return sf::Joystick::getButtonCount(f_jp); }
+    inline bool CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis) { return sf::Joystick::hasAxis(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); }
+    inline float GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis) { return sf::Joystick::getAxisPosition(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); }
 protected:
     explicit SfmlManager(Core *f_core);
     ~SfmlManager();

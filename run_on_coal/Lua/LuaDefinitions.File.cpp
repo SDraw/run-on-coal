@@ -57,7 +57,7 @@ int fileClose(lua_State *f_vm)
 int fileRead(lua_State *f_vm)
 {
     File *l_file;
-    LUA_INTEGER l_length = 0;
+    lua_Integer l_length = 0;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_file, ElementType::FileElement);
     argStream.ReadInteger(l_length);
@@ -67,7 +67,7 @@ int fileRead(lua_State *f_vm)
         return 1;
     }
     std::string l_data;
-    LUA_INTEGER l_read = l_file->Read(l_data, size_t(l_length));
+    lua_Integer l_read = l_file->Read(l_data, size_t(l_length));
     if(l_read <= 0)
     {
         lua_pushboolean(f_vm, 0);
@@ -89,7 +89,7 @@ int fileWrite(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    LUA_INTEGER l_written = l_file->Write(l_data);
+    lua_Integer l_written = l_file->Write(l_data);
     if(l_written <= 0)
     {
         lua_pushboolean(f_vm, 0);
@@ -108,14 +108,14 @@ int fileGetSize(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    LUA_INTEGER l_size = l_file->GetSize();
+    lua_Integer l_size = l_file->GetSize();
     lua_pushinteger(f_vm, l_size);
     return 1;
 }
 int fileSetPosition(lua_State *f_vm)
 {
     File *l_file;
-    LUA_INTEGER l_pos;
+    lua_Integer l_pos;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_file, ElementType::FileElement);
     argStream.ReadInteger(l_pos);
@@ -138,7 +138,7 @@ int fileGetPosition(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    LUA_INTEGER l_pos = l_file->GetPosition();
+    lua_Integer l_pos = l_file->GetPosition();
     lua_pushinteger(f_vm, l_pos);
     return 1;
 }

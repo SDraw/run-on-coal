@@ -19,5 +19,10 @@ int setWindowTitle(lua_State *f_vm);
 int setWindowIcon(lua_State *f_vm);
 int requestWindowFocus(lua_State *f_vm);
 int getWindowFocus(lua_State *f_vm);
+int isJoypadConnected(lua_State *f_vm);
+int joypadGetButtonCount(lua_State *f_vm);
+int joypadGetButtonState(lua_State *f_vm);
+int joypadHasAxis(lua_State *f_vm);
+int joypadGetAxisValue(lua_State *f_vm);
 }
 }

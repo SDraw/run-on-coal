@@ -249,7 +249,7 @@ int modelDraw(lua_State *f_vm)
 int modelAttach(lua_State *f_vm)
 {
     Model *l_model, *l_parent;
-    LUA_INTEGER l_bone = -1;
+    lua_Integer l_bone = -1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata((void**)&l_model, ElementType::ModelElement);
     argStream.ReadUserdata((void**)&l_parent, ElementType::ModelElement);

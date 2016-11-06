@@ -29,6 +29,12 @@ std::vector<std::string> g_mouseKeysTable
     "left", "right", "middle",
     "x1", "x2"
 };
+std::vector<std::string> g_axisNames
+{
+    "X", "Y", "Z",
+    "R", "U", "V",
+    "PovX", "PovY"
+};
 }
 
 ROC::SfmlManager::SfmlManager(Core *f_core)
@@ -189,7 +195,7 @@ bool ROC::SfmlManager::DoPulse()
             case sf::Event::JoystickMoved:
             {
                 m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
-                m_argument->PushArgument(static_cast<int>(m_event.joystickMove.axis));
+                m_argument->PushArgument(g_axisNames[m_event.joystickMove.axis]);
                 m_argument->PushArgument(m_event.joystickMove.position);
                 m_eventManager->CallEvent(EventType::JoypadAxis, m_argument);
                 m_argument->Clear();

@@ -13,7 +13,7 @@ namespace Lua
 int fontCreate(lua_State *f_vm)
 {
     std::string l_path;
-    LUA_INTEGER l_size;
+    lua_Integer l_size;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_path);
     argStream.ReadInteger(l_size);

@@ -19,7 +19,7 @@ std::vector<std::string> g_targetTypesTable
 
 int rtCreate(lua_State *f_vm)
 {
-    LUA_INTEGER l_par[3];
+    lua_Integer l_par[3];
     std::string l_type;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     for(int i = 0; i < 3; i++) argStream.ReadInteger(l_par[i]);
