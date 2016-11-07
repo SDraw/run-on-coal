@@ -4,7 +4,9 @@ namespace ROC
 {
 enum EventType : unsigned char
 {
-    PreRender = 0U, //onOGLPreRender
+    AppStart = 0U, //onAppStart
+    AppStop, //onAppStop
+    PreRender, //onOGLPreRender
     Render, //onOGLRender
     WindowResize, //onWindowResize
     WindowFocus, //onWindowFocus
@@ -30,10 +32,10 @@ class EventManager
     std::vector<Event*>::iterator m_iter;
     unsigned char m_activeEvent;
 public:
-    void CallEvent(unsigned char f_event, LuaArguments *f_args);
     bool AddEvent(unsigned char f_event, int f_ref, void *f_pointer);
     bool SetEventMute(unsigned char f_event, void *f_pointer, bool f_mute);
     bool RemoveEvent(unsigned char f_event, void *f_pointer);
+    void CallEvent(unsigned char f_event, LuaArguments *f_args);
 protected:
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();

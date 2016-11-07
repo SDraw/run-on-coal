@@ -31,6 +31,7 @@ public:
 protected:
     explicit InheritanceManager(Core *f_core);
     ~InheritanceManager();
+
     void RemoveInheritance(void *f_child, void *f_parent);
     void RemoveChildRelation(void *f_child);
     void RemoveParentRelation(void *f_parent);

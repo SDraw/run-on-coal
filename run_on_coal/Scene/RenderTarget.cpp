@@ -13,26 +13,6 @@ ROC::RenderTarget::~RenderTarget()
     Clear();
 }
 
-void ROC::RenderTarget::Clear()
-{
-    m_type = RENDERTARGET_TYPE_NONE;
-    if(m_bTexture)
-    {
-        glDeleteTextures(1, &m_texture);
-        m_bTexture = false;
-    }
-    if(m_bRenderBuffer)
-    {
-        glDeleteRenderbuffers(1, &m_renderBuffer);
-        m_bRenderBuffer = false;
-    }
-    if(m_bFrameBuffer)
-    {
-        glDeleteFramebuffers(1, &m_frameBuffer);
-        m_bFrameBuffer = false;
-    }
-}
-
 bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_type)
 {
     if(m_type != RENDERTARGET_TYPE_NONE || f_type <= RENDERTARGET_TYPE_NONE || f_type > RENDERTARGET_TYPE_RGBF) return false;
@@ -108,9 +88,28 @@ void ROC::RenderTarget::BindTexture(unsigned int f_bind)
     glBindTexture(GL_TEXTURE_2D, m_texture);
     if(f_bind) glActiveTexture(GL_TEXTURE0);
 }
-
 void ROC::RenderTarget::Enable()
 {
     if(m_type == RENDERTARGET_TYPE_NONE) return;
     glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+}
+
+void ROC::RenderTarget::Clear()
+{
+    m_type = RENDERTARGET_TYPE_NONE;
+    if(m_bTexture)
+    {
+        glDeleteTextures(1, &m_texture);
+        m_bTexture = false;
+    }
+    if(m_bRenderBuffer)
+    {
+        glDeleteRenderbuffers(1, &m_renderBuffer);
+        m_bRenderBuffer = false;
+    }
+    if(m_bFrameBuffer)
+    {
+        glDeleteFramebuffers(1, &m_frameBuffer);
+        m_bFrameBuffer = false;
+    }
 }

@@ -28,5 +28,8 @@
 #include "Scene/Sound.h"
 #include "Scene/Texture.h"
 
+#include "Lua/ArgReader.h"
+#include "Lua/LuaArguments.h"
+
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"

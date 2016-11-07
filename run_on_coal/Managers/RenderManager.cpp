@@ -61,14 +61,22 @@ ROC::RenderManager::~RenderManager()
     delete m_argument;
 }
 
-void ROC::RenderManager::DoPulse()
+void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
 {
-    m_time = m_sfmlManager->GetTime();
-
-    m_locked = false;
-    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::Render, m_argument);
-    m_locked = true;
-    m_sfmlManager->SwapBuffers();
+    if(m_locked || m_activeTarget == f_rt) return;
+    m_activeTarget = f_rt;
+    if(!m_activeTarget)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+        m_core->GetSfmlManager()->GetWindowSize(m_renderTargetSize);
+    }
+    else
+    {
+        f_rt->Enable();
+        f_rt->GetSize(m_renderTargetSize);
+    }
+    m_screenProjection = glm::ortho(0.f, static_cast<float>(m_renderTargetSize.x), 0.f, static_cast<float>(m_renderTargetSize.y));
+    glViewport(0, 0, m_renderTargetSize.x, m_renderTargetSize.y);
 }
 
 void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)
@@ -107,7 +115,6 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
         }
     }
 }
-
 void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 {
     if(m_locked) return;
@@ -132,7 +139,6 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
     }
     m_activeShader->SetModelUniformValue(f_model->m_matrix);
 
-    //Skeletal animation
     if(f_model->HasSkeleton())
     {
         m_activeShader->SetBonesUniformValue(f_model->m_skeleton->m_boneMatrices);
@@ -241,22 +247,14 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
     m_quad->Draw(l_vaoBind);
 }
 
-void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
+void ROC::RenderManager::DoPulse()
 {
-    if(m_locked || m_activeTarget == f_rt) return;
-    m_activeTarget = f_rt;
-    if(!m_activeTarget)
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-        m_core->GetSfmlManager()->GetWindowSize(m_renderTargetSize);
-    }
-    else
-    {
-        f_rt->Enable();
-        f_rt->GetSize(m_renderTargetSize);
-    }
-    m_screenProjection = glm::ortho(0.f, static_cast<float>(m_renderTargetSize.x), 0.f, static_cast<float>(m_renderTargetSize.y));
-    glViewport(0, 0, m_renderTargetSize.x, m_renderTargetSize.y);
+    m_time = m_sfmlManager->GetTime();
+
+    m_locked = false;
+    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::Render, m_argument);
+    m_locked = true;
+    m_sfmlManager->SwapBuffers();
 }
 
 void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader)
@@ -301,7 +299,6 @@ void ROC::RenderManager::EnableBlending()
         m_blendEnabled = true;
     }
 }
-
 bool ROC::RenderManager::CompareLastVAO(GLuint f_vao)
 {
     if(f_vao == m_lastVAO) return false;
@@ -314,7 +311,6 @@ bool ROC::RenderManager::CompareLastTexture(GLuint f_texture)
     m_lastTexture = f_texture;
     return true;
 }
-
 void ROC::RenderManager::DisableCulling()
 {
     if(m_cullEnabled)
@@ -331,7 +327,6 @@ void ROC::RenderManager::EnableCulling()
         m_cullEnabled = true;
     }
 }
-
 void ROC::RenderManager::ResetCallsReducing()
 {
     m_lastTexture = 0U;

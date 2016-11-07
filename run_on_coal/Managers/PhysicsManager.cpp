@@ -43,13 +43,6 @@ ROC::PhysicsManager::~PhysicsManager()
     delete m_broadPhase;
 }
 
-void ROC::PhysicsManager::DoPulse()
-{
-    if(!m_enabled) return;
-    m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
-    for(auto iter : m_elementSet) iter->UpdateRigidity();
-}
-
 void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
 {
     if(m_floorEnabled == f_value) return;
@@ -70,7 +63,6 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
         m_groundBody = NULL;
     }
 }
-
 void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
 {
     m_dynamicWorld->setGravity((btVector3&)f_grav);
@@ -84,21 +76,6 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 {
     btVector3 l_grav = m_dynamicWorld->getGravity();
     std::memcpy(&f_grav, l_grav, sizeof(glm::vec3));
-}
-
-bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
-{
-    if(!std::memcmp(&f_start, &f_end, sizeof(glm::vec3))) return false;
-    btCollisionWorld::ClosestRayResultCallback l_result((btVector3&)f_start, (btVector3&)f_end);
-    m_dynamicWorld->rayTest((btVector3&)f_start, (btVector3&)f_end, l_result);
-    if(!l_result.hasHit()) return false;
-    btVector3 l_hitEnd = l_result.m_hitPointWorld;
-    btVector3 l_hitNormal = l_result.m_hitNormalWorld;
-    auto iter = m_bodyMap.find((void*)l_result.m_collisionObject);
-    if(iter != m_bodyMap.end()) *f_model = iter->second;
-    std::memcpy(&f_end, l_hitEnd, sizeof(glm::vec3));
-    std::memcpy(&f_normal, l_hitNormal, sizeof(glm::vec3));
-    return true;
 }
 
 bool ROC::PhysicsManager::SetModelRigidity(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
@@ -162,6 +139,28 @@ void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
     if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
     m_dynamicWorld->removeRigidBody(f_col->m_rigidBody);
     m_collisionSet.erase(iter);
+}
+
+void ROC::PhysicsManager::DoPulse()
+{
+    if(!m_enabled) return;
+    m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
+    for(auto iter : m_elementSet) iter->UpdateRigidity();
+}
+
+bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
+{
+    if(!std::memcmp(&f_start, &f_end, sizeof(glm::vec3))) return false;
+    btCollisionWorld::ClosestRayResultCallback l_result((btVector3&)f_start, (btVector3&)f_end);
+    m_dynamicWorld->rayTest((btVector3&)f_start, (btVector3&)f_end, l_result);
+    if(!l_result.hasHit()) return false;
+    btVector3 l_hitEnd = l_result.m_hitPointWorld;
+    btVector3 l_hitNormal = l_result.m_hitNormalWorld;
+    auto iter = m_bodyMap.find((void*)l_result.m_collisionObject);
+    if(iter != m_bodyMap.end()) *f_model = iter->second;
+    std::memcpy(&f_end, l_hitEnd, sizeof(glm::vec3));
+    std::memcpy(&f_normal, l_hitNormal, sizeof(glm::vec3));
+    return true;
 }
 
 void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)

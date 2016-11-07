@@ -10,6 +10,7 @@ class PreRenderManager
 {
     Core *m_core;
     PhysicsManager *m_physicsManager;
+
     std::set<Model*> m_staticModelSet;
     std::set<Model*> m_animatedModelSet;
 
@@ -20,10 +21,11 @@ public:
     void AddModel(Model *f_model);
     void RemoveModel(Model *f_model);
 protected:
-    void DoPulse_S1();
-    void DoPulse_S2();
     explicit PreRenderManager(Core *f_core);
     ~PreRenderManager();
+
+    void DoPulse_S1();
+    void DoPulse_S2();
     friend Core;
     friend class ElementManager;
 };

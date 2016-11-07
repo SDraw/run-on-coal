@@ -15,31 +15,27 @@ class Skeleton;
 class Animation;
 class Model
 {
-    Animation *m_animation;
-    Model *m_parent;
-
-    int m_parentBone;
-    unsigned int m_animLastTick;
-    unsigned int m_animCurrentTick;
-    enum AnimationState { None = 0U, Paused, Playing };
-    AnimationState m_animState;
-    float m_animationSpeed;
-
     glm::vec3 m_position;
     glm::quat m_rotation;
     glm::vec3 m_scale;
     glm::mat4 m_localMatrix;
     bool m_rebuildMatrix;
 
+    Model *m_parent;
+    int m_parentBone;
+
+    Animation *m_animation;
+    unsigned int m_animLastTick;
+    unsigned int m_animCurrentTick;
+    enum AnimationState { None = 0U, Paused, Playing } m_animState;
+    float m_animationSpeed;
+
     void UpdateSkeleton();
-    void UpdateAnimationTick();
 
     Model(const Model& that);
 public:
-    inline bool IsDrawable() { return (m_geometry != NULL); }
-    inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
-    inline bool IsRigid() { return (m_rigidBody != NULL); }
-    //Manipulation
+    inline Geometry* GetGeometry() { return m_geometry; }
+
     void SetPosition(glm::vec3 &f_pos);
     void GetPosition(glm::vec3 &f_pos, bool f_global = false);
     void SetRotation(glm::quat &f_rot);
@@ -47,6 +43,9 @@ public:
     void SetScale(glm::vec3 &f_scl);
     void GetScale(glm::vec3 &f_scl, bool f_global = false);
 
+    inline Model* GetParent() { return m_parent; }
+
+    inline Animation* GetAnimation() { return m_animation; }
     bool PlayAnimation();
     bool PauseAnimation();
     bool ResetAnimation();
@@ -58,7 +57,7 @@ public:
     inline bool HasSkeleton() { return (m_skeleton != NULL); }
     bool HasRigidSkeleton();
 
-    //Physics
+    inline bool IsRigid() { return (m_rigidBody != NULL); }
     bool SetVelocity(glm::vec3 &f_val);
     bool GetVelocity(glm::vec3 &f_val);
     bool SetAngularVelocity(glm::vec3 &f_val);
@@ -67,20 +66,21 @@ public:
     bool SetFriction(float f_val);
     inline float GetFriction() { return (m_rigidBody ? m_rigidBody->getFriction() : -1.f); }
 
-    inline Geometry* GetGeometry() { return m_geometry; }
-    inline Model* GetParent() { return m_parent; }
-    inline Animation* GetAnimation() { return m_animation; }
+    inline bool IsDrawable() { return (m_geometry != NULL); }
+    inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
 protected:
     Geometry *m_geometry;
+    glm::mat4 m_matrix;
     Skeleton *m_skeleton;
     btRigidBody* m_rigidBody;
-    glm::mat4 m_matrix;
+
     explicit Model(Geometry *f_geometry);
     ~Model();
-    void SetParent(Model *f_model, int f_bone = -1);
-    void SetAnimation(Animation *f_anim);
+
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
     void UpdateMatrix();
+    void SetParent(Model *f_model, int f_bone = -1);
+    void SetAnimation(Animation *f_anim);
     void UpdateAnimation();
     bool SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveRigidity();

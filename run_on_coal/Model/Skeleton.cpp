@@ -70,6 +70,14 @@ void ROC::Skeleton::Update()
     for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_boneMatrices[i], &m_boneVector[i]->m_offsetMatrix, sizeof(glm::mat4));
     for(auto iter : m_fastBoneVector) iter->m_rebuildMatrix = false;
 }
+void ROC::Skeleton::ResetBonesInterpolation()
+{
+    for(auto iter : m_boneVector)
+    {
+        iter->m_interpolation = true;
+        iter->m_interpolationValue = 0.f;
+    }
+}
 
 void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
 {
@@ -180,14 +188,5 @@ void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model, bool f_enabled)
                 iter1.m_rigidBody->setCenterOfMassTransform(l_transform);
             }
         }
-    }
-}
-
-void ROC::Skeleton::ResetBonesInterpolation()
-{
-    for(auto iter : m_boneVector)
-    {
-        iter->m_interpolation = true;
-        iter->m_interpolationValue = 0.f;
     }
 }

@@ -11,8 +11,23 @@
 
 ROC::Model::Model(Geometry *f_geometry)
 {
+    m_position = glm::vec3(0.f);
+    m_rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
+    m_scale = glm::vec3(1.f);
+    m_localMatrix = glm::mat4(1.f);
+    m_matrix = glm::mat4(1.f);
+    m_rebuildMatrix = false;
+
     m_geometry = f_geometry;
-    m_rigidBody = NULL;
+
+    m_parent = NULL;
+    m_parentBone = -1;
+
+    m_animation = NULL;
+    m_animLastTick = 0U;
+    m_animCurrentTick = 0U;
+    m_animState = AnimationState::None;
+    m_animationSpeed = 1.f;
 
     if(m_geometry->HasBonesData())
     {
@@ -27,64 +42,13 @@ ROC::Model::Model(Geometry *f_geometry)
         }
     }
     else m_skeleton = NULL;
-    m_animation = NULL;
-    m_animLastTick = 0U;
-    m_animCurrentTick = 0U;
-    m_animState = AnimationState::None;
-    m_animationSpeed = 1.f;
 
-    m_position = glm::vec3(0.f);
-    m_rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
-    m_scale = glm::vec3(1.f);
-
-    m_localMatrix = glm::mat4(1.f);
-    m_matrix = glm::mat4(1.f);
-    m_rebuildMatrix = false;
-
-    m_parent = NULL;
-    m_parentBone = -1;
+    m_rigidBody = NULL;
 }
 ROC::Model::~Model()
 {
     if(m_skeleton) delete m_skeleton;
     RemoveRigidity();
-}
-
-void ROC::Model::UpdateMatrix()
-{
-    if(!m_parent && !m_rebuildMatrix) return;
-    if(m_rebuildMatrix)
-    {
-        m_localMatrix = glm::translate(Bone::m_identity, m_position)*glm::toMat4(m_rotation)*glm::scale(Bone::m_identity, m_scale);
-        m_rebuildMatrix = false;
-    }
-    if(m_parent)
-    {
-        m_parent->UpdateMatrix();
-        glm::mat4 l_parentMatrix(m_parent->m_matrix);
-        if(m_parentBone != -1) l_parentMatrix *= m_parent->m_skeleton->m_boneMatrices[m_parentBone];
-        m_matrix = l_parentMatrix*m_localMatrix;
-    }
-    else std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
-}
-
-void ROC::Model::UpdateSkeleton()
-{
-    if(m_animation)
-    {
-        float l_lerpDelta;
-        if(!m_animation->CacheData(m_animCurrentTick, l_lerpDelta)) return;
-        m_skeleton->Update(m_animation->m_leftFrame, m_animation->m_rightFrame, l_lerpDelta);
-    }
-    else m_skeleton->Update();
-}
-void ROC::Model::UpdateAnimationTick()
-{
-    unsigned int l_sysTick = SystemTick::GetTick();
-    unsigned int l_difTick = static_cast<unsigned int>(static_cast<float>(l_sysTick - m_animLastTick)*m_animationSpeed);
-    m_animLastTick = l_sysTick;
-    m_animCurrentTick += l_difTick;
-    m_animCurrentTick %= m_animation->m_durationTotal;
 }
 
 void ROC::Model::SetPosition(glm::vec3 &f_pos)
@@ -156,6 +120,23 @@ void ROC::Model::GetScale(glm::vec3 &f_scl, bool f_global)
     }
     else std::memcpy(&f_scl, &m_scale, sizeof(glm::vec3));
 }
+void ROC::Model::UpdateMatrix()
+{
+    if(!m_parent && !m_rebuildMatrix) return;
+    if(m_rebuildMatrix)
+    {
+        m_localMatrix = glm::translate(Bone::m_identity, m_position)*glm::toMat4(m_rotation)*glm::scale(Bone::m_identity, m_scale);
+        m_rebuildMatrix = false;
+    }
+    if(m_parent)
+    {
+        m_parent->UpdateMatrix();
+        glm::mat4 l_parentMatrix(m_parent->m_matrix);
+        if(m_parentBone != -1) l_parentMatrix *= m_parent->m_skeleton->m_boneMatrices[m_parentBone];
+        m_matrix = l_parentMatrix*m_localMatrix;
+    }
+    else std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
+}
 
 void ROC::Model::SetParent(Model *f_model, int f_bone)
 {
@@ -174,16 +155,21 @@ void ROC::Model::SetAnimation(Animation *f_anim)
         m_skeleton->ResetBonesInterpolation();
         UpdateSkeleton();
     }
+    else
+    {
+        m_animationSpeed = 1.f;
+        m_animState = AnimationState::None;
+    }
 }
 void ROC::Model::UpdateAnimation()
 {
-    if(!m_skeleton) return;
-    if(m_animation)
-    {
-        if(m_animState == AnimationState::Paused) return;
-        UpdateAnimationTick();
-        UpdateSkeleton();
-    }
+    if(!m_skeleton || !m_animation || m_animState == AnimationState::Paused) return;
+    unsigned int l_sysTick = SystemTick::GetTick();
+    unsigned int l_difTick = static_cast<unsigned int>(static_cast<float>(l_sysTick - m_animLastTick)*m_animationSpeed);
+    m_animLastTick = l_sysTick;
+    m_animCurrentTick += l_difTick;
+    m_animCurrentTick %= m_animation->m_durationTotal;
+    UpdateSkeleton();
 }
 bool ROC::Model::PlayAnimation()
 {
@@ -225,12 +211,21 @@ float ROC::Model::GetAnimationProgress()
     return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->m_durationTotal)) : -1.f);
 }
 
+void ROC::Model::UpdateSkeleton()
+{
+    if(m_animation)
+    {
+        float l_lerpDelta;
+        if(!m_animation->CacheData(m_animCurrentTick, l_lerpDelta)) return;
+        m_skeleton->Update(m_animation->m_leftFrame, m_animation->m_rightFrame, l_lerpDelta);
+    }
+    else m_skeleton->Update();
+}
 bool ROC::Model::HasRigidSkeleton()
 {
     return (m_skeleton ? m_skeleton->m_rigid : false);
 }
 
-//Physics
 bool ROC::Model::SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim)
 {
     if(m_rigidBody || m_parent || f_mass < 0.f) return false;
@@ -314,7 +309,6 @@ bool ROC::Model::SetFriction(float f_val)
     m_rigidBody->activate(true);
     return true;
 }
-
 void ROC::Model::UpdateRigidity()
 {
     if(m_rigidBody)

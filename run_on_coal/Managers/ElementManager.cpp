@@ -24,7 +24,6 @@ ROC::ElementManager::ElementManager(Core *f_core)
 {
     m_core = f_core;
     m_locked = false;
-    m_regex = std::regex("(\\.\\.)+(\\/|\\\\)");
 }
 ROC::ElementManager::~ElementManager()
 {

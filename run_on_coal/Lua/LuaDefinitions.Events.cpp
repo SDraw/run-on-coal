@@ -12,6 +12,7 @@ namespace Lua
 {
 const std::vector<std::string> g_eventNamesTable
 {
+    "onAppStart", "onAppStop",
     "onOGLPreRender", "onOGLRender",
     "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",

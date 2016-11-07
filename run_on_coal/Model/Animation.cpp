@@ -6,8 +6,8 @@ ROC::Animation::Animation()
 {
     m_animFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     m_duration = 0U;
-    m_fps = 0U;
     m_durationTotal = 0U;
+    m_fps = 0U;
     m_bonesValue = 0U;
     m_cachedFrame = 0U;
     m_loaded = false;
@@ -15,16 +15,6 @@ ROC::Animation::Animation()
 ROC::Animation::~Animation()
 {
     m_animFile.close();
-}
-
-void ROC::Animation::Clean()
-{
-    m_animFile.close();
-    m_duration = 0U;
-    m_bonesValue = 0U;
-    m_fps = 0U;
-    m_durationTotal = 0U;
-    m_loaded = false;
 }
 
 bool ROC::Animation::Load(std::string &f_path)
@@ -77,4 +67,14 @@ bool ROC::Animation::CacheData(unsigned int f_tick, float &f_lerp)
         m_cachedFrame = l_frameL;
     }
     return m_animFile.good();
+}
+
+void ROC::Animation::Clean()
+{
+    m_animFile.close();
+    m_duration = 0U;
+    m_bonesValue = 0U;
+    m_fps = 0U;
+    m_durationTotal = 0U;
+    m_loaded = false;
 }

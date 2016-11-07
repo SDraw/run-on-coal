@@ -21,6 +21,13 @@ bool ROC::MemoryManager::CheckMemoryPointer(void *f_pointer, unsigned char f_typ
     return true;
 }
 
+int ROC::MemoryManager::GetMemoryPointerType(void *f_pointer)
+{
+    auto iter = m_memoryMap.find(f_pointer);
+    if(iter == m_memoryMap.end()) return -1;
+    return iter->second;
+}
+
 void ROC::MemoryManager::RemoveMemoryPointer(void *f_pointer, unsigned char f_type)
 {
     auto l_checkIterator = m_memoryMap.find(f_pointer);
@@ -28,11 +35,4 @@ void ROC::MemoryManager::RemoveMemoryPointer(void *f_pointer, unsigned char f_ty
     {
         if(l_checkIterator->second == f_type) m_memoryMap.erase(l_checkIterator);
     }
-}
-
-int ROC::MemoryManager::GetMemoryPointerType(void *f_pointer)
-{
-    auto iter = m_memoryMap.find(f_pointer);
-    if(iter == m_memoryMap.end()) return -1;
-    return iter->second;
 }

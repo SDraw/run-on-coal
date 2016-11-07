@@ -11,6 +11,7 @@ class Sound
     bool m_b3D;
     bool m_looped;
     bool m_mono;
+
     glm::vec3 m_v3DPosition;
     glm::vec2 m_v3DDistance;
 public:

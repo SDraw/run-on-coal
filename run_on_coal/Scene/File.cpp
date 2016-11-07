@@ -29,6 +29,7 @@ bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
     m_path.append(f_rPath);
     return true;
 }
+
 size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
 {
     std::vector<char> l_data(f_lenght);
@@ -45,6 +46,7 @@ size_t ROC::File::Write(std::string &f_data)
     l_start = m_file->tellg() - l_start;
     return static_cast<size_t>(l_start);
 }
+
 size_t ROC::File::GetSize()
 {
     size_t l_size = 0U;
@@ -64,7 +66,6 @@ size_t ROC::File::GetSize()
     }
     return l_size;
 }
-
 bool ROC::File::SetPosition(size_t f_pos)
 {
     if(m_type == FileMode::ReadMode) m_file->seekg(f_pos);

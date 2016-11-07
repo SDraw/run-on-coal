@@ -21,8 +21,10 @@ class Font
     GLuint m_uvVBO;
 
     bool m_loaded;
-    void Clear();
+
     bool LoadChar(unsigned int l_char);
+
+    void Clear();
 protected:
     GLuint m_VAO;
     Font();

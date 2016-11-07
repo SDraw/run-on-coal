@@ -13,10 +13,10 @@ ROC::Material::Material()
     m_bIndexVBO = false;
     m_bVAO = false;
 
-    m_texture = NULL;
-
     m_params = glm::vec4(1.f);
     m_type = 0;
+
+    m_texture = NULL;
 }
 
 ROC::Material::~Material()
@@ -28,16 +28,6 @@ ROC::Material::~Material()
     if(m_bIndexVBO) glDeleteBuffers(1, &m_indexVBO);
     if(m_bVAO) glDeleteVertexArrays(1, &m_VAO);
     if(m_texture) delete m_texture;
-}
-
-void ROC::Material::LoadTexture(std::string &f_path, bool f_compressed)
-{
-    m_texture = new Texture();
-    if(!m_texture->Load(f_path, IsTransparent() ? TEXTURE_TYPE_RGBA : TEXTURE_TYPE_RGB, f_compressed))
-    {
-        delete m_texture;
-        m_texture = NULL;
-    }
 }
 
 void ROC::Material::LoadVertices(std::vector<glm::vec3> &f_vector)
@@ -120,6 +110,15 @@ void ROC::Material::GenerateVAO()
     glBindVertexArray(NULL);
 
     m_bVAO = true;
+}
+void ROC::Material::LoadTexture(std::string &f_path, bool f_compressed)
+{
+    m_texture = new Texture();
+    if(!m_texture->Load(f_path, IsTransparent() ? TEXTURE_TYPE_RGBA : TEXTURE_TYPE_RGB, f_compressed))
+    {
+        delete m_texture;
+        m_texture = NULL;
+    }
 }
 
 void ROC::Material::Draw(bool f_texturize, bool f_binding)

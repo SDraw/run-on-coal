@@ -26,7 +26,6 @@ class Collision;
 class ElementManager
 {
     Core *m_core;
-    std::regex m_regex;
     bool m_locked;
 public:
     Scene* CreateScene();
@@ -72,6 +71,7 @@ public:
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
+
     inline void SetLock(bool f_lock) { m_locked = f_lock; }
     void DestroyByPointer(void* f_pointer, unsigned char f_type);
     friend Core;

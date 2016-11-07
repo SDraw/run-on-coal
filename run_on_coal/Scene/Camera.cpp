@@ -3,6 +3,8 @@
 
 ROC::Camera::Camera(unsigned char f_type)
 {
+    m_type = f_type;
+
     m_viewPosition = glm::vec3(0.f);
     m_viewDirection = glm::vec3(0.f, 0.f, 1.f);
     m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -11,8 +13,6 @@ ROC::Camera::Camera(unsigned char f_type)
     m_aspectRatio = 640.f / 480.f;
     m_orthoParams = glm::vec4(-1.f, 1.f, -1.f, 1.f);
     m_depth = glm::vec2(1.f, 10.f);
-
-    m_type = f_type;
     m_projectionMatrix = glm::perspective(m_fov, m_aspectRatio, m_depth.x, m_depth.y);
 
     m_rebuildView = false;
@@ -60,16 +60,6 @@ void ROC::Camera::SetDepth(glm::vec2 &f_depth)
     std::memcpy(&m_depth, &f_depth, sizeof(glm::vec2));
     m_rebuildProjection = true;
 }
-
-bool ROC::Camera::IsInFrustum(glm::vec3 &f_pos, float f_radius)
-{
-    for(auto &iter : m_planes)
-    {
-        if(iter.x*f_pos.x + iter.y*f_pos.y + iter.z*f_pos.z + iter.w < -f_radius) return false;
-    }
-    return true;
-}
-
 void ROC::Camera::GetViewMatrix(glm::mat4 &f_mat)
 {
     UpdateMatrices();
@@ -109,4 +99,13 @@ void ROC::Camera::UpdateMatrices()
     }
     m_rebuildView = false;
     m_rebuildProjection = false;
+}
+
+bool ROC::Camera::IsInFrustum(glm::vec3 &f_pos, float f_radius)
+{
+    for(auto &iter : m_planes)
+    {
+        if(iter.x*f_pos.x + iter.y*f_pos.y + iter.z*f_pos.z + iter.w < -f_radius) return false;
+    }
+    return true;
 }

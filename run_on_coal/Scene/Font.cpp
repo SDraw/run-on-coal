@@ -47,6 +47,20 @@ ROC::Font::~Font()
     }
 }
 
+bool ROC::Font::LoadTTF(std::string &f_path, int f_size)
+{
+    if(m_loaded) return false;
+    if(FT_Init_FreeType(&m_library)) return false;
+    if(FT_New_Face(m_library, f_path.c_str(), 0, &m_face))
+    {
+        FT_Done_FreeType(m_library);
+        return false;
+    }
+    FT_Select_Charmap(m_face, ft_encoding_unicode);
+    FT_Set_Pixel_Sizes(m_face, 0, f_size);
+    m_loaded = true;
+    return true;
+}
 bool ROC::Font::LoadChar(unsigned int l_char)
 {
     if(FT_Load_Char(m_face, l_char, FT_LOAD_RENDER)) return false;
@@ -62,21 +76,6 @@ bool ROC::Font::LoadChar(unsigned int l_char)
     l_charData->m_advance = m_face->glyph->advance.x;
     l_charData->m_breaing = glm::ivec2(m_face->glyph->bitmap_left, m_face->glyph->bitmap_top);
     m_charMap.insert(std::pair<unsigned int, charData*>(l_char, l_charData));
-    return true;
-}
-
-bool ROC::Font::LoadTTF(std::string &f_path, int f_size)
-{
-    if(m_loaded) return false;
-    if(FT_Init_FreeType(&m_library)) return false;
-    if(FT_New_Face(m_library, f_path.c_str(), 0, &m_face))
-    {
-        FT_Done_FreeType(m_library);
-        return false;
-    }
-    FT_Select_Charmap(m_face, ft_encoding_unicode);
-    FT_Set_Pixel_Sizes(m_face, 0, f_size);
-    m_loaded = true;
     return true;
 }
 

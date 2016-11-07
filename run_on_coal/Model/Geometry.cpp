@@ -14,17 +14,6 @@ ROC::Geometry::~Geometry()
 {
     Clear();
 }
-void ROC::Geometry::Clear()
-{
-    for(auto iter : m_materialVector) delete iter;
-    m_materialVector.clear();
-    m_materialCount = 0U;
-    for(auto iter : m_bonesData) delete iter;
-    m_bonesData.clear();
-    for(auto iter : m_chainsData) delete iter;
-    m_chainsData.clear();
-    m_loaded = false;
-}
 
 bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
 {
@@ -270,4 +259,16 @@ bool ROC::Geometry::HasChainsData()
 void ROC::Geometry::GetChainsData(std::vector<BoneChainGroup*> &f_vec)
 {
     f_vec.insert(f_vec.begin(), m_chainsData.begin(), m_chainsData.end());
+}
+
+void ROC::Geometry::Clear()
+{
+    for(auto iter : m_materialVector) delete iter;
+    m_materialVector.clear();
+    m_materialCount = 0U;
+    for(auto iter : m_bonesData) delete iter;
+    m_bonesData.clear();
+    for(auto iter : m_chainsData) delete iter;
+    m_chainsData.clear();
+    m_loaded = false;
 }

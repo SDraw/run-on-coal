@@ -57,7 +57,16 @@ int main(int argc, char *argv[])
         l_logManager->Log(l_text);
     }
     delete l_meta;
+
+    ROC::LuaArguments *l_emptyArgs = new ROC::LuaArguments();
+    ROC::EventManager *l_eventManager = l_core->GetLuaManager()->GetEventManager();
+    l_eventManager->CallEvent(ROC::EventType::AppStart, l_emptyArgs);
+
     while(l_core->DoPulse());
+
+    l_eventManager->CallEvent(ROC::EventType::AppStop, l_emptyArgs);
+    delete l_emptyArgs;
+
     ROC::Core::Terminate();
     return EXIT_SUCCESS;
 }
