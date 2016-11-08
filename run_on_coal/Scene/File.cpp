@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Scene/File.h"
+#include "Utils/Utils.h"
 
 ROC::File::File()
 {
@@ -75,21 +76,23 @@ bool ROC::File::SetPosition(size_t f_pos)
 
 bool ROC::File::Delete(Core *f_core, std::string &f_path)
 {
-    std::string l_path;
-    f_core->GetWorkingDirectory(l_path);
-    l_path.append("/");
-    l_path.append(f_path);
-    return !std::remove(l_path.c_str());
+    std::string l_work, l_path;
+    f_core->GetWorkingDirectory(l_work);
+    Utils::AnalyzePath(f_path, l_path);
+    Utils::JoinPaths(l_work, l_path);
+    return !std::remove(l_work.c_str());
 }
-
 bool ROC::File::Rename(Core *f_core, std::string &f_old, std::string &f_new)
 {
-    std::string l_oPath, l_nPath;
-    f_core->GetWorkingDirectory(l_oPath);
-    l_nPath.append(l_oPath);
-    l_nPath.append("/");
-    l_nPath.append(f_new);
-    l_oPath.append("/");
-    l_oPath.append(f_old);
-    return !std::rename(l_oPath.c_str(), l_nPath.c_str());
+    std::string l_workOld, l_pathOld, l_workNew, l_pathNew;
+
+    f_core->GetWorkingDirectory(l_workOld);
+    Utils::AnalyzePath(f_old, l_pathOld);
+    Utils::JoinPaths(l_workOld, l_pathOld);
+
+    f_core->GetWorkingDirectory(l_workNew);
+    Utils::AnalyzePath(f_new, l_pathNew);
+    Utils::JoinPaths(l_workNew, l_pathNew);
+
+    return !std::rename(l_workOld.c_str(), l_workNew.c_str());
 }
