@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <vector>
+#include <string>
 #include <fstream>
 #include <sstream>
 #include <bitset>
@@ -531,30 +532,26 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
         //Materials parsing
         while(std::getline(l_materialFile, l_buffer))
         {
-            if(l_buffer[0] == 'n' && l_buffer[1] == 'e' && l_buffer[2] == 'w' && l_buffer[3] == 'm' && l_buffer[4] == 't' && l_buffer[5] == 'l') //new material
+            if(l_buffer.empty()) continue;
+            if(l_buffer.at(0) == 'N' || l_buffer.at(0) == 'K' || l_buffer.at(0) == 'd' || l_buffer.at(0) == 'i') continue;
+            if(!l_buffer.find("newmtl "))
             {
-                char l_textureName[128];
-                if(std::sscanf(l_buffer.c_str(), "%*s %s", l_textureName) == EOF) Error("Material name parse error");
-                l_materialNames.push_back(l_textureName);
-                while(std::getline(l_materialFile, l_buffer))
-                {
-                    std::cout << l_buffer << std::endl;
-                    if(l_buffer[0] == 'N' || l_buffer[0] == 'K' || l_buffer[0] == 'd' || l_buffer[0] == 'i') continue;
-                    if(l_buffer[0] == 't' && l_buffer[1] == 'y' && l_buffer[2] == 'p' && l_buffer[3] == 'e')
-                    {
-                        unsigned int l_mType;
-                        if(std::sscanf(l_buffer.c_str(), "%*s %u", &l_mType) == EOF) Error("Unable to parse material type");
-                        l_materialTypes.push_back(l_mType);
-                        continue;
-                    }
-                    if(l_buffer[0] == 'm' && l_buffer[1] == 'a' && l_buffer[2] == 'p' && l_buffer[3] == '_' && (l_buffer[4] == 'K' || l_buffer[4] == 'k') && l_buffer[5] == 'd')
-                    {
-                        if(std::sscanf(l_buffer.c_str(), "%*s %s", l_textureName) == EOF) Error("Unable to parse diffuse map");
-                        l_materialTextureNames.push_back(std::string("textures/") + l_textureName);
-                        continue;
-                    }
-                    else break;
-                }
+                std::string l_materialName = l_buffer.substr(7U);
+                l_materialNames.push_back(l_materialName);
+                continue;
+            }
+            if(!l_buffer.find("type "))
+            {
+                std::string l_typeString = l_buffer.substr(5U);
+                l_materialTypes.push_back(static_cast<unsigned char>(std::stoi(l_typeString)));
+                continue;
+            }
+            if(!l_buffer.find("map_Kd ") || !l_buffer.find("map_kd "))
+            {
+                std::string l_textureName = l_buffer.substr(7U);
+                l_textureName.insert(0U, "textures/");
+                l_materialTextureNames.push_back(l_textureName);
+                continue;
             }
         }
         l_materialFile.close();
@@ -593,30 +590,32 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
     std::vector<Face> l_faceVector;
     while(std::getline(l_objectFile, l_buffer))
     {
-        if(l_buffer[0] == '#' || l_buffer[0] == 's' || l_buffer[0] == 'm' || l_buffer[0] == 'o') continue;
-        if(l_buffer[0] == 'v') //vertex, uv or normal
+        if(l_buffer.empty()) continue;
+        if(l_buffer.at(0) == '#' || l_buffer.at(0) == 's' || l_buffer.at(0) == 'm' || l_buffer.at(0) == 'o') continue;
+        if(!l_buffer.find("v "))
         {
-            if(l_buffer[1] == 'n') // normal
-            {
-                float x, y, z;
-                if(std::sscanf(l_buffer.c_str(), "%*s %f %f %f", &x, &y, &z) == EOF) Error("Normals parsing error");
-                temp_normal.push_back(glm::vec3(x, y, z));
-                continue;
-            }
-            if(l_buffer[1] == 't') //uv
-            {
-                float u, v;
-                if(std::sscanf(l_buffer.c_str(), "%*s %f %f", &u, &v) == EOF) Error("UVs parsing error");
-                temp_uv.push_back(glm::vec2(u, 1.0f - v));
-                continue;
-            }
-            if(l_buffer[1] == ' ')
-            {
-                float x, y, z;
-                if(std::sscanf(l_buffer.c_str(), "%*s %f %f %f", &x, &y, &z) == EOF) Error("Vertices parsing error");
-                temp_vertex.push_back(glm::vec3(x, y, z));
-                continue;
-            }
+            std::stringstream l_vertexStream(l_buffer.substr(2U));
+            glm::vec3 l_vert;
+            l_vertexStream >> l_vert.x >> l_vert.y >> l_vert.z;
+            temp_vertex.push_back(l_vert);
+            continue;
+        }
+        if(!l_buffer.find("vn "))
+        {
+            std::stringstream l_normalStream(l_buffer.substr(3U));
+            glm::vec3 l_norm;
+            l_normalStream >> l_norm.x >> l_norm.y >> l_norm.z;
+            temp_normal.push_back(l_norm);
+            continue;
+        }
+        if(!l_buffer.find("vt "))
+        {
+            std::stringstream l_uvStream(l_buffer.substr(3U));
+            glm::vec2 l_uv;
+            l_uvStream >> l_uv.x >> l_uv.y;
+            l_uv.y = 1.f - l_uv.y;
+            temp_uv.push_back(l_uv);
+            continue;
         }
         if(!l_dataParsed)
         {
@@ -655,7 +654,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             delete[]l_compressedData;
             Info(temp_vertex.size() << " normals");
         }
-        if(l_buffer[0] == 'u' && l_buffer[1] == 's' && l_buffer[2] == 'e')
+        if(!l_buffer.find("usemtl "))
         {
             if(!l_materialsSizeParsed)
             {
@@ -710,13 +709,12 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                 Info("Material " << l_currentMaterial << ", " << l_faceVector.size() << " faces");
                 l_faceVector.clear();
             }
-            char l_textureName[128];
-            if(std::sscanf(l_buffer.c_str(), "%*s %s", l_textureName) == EOF) Error("Unable to parse materials");
+            std::string l_textureName = l_buffer.substr(7U);
             l_currentMaterial = std::distance(l_materialNames.begin(), std::find(l_materialNames.begin(), l_materialNames.end(), l_textureName));
             if(l_currentMaterial >= int(l_materialNames.size()) || l_currentMaterial < 0) Error("Unable to parse materials");
             continue;
         }
-        if(l_buffer[0] == 'f') //triangle
+        if(!l_buffer.find("f "))
         {
             if(!l_materialsSizeParsed)
             {
@@ -725,20 +723,16 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                 l_materialsSizeParsed = true;
                 Info(l_materialsSizeI << " material(s)");
             }
-            unsigned int v1, v2, v3;
-            unsigned int t1, t2, t3;
-            unsigned int n1, n2, n3;
-            if(std::sscanf(l_buffer.c_str(), "%*s %u/%u/%u %u/%u/%u %u/%u/%u", &v1, &t1, &n1, &v2, &t2, &n2, &v3, &t3, &n3) == EOF) Error("Unable to parse faces for material" << l_currentMaterial)
-                Face l_face;
-            l_face.m_materialIndices[0] = v1 - 1;
-            l_face.m_materialIndices[1] = v2 - 1;
-            l_face.m_materialIndices[2] = v3 - 1;
-            l_face.m_materialIndices[3] = t1 - 1;
-            l_face.m_materialIndices[4] = t2 - 1;
-            l_face.m_materialIndices[5] = t3 - 1;
-            l_face.m_materialIndices[6] = n1 - 1;
-            l_face.m_materialIndices[7] = n2 - 1;
-            l_face.m_materialIndices[8] = n3 - 1;
+            std::string l_faceString = l_buffer.substr(2U);
+            std::replace(l_faceString.begin(), l_faceString.end(), '/', ' ');
+            std::stringstream l_faceStream(l_faceString);
+            Face l_face;
+            l_faceStream >>
+                l_face.m_materialIndices[0] >> l_face.m_materialIndices[3] >> l_face.m_materialIndices[6] >>
+                l_face.m_materialIndices[1] >> l_face.m_materialIndices[4] >> l_face.m_materialIndices[7] >>
+                l_face.m_materialIndices[2] >> l_face.m_materialIndices[5] >> l_face.m_materialIndices[8];
+
+            for(int i = 0; i < 9; i++) l_face.m_materialIndices[i]--;
             l_faceVector.push_back(l_face);
             continue;
         }
