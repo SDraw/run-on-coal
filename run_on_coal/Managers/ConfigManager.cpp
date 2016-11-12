@@ -40,13 +40,16 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                         switch(Utils::ReadEnumVector(g_attributeTable, l_param))
                         {
                             case 0:
+                            {
                                 m_antialiasing = l_attrib.as_int(0);
                                 if(m_antialiasing < 0) m_antialiasing = 0;
-                                break;
+                            } break;
                             case 1:
                             {
-                                std::string l_param = l_attrib.as_string("854x480");
-                                if(!l_param.empty()) sscanf(l_param.c_str(), "%dx%d", &m_windowSize.x, &m_windowSize.y);
+                                std::string l_size = l_attrib.as_string("854x480");
+                                std::replace(l_size.begin(), l_size.end(), 'x', ' ');
+                                std::stringstream l_sizeStream(l_size);
+                                l_sizeStream >> m_windowSize.x >> m_windowSize.y;
                             } break;
                             case 2:
                                 m_fullscreen = l_attrib.as_bool(false);
@@ -55,9 +58,10 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                                 m_logging = l_attrib.as_bool(false);
                                 break;
                             case 4:
+                            {
                                 m_fpsLimit = l_attrib.as_uint(60U);
                                 if(m_fpsLimit == 0U) m_fpsLimit = 60U;
-                                break;
+                            } break;
                             case 5:
                                 m_vsync = l_attrib.as_bool(false);
                         }

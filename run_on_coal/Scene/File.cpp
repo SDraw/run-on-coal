@@ -18,7 +18,7 @@ bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
     if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = FileMode::WriteMode;
-    m_path.append(f_rPath);
+    m_path.insert(m_path.begin(), f_rPath.begin(), f_rPath.end());
     return true;
 }
 bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
@@ -27,7 +27,7 @@ bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
     if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = f_ro ? FileMode::ReadMode : FileMode::WriteMode;
-    m_path.append(f_rPath);
+    m_path.insert(m_path.begin(), f_rPath.begin(), f_rPath.end());
     return true;
 }
 
@@ -35,7 +35,7 @@ size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
 {
     std::vector<char> l_data(f_lenght);
     size_t l_read = static_cast<size_t>(m_file->read(&l_data[0], f_lenght).gcount());
-    f_data.append(l_data.begin(), l_data.begin() + l_read);
+    f_data.insert(f_data.begin(), l_data.begin(), l_data.begin() + l_read);
     return l_read;
 }
 size_t ROC::File::Write(std::string &f_data)

@@ -2,9 +2,9 @@
 
 namespace ROC
 {
-enum ElementType
+enum ElementType : unsigned char
 {
-    GeometryElement = 1U, ModelElement, AnimationElement, SceneElement,
+    GeometryElement = 0U, ModelElement, AnimationElement, SceneElement,
     CameraElement, LightElement, RenderTargetElement, ShaderElement,
     SoundElement, TextureElement, FontElement, FileElement, CollisionElement
 };

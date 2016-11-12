@@ -334,7 +334,7 @@ bool ROC::ArgReader::HasErrors()
         l_log.append(":");
         l_log.append(std::to_string(l_ar.currentline));
         l_log.append(": ");
-        l_log.append(m_error);
+        l_log.insert(l_log.end(), m_error.begin(), m_error.end());
         l_log.append(" at argument ");
         l_log.append(std::to_string(m_iArgIndex));
         m_core->GetLogManager()->Log(l_log);

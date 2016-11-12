@@ -162,21 +162,21 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
     {
         std::string l_vertexPath;
         Utils::AnalyzePath(f_vpath, l_vertexPath);
-        l_path[0].append(l_work);
+        l_path[0].insert(l_path[0].begin(), l_work.begin(), l_work.end());
         Utils::JoinPaths(l_path[0], l_vertexPath);
     }
     if(!f_fpath.empty())
     {
         std::string l_fragmentPath;
         Utils::AnalyzePath(f_fpath, l_fragmentPath);
-        l_path[1].append(l_work);
+        l_path[1].insert(l_path[1].begin(), l_work.begin(), l_work.end());
         Utils::JoinPaths(l_path[1], l_fragmentPath);
     }
     if(!f_gpath.empty())
     {
         std::string l_geometryPath;
         Utils::AnalyzePath(f_gpath, l_geometryPath);
-        l_path[2].append(l_work);
+        l_path[2].insert(l_path[2].begin(), l_work.begin(), l_work.end());
         Utils::JoinPaths(l_path[2], l_geometryPath);
     }
     if(!l_shader->Load(l_path[0], l_path[1], l_path[2]))
@@ -186,13 +186,13 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
         if(!l_shaderError.empty())
         {
             std::string l_error("[");
-            l_error.append(f_vpath);
+            l_error.insert(l_error.end(),f_vpath.begin(),f_vpath.end());
             l_error.append(",");
-            l_error.append(f_fpath);
+            l_error.insert(l_error.end(),f_fpath.begin(),f_fpath.end());
             l_error.append(",");
-            l_error.append(f_gpath);
+            l_error.insert(l_error.end(),f_gpath.begin(),f_gpath.end());
             l_error.append("] -> ");
-            l_error.append(l_shaderError);
+            l_error.insert(l_error.end(),l_shaderError.begin(),l_shaderError.end());
             m_core->GetLogManager()->Log(l_error);
         }
         delete l_shader;

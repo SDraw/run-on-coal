@@ -17,7 +17,7 @@ public:
     inline size_t GetPosition() { return static_cast<size_t>((m_type == FileMode::ReadMode) ? m_file->tellg() : m_file->tellp()); }
     inline bool IsEOF() { return m_file->eof(); }
 
-    inline void GetPath(std::string &f_string) { f_string.append(m_path); }
+    inline void GetPath(std::string &f_string) { f_string.insert(f_string.begin(), m_path.begin(), m_path.end()); }
 
     static bool Delete(Core *f_core, std::string &f_path);
     static bool Rename(Core *f_core, std::string &f_old, std::string &f_new);

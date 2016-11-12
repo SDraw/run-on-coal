@@ -51,13 +51,13 @@ int ReadEnumVector(const std::vector<std::string> &f_vec, std::string &f_val)
 }
 
 void AnalyzePath(std::string &f_in, std::string &f_out)
-{ 
-    std::regex_replace(std::back_inserter(f_out), f_in.begin(), f_in.end(), g_upRegex, ""); 
+{
+    std::regex_replace(std::back_inserter(f_out), f_in.begin(), f_in.end(), g_upRegex, "");
 }
 void JoinPaths(std::string &f_result, std::string &f_path)
 {
     f_result.push_back('/');
-    f_result.append(f_path);
+    f_result.insert(f_result.end(), f_path.begin(), f_path.end());
 }
 
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
