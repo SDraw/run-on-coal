@@ -32,7 +32,6 @@ ROC::ElementManager::~ElementManager()
 ROC::Scene* ROC::ElementManager::CreateScene()
 {
     ROC::Scene *l_scene = new Scene();
-    if(!l_scene) return NULL;
     m_core->GetMemoryManager()->AddMemoryPointer(l_scene, ElementType::SceneElement);
     return l_scene;
 }
@@ -48,7 +47,7 @@ bool ROC::ElementManager::DestroyScene(Scene *f_scene)
 ROC::Camera* ROC::ElementManager::CreateCamera(unsigned char f_type)
 {
     Camera *l_camera = new Camera(f_type);
-    if(!l_camera) return NULL;
+
     m_core->GetMemoryManager()->AddMemoryPointer(l_camera, ElementType::CameraElement);
     return l_camera;
 }
@@ -63,7 +62,7 @@ bool ROC::ElementManager::DestroyCamera(Camera *f_cam)
 ROC::Light* ROC::ElementManager::CreateLight()
 {
     Light *l_light = new Light();
-    if(!l_light) return NULL;
+
     m_core->GetMemoryManager()->AddMemoryPointer(l_light, ElementType::LightElement);
     return l_light;
 }
@@ -78,7 +77,6 @@ bool ROC::ElementManager::DestroyLight(Light *f_light)
 ROC::Animation* ROC::ElementManager::CreateAnimation(std::string &f_path)
 {
     Animation *l_anim = new Animation();
-    if(!l_anim) return NULL;
 
     std::string l_work, l_path;
     m_core->GetWorkingDirectory(l_work);
@@ -104,7 +102,6 @@ bool ROC::ElementManager::DestroyAnimation(Animation *f_anim)
 ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path, bool l_comp)
 {
     Geometry *l_geometry = new Geometry();
-    if(!l_geometry) return NULL;
 
     std::string l_work, l_path;
     m_core->GetWorkingDirectory(l_work);
@@ -131,7 +128,7 @@ bool ROC::ElementManager::DestroyGeometry(Geometry *f_geometry)
 ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
 {
     Model *l_model = new Model(f_geometry);
-    if(!l_model) return NULL;
+
     m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
     m_core->GetMemoryManager()->AddMemoryPointer(l_model, ElementType::ModelElement);
     m_core->GetPreRenderManager()->AddModel(l_model);
@@ -153,7 +150,6 @@ bool ROC::ElementManager::DestroyModel(Model *f_model)
 ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath)
 {
     Shader *l_shader = new Shader();
-    if(!l_shader) return NULL;
 
     std::string l_path[3], l_work;
     m_core->GetWorkingDirectory(l_work);
@@ -213,7 +209,6 @@ bool ROC::ElementManager::DestroyShader(Shader *f_shader)
 ROC::Sound* ROC::ElementManager::CreateSound(std::string &f_path, bool f_loop)
 {
     Sound *l_sound = new Sound(f_loop);
-    if(!l_sound) return NULL;
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
@@ -238,7 +233,7 @@ bool ROC::ElementManager::DestroySound(Sound *f_sound)
 ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type)
 {
     RenderTarget *l_rt = new RenderTarget();
-    if(!l_rt) return NULL;
+
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(!l_rt->Create(f_num, f_size, f_type))
     {
@@ -262,7 +257,6 @@ bool ROC::ElementManager::DestroyRenderTarget(RenderTarget *f_rt)
 ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type, bool f_compress)
 {
     Texture *l_tex = new Texture();
-    if(!l_tex) return NULL;
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
@@ -281,7 +275,6 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
 ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_path, bool f_compress)
 {
     Texture *l_tex = new Texture();
-    if(!l_tex) return NULL;
 
     std::vector<std::string> l_path;
     std::string l_work;
@@ -316,7 +309,6 @@ bool ROC::ElementManager::DestroyTexture(Texture *f_tex)
 ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size)
 {
     Font *l_font = new Font();
-    if(!l_font) return NULL;
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
@@ -342,7 +334,6 @@ bool ROC::ElementManager::DestroyFont(Font *f_font)
 ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
 {
     File *l_file = new File();
-    if(!l_file) return NULL;
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
@@ -360,7 +351,6 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
 ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
-    if(!l_file) return NULL;
 
     std::string l_path, l_work;
     m_core->GetWorkingDirectory(l_work);
@@ -385,7 +375,6 @@ bool ROC::ElementManager::DestroyFile(File *f_file)
 ROC::Collision* ROC::ElementManager::CreateCollision(unsigned char f_type, glm::vec3 &f_size)
 {
     Collision *l_col = new Collision();
-    if(!l_col) return NULL;
     if(!l_col->Create(f_type, f_size))
     {
         delete l_col;

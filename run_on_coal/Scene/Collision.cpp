@@ -41,10 +41,8 @@ bool ROC::Collision::Create(unsigned char f_type, glm::vec3 &f_size)
     btTransform l_transform;
     l_transform.setIdentity();
     btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
-    if(!l_fallMotionState) return false;
     btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(0.f, l_fallMotionState, l_shape, l_inertia);
     m_rigidBody = new btRigidBody(fallRigidBodyCI);
-    if(!m_rigidBody) return false;
     return true;
 }
 

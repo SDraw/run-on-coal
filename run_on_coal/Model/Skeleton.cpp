@@ -24,6 +24,7 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
     m_boneVector[0]->GenerateFastTree(m_fastBoneVector);
     m_boneMatrices.resize(m_bonesCount);
     m_rigid = false;
+    m_jointsCount = 0U;
 }
 ROC::Skeleton::~Skeleton()
 {

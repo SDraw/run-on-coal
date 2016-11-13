@@ -7,6 +7,9 @@ ROC::RenderTarget::RenderTarget()
     m_bTexture = false;
     m_bRenderBuffer = false;
     m_bFrameBuffer = false;
+    m_frameBuffer = 0U;
+    m_renderBuffer = 0U;
+    m_texture = 0U;
 }
 ROC::RenderTarget::~RenderTarget()
 {

@@ -52,6 +52,7 @@ class RenderManager
     void EnableNonActiveShader(Shader *f_shader);
 
     RenderManager(const RenderManager& that);
+    RenderManager &operator =(const RenderManager &that);
 public:
     void SetRenderTarget(RenderTarget *f_rt);
 

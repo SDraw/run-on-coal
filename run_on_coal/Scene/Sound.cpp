@@ -5,6 +5,7 @@ ROC::Sound::Sound(bool f_loop)
 {
     m_handle = NULL;
     m_speed = 1.f;
+    m_volume = 100.f;
     m_b3D = false;
     m_looped = f_loop;
     m_mono = false;
@@ -20,7 +21,6 @@ bool ROC::Sound::Load(std::string &f_path)
 {
     if(m_handle) return false;
     m_handle = new sf::Music;
-    if(!m_handle) return false;
     if(!m_handle->openFromFile(f_path)) return false;
     if(m_looped) m_handle->setLoop(true);
     m_mono = (m_handle->getChannelCount() == 1);

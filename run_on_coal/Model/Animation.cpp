@@ -8,6 +8,8 @@ ROC::Animation::Animation()
     m_duration = 0U;
     m_durationTotal = 0U;
     m_fps = 0U;
+    m_frameDelta = 0U;
+    m_frameSize = 0U;
     m_bonesValue = 0U;
     m_cachedFrame = 0U;
     m_loaded = false;

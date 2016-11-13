@@ -42,7 +42,11 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_core = f_core;
     m_eventManager = m_core->GetLuaManager()->GetEventManager();
 
+    m_time = 0.f;
+    m_event = sf::Event();
+
     std::string l_log;
+    LogManager *l_logManager = m_core->GetLogManager();
 
     ConfigManager *l_configManager = m_core->GetConfigManager();
     glm::ivec2 l_windowSize;
@@ -68,21 +72,21 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     if(l_error != GLEW_OK)
     {
         l_log.append((char*)glewGetErrorString(l_error));
-        f_core->GetLogManager()->Log(l_log);
+        l_logManager->Log(l_log);
         exit(EXIT_FAILURE);
     }
 
     l_log.append("OpenGL ");
     l_log.append((char*)glGetString(GL_VERSION));
-    f_core->GetLogManager()->Log(l_log);
+    l_logManager->Log(l_log);
     l_log.clear();
     l_log.append("Renderer ");
     l_log.append((char*)glGetString(GL_RENDERER));
-    f_core->GetLogManager()->Log(l_log);
+    l_logManager->Log(l_log);
     l_log.clear();
     l_log.append("GLEW ");
     l_log.append((char*)glewGetString(GLEW_VERSION));
-    f_core->GetLogManager()->Log(l_log);
+    l_logManager->Log(l_log);
 
     m_active = true;
     m_argument = new LuaArguments();

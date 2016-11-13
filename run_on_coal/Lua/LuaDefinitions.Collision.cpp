@@ -126,7 +126,6 @@ int collisionGetRotation(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_returnVal = l_reqQuat ? 4 : 3;
     glm::quat l_rot;
     l_col->GetRotation(l_rot);
     if(l_reqQuat)
@@ -143,7 +142,7 @@ int collisionGetRotation(lua_State *f_vm)
         lua_pushnumber(f_vm, l_vRot.y);
         lua_pushnumber(f_vm, l_vRot.z);
     }
-    return l_returnVal;
+    return (l_reqQuat ? 4 : 3);
 }
 }
 }

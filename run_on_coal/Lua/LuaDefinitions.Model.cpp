@@ -153,7 +153,6 @@ int modelGetRotation(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_retVal;
     glm::quat l_qRot;
     l_model->GetRotation(l_qRot, l_global);
     if(!l_quatReq)
@@ -162,7 +161,6 @@ int modelGetRotation(lua_State *f_vm)
         lua_pushnumber(f_vm, l_vRot.x);
         lua_pushnumber(f_vm, l_vRot.y);
         lua_pushnumber(f_vm, l_vRot.z);
-        l_retVal = 3;
     }
     else
     {
@@ -170,9 +168,8 @@ int modelGetRotation(lua_State *f_vm)
         lua_pushnumber(f_vm, l_qRot.y);
         lua_pushnumber(f_vm, l_qRot.z);
         lua_pushnumber(f_vm, l_qRot.w);
-        l_retVal = 4;
     }
-    return l_retVal;
+    return (l_quatReq ? 4 : 3);
 }
 int modelSetScale(lua_State *f_vm)
 {
@@ -478,7 +475,7 @@ int modelGetMass(lua_State *f_vm)
         return 1;
     }
     float l_mass = l_model->GetMass();
-    (l_mass == -1.f) ? lua_pushboolean(f_vm, 0) : lua_pushnumber(f_vm, l_mass);
+    lua_pushnumber(f_vm, l_mass);
     return 1;
 }
 int modelSetFriction(lua_State *f_vm)
@@ -508,7 +505,7 @@ int modelGetFriction(lua_State *f_vm)
         return 1;
     }
     float l_friction = l_model->GetFriction();
-    (l_friction == -1.f) ? lua_pushboolean(f_vm, 0) : lua_pushnumber(f_vm, l_friction);
+    lua_pushnumber(f_vm, l_friction);
     return 1;
 }
 int modelSetVelocity(lua_State *f_vm)

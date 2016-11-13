@@ -12,6 +12,7 @@ class LuaManager
     lua_State *m_pVM;
     EventManager *m_eventManager;
     LuaManager(const LuaManager& that);
+    LuaManager &operator =(const LuaManager &that);
 public:
     static Core *m_corePointer;
     bool OpenFile(std::string &f_path);

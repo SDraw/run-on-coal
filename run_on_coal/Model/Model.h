@@ -33,6 +33,7 @@ class Model
     void UpdateSkeleton();
 
     Model(const Model& that);
+    Model &operator =(const Model &that);
 public:
     inline Geometry* GetGeometry() { return m_geometry; }
 

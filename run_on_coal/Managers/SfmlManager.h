@@ -26,6 +26,7 @@ class SfmlManager
     std::string m_input;
 
     SfmlManager(const SfmlManager& that);
+    SfmlManager &operator =(const SfmlManager &that);
 public:
     void GetWindowPosition(glm::ivec2 &f_pos);
     void GetWindowSize(glm::ivec2 &f_size);

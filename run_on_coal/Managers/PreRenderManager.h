@@ -17,6 +17,7 @@ class PreRenderManager
     LuaArguments *m_argument;
 
     PreRenderManager(const PreRenderManager& that);
+    PreRenderManager &operator =(const PreRenderManager &that);
 public:
     void AddModel(Model *f_model);
     void RemoveModel(Model *f_model);

@@ -28,6 +28,7 @@ class PhysicsManager
     btRigidBody* m_groundBody;
 
     PhysicsManager(const PhysicsManager& that);
+    PhysicsManager &operator =(const PhysicsManager &that);
 public:
     inline void SetPhysicsEnabled(bool f_value) { m_enabled = f_value; }
     inline bool GetPhysicsEnabled() { return m_enabled; }

@@ -9,13 +9,16 @@ ROC::File::File()
 }
 ROC::File::~File()
 {
-    if(m_file) delete m_file;
+    if(m_file)
+    {
+        m_file->close();
+        delete m_file;
+    }
 }
 
 bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
 {
     m_file = new std::fstream(f_path, std::ios::out | std::ios::binary);
-    if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = FileMode::WriteMode;
     m_path.insert(m_path.begin(), f_rPath.begin(), f_rPath.end());
@@ -24,7 +27,6 @@ bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
 bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
 {
     m_file = new std::fstream(f_path, (f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
-    if(!m_file) return false;
     if(m_file->fail()) return false;
     m_type = f_ro ? FileMode::ReadMode : FileMode::WriteMode;
     m_path.insert(m_path.begin(), f_rPath.begin(), f_rPath.end());

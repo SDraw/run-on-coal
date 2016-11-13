@@ -28,8 +28,10 @@ class Core
     SoundManager *m_soundManager;
     static Core *m_instance;
     std::string m_workingDir;
+
     Core();
     Core(const Core& that);
+    Core &operator =(const Core &that);
     ~Core();
 public:
     static Core* GetCore();

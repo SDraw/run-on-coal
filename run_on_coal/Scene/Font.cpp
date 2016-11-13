@@ -4,6 +4,8 @@
 ROC::Font::Font()
 {
     m_loaded = false;
+    m_library = FT_Library();
+    m_face = FT_Face();
 
     glGenVertexArrays(1, &m_VAO);
     glGenBuffers(1, &m_vertexVBO);

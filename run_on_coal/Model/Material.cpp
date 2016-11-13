@@ -7,11 +7,17 @@ ROC::Material::Material()
     m_verticesCount = 0;
 
     m_bVertexVBO = false;
+    m_vertexVBO = 0U;
     m_bUvVBO = false;
+    m_uvVBO = 0U;
     m_bNormalVBO = false;
+    m_normalVBO = 0U;
     m_bWeightVBO = false;
+    m_weightVBO = 0U;
     m_bIndexVBO = false;
+    m_indexVBO = 0U;
     m_bVAO = false;
+    m_VAO = 0U;
 
     m_params = glm::vec4(1.f);
     m_type = 0;
