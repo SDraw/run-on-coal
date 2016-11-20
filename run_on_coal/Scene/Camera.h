@@ -18,7 +18,7 @@ class Camera
     bool m_rebuildView;
     bool m_rebuildProjection;
 public:
-    inline void SetType(unsigned char f_type) { m_type = f_type; }
+    void SetType(unsigned char f_type);
     inline unsigned char GetType() { return m_type; }
 
     void SetFOV(float f_fov);

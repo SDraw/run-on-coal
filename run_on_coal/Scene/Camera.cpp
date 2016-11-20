@@ -22,6 +22,13 @@ ROC::Camera::~Camera()
 {
 }
 
+void ROC::Camera::SetType(unsigned char f_type)
+{
+    if(m_type == f_type) return;
+    m_type = f_type;
+    m_rebuildProjection = true;
+}
+
 void ROC::Camera::SetPosition(glm::vec3& f_pos)
 {
     if(!std::memcmp(&m_viewPosition, &f_pos, sizeof(glm::vec3))) return;
@@ -95,10 +102,10 @@ void ROC::Camera::UpdateMatrices()
         m_planes[3] = glm::row(l_mat, 3) - glm::row(l_mat, 1);
         m_planes[4] = glm::row(l_mat, 3) + glm::row(l_mat, 2);
         m_planes[5] = glm::row(l_mat, 3) - glm::row(l_mat, 2);
-        for(auto &iter : m_planes) iter /= sqrtf(iter.x*iter.x + iter.y*iter.y + iter.z*iter.z);
+        for(auto &iter : m_planes) iter /= glm::sqrt(iter.x*iter.x + iter.y*iter.y + iter.z*iter.z);
+        m_rebuildView = false;
+        m_rebuildProjection = false;
     }
-    m_rebuildView = false;
-    m_rebuildProjection = false;
 }
 
 bool ROC::Camera::IsInFrustum(glm::vec3 &f_pos, float f_radius)
