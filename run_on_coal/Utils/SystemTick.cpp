@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Utils/SystemTick.h"
 
-unsigned int ROC::SystemTick::m_tick = GetTickCount();
+unsigned int ROC::SystemTick::m_tick = 0U;
 
 unsigned int ROC::SystemTick::GetTick()
 {
