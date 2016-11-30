@@ -22,6 +22,8 @@ class PreRenderManager
     std::map<Model*, TreeNode*> m_modelToNodeMap;
     std::list<TreeNode*> m_nodeList;
 
+    std::set<Model*> m_animatedModelSet;
+
     LuaArguments *m_argument;
 
     PreRenderManager(const PreRenderManager& that);

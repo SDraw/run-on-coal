@@ -34,6 +34,7 @@ void ROC::PreRenderManager::AddModel(Model *f_model)
     l_node->m_model = f_model;
     m_modelTreeSet.insert(l_node);
     m_modelToNodeMap.insert(std::pair<Model*, TreeNode*>(f_model, l_node));
+    if(f_model->m_skeleton) m_animatedModelSet.insert(f_model);
 }
 
 void ROC::PreRenderManager::AddLink(Model *f_model, Model *f_parent)
@@ -84,6 +85,8 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
     }
     m_modelTreeSet.erase(l_node);
     delete l_node;
+
+    if(f_model->m_skeleton) m_animatedModelSet.erase(f_model);
 }
 
 void ROC::PreRenderManager::DoPulse_S1()
@@ -110,14 +113,5 @@ void ROC::PreRenderManager::DoPulse_S1()
 void ROC::PreRenderManager::DoPulse_S2()
 {
     bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
-    m_nodeList.insert(m_nodeList.begin(), m_modelTreeSet.rbegin(), m_modelTreeSet.rend());
-    while(!m_nodeList.empty())
-    {
-        TreeNode *l_current = m_nodeList.back();
-        m_nodeList.pop_back();
-        m_nodeList.insert(m_nodeList.begin(), l_current->m_children.rbegin(), l_current->m_children.rend());
-
-        l_current->m_model->UpdateMatrix();
-        if(l_current->m_model->m_skeleton) l_current->m_model->m_skeleton->UpdateRigidBones(l_current->m_model->m_matrix, l_physicsState);
-    }
+    for(auto iter : m_animatedModelSet) iter->m_skeleton->UpdateRigidBones(iter->m_matrix, l_physicsState);
 }
