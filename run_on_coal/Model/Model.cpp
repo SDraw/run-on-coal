@@ -130,9 +130,8 @@ void ROC::Model::UpdateMatrix()
     }
     if(m_parent)
     {
-        m_parent->UpdateMatrix();
         glm::mat4 l_parentMatrix(m_parent->m_matrix);
-        if(m_parentBone != -1) l_parentMatrix *= m_parent->m_skeleton->m_boneMatrices[m_parentBone];
+        if(m_parentBone != -1) l_parentMatrix *= m_parent->m_skeleton->m_boneVector[m_parentBone]->m_matrix;
         m_matrix = l_parentMatrix*m_localMatrix;
     }
     else std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));

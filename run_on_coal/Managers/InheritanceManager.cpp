@@ -3,6 +3,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/MemoryManager.h"
+#include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager.h"
 #include "Model/Animation.h"
 #include "Model/Model.h"
@@ -145,9 +146,10 @@ bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent
         l_treeParent = l_treeParent->GetParent();
     }
     if(!f_parent->HasSkeleton()) f_bone = -1;
-    else if(static_cast<int>(f_parent->m_skeleton->m_bonesCount) >= f_bone) f_bone = -1;
+    else if(f_bone >= static_cast<int>(f_parent->m_skeleton->m_bonesCount)) f_bone = -1;
     f_model->SetParent(f_parent, f_bone);
     m_inheritMap.insert(std::pair<void*, void*>(f_model, f_parent));
+    m_core->GetPreRenderManager()->AddLink(f_model, f_parent);
     return true;
 }
 bool ROC::InheritanceManager::DettachModel(Model *f_model)
@@ -155,6 +157,7 @@ bool ROC::InheritanceManager::DettachModel(Model *f_model)
     Model *l_parent = f_model->GetParent();
     if(!l_parent) return false;
     RemoveInheritance(f_model, l_parent);
+    m_core->GetPreRenderManager()->RemoveLink(f_model);
     return true;
 }
 
