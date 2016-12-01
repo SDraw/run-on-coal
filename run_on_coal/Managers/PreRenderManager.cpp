@@ -69,9 +69,7 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
     if(l_modelIter == m_modelToNodeMap.end()) return;
     TreeNode *l_node = l_modelIter->second;
 
-    if(!l_node->m_parent) return;
-    l_node->m_parent->m_children.erase(l_node);
-
+    if(l_node->m_parent) l_node->m_parent->m_children.erase(l_node);
     for(auto iter : l_node->m_children)
     {
         m_modelTreeSet.insert(iter);
