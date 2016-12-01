@@ -65,8 +65,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "modelSetScale", Lua::modelSetScale);
     lua_register(m_pVM, "modelGetScale", Lua::modelGetScale);
 
-    lua_register(m_pVM, "modelSetMatrixUpdate", Lua::modelSetMatrixUpdate);
-
     lua_register(m_pVM, "modelDraw", Lua::modelDraw);
 
     lua_register(m_pVM, "modelAttach", Lua::modelAttach);

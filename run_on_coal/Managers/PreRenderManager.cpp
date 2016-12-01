@@ -46,11 +46,7 @@ void ROC::PreRenderManager::AddLink(Model *f_model, Model *f_parent)
     TreeNode *l_modelNode = l_modelIter->second;
     TreeNode *l_parentNode = l_parentIter->second;
 
-    if(l_modelNode->m_root)
-    {
-        m_modelTreeSet.erase(l_modelNode);
-        l_modelNode->m_root = false;
-    }
+    if(!l_modelNode->m_parent) m_modelTreeSet.erase(l_modelNode);
     l_modelNode->m_parent = l_parentNode;
     l_parentNode->m_children.insert(l_modelNode);
 }
@@ -64,7 +60,6 @@ void ROC::PreRenderManager::RemoveLink(Model *f_model)
     l_node->m_parent->m_children.erase(l_node);
 
     m_modelTreeSet.insert(l_node);
-    l_node->m_root = true;
     l_node->m_parent = NULL;
 }
 
@@ -80,7 +75,6 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
     for(auto iter : l_node->m_children)
     {
         m_modelTreeSet.insert(iter);
-        iter->m_root = true;
         iter->m_parent = NULL;
     }
     m_modelTreeSet.erase(l_node);

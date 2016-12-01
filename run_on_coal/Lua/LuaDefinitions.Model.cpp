@@ -207,22 +207,6 @@ int modelGetScale(lua_State *f_vm)
     lua_pushnumber(f_vm, l_vScl.z);
     return 3;
 }
-int modelSetMatrixUpdate(lua_State *f_vm)
-{
-    Model *l_model;
-    bool l_val;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_model, ElementType::ModelElement);
-    argStream.ReadBoolean(l_val);
-    if(argStream.HasErrors())
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    l_val ? LuaManager::m_corePointer->GetPreRenderManager()->AddModel(l_model) : LuaManager::m_corePointer->GetPreRenderManager()->RemoveModel(l_model);
-    lua_pushboolean(f_vm, 1);
-    return 1;
-}
 int modelDraw(lua_State *f_vm)
 {
     Model *l_model;

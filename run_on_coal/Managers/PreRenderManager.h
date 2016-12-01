@@ -13,7 +13,6 @@ class PreRenderManager
 
     struct TreeNode
     {
-        bool m_root = true;
         Model *m_model;
         TreeNode *m_parent = NULL;
         std::set<TreeNode*> m_children;
@@ -28,15 +27,16 @@ class PreRenderManager
 
     PreRenderManager(const PreRenderManager& that);
     PreRenderManager &operator =(const PreRenderManager &that);
-public:
-    void AddModel(Model *f_model);
-    void RemoveModel(Model *f_model);
 protected:
     explicit PreRenderManager(Core *f_core);
     ~PreRenderManager();
 
+    void AddModel(Model *f_model);
+    void RemoveModel(Model *f_model);
+
     void AddLink(Model *f_model, Model *f_parent);
     void RemoveLink(Model *f_model);
+
     void DoPulse_S1();
     void DoPulse_S2();
     friend Core;

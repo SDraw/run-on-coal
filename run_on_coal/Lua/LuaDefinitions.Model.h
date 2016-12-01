@@ -14,7 +14,6 @@ int modelSetRotation(lua_State *f_vm);
 int modelGetRotation(lua_State *f_vm);
 int modelSetScale(lua_State *f_vm);
 int modelGetScale(lua_State *f_vm);
-int modelSetMatrixUpdate(lua_State *f_vm);
 int modelDraw(lua_State *f_vm);
 int modelAttach(lua_State *f_vm);
 int modelDettach(lua_State *f_vm);
