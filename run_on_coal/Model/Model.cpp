@@ -17,6 +17,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_localMatrix = glm::mat4(1.f);
     m_matrix = glm::mat4(1.f);
     m_rebuildMatrix = false;
+    m_rebuilded = false;
 
     m_geometry = f_geometry;
 
@@ -122,19 +123,40 @@ void ROC::Model::GetScale(glm::vec3 &f_scl, bool f_global)
 }
 void ROC::Model::UpdateMatrix()
 {
-    if(!m_parent && !m_rebuildMatrix) return;
+    m_rebuilded = false;
     if(m_rebuildMatrix)
     {
         m_localMatrix = glm::translate(Bone::m_identity, m_position)*glm::toMat4(m_rotation)*glm::scale(Bone::m_identity, m_scale);
         m_rebuildMatrix = false;
+        m_rebuilded = true;
     }
     if(m_parent)
     {
-        glm::mat4 l_parentMatrix(m_parent->m_matrix);
-        if(m_parentBone != -1) l_parentMatrix *= m_parent->m_skeleton->m_boneVector[m_parentBone]->m_matrix;
-        m_matrix = l_parentMatrix*m_localMatrix;
+        if(m_parentBone != -1)
+        {
+            if(m_parent->m_skeleton->m_boneVector[m_parentBone]->m_rebuilded || m_parent->m_rebuilded)
+            {
+                glm::mat4 l_parentMatrix;
+                std::memcpy(&l_parentMatrix, &m_parent->m_matrix, sizeof(glm::mat4));
+                m_matrix = (l_parentMatrix*m_parent->m_skeleton->m_boneVector[m_parentBone]->m_matrix)*m_localMatrix;
+                m_rebuilded = true;
+            }
+        }
+        else
+        {
+            if(m_parent->m_rebuilded)
+            {
+                glm::mat4 l_parentMatrix;
+                std::memcpy(&l_parentMatrix, &m_parent->m_matrix, sizeof(glm::mat4));
+                m_matrix = l_parentMatrix*m_localMatrix;
+                m_rebuilded = true;
+            }
+        }
     }
-    else std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
+    else
+    {
+        if(m_rebuilded) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
+    }
 }
 
 void ROC::Model::SetParent(Model *f_model, int f_bone)

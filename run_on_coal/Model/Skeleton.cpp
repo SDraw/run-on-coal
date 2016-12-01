@@ -20,8 +20,22 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
             m_boneVector[f_data[i]->m_parent]->AddChild(m_boneVector[i]);
         }
     }
-    m_boneVector[0]->GenerateBindPose();
-    m_boneVector[0]->GenerateFastTree(m_fastBoneVector);
+    if(!m_boneVector.empty())
+    {
+        std::list<Bone*> l_bonesStack;
+        std::list<Bone*> l_bonesFastStack;
+        l_bonesStack.push_back(m_boneVector[0]);
+
+        while(!l_bonesStack.empty())
+        {
+            Bone *l_bone = l_bonesStack.back();
+            l_bonesStack.pop_back();
+            l_bonesStack.insert(l_bonesStack.end(), l_bone->m_childBoneVector.rbegin(), l_bone->m_childBoneVector.rend());
+            l_bonesFastStack.push_back(l_bone);
+            l_bone->GenerateBindPose();
+        }
+        m_fastBoneVector.insert(m_fastBoneVector.begin(), l_bonesFastStack.begin(), l_bonesFastStack.end());
+    }
     m_boneMatrices.resize(m_bonesCount);
     m_rigid = false;
     m_jointsCount = 0U;
@@ -69,7 +83,6 @@ void ROC::Skeleton::Update()
 {
     for(auto iter : m_fastBoneVector) iter->UpdateMatrix();
     for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_boneMatrices[i], &m_boneVector[i]->m_offsetMatrix, sizeof(glm::mat4));
-    for(auto iter : m_fastBoneVector) iter->m_rebuildMatrix = false;
 }
 void ROC::Skeleton::ResetBonesInterpolation()
 {

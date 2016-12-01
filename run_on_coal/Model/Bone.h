@@ -21,6 +21,7 @@ class Bone
 protected:
     glm::mat4 m_offsetMatrix;
     bool m_rebuildMatrix;
+    bool m_rebuilded;
 
     bool m_interpolation;
     float m_interpolationValue;
@@ -35,7 +36,6 @@ protected:
     inline void SetParent(Bone *f_bone) { m_parent = f_bone; }
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
 
-    void GenerateFastTree(std::vector<Bone*> &f_vec);
     friend class Skeleton;
     friend class Model;
 };

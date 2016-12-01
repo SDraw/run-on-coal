@@ -20,6 +20,7 @@ class Model
     glm::vec3 m_scale;
     glm::mat4 m_localMatrix;
     bool m_rebuildMatrix;
+    bool m_rebuilded;
 
     Model *m_parent;
     int m_parentBone;

@@ -11,6 +11,7 @@ ROC::Bone::Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::ve
     std::memcpy(&m_data.m_pos, &f_pos, sizeof(glm::vec3));
     std::memcpy(&m_data.m_scl, &f_scale, sizeof(glm::vec3));
     m_rebuildMatrix = false;
+    m_rebuilded = false;
     m_interpolation = true;
     m_interpolationValue = 0.f;
 }
@@ -46,33 +47,30 @@ void ROC::Bone::GenerateBindPose()
     else m_matrix = m_parent->m_matrix*m_localMatrix;
     m_bindMatrix = glm::inverse(m_matrix);
     m_offsetMatrix = m_matrix*m_bindMatrix;
-    for(auto iter : m_childBoneVector) iter->GenerateBindPose();
 }
 void ROC::Bone::UpdateMatrix()
 {
+    m_rebuilded = false;
     if(m_rebuildMatrix)
     {
         m_localMatrix = glm::translate(m_identity, m_data.m_pos)*glm::mat4_cast(m_data.m_rot)*glm::scale(m_identity, m_data.m_scl);
         if(!m_parent) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         else m_matrix = m_parent->m_matrix*m_localMatrix;
         m_offsetMatrix = m_matrix*m_bindMatrix;
+        m_rebuilded = true;
+        m_rebuildMatrix = false;
     }
     else
     {
         if(m_parent)
         {
-            if(m_parent->m_rebuildMatrix)
+            if(m_parent->m_rebuilded)
             {
                 m_matrix = m_parent->m_matrix*m_localMatrix;
                 m_offsetMatrix = m_matrix*m_bindMatrix;
-                m_rebuildMatrix = true;
+                m_rebuilded = true;
+                m_rebuildMatrix = false;
             }
         }
     }
-}
-
-void ROC::Bone::GenerateFastTree(std::vector<Bone*> &f_vec)
-{
-    f_vec.push_back(this);
-    for(auto iter : m_childBoneVector) iter->GenerateFastTree(f_vec);
 }

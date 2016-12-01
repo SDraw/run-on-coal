@@ -70,6 +70,7 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
     TreeNode *l_node = l_modelIter->second;
 
     if(l_node->m_parent) l_node->m_parent->m_children.erase(l_node);
+
     for(auto iter : l_node->m_children)
     {
         m_modelTreeSet.insert(iter);
@@ -92,7 +93,7 @@ void ROC::PreRenderManager::DoPulse_S1()
     {
         TreeNode *l_current = m_nodeList.back();
         m_nodeList.pop_back();
-        m_nodeList.insert(m_nodeList.begin(), l_current->m_children.rbegin(), l_current->m_children.rend());
+        m_nodeList.insert(m_nodeList.end(), l_current->m_children.rbegin(), l_current->m_children.rend());
 
         l_current->m_model->UpdateMatrix();
         if(l_current->m_model->m_skeleton)
