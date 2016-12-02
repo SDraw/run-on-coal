@@ -11,17 +11,18 @@
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
+    m_eventManager = m_core->GetLuaManager()->GetEventManager();
     m_physicsManager = m_core->GetPhysicsManager();
     m_argument = new LuaArguments();
 }
 ROC::PreRenderManager::~PreRenderManager()
 {
-    m_nodeList.insert(m_nodeList.begin(), m_modelTreeSet.rbegin(), m_modelTreeSet.rend());
+    m_nodeList.insert(m_nodeList.end(), m_modelTreeSet.rbegin(), m_modelTreeSet.rend());
     while(!m_nodeList.empty())
     {
         TreeNode *l_node = m_nodeList.back();
         m_nodeList.pop_back();
-        m_nodeList.insert(m_nodeList.begin(), l_node->m_children.rbegin(), l_node->m_children.rend());
+        m_nodeList.insert(m_nodeList.end(), l_node->m_children.rbegin(), l_node->m_children.rend());
         delete l_node;
     }
     delete m_argument;
@@ -45,6 +46,7 @@ void ROC::PreRenderManager::AddLink(Model *f_model, Model *f_parent)
     if(l_parentIter == m_modelToNodeMap.end()) return;
     TreeNode *l_modelNode = l_modelIter->second;
     TreeNode *l_parentNode = l_parentIter->second;
+    if(l_parentNode->m_children.find(l_modelNode) != l_parentNode->m_children.end()) return;
 
     if(!l_modelNode->m_parent) m_modelTreeSet.erase(l_modelNode);
     l_modelNode->m_parent = l_parentNode;
@@ -70,7 +72,6 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
     TreeNode *l_node = l_modelIter->second;
 
     if(l_node->m_parent) l_node->m_parent->m_children.erase(l_node);
-
     for(auto iter : l_node->m_children)
     {
         m_modelTreeSet.insert(iter);
@@ -84,11 +85,10 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
 
 void ROC::PreRenderManager::DoPulse_S1()
 {
-    EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
-    l_eventManager->CallEvent(EventType::PreRender, m_argument);
+    m_eventManager->CallEvent(EventType::PreRender, m_argument);
     bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
 
-    m_nodeList.insert(m_nodeList.begin(), m_modelTreeSet.rbegin(), m_modelTreeSet.rend());
+    m_nodeList.insert(m_nodeList.end(), m_modelTreeSet.rbegin(), m_modelTreeSet.rend());
     while(!m_nodeList.empty())
     {
         TreeNode *l_current = m_nodeList.back();

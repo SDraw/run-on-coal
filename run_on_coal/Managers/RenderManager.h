@@ -6,6 +6,7 @@
 namespace ROC
 {
 class Core;
+class EventManager;
 class SfmlManager;
 class Model;
 class Scene;
@@ -18,6 +19,7 @@ class LuaArguments;
 class RenderManager
 {
     Core *m_core;
+    EventManager *m_eventManager;
     SfmlManager *m_sfmlManager;
 
     bool m_locked;

@@ -3,12 +3,14 @@
 namespace ROC
 {
 class Core;
+class EventManager;
 class PhysicsManager;
 class Model;
 class LuaArguments;
 class PreRenderManager
 {
     Core *m_core;
+    EventManager *m_eventManager;
     PhysicsManager *m_physicsManager;
 
     struct TreeNode

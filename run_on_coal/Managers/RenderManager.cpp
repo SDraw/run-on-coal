@@ -20,6 +20,7 @@
 ROC::RenderManager::RenderManager(Core *f_core)
 {
     m_core = f_core;
+    m_eventManager = m_core->GetLuaManager()->GetEventManager();
     m_sfmlManager = m_core->GetSfmlManager();
 
     glEnable(GL_DEPTH_TEST);
@@ -252,7 +253,7 @@ void ROC::RenderManager::DoPulse()
     m_time = m_sfmlManager->GetTime();
 
     m_locked = false;
-    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::Render, m_argument);
+    m_eventManager->CallEvent(EventType::Render, m_argument);
     m_locked = true;
     m_sfmlManager->SwapBuffers();
 }

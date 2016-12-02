@@ -3,6 +3,7 @@
 namespace ROC
 {
 class Core;
+class MemoryManager;
 class SfmlManager;
 class Constraint;
 class Model;
@@ -10,10 +11,10 @@ class Collision;
 class PhysicsManager
 {
     Core *m_core;
+    MemoryManager *m_memoryManager;
 
-    std::set<Model*> m_elementSet;
-    std::map<void*, void*> m_bodyMap;
-    std::set<Collision*> m_collisionSet;
+    std::set<Model*> m_modelsSet;
+    std::set<Collision*> m_collisionsSet;
 
     bool m_enabled;
     btDiscreteDynamicsWorld* m_dynamicWorld;

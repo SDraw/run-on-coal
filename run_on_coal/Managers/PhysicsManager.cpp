@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/ConfigManager.h"
+#include "Managers/MemoryManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Model/Model.h"
 #include "Model/Skeleton.h"
@@ -9,6 +10,7 @@
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
 {
     m_core = f_core;
+    m_memoryManager = m_core->GetMemoryManager();
 
     m_broadPhase = new btDbvtBroadphase();
     m_collisionConfig = new btDefaultCollisionConfiguration();
@@ -66,7 +68,7 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
 void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
 {
     m_dynamicWorld->setGravity((btVector3&)f_grav);
-    for(auto iter : m_elementSet)
+    for(auto iter : m_modelsSet)
     {
         iter->m_rigidBody->setGravity((btVector3&)f_grav);
         iter->m_rigidBody->activate(true);
@@ -80,21 +82,20 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 
 bool ROC::PhysicsManager::SetModelRigidity(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
 {
+    if(m_modelsSet.find(f_model) != m_modelsSet.end()) return true;
     if(f_model->HasRigidSkeleton()) return false;
     if(!f_model->SetRigidity(f_type, f_mass, f_dim)) return false;
-    m_elementSet.insert(f_model);
-    m_bodyMap.insert(std::pair<void*, Model*>(f_model->m_rigidBody, f_model));
+    m_modelsSet.insert(f_model);
+    f_model->m_rigidBody->setUserPointer(f_model);
     m_dynamicWorld->addRigidBody(f_model->m_rigidBody);
     return true;
 }
 bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
 {
-    auto iter = m_elementSet.find(f_model);
-    if(iter == m_elementSet.end()) return false;
-    auto iter1 = m_bodyMap.find(f_model->m_rigidBody);
-    if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
+    auto iter = m_modelsSet.find(f_model);
+    if(iter == m_modelsSet.end()) return false;
     m_dynamicWorld->removeRigidBody(f_model->m_rigidBody);
-    m_elementSet.erase(iter);
+    m_modelsSet.erase(iter);
     if(!f_model->RemoveRigidity()) return false;
     return true;
 }
@@ -126,26 +127,24 @@ void ROC::PhysicsManager::RemoveRigidSkeleton(Model *f_model)
 
 void ROC::PhysicsManager::AddCollision(Collision *f_col)
 {
-    if(m_collisionSet.find(f_col) != m_collisionSet.end()) return;
+    if(m_collisionsSet.find(f_col) != m_collisionsSet.end()) return;
     m_dynamicWorld->addRigidBody(f_col->m_rigidBody);
-    m_collisionSet.insert(f_col);
-    m_bodyMap.insert(std::pair<void*, void*>(f_col->m_rigidBody, f_col));
+    m_collisionsSet.insert(f_col);
+    f_col->m_rigidBody->setUserPointer(f_col);
 }
 void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
 {
-    auto iter = m_collisionSet.find(f_col);
-    if(iter == m_collisionSet.end()) return;
-    auto iter1 = m_bodyMap.find(f_col->m_rigidBody);
-    if(iter1 != m_bodyMap.end()) m_bodyMap.erase(iter1);
+    auto iter = m_collisionsSet.find(f_col);
+    if(iter == m_collisionsSet.end()) return;
     m_dynamicWorld->removeRigidBody(f_col->m_rigidBody);
-    m_collisionSet.erase(iter);
+    m_collisionsSet.erase(iter);
 }
 
 void ROC::PhysicsManager::DoPulse()
 {
     if(!m_enabled) return;
     m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
-    for(auto iter : m_elementSet) iter->UpdateRigidity();
+    for(auto iter : m_modelsSet) iter->UpdateRigidity();
 }
 
 bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
@@ -156,8 +155,8 @@ bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec
     if(!l_result.hasHit()) return false;
     btVector3 l_hitEnd = l_result.m_hitPointWorld;
     btVector3 l_hitNormal = l_result.m_hitNormalWorld;
-    auto iter = m_bodyMap.find((void*)l_result.m_collisionObject);
-    if(iter != m_bodyMap.end()) *f_model = iter->second;
+    void *l_colObject = l_result.m_collisionObject->getUserPointer();
+    *f_model = l_colObject ? (m_memoryManager->IsValidMemoryPointer(l_colObject) ? l_colObject : NULL) : NULL;
     std::memcpy(&f_end, l_hitEnd, sizeof(glm::vec3));
     std::memcpy(&f_normal, l_hitNormal, sizeof(glm::vec3));
     return true;

@@ -23,18 +23,15 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
     if(!m_boneVector.empty())
     {
         std::list<Bone*> l_bonesStack;
-        std::list<Bone*> l_bonesFastStack;
         l_bonesStack.push_back(m_boneVector[0]);
-
         while(!l_bonesStack.empty())
         {
             Bone *l_bone = l_bonesStack.back();
             l_bonesStack.pop_back();
             l_bonesStack.insert(l_bonesStack.end(), l_bone->m_childBoneVector.rbegin(), l_bone->m_childBoneVector.rend());
-            l_bonesFastStack.push_back(l_bone);
+            m_fastBoneVector.push_back(l_bone);
             l_bone->GenerateBindPose();
         }
-        m_fastBoneVector.insert(m_fastBoneVector.begin(), l_bonesFastStack.begin(), l_bonesFastStack.end());
     }
     m_boneMatrices.resize(m_bonesCount);
     m_rigid = false;
