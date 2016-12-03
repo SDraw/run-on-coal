@@ -138,8 +138,8 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
 
                 Material *l_material = new Material();
                 m_materialVector.push_back(l_material);
-                std::memcpy(&l_material->m_type, &l_materialType, sizeof(unsigned char));
-                std::memcpy(&l_material->m_params, &l_materialParam, sizeof(glm::vec4));
+                l_material->SetType(l_materialType);
+                l_material->SetParams(l_materialParam);
                 l_material->LoadVertices(l_tempVertex);
                 l_material->LoadUVs(l_tempUV);
                 l_material->LoadNormals(l_tempNormal);

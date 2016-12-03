@@ -134,11 +134,11 @@ void ROC::Model::UpdateMatrix()
     {
         if(m_parentBone != -1)
         {
-            if(m_parent->m_skeleton->m_boneVector[m_parentBone]->m_rebuilded || m_parent->m_rebuilded)
+            if(m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
             {
                 glm::mat4 l_parentMatrix;
                 std::memcpy(&l_parentMatrix, &m_parent->m_matrix, sizeof(glm::mat4));
-                m_matrix = (l_parentMatrix*m_parent->m_skeleton->m_boneVector[m_parentBone]->m_matrix)*m_localMatrix;
+                m_matrix = (l_parentMatrix*m_parent->m_skeleton->GetBoneMatricesVectorRef()[m_parentBone])*m_localMatrix;
                 m_rebuilded = true;
             }
         }
@@ -189,7 +189,7 @@ void ROC::Model::UpdateAnimation()
     unsigned int l_difTick = static_cast<unsigned int>(static_cast<float>(l_sysTick - m_animLastTick)*m_animationSpeed);
     m_animLastTick = l_sysTick;
     m_animCurrentTick += l_difTick;
-    m_animCurrentTick %= m_animation->m_durationTotal;
+    m_animCurrentTick %= m_animation->GetTotalDuration();
     UpdateSkeleton();
 }
 bool ROC::Model::PlayAnimation()
@@ -224,12 +224,12 @@ bool ROC::Model::SetAnimationSpeed(float f_val)
 bool ROC::Model::SetAnimationProgress(float f_val)
 {
     if(!m_animation || f_val < 0.f || f_val > 1.f) return false;
-    m_animCurrentTick = static_cast<unsigned int>(float(m_animation->m_durationTotal)*f_val);
+    m_animCurrentTick = static_cast<unsigned int>(float(m_animation->GetTotalDuration())*f_val);
     return true;
 }
 float ROC::Model::GetAnimationProgress()
 {
-    return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->m_durationTotal)) : -1.f);
+    return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->GetTotalDuration())) : -1.f);
 }
 
 void ROC::Model::UpdateSkeleton()
@@ -238,7 +238,7 @@ void ROC::Model::UpdateSkeleton()
     {
         float l_lerpDelta;
         if(!m_animation->CacheData(m_animCurrentTick, l_lerpDelta)) return;
-        m_skeleton->Update(m_animation->m_leftFrame, m_animation->m_rightFrame, l_lerpDelta);
+        m_skeleton->Update(m_animation->GetLeftFrameDataRef(), m_animation->GetRightFrameDataRef(), l_lerpDelta);
     }
     else m_skeleton->Update();
 }

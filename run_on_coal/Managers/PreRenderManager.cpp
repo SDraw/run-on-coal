@@ -97,12 +97,12 @@ void ROC::PreRenderManager::DoPulse_S1()
         if(l_current->m_model->m_skeleton)
         {
             l_current->m_model->UpdateAnimation();
-            l_current->m_model->m_skeleton->UpdateJoints(l_current->m_model->m_matrix, l_physicsState);
+            l_current->m_model->GetSkeleton()->UpdateJoints(l_current->m_model->GetMatrixRef(), l_physicsState);
         }
     }
 }
 void ROC::PreRenderManager::DoPulse_S2()
 {
     bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
-    for(auto iter : m_animatedModelSet) iter->m_skeleton->UpdateRigidBones(iter->m_matrix, l_physicsState);
+    for(auto iter : m_animatedModelSet) iter->GetSkeleton()->UpdateRigidBones(iter->GetMatrixRef(), l_physicsState);
 }

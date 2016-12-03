@@ -97,18 +97,18 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             if(l_camera)
             {
                 l_camera->UpdateMatrices();
-                m_activeShader->SetProjectionUniformValue(l_camera->m_projectionMatrix);
-                m_activeShader->SetViewUniformValue(l_camera->m_viewMatrix);
-                m_activeShader->SetCameraPositionUniformValue(l_camera->m_viewPosition);
-                m_activeShader->SetCameraDirectionUniformValue(l_camera->m_viewDirection);
+                m_activeShader->SetProjectionUniformValue(l_camera->GetProjectionMatrixRef());
+                m_activeShader->SetViewUniformValue(l_camera->GetViewMatrixRef());
+                m_activeShader->SetCameraPositionUniformValue(l_camera->GetPositionRef());
+                m_activeShader->SetCameraDirectionUniformValue(l_camera->GetDirectionRef());
             }
             Light *l_light = m_activeScene->GetLight();
             if(l_light)
             {
                 m_activeShader->SetLightingUniformValue(1U);
-                m_activeShader->SetLightColorUniformValue(l_light->m_color);
-                m_activeShader->SetLightDirectionUniformValue(l_light->m_direction);
-                m_activeShader->SetLightParamUniformValue(l_light->m_params);
+                m_activeShader->SetLightColorUniformValue(l_light->GetColorRef());
+                m_activeShader->SetLightDirectionUniformValue(l_light->GetDirectionRef());
+                m_activeShader->SetLightParamUniformValue(l_light->GetParamsRef());
             }
             else m_activeShader->SetLightingUniformValue(0U);
         }
@@ -127,7 +127,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 
 void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum, float f_radius)
 {
-    if(m_locked || !m_activeShader || !m_activeScene || !f_model->m_geometry) return;
+    if(m_locked || !m_activeShader || !m_activeScene || !f_model->IsDrawable()) return;
 
     if(f_frustum)
     {
@@ -136,18 +136,18 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
         f_model->GetPosition(m_modelPosition, true);
         if(!l_camera->IsInFrustum(m_modelPosition, f_radius)) return;
     }
-    m_activeShader->SetModelUniformValue(f_model->m_matrix);
+    m_activeShader->SetModelUniformValue(f_model->GetMatrixRef());
 
-    if(f_model->m_skeleton)
+    if(f_model->HasSkeleton())
     {
-        m_activeShader->SetBonesUniformValue(f_model->m_skeleton->m_boneMatrices);
+        m_activeShader->SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatricesVectorRef());
         m_activeShader->SetAnimatedUniformValue(1U);
     }
     else m_activeShader->SetAnimatedUniformValue(0U);
 
-    for(auto iter : f_model->m_geometry->m_materialVector)
+    for(auto iter : f_model->GetGeometry()->GetMaterialVectorRef())
     {
-        if((iter->m_type&MATERIAL_BIT_DEPTH) != MATERIAL_BIT_DEPTH)
+        if(!iter->IsDepthable())
         {
             if(m_activeTarget)
             {
@@ -156,16 +156,16 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
             DisableDepth();
         }
         else EnableDepth();
-        ((iter->m_type&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT) ? EnableBlending() : DisableBlending();
-        ((iter->m_type&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE) ? DisableCulling() : EnableCulling();
+        iter->IsTransparent() ? EnableBlending() : DisableBlending();
+        iter->IsDoubleSided() ? DisableCulling() : EnableCulling();
 
-        bool l_vaoBind = CompareLastVAO(iter->m_VAO);
+        bool l_vaoBind = CompareLastVAO(iter->GetVAO());
         if(l_vaoBind)
         {
-            m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(iter->m_type));
-            m_activeShader->SetMaterialParamUniformValue(iter->m_params);
+            m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(iter->GetType()));
+            m_activeShader->SetMaterialParamUniformValue(iter->GetParamsRef());
         }
-        iter->Draw(CompareLastTexture(iter->m_texture->m_texture) && f_texturize, l_vaoBind);
+        iter->Draw(CompareLastTexture(iter->GetTexture()->GetID()) && f_texturize, l_vaoBind);
     }
 }
 void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color)
@@ -177,14 +177,14 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_te
     m_activeShader->SetProjectionUniformValue(m_screenProjection);
     m_activeShader->SetColorUniformValue(f_color);
 
-    f_font->Draw(f_text, f_pos, CompareLastVAO(f_font->m_VAO));
+    f_font->Draw(f_text, f_pos, CompareLastVAO(f_font->GetVAO()));
 }
 void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
 {
     if(m_locked || !m_activeShader || f_texture->IsCubic()) return;
 
-    bool l_vaoBind = CompareLastVAO(m_quad->m_VAO);
-    if(CompareLastTexture(f_texture->m_texture)) f_texture->Bind(0U);
+    bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
+    if(CompareLastTexture(f_texture->GetID())) f_texture->Bind(0U);
 
     m_activeShader->SetProjectionUniformValue(m_screenProjection);
     m_activeShader->SetColorUniformValue(f_color);
@@ -216,8 +216,8 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
 {
     if(m_locked || !m_activeShader || !f_rt->IsColored()) return;
 
-    bool l_vaoBind = CompareLastVAO(m_quad->m_VAO);
-    if(CompareLastTexture(f_rt->m_texture)) f_rt->BindTexture(0U);
+    bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
+    if(CompareLastTexture(f_rt->GetTextureID())) f_rt->BindTexture(0U);
 
     m_activeShader->SetProjectionUniformValue(m_screenProjection);
     m_activeShader->SetColorUniformValue(f_color);

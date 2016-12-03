@@ -9,16 +9,17 @@ namespace ROC
 {
 class Collision
 {
+    btRigidBody *m_rigidBody;
 public:
     void SetPosition(glm::vec3 &f_pos);
     void GetPosition(glm::vec3 &f_pos);
     void SetRotation(glm::quat &f_rot);
     void GetRotation(glm::quat &f_rot);
 protected:
-    btRigidBody *m_rigidBody;
     Collision();
     ~Collision();
     bool Create(unsigned char f_type, glm::vec3 &f_size);
+    inline btRigidBody* GetRigidBody() { return m_rigidBody; }
     friend class ElementManager;
     friend class PhysicsManager;
 };

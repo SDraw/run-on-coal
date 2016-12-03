@@ -8,15 +8,19 @@ class Camera
 {
     unsigned char m_type;
 
+    glm::vec3 m_viewPosition;
+    glm::vec3 m_viewDirection;
+    glm::mat4 m_viewMatrix;
+    glm::mat4 m_projectionMatrix;
+    bool m_rebuildView;
+    bool m_rebuildProjection;
+
     float m_fov;
     float m_aspectRatio;
     glm::vec4 m_orthoParams;
     glm::vec2 m_depth;
 
     glm::vec4 m_planes[6];
-
-    bool m_rebuildView;
-    bool m_rebuildProjection;
 public:
     void SetType(unsigned char f_type);
     inline unsigned char GetType() { return m_type; }
@@ -39,14 +43,13 @@ public:
 
     bool IsInFrustum(glm::vec3 &f_pos, float f_radius);
 protected:
-    glm::vec3 m_viewPosition;
-    glm::vec3 m_viewDirection;
-    glm::mat4 m_viewMatrix;
-    glm::mat4 m_projectionMatrix;
-
     explicit Camera(unsigned char f_type);
     ~Camera();
 
+    inline glm::vec3& GetPositionRef() { return m_viewPosition; }
+    inline glm::vec3& GetDirectionRef() { return m_viewDirection; }
+    inline glm::mat4& GetProjectionMatrixRef() { return m_projectionMatrix; }
+    inline glm::mat4& GetViewMatrixRef() { return m_viewMatrix; }
     void UpdateMatrices();
     friend class ElementManager;
     friend class RenderManager;

@@ -11,7 +11,7 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
         Bone *l_bone = new Bone(iter->m_name, iter->m_rotation, iter->m_position, iter->m_scale);
         m_boneVector.push_back(l_bone);
     }
-    m_bonesCount = m_boneVector.size();
+    m_bonesCount = static_cast<unsigned int>(m_boneVector.size());
     for(size_t i = 0, j = f_data.size(); i < j; i++)
     {
         if(f_data[i]->m_parent != -1)
@@ -33,7 +33,7 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
             l_bone->GenerateBindPose();
         }
     }
-    m_boneMatrices.resize(m_bonesCount);
+    m_boneMatrices.resize(static_cast<size_t>(m_bonesCount));
     m_rigid = false;
     m_jointsCount = 0U;
 }
@@ -64,7 +64,7 @@ ROC::Skeleton::~Skeleton()
 
 void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
 {
-    for(size_t i = 0, l_bonePos = 0; i < m_bonesCount; i++, l_bonePos += 10)
+    for(unsigned int i = 0, l_bonePos = 0; i < m_bonesCount; i++, l_bonePos += 10)
     {
         std::memcpy(&m_leftData, &f_left[l_bonePos], sizeof(skFastStoring));
         std::memcpy(&m_rightData, &f_right[l_bonePos], sizeof(skFastStoring));
@@ -79,7 +79,7 @@ void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_rig
 void ROC::Skeleton::Update()
 {
     for(auto iter : m_fastBoneVector) iter->UpdateMatrix();
-    for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_boneMatrices[i], &m_boneVector[i]->m_offsetMatrix, sizeof(glm::mat4));
+    for(unsigned int i = 0; i < m_bonesCount; i++) std::memcpy(&m_boneMatrices[i], &m_boneVector[i]->GetOffsetMatrixRef(), sizeof(glm::mat4));
 }
 void ROC::Skeleton::ResetBonesInterpolation()
 {
@@ -106,7 +106,7 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
             l_shape->calculateLocalInertia(l_chainData->m_mass, l_inertia);
 
             btTransform l_transform;
-            l_transform.setFromOpenGLMatrix((float*)&m_boneVector[l_skChain.m_boneID]->m_matrix);
+            l_transform.setFromOpenGLMatrix((float*)&m_boneVector[l_skChain.m_boneID]->GetMatrixRef());
             btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
 
             btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(l_chainData->m_mass, l_fallMotionState, l_shape, l_inertia);
@@ -157,7 +157,7 @@ void ROC::Skeleton::UpdateJoints(glm::mat4 &f_model, bool f_enabled)
     {
         skChain &l_chain = m_chainsVector[i][0];
         btRigidBody *l_joint = m_jointVector[i];
-        l_bone.setFromOpenGLMatrix((float*)&m_boneVector[l_chain.m_boneID]->m_matrix);
+        l_bone.setFromOpenGLMatrix((float*)&m_boneVector[l_chain.m_boneID]->GetMatrixRef());
         l_transform.mult(l_model, l_bone);
         if(f_enabled) l_transform.setRotation(l_joint->getCenterOfMassTransform().getRotation());
         l_joint->setCenterOfMassTransform(l_transform);
@@ -179,11 +179,11 @@ void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model, bool f_enabled)
             {
                 Bone *l_bone = m_boneVector[iter1.m_boneID];
                 const btTransform &l_bodyTransform = iter1.m_rigidBody->getCenterOfMassTransform();
-                l_boneBind.setFromOpenGLMatrix((float*)&l_bone->m_bindMatrix);
+                l_boneBind.setFromOpenGLMatrix((float*)&l_bone->GetBindMatrixRef());
                 l_bodyLocal.mult(l_modelInv, l_bodyTransform);
                 l_result.mult(l_bodyLocal, l_boneBind);
-                l_result.getOpenGLMatrix((float*)&l_bone->m_offsetMatrix);
-                std::memcpy(&m_boneMatrices[iter1.m_boneID], &l_bone->m_offsetMatrix, sizeof(glm::mat4));
+                l_result.getOpenGLMatrix((float*)&l_bone->GetOffsetMatrixRef());
+                std::memcpy(&m_boneMatrices[iter1.m_boneID], &l_bone->GetOffsetMatrixRef(), sizeof(glm::mat4));
             }
         }
     }
@@ -194,7 +194,7 @@ void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model, bool f_enabled)
         {
             for(auto iter1 : iter)
             {
-                l_bone.setFromOpenGLMatrix((float*)&m_boneVector[iter1.m_boneID]->m_matrix);
+                l_bone.setFromOpenGLMatrix((float*)&m_boneVector[iter1.m_boneID]->GetMatrixRef());
                 l_transform.mult(l_model, l_bone);
                 iter1.m_rigidBody->setCenterOfMassTransform(l_transform);
             }
