@@ -3,15 +3,12 @@
 namespace ROC
 {
 class Core;
-class MemoryManager;
-class SfmlManager;
 class Constraint;
 class Model;
 class Collision;
 class PhysicsManager
 {
     Core *m_core;
-    MemoryManager *m_memoryManager;
 
     std::set<Model*> m_modelsSet;
     std::set<Collision*> m_collisionsSet;

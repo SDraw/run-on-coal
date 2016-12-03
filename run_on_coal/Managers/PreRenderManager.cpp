@@ -11,8 +11,6 @@
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
-    m_eventManager = m_core->GetLuaManager()->GetEventManager();
-    m_physicsManager = m_core->GetPhysicsManager();
     m_argument = new LuaArguments();
 }
 ROC::PreRenderManager::~PreRenderManager()
@@ -85,8 +83,8 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
 
 void ROC::PreRenderManager::DoPulse_S1()
 {
-    m_eventManager->CallEvent(EventType::PreRender, m_argument);
-    bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
+    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::PreRender, m_argument);
+    bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
 
     m_nodeList.insert(m_nodeList.end(), m_modelTreeSet.rbegin(), m_modelTreeSet.rend());
     while(!m_nodeList.empty())
@@ -105,6 +103,6 @@ void ROC::PreRenderManager::DoPulse_S1()
 }
 void ROC::PreRenderManager::DoPulse_S2()
 {
-    bool l_physicsState = m_physicsManager->GetPhysicsEnabled();
+    bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
     for(auto iter : m_animatedModelSet) iter->m_skeleton->UpdateRigidBones(iter->m_matrix, l_physicsState);
 }

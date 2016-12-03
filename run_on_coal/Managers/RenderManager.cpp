@@ -20,8 +20,6 @@
 ROC::RenderManager::RenderManager(Core *f_core)
 {
     m_core = f_core;
-    m_eventManager = m_core->GetLuaManager()->GetEventManager();
-    m_sfmlManager = m_core->GetSfmlManager();
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -129,7 +127,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 
 void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum, float f_radius)
 {
-    if(m_locked || !m_activeShader || !m_activeScene || !f_model->IsDrawable()) return;
+    if(m_locked || !m_activeShader || !m_activeScene || !f_model->m_geometry) return;
 
     if(f_frustum)
     {
@@ -140,7 +138,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
     }
     m_activeShader->SetModelUniformValue(f_model->m_matrix);
 
-    if(f_model->HasSkeleton())
+    if(f_model->m_skeleton)
     {
         m_activeShader->SetBonesUniformValue(f_model->m_skeleton->m_boneMatrices);
         m_activeShader->SetAnimatedUniformValue(1U);
@@ -250,12 +248,12 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
 
 void ROC::RenderManager::DoPulse()
 {
-    m_time = m_sfmlManager->GetTime();
+    m_time = m_core->GetSfmlManager()->GetTime();
 
     m_locked = false;
-    m_eventManager->CallEvent(EventType::Render, m_argument);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::Render, m_argument);
     m_locked = true;
-    m_sfmlManager->SwapBuffers();
+    m_core->GetSfmlManager()->SwapBuffers();
 }
 
 void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader)

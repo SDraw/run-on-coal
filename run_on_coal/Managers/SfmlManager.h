@@ -5,12 +5,10 @@
 namespace ROC
 {
 class Core;
-class EventManager;
 class LuaArguments;
 class SfmlManager
 {
     Core *m_core;
-    EventManager *m_eventManager;
 
     sf::Window *m_window;
     bool m_active;

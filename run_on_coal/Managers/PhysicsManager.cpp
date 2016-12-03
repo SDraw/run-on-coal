@@ -10,7 +10,6 @@
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
 {
     m_core = f_core;
-    m_memoryManager = m_core->GetMemoryManager();
 
     m_broadPhase = new btDbvtBroadphase();
     m_collisionConfig = new btDefaultCollisionConfiguration();
@@ -153,12 +152,10 @@ bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec
     btCollisionWorld::ClosestRayResultCallback l_result((btVector3&)f_start, (btVector3&)f_end);
     m_dynamicWorld->rayTest((btVector3&)f_start, (btVector3&)f_end, l_result);
     if(!l_result.hasHit()) return false;
-    btVector3 l_hitEnd = l_result.m_hitPointWorld;
-    btVector3 l_hitNormal = l_result.m_hitNormalWorld;
     void *l_colObject = l_result.m_collisionObject->getUserPointer();
-    *f_model = l_colObject ? (m_memoryManager->IsValidMemoryPointer(l_colObject) ? l_colObject : NULL) : NULL;
-    std::memcpy(&f_end, l_hitEnd, sizeof(glm::vec3));
-    std::memcpy(&f_normal, l_hitNormal, sizeof(glm::vec3));
+    *f_model = l_colObject ? (m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject) ? l_colObject : NULL) : NULL;
+    std::memcpy(&f_end, l_result.m_hitPointWorld, sizeof(glm::vec3));
+    std::memcpy(&f_normal, l_result.m_hitNormalWorld, sizeof(glm::vec3));
     return true;
 }
 
