@@ -101,15 +101,16 @@ bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
 
 void ROC::PhysicsManager::AddRigidSkeleton(Model *f_model)
 {
+    for(auto iter : f_model->GetSkeleton()->GetJointVectorRef()) m_dynamicWorld->addRigidBody(iter);
     for(auto iter : f_model->GetSkeleton()->GetChainsVectorRef())
     {
         for(auto iter1 : iter)
         {
+            iter1.m_rigidBody->setUserPointer(f_model);
             m_dynamicWorld->addRigidBody(iter1.m_rigidBody);
             m_dynamicWorld->addConstraint(iter1.m_constraint);
         }
     }
-    for(auto iter : f_model->GetSkeleton()->GetJointVectorRef()) m_dynamicWorld->addRigidBody(iter);
 }
 void ROC::PhysicsManager::RemoveRigidSkeleton(Model *f_model)
 {

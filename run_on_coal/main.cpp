@@ -12,11 +12,9 @@ int main(int argc, char *argv[])
 #endif
 {
     ROC::Core *l_core = ROC::Core::GetCore();
-    ROC::LogManager *l_logManager = l_core->GetLogManager();
     pugi::xml_document *l_meta = new pugi::xml_document();
     if(l_meta->load_file("scripts/meta.xml"))
     {
-        ROC::LuaManager *l_luaManager = l_core->GetLuaManager();
         pugi::xml_node l_metaRoot = l_meta->child("meta");
         if(l_metaRoot)
         {
@@ -28,45 +26,43 @@ int main(int argc, char *argv[])
                 {
                     std::string l_path("scripts/");
                     l_path.append(l_attrib.as_string());
-                    l_luaManager->OpenFile(l_path);
+                    l_core->GetLuaManager()->OpenFile(l_path);
                 }
                 else
                 {
                     std::string l_text("Unable to find attribute 'src' at 'script' subnodes with ID ");
                     l_text.append(std::to_string(l_counter));
                     l_text.append(" in 'scripts/meta.xml'");
-                    l_logManager->Log(l_text);
+                    l_core->GetLogManager()->Log(l_text);
                 }
                 l_counter++;
             }
             if(!l_counter)
             {
                 std::string l_text("Unable to find any 'script' subnode in 'scripts/meta.xml'");
-                l_logManager->Log(l_text);
+                l_core->GetLogManager()->Log(l_text);
             }
         }
         else
         {
             std::string l_text("Unable to find root node 'meta' in 'scripts/meta.xml'.");
-            l_logManager->Log(l_text);
+            l_core->GetLogManager()->Log(l_text);
         }
     }
     else
     {
         std::string l_text("Unable to find 'scripts/meta.xml'.");
-        l_logManager->Log(l_text);
+        l_core->GetLogManager()->Log(l_text);
     }
     delete l_meta;
 
     ROC::LuaArguments *l_emptyArgs = new ROC::LuaArguments();
-    ROC::EventManager *l_eventManager = l_core->GetLuaManager()->GetEventManager();
-    l_eventManager->CallEvent(ROC::EventType::AppStart, l_emptyArgs);
+    l_core->GetLuaManager()->GetEventManager()->CallEvent(ROC::EventType::AppStart, l_emptyArgs);
 
     while(l_core->DoPulse());
 
-    l_eventManager->CallEvent(ROC::EventType::AppStop, l_emptyArgs);
+    l_core->GetLuaManager()->GetEventManager()->CallEvent(ROC::EventType::AppStop, l_emptyArgs);
     delete l_emptyArgs;
-
     ROC::Core::Terminate();
     return EXIT_SUCCESS;
 }
