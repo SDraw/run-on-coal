@@ -16,14 +16,20 @@ const std::vector<std::string> g_textureTypesTable
 {
     "rgb", "rgba", "cube"
 };
+const std::vector<std::string> g_textureFilteringTypesTable
+{
+    "nearest", "linear"
+};
 
 int textureCreate(lua_State *f_vm)
 {
-    std::string l_type;
-    bool l_compress;
+    std::string l_type, l_filtering;
+    bool l_compress = false;
+    int l_argAddCount = 0;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_type);
-    argStream.ReadBoolean(l_compress);
+    if(argStream.ReadNextText(l_filtering)) l_argAddCount++;
+    if(argStream.ReadNextBoolean(l_compress)) l_argAddCount++;
     if(argStream.HasErrors() || l_type.empty())
     {
         lua_pushboolean(f_vm, 0);
@@ -31,6 +37,8 @@ int textureCreate(lua_State *f_vm)
     }
     Texture *l_tex = NULL;
     int l_iType = Utils::ReadEnumVector(g_textureTypesTable, l_type);
+    int l_filteringType = Utils::ReadEnumVector(g_textureFilteringTypesTable, l_filtering);
+    if(l_filteringType == -1) l_filteringType = 0;
     switch(l_iType)
     {
         case 0: case 1:
@@ -42,19 +50,19 @@ int textureCreate(lua_State *f_vm)
                 lua_pushboolean(f_vm, 0);
                 return 1;
             }
-            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path, TEXTURE_TYPE_RGB + l_iType, l_compress);
+            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path, TEXTURE_TYPE_RGB + l_iType, static_cast<unsigned char>(l_filteringType), l_compress);
         } break;
         case 2:
         {
-            argStream.DecreaseArguments(3);
             std::vector<std::string> l_path;
+            argStream.DecreaseArguments(3 + l_argAddCount);
             argStream.ReadTableTexts(l_path, 6);
             if(argStream.HasErrors())
             {
                 lua_pushboolean(f_vm, 0);
                 return 1;
             }
-            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path, l_compress);
+            l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
         } break;
     }
     l_tex ? lua_pushlightuserdata(f_vm, l_tex) : lua_pushboolean(f_vm, 0);

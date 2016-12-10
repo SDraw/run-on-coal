@@ -12,16 +12,14 @@ namespace Lua
 int geometryCreate(lua_State *f_vm)
 {
     std::string l_path;
-    bool l_comp = false;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_path);
-    argStream.ReadNextBoolean(l_comp);
     if(argStream.HasErrors() || l_path.empty())
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    Geometry *l_geometry = LuaManager::m_corePointer->GetElementManager()->CreateGeometry(l_path, l_comp);
+    Geometry *l_geometry = LuaManager::m_corePointer->GetElementManager()->CreateGeometry(l_path);
     l_geometry ? lua_pushlightuserdata(f_vm, l_geometry) : lua_pushboolean(f_vm, 0);
     return 1;
 }

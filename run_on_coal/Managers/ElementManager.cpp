@@ -99,7 +99,7 @@ bool ROC::ElementManager::DestroyAnimation(Animation *f_anim)
     return true;
 }
 
-ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path, bool l_comp)
+ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path)
 {
     Geometry *l_geometry = new Geometry();
 
@@ -109,7 +109,7 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path, bool l_c
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_geometry->Load(l_work, l_comp))
+    if(!l_geometry->Load(l_work))
     {
         delete l_geometry;
         return NULL;
@@ -254,7 +254,7 @@ bool ROC::ElementManager::DestroyRenderTarget(RenderTarget *f_rt)
     return true;
 }
 
-ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress)
 {
     Texture *l_tex = new Texture();
 
@@ -264,7 +264,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_tex->Load(l_work, f_type, f_compress))
+    if(!l_tex->Load(l_work, f_type, f_filter, f_compress))
     {
         delete l_tex;
         return NULL;
@@ -272,7 +272,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
     m_core->GetMemoryManager()->AddMemoryPointer(l_tex, ElementType::TextureElement);
     return l_tex;
 }
-ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_path, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     Texture *l_tex = new Texture();
 
@@ -290,7 +290,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
     }
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_tex->LoadCubemap(l_path, f_compress))
+    if(!l_tex->LoadCubemap(l_path, f_filter, f_compress))
     {
         delete l_tex;
         return NULL;

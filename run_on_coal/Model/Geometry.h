@@ -23,7 +23,7 @@ protected:
     Geometry();
     ~Geometry();
     inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
-    bool Load(std::string &f_path, bool f_compressed);
+    bool Load(std::string &f_path);
     void GetBonesData(std::vector<BoneData*> &f_vec);
     void GetChainsData(std::vector<BoneChainGroup*> &f_vec);
     friend class ElementManager;

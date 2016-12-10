@@ -375,6 +375,18 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
             sajson::value l_dsData = m_node.get_object_value(l_nodeIndex);
             l_materialBit.set(3, l_dsData.get_type() == sajson::TYPE_TRUE);
         }
+        l_nodeIndex = m_node.find_object_key(sajson::literal("filtering"));
+        if(l_nodeIndex != m_node.get_length())
+        {
+            sajson::value l_filterData = m_node.get_object_value(l_nodeIndex);
+            if(l_filterData.get_type() == sajson::TYPE_INTEGER) l_materialBit.set(4, l_filterData.get_integer_value() == 1);
+        }
+        l_nodeIndex = m_node.find_object_key(sajson::literal("compression"));
+        if(l_nodeIndex != m_node.get_length())
+        {
+            sajson::value l_compData = m_node.get_object_value(l_nodeIndex);
+            l_materialBit.set(5, l_compData.get_type() == sajson::TYPE_TRUE);
+        }
 
         std::string l_difMap;
         l_nodeIndex = m_node.find_object_key(sajson::literal("mapDiffuse"));
@@ -540,7 +552,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                 l_materialNames.push_back(l_materialName);
                 continue;
             }
-            if(!l_buffer.find("type "))
+            if(!l_buffer.find("type ")) // this is custom line, you have to insert it in file with value based on material bits
             {
                 std::string l_typeString = l_buffer.substr(5U);
                 l_materialTypes.push_back(static_cast<unsigned char>(std::stoi(l_typeString)));
@@ -576,14 +588,14 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
     {
         for(size_t i = 0, j = l_materialNames.size() - l_materialTypes.size(); i < j; i++)
         {
-            l_materialTypes.push_back(1U);
+            l_materialTypes.push_back(3U);
         }
     }
 
     std::ofstream l_outputFile(f_out, std::ios::out | std::ios::binary);
     if(l_outputFile.fail()) Error("Unable to create output file");
     l_outputFile.write("ROC", 3);
-    unsigned char l_setter = 0x1;
+    unsigned char l_setter = 0x1U;
     l_outputFile.write((char*)&l_setter, sizeof(unsigned char));
     bool l_dataParsed = false;
     bool l_materialsSizeParsed = false;
@@ -666,30 +678,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             if(l_defaultMaterial) continue;
             if(l_currentMaterial != -1)
             {
-                std::bitset<8U> l_bType;
-                switch(l_materialTypes[l_currentMaterial])
-                {
-                    case 1:
-                    {
-                        l_bType.set(0, 1);
-                        l_bType.set(1, 1);
-                    } break;
-                    case 2:
-                    {
-                        l_bType.set(1, 1);
-                    } break;
-                    case 3:
-                    {
-                        l_bType.set(0, 1);
-                        l_bType.set(2, 1);
-                    } break;
-                    default:
-                    {
-                        l_bType.set(0, 1);
-                        l_bType.set(1, 1);
-                    } break;
-                }
-                l_setter = static_cast<unsigned char>(l_bType.to_ulong());
+                l_setter = static_cast<unsigned char>(l_materialTypes[l_currentMaterial]);
                 l_outputFile.write((char*)&l_setter, sizeof(unsigned char));
                 glm::vec4 l_params(1.f);
                 l_outputFile.write((char*)&l_params, sizeof(glm::vec4));
@@ -739,30 +728,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
     }
     if(l_currentMaterial != -1)
     {
-        std::bitset<8U> l_bType;
-        switch(l_materialTypes[l_currentMaterial])
-        {
-            case 1:
-            {
-                l_bType.set(0, 1);
-                l_bType.set(1, 1);
-            } break;
-            case 2:
-            {
-                l_bType.set(1, 1);
-            } break;
-            case 3:
-            {
-                l_bType.set(0, 1);
-                l_bType.set(2, 1);
-            } break;
-            default:
-            {
-                l_bType.set(0, 1);
-                l_bType.set(1, 1);
-            } break;
-        }
-        l_setter = static_cast<unsigned char>(l_bType.to_ulong());
+        l_setter = static_cast<unsigned char>(l_materialTypes[l_currentMaterial]);
         l_outputFile.write((char*)&l_setter, sizeof(unsigned char));
         glm::vec4 l_params(1.f);
         l_outputFile.write((char*)&l_params, sizeof(glm::vec4));

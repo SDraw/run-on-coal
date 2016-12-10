@@ -117,10 +117,10 @@ void ROC::Material::GenerateVAO()
 
     m_bVAO = true;
 }
-void ROC::Material::LoadTexture(std::string &f_path, bool f_compressed)
+void ROC::Material::LoadTexture(std::string &f_path)
 {
     m_texture = new Texture();
-    if(!m_texture->Load(f_path, IsTransparent() ? TEXTURE_TYPE_RGBA : TEXTURE_TYPE_RGB, f_compressed))
+    if(!m_texture->Load(f_path, IsTransparent() ? TEXTURE_TYPE_RGBA : TEXTURE_TYPE_RGB, GetFilteringType(), IsCompressed()))
     {
         delete m_texture;
         m_texture = NULL;

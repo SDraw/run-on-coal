@@ -185,72 +185,57 @@ void ROC::ArgReader::ReadFunctionPointer(void **f_pointer)
     m_iArgIndex++;
 }
 
-void ROC::ArgReader::ReadNextBoolean(bool &f_val)
+bool ROC::ArgReader::ReadNextBoolean(bool &f_val)
 {
-    if(m_hasErrors) return;
-    if(m_iArgNum < m_iArgIndex) return;
-    if(!lua_isboolean(m_pVM, m_iArgIndex)) return;
+    if(m_hasErrors || m_iArgNum < m_iArgIndex) return false;
+    if(!lua_isboolean(m_pVM, m_iArgIndex)) return false;
     f_val = (lua_toboolean(m_pVM, m_iArgIndex) == 1);
     m_iArgIndex++;
+    return true;
 }
-void ROC::ArgReader::ReadNextNumber(lua_Number &f_val)
+bool ROC::ArgReader::ReadNextNumber(lua_Number &f_val)
 {
-    if(m_hasErrors) return;
-    if(m_iArgNum < m_iArgIndex) return;
-    if(!lua_isnumber(m_pVM, m_iArgIndex)) return;
+    if(m_hasErrors || m_iArgNum < m_iArgIndex) return false;
+    if(!lua_isnumber(m_pVM, m_iArgIndex)) return false;
     lua_Number l_val = lua_tonumber(m_pVM, m_iArgIndex);
-    if(std::isnan(l_val) || std::isinf(l_val)) return;
+    if(std::isnan(l_val) || std::isinf(l_val)) return false;
     f_val = l_val;
     m_iArgIndex++;
+    return true;
 }
-void ROC::ArgReader::ReadNextInteger(lua_Integer &f_val)
+bool ROC::ArgReader::ReadNextInteger(lua_Integer &f_val)
 {
-    if(m_hasErrors) return;
-    if(m_iArgNum < m_iArgIndex) return;
-    if(!lua_isinteger(m_pVM, m_iArgIndex)) return;
+    if(m_hasErrors || m_iArgNum < m_iArgIndex) return false;
+    if(!lua_isinteger(m_pVM, m_iArgIndex)) return false;
     f_val = lua_tointeger(m_pVM, m_iArgIndex);
     m_iArgIndex++;
+    return true;
 }
-void ROC::ArgReader::ReadNextText(std::string &f_val)
+bool ROC::ArgReader::ReadNextText(std::string &f_val)
 {
-    if(m_hasErrors) return;
-    if(m_iArgNum < m_iArgIndex) return;
-    if(!lua_isstring(m_pVM, m_iArgIndex)) return;
+    if(m_hasErrors || m_iArgNum < m_iArgIndex) return false;
+    if(!lua_isstring(m_pVM, m_iArgIndex)) return false;
     f_val.append(lua_tostring(m_pVM, m_iArgIndex));
     m_iArgIndex++;
+    return true;
 }
-void ROC::ArgReader::ReadNextUserdata(void **f_val, unsigned int f_type)
+bool ROC::ArgReader::ReadNextUserdata(void **f_val, unsigned int f_type)
 {
-    if(m_hasErrors) return;
-    if(m_iArgNum < m_iArgIndex) return;
-    if(!lua_islightuserdata(m_pVM, m_iArgIndex))
-    {
-        m_error.append("Expected userdata");
-        m_hasErrors = true;
-        return;
-    }
+    if(m_hasErrors || m_iArgNum < m_iArgIndex) return false;
+    if(!lua_islightuserdata(m_pVM, m_iArgIndex)) return false;
     void *a = (void*)lua_topointer(m_pVM, m_iArgIndex);
-    if(!m_core->GetMemoryManager()->CheckMemoryPointer(a, f_type))
-    {
-        m_error.append("Invalid userdata");
-        m_hasErrors = true;
-        return;
-    }
+    if(!m_core->GetMemoryManager()->CheckMemoryPointer(a, f_type)) return false;
     *f_val = a;
     m_iArgIndex++;
+    return true;
 }
-void ROC::ArgReader::ReadNextPointer(void **f_val)
+bool ROC::ArgReader::ReadNextPointer(void **f_val)
 {
-    if(m_hasErrors) return;
-    if(m_iArgNum < m_iArgIndex) return;
-    if(!lua_islightuserdata(m_pVM, m_iArgIndex))
-    {
-        m_error.append("Expected userdata");
-        m_hasErrors = true;
-        return;
-    }
+    if(m_hasErrors || m_iArgNum < m_iArgIndex) return false;
+    if(!lua_islightuserdata(m_pVM, m_iArgIndex)) return false;
     *f_val = (void*)lua_topointer(m_pVM, m_iArgIndex);
     m_iArgIndex++;
+    return true;
 }
 
 void ROC::ArgReader::ReadTableNumbers(std::vector<double> &f_vec, int f_size)

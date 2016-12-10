@@ -25,12 +25,12 @@ public:
     void ReadFunction(int &f_val, void **f_pointer);
     void ReadFunctionPointer(void **f_pointer);
 
-    void ReadNextBoolean(bool &f_val);
-    void ReadNextNumber(lua_Number &f_val);
-    void ReadNextInteger(lua_Integer &f_val);
-    void ReadNextText(std::string &f_val);
-    void ReadNextUserdata(void **f_val, unsigned int f_type);
-    void ReadNextPointer(void **f_val);
+    bool ReadNextBoolean(bool &f_val);
+    bool ReadNextNumber(lua_Number &f_val);
+    bool ReadNextInteger(lua_Integer &f_val);
+    bool ReadNextText(std::string &f_val);
+    bool ReadNextUserdata(void **f_val, unsigned int f_type);
+    bool ReadNextPointer(void **f_val);
 
     void ReadTableNumbers(std::vector<lua_Number> &f_vec, int f_size);
     void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);

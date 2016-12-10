@@ -37,7 +37,7 @@ public:
     Light* CreateLight();
     bool DestroyLight(Light *f_light);
 
-    Geometry* CreateGeometry(std::string &f_path, bool l_comp);
+    Geometry* CreateGeometry(std::string &f_path);
     bool DestroyGeometry(Geometry *f_geometry);
 
     Model* CreateModel(Geometry *f_geometry);
@@ -55,8 +55,8 @@ public:
     RenderTarget* CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type);
     bool DestroyRenderTarget(RenderTarget *f_rt);
 
-    Texture* CreateTexture(std::string &f_path, int f_type, bool f_compress = false);
-    Texture* CreateTexture(std::vector<std::string> &f_path, bool f_compress = false);
+    Texture* CreateTexture(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress);
+    Texture* CreateTexture(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
     bool DestroyTexture(Texture *f_tex);
 
     Font* CreateFont_(std::string &f_path, int f_size);

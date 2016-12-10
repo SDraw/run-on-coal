@@ -15,7 +15,7 @@ ROC::Geometry::~Geometry()
     Clear();
 }
 
-bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
+bool ROC::Geometry::Load(std::string &f_path)
 {
     if(m_loaded) return false;
     bool l_result = true;
@@ -149,7 +149,7 @@ bool ROC::Geometry::Load(std::string &f_path, bool f_compressed)
                     l_material->LoadIndices(l_tempIndex);
                 }
                 l_material->GenerateVAO();
-                l_material->LoadTexture(l_difTexture, f_compressed);
+                l_material->LoadTexture(l_difTexture);
             }
             m_materialCount = static_cast<unsigned int>(m_materialVector.size());
             if(m_materialCount)

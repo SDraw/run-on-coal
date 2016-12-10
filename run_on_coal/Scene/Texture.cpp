@@ -11,7 +11,7 @@ ROC::Texture::~Texture()
     if(m_texture) glDeleteTextures(1, &m_texture);
 }
 
-bool ROC::Texture::Load(std::string &f_path, int f_type, bool f_compress)
+bool ROC::Texture::Load(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress)
 {
     if(m_type != TEXTURE_TYPE_NONE || f_type <= TEXTURE_TYPE_NONE || f_type >= TEXTURE_TYPE_CUBEMAP) return false;
     sf::Image l_image;
@@ -23,22 +23,22 @@ bool ROC::Texture::Load(std::string &f_path, int f_type, bool f_compress)
         glBindTexture(GL_TEXTURE_2D, m_texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST+f_filter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST+f_filter);
         glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
     }
     else GenerateBrokenTexture();
     return true;
 }
-bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, bool f_compress)
+bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     if(m_type != TEXTURE_TYPE_NONE || f_path.size() != 6U) return false;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST+f_filter);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST+f_filter);
 
     m_type = TEXTURE_TYPE_CUBEMAP;
     for(int i = 0; i < 6; i++)
