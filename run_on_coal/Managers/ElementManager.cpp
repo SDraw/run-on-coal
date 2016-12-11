@@ -306,7 +306,7 @@ bool ROC::ElementManager::DestroyTexture(Texture *f_tex)
     return true;
 }
 
-ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size)
+ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size, unsigned char f_filter)
 {
     Font *l_font = new Font();
 
@@ -316,7 +316,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size)
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_font->LoadTTF(l_work, f_size))
+    if(!l_font->LoadTTF(l_work, f_size, f_filter))
     {
         delete l_font;
         return NULL;

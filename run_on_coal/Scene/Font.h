@@ -20,6 +20,7 @@ class Font
     GLuint m_vertexVBO;
     GLuint m_uvVBO;
     GLuint m_VAO;
+    int m_filteringType;
 
     bool m_loaded;
 
@@ -29,7 +30,7 @@ class Font
 protected:
     Font();
     ~Font();
-    bool LoadTTF(std::string &f_path, int f_size);
+    bool LoadTTF(std::string &f_path, int f_size, unsigned char f_filter);
     inline GLuint GetVAO() { return m_VAO; }
     bool Draw(sf::String &f_text, glm::vec2 &f_pos, bool f_bind);
     friend class ElementManager;

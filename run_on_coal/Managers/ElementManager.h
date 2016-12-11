@@ -59,7 +59,7 @@ public:
     Texture* CreateTexture(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
     bool DestroyTexture(Texture *f_tex);
 
-    Font* CreateFont_(std::string &f_path, int f_size);
+    Font* CreateFont_(std::string &f_path, int f_size, unsigned char f_filter);
     bool DestroyFont(Font *f_font);
 
     File* CreateFile_(std::string &f_path);

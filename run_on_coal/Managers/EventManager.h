@@ -24,10 +24,17 @@ enum EventType : unsigned char
 
 class LuaManager;
 class LuaArguments;
-class Event;
 class EventManager
 {
     LuaManager *m_luaManager;
+
+    struct Event
+    {
+        void *m_luaFunc;
+        int m_luaRef;
+        bool m_muted = false;
+        bool m_deleted = false;
+    };
     std::vector<Event*> m_eventsVector[EventType::Last];
     std::vector<Event*>::iterator m_iter;
     unsigned char m_activeEvent;

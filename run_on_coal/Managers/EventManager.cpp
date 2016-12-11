@@ -2,7 +2,6 @@
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 #include "Lua/LuaArguments.h"
-#include "Utils/Event.h"
 
 ROC::EventManager::EventManager(LuaManager *f_luaManager)
 {
@@ -35,7 +34,9 @@ bool ROC::EventManager::AddEvent(unsigned char f_event, int f_ref, void *f_point
             return l_result;
         }
     }
-    Event *l_eventObj = new Event(f_pointer, f_ref);
+    Event *l_eventObj = new Event();
+    l_eventObj->m_luaFunc = f_pointer;
+    l_eventObj->m_luaRef = f_ref;
     if(f_event == m_activeEvent) m_iter = l_event.insert(m_iter, l_eventObj)+1;
     else l_event.push_back(l_eventObj);
     return true;

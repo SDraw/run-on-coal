@@ -5,24 +5,34 @@
 #include "Managers/RenderManager.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Font.h"
+#include "Utils/Utils.h"
 
 namespace ROC
 {
 namespace Lua
 {
+const std::vector<std::string> g_fontFilteringTypesTable
+{
+    "nearest", "linear"
+};
+
 int fontCreate(lua_State *f_vm)
 {
     std::string l_path;
     lua_Integer l_size;
+    std::string l_filter;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_path);
     argStream.ReadInteger(l_size);
+    argStream.ReadNextText(l_filter);
     if(argStream.HasErrors() || l_path.empty() || l_size < 1)
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    Font *l_font = LuaManager::m_corePointer->GetElementManager()->CreateFont_(l_path, static_cast<int>(l_size));
+    int l_filteringType = Utils::ReadEnumVector(g_fontFilteringTypesTable, l_filter);
+    if(l_filteringType == -1) l_filteringType = 0;
+    Font *l_font = LuaManager::m_corePointer->GetElementManager()->CreateFont_(l_path, static_cast<int>(l_size), static_cast<unsigned char>(l_filteringType));
     l_font ? lua_pushlightuserdata(f_vm, l_font) : lua_pushboolean(f_vm, 0);
     return 1;
 }
