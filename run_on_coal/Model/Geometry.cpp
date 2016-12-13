@@ -19,6 +19,7 @@ bool ROC::Geometry::Load(std::string &f_path)
 {
     if(m_loaded) return false;
     bool l_result = true;
+    unsigned char l_type;
     std::ifstream l_file;
     l_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
@@ -29,7 +30,6 @@ bool ROC::Geometry::Load(std::string &f_path)
         l_file.read((char*)l_header.data(), 3);
         if(!l_header.compare("ROC"))
         {
-            unsigned char l_type;
             l_file.read((char*)&l_type, sizeof(unsigned char));
 
             int l_compressedSize, l_uncompressedSize;
@@ -64,7 +64,7 @@ bool ROC::Geometry::Load(std::string &f_path)
             l_normalData.resize(l_uncompressedSize / sizeof(glm::vec3));
             Utils::UncompressData(l_tempData.data(), l_compressedSize, l_normalData.data(), l_uncompressedSize);
 
-            if(l_type == 0x2) // If has skeletal animation
+            if(l_type == 0x2U) // If has skeletal animation
             {
                 // Weights
                 l_file.read((char*)&l_compressedSize, sizeof(int));
@@ -143,7 +143,7 @@ bool ROC::Geometry::Load(std::string &f_path)
                 l_material->LoadVertices(l_tempVertex);
                 l_material->LoadUVs(l_tempUV);
                 l_material->LoadNormals(l_tempNormal);
-                if(l_type == 0x2)
+                if(l_type == 0x2U)
                 {
                     l_material->LoadWeights(l_tempWeight);
                     l_material->LoadIndices(l_tempIndex);
@@ -166,7 +166,7 @@ bool ROC::Geometry::Load(std::string &f_path)
                 m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
             }
 
-            if(l_type == 0x2)
+            if(l_type == 0x2U)
             {
                 int l_bonesSize;
                 l_file.read((char*)&l_bonesSize, sizeof(int));
@@ -198,7 +198,7 @@ bool ROC::Geometry::Load(std::string &f_path)
         l_result = false;
     }
 
-    if(l_result)
+    if(l_result && (l_type == 0x2U))
     {
         try
         {

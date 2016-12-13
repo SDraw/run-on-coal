@@ -62,7 +62,6 @@ bool ROC::ElementManager::DestroyCamera(Camera *f_cam)
 ROC::Light* ROC::ElementManager::CreateLight()
 {
     Light *l_light = new Light();
-
     m_core->GetMemoryManager()->AddMemoryPointer(l_light, ElementType::LightElement);
     return l_light;
 }
@@ -128,7 +127,6 @@ bool ROC::ElementManager::DestroyGeometry(Geometry *f_geometry)
 ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
 {
     Model *l_model = new Model(f_geometry);
-
     m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
     m_core->GetMemoryManager()->AddMemoryPointer(l_model, ElementType::ModelElement);
     m_core->GetPreRenderManager()->AddModel(l_model);
