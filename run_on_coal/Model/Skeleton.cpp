@@ -175,6 +175,7 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneJointData*> &f_vec)
         btDefaultMotionState *l_jointFallMotionState = new btDefaultMotionState(l_boneTransform);
         btRigidBody::btRigidBodyConstructionInfo l_jointFallRigidBodyCI(0.f, l_jointFallMotionState, l_jointShape);
         l_joint->m_emptyBody = new btRigidBody(l_jointFallRigidBodyCI);
+        l_joint->m_emptyBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
         l_joint->m_emptyBody->setActivationState(DISABLE_DEACTIVATION);
 
         m_jointVector.push_back(l_joint);
@@ -298,7 +299,7 @@ void ROC::Skeleton::UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled)
             l_bone.setFromOpenGLMatrix((float*)&m_boneVector[iter->m_boneID]->GetMatrixRef());
             l_offset.mult(l_bone, iter->m_offset[0]);
             l_transform.mult(l_model, l_offset);
-            iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform);
+            f_enabled ? iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform) : iter->m_rigidBody->setCenterOfMassTransform(l_transform);
         }
     }
 
@@ -314,12 +315,12 @@ void ROC::Skeleton::UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled)
                 l_parentTransform.setFromOpenGLMatrix((float*)&l_parentBone->GetMatrixRef());
                 l_bone.mult(l_parentTransform, iter->m_localMatrix[0]);
                 l_result.mult(l_model, l_bone);
-                iter->m_emptyBody->setCenterOfMassTransform(l_result);
+                f_enabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_result) : iter->m_emptyBody->setCenterOfMassTransform(l_result);
             }
             else
             {
                 l_result.mult(l_model, iter->m_localMatrix[0]);
-                iter->m_emptyBody->setCenterOfMassTransform(iter->m_localMatrix[0]);
+                f_enabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_result) : iter->m_emptyBody->setCenterOfMassTransform(l_result);
             }
         }
     }

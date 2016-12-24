@@ -333,8 +333,12 @@ void ROC::Model::UpdateRigidity()
         if(m_rigidBody->isActive())
         {
             const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
-            std::memcpy(&m_position, l_transform.getOrigin(), sizeof(glm::vec3));
-            std::memcpy(&m_rotation, l_transform.getRotation(), sizeof(glm::quat));
+            btQuaternion l_rotation = l_transform.getRotation();
+            std::memcpy(&m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+            m_rotation.x = l_rotation.x();
+            m_rotation.y = l_rotation.y();
+            m_rotation.z = l_rotation.z();
+            m_rotation.w = l_rotation.w();
             l_transform.getOpenGLMatrix((float*)&m_localMatrix);
             std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         }
