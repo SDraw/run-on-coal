@@ -1,10 +1,16 @@
 #pragma once
+#define BC_TYPE_SPHERE 0U
+#define BC_TYPE_BOX 1U
+#define BC_TYPE_CYLINDER 2U
+#define BC_TYPE_CAPSULE 3U
+#define BC_TYPE_CONE 4U
 
 namespace ROC
 {
 class Bone;
-class BoneChainGroup;
+class BoneCollisionData;
 class BoneData;
+class BoneJointData;
 class Skeleton
 {
     unsigned int m_bonesCount;
@@ -12,24 +18,38 @@ class Skeleton
     std::vector<Bone*> m_fastBoneVector;
     std::vector<glm::mat4> m_boneMatrices;
 
-    size_t m_jointsCount;
-    bool m_rigid;
-    struct skChain
+    struct skCollision
     {
+        btAlignedObjectArray<btTransform> m_offset; // [0] - normal
         btRigidBody *m_rigidBody;
-        btTypedConstraint *m_constraint;
         int m_boneID;
     };
-    std::vector<std::vector<skChain>> m_chainsVector;
-    std::vector<btRigidBody*> m_jointVector;
+    std::vector<skCollision*> m_collisionVector;
+    bool m_hasCollision;
+
+    struct skJoint
+    {
+        btAlignedObjectArray<btTransform> m_localMatrix; // [0] - normal
+        btRigidBody *m_emptyBody;
+        int m_boneID;
+        struct jtPart
+        {
+            btAlignedObjectArray<btTransform> m_offset; // [0] - normal, [1] - inverse
+            btRigidBody *m_rigidBody;
+            btGeneric6DofSpringConstraint *m_constraint;
+            int m_boneID;
+        };
+        std::vector<jtPart*> m_chainsVector;
+    };
+    std::vector<skJoint*> m_jointVector;
+    bool m_rigid;
 
     struct skFastStoring
     {
         glm::vec3 m_pos;
         glm::quat m_rot;
         glm::vec3 m_scale;
-    };
-    skFastStoring m_leftData, m_rightData, m_interpolated;
+    } m_leftData, m_rightData, m_interpolated;
 protected:
     explicit Skeleton(std::vector<BoneData*> &f_data);
     ~Skeleton();
@@ -38,11 +58,12 @@ protected:
     void Update();
     void ResetBonesInterpolation();
 
-    void InitRigidity(std::vector<BoneChainGroup*> &f_vec);
-    void UpdateJoints(glm::mat4 &f_model, bool f_enabled);
-    void UpdateRigidBones(glm::mat4 &f_model, bool f_enabled);
-    inline std::vector<std::vector<skChain>>& GetChainsVectorRef() { return m_chainsVector; }
-    inline std::vector<btRigidBody*>& GetJointVectorRef() { return m_jointVector; }
+    void InitCollision(std::vector<BoneCollisionData*> &f_vec);
+    void InitRigidity(std::vector<BoneJointData*> &f_vec);
+    void UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled);
+    void UpdateCollision_S2(glm::mat4 &f_model, bool f_enabled);
+    inline std::vector<skCollision*> &GetCollisionVectorRef() { return m_collisionVector; }
+    inline std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
 
     inline size_t GetBonesCount() { return m_bonesCount; }
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }

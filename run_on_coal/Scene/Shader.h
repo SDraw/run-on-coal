@@ -15,7 +15,6 @@ class Shader
     GLint m_modelUniform;
     GLint m_cameraPositionUniform;
     GLint m_cameraDirectionUniform;
-    GLint m_lightingUniform;
     GLint m_lightColorUniform;
     GLint m_lightDirectionUniform;
     GLint m_lightParamUniform;
@@ -35,7 +34,7 @@ class Shader
     glm::vec3 m_cameraPositionUniformValue;
     glm::vec3 m_cameraDirectionUniformValue;
     unsigned int m_lightingUniformValue;
-    glm::vec3 m_lightColorUniformValue;
+    glm::vec4 m_lightColorUniformValue;
     glm::vec3 m_lightDirectionUniformValue;
     glm::vec4 m_lightParamUniformValue;
     glm::vec4 m_materialParamUniformValue;
@@ -124,8 +123,7 @@ protected:
     void SetModelUniformValue(glm::mat4 &f_value);
     void SetCameraPositionUniformValue(glm::vec3 &f_value);
     void SetCameraDirectionUniformValue(glm::vec3 &f_value);
-    void SetLightingUniformValue(unsigned int f_value);
-    void SetLightColorUniformValue(glm::vec3 &f_value);
+    void SetLightColorUniformValue(glm::vec4 &f_value);
     void SetLightDirectionUniformValue(glm::vec3 &f_value);
     void SetLightParamUniformValue(glm::vec4 &f_value);
     void SetMaterialParamUniformValue(glm::vec4 &f_value);

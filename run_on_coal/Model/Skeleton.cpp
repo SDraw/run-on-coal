@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Model/Bone.h"
+#include "Model/BoneCollisionData.h"
 #include "Model/BoneData.h"
-#include "Model/BoneChainGroup.h"
+#include "Model/BoneJointData.h"
 #include "Model/Skeleton.h"
 
 ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
@@ -23,7 +24,7 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
     if(!m_boneVector.empty())
     {
         std::list<Bone*> l_bonesStack;
-        l_bonesStack.push_back(m_boneVector[0]);
+        l_bonesStack.push_back(m_boneVector.front());
         while(!l_bonesStack.empty())
         {
             Bone *l_bone = l_bonesStack.back();
@@ -34,30 +35,48 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
         }
     }
     m_boneMatrices.resize(static_cast<size_t>(m_bonesCount));
+    m_hasCollision = false;
     m_rigid = false;
-    m_jointsCount = 0U;
 }
 ROC::Skeleton::~Skeleton()
 {
     for(auto iter : m_boneVector) delete iter;
     m_boneVector.clear();
     m_boneMatrices.clear();
-    if(m_rigid)
+
+    if(m_hasCollision)
     {
-        for(auto iter : m_chainsVector)
+        for(auto iter : m_collisionVector)
         {
-            for(auto iter1 : iter) delete iter1.m_constraint;
-            for(auto iter1 : iter)
-            {
-                delete iter1.m_rigidBody->getMotionState();
-                delete iter1.m_rigidBody;
-            }
-        }
-        for(auto iter : m_jointVector)
-        {
-            delete iter->getMotionState();
+            iter->m_offset.clear();
+            delete iter->m_rigidBody->getMotionState();
+            delete iter->m_rigidBody;
             delete iter;
         }
+        m_collisionVector.clear();
+    }
+
+    if(m_rigid)
+    {
+        for(auto iter : m_jointVector)
+        {
+            for(auto iter1 = iter->m_chainsVector.rbegin(); iter1 != iter->m_chainsVector.rend(); ++iter1)
+            {
+                (*iter1)->m_offset.clear();
+                (*iter1)->m_constraint->getRigidBodyA().removeConstraintRef((*iter1)->m_constraint);
+                (*iter1)->m_constraint->getRigidBodyB().removeConstraintRef((*iter1)->m_constraint);
+                delete (*iter1)->m_constraint;
+                delete (*iter1)->m_rigidBody->getMotionState();
+                delete (*iter1)->m_rigidBody;
+                delete (*iter1);
+            }
+            iter->m_localMatrix.clear();
+            iter->m_chainsVector.clear();
+            delete iter->m_emptyBody->getMotionState();
+            delete iter->m_emptyBody;
+            delete iter;
+        }
+        m_jointVector.clear();
     }
     m_fastBoneVector.clear();
 }
@@ -90,113 +109,256 @@ void ROC::Skeleton::ResetBonesInterpolation()
     }
 }
 
-void ROC::Skeleton::InitRigidity(std::vector<BoneChainGroup*> &f_vec)
+void ROC::Skeleton::InitCollision(std::vector<BoneCollisionData*> &f_vec)
+{
+    if(m_hasCollision) return;
+    for(auto iter : f_vec)
+    {
+        skCollision *l_colData = new skCollision();
+
+        btCollisionShape *l_shape = NULL;
+        switch(iter->m_type)
+        {
+            case BC_TYPE_SPHERE:
+                l_shape = new btSphereShape(iter->m_size.x);
+                break;
+            case BC_TYPE_BOX:
+                l_shape = new btBoxShape(btVector3(iter->m_size.x, iter->m_size.y, iter->m_size.z));
+                break;
+            case BC_TYPE_CYLINDER:
+                l_shape = new btCylinderShape(btVector3(iter->m_size.x, iter->m_size.y, iter->m_size.z));
+                break;
+            case BC_TYPE_CAPSULE:
+                l_shape = new btCapsuleShape(iter->m_size.x, iter->m_size.y);
+                break;
+            case BC_TYPE_CONE:
+                l_shape = new btConeShape(iter->m_size.x, iter->m_size.y);
+                break;
+            default:
+                l_shape = new btEmptyShape();
+        }
+
+        btTransform l_transform, l_resultTransform;
+        l_transform.setFromOpenGLMatrix((float*)&m_boneVector[iter->m_boneID]->GetMatrixRef());
+        l_colData->m_offset.push_back(btTransform());
+        l_colData->m_offset[0].setIdentity();
+        l_colData->m_offset[0].setOrigin(btVector3(iter->m_offset.x, iter->m_offset.y, iter->m_offset.z));
+        l_colData->m_offset[0].setRotation(btQuaternion(iter->m_offsetRotation.x, iter->m_offsetRotation.y, iter->m_offsetRotation.z, iter->m_offsetRotation.w));
+        l_resultTransform.mult(l_transform, l_colData->m_offset[0]);
+        btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_resultTransform);
+        btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(0.f, l_fallMotionState, l_shape);
+        l_colData->m_rigidBody = new btRigidBody(fallRigidBodyCI);
+        l_colData->m_rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+        l_colData->m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+
+        l_colData->m_boneID = static_cast<int>(iter->m_boneID);
+
+        m_collisionVector.push_back(l_colData);
+    }
+    if(!m_collisionVector.empty()) m_hasCollision = true;
+}
+
+void ROC::Skeleton::InitRigidity(std::vector<BoneJointData*> &f_vec)
 {
     if(m_rigid) return;
-    m_chainsVector.resize(f_vec.size());
-    for(size_t i = 0, ii = m_chainsVector.size(); i < ii; i++)
+    for(auto iter : f_vec)
     {
-        for(size_t j = 0, jj = f_vec[i]->m_boneChainDataVector.size(); j < jj; j++)
+        skJoint *l_joint = new skJoint();
+        l_joint->m_boneID = static_cast<int>(iter->m_boneID);
+        l_joint->m_localMatrix.push_back(btTransform());
+        l_joint->m_localMatrix[0].setFromOpenGLMatrix((float*)&m_boneVector[l_joint->m_boneID]->GetLocalMatrixRef());
+
+        btTransform l_boneTransform;
+        l_boneTransform.setFromOpenGLMatrix((float*)&m_boneVector[l_joint->m_boneID]->GetMatrixRef());
+
+        btCollisionShape *l_jointShape = new btEmptyShape();
+        btDefaultMotionState *l_jointFallMotionState = new btDefaultMotionState(l_boneTransform);
+        btRigidBody::btRigidBodyConstructionInfo l_jointFallRigidBodyCI(0.f, l_jointFallMotionState, l_jointShape);
+        l_joint->m_emptyBody = new btRigidBody(l_jointFallRigidBodyCI);
+        l_joint->m_emptyBody->setActivationState(DISABLE_DEACTIVATION);
+
+        m_jointVector.push_back(l_joint);
+
+        for(int i = 0, j = static_cast<int>(iter->m_jointPartVector.size()); i < j; i++)
         {
-            BoneChainGroup::BoneChainData *l_chainData = f_vec[i]->m_boneChainDataVector[j];
-            skChain l_skChain;
-            l_skChain.m_boneID = l_chainData->m_boneID;
-            btVector3 l_inertia;
-            btSphereShape *l_shape = new btSphereShape(l_chainData->m_size.x);
-            l_shape->calculateLocalInertia(l_chainData->m_mass, l_inertia);
+            BoneJointData::bjdJointPart *l_dataPart = iter->m_jointPartVector[i];
+            skJoint::jtPart *l_jointPart = new skJoint::jtPart();
+            l_jointPart->m_boneID = static_cast<int>(l_dataPart->m_boneID);
 
-            btTransform l_transform;
-            l_transform.setFromOpenGLMatrix((float*)&m_boneVector[l_skChain.m_boneID]->GetMatrixRef());
-            btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
+            btTransform l_jointPartBoneTransform, l_jointPartResultTransform;
 
-            btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(l_chainData->m_mass, l_fallMotionState, l_shape, l_inertia);
-            l_skChain.m_rigidBody = new btRigidBody(fallRigidBodyCI);
-            l_skChain.m_rigidBody->setDamping(0.75f, 0.75f);
+            l_jointPartBoneTransform.setFromOpenGLMatrix((float*)&m_boneVector[l_jointPart->m_boneID]->GetMatrixRef());
+            l_jointPart->m_offset.push_back(btTransform());
+            l_jointPart->m_offset[0].setIdentity();
+            l_jointPart->m_offset[0].setOrigin(btVector3(l_dataPart->m_offset.x, l_dataPart->m_offset.y, l_dataPart->m_offset.z));
+            l_jointPart->m_offset[0].setRotation(btQuaternion(l_dataPart->m_rotation.x, l_dataPart->m_rotation.y, l_dataPart->m_rotation.z, l_dataPart->m_rotation.w));
+            l_jointPart->m_offset.push_back(l_jointPart->m_offset[0].inverse());
 
-            if(j > 0)
+            l_jointPartResultTransform.mult(l_jointPartBoneTransform, l_jointPart->m_offset[0]);
+
+            btCollisionShape *l_jointPartShape = NULL;
+            btVector3 l_jointPartInertia;
+            switch(l_dataPart->m_type)
             {
-                l_skChain.m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
-                btVector3 l_pivotA(0.f, 0.f, 0.f);
-                btTransform l_parentTransform = m_chainsVector[i][j - 1].m_rigidBody->getWorldTransform();
-                btTransform l_offsetTransform = l_parentTransform.inverse()*l_transform;
-                l_skChain.m_rigidBody->setIgnoreCollisionCheck(m_chainsVector[i][j - 1].m_rigidBody, true);
-                m_chainsVector[i][j - 1].m_rigidBody->setIgnoreCollisionCheck(l_skChain.m_rigidBody, true);
-                l_skChain.m_constraint = new btPoint2PointConstraint(*l_skChain.m_rigidBody, *m_chainsVector[i][j - 1].m_rigidBody, l_pivotA, l_offsetTransform.getOrigin());
+                case BC_TYPE_SPHERE:
+                    l_jointPartShape = new btSphereShape(l_dataPart->m_size.x);
+                    break;
+                case BC_TYPE_BOX:
+                    l_jointPartShape = new btBoxShape(btVector3(l_dataPart->m_size.x, l_dataPart->m_size.y, l_dataPart->m_size.z));
+                    break;
+                case BC_TYPE_CYLINDER:
+                    l_jointPartShape = new btCylinderShape(btVector3(l_dataPart->m_size.x, l_dataPart->m_size.y, l_dataPart->m_size.z));
+                    break;
+                case BC_TYPE_CAPSULE:
+                    l_jointPartShape = new btCapsuleShape(l_dataPart->m_size.x, l_dataPart->m_size.y);
+                    break;
+                case BC_TYPE_CONE:
+                    l_jointPartShape = new btConeShape(l_dataPart->m_size.x, l_dataPart->m_size.y);
+                    break;
+                default:
+                    l_jointPartShape = new btEmptyShape();
+            }
+            l_jointPartShape->calculateLocalInertia(l_dataPart->m_mass, l_jointPartInertia);
+            btDefaultMotionState *l_jointPartFallMotionState = new btDefaultMotionState(l_jointPartResultTransform);
+            btRigidBody::btRigidBodyConstructionInfo l_jointPartFallRigidBodyCI(l_dataPart->m_mass, l_jointPartFallMotionState, l_jointPartShape, l_jointPartInertia);
+            l_jointPart->m_rigidBody = new btRigidBody(l_jointPartFallRigidBodyCI);
+            l_jointPart->m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+
+            btTransform l_jointPartConstraintOffset;
+            l_jointPartConstraintOffset.setIdentity();
+            l_jointPartConstraintOffset.setOrigin(btVector3(-l_dataPart->m_offset.x, -l_dataPart->m_offset.y, -l_dataPart->m_offset.z));
+            if(i == 0)
+            {
+                btTransform l_jointConstraintOffset;
+                l_jointConstraintOffset.setIdentity();
+                l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_joint->m_emptyBody, *l_jointPart->m_rigidBody, l_jointConstraintOffset, l_jointPartConstraintOffset, false);
             }
             else
             {
-                btVector3 l_pivotA(0.f, 0.f, 0.f);
-                btVector3 l_jointInertia;
-                btSphereShape *l_jointShape = new btSphereShape(0.01f);
-                l_shape->calculateLocalInertia(0.f, l_jointInertia);
-                btDefaultMotionState *l_jointFallMotionState = new btDefaultMotionState(l_transform);
-                btRigidBody::btRigidBodyConstructionInfo l_jointFallRigidBodyCI(0.f, l_jointFallMotionState, l_jointShape, l_jointInertia);
-                btRigidBody *l_joint = new btRigidBody(l_jointFallRigidBodyCI);
-                l_joint->setDamping(0.75f, 0.75f);
+                btRigidBody *l_prevJointRigidBody = l_joint->m_chainsVector.back()->m_rigidBody;
+                btTransform l_toPrevJointPartTransform;
+                l_toPrevJointPartTransform.mult(l_prevJointRigidBody->getCenterOfMassTransform().inverse(), l_jointPartBoneTransform);
 
-                l_skChain.m_rigidBody->setIgnoreCollisionCheck(l_joint, true);
-                l_joint->setIgnoreCollisionCheck(l_skChain.m_rigidBody, true);
-
-                l_skChain.m_constraint = new btPoint2PointConstraint(*l_skChain.m_rigidBody, *l_joint, l_pivotA, l_pivotA);
-                m_jointVector.push_back(l_joint);
+                l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_prevJointRigidBody, *l_jointPart->m_rigidBody, l_toPrevJointPartTransform, l_jointPartConstraintOffset, false);
             }
-            m_chainsVector[i].push_back(l_skChain);
+
+            l_jointPart->m_constraint->setLinearLowerLimit(btVector3(l_dataPart->m_lowerLinearLimit.x, l_dataPart->m_lowerLinearLimit.y, l_dataPart->m_lowerLinearLimit.z));
+            l_jointPart->m_constraint->setLinearUpperLimit(btVector3(l_dataPart->m_upperLinearLimit.x, l_dataPart->m_upperLinearLimit.y, l_dataPart->m_upperLinearLimit.z));
+            if(l_dataPart->m_linearStiffness.x > 0.f)
+            {
+                l_jointPart->m_constraint->enableSpring(0, true);
+                l_jointPart->m_constraint->setStiffness(0, l_dataPart->m_linearStiffness.x);
+            }
+            if(l_dataPart->m_linearStiffness.y > 0.f)
+            {
+                l_jointPart->m_constraint->enableSpring(1, true);
+                l_jointPart->m_constraint->setStiffness(1, l_dataPart->m_linearStiffness.y);
+            }
+            if(l_dataPart->m_linearStiffness.z > 0.f)
+            {
+                l_jointPart->m_constraint->enableSpring(2, true);
+                l_jointPart->m_constraint->setStiffness(2, l_dataPart->m_linearStiffness.z);
+            }
+
+            l_jointPart->m_constraint->setAngularLowerLimit(btVector3(l_dataPart->m_lowerAngularLimit.x, l_dataPart->m_lowerAngularLimit.y, l_dataPart->m_lowerAngularLimit.z));
+            l_jointPart->m_constraint->setAngularUpperLimit(btVector3(l_dataPart->m_upperAngularLimit.x, l_dataPart->m_upperAngularLimit.y, l_dataPart->m_upperAngularLimit.z));
+            if(l_dataPart->m_angularStiffness.x > 0.f)
+            {
+                l_jointPart->m_constraint->enableSpring(3, true);
+                l_jointPart->m_constraint->setStiffness(3, l_dataPart->m_angularStiffness.x);
+            }
+            if(l_dataPart->m_angularStiffness.y > 0.f)
+            {
+                l_jointPart->m_constraint->enableSpring(4, true);
+                l_jointPart->m_constraint->setStiffness(4, l_dataPart->m_angularStiffness.y);
+            }
+            if(l_dataPart->m_angularStiffness.z > 0.f)
+            {
+                l_jointPart->m_constraint->enableSpring(5, true);
+                l_jointPart->m_constraint->setStiffness(5, l_dataPart->m_angularStiffness.z);
+            }
+
+            l_joint->m_chainsVector.push_back(l_jointPart);
         }
     }
-    m_jointsCount = m_jointVector.size();
-    m_rigid = true;
+
+    if(!m_jointVector.empty()) m_rigid = true;
 }
 
-void ROC::Skeleton::UpdateJoints(glm::mat4 &f_model, bool f_enabled)
+void ROC::Skeleton::UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled)
 {
-    if(!m_rigid) return;
-    btTransform l_transform, l_model, l_bone;
+    if(!(m_rigid || m_hasCollision)) return;
+    btTransform l_transform, l_model, l_bone, l_offset;
     l_model.setFromOpenGLMatrix((float*)&f_model);
 
-    for(size_t i = 0; i < m_jointsCount; i++)
+    if(m_hasCollision)
     {
-        skChain &l_chain = m_chainsVector[i][0];
-        btRigidBody *l_joint = m_jointVector[i];
-        l_bone.setFromOpenGLMatrix((float*)&m_boneVector[l_chain.m_boneID]->GetMatrixRef());
-        l_transform.mult(l_model, l_bone);
-        if(f_enabled) l_transform.setRotation(l_joint->getCenterOfMassTransform().getRotation());
-        l_joint->setCenterOfMassTransform(l_transform);
+        for(auto iter : m_collisionVector)
+        {
+            l_bone.setFromOpenGLMatrix((float*)&m_boneVector[iter->m_boneID]->GetMatrixRef());
+            l_offset.mult(l_bone, iter->m_offset[0]);
+            l_transform.mult(l_model, l_offset);
+            iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform);
+        }
+    }
+
+    if(m_rigid)
+    {
+        btTransform l_parentTransform;
+        btTransform l_result;
+        for(auto iter : m_jointVector)
+        {
+            if(m_boneVector[iter->m_boneID]->HasParent())
+            {
+                Bone *l_parentBone = m_boneVector[iter->m_boneID]->GetParent();
+                l_parentTransform.setFromOpenGLMatrix((float*)&l_parentBone->GetMatrixRef());
+                l_bone.mult(l_parentTransform, iter->m_localMatrix[0]);
+                l_result.mult(l_model, l_bone);
+                iter->m_emptyBody->setCenterOfMassTransform(l_result);
+            }
+            else
+            {
+                l_result.mult(l_model, iter->m_localMatrix[0]);
+                iter->m_emptyBody->setCenterOfMassTransform(iter->m_localMatrix[0]);
+            }
+        }
     }
 }
 
-void ROC::Skeleton::UpdateRigidBones(glm::mat4 &f_model, bool f_enabled)
+void ROC::Skeleton::UpdateCollision_S2(glm::mat4 &f_model, bool f_enabled)
 {
     if(!m_rigid) return;
-    btTransform l_model;
+    btTransform l_model, l_transform1, l_transform2, l_transform3;
     l_model.setFromOpenGLMatrix((float*)&f_model);
     if(f_enabled)
     {
+        btTransform l_transform4;
         btTransform l_modelInv = l_model.inverse();
-        btTransform l_boneBind, l_bodyLocal, l_result;
-        for(auto iter : m_chainsVector)
+
+        for(auto iter : m_jointVector)
         {
-            for(auto iter1 : iter)
+            for(auto iter1 : iter->m_chainsVector)
             {
-                Bone *l_bone = m_boneVector[iter1.m_boneID];
-                const btTransform &l_bodyTransform = iter1.m_rigidBody->getCenterOfMassTransform();
-                l_boneBind.setFromOpenGLMatrix((float*)&l_bone->GetBindMatrixRef());
-                l_bodyLocal.mult(l_modelInv, l_bodyTransform);
-                l_result.mult(l_bodyLocal, l_boneBind);
-                l_result.getOpenGLMatrix((float*)&l_bone->GetOffsetMatrixRef());
-                std::memcpy(&m_boneMatrices[iter1.m_boneID], &l_bone->GetOffsetMatrixRef(), sizeof(glm::mat4));
+                l_transform1.mult(iter1->m_rigidBody->getCenterOfMassTransform(), iter1->m_offset[1]);
+                l_transform2.mult(l_modelInv, l_transform1);
+
+                l_transform3.setFromOpenGLMatrix((float*)&m_boneVector[iter1->m_boneID]->GetBindMatrixRef());
+                l_transform4.mult(l_transform2, l_transform3);
+                l_transform4.getOpenGLMatrix((float*)&m_boneVector[iter1->m_boneID]->GetOffsetMatrixRef());
+                std::memcpy(&m_boneMatrices[iter1->m_boneID], &m_boneVector[iter1->m_boneID]->GetOffsetMatrixRef(), sizeof(glm::mat4));
             }
         }
     }
     else
     {
-        btTransform l_transform, l_bone;
-        for(auto iter : m_chainsVector)
+        for(auto iter : m_jointVector)
         {
-            for(auto iter1 : iter)
+            for(auto iter1 : iter->m_chainsVector)
             {
-                l_bone.setFromOpenGLMatrix((float*)&m_boneVector[iter1.m_boneID]->GetMatrixRef());
-                l_transform.mult(l_model, l_bone);
-                iter1.m_rigidBody->setCenterOfMassTransform(l_transform);
+                l_transform1.setFromOpenGLMatrix((float*)&m_boneVector[iter1->m_boneID]->GetMatrixRef());
+                l_transform2.mult(l_transform1, iter1->m_offset[0]);
+                l_transform3.mult(l_model, l_transform2);
+                iter1->m_rigidBody->setCenterOfMassTransform(l_transform3);
             }
         }
     }

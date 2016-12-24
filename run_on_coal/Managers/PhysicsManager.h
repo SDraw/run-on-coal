@@ -43,8 +43,8 @@ protected:
     explicit PhysicsManager(Core *f_core);
     ~PhysicsManager();
 
-    void AddRigidSkeleton(Model *f_model);
-    void RemoveRigidSkeleton(Model *f_model);
+    void AddModel(Model *f_model);
+    void RemoveModel(Model *f_model);
     void AddCollision(Collision *f_col);
     void RemoveCollision(Collision *f_col);
 

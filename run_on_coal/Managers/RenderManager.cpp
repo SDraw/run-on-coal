@@ -47,6 +47,10 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_locked = true;
     m_textureMatrix = glm::mat4(1.f);
 
+    m_emptyVec3 = glm::vec3(0.f);
+    m_emptyVec4 = glm::vec4(0.f);
+    m_emptyMat4 = glm::mat4(0.f);
+
     glm::ivec2 l_size;
     m_core->GetSfmlManager()->GetWindowSize(l_size);
     m_screenProjection = glm::ortho(0.f, static_cast<float>(l_size.x), 0.f, static_cast<float>(l_size.y));
@@ -94,23 +98,16 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
         if(m_activeShader)
         {
             Camera *l_camera = m_activeScene->GetCamera();
-            if(l_camera)
-            {
-                l_camera->UpdateMatrices();
-                m_activeShader->SetProjectionUniformValue(l_camera->GetProjectionMatrixRef());
-                m_activeShader->SetViewUniformValue(l_camera->GetViewMatrixRef());
-                m_activeShader->SetCameraPositionUniformValue(l_camera->GetPositionRef());
-                m_activeShader->SetCameraDirectionUniformValue(l_camera->GetDirectionRef());
-            }
+            if(l_camera) l_camera->UpdateMatrices();
+            m_activeShader->SetProjectionUniformValue(l_camera ? l_camera->GetProjectionMatrixRef() : m_emptyMat4);
+            m_activeShader->SetViewUniformValue(l_camera ? l_camera->GetViewMatrixRef() : m_emptyMat4);
+            m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPositionRef() : m_emptyVec3);
+            m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirectionRef() : m_emptyVec3);
+
             Light *l_light = m_activeScene->GetLight();
-            if(l_light)
-            {
-                m_activeShader->SetLightingUniformValue(1U);
-                m_activeShader->SetLightColorUniformValue(l_light->GetColorRef());
-                m_activeShader->SetLightDirectionUniformValue(l_light->GetDirectionRef());
-                m_activeShader->SetLightParamUniformValue(l_light->GetParamsRef());
-            }
-            else m_activeShader->SetLightingUniformValue(0U);
+            m_activeShader->SetLightColorUniformValue(l_light ? l_light->GetColorRef() : m_emptyVec4);
+            m_activeShader->SetLightDirectionUniformValue(l_light ? l_light->GetDirectionRef() : m_emptyVec3);
+            m_activeShader->SetLightParamUniformValue(l_light ? l_light->GetParamsRef() : m_emptyVec4);
         }
     }
 }

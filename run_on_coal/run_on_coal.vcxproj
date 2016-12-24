@@ -146,7 +146,7 @@
     <ClInclude Include="Managers\PhysicsManager.h" />
     <ClInclude Include="Managers\PreRenderManager.h" />
     <ClInclude Include="Managers\RenderManager.h" />
-    <ClInclude Include="Model\BoneChainGroup.h" />
+    <ClInclude Include="Model\BoneJointData.h" />
     <ClInclude Include="Model\BoneData.h" />
     <ClInclude Include="Model\Geometry.h" />
     <ClInclude Include="Model\Material.h" />
@@ -167,6 +167,7 @@
     <ClInclude Include="Scene\Sound.h" />
     <ClInclude Include="Managers\SoundManager.h" />
     <ClInclude Include="Scene\Texture.h" />
+    <ClInclude Include="Model\BoneCollisionData.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\SystemTick.h" />
@@ -215,11 +216,12 @@
     <ClCompile Include="Managers\PhysicsManager.cpp" />
     <ClCompile Include="Managers\PreRenderManager.cpp" />
     <ClCompile Include="Managers\RenderManager.cpp" />
-    <ClCompile Include="Model\BoneChainGroup.cpp" />
+    <ClCompile Include="Model\BoneJointData.cpp" />
     <ClCompile Include="Model\BoneData.cpp" />
     <ClCompile Include="Model\Geometry.cpp" />
     <ClCompile Include="Model\Material.cpp" />
     <ClCompile Include="Model\Model.cpp" />
+    <ClCompile Include="Model\BoneCollisionData.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
     <ClCompile Include="Scene\Collision.cpp" />
     <ClCompile Include="Scene\File.cpp" />

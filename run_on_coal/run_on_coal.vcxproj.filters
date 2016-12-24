@@ -168,14 +168,17 @@
     <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Model\BoneChainGroup.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Model\BoneData.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="Utils\SystemTick.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BoneCollisionData.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BoneJointData.cpp">
+      <Filter>Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,14 +343,17 @@
     <ClInclude Include="Lua\LuaDefinitions.Sfml.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Model\BoneChainGroup.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Model\BoneData.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Utils\SystemTick.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BoneCollisionData.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BoneJointData.h">
+      <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

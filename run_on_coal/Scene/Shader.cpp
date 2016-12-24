@@ -16,7 +16,6 @@ ROC::Shader::Shader()
     m_modelUniform = -1;
     m_cameraPositionUniform = -1;
     m_cameraDirectionUniform = -1;
-    m_lightingUniform = -1;
     m_lightColorUniform = -1;
     m_lightDirectionUniform = -1;
     m_lightParamUniform = -1;
@@ -35,7 +34,7 @@ ROC::Shader::Shader()
     m_cameraPositionUniformValue = glm::vec3(0.f);
     m_cameraDirectionUniformValue = glm::vec3(0.f);
     m_lightingUniformValue = 0U;
-    m_lightColorUniformValue = glm::vec3(0.f);
+    m_lightColorUniformValue = glm::vec4(0.f);
     m_lightDirectionUniformValue = glm::vec3(0.f);
     m_lightParamUniformValue = glm::vec4(0.f);
     m_materialParamUniformValue = glm::vec4(0.f);
@@ -179,7 +178,6 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     m_cameraPositionUniform = glGetUniformLocation(m_program, "gCameraPosition");
     m_cameraDirectionUniform = glGetUniformLocation(m_program, "gCameraDirection");
     //Light
-    m_lightingUniform = glGetUniformLocation(m_program, "gLighting");
     m_lightColorUniform = glGetUniformLocation(m_program, "gLightColor");
     m_lightDirectionUniform = glGetUniformLocation(m_program, "gLightDirection");
     m_lightParamUniform = glGetUniformLocation(m_program, "gLightParam");
@@ -408,18 +406,11 @@ void ROC::Shader::SetCameraDirectionUniformValue(glm::vec3 &f_value)
     std::memcpy(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3));
     SetUniformValue(m_cameraDirectionUniform, m_cameraDirectionUniformValue);
 }
-void ROC::Shader::SetLightingUniformValue(unsigned int f_value)
-{
-    if(m_lightingUniform == -1) return;
-    if(m_lightingUniformValue == f_value) return;
-    m_lightingUniformValue = f_value;
-    SetUniformValue(m_lightingUniform, m_lightingUniformValue);
-}
-void ROC::Shader::SetLightColorUniformValue(glm::vec3 &f_value)
+void ROC::Shader::SetLightColorUniformValue(glm::vec4 &f_value)
 {
     if(m_lightColorUniform == -1) return;
-    if(!std::memcmp(&m_lightColorUniformValue, &f_value, sizeof(glm::vec3))) return;
-    std::memcpy(&m_lightColorUniformValue, &f_value, sizeof(glm::vec3));
+    if(!std::memcmp(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4))) return;
+    std::memcpy(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4));
     SetUniformValue(m_lightColorUniform, m_lightColorUniformValue);
 }
 void ROC::Shader::SetLightDirectionUniformValue(glm::vec3 &f_value)

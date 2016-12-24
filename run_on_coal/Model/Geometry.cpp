@@ -1,6 +1,7 @@
 #include "stdafx.h"
+#include "Model/BoneCollisionData.h"
 #include "Model/BoneData.h"
-#include "Model/BoneChainGroup.h"
+#include "Model/BoneJointData.h"
 #include "Model/Geometry.h"
 #include "Model/Material.h"
 #include "Utils/Utils.h"
@@ -206,59 +207,77 @@ bool ROC::Geometry::Load(std::string &f_path)
             l_file.read((char*)&l_physicBlock, sizeof(unsigned char));
             if(l_physicBlock == 0xCB)
             {
-                unsigned int l_chainsCount = 0U;
-                l_file.read((char*)&l_chainsCount, sizeof(unsigned int));
-                for(unsigned int i = 0; i < l_chainsCount; i++)
+                unsigned int l_scbCount = 0U;
+                l_file.read((char*)&l_scbCount, sizeof(unsigned int));
+                for(unsigned int i = 0U; i < l_scbCount; i++)
                 {
-                    BoneChainGroup *l_group = new BoneChainGroup();
-                    m_chainsData.push_back(l_group);
-                    unsigned int l_chainParts = 0U;
-                    l_file.read((char*)&l_chainParts, sizeof(unsigned int));
-                    for(unsigned int j = 0; j < l_chainParts; j++)
+                    BoneCollisionData *l_colData = new BoneCollisionData();
+                    m_collisionData.push_back(l_colData);
+                    l_file.read((char*)&l_colData->m_type, sizeof(unsigned char));
+                    l_file.read((char*)&l_colData->m_size, sizeof(glm::vec3));
+                    l_file.read((char*)&l_colData->m_offset, sizeof(glm::vec3));
+                    l_file.read((char*)&l_colData->m_offsetRotation, sizeof(glm::quat));
+                    l_file.read((char*)&l_colData->m_boneID, sizeof(unsigned int));
+                }
+
+                unsigned int l_jointsCount = 0U;
+                l_file.read((char*)&l_jointsCount, sizeof(unsigned int));
+                for(unsigned int i = 0U; i < l_jointsCount; i++)
+                {
+                    unsigned int l_jointParts = 0U;
+                    l_file.read((char*)&l_jointParts, sizeof(unsigned int));
+
+                    if(l_jointParts > 0U)
                     {
-                        unsigned char l_chainType;
-                        float l_chainMass;
-                        glm::vec3 l_chainSize;
-                        int l_chainBoneID;
-                        l_file.read((char*)&l_chainType, sizeof(unsigned char));
-                        l_file.read((char*)&l_chainMass, sizeof(float));
-                        l_file.read((char*)&l_chainSize, sizeof(glm::vec3));
-                        l_file.read((char*)&l_chainBoneID, sizeof(int));
-                        l_group->AddChain(l_chainType, l_chainMass, l_chainSize, l_chainBoneID);
+                        BoneJointData *l_joint = new BoneJointData();
+                        m_jointData.push_back(l_joint);
+                        l_file.read((char*)&l_joint->m_boneID, sizeof(unsigned int));
+                        for(unsigned int j = 0; j < l_jointParts; j++)
+                        {
+                            unsigned int l_boneID;
+                            unsigned char l_type;
+                            glm::vec3 l_size;
+                            glm::vec3 l_offset;
+                            glm::quat l_rotation;
+                            float l_mass;
+                            glm::vec3 l_lowerAngularLimit;
+                            glm::vec3 l_upperAngularLimit;
+                            glm::vec3 l_angularStiffness;
+                            glm::vec3 l_lowerLinearLimit;
+                            glm::vec3 l_upperLinearLimit;
+                            glm::vec3 l_linearStiffness;
+                            l_file.read((char*)&l_boneID, sizeof(unsigned int));
+                            l_file.read((char*)&l_type, sizeof(unsigned char));
+                            l_file.read((char*)&l_size, sizeof(glm::vec3));
+                            l_file.read((char*)&l_offset, sizeof(glm::vec3));
+                            l_file.read((char*)&l_rotation, sizeof(glm::quat));
+                            l_file.read((char*)&l_mass, sizeof(float));
+
+                            l_file.read((char*)&l_lowerAngularLimit, sizeof(glm::vec3));
+                            l_file.read((char*)&l_upperAngularLimit, sizeof(glm::vec3));
+                            l_file.read((char*)&l_angularStiffness, sizeof(glm::vec3));
+
+                            l_file.read((char*)&l_lowerLinearLimit, sizeof(glm::vec3));
+                            l_file.read((char*)&l_upperLinearLimit, sizeof(glm::vec3));
+                            l_file.read((char*)&l_linearStiffness, sizeof(glm::vec3));
+
+                            l_joint->AddPart(l_boneID, l_type, l_size, l_offset, l_rotation, l_mass, l_lowerAngularLimit, l_upperAngularLimit, l_angularStiffness, l_lowerLinearLimit, l_upperLinearLimit, l_linearStiffness);
+                        }
                     }
                 }
             }
         }
         catch(const std::ifstream::failure &e)
         {
-            for(auto iter : m_chainsData)
-            {
-                for(auto iter1 : iter->m_boneChainDataVector) delete iter1;
-                delete iter;
-            }
-            m_chainsData.clear();
+            for(auto iter : m_collisionData) delete iter;
+            m_collisionData.clear();
+
+            for(auto iter : m_jointData) delete iter;
+            m_jointData.clear();
         }
     }
     m_loaded = l_result;
     return l_result;
-}
-
-bool ROC::Geometry::HasBonesData()
-{
-    return (m_bonesData.size() > 0U);
-}
-void ROC::Geometry::GetBonesData(std::vector<BoneData*> &f_vec)
-{
-    f_vec.insert(f_vec.begin(), m_bonesData.begin(), m_bonesData.end());
-}
-
-bool ROC::Geometry::HasChainsData()
-{
-    return (m_chainsData.size() > 0U);
-}
-void ROC::Geometry::GetChainsData(std::vector<BoneChainGroup*> &f_vec)
-{
-    f_vec.insert(f_vec.begin(), m_chainsData.begin(), m_chainsData.end());
 }
 
 void ROC::Geometry::Clear()
@@ -268,7 +287,9 @@ void ROC::Geometry::Clear()
     m_materialCount = 0U;
     for(auto iter : m_bonesData) delete iter;
     m_bonesData.clear();
-    for(auto iter : m_chainsData) delete iter;
-    m_chainsData.clear();
+    for(auto iter : m_collisionData) delete iter;
+    m_collisionData.clear();
+    for(auto iter : m_jointData) delete iter;
+    m_jointData.clear();
     m_loaded = false;
 }

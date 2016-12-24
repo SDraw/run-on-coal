@@ -32,11 +32,14 @@ protected:
     void GenerateBindPose();
     void UpdateMatrix();
 
+    inline glm::mat4& GetLocalMatrixRef() { return m_localMatrix; }
     inline glm::mat4& GetMatrixRef() { return m_matrix; }
     inline glm::mat4& GetBindMatrixRef() { return m_bindMatrix; }
     inline glm::mat4& GetOffsetMatrixRef() { return m_offsetMatrix; }
 
-    inline void SetParent(Bone *f_bone) { m_parent = f_bone; }
+    inline void SetParent( Bone *f_bone) { m_parent = f_bone; }
+    inline bool HasParent() { return (m_parent != NULL); }
+    inline Bone* GetParent() { return m_parent;  }
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
 
     inline bool IsRebuilded() { return m_rebuilded; }

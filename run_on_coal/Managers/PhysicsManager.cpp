@@ -66,63 +66,86 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
 }
 void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
 {
-    m_dynamicWorld->setGravity((btVector3&)f_grav);
+    btVector3 l_grav(f_grav.x, f_grav.y, f_grav.z);
+    m_dynamicWorld->setGravity(l_grav);
     for(auto iter : m_modelsSet)
     {
-        iter->GetRigidBody()->setGravity((btVector3&)f_grav);
+        iter->GetRigidBody()->setGravity(l_grav);
         iter->GetRigidBody()->activate(true);
     }
 }
 void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 {
     btVector3 l_grav = m_dynamicWorld->getGravity();
-    std::memcpy(&f_grav, l_grav, sizeof(glm::vec3));
+    f_grav.x = l_grav.x();
+    f_grav.y = l_grav.y();
+    f_grav.z = l_grav.z();
 }
 
 bool ROC::PhysicsManager::SetModelRigidity(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
 {
-    if(m_modelsSet.find(f_model) != m_modelsSet.end()) return true;
+    if(m_modelsSet.find(f_model) == m_modelsSet.end()) return false;
     if(f_model->HasRigidSkeleton()) return false;
     if(!f_model->SetRigidity(f_type, f_mass, f_dim)) return false;
-    m_modelsSet.insert(f_model);
     f_model->GetRigidBody()->setUserPointer(f_model);
     m_dynamicWorld->addRigidBody(f_model->GetRigidBody());
     return true;
 }
 bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
 {
-    auto iter = m_modelsSet.find(f_model);
-    if(iter == m_modelsSet.end()) return false;
+    if(m_modelsSet.find(f_model) == m_modelsSet.end()) return false;
     m_dynamicWorld->removeRigidBody(f_model->GetRigidBody());
-    m_modelsSet.erase(iter);
-    if(!f_model->RemoveRigidity()) return false;
-    return true;
+    return f_model->RemoveRigidity();
 }
 
-void ROC::PhysicsManager::AddRigidSkeleton(Model *f_model)
+void ROC::PhysicsManager::AddModel(Model *f_model)
 {
-    for(auto iter : f_model->GetSkeleton()->GetJointVectorRef()) m_dynamicWorld->addRigidBody(iter);
-    for(auto iter : f_model->GetSkeleton()->GetChainsVectorRef())
+    auto iter = m_modelsSet.find(f_model);
+    if(iter != m_modelsSet.end()) return;
+    m_modelsSet.insert(f_model);
+
+    if(f_model->HasSkeleton())
     {
-        for(auto iter1 : iter)
+        for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef())
         {
-            iter1.m_rigidBody->setUserPointer(f_model);
-            m_dynamicWorld->addRigidBody(iter1.m_rigidBody);
-            m_dynamicWorld->addConstraint(iter1.m_constraint);
+            iter->m_rigidBody->setUserPointer(f_model);
+            m_dynamicWorld->addRigidBody(iter->m_rigidBody);
+        }
+
+        for(auto iter : f_model->GetSkeleton()->GetJointVectorRef())
+        {
+            m_dynamicWorld->addRigidBody(iter->m_emptyBody);
+            for(auto iter1 : iter->m_chainsVector)
+            {
+                
+                iter1->m_rigidBody->setUserPointer(f_model);
+                m_dynamicWorld->addRigidBody(iter1->m_rigidBody);
+                m_dynamicWorld->addConstraint(iter1->m_constraint,true);
+            }
         }
     }
 }
-void ROC::PhysicsManager::RemoveRigidSkeleton(Model *f_model)
+void ROC::PhysicsManager::RemoveModel(Model *f_model)
 {
-    for(auto iter : f_model->GetSkeleton()->GetChainsVectorRef())
+    auto iter = m_modelsSet.find(f_model);
+    if(iter == m_modelsSet.end()) return;
+    m_modelsSet.erase(f_model);
+
+    if(f_model->IsRigid()) RemoveModelRigidity(f_model);
+    if(f_model->HasSkeleton())
     {
-        for(auto iter1 : iter)
+        for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef()) m_dynamicWorld->removeRigidBody(iter->m_rigidBody);
+
+        for(auto iter : f_model->GetSkeleton()->GetJointVectorRef())
         {
-            m_dynamicWorld->removeRigidBody(iter1.m_rigidBody);
-            m_dynamicWorld->removeConstraint(iter1.m_constraint);
+            m_dynamicWorld->removeRigidBody(iter->m_emptyBody);
+            for(auto iter1 : iter->m_chainsVector)
+            {
+                m_dynamicWorld->removeRigidBody(iter1->m_rigidBody);
+                m_dynamicWorld->removeConstraint(iter1->m_constraint);
+            }
         }
     }
-    for(auto iter : f_model->GetSkeleton()->GetJointVectorRef()) m_dynamicWorld->removeRigidBody(iter);
 }
 
 void ROC::PhysicsManager::AddCollision(Collision *f_col)
@@ -150,13 +173,16 @@ void ROC::PhysicsManager::DoPulse()
 bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
 {
     if(!std::memcmp(&f_start, &f_end, sizeof(glm::vec3))) return false;
-    btCollisionWorld::ClosestRayResultCallback l_result((btVector3&)f_start, (btVector3&)f_end);
-    m_dynamicWorld->rayTest((btVector3&)f_start, (btVector3&)f_end, l_result);
+
+    btVector3 l_start(f_start.x, f_start.y, f_start.z), l_end(f_end.x, f_end.y, f_end.z);
+    btCollisionWorld::ClosestRayResultCallback l_result(l_start, l_end);
+    m_dynamicWorld->rayTest(l_start, l_end, l_result);
     if(!l_result.hasHit()) return false;
+
     void *l_colObject = l_result.m_collisionObject->getUserPointer();
     *f_model = l_colObject ? (m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject) ? l_colObject : NULL) : NULL;
-    std::memcpy(&f_end, l_result.m_hitPointWorld, sizeof(glm::vec3));
-    std::memcpy(&f_normal, l_result.m_hitNormalWorld, sizeof(glm::vec3));
+    std::memcpy(&f_end, l_result.m_hitPointWorld.m_floats, sizeof(glm::vec3));
+    std::memcpy(&f_normal, l_result.m_hitNormalWorld.m_floats, sizeof(glm::vec3));
     return true;
 }
 

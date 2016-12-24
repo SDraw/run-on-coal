@@ -130,7 +130,7 @@ ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
     m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
     m_core->GetMemoryManager()->AddMemoryPointer(l_model, ElementType::ModelElement);
     m_core->GetPreRenderManager()->AddModel(l_model);
-    if(l_model->HasRigidSkeleton()) m_core->GetPhysicsManager()->AddRigidSkeleton(l_model);
+    m_core->GetPhysicsManager()->AddModel(l_model);
     return l_model;
 }
 bool ROC::ElementManager::DestroyModel(Model *f_model)
@@ -138,8 +138,7 @@ bool ROC::ElementManager::DestroyModel(Model *f_model)
     m_core->GetInheritManager()->RemoveParentRelation(f_model);
     m_core->GetInheritManager()->RemoveChildRelation(f_model);
     m_core->GetPreRenderManager()->RemoveModel(f_model);
-    if(f_model->IsRigid()) m_core->GetPhysicsManager()->RemoveModelRigidity(f_model);
-    if(f_model->HasRigidSkeleton()) m_core->GetPhysicsManager()->RemoveRigidSkeleton(f_model);
+    m_core->GetPhysicsManager()->RemoveModel(f_model);
     m_core->GetMemoryManager()->RemoveMemoryPointer(f_model, ElementType::ModelElement);
     delete f_model;
     return true;

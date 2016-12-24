@@ -11,6 +11,7 @@
 #endif
 
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 #include <map>
@@ -29,7 +30,7 @@
 
 #define GLM_FORCE_INLINE
 #ifndef _DEBUG
-#define GLM_FORCE_SSE2
+    #define GLM_FORCE_SSE2
 #endif
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_access.hpp"

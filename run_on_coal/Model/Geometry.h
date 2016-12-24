@@ -4,7 +4,8 @@ namespace ROC
 {
 
 class BoneData;
-class BoneChainGroup;
+class BoneCollisionData;
+class BoneJointData;
 class Material;
 class Geometry
 {
@@ -12,20 +13,25 @@ class Geometry
     unsigned int m_materialCount;
 
     std::vector<BoneData*> m_bonesData;
-    std::vector<BoneChainGroup*> m_chainsData;
+    std::vector<BoneCollisionData*> m_collisionData;
+    std::vector<BoneJointData*> m_jointData;
 
     bool m_loaded;
     void Clear();
 public:
-    bool HasBonesData();
-    bool HasChainsData();
+    inline bool HasBonesData() { return !m_bonesData.empty(); }
+    inline bool HasBonesCollisionData() { return !m_collisionData.empty(); }
+    inline bool HasJointsData() { return !m_jointData.empty(); }
 protected:
     Geometry();
     ~Geometry();
     inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
     bool Load(std::string &f_path);
-    void GetBonesData(std::vector<BoneData*> &f_vec);
-    void GetChainsData(std::vector<BoneChainGroup*> &f_vec);
+
+    inline std::vector<BoneData*> &GetBonesDataRef() { return m_bonesData; };
+    inline std::vector<BoneCollisionData*> &GetBonesCollisionDataRef() { return m_collisionData; }
+    inline std::vector<BoneJointData*> &GetJointsDataRef() { return m_jointData; };
+
     friend class ElementManager;
     friend class RenderManager;
     friend class Model;

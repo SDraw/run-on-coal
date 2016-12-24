@@ -4,7 +4,7 @@ namespace ROC
 class Light
 {
     glm::vec3 m_direction;
-    glm::vec3 m_color;
+    glm::vec4 m_color;
     glm::vec4 m_params;
 public:
     inline void SetParams(glm::vec4 &f_val) { std::memcpy(&m_params, &f_val, sizeof(glm::vec4)); }
@@ -15,7 +15,7 @@ public:
     inline void GetDirection(glm::vec3 &f_vec) { std::memcpy(&f_vec, &m_direction, sizeof(glm::vec3)); }
 protected:
     inline glm::vec4& GetParamsRef() { return m_params; }
-    inline glm::vec3& GetColorRef() { return m_color; }
+    inline glm::vec4& GetColorRef() { return m_color; }
     inline glm::vec3& GetDirectionRef() { return m_direction; }
     Light();
     ~Light();

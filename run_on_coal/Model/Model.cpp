@@ -2,7 +2,7 @@
 #include "Model/Animation.h"
 #include "Model/Bone.h"
 #include "Model/BoneData.h"
-#include "Model/BoneChainGroup.h"
+#include "Model/BoneJointData.h"
 #include "Model/Geometry.h"
 #include "Model/Model.h"
 #include "Model/Skeleton.h"
@@ -32,15 +32,9 @@ ROC::Model::Model(Geometry *f_geometry)
 
     if(m_geometry->HasBonesData())
     {
-        std::vector<BoneData*> l_bonesData;
-        m_geometry->GetBonesData(l_bonesData);
-        m_skeleton = new Skeleton(l_bonesData);
-        if(m_geometry->HasChainsData())
-        {
-            std::vector<BoneChainGroup*> l_chainGroups;
-            m_geometry->GetChainsData(l_chainGroups);
-            m_skeleton->InitRigidity(l_chainGroups);
-        }
+        m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
+        if(m_geometry->HasBonesCollisionData()) m_skeleton->InitCollision(m_geometry->GetBonesCollisionDataRef());
+        if(m_geometry->HasJointsData()) m_skeleton->InitRigidity(m_geometry->GetJointsDataRef());
     }
     else m_skeleton = NULL;
 
@@ -60,7 +54,7 @@ void ROC::Model::SetPosition(glm::vec3 &f_pos)
     if(m_rigidBody)
     {
         btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
-        l_transform.setOrigin((btVector3&)m_position);
+        l_transform.setOrigin(btVector3(m_position.x,m_position.y,m_position.z));
         m_rigidBody->setCenterOfMassTransform(l_transform);
         m_rigidBody->activate(true);
     }
@@ -261,10 +255,10 @@ bool ROC::Model::SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_di
             l_shape = new btSphereShape(f_dim.x);
             break;
         case MODEL_RIGIDITY_TYPE_BOX:
-            l_shape = new btBoxShape((btVector3&)f_dim);
+            l_shape = new btBoxShape(btVector3(f_dim.x,f_dim.y,f_dim.z));
             break;
         case MODEL_RIGIDITY_TYPE_CYLINDER:
-            l_shape = new btCylinderShape((btVector3&)f_dim);
+            l_shape = new btCylinderShape(btVector3(f_dim.x,f_dim.y,f_dim.z));
             break;
         case MODEL_RIGIDITY_TYPE_CAPSULE:
             l_shape = new btCapsuleShape(f_dim.x, f_dim.y);
@@ -272,9 +266,11 @@ bool ROC::Model::SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_di
         case MODEL_RIGIDITY_TYPE_CONE:
             l_shape = new btConeShape(f_dim.x, f_dim.y);
             break;
+        default:
+            l_shape = new btEmptyShape();
     }
     l_shape->calculateLocalInertia(f_mass, l_inertia);
-    btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(btTransform((btQuaternion&)m_rotation, (btVector3&)m_position));
+    btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(btTransform(btQuaternion(m_rotation.x,m_rotation.y,m_rotation.z,m_rotation.w), btVector3(m_position.x,m_position.y,m_position.z)));
     btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(f_mass, l_fallMotionState, l_shape, l_inertia);
     m_rigidBody = new btRigidBody(fallRigidBodyCI);
     return true;
