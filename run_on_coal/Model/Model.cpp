@@ -65,8 +65,7 @@ void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
     {
         btTransform l_transform;
         l_transform.setFromOpenGLMatrix((float*)&m_matrix);
-        btVector3 l_pos = l_transform.getOrigin();
-        std::memcpy(&f_pos, l_pos, sizeof(glm::vec3));
+        std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
     }
     else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
 }
@@ -91,9 +90,12 @@ void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)
         btTransform l_transform;
         l_transform.setFromOpenGLMatrix((float*)&m_matrix);
         btQuaternion l_rot = l_transform.getRotation();
-        std::memcpy(&f_rot, l_rot, sizeof(glm::vec3));
+        f_rot.x = l_rot.x();
+        f_rot.y = l_rot.y();
+        f_rot.z = l_rot.z();
+        f_rot.w = l_rot.w();
     }
-    else std::memcpy(&f_rot, &m_rotation, sizeof(glm::quat));
+    else std::memcpy(&f_rot.data, &m_rotation, sizeof(glm::quat));
 }
 
 void ROC::Model::SetScale(glm::vec3 &f_scl)

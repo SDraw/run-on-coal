@@ -38,6 +38,7 @@ void ROC::SoundManager::SetListenerUp(glm::vec3 &f_up)
 void ROC::SoundManager::SetGlobalVolume(float f_val)
 {
     if(f_val == m_globalVolume) return;
+    if(f_val < 0.f) f_val = 0.f;
     sf::Listener::setGlobalVolume(f_val);
     m_globalVolume = f_val;
 }

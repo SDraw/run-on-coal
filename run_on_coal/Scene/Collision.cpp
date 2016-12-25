@@ -48,9 +48,7 @@ bool ROC::Collision::Create(unsigned char f_type, glm::vec3 &f_size)
 
 void ROC::Collision::GetPosition(glm::vec3 &f_pos)
 {
-    btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
-    btVector3 l_position = l_transform.getOrigin();
-    std::memcpy(&f_pos, l_position, sizeof(glm::vec3));
+    std::memcpy(&f_pos, m_rigidBody->getCenterOfMassTransform().getOrigin().m_floats, sizeof(glm::vec3));
 }
 void ROC::Collision::SetPosition(glm::vec3 &f_pos)
 {
@@ -61,9 +59,11 @@ void ROC::Collision::SetPosition(glm::vec3 &f_pos)
 }
 void ROC::Collision::GetRotation(glm::quat &f_rot)
 {
-    btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
-    btQuaternion l_rotation = l_transform.getRotation();
-    std::memcpy(&f_rot, l_rotation, sizeof(glm::quat));
+    btQuaternion l_rotation = m_rigidBody->getCenterOfMassTransform().getRotation();
+    f_rot.x = l_rotation.x();
+    f_rot.y = l_rotation.y();
+    f_rot.z = l_rotation.z();
+    f_rot.w = l_rotation.w();
 }
 void ROC::Collision::SetRotation(glm::quat &f_rot)
 {

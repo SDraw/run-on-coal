@@ -179,13 +179,13 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
         if(!l_shaderError.empty())
         {
             std::string l_error("[");
-            l_error.insert(l_error.end(),f_vpath.begin(),f_vpath.end());
+            l_error.insert(l_error.end(), f_vpath.begin(), f_vpath.end());
             l_error.append(",");
-            l_error.insert(l_error.end(),f_fpath.begin(),f_fpath.end());
+            l_error.insert(l_error.end(), f_fpath.begin(), f_fpath.end());
             l_error.append(",");
-            l_error.insert(l_error.end(),f_gpath.begin(),f_gpath.end());
+            l_error.insert(l_error.end(), f_gpath.begin(), f_gpath.end());
             l_error.append("] -> ");
-            l_error.insert(l_error.end(),l_shaderError.begin(),l_shaderError.end());
+            l_error.insert(l_error.end(), l_shaderError.begin(), l_shaderError.end());
             m_core->GetLogManager()->Log(l_error);
         }
         delete l_shader;

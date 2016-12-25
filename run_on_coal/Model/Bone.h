@@ -43,6 +43,7 @@ protected:
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
 
     inline bool IsRebuilded() { return m_rebuilded; }
+    inline void ForceRebuildState(bool f_state) { m_rebuilded = f_state; }
 
     friend class Skeleton;
     friend class Model;

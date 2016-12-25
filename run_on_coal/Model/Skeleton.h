@@ -34,12 +34,12 @@ class Skeleton
         int m_boneID;
         struct jtPart
         {
-            btAlignedObjectArray<btTransform> m_offset; // [0] - normal, [1] - inverse
+            btAlignedObjectArray<btTransform> m_offset; // [0] - normal, [1] - inverse, [2] - bind
             btRigidBody *m_rigidBody;
             btGeneric6DofSpringConstraint *m_constraint;
             int m_boneID;
         };
-        std::vector<jtPart*> m_chainsVector;
+        std::vector<jtPart*> m_partsVector;
     };
     std::vector<skJoint*> m_jointVector;
     bool m_rigid;

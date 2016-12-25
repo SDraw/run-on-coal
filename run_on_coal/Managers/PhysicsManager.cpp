@@ -115,12 +115,12 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
         for(auto iter : f_model->GetSkeleton()->GetJointVectorRef())
         {
             m_dynamicWorld->addRigidBody(iter->m_emptyBody);
-            for(auto iter1 : iter->m_chainsVector)
+            for(auto iter1 : iter->m_partsVector)
             {
-                
+
                 iter1->m_rigidBody->setUserPointer(f_model);
                 m_dynamicWorld->addRigidBody(iter1->m_rigidBody);
-                m_dynamicWorld->addConstraint(iter1->m_constraint,true);
+                m_dynamicWorld->addConstraint(iter1->m_constraint, true);
             }
         }
     }
@@ -139,7 +139,7 @@ void ROC::PhysicsManager::RemoveModel(Model *f_model)
         for(auto iter : f_model->GetSkeleton()->GetJointVectorRef())
         {
             m_dynamicWorld->removeRigidBody(iter->m_emptyBody);
-            for(auto iter1 : iter->m_chainsVector)
+            for(auto iter1 : iter->m_partsVector)
             {
                 m_dynamicWorld->removeRigidBody(iter1->m_rigidBody);
                 m_dynamicWorld->removeConstraint(iter1->m_constraint);
@@ -167,7 +167,6 @@ void ROC::PhysicsManager::DoPulse()
 {
     if(!m_enabled) return;
     m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
-    for(auto iter : m_modelsSet) iter->UpdateRigidity();
 }
 
 bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
