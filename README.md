@@ -14,7 +14,7 @@ Simple and light-weight 3D game engine.
 * Audio playback with spatialization (Ogg, WAV, FLAC)
 * TrueType font rendering with Unicode characters support
 
-[![alt text](http://i.imgur.com/uABPi2s.png "Skeletal animation, rigid bones chains")](https://www.youtube.com/watch?v=lDpUwM7fkKw)  [![alt text](http://i.imgur.com/p1LoxXA.png "Solid bodies physics")](https://www.youtube.com/watch?v=NP3ijUbu1oI)
+[![alt text](http://i.imgur.com/spFAFnr.png "Static and dynamic bone collision")](https://youtu.be/L2UA3kquDpg)  [![alt text](http://i.imgur.com/p1LoxXA.png "Solid bodies physics")](https://youtu.be/NP3ijUbu1oI)
 
 # Builds
 Latest build is always avaliable at [Dropbox shared folder](https://www.dropbox.com/sh/vowd9qzzy5hosen/AADyDIJJi7bYwbPFZ8rhvolZa?dl=0).
