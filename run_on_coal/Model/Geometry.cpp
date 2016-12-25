@@ -236,22 +236,23 @@ bool ROC::Geometry::Load(std::string &f_path)
                         {
                             unsigned int l_boneID;
                             unsigned char l_type;
-                            glm::vec3 l_size;
-                            glm::vec3 l_offset;
+                            glm::vec3 l_size, l_offset;
                             glm::quat l_rotation;
-                            float l_mass;
-                            glm::vec3 l_lowerAngularLimit;
-                            glm::vec3 l_upperAngularLimit;
-                            glm::vec3 l_angularStiffness;
-                            glm::vec3 l_lowerLinearLimit;
-                            glm::vec3 l_upperLinearLimit;
-                            glm::vec3 l_linearStiffness;
+                            float l_mass, l_restutition, l_friction;
+                            glm::vec2 l_damping;
+                            glm::vec3 l_lowerAngularLimit, l_upperAngularLimit, l_angularStiffness;
+                            glm::vec3 l_lowerLinearLimit, l_upperLinearLimit, l_linearStiffness;
+
                             l_file.read((char*)&l_boneID, sizeof(unsigned int));
                             l_file.read((char*)&l_type, sizeof(unsigned char));
                             l_file.read((char*)&l_size, sizeof(glm::vec3));
                             l_file.read((char*)&l_offset, sizeof(glm::vec3));
                             l_file.read((char*)&l_rotation, sizeof(glm::quat));
+
                             l_file.read((char*)&l_mass, sizeof(float));
+                            l_file.read((char*)&l_restutition, sizeof(float));
+                            l_file.read((char*)&l_friction, sizeof(float));
+                            l_file.read((char*)&l_damping, sizeof(glm::vec2));
 
                             l_file.read((char*)&l_lowerAngularLimit, sizeof(glm::vec3));
                             l_file.read((char*)&l_upperAngularLimit, sizeof(glm::vec3));
@@ -261,7 +262,7 @@ bool ROC::Geometry::Load(std::string &f_path)
                             l_file.read((char*)&l_upperLinearLimit, sizeof(glm::vec3));
                             l_file.read((char*)&l_linearStiffness, sizeof(glm::vec3));
 
-                            l_joint->AddPart(l_boneID, l_type, l_size, l_offset, l_rotation, l_mass, l_lowerAngularLimit, l_upperAngularLimit, l_angularStiffness, l_lowerLinearLimit, l_upperLinearLimit, l_linearStiffness);
+                            l_joint->AddPart(l_boneID, l_type, l_size, l_offset, l_rotation, l_mass, l_restutition, l_friction, l_damping, l_lowerAngularLimit, l_upperAngularLimit, l_angularStiffness, l_lowerLinearLimit, l_upperLinearLimit, l_linearStiffness);
                         }
                     }
                 }

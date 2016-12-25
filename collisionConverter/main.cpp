@@ -22,7 +22,7 @@ struct chainPartData
     float m_sizeX, m_sizeY, m_sizeZ;
     float m_offsetX, m_offsetY, m_offsetZ;
     float m_rotationX, m_rotationY, m_rotationZ, m_rotationW;
-    float m_mass;
+    float m_mass, m_restutition, m_friction, m_linearDamping, m_angularDamping;
     float m_lowerAngularLimitX, m_lowerAngularLimitY, m_lowerAngularLimitZ;
     float m_upperAngularLimitX, m_upperAngularLimitY, m_upperAngularLimitZ;
     float m_angularStiffnessX, m_angularStiffnessY, m_angularStiffnessZ;
@@ -169,6 +169,19 @@ int main(int argc, char *argv[])
                     if(!l_attr) Error("No 'mass' attribute at part node\n");
                     l_chainPartData.m_mass = l_attr.as_float(1.f);
 
+                    l_attr = l_part.attribute("restutition");
+                    if(!l_attr) Error("No 'restutition' attribute at part node\n");
+                    l_chainPartData.m_restutition = l_attr.as_float(0.f);
+
+                    l_attr = l_part.attribute("friction");
+                    if(!l_attr) Error("No 'friction' attribute at part node\n");
+                    l_chainPartData.m_friction = l_attr.as_float(0.5f);
+
+                    l_attr = l_part.attribute("damping");
+                    if(!l_attr) Error("No 'damping' attribute at part node\n");
+                    std::stringstream l_dampingStream(l_attr.as_string("0.0 0.0"));
+                    l_dampingStream >> l_chainPartData.m_linearDamping >> l_chainPartData.m_angularDamping;
+
                     l_attr = l_part.attribute("lowAngLim");
                     if(!l_attr) Error("No 'lowAngLim' attribute at part node\n");
                     std::stringstream l_lowAngLimStream(l_attr.as_string("0.0 0.0 0.0"));
@@ -212,6 +225,10 @@ int main(int argc, char *argv[])
                     l_file.write((char*)&l_chainPartData.m_rotationZ, sizeof(float));
                     l_file.write((char*)&l_chainPartData.m_rotationW, sizeof(float));
                     l_file.write((char*)&l_chainPartData.m_mass, sizeof(float));
+                    l_file.write((char*)&l_chainPartData.m_restutition, sizeof(float));
+                    l_file.write((char*)&l_chainPartData.m_friction, sizeof(float));
+                    l_file.write((char*)&l_chainPartData.m_linearDamping, sizeof(float));
+                    l_file.write((char*)&l_chainPartData.m_angularDamping, sizeof(float));
                     l_file.write((char*)&l_chainPartData.m_lowerAngularLimitX, sizeof(float));
                     l_file.write((char*)&l_chainPartData.m_lowerAngularLimitY, sizeof(float));
                     l_file.write((char*)&l_chainPartData.m_lowerAngularLimitZ, sizeof(float));

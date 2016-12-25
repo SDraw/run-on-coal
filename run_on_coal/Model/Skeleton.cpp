@@ -227,6 +227,10 @@ void ROC::Skeleton::InitRigidity(std::vector<BoneJointData*> &f_vec)
             l_jointPart->m_rigidBody = new btRigidBody(l_jointPartFallRigidBodyCI);
             l_jointPart->m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
+            l_jointPart->m_rigidBody->setRestitution(l_dataPart->m_restutition);
+            l_jointPart->m_rigidBody->setFriction(l_dataPart->m_friction);
+	        l_jointPart->m_rigidBody->setDamping(l_dataPart->m_damping.x, l_dataPart->m_damping.y);
+
             btTransform l_jointPartConstraintOffset;
             l_jointPartConstraintOffset.setIdentity();
             l_jointPartConstraintOffset.setOrigin(btVector3(-l_dataPart->m_offset.x, -l_dataPart->m_offset.y, -l_dataPart->m_offset.z));
