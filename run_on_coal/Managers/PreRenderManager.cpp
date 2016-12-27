@@ -89,7 +89,7 @@ void ROC::PreRenderManager::DoPulse_S1()
         TreeNode *l_current = m_nodeList.back();
         m_nodeList.pop_back();
         m_nodeList.insert(m_nodeList.end(), l_current->m_children.rbegin(), l_current->m_children.rend());
-        if(l_current->m_model->IsRigid() && l_physicsState) continue;
+        if(l_current->m_model->HasCollision() && l_physicsState) continue;
 
         l_current->m_model->UpdateMatrix();
         if(l_current->m_model->HasSkeleton())
@@ -109,7 +109,7 @@ void ROC::PreRenderManager::DoPulse_S2()
         TreeNode *l_current = m_nodeList.back();
         m_nodeList.pop_back();
         m_nodeList.insert(m_nodeList.end(), l_current->m_children.rbegin(), l_current->m_children.rend());
-        l_current->m_model->IsRigid() ? l_current->m_model->UpdateRigidity() : l_current->m_model->UpdateMatrix();
+        l_current->m_model->HasCollision() ? l_current->m_model->UpdateCollision() : l_current->m_model->UpdateMatrix();
         if(l_current->m_model->HasSkeleton()) l_current->m_model->GetSkeleton()->UpdateCollision_S2(l_current->m_model->GetMatrixRef(), l_physicsState);
     }
 }

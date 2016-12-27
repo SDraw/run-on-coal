@@ -138,13 +138,15 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
 }
 bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent, int f_bone)
 {
-    if(f_model->IsRigid() || f_model == f_parent || f_model->GetParent()) return false;
+    if(f_model->HasCollision() || f_model == f_parent || f_model->GetParent()) return false;
+
     Model *l_treeParent = f_parent->GetParent();
     while(l_treeParent)
     {
         if(l_treeParent == f_model) return false;
         l_treeParent = l_treeParent->GetParent();
     }
+
     if(!f_parent->HasSkeleton()) f_bone = -1;
     else if(f_bone >= static_cast<int>(f_parent->GetSkeleton()->GetBonesCount())) f_bone = -1;
     f_model->SetParent(f_parent, f_bone);

@@ -84,8 +84,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "modelSetAnimationProgress", Lua::modelSetAnimationProgress);
     lua_register(m_pVM, "modelGetAnimationProgress", Lua::modelGetAnimationProgress);
 
-    lua_register(m_pVM, "modelSetRigidity", Lua::modelSetRigidity);
-    lua_register(m_pVM, "modelRemoveRigidity", Lua::modelRemoveRigidity);
+    lua_register(m_pVM, "modelSetCollision", Lua::modelSetCollision);
+    lua_register(m_pVM, "modelRemoveCollision", Lua::modelRemoveCollision);
 
     lua_register(m_pVM, "modelGetMass", Lua::modelGetMass);
 

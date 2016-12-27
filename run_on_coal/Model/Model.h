@@ -62,9 +62,10 @@ public:
     float GetAnimationProgress();
 
     inline bool HasSkeleton() { return (m_skeleton != NULL); }
-    bool HasRigidSkeleton();
+    bool HasSkeletonStaticBoneCollision();
+    bool HasSkeletonDynamicBoneCollision();
 
-    inline bool IsRigid() { return (m_rigidBody != NULL); }
+    inline bool HasCollision() { return (m_rigidBody != NULL); }
     inline btRigidBody* GetRigidBody() { return m_rigidBody; }
     bool SetVelocity(glm::vec3 &f_val);
     bool GetVelocity(glm::vec3 &f_val);
@@ -87,9 +88,9 @@ protected:
     void SetAnimation(Animation *f_anim);
     void UpdateAnimation();
     inline Skeleton* GetSkeleton() { return m_skeleton; }
-    bool SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim);
-    bool RemoveRigidity();
-    void UpdateRigidity();
+    bool SetCollision(unsigned char f_type, float f_mass, glm::vec3 &f_dim);
+    bool RemoveCollision();
+    void UpdateCollision();
 
     friend class ElementManager;
     friend class InheritanceManager;

@@ -25,7 +25,7 @@ class Skeleton
         int m_boneID;
     };
     std::vector<skCollision*> m_collisionVector;
-    bool m_hasCollision;
+    bool m_hasStaticBoneCollision;
 
     struct skJoint
     {
@@ -42,7 +42,7 @@ class Skeleton
         std::vector<jtPart*> m_partsVector;
     };
     std::vector<skJoint*> m_jointVector;
-    bool m_rigid;
+    bool m_hasDynamicBoneCollision;
 
     struct skFastStoring
     {
@@ -58,12 +58,14 @@ protected:
     void Update();
     void ResetBonesInterpolation();
 
-    void InitCollision(std::vector<BoneCollisionData*> &f_vec);
-    void InitRigidity(std::vector<BoneJointData*> &f_vec);
+    void InitStaticBoneCollision(std::vector<BoneCollisionData*> &f_vec);
+    void InitDynamicBoneCollision(std::vector<BoneJointData*> &f_vec);
     void UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled);
     void UpdateCollision_S2(glm::mat4 &f_model, bool f_enabled);
     inline std::vector<skCollision*> &GetCollisionVectorRef() { return m_collisionVector; }
     inline std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
+    inline bool HasStaticBoneCollision() { return m_hasStaticBoneCollision; }
+    inline bool HasDynamicBoneCollision() { return m_hasDynamicBoneCollision; }
 
     inline size_t GetBonesCount() { return m_bonesCount; }
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }

@@ -35,8 +35,8 @@ public:
     void SetGravity(glm::vec3 &f_grav);
     void GetGravity(glm::vec3 &f_grav);
 
-    bool SetModelRigidity(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim);
-    bool RemoveModelRigidity(Model *f_model);
+    bool SetModelCollision(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim);
+    bool RemoveModelCollision(Model *f_model);
 
     bool RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model);
 protected:

@@ -15,7 +15,7 @@ namespace ROC
 {
 namespace Lua
 {
-const std::vector<std::string> g_modelRigidityTable
+const std::vector<std::string> g_modelCollisionTable
 {
     "sphere", "box", "cylinder", "capsule", "cone"
 };
@@ -407,7 +407,7 @@ int modelGetAnimationProgress(lua_State *f_vm)
     return 1;
 }
 
-int modelSetRigidity(lua_State *f_vm)
+int modelSetCollision(lua_State *f_vm)
 {
     Model *l_model;
     std::string l_textType;
@@ -423,18 +423,18 @@ int modelSetRigidity(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    int l_type = Utils::ReadEnumVector(g_modelRigidityTable, l_textType);
+    int l_type = Utils::ReadEnumVector(g_modelCollisionTable, l_textType);
     if(l_type == -1)
     {
         lua_pushboolean(f_vm, 0);
         return 1;
     }
     glm::vec3 l_vSize(l_sizes[0], l_sizes[1], l_sizes[2]);
-    bool result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelRigidity(l_model, MODEL_RIGIDITY_TYPE_SPHERE + static_cast<unsigned char>(l_type), static_cast<float>(l_mass), l_vSize);
+    bool result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelCollision(l_model, MODEL_RIGIDITY_TYPE_SPHERE + static_cast<unsigned char>(l_type), static_cast<float>(l_mass), l_vSize);
     lua_pushboolean(f_vm, result);
     return 1;
 }
-int modelRemoveRigidity(lua_State *f_vm)
+int modelRemoveCollision(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
@@ -444,7 +444,7 @@ int modelRemoveRigidity(lua_State *f_vm)
         lua_pushboolean(f_vm, 0);
         return 1;
     }
-    bool result = LuaManager::m_corePointer->GetPhysicsManager()->RemoveModelRigidity(l_model);
+    bool result = LuaManager::m_corePointer->GetPhysicsManager()->RemoveModelCollision(l_model);
     lua_pushboolean(f_vm, result);
     return 1;
 }

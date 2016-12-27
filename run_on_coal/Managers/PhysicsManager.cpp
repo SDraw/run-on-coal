@@ -82,20 +82,20 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
     f_grav.z = l_grav.z();
 }
 
-bool ROC::PhysicsManager::SetModelRigidity(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
+bool ROC::PhysicsManager::SetModelCollision(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
 {
     if(m_modelsSet.find(f_model) == m_modelsSet.end()) return false;
-    if(f_model->HasRigidSkeleton()) return false;
-    if(!f_model->SetRigidity(f_type, f_mass, f_dim)) return false;
+    if(f_model->HasSkeletonStaticBoneCollision() || f_model->HasSkeletonDynamicBoneCollision()) return false;
+    if(!f_model->SetCollision(f_type, f_mass, f_dim)) return false;
     f_model->GetRigidBody()->setUserPointer(f_model);
     m_dynamicWorld->addRigidBody(f_model->GetRigidBody());
     return true;
 }
-bool ROC::PhysicsManager::RemoveModelRigidity(Model *f_model)
+bool ROC::PhysicsManager::RemoveModelCollision(Model *f_model)
 {
     if(m_modelsSet.find(f_model) == m_modelsSet.end()) return false;
     m_dynamicWorld->removeRigidBody(f_model->GetRigidBody());
-    return f_model->RemoveRigidity();
+    return f_model->RemoveCollision();
 }
 
 void ROC::PhysicsManager::AddModel(Model *f_model)
@@ -131,7 +131,7 @@ void ROC::PhysicsManager::RemoveModel(Model *f_model)
     if(iter == m_modelsSet.end()) return;
     m_modelsSet.erase(f_model);
 
-    if(f_model->IsRigid()) RemoveModelRigidity(f_model);
+    if(f_model->HasCollision()) RemoveModelCollision(f_model);
     if(f_model->HasSkeleton())
     {
         for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef()) m_dynamicWorld->removeRigidBody(iter->m_rigidBody);

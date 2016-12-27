@@ -33,8 +33,8 @@ ROC::Model::Model(Geometry *f_geometry)
     if(m_geometry->HasBonesData())
     {
         m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
-        if(m_geometry->HasBonesCollisionData()) m_skeleton->InitCollision(m_geometry->GetBonesCollisionDataRef());
-        if(m_geometry->HasJointsData()) m_skeleton->InitRigidity(m_geometry->GetJointsDataRef());
+        if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionDataRef());
+        if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsDataRef());
     }
     else m_skeleton = NULL;
 
@@ -43,7 +43,7 @@ ROC::Model::Model(Geometry *f_geometry)
 ROC::Model::~Model()
 {
     if(m_skeleton) delete m_skeleton;
-    RemoveRigidity();
+    RemoveCollision();
 }
 
 void ROC::Model::SetPosition(glm::vec3 &f_pos)
@@ -54,7 +54,7 @@ void ROC::Model::SetPosition(glm::vec3 &f_pos)
     if(m_rigidBody)
     {
         btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
-        l_transform.setOrigin(btVector3(m_position.x,m_position.y,m_position.z));
+        l_transform.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
         m_rigidBody->setCenterOfMassTransform(l_transform);
         m_rigidBody->activate(true);
     }
@@ -238,12 +238,16 @@ void ROC::Model::UpdateSkeleton()
     }
     else m_skeleton->Update();
 }
-bool ROC::Model::HasRigidSkeleton()
+bool ROC::Model::HasSkeletonStaticBoneCollision()
 {
-    return (m_skeleton ? m_skeleton->m_rigid : false);
+    return (m_skeleton ? m_skeleton->HasStaticBoneCollision() : false);
+}
+bool ROC::Model::HasSkeletonDynamicBoneCollision()
+{
+    return (m_skeleton ? m_skeleton->HasDynamicBoneCollision() : false);
 }
 
-bool ROC::Model::SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_dim)
+bool ROC::Model::SetCollision(unsigned char f_type, float f_mass, glm::vec3 &f_dim)
 {
     if(m_rigidBody || m_parent || f_mass < 0.f) return false;
     if(f_type > MODEL_RIGIDITY_TYPE_CONE) return false;
@@ -257,10 +261,10 @@ bool ROC::Model::SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_di
             l_shape = new btSphereShape(f_dim.x);
             break;
         case MODEL_RIGIDITY_TYPE_BOX:
-            l_shape = new btBoxShape(btVector3(f_dim.x,f_dim.y,f_dim.z));
+            l_shape = new btBoxShape(btVector3(f_dim.x, f_dim.y, f_dim.z));
             break;
         case MODEL_RIGIDITY_TYPE_CYLINDER:
-            l_shape = new btCylinderShape(btVector3(f_dim.x,f_dim.y,f_dim.z));
+            l_shape = new btCylinderShape(btVector3(f_dim.x, f_dim.y, f_dim.z));
             break;
         case MODEL_RIGIDITY_TYPE_CAPSULE:
             l_shape = new btCapsuleShape(f_dim.x, f_dim.y);
@@ -272,12 +276,12 @@ bool ROC::Model::SetRigidity(unsigned char f_type, float f_mass, glm::vec3 &f_di
             l_shape = new btEmptyShape();
     }
     l_shape->calculateLocalInertia(f_mass, l_inertia);
-    btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(btTransform(btQuaternion(m_rotation.x,m_rotation.y,m_rotation.z,m_rotation.w), btVector3(m_position.x,m_position.y,m_position.z)));
+    btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(btTransform(btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w), btVector3(m_position.x, m_position.y, m_position.z)));
     btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(f_mass, l_fallMotionState, l_shape, l_inertia);
     m_rigidBody = new btRigidBody(fallRigidBodyCI);
     return true;
 }
-bool ROC::Model::RemoveRigidity()
+bool ROC::Model::RemoveCollision()
 {
     if(!m_rigidBody) return false;
     delete m_rigidBody->getMotionState();
@@ -328,21 +332,20 @@ bool ROC::Model::SetFriction(float f_val)
     m_rigidBody->activate(true);
     return true;
 }
-void ROC::Model::UpdateRigidity()
+void ROC::Model::UpdateCollision()
 {
-    if(m_rigidBody)
+    if(!m_rigidBody) return;
+    m_rebuilded = m_rigidBody->isActive();
+    if(m_rebuilded)
     {
-        if(m_rigidBody->isActive())
-        {
-            const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
-            btQuaternion l_rotation = l_transform.getRotation();
-            std::memcpy(&m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-            m_rotation.x = l_rotation.x();
-            m_rotation.y = l_rotation.y();
-            m_rotation.z = l_rotation.z();
-            m_rotation.w = l_rotation.w();
-            l_transform.getOpenGLMatrix((float*)&m_localMatrix);
-            std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
-        }
+        const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
+        btQuaternion l_rotation = l_transform.getRotation();
+        std::memcpy(&m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+        m_rotation.x = l_rotation.x();
+        m_rotation.y = l_rotation.y();
+        m_rotation.z = l_rotation.z();
+        m_rotation.w = l_rotation.w();
+        l_transform.getOpenGLMatrix((float*)&m_localMatrix);
+        std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
     }
 }
