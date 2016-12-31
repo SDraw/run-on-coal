@@ -18,7 +18,10 @@ public:
 
     void ReadBoolean(bool &f_val);
     void ReadNumber(lua_Number &f_val);
+    void ReadNumber(float &f_val);
     void ReadInteger(lua_Integer &f_val);
+    void ReadInteger(int &f_val);
+    void ReadInteger(unsigned int &f_val);
     void ReadText(std::string &f_val);
     void ReadUserdata(void **f_val, unsigned int f_type);
     void ReadPointer(void **f_val);
@@ -27,12 +30,16 @@ public:
 
     bool ReadNextBoolean(bool &f_val);
     bool ReadNextNumber(lua_Number &f_val);
+    bool ReadNextNumber(float &f_val);
     bool ReadNextInteger(lua_Integer &f_val);
+    bool ReadNextInteger(int &f_val);
+    bool ReadNextInteger(unsigned int &f_val);
     bool ReadNextText(std::string &f_val);
     bool ReadNextUserdata(void **f_val, unsigned int f_type);
     bool ReadNextPointer(void **f_val);
 
     void ReadTableNumbers(std::vector<lua_Number> &f_vec, int f_size);
+    void ReadTableNumbers(std::vector<float> &f_vec, int f_size);
     void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);
 
     bool HasErrors();

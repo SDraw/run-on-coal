@@ -12,18 +12,18 @@ namespace ROC
 {
 namespace Lua
 {
+
 int physicsSetEnabled(lua_State *f_vm)
 {
     bool l_val;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadBoolean(l_val);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        LuaManager::m_corePointer->GetPhysicsManager()->SetPhysicsEnabled(l_val);
+        lua_pushboolean(f_vm, 1);
     }
-    LuaManager::m_corePointer->GetPhysicsManager()->SetPhysicsEnabled(l_val);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int physicsGetEnabled(lua_State *f_vm)
@@ -38,13 +38,12 @@ int physicsSetFloorEnabled(lua_State *f_vm)
     bool l_val;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadBoolean(l_val);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        LuaManager::m_corePointer->GetPhysicsManager()->SetFloorEnabled(l_val);
+        lua_pushboolean(f_vm, 1);
     }
-    LuaManager::m_corePointer->GetPhysicsManager()->SetFloorEnabled(l_val);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int physicsGetFloorEnabled(lua_State *f_vm)
@@ -56,17 +55,15 @@ int physicsGetFloorEnabled(lua_State *f_vm)
 
 int physicsSetGravity(lua_State *f_vm)
 {
-    lua_Number l_val[3];
+    glm::vec3 l_gravity;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
-    if(argStream.HasErrors())
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gravity[i]);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        LuaManager::m_corePointer->GetPhysicsManager()->SetGravity(l_gravity);
+        lua_pushboolean(f_vm, 1);
     }
-    glm::vec3 l_vec(l_val[0], l_val[1], l_val[2]);
-    LuaManager::m_corePointer->GetPhysicsManager()->SetGravity(l_vec);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int physicsGetGravity(lua_State *f_vm)
@@ -81,32 +78,30 @@ int physicsGetGravity(lua_State *f_vm)
 
 int physicsRayCast(lua_State *f_vm)
 {
-    lua_Number l_val[6];
+    glm::vec3 l_start, l_end;
+    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    for(int i = 0; i < 6; i++) argStream.ReadNumber(l_val[i]);
-    if(argStream.HasErrors())
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_start[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_end[i]);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        glm::vec3 l_hitNormal;
+        void *l_hitElement = NULL;
+        if(LuaManager::m_corePointer->GetPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, &l_hitElement))
+        {
+            lua_pushnumber(f_vm, l_end.x);
+            lua_pushnumber(f_vm, l_end.y);
+            lua_pushnumber(f_vm, l_end.z);
+            lua_pushnumber(f_vm, l_hitNormal.x);
+            lua_pushnumber(f_vm, l_hitNormal.y);
+            lua_pushnumber(f_vm, l_hitNormal.z);
+            l_hitElement ? lua_pushlightuserdata(f_vm, l_hitElement) : lua_pushstring(f_vm, "floor");
+            l_returnVal = 7;
+        }
+        else lua_pushboolean(f_vm, 0);
     }
-    glm::vec3 l_rayStart(l_val[0], l_val[1], l_val[2]);
-    glm::vec3 l_rayEnd(l_val[3], l_val[4], l_val[5]);
-    glm::vec3 l_hitNormal;
-    void *l_hitElement = NULL;
-    if(!LuaManager::m_corePointer->GetPhysicsManager()->RayCast(l_rayStart, l_rayEnd, l_hitNormal, &l_hitElement))
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    lua_pushnumber(f_vm, l_rayEnd.x);
-    lua_pushnumber(f_vm, l_rayEnd.y);
-    lua_pushnumber(f_vm, l_rayEnd.z);
-    lua_pushnumber(f_vm, l_hitNormal.x);
-    lua_pushnumber(f_vm, l_hitNormal.y);
-    lua_pushnumber(f_vm, l_hitNormal.z);
-    if(l_hitElement != NULL) lua_pushlightuserdata(f_vm, l_hitElement);
-    else lua_pushstring(f_vm, "floor");
-    return 7;
+    else lua_pushboolean(f_vm, 0);
+    return l_returnVal;
 }
 
 }

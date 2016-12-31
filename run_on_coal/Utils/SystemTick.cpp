@@ -3,10 +3,6 @@
 
 unsigned int ROC::SystemTick::m_tick = 0U;
 
-unsigned int ROC::SystemTick::GetTick()
-{
-    return m_tick;
-}
 void ROC::SystemTick::UpdateTick()
 {
 #ifdef _WIN32

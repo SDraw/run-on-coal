@@ -10,6 +10,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 const std::vector<std::string> g_eventNamesTable
 {
     "onAppStart", "onAppStop",
@@ -29,19 +30,17 @@ int addEvent(lua_State *f_vm)
     argStream.DecreaseArguments(2);
     argStream.ReadText(l_event);
     argStream.ReadFunction(l_func, &l_point);
-    if(argStream.HasErrors() || l_event.empty())
+    if(!argStream.HasErrors() && !l_event.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
+        if(l_enumValue != -1)
+        {
+            bool result = LuaManager::m_corePointer->GetLuaManager()->GetEventManager()->AddEvent(l_enumValue, l_func, l_point);
+            lua_pushboolean(f_vm, result);
+        }
+        else lua_pushboolean(f_vm, 0);
     }
-    int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
-    if(l_enumValue == -1)
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    bool result = LuaManager::m_corePointer->GetLuaManager()->GetEventManager()->AddEvent(l_enumValue, l_func, l_point);
-    lua_pushboolean(f_vm, result);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int setEventMute(lua_State *f_vm)
@@ -53,19 +52,17 @@ int setEventMute(lua_State *f_vm)
     argStream.ReadText(l_event);
     argStream.ReadFunctionPointer(&l_point);
     argStream.ReadBoolean(l_mute);
-    if(argStream.HasErrors() || l_event.empty())
+    if(!argStream.HasErrors() && !l_event.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
+        if(l_enumValue != -1)
+        {
+            bool result = LuaManager::m_corePointer->GetLuaManager()->GetEventManager()->SetEventMute(l_enumValue, l_point, l_mute);
+            lua_pushboolean(f_vm, result);
+        }
+        else lua_pushboolean(f_vm, 0);
     }
-    int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
-    if(l_enumValue == -1)
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    bool result = LuaManager::m_corePointer->GetLuaManager()->GetEventManager()->SetEventMute(l_enumValue, l_point, l_mute);
-    lua_pushboolean(f_vm, result);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int removeEvent(lua_State *f_vm)
@@ -75,20 +72,19 @@ int removeEvent(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_event);
     argStream.ReadFunctionPointer(&l_point);
-    if(argStream.HasErrors() || l_event.empty())
+    if(!argStream.HasErrors() && !l_event.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
+        if(l_enumValue != -1)
+        {
+            bool result = LuaManager::m_corePointer->GetLuaManager()->GetEventManager()->RemoveEvent(l_enumValue, l_point);
+            lua_pushboolean(f_vm, result);
+        }
+        else lua_pushboolean(f_vm, 0);
     }
-    int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
-    if(l_enumValue == -1)
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    bool result = LuaManager::m_corePointer->GetLuaManager()->GetEventManager()->RemoveEvent(l_enumValue, l_point);
-    lua_pushboolean(f_vm, result);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
+
 }
 }

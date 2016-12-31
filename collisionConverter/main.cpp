@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if(l_file.fail()) Error("Unable to create binary file\n");
 
     unsigned char l_setter = 0xCBU;
-    l_file.write((char*)&l_setter, sizeof(unsigned char));
+    l_file.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
 
     unsigned int l_sbcCount = 0U;
     pugi::xml_node l_statics = l_root.child("statics");
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
         if(l_sbcCountAtr)
         {
             l_sbcCount = l_sbcCountAtr.as_uint();
-            l_file.write((char*)&l_sbcCount, sizeof(unsigned int));
+            l_file.write(reinterpret_cast<char*>(&l_sbcCount), sizeof(unsigned int));
 
             for(pugi::xml_node l_sbcNode = l_statics.child("sbc"); l_sbcNode; l_sbcNode = l_sbcNode.next_sibling("sbc"))
             {
@@ -87,18 +87,18 @@ int main(int argc, char *argv[])
                 std::stringstream l_rotationStream(l_attr.as_string("0.0 0.0 0.0 1.0"));
                 l_rotationStream >> l_sbcData.m_rotX >> l_sbcData.m_rotY >> l_sbcData.m_rotZ >> l_sbcData.m_rotW;
 
-                l_file.write((char*)&l_sbcData.m_type, sizeof(unsigned char));
-                l_file.write((char*)&l_sbcData.m_sizeX, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_sizeY, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_sizeZ, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_posX, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_posY, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_posZ, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_rotX, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_rotY, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_rotZ, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_rotW, sizeof(float));
-                l_file.write((char*)&l_sbcData.m_boneID, sizeof(unsigned int));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_type), sizeof(unsigned char));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeX), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeY), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeZ), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posX), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posY), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posZ), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotX), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotY), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotZ), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotW), sizeof(float));
+                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_boneID), sizeof(unsigned int));
 
                 l_sbcCount--;
             }
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        l_file.write((char*)&l_sbcCount, sizeof(unsigned int));
+        l_file.write(reinterpret_cast<char*>(&l_sbcCount), sizeof(unsigned int));
         Info("No data of static bone collisions");
     }
 
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
         if(l_chainsCountAtr)
         {
             l_chainsCount = l_chainsCountAtr.as_uint();
-            l_file.write((char*)&l_chainsCount, sizeof(unsigned int));
+            l_file.write(reinterpret_cast<char*>(&l_chainsCount), sizeof(unsigned int));
 
             for(pugi::xml_node l_chain = l_chains.child("chain"); l_chain; l_chain = l_chain.next_sibling("chain"))
             {
@@ -131,9 +131,9 @@ int main(int argc, char *argv[])
                 if(!l_attr || !l_boneIDAtr) Error("No 'count' or 'bone' attribute at 'chain' node\n");
 
                 unsigned int l_chainPartsCount = l_attr.as_uint();
-                l_file.write((char*)&l_chainPartsCount, sizeof(unsigned int));
+                l_file.write(reinterpret_cast<char*>(&l_chainPartsCount), sizeof(unsigned int));
                 unsigned int l_chainBone = l_boneIDAtr.as_uint();
-                l_file.write((char*)&l_chainBone, sizeof(unsigned int));
+                l_file.write(reinterpret_cast<char*>(&l_chainBone), sizeof(unsigned int));
 
 
                 for(pugi::xml_node l_part = l_chain.child("part"); l_part; l_part = l_part.next_sibling("part"))
@@ -212,41 +212,41 @@ int main(int argc, char *argv[])
                     std::stringstream l_linStiffStream(l_attr.as_string("0.0 0.0 0.0"));
                     l_linStiffStream >> l_chainPartData.m_linearStiffnessX >> l_chainPartData.m_linearStiffnessY >> l_chainPartData.m_linearStiffnessZ;
 
-                    l_file.write((char*)&l_chainPartData.m_boneID, sizeof(int));
-                    l_file.write((char*)&l_chainPartData.m_type, sizeof(unsigned char));
-                    l_file.write((char*)&l_chainPartData.m_sizeX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_sizeY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_sizeZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_offsetX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_offsetY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_offsetZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_rotationX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_rotationY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_rotationZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_rotationW, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_mass, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_restutition, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_friction, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_linearDamping, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_angularDamping, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_lowerAngularLimitX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_lowerAngularLimitY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_lowerAngularLimitZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_upperAngularLimitX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_upperAngularLimitY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_upperAngularLimitZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_angularStiffnessX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_angularStiffnessY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_angularStiffnessZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_lowerLinearLimitX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_lowerLinearLimitY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_lowerLinearLimitZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_upperLinearLimitX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_upperLinearLimitY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_upperLinearLimitZ, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_linearStiffnessX, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_linearStiffnessY, sizeof(float));
-                    l_file.write((char*)&l_chainPartData.m_linearStiffnessZ, sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_boneID), sizeof(int));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_type), sizeof(unsigned char));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_sizeX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_sizeY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_sizeZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_offsetX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_offsetY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_offsetZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_rotationX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_rotationY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_rotationZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_rotationW), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_mass), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_restutition), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_friction), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_linearDamping), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_angularDamping), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_lowerAngularLimitX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_lowerAngularLimitY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_lowerAngularLimitZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_upperAngularLimitX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_upperAngularLimitY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_upperAngularLimitZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_angularStiffnessX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_angularStiffnessY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_angularStiffnessZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_lowerLinearLimitX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_lowerLinearLimitY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_lowerLinearLimitZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_upperLinearLimitX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_upperLinearLimitY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_upperLinearLimitZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_linearStiffnessX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_linearStiffnessY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_chainPartData.m_linearStiffnessZ), sizeof(float));
 
                     l_chainPartsCount--;
                 }
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        l_file.write((char*)&l_chainsCount, sizeof(unsigned int));
+        l_file.write(reinterpret_cast<char*>(&l_chainsCount), sizeof(unsigned int));
         Info("No data of bone chains");
     }
     l_file.flush();

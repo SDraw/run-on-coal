@@ -14,6 +14,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 const std::vector<std::string> g_uniformTypesTable
 {
     "uint", "uvec2", "uvec3", "uvec4",
@@ -31,27 +32,25 @@ int shaderCreate(lua_State *f_vm)
     argStream.ReadText(l_vsp);
     argStream.ReadText(l_fsp);
     argStream.ReadNextText(l_gsp);
-    if(argStream.HasErrors() || (l_vsp.empty() && l_fsp.empty()))
+    if(!argStream.HasErrors() && !l_vsp.empty() && !l_fsp.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        Shader *l_shader = LuaManager::m_corePointer->GetElementManager()->CreateShader(l_vsp, l_fsp, l_gsp);
+        l_shader ? lua_pushlightuserdata(f_vm, l_shader) : lua_pushboolean(f_vm, 0);
     }
-    Shader *l_shader = LuaManager::m_corePointer->GetElementManager()->CreateShader(l_vsp, l_fsp, l_gsp);
-    l_shader ? lua_pushlightuserdata(f_vm, l_shader) : lua_pushboolean(f_vm, 0);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int shaderDestroy(lua_State *f_vm)
 {
     Shader *l_shader = NULL;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_shader, ElementType::ShaderElement);
-    if(argStream.HasErrors())
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyShader(l_shader);
+        lua_pushboolean(f_vm, l_result);
     }
-    bool result = LuaManager::m_corePointer->GetElementManager()->DestroyShader(l_shader);
-    lua_pushboolean(f_vm, result);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int shaderGetUniform(lua_State *f_vm)
@@ -59,299 +58,276 @@ int shaderGetUniform(lua_State *f_vm)
     Shader *l_shader = NULL;
     std::string l_unif;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_shader, ElementType::ShaderElement);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
     argStream.ReadText(l_unif);
-    if(argStream.HasErrors() || l_unif.empty())
+    if(!argStream.HasErrors() && !l_unif.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        int l_result = l_shader->GetUniform(l_unif);
+        (l_result != -1) ? lua_pushinteger(f_vm, l_result) : lua_pushboolean(f_vm, 0);
     }
-    lua_Integer l_result = l_shader->GetUniform(l_unif);
-    (l_result == -1) ? lua_pushboolean(f_vm, 0) : lua_pushinteger(f_vm, l_result);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int shaderSetUniformValue(lua_State *f_vm)
 {
     Shader *l_shader = NULL;
-    lua_Integer l_unif;
+    int l_uniform;
     std::string l_type;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_shader, ElementType::ShaderElement);
-    argStream.ReadInteger(l_unif);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
+    argStream.ReadInteger(l_uniform);
     argStream.ReadText(l_type);
-    if(argStream.HasErrors() || l_unif < 0 || l_unif > 255 || l_type.empty())
+    if(!argStream.HasErrors() && (l_uniform >= 0 && l_uniform <= 255) && !l_type.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    switch(Utils::ReadEnumVector(g_uniformTypesTable, l_type))
-    {
-        // Unsigned int
-        case 0:
+        switch(Utils::ReadEnumVector(g_uniformTypesTable, l_type))
         {
-            lua_Integer l_val;
-            argStream.ReadInteger(l_val);
-            if(argStream.HasErrors() || l_val < 0)
+            case 0: // Unsigned int
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, static_cast<int>(l_unif), static_cast<unsigned int>(l_val));
-        } break;
-        case 1:
-        {
-            lua_Integer l_val[2];
-            for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
-            if(argStream.HasErrors() || l_val[0] < 0 || l_val[1] < 0)
+                unsigned int l_val;
+                argStream.ReadInteger(l_val);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 1: // Unsigned int 2
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::uvec2 l_vec(l_val[0], l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 2:
-        {
-            lua_Integer l_val[3];
-            for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
-            if(argStream.HasErrors() || l_val[0] < 0 || l_val[1] < 0 || l_val[2] < 0)
+                glm::uvec2 l_val;
+                for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 2: // Unsigned int 3
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::uvec3 l_vec(l_val[0], l_val[1], l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 3:
-        {
-            lua_Integer l_val[4];
-            for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
-            if(argStream.HasErrors() || l_val[0] < 0 || l_val[1] < 0 || l_val[2] < 0 || l_val[3] < 0)
+                glm::uvec3 l_val;
+                for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 3: // Unsigned int 4
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::uvec4 l_vec(l_val[0], l_val[1], l_val[2], l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        // Integer
-        case 4:
-        {
-            lua_Integer l_val;
-            argStream.ReadInteger(l_val);
-            if(argStream.HasErrors())
+                glm::uvec4 l_val;
+                for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 4: // Integer
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, static_cast<int>(l_unif), static_cast<int>(l_val));
-        } break;
-        case 5:
-        {
-            lua_Integer l_val[2];
-            for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
-            if(argStream.HasErrors())
+                int l_val;
+                argStream.ReadInteger(l_val);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 5: // Integer 2
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::ivec2 l_vec(l_val[0], l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 6:
-        {
-            lua_Integer l_val[3];
-            for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
-            if(argStream.HasErrors())
+                glm::ivec2 l_val;
+                for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 6: // Integer 3
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::ivec3 l_vec(l_val[0], l_val[1], l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 7:
-        {
-            lua_Integer l_val[4];
-            for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
-            if(argStream.HasErrors())
+                glm::ivec3 l_val;
+                for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 7: // Integer 4
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::ivec4 l_vec(l_val[0], l_val[1], l_val[2], l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        // Float
-        case 8:
-        {
-            lua_Number l_val;
-            argStream.ReadNumber(l_val);
-            if(argStream.HasErrors())
+                glm::ivec4 l_val;
+                for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 8: // Float
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, static_cast<int>(l_unif), static_cast<float>(l_val));
-        } break;
-        case 9:
-        {
-            lua_Number l_val[2];
-            for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
-            if(argStream.HasErrors())
+                float l_val;
+                argStream.ReadNumber(l_val);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 9: // Float 2
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::vec2 l_vec(l_val[0], l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 10:
-        {
-            lua_Number l_val[3];
-            for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
-            if(argStream.HasErrors())
+                glm::vec2 l_val;
+                for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 10: // Float 3
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::vec3 l_vec(l_val[0], l_val[1], l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 11:
-        {
-            lua_Number l_val[4];
-            for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
-            if(argStream.HasErrors())
+                glm::vec3 l_val;
+                for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 11: // Float 4
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
+                glm::vec4 l_val;
+                for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
             }
-            glm::vec4 l_vec(l_val[0], l_val[1], l_val[2], l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        }
-        // Double
-        case 12:
-        {
-            lua_Number l_val;
-            argStream.ReadNumber(l_val);
-            if(argStream.HasErrors())
+            case 12: // Double
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, static_cast<int>(l_unif), l_val);
-        } break;
-        case 13:
-        {
-            lua_Number l_val[2];
-            for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
-            if(argStream.HasErrors())
+                double l_val;
+                argStream.ReadNumber(l_val);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueO(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 13: // Double 2
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::dvec2 l_vec(l_val[0], l_val[1]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 14:
-        {
-            lua_Number l_val[3];
-            for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
-            if(argStream.HasErrors())
+                glm::dvec2 l_val;
+                for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 14: // Double 3
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::dvec3 l_vec(l_val[0], l_val[1], l_val[2]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        } break;
-        case 15:
-        {
-            lua_Number l_val[4];
-            for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
-            if(argStream.HasErrors())
+                glm::dvec3 l_val;
+                for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 15: // Double 4
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
+                glm::dvec4 l_val;
+                for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
+                if(!argStream.HasErrors())
+                {
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_val);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
             }
-            glm::dvec4 l_vec(l_val[0], l_val[1], l_val[2], l_val[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_vec);
-        }
-        // Matrix 2x2
-        case 16:
-        {
-            argStream.DecreaseArguments(4);
-            std::vector<lua_Number> l_dvec;
-            argStream.ReadTableNumbers(l_dvec, 4);
-            if(argStream.HasErrors())
+            case 16: // Matrix 2x2
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::mat2 l_mat(l_dvec[0], l_dvec[1], l_dvec[2], l_dvec[3]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_mat);
-        } break;
-        // Matrix 3x3
-        case 17:
-        {
-            argStream.DecreaseArguments(4);
-            std::vector<lua_Number> l_dvec;
-            argStream.ReadTableNumbers(l_dvec, 9);
-            if(argStream.HasErrors())
+                std::vector<float> l_vec;
+                argStream.DecreaseArguments(4);
+                argStream.ReadTableNumbers(l_vec, 4);
+                if(!argStream.HasErrors())
+                {
+                    glm::mat2 l_mat;
+                    std::memcpy(&l_mat, l_vec.data(), sizeof(glm::mat2));
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_mat);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 17: // Matrix 3x3
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::mat3 l_mat(l_dvec[0], l_dvec[1], l_dvec[2], l_dvec[3], l_dvec[4], l_dvec[5], l_dvec[6], l_dvec[7], l_dvec[8]);
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_mat);
-        } break;
-        //Matrix 4x4
-        case 18:
-        {
-            argStream.DecreaseArguments(4);
-            std::vector<lua_Number> l_dvec;
-            argStream.ReadTableNumbers(l_dvec, 16);
-            if(argStream.HasErrors())
+                std::vector<float> l_vec;
+                argStream.DecreaseArguments(4);
+                argStream.ReadTableNumbers(l_vec, 9);
+                if(!argStream.HasErrors())
+                {
+                    glm::mat3 l_mat;
+                    std::memcpy(&l_mat, l_vec.data(), sizeof(glm::mat3));
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_mat);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 18: // Matrix 4x4
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            glm::mat4 l_mat(
-                l_dvec[0], l_dvec[1], l_dvec[2], l_dvec[3],
-                l_dvec[4], l_dvec[5], l_dvec[6], l_dvec[7],
-                l_dvec[8], l_dvec[9], l_dvec[10], l_dvec[11],
-                l_dvec[12], l_dvec[13], l_dvec[14], l_dvec[15]
-                );
-            LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, static_cast<int>(l_unif), l_mat);
-        } break;
-        //Texture
-        case 19:
-        {
-            Texture *l_texture;
-            argStream.ReadUserdata((void**)&l_texture, ElementType::TextureElement);
-            if(argStream.HasErrors())
+                std::vector<float> l_vec;
+                argStream.DecreaseArguments(4);
+                argStream.ReadTableNumbers(l_vec, 16);
+                if(!argStream.HasErrors())
+                {
+                    glm::mat4 l_mat;
+                    std::memcpy(&l_mat, l_vec.data(), sizeof(glm::mat4));
+                    LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_mat);
+                    lua_pushboolean(f_vm, 1);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 19: // Texture
             {
-                lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            LuaManager::m_corePointer->GetInheritManager()->AttachTextureToShader(l_shader, l_texture, static_cast<int>(l_unif));
-        } break;
-        //Target
-        case 20:
-        {
-            RenderTarget *l_target;
-            argStream.ReadUserdata((void**)&l_target, ElementType::RenderTargetElement);
-            if(argStream.HasErrors())
+                Texture *l_texture;
+                argStream.ReadUserdata(reinterpret_cast<void**>(&l_texture), ElementType::TextureElement);
+                if(!argStream.HasErrors())
+                {
+                    bool l_result = LuaManager::m_corePointer->GetInheritManager()->AttachTextureToShader(l_shader, l_texture, l_uniform);
+                    lua_pushboolean(f_vm, l_result);
+                }
+                else lua_pushboolean(f_vm, 0);
+            } break;
+            case 20: // Render target
             {
+                RenderTarget *l_target;
+                argStream.ReadUserdata(reinterpret_cast<void**>(&l_target), ElementType::RenderTargetElement);
+                if(!argStream.HasErrors())
+                {
+                    bool l_result = LuaManager::m_corePointer->GetInheritManager()->AttachRenderTargetToShader(l_shader, l_target, l_uniform);
+                    lua_pushboolean(f_vm, l_result);
+                }
+                else lua_pushboolean(f_vm, 1);
+            } break;
+            default:
                 lua_pushboolean(f_vm, 0);
-                return 1;
-            }
-            LuaManager::m_corePointer->GetInheritManager()->AttachRenderTargetToShader(l_shader, l_target, static_cast<int>(l_unif));
         }
     }
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
+
 }
 }

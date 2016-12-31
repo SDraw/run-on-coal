@@ -165,8 +165,7 @@ void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
 
 void ROC::PhysicsManager::DoPulse()
 {
-    if(!m_enabled) return;
-    m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
+    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
 }
 
 bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)

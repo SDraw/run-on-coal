@@ -197,7 +197,7 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
         l_textureRotation.setRotation(l_textureZAxis, f_rot);
         l_textureTransform.setRotation(l_textureRotation);
     }
-    l_textureTransform.getOpenGLMatrix((float*)&m_textureMatrix);
+    l_textureTransform.getOpenGLMatrix(reinterpret_cast<float*>(&m_textureMatrix));
     m_activeShader->SetModelUniformValue(m_textureMatrix);
 
     m_quad->SetProportions(f_size, l_vaoBind);
@@ -230,7 +230,7 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
         l_textureRotation.setRotation(l_textureZAxis, f_rot);
         l_textureTransform.setRotation(l_textureRotation);
     }
-    l_textureTransform.getOpenGLMatrix((float*)&m_textureMatrix);
+    l_textureTransform.getOpenGLMatrix(reinterpret_cast<float*>(&m_textureMatrix));
     m_activeShader->SetModelUniformValue(m_textureMatrix);
 
     m_quad->SetProportions(f_size, l_vaoBind);

@@ -10,6 +10,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 int lightCreate(lua_State *f_vm)
 {
     Light *l_light = LuaManager::m_corePointer->GetElementManager()->CreateLight();
@@ -20,118 +21,116 @@ int lightDestroy(lua_State *f_vm)
 {
     Light *l_light;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_light, ElementType::LightElement);
-    if(argStream.HasErrors())
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyLight(l_light);
+        lua_pushboolean(f_vm, l_result);
     }
-    bool result = LuaManager::m_corePointer->GetElementManager()->DestroyLight(l_light);
-    lua_pushboolean(f_vm, result);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int lightSetParams(lua_State *f_vm)
 {
     Light *l_light;
-    lua_Number l_params[4];
+    glm::vec4 l_params;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_light, ElementType::LightElement);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_params[i]);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        l_light->SetParams(l_params);
+        lua_pushboolean(f_vm, 1);
     }
-    glm::vec4 l_vparams(l_params[0], l_params[1], l_params[2], l_params[3]);
-    l_light->SetParams(l_vparams);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int lightGetParams(lua_State *f_vm)
 {
     Light *l_light;
+    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_light, ElementType::LightElement);
-    if(argStream.HasErrors())
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+
+        glm::vec4 l_params;
+        l_light->GetParams(l_params);
+        lua_pushnumber(f_vm, l_params.x);
+        lua_pushnumber(f_vm, l_params.y);
+        lua_pushnumber(f_vm, l_params.z);
+        lua_pushnumber(f_vm, l_params.w);
+        l_returnVal = 4;
     }
-    glm::vec4 l_params;
-    l_light->GetParams(l_params);
-    lua_pushnumber(f_vm, l_params.x);
-    lua_pushnumber(f_vm, l_params.y);
-    lua_pushnumber(f_vm, l_params.z);
-    lua_pushnumber(f_vm, l_params.w);
-    return 4;
+    else lua_pushboolean(f_vm, 0);
+    return l_returnVal;
 }
 int lightSetColor(lua_State *f_vm)
 {
     Light *l_light;
-    lua_Number f_inten[3];
+    glm::vec3 l_color;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_light, ElementType::LightElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(f_inten[i]);
-    if(argStream.HasErrors())
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_color[i]);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        l_light->SetColor(l_color);
+        lua_pushboolean(f_vm, 1);
     }
-    glm::vec3 f_color(f_inten[0], f_inten[1], f_inten[2]);
-    l_light->SetColor(f_color);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int lightGetColor(lua_State *f_vm)
 {
     Light *l_light;
+    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_light, ElementType::LightElement);
-    if(argStream.HasErrors())
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        glm::vec3 f_color;
+        l_light->GetColor(f_color);
+        lua_pushnumber(f_vm, f_color.x);
+        lua_pushnumber(f_vm, f_color.y);
+        lua_pushnumber(f_vm, f_color.z);
+        l_returnVal = 3;
     }
-    glm::vec3 f_color;
-    l_light->GetColor(f_color);
-    lua_pushnumber(f_vm, f_color.x);
-    lua_pushnumber(f_vm, f_color.y);
-    lua_pushnumber(f_vm, f_color.z);
-    return 3;
+    else lua_pushboolean(f_vm, 0);
+    return l_returnVal;
 }
 int lightSetDirection(lua_State *f_vm)
 {
     Light *l_light;
-    lua_Number l_dir[3];
+    glm::vec3 l_dir;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_light, ElementType::LightElement);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        l_light->SetDirection(l_dir);
+        lua_pushboolean(f_vm, 1);
     }
-    glm::vec3 l_vDir(l_dir[0], l_dir[1], l_dir[2]);
-    l_light->SetDirection(l_vDir);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int lightGetDirection(lua_State *f_vm)
 {
     Light *l_light;
+    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata((void**)&l_light, ElementType::LightElement);
-    if(argStream.HasErrors())
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        glm::vec3 l_dir;
+        l_light->GetDirection(l_dir);
+        lua_pushnumber(f_vm, l_dir.x);
+        lua_pushnumber(f_vm, l_dir.y);
+        lua_pushnumber(f_vm, l_dir.z);
+        l_returnVal = 3;
     }
-    glm::vec3 l_vDir;
-    l_light->GetDirection(l_vDir);
-    lua_pushnumber(f_vm, l_vDir.x);
-    lua_pushnumber(f_vm, l_vDir.y);
-    lua_pushnumber(f_vm, l_vDir.z);
-    return 3;
+    else lua_pushboolean(f_vm, 0);
+    return l_returnVal;
 }
+
 }
 }

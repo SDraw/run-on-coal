@@ -27,9 +27,9 @@ bool ROC::Animation::Load(std::string &f_path)
     try
     {
         m_animFile.open(f_path, std::ios::binary | std::ios::in);
-        m_animFile.read((char*)&m_fps, sizeof(m_fps));
-        m_animFile.read((char*)&m_duration, sizeof(m_duration));
-        m_animFile.read((char*)&m_bonesValue, sizeof(m_bonesValue));
+        m_animFile.read(reinterpret_cast<char*>(&m_fps), sizeof(m_fps));
+        m_animFile.read(reinterpret_cast<char*>(&m_duration), sizeof(m_duration));
+        m_animFile.read(reinterpret_cast<char*>(&m_bonesValue), sizeof(m_bonesValue));
 
         m_durationTotal = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps)*static_cast<float>(m_duration))*1000.f));
         m_frameDelta = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps))*1000.0));
@@ -40,9 +40,9 @@ bool ROC::Animation::Load(std::string &f_path)
 
         // Cache
         m_animFile.seekg(12U, std::ios::beg); 
-        m_animFile.read((char*)m_leftFrame.data(), m_frameSize);
+        m_animFile.read(reinterpret_cast<char*>(m_leftFrame.data()), m_frameSize);
         m_animFile.seekg(12U + m_frameSize, std::ios::beg);
-        m_animFile.read((char*)m_rightFrame.data(), m_frameSize);
+        m_animFile.read(reinterpret_cast<char*>(m_rightFrame.data()), m_frameSize);
     }
     catch(const std::ifstream::failure &e)
     {
@@ -63,9 +63,9 @@ bool ROC::Animation::CacheData(unsigned int f_tick, float &f_lerp)
     if(l_frameL != m_cachedFrame)
     {
         m_animFile.seekg(12U + (l_frameL%m_duration)*m_frameSize, std::ios::beg);
-        m_animFile.read((char*)m_leftFrame.data(), m_frameSize);
+        m_animFile.read(reinterpret_cast<char*>(m_leftFrame.data()), m_frameSize);
         m_animFile.seekg(12U + (l_frameR%m_duration)*m_frameSize, std::ios::beg);
-        m_animFile.read((char*)m_rightFrame.data(), m_frameSize);
+        m_animFile.read(reinterpret_cast<char*>(m_rightFrame.data()), m_frameSize);
         m_cachedFrame = l_frameL;
     }
     return m_animFile.good();

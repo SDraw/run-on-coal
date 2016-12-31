@@ -50,7 +50,6 @@ void ROC::Model::SetPosition(glm::vec3 &f_pos)
 {
     if(!std::memcmp(&m_position, &f_pos, sizeof(glm::vec3))) return;
     std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
-    m_rebuildMatrix = true;
     if(m_rigidBody)
     {
         btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
@@ -58,49 +57,65 @@ void ROC::Model::SetPosition(glm::vec3 &f_pos)
         m_rigidBody->setCenterOfMassTransform(l_transform);
         m_rigidBody->activate(true);
     }
+    else m_rebuildMatrix = true;
 }
 void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
 {
-    if(f_global && m_parent)
+    if(m_rigidBody) std::memcpy(&f_pos, m_rigidBody->getCenterOfMassTransform().getOrigin().m_floats, sizeof(glm::vec3));
+    else
     {
-        btTransform l_transform;
-        l_transform.setFromOpenGLMatrix((float*)&m_matrix);
-        std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+        if(f_global && m_parent)
+        {
+            btTransform l_transform;
+            l_transform.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_matrix));
+            std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+        }
+        else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
     }
-    else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
 }
 
 void ROC::Model::SetRotation(glm::quat &f_rot)
 {
     if(!std::memcmp(&m_rotation, &f_rot, sizeof(glm::quat))) return;
     std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
-    m_rebuildMatrix = true;
     if(m_rigidBody)
     {
         btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
-        l_transform.setRotation((btQuaternion&)m_rotation);
+        l_transform.setRotation(btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w));
         m_rigidBody->setCenterOfMassTransform(l_transform);
         m_rigidBody->activate(true);
     }
+    else m_rebuildMatrix = true;
 }
 void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)
 {
-    if(f_global && m_parent)
+    if(m_rigidBody)
     {
-        btTransform l_transform;
-        l_transform.setFromOpenGLMatrix((float*)&m_matrix);
-        btQuaternion l_rot = l_transform.getRotation();
-        f_rot.x = l_rot.x();
-        f_rot.y = l_rot.y();
-        f_rot.z = l_rot.z();
-        f_rot.w = l_rot.w();
+        btQuaternion l_rotation = m_rigidBody->getCenterOfMassTransform().getRotation();
+        f_rot.x = l_rotation.x();
+        f_rot.y = l_rotation.y();
+        f_rot.z = l_rotation.z();
+        f_rot.w = l_rotation.w();
     }
-    else std::memcpy(&f_rot.data, &m_rotation, sizeof(glm::quat));
+    else
+    {
+        if(f_global && m_parent)
+        {
+            btTransform l_transform;
+            l_transform.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_matrix));
+            btQuaternion l_rot = l_transform.getRotation();
+            f_rot.x = l_rot.x();
+            f_rot.y = l_rot.y();
+            f_rot.z = l_rot.z();
+            f_rot.w = l_rot.w();
+        }
+        else std::memcpy(&f_rot.data, &m_rotation, sizeof(glm::quat));
+    }
 }
 
 void ROC::Model::SetScale(glm::vec3 &f_scl)
 {
-    if(!std::memcmp(&m_scale, &f_scl, sizeof(glm::vec3))) return;
+    if(m_rigidBody || !std::memcmp(&m_scale, &f_scl, sizeof(glm::vec3))) return;
     std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
     m_rebuildMatrix = true;
 }
@@ -108,9 +123,8 @@ void ROC::Model::GetScale(glm::vec3 &f_scl, bool f_global)
 {
     if(f_global && m_parent)
     {
-        glm::vec3 l_scale, l_skew;
+        glm::vec3 l_scale, l_skew, l_translation;
         glm::quat l_rotation;
-        glm::vec3 l_translation;
         glm::vec4 perspective;
         glm::decompose(m_matrix, l_scale, l_rotation, l_translation, l_skew, perspective);
         std::memcpy(&f_scl, &l_scale, sizeof(glm::vec3));
@@ -345,7 +359,7 @@ void ROC::Model::UpdateCollision()
         m_rotation.y = l_rotation.y();
         m_rotation.z = l_rotation.z();
         m_rotation.w = l_rotation.w();
-        l_transform.getOpenGLMatrix((float*)&m_localMatrix);
+        l_transform.getOpenGLMatrix(reinterpret_cast<float*>(&m_localMatrix));
         std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
     }
 }

@@ -67,7 +67,7 @@ protected:
     inline bool HasStaticBoneCollision() { return m_hasStaticBoneCollision; }
     inline bool HasDynamicBoneCollision() { return m_hasDynamicBoneCollision; }
 
-    inline size_t GetBonesCount() { return m_bonesCount; }
+    inline unsigned int GetBonesCount() { return m_bonesCount; }
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
     inline std::vector<glm::mat4>& GetBoneMatricesVectorRef() { return m_boneMatrices; }
 

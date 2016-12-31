@@ -10,6 +10,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 const std::vector<std::string> g_buffersTable
 {
     "color", "depth"
@@ -24,54 +25,44 @@ int oglClear(lua_State *f_vm)
     std::string l_param;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_param);
-    if(argStream.HasErrors() || l_param.empty())
+    if(!argStream.HasErrors() && !l_param.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        int l_type = Utils::ReadEnumVector(g_buffersTable, l_param);
+        if(l_type != -1)
+        {
+            GLbitfield l_buffer = (l_type == 0) ? GL_COLOR_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
+            LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(l_buffer);
+            lua_pushboolean(f_vm, 1);
+        }
+        else lua_pushboolean(f_vm, 0);
     }
-    bool l_result = true;
-    switch(Utils::ReadEnumVector(g_buffersTable, l_param))
-    {
-        case 0:
-            LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(GL_COLOR_BUFFER_BIT);
-            break;
-        case 1:
-            LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(GL_DEPTH_BUFFER_BIT);
-            break;
-        default:
-            l_result = false;
-    }
-    lua_pushboolean(f_vm, l_result);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int oglClearColor(lua_State *f_vm)
 {
-    lua_Number l_color[4];
+    glm::vec4 l_color;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        LuaManager::m_corePointer->GetRenderManager()->SetClearColour(l_color);
+        lua_pushboolean(f_vm, 1);
     }
-    glm::vec4 l_vColor(l_color[0], l_color[1], l_color[2], l_color[3]);
-    LuaManager::m_corePointer->GetRenderManager()->SetClearColour(l_vColor);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int oglViewport(lua_State *f_vm)
 {
-    lua_Integer l_params[4];
+    glm::ivec4 l_area;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    for(int i = 0; i < 4; i++) argStream.ReadInteger(l_params[i]);
-    if(argStream.HasErrors())
+    for(int i = 0; i < 4; i++) argStream.ReadInteger(l_area[i]);
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        LuaManager::m_corePointer->GetRenderManager()->SetViewport(l_area);
+        lua_pushboolean(f_vm, 1);
     }
-    glm::ivec4 l_area(l_params[0], l_params[1], l_params[2], l_params[3]);
-    LuaManager::m_corePointer->GetRenderManager()->SetViewport(l_area);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int oglPolygonMode(lua_State *f_vm)
@@ -79,20 +70,19 @@ int oglPolygonMode(lua_State *f_vm)
     std::string l_mode;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_mode);
-    if(argStream.HasErrors() || l_mode.empty())
+    if(!argStream.HasErrors() && !l_mode.empty())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        int l_type = Utils::ReadEnumVector(g_drawingTable, l_mode);
+        if(l_type != -1)
+        {
+            LuaManager::m_corePointer->GetRenderManager()->SetPolygonMode(l_type);
+            lua_pushboolean(f_vm, 1);
+        }
+        else lua_pushboolean(f_vm, 0);
     }
-    int l_type = Utils::ReadEnumVector(g_drawingTable, l_mode);
-    if(l_type == -1)
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    LuaManager::m_corePointer->GetRenderManager()->SetPolygonMode(static_cast<unsigned int>(l_type));
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
+
 }
 }

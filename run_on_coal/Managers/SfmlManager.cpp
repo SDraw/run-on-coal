@@ -70,21 +70,21 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     GLenum l_error = glewInit();
     if(l_error != GLEW_OK)
     {
-        l_log.append((char*)glewGetErrorString(l_error));
+        l_log.append(reinterpret_cast<const char*>(glewGetErrorString(l_error)));
         l_logManager->Log(l_log);
         exit(EXIT_FAILURE);
     }
 
     l_log.append("OpenGL ");
-    l_log.append((char*)glGetString(GL_VERSION));
+    l_log.append(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
     l_logManager->Log(l_log);
     l_log.clear();
     l_log.append("Renderer ");
-    l_log.append((char*)glGetString(GL_RENDERER));
+    l_log.append(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
     l_logManager->Log(l_log);
     l_log.clear();
     l_log.append("GLEW ");
-    l_log.append((char*)glewGetString(GLEW_VERSION));
+    l_log.append(reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
     l_logManager->Log(l_log);
 
     m_active = true;

@@ -141,7 +141,7 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
                 GLint l_logLength = 0;
                 glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &l_logLength);
                 m_error.resize(l_logLength);
-                glGetProgramInfoLog(m_program, l_logLength, &l_logLength, (GLchar*)m_error.data());
+                glGetProgramInfoLog(m_program, l_logLength, &l_logLength, const_cast<GLchar*>(m_error.data()));
                 glDeleteProgram(m_program);
                 m_program = 0U;
             }
@@ -228,7 +228,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec2 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::uvec2> &f_value)
 {
-    glUniform2uiv(f_uValue, f_value.size(), (GLuint*)f_value.data());
+    glUniform2uiv(f_uValue, f_value.size(), reinterpret_cast<GLuint*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec3 &f_value)
 {
@@ -236,7 +236,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec3 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::uvec3> &f_value)
 {
-    glUniform3uiv(f_uValue, f_value.size(), (GLuint*)f_value.data());
+    glUniform3uiv(f_uValue, f_value.size(), reinterpret_cast<GLuint*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec4 &f_value)
 {
@@ -244,7 +244,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec4 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::uvec4> &f_value)
 {
-    glUniform4uiv(f_uValue, f_value.size(), (GLuint*)f_value.data());
+    glUniform4uiv(f_uValue, f_value.size(), reinterpret_cast<GLuint*>(f_value.data()));
 }
 
 void ROC::Shader::SetUniformValue(GLint f_uValue, int f_value)
@@ -261,7 +261,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec2 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::ivec2> &f_value)
 {
-    glUniform2iv(f_uValue, f_value.size(), (GLint*)f_value.data());
+    glUniform2iv(f_uValue, f_value.size(), reinterpret_cast<GLint*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec3 &f_value)
 {
@@ -269,7 +269,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec3 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::ivec3> &f_value)
 {
-    glUniform3iv(f_uValue, f_value.size(), (GLint*)f_value.data());
+    glUniform3iv(f_uValue, f_value.size(), reinterpret_cast<GLint*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec4 &f_value)
 {
@@ -277,7 +277,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec4 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::ivec4> &f_value)
 {
-    glUniform4iv(f_uValue, f_value.size(), (GLint*)f_value.data());
+    glUniform4iv(f_uValue, f_value.size(), reinterpret_cast<GLint*>(f_value.data()));
 }
 
 void ROC::Shader::SetUniformValue(GLint f_uValue, float f_value)
@@ -294,7 +294,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec2 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::vec2> &f_value)
 {
-    glUniform2fv(f_uValue, f_value.size(), (GLfloat*)f_value.data());
+    glUniform2fv(f_uValue, f_value.size(), reinterpret_cast<GLfloat*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec3 &f_value)
 {
@@ -302,7 +302,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec3 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::vec3> &f_value)
 {
-    glUniform3fv(f_uValue, f_value.size(), (GLfloat*)f_value.data());
+    glUniform3fv(f_uValue, f_value.size(), reinterpret_cast<GLfloat*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec4 &f_value)
 {
@@ -310,7 +310,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec4 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::vec4> &f_value)
 {
-    glUniform4fv(f_uValue, f_value.size(), (GLfloat*)f_value.data());
+    glUniform4fv(f_uValue, f_value.size(), reinterpret_cast<GLfloat*>(f_value.data()));
 }
 
 void ROC::Shader::SetUniformValue(GLint f_uValue, double f_value)
@@ -327,7 +327,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec2 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::dvec2> &f_value)
 {
-    glUniform2dv(f_uValue, f_value.size(), (GLdouble*)f_value.data());
+    glUniform2dv(f_uValue, f_value.size(), reinterpret_cast<GLdouble*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec3 &f_value)
 {
@@ -335,7 +335,7 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec3 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::dvec3> &f_value)
 {
-    glUniform3dv(f_uValue, f_value.size(), (GLdouble*)f_value.data());
+    glUniform3dv(f_uValue, f_value.size(), reinterpret_cast<GLdouble*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec4 &f_value)
 {
@@ -343,32 +343,32 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec4 &f_value)
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::dvec4> &f_value)
 {
-    glUniform4dv(f_uValue, f_value.size(), (GLdouble*)f_value.data());
+    glUniform4dv(f_uValue, f_value.size(), reinterpret_cast<GLdouble*>(f_value.data()));
 }
 
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::mat2 &f_value)
 {
-    glUniformMatrix2fv(f_uValue, 1, GL_FALSE, (GLfloat*)&f_value);
+    glUniformMatrix2fv(f_uValue, 1, GL_FALSE, reinterpret_cast<GLfloat*>(&f_value));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::mat2> &f_value)
 {
-    glUniformMatrix2fv(f_uValue, f_value.size(), GL_FALSE, (GLfloat*)f_value.data());
+    glUniformMatrix2fv(f_uValue, f_value.size(), GL_FALSE, reinterpret_cast<GLfloat*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::mat3 &f_value)
 {
-    glUniformMatrix3fv(f_uValue, 1, GL_FALSE, (GLfloat*)&f_value);
+    glUniformMatrix3fv(f_uValue, 1, GL_FALSE, reinterpret_cast<GLfloat*>(&f_value));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::mat3> &f_value)
 {
-    glUniformMatrix3fv(f_uValue, f_value.size(), GL_FALSE, (GLfloat*)f_value.data());
+    glUniformMatrix3fv(f_uValue, f_value.size(), GL_FALSE, reinterpret_cast<GLfloat*>(f_value.data()));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, glm::mat4 &f_value)
 {
-    glUniformMatrix4fv(f_uValue, 1, GL_FALSE, (GLfloat*)&f_value);
+    glUniformMatrix4fv(f_uValue, 1, GL_FALSE, reinterpret_cast<GLfloat*>(&f_value));
 }
 void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::mat4> &f_value)
 {
-    glUniformMatrix4fv(f_uValue, f_value.size(), GL_FALSE, (GLfloat*)f_value.data());
+    glUniformMatrix4fv(f_uValue, f_value.size(), GL_FALSE, reinterpret_cast<GLfloat*>(f_value.data()));
 }
 
 void ROC::Shader::SetProjectionUniformValue(glm::mat4 &f_value)

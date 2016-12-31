@@ -33,7 +33,7 @@ void GetShaderInfoLog(GLuint f_shader, std::string &f_log)
     GLint l_logSize = 0;
     glGetShaderiv(f_shader, GL_INFO_LOG_LENGTH, &l_logSize);
     f_log.resize(l_logSize);
-    glGetShaderInfoLog(f_shader, l_logSize, &l_logSize, (GLchar*)f_log.data());
+    glGetShaderInfoLog(f_shader, l_logSize, &l_logSize, const_cast<GLchar*>(f_log.data()));
 }
 
 int ReadEnumVector(const std::vector<std::string> &f_vec, std::string &f_val)
@@ -65,8 +65,8 @@ int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
     z_stream zInfo = { 0 };
     zInfo.total_in = zInfo.avail_in = f_srcLen;
     zInfo.total_out = zInfo.avail_out = f_destLen;
-    zInfo.next_in = (unsigned char*)f_src;
-    zInfo.next_out = (unsigned char*)f_dest;
+    zInfo.next_in = static_cast<unsigned char*>(f_src);
+    zInfo.next_out = static_cast<unsigned char*>(f_dest);
 
     int l_error, l_ret = -1;
     l_error = deflateInit(&zInfo, Z_DEFAULT_COMPRESSION);
@@ -83,8 +83,8 @@ int UncompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
     z_stream zInfo = { 0 };
     zInfo.total_in = zInfo.avail_in = f_srcLen;
     zInfo.total_out = zInfo.avail_out = f_destLen;
-    zInfo.next_in = (unsigned char*)f_src;
-    zInfo.next_out = (unsigned char*)f_dest;
+    zInfo.next_in = static_cast<unsigned char*>(f_src);
+    zInfo.next_out = static_cast<unsigned char*>(f_dest);
 
     int l_error, l_ret = -1;
     l_error = inflateInit(&zInfo);

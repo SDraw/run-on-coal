@@ -164,9 +164,9 @@ bool Animation::GenerateBinary(std::string &f_path)
         std::cout << "Unable to create file " << f_path.c_str() << std::endl;
         return false;
     }
-    l_file.write((char*)&m_fps, sizeof(unsigned int));
-    l_file.write((char*)&m_duration, sizeof(unsigned int));
-    l_file.write((char*)&m_bonesValue, sizeof(unsigned int));
+    l_file.write(reinterpret_cast<char*>(&m_fps), sizeof(unsigned int));
+    l_file.write(reinterpret_cast<char*>(&m_duration), sizeof(unsigned int));
+    l_file.write(reinterpret_cast<char*>(&m_bonesValue), sizeof(unsigned int));
     for(size_t i = 0, ii = m_frameVector.size(); i < ii; i++)
     {
         for(size_t j = 0; j < m_bonesValue; j++)
@@ -175,7 +175,7 @@ bool Animation::GenerateBinary(std::string &f_path)
             l_data.m_position = m_frameVector[i]->m_position[j];
             l_data.m_rotation = m_frameVector[i]->m_rotation[j];
             l_data.m_scale = m_frameVector[i]->m_scale[j];
-            l_file.write((char*)&l_data, sizeof(boneData));
+            l_file.write(reinterpret_cast<char*>(&l_data), sizeof(boneData));
         }
     }
     l_file.flush();

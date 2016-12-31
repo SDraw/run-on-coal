@@ -30,13 +30,12 @@ int logPrint(lua_State *f_vm)
     std::string l_text;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_text);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        LuaManager::m_corePointer->GetLogManager()->Log(l_text);
+        lua_pushboolean(f_vm, 1);
     }
-    LuaManager::m_corePointer->GetLogManager()->Log(l_text);
-    lua_pushboolean(f_vm, 1);
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int isElement(lua_State *f_vm)
@@ -44,13 +43,8 @@ int isElement(lua_State *f_vm)
     void *l_pointer = NULL;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadPointer(&l_pointer);
-    if(argStream.HasErrors())
-    {
-        lua_pushboolean(f_vm, 0);
-        return 1;
-    }
-    bool l_result = LuaManager::m_corePointer->GetMemoryManager()->IsValidMemoryPointer(l_pointer);
-    lua_pushboolean(f_vm, l_result);
+    if(!argStream.HasErrors()) lua_pushboolean(f_vm, LuaManager::m_corePointer->GetMemoryManager()->IsValidMemoryPointer(l_pointer));
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 
@@ -59,13 +53,12 @@ int getElementType(lua_State *f_vm)
     void *l_pointer = NULL;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadPointer(&l_pointer);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
-        lua_pushboolean(f_vm, 0);
-        return 1;
+        int l_type = LuaManager::m_corePointer->GetMemoryManager()->GetMemoryPointerType(l_pointer);
+        lua_pushstring(f_vm, (l_type != -1) ? g_elementTypeName[l_type].c_str() : "invalid");
     }
-    int l_type = LuaManager::m_corePointer->GetMemoryManager()->GetMemoryPointerType(l_pointer);
-    lua_pushstring(f_vm, (l_type != -1) ? g_elementTypeName[l_type].c_str() : "invalid");
+    else lua_pushboolean(f_vm, 0);
     return 1;
 }
 int getTickCount(lua_State *f_vm)
