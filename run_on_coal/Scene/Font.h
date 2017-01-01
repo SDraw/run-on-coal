@@ -14,7 +14,9 @@ class Font
         glm::ivec2 m_breaing;
         FT_Pos m_advance;
     };
-    std::map<unsigned int, charData*> m_charMap;
+    std::unordered_map<unsigned int, charData*> m_charMap;
+    std::unordered_map<unsigned int, charData*>::iterator m_charIter;
+    std::unordered_map<unsigned int, charData*>::iterator m_charMapEnd;
 
     glm::vec3 m_vertices[6];
     GLuint m_vertexVBO;

@@ -454,9 +454,7 @@ void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value)
     size_t l_vectorSize = f_value.size();
     if(l_vectorSize > MAX_BONES_PER_MODEL) return;
     glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
-    void *l_data = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
-    std::memcpy(l_data, f_value.data(), l_vectorSize*sizeof(glm::mat4));
-    glUnmapBuffer(GL_UNIFORM_BUFFER);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, l_vectorSize*sizeof(glm::mat4), f_value.data());
 }
 void ROC::Shader::SetTimeUniformValue(float f_value)
 {
