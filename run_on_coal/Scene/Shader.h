@@ -73,7 +73,7 @@ protected:
     Shader();
     ~Shader();
     bool Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath);
-    void Enable(bool f_textureBind = false);
+    void Enable(bool f_full = true);
 
     void SetUniformValue(GLint f_uValue, unsigned int f_value);
     void SetUniformValue(GLint f_uValue, std::vector<unsigned int> &f_value);

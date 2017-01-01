@@ -117,7 +117,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
     m_activeShader = f_shader;
     if(m_activeShader)
     {
-        m_activeShader->Enable(true);
+        m_activeShader->Enable();
         m_activeShader->SetTimeUniformValue(m_time);
     }
 }
@@ -201,7 +201,7 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
     m_activeShader->SetModelUniformValue(m_textureMatrix);
 
     m_quad->SetProportions(f_size, l_vaoBind);
-    if(l_vaoBind) l_vaoBind = false;
+    l_vaoBind = false;
 
     DisableCulling();
     DisableDepth();
@@ -234,7 +234,7 @@ void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 
     m_activeShader->SetModelUniformValue(m_textureMatrix);
 
     m_quad->SetProportions(f_size, l_vaoBind);
-    if(l_vaoBind) l_vaoBind = false;
+    l_vaoBind = false;
 
     DisableCulling();
     DisableDepth();
@@ -255,11 +255,11 @@ void ROC::RenderManager::DoPulse()
 
 void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader)
 {
-    if(m_activeShader != f_shader) f_shader->Enable();
+    if(m_activeShader != f_shader) f_shader->Enable(false);
 }
 void ROC::RenderManager::RestoreActiveShader(Shader *f_shader)
 {
-    if(m_activeShader != f_shader && m_activeShader) m_activeShader->Enable();
+    if(m_activeShader != f_shader && m_activeShader) m_activeShader->Enable(false);
 }
 
 void ROC::RenderManager::DisableDepth()

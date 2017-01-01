@@ -450,10 +450,9 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
 }
 void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value)
 {
-    if(m_bonesUBO == 0xFFFFFFFF) return;
+    if(m_bonesUBO == GL_INVALID_INDEX) return;
     size_t l_vectorSize = f_value.size();
     if(l_vectorSize > MAX_BONES_PER_MODEL) return;
-    glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, l_vectorSize*sizeof(glm::mat4), f_value.data());
 }
 void ROC::Shader::SetTimeUniformValue(float f_value)
@@ -527,12 +526,13 @@ void ROC::Shader::Dettach(RenderTarget *f_target)
     }
 }
 
-void ROC::Shader::Enable(bool f_textureBind)
+void ROC::Shader::Enable(bool f_full)
 {
     glUseProgram(m_program);
-    if(f_textureBind)
+    if(f_full)
     {
         for(auto iter : m_textureBind) iter.m_texture->Bind(iter.m_slot);
         for(auto iter : m_targetBind) iter.m_target->BindTexture(iter.m_slot);
+        if(m_bonesUBO != GL_INVALID_INDEX) glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
     }
 }

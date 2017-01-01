@@ -16,7 +16,7 @@ class PreRenderManager
         std::set<TreeNode*> m_children;
     };
     std::set<TreeNode*> m_modelTreeSet;
-    std::map<Model*, TreeNode*> m_modelToNodeMap;
+    std::unordered_map<Model*, TreeNode*> m_modelToNodeMap;
     std::list<TreeNode*> m_nodeList;
 
     LuaArguments *m_argument;
