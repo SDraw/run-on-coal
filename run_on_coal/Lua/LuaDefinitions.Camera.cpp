@@ -275,7 +275,7 @@ int cameraGetDepth(lua_State *f_vm)
         l_returnVal++;
     }
     else lua_pushboolean(f_vm, 0);
-    return 2;
+    return l_returnVal;
 }
 
 int cameraGetViewMatrix(lua_State *f_vm)
