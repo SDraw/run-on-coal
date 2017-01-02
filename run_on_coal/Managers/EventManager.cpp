@@ -19,58 +19,68 @@ ROC::EventManager::~EventManager()
 
 bool ROC::EventManager::AddEvent(unsigned char f_event, int f_ref, void *f_pointer)
 {
-    if(f_event >= EventType::Last) return false;
-    auto &l_event = m_eventsVector[f_event];
-    for(auto iter : l_event)
+    bool l_result = false;
+    if(f_event < EventType::Last)
     {
-        if(iter->m_luaFunc == f_pointer)
+        auto &l_event = m_eventsVector[f_event];
+        for(auto iter : l_event)
         {
-            bool l_result = false;
-            if(iter->m_deleted)
+            if(iter->m_luaFunc == f_pointer)
             {
-                iter->m_deleted = false;
-                l_result = true;
+                if(iter->m_deleted)
+                {
+                    iter->m_deleted = false;
+                    l_result = true;
+                }
+                break;
             }
-            return l_result;
+        }
+        if(!l_result)
+        {
+            Event *l_eventObj = new Event();
+            l_eventObj->m_luaFunc = f_pointer;
+            l_eventObj->m_luaRef = f_ref;
+            if(f_event == m_activeEvent) m_iter = l_event.insert(m_iter, l_eventObj) + 1;
+            else l_event.push_back(l_eventObj);
+            l_result = true;
         }
     }
-    Event *l_eventObj = new Event();
-    l_eventObj->m_luaFunc = f_pointer;
-    l_eventObj->m_luaRef = f_ref;
-    if(f_event == m_activeEvent) m_iter = l_event.insert(m_iter, l_eventObj)+1;
-    else l_event.push_back(l_eventObj);
-    return true;
+    return l_result;
 }
 bool ROC::EventManager::SetEventMute(unsigned char f_event, void *f_pointer, bool f_mute)
 {
-    if(f_event >= EventType::Last) return false;
     bool l_result = false;
-    auto &l_event = m_eventsVector[f_event];
-    for(auto it = l_event.begin(); it != l_event.end(); it++)
+    if(f_event < EventType::Last)
     {
-        Event *l_eventObj = (*it);
-        if(l_eventObj->m_luaFunc == f_pointer)
+        auto &l_event = m_eventsVector[f_event];
+        for(auto it = l_event.begin(); it != l_event.end(); it++)
         {
-            l_eventObj->m_muted = f_mute;
-            l_result = true;
-            break;
+            Event *l_eventObj = (*it);
+            if(l_eventObj->m_luaFunc == f_pointer)
+            {
+                l_eventObj->m_muted = f_mute;
+                l_result = true;
+                break;
+            }
         }
     }
     return l_result;
 }
 bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
 {
-    if(f_event >= EventType::Last) return false;
     bool l_result = false;
-    auto &l_event = m_eventsVector[f_event];
-    for(auto it = l_event.begin(); it != l_event.end(); it++)
+    if(f_event < EventType::Last)
     {
-        Event *l_eventObj = (*it);
-        if(l_eventObj->m_luaFunc == f_pointer)
+        auto &l_event = m_eventsVector[f_event];
+        for(auto it = l_event.begin(); it != l_event.end(); it++)
         {
-            l_eventObj->m_deleted = true;
-            l_result = true;
-            break;
+            Event *l_eventObj = (*it);
+            if(l_eventObj->m_luaFunc == f_pointer)
+            {
+                l_eventObj->m_deleted = true;
+                l_result = true;
+                break;
+            }
         }
     }
     return l_result;
@@ -78,19 +88,21 @@ bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
 
 void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments *f_args)
 {
-    if(f_event >= EventType::Last) return;
-    m_activeEvent = f_event;
-    auto &l_event = m_eventsVector[f_event];
-    for(m_iter = l_event.begin(); m_iter != l_event.end(); ++m_iter)
+    if(f_event < EventType::Last)
     {
-        Event *l_eventObj = (*m_iter);
-        if(!l_eventObj->m_muted && !l_eventObj->m_deleted) m_luaManager->CallFunction(l_eventObj->m_luaRef, f_args);
-        if(l_eventObj->m_deleted)
+        m_activeEvent = f_event;
+        auto &l_event = m_eventsVector[f_event];
+        for(m_iter = l_event.begin(); m_iter != l_event.end(); ++m_iter)
         {
-            m_luaManager->RemoveReference(l_eventObj->m_luaRef);
-            delete l_eventObj;
-            m_iter = l_event.erase(m_iter);
-            if(m_iter == l_event.end()) break;
+            Event *l_eventObj = (*m_iter);
+            if(!l_eventObj->m_muted && !l_eventObj->m_deleted) m_luaManager->CallFunction(l_eventObj->m_luaRef, f_args);
+            if(l_eventObj->m_deleted)
+            {
+                m_luaManager->RemoveReference(l_eventObj->m_luaRef);
+                delete l_eventObj;
+                m_iter = l_event.erase(m_iter);
+                if(m_iter == l_event.end()) break;
+            }
         }
     }
 }

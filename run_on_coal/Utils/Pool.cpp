@@ -51,7 +51,9 @@ int ROC::Pool::Allocate()
 }
 void ROC::Pool::Reset(unsigned int f_id)
 {
-    if(f_id >= m_size) return;
-    m_poolData[f_id] = 0U;
-    if(f_id < m_minimal) m_minimal = f_id;
+    if(f_id < m_size)
+    {
+        m_poolData[f_id] = 0U;
+        if(f_id < m_minimal) m_minimal = f_id;
+    }
 }

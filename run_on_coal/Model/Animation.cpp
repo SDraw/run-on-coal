@@ -21,36 +21,36 @@ ROC::Animation::~Animation()
 
 bool ROC::Animation::Load(std::string &f_path)
 {
-    if(m_loaded) return false;
-    bool l_result = true;
-
-    try
+    if(!m_loaded)
     {
-        m_animFile.open(f_path, std::ios::binary | std::ios::in);
-        m_animFile.read(reinterpret_cast<char*>(&m_fps), sizeof(m_fps));
-        m_animFile.read(reinterpret_cast<char*>(&m_duration), sizeof(m_duration));
-        m_animFile.read(reinterpret_cast<char*>(&m_bonesValue), sizeof(m_bonesValue));
+        try
+        {
+            m_animFile.open(f_path, std::ios::binary | std::ios::in);
+            m_animFile.read(reinterpret_cast<char*>(&m_fps), sizeof(m_fps));
+            m_animFile.read(reinterpret_cast<char*>(&m_duration), sizeof(m_duration));
+            m_animFile.read(reinterpret_cast<char*>(&m_bonesValue), sizeof(m_bonesValue));
 
-        m_durationTotal = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps)*static_cast<float>(m_duration))*1000.f));
-        m_frameDelta = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps))*1000.0));
+            m_durationTotal = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps)*static_cast<float>(m_duration))*1000.f));
+            m_frameDelta = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps))*1000.0));
 
-        m_frameSize = m_bonesValue * 10U * sizeof(float);
-        m_rightFrame.resize(m_bonesValue * 10U);
-        m_leftFrame.resize(m_bonesValue * 10U);
+            m_frameSize = m_bonesValue * 10U * sizeof(float);
+            m_rightFrame.resize(m_bonesValue * 10U);
+            m_leftFrame.resize(m_bonesValue * 10U);
 
-        // Cache
-        m_animFile.seekg(12U, std::ios::beg); 
-        m_animFile.read(reinterpret_cast<char*>(m_leftFrame.data()), m_frameSize);
-        m_animFile.seekg(12U + m_frameSize, std::ios::beg);
-        m_animFile.read(reinterpret_cast<char*>(m_rightFrame.data()), m_frameSize);
+            // Cache
+            m_animFile.seekg(12U, std::ios::beg);
+            m_animFile.read(reinterpret_cast<char*>(m_leftFrame.data()), m_frameSize);
+            m_animFile.seekg(12U + m_frameSize, std::ios::beg);
+            m_animFile.read(reinterpret_cast<char*>(m_rightFrame.data()), m_frameSize);
+
+            m_loaded = true;
+        }
+        catch(const std::ifstream::failure &e)
+        {
+            Clean();
+        }
     }
-    catch(const std::ifstream::failure &e)
-    {
-        Clean();
-        l_result = false;
-    }
-    m_loaded = l_result;
-    return l_result;
+    return m_loaded;
 }
 
 bool ROC::Animation::CacheData(unsigned int f_tick, float &f_lerp)
@@ -62,11 +62,15 @@ bool ROC::Animation::CacheData(unsigned int f_tick, float &f_lerp)
 
     if(l_frameL != m_cachedFrame)
     {
-        m_animFile.seekg(12U + (l_frameL%m_duration)*m_frameSize, std::ios::beg);
-        m_animFile.read(reinterpret_cast<char*>(m_leftFrame.data()), m_frameSize);
-        m_animFile.seekg(12U + (l_frameR%m_duration)*m_frameSize, std::ios::beg);
-        m_animFile.read(reinterpret_cast<char*>(m_rightFrame.data()), m_frameSize);
-        m_cachedFrame = l_frameL;
+        try
+        {
+            m_animFile.seekg(12U + (l_frameL%m_duration)*m_frameSize, std::ios::beg);
+            m_animFile.read(reinterpret_cast<char*>(m_leftFrame.data()), m_frameSize);
+            m_animFile.seekg(12U + (l_frameR%m_duration)*m_frameSize, std::ios::beg);
+            m_animFile.read(reinterpret_cast<char*>(m_rightFrame.data()), m_frameSize);
+            m_cachedFrame = l_frameL;
+        }
+        catch(const std::ifstream::failure &e) {}
     }
     return m_animFile.good();
 }

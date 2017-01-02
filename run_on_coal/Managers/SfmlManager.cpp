@@ -135,10 +135,12 @@ bool ROC::SfmlManager::SetIcon(std::string &f_path)
 
 void ROC::SfmlManager::SetCursorMode(unsigned char f_mode)
 {
-    if(f_mode == m_cursorMode) return;
-    m_cursorMode = f_mode;
-    m_window->setMouseCursorGrabbed((m_cursorMode & CURSOR_LOCK_BIT) == CURSOR_LOCK_BIT);
-    m_window->setMouseCursorVisible((m_cursorMode & CURSOR_VISIBILITY_BIT) == CURSOR_VISIBILITY_BIT);
+    if(f_mode != m_cursorMode)
+    {
+        m_cursorMode = f_mode;
+        m_window->setMouseCursorGrabbed((m_cursorMode & CURSOR_LOCK_BIT) == CURSOR_LOCK_BIT);
+        m_window->setMouseCursorVisible((m_cursorMode & CURSOR_VISIBILITY_BIT) == CURSOR_VISIBILITY_BIT);
+    }
 }
 void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos)
 {
@@ -201,7 +203,7 @@ bool ROC::SfmlManager::DoPulse()
                 {
                     sf::String l_text(m_event.text.unicode);
                     auto l_utf8 = l_text.toUtf8();
-                    m_input.insert(m_input.begin(), l_utf8.begin(), l_utf8.end());
+                    m_input.insert(m_input.end(), l_utf8.begin(), l_utf8.end());
                     m_argument->PushArgument(m_input);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::TextInput, m_argument);
                     m_argument->Clear();

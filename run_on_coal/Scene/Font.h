@@ -12,7 +12,7 @@ class Font
         GLuint m_texture;
         glm::ivec2 m_size;
         glm::ivec2 m_breaing;
-        FT_Pos m_advance;
+        float m_advance;
     };
     std::unordered_map<unsigned int, charData*> m_charMap;
     std::unordered_map<unsigned int, charData*>::iterator m_charIter;
@@ -34,7 +34,7 @@ protected:
     ~Font();
     bool LoadTTF(std::string &f_path, int f_size, unsigned char f_filter);
     inline GLuint GetVAO() { return m_VAO; }
-    bool Draw(sf::String &f_text, glm::vec2 &f_pos, bool f_bind);
+    void Draw(sf::String &f_text, glm::vec2 &f_pos, bool f_bind);
     friend class ElementManager;
     friend class RenderManager;
 };

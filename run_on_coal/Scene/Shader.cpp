@@ -1,7 +1,7 @@
 #include "stdafx.h"
+#include "Scene/RenderTarget.h"
 #include "Scene/Shader.h"
 #include "Scene/Texture.h"
-#include "Scene/RenderTarget.h"
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
@@ -9,7 +9,7 @@ ROC::Pool *ROC::Shader::m_uboBindPool = NULL;
 
 ROC::Shader::Shader()
 {
-    m_program = 0;
+    m_program = 0U;
 
     m_projectionUniform = -1;
     m_viewUniform = -1;
@@ -60,105 +60,145 @@ ROC::Shader::~Shader()
 
 bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath)
 {
-    if(m_program) return false;
-    GLuint l_vertexShader = 0U;
-    GLuint l_fragmentShader = 0U;
-    GLuint l_geometryShader = 0U;
-    bool l_result = false;
-    if(!f_vpath.empty())
+    if(!m_program && !f_vpath.empty() && !f_fpath.empty())
     {
-        std::string l_data;
-        if(Utils::ReadFile(f_vpath, l_data))
+        std::ifstream l_file;
+
+        GLuint l_vertexShader = 0U;
+        l_file.open(f_vpath, std::ios::in);
+        if(!l_file.fail())
         {
+            std::string l_shaderData;
+            std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
+            std::back_insert_iterator<std::string> l_stringInsert(l_shaderData);
+            std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
+            l_file.close();
+
             l_vertexShader = glCreateShader(GL_VERTEX_SHADER);
             if(l_vertexShader)
             {
-                const char *l_source = l_data.c_str();
+                const char *l_source = l_shaderData.c_str();
                 glShaderSource(l_vertexShader, 1, &l_source, NULL);
                 glCompileShader(l_vertexShader);
-                if(!Utils::CheckShader(l_vertexShader))
+
+                GLint l_state;
+                glGetShaderiv(l_vertexShader, GL_COMPILE_STATUS, &l_state);
+                if(!l_state)
                 {
-                    Utils::GetShaderInfoLog(l_vertexShader, m_error);
+                    GLint l_logSize = 0;
+                    glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
+                    m_error.resize(l_logSize);
+                    glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
                     glDeleteShader(l_vertexShader);
                     l_vertexShader = 0U;
                 }
             }
         }
-    }
-    if(!f_fpath.empty())
-    {
-        std::string l_data;
-        if(Utils::ReadFile(f_fpath, l_data))
+        l_file.clear();
+
+        GLuint l_fragmentShader = 0U;
+        l_file.open(f_fpath, std::ios::in);
+        if(!l_file.fail())
         {
+            std::string l_shaderData;
+            std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
+            std::back_insert_iterator<std::string> l_stringInsert(l_shaderData);
+            std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
+            l_file.close();
+
             l_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
             if(l_fragmentShader)
             {
-                const char *l_source = l_data.c_str();
+                const char *l_source = l_shaderData.c_str();
                 glShaderSource(l_fragmentShader, 1, &l_source, NULL);
                 glCompileShader(l_fragmentShader);
-                if(!Utils::CheckShader(l_fragmentShader))
+
+                GLint l_state;
+                glGetShaderiv(l_fragmentShader, GL_COMPILE_STATUS, &l_state);
+                if(!l_state)
                 {
-                    Utils::GetShaderInfoLog(l_fragmentShader, m_error);
+                    GLint l_logSize = 0;
+                    glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
+                    m_error.resize(l_logSize);
+                    glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
                     glDeleteShader(l_fragmentShader);
                     l_fragmentShader = 0U;
                 }
             }
         }
-    }
-    if(!f_gpath.empty())
-    {
-        std::string l_data;
-        if(Utils::ReadFile(f_gpath, l_data))
+        l_file.clear();
+
+        GLuint l_geometryShader = 0U;
+        if(!f_gpath.empty())
         {
-            l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-            if(l_geometryShader)
+            l_file.open(f_gpath, std::ios::in);
+            if(!l_file.fail())
             {
-                const char *l_source = l_data.c_str();
-                glShaderSource(l_geometryShader, 1, &l_source, NULL);
-                glCompileShader(l_geometryShader);
-                if(!Utils::CheckShader(l_geometryShader))
+                std::string l_shaderData;
+                std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
+                std::back_insert_iterator<std::string> l_stringInsert(l_shaderData);
+                std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
+                l_file.close();
+
+                l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+                if(l_geometryShader)
                 {
-                    Utils::GetShaderInfoLog(l_geometryShader, m_error);
-                    glDeleteShader(l_geometryShader);
-                    l_geometryShader = 0U;
+                    const char *l_source = l_shaderData.c_str();
+                    glShaderSource(l_geometryShader, 1, &l_source, NULL);
+                    glCompileShader(l_geometryShader);
+
+                    GLint l_state;
+                    glGetShaderiv(l_geometryShader, GL_COMPILE_STATUS, &l_state);
+                    if(!l_state)
+                    {
+                        GLint l_logSize = 0;
+                        glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
+                        m_error.resize(l_logSize);
+                        glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
+                        glDeleteShader(l_geometryShader);
+                        l_geometryShader = 0U;
+                    }
                 }
             }
+            l_file.clear();
         }
-    }
-    if(l_vertexShader && l_fragmentShader)
-    {
-        m_program = glCreateProgram();
-        if(m_program)
+
+
+        if(m_error.empty())
         {
-            glAttachShader(m_program, l_vertexShader);
-            glAttachShader(m_program, l_fragmentShader);
-            if(l_geometryShader) glAttachShader(m_program, l_geometryShader);
-            GLint l_link = 0;
-            glLinkProgram(m_program);
-            glGetProgramiv(m_program, GL_LINK_STATUS, &l_link);
-            if(!l_link)
+            m_program = glCreateProgram();
+            if(m_program)
             {
-                GLint l_logLength = 0;
-                glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &l_logLength);
-                m_error.resize(l_logLength);
-                glGetProgramInfoLog(m_program, l_logLength, &l_logLength, const_cast<GLchar*>(m_error.data()));
-                glDeleteProgram(m_program);
-                m_program = 0U;
+                glAttachShader(m_program, l_vertexShader);
+                glAttachShader(m_program, l_fragmentShader);
+                if(l_geometryShader) glAttachShader(m_program, l_geometryShader);
+
+                GLint l_link = 0;
+                glLinkProgram(m_program);
+                glGetProgramiv(m_program, GL_LINK_STATUS, &l_link);
+                if(!l_link)
+                {
+                    GLint l_logLength = 0;
+                    glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &l_logLength);
+                    m_error.resize(l_logLength);
+                    glGetProgramInfoLog(m_program, l_logLength, &l_logLength, const_cast<GLchar*>(m_error.data()));
+                    glDeleteProgram(m_program);
+                    m_program = 0U;
+                }
+                else
+                {
+                    glDetachShader(m_program, l_vertexShader);
+                    glDetachShader(m_program, l_fragmentShader);
+                    if(l_geometryShader) glDetachShader(m_program, l_vertexShader);
+                    SetupDefaultUniformsAndLocations();
+                }
+                glDeleteShader(l_vertexShader);
+                glDeleteShader(l_fragmentShader);
+                if(l_geometryShader) glDeleteShader(l_geometryShader);
             }
-            else
-            {
-                glDetachShader(m_program, l_vertexShader);
-                glDetachShader(m_program, l_fragmentShader);
-                if(l_geometryShader) glDetachShader(m_program, l_vertexShader);
-                SetupDefaultUniformsAndLocations();
-                l_result = true;
-            }
-            glDeleteShader(l_vertexShader);
-            glDeleteShader(l_fragmentShader);
-            if(l_geometryShader) glDeleteShader(l_geometryShader);
         }
     }
-    return l_result;
+    return (m_program != 0U);
 }
 void ROC::Shader::SetupDefaultUniformsAndLocations()
 {
@@ -194,7 +234,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
         {
             glGenBuffers(1, &m_bonesUBO);
             glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
-            glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * MAX_BONES_PER_MODEL, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * SHADER_MAX_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
             glBindBufferBase(GL_UNIFORM_BUFFER, m_boneBindIndex, m_bonesUBO);
             glUniformBlockBinding(m_program, l_boneUniform, m_boneBindIndex);
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -373,118 +413,182 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, std::vector<glm::mat4> &f_valu
 
 void ROC::Shader::SetProjectionUniformValue(glm::mat4 &f_value)
 {
-    if(m_projectionUniform == -1) return;
-    if(!std::memcmp(&m_projectionUniformValue, &f_value, sizeof(glm::mat4))) return;
-    std::memcpy(&m_projectionUniformValue, &f_value, sizeof(glm::mat4));
-    SetUniformValue(m_projectionUniform, m_projectionUniformValue);
+    if(m_projectionUniform != -1)
+    {
+        if(std::memcmp(&m_projectionUniformValue, &f_value, sizeof(glm::mat4)))
+        {
+            std::memcpy(&m_projectionUniformValue, &f_value, sizeof(glm::mat4));
+            SetUniformValue(m_projectionUniform, m_projectionUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetViewUniformValue(glm::mat4 &f_value)
 {
-    if(m_viewUniform == -1) return;
-    if(!std::memcmp(&m_viewUniformValue, &f_value, sizeof(glm::mat4))) return;
-    std::memcpy(&m_viewUniformValue, &f_value, sizeof(glm::mat4));
-    SetUniformValue(m_viewUniform, m_viewUniformValue);
+    if(m_viewUniform != -1)
+    {
+        if(std::memcmp(&m_viewUniformValue, &f_value, sizeof(glm::mat4)))
+        {
+            std::memcpy(&m_viewUniformValue, &f_value, sizeof(glm::mat4));
+            SetUniformValue(m_viewUniform, m_viewUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetModelUniformValue(glm::mat4 &f_value)
 {
-    if(m_modelUniform == -1) return;
-    if(!std::memcmp(&m_modelUniformValue, &f_value, sizeof(glm::mat4))) return;
-    std::memcpy(&m_modelUniformValue, &f_value, sizeof(glm::mat4));
-    SetUniformValue(m_modelUniform, m_modelUniformValue);
+    if(m_modelUniform != -1)
+    {
+        if(std::memcmp(&m_modelUniformValue, &f_value, sizeof(glm::mat4)))
+        {
+            std::memcpy(&m_modelUniformValue, &f_value, sizeof(glm::mat4));
+            SetUniformValue(m_modelUniform, m_modelUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetCameraPositionUniformValue(glm::vec3 &f_value)
 {
-    if(m_cameraPositionUniform == -1) return;
-    if(!std::memcmp(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3))) return;
-    std::memcpy(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3));
-    SetUniformValue(m_cameraPositionUniform, m_cameraPositionUniformValue);
+    if(m_cameraPositionUniform != -1)
+    {
+        if(std::memcmp(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3)))
+        {
+            std::memcpy(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3));
+            SetUniformValue(m_cameraPositionUniform, m_cameraPositionUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetCameraDirectionUniformValue(glm::vec3 &f_value)
 {
-    if(m_cameraDirectionUniform == -1) return;
-    if(!std::memcmp(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3))) return;
-    std::memcpy(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3));
-    SetUniformValue(m_cameraDirectionUniform, m_cameraDirectionUniformValue);
+    if(m_cameraDirectionUniform != -1)
+    {
+        if(std::memcmp(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3)))
+        {
+            std::memcpy(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3));
+            SetUniformValue(m_cameraDirectionUniform, m_cameraDirectionUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetLightColorUniformValue(glm::vec4 &f_value)
 {
-    if(m_lightColorUniform == -1) return;
-    if(!std::memcmp(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4))) return;
-    std::memcpy(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4));
-    SetUniformValue(m_lightColorUniform, m_lightColorUniformValue);
+    if(m_lightColorUniform != -1)
+    {
+        if(std::memcmp(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4)))
+        {
+            std::memcpy(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4));
+            SetUniformValue(m_lightColorUniform, m_lightColorUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetLightDirectionUniformValue(glm::vec3 &f_value)
 {
-    if(m_lightDirectionUniform == -1) return;
-    if(!std::memcmp(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3))) return;
-    std::memcpy(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3));
-    SetUniformValue(m_lightDirectionUniform, m_lightDirectionUniformValue);
+    if(m_lightDirectionUniform != -1)
+    {
+        if(std::memcmp(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3)))
+        {
+            std::memcpy(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3));
+            SetUniformValue(m_lightDirectionUniform, m_lightDirectionUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetLightParamUniformValue(glm::vec4 &f_value)
 {
-    if(m_lightParamUniform == -1) return;
-    if(!std::memcmp(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4))) return;
-    std::memcpy(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4));
-    SetUniformValue(m_lightParamUniform, m_lightParamUniformValue);
+    if(m_lightParamUniform != -1)
+    {
+        if(std::memcmp(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4)))
+        {
+            std::memcpy(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4));
+            SetUniformValue(m_lightParamUniform, m_lightParamUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetMaterialParamUniformValue(glm::vec4 &f_value)
 {
-    if(m_materialParamUniform == -1) return;
-    if(!std::memcmp(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4))) return;
-    std::memcpy(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4));
-    SetUniformValue(m_materialParamUniform, m_materialParamUniformValue);
+    if(m_materialParamUniform != -1)
+    {
+        if(std::memcmp(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4)))
+        {
+            std::memcpy(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4));
+            SetUniformValue(m_materialParamUniform, m_materialParamUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetMaterialTypeUniformValue(int f_value)
 {
-    if(m_materialTypeUniform == -1) return;
-    if(m_materialTypeUniformValue == f_value) return;
-    m_materialTypeUniformValue = f_value;
-    SetUniformValue(m_materialTypeUniform, m_materialTypeUniformValue);
+    if(m_materialTypeUniform != -1)
+    {
+        if(m_materialTypeUniformValue != f_value)
+        {
+            m_materialTypeUniformValue = f_value;
+            SetUniformValue(m_materialTypeUniform, m_materialTypeUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
 {
-    if(m_animatedUniform == -1) return;
-    if(m_animatedUniformValue == f_value) return;
-    m_animatedUniformValue = f_value;
-    SetUniformValue(m_animatedUniform, m_animatedUniformValue);
+    if(m_animatedUniform != -1)
+    {
+        if(m_animatedUniformValue != f_value)
+        {
+            m_animatedUniformValue = f_value;
+            SetUniformValue(m_animatedUniform, m_animatedUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value)
 {
-    if(m_bonesUBO == GL_INVALID_INDEX) return;
-    size_t l_vectorSize = f_value.size();
-    if(l_vectorSize > MAX_BONES_PER_MODEL) return;
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, l_vectorSize*sizeof(glm::mat4), f_value.data());
+    if(m_bonesUBO != GL_INVALID_INDEX)
+    {
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, f_value.size()*sizeof(glm::mat4), f_value.data());
+    }
 }
 void ROC::Shader::SetTimeUniformValue(float f_value)
 {
-    if(m_timeUniform == -1) return;
-    if(m_timeUniformValue == f_value) return;
-    m_timeUniformValue = f_value;
-    SetUniformValue(m_timeUniform, m_timeUniformValue);
+    if(m_timeUniform != -1)
+    {
+        if(m_timeUniformValue != f_value)
+        {
+            m_timeUniformValue = f_value;
+            SetUniformValue(m_timeUniform, m_timeUniformValue);
+        }
+    }
 }
 void ROC::Shader::SetColorUniformValue(glm::vec4 &f_value)
 {
-    if(m_colorUniform == -1) return;
-    if(!std::memcmp(&f_value, &m_colorUniformValue, sizeof(glm::vec4))) return;
-    std::memcpy(&m_colorUniformValue, &f_value, sizeof(glm::vec4));
-    SetUniformValue(m_colorUniform, m_colorUniformValue);
+    if(m_colorUniform != -1)
+    {
+        if(std::memcmp(&f_value, &m_colorUniformValue, sizeof(glm::vec4)))
+        {
+            std::memcpy(&m_colorUniformValue, &f_value, sizeof(glm::vec4));
+            SetUniformValue(m_colorUniform, m_colorUniformValue);
+        }
+    }
 }
 
 bool ROC::Shader::Attach(Texture *f_texture, int f_uniform)
 {
+    bool l_result = false;
     for(auto iter : m_textureBind)
     {
-        if(iter.m_texture == f_texture) return false;
+        if(iter.m_texture == f_texture)
+        {
+            l_result = true;
+            break;
+        }
     }
-    int l_slot = m_bindPool->Allocate();
-    if(l_slot == -1) return false;
-    textureBindData l_bind{ f_texture, l_slot + 1, f_uniform };
-    m_textureBind.push_back(l_bind);
-    SetUniformValue(f_uniform, l_slot + 1);
-    return true;
+    if(!l_result)
+    {
+        int l_slot = m_bindPool->Allocate();
+        if(l_slot != -1)
+        {
+            textureBindData l_bind{ f_texture, l_slot + 1, f_uniform };
+            m_textureBind.push_back(l_bind);
+            SetUniformValue(f_uniform, l_slot + 1);
+            l_result = true;
+        }
+    }
+    return l_result;
 }
-void ROC::Shader::Dettach(Texture *f_texture)
+bool ROC::Shader::Dettach(Texture *f_texture)
 {
+    bool l_result = false;
     for(unsigned int i = 0U, j = m_textureBind.size(); i < j; i++)
     {
         textureBindData &l_bind = m_textureBind[i];
@@ -493,26 +597,40 @@ void ROC::Shader::Dettach(Texture *f_texture)
             m_bindPool->Reset(static_cast<unsigned int>(l_bind.m_slot - 1));
             SetUniformValue(l_bind.m_uniform, -1);
             m_textureBind.erase(m_textureBind.begin() + i);
+            l_result = true;
             break;
         }
     }
+    return l_result;
 }
 
 bool ROC::Shader::Attach(RenderTarget *f_target, int f_uniform)
 {
+    bool l_result = false;
     for(auto iter : m_targetBind)
     {
-        if(iter.m_target == f_target) return false;
+        if(iter.m_target == f_target)
+        {
+            l_result = true;
+            break;
+        }
     }
-    int l_slot = m_bindPool->Allocate();
-    if(l_slot == -1) return false;
-    targetBindData l_bind{ f_target, l_slot + 1, f_uniform };
-    m_targetBind.push_back(l_bind);
-    SetUniformValue(f_uniform, l_slot + 1);
-    return true;
+    if(!l_result)
+    {
+        int l_slot = m_bindPool->Allocate();
+        if(l_slot != -1)
+        {
+            targetBindData l_bind{ f_target, l_slot + 1, f_uniform };
+            m_targetBind.push_back(l_bind);
+            SetUniformValue(f_uniform, l_slot + 1);
+            l_result = true;
+        }
+    }
+    return l_result;
 }
-void ROC::Shader::Dettach(RenderTarget *f_target)
+bool ROC::Shader::Dettach(RenderTarget *f_target)
 {
+    bool l_result = false;
     for(unsigned int i = 0U, j = m_targetBind.size(); i < j; i++)
     {
         targetBindData &l_bind = m_targetBind[i];
@@ -521,9 +639,11 @@ void ROC::Shader::Dettach(RenderTarget *f_target)
             m_bindPool->Reset(static_cast<unsigned int>(l_bind.m_slot - 1));
             SetUniformValue(l_bind.m_uniform, -1);
             m_targetBind.erase(m_targetBind.begin() + i);
+            l_result = true;
             break;
         }
     }
+    return l_result;
 }
 
 void ROC::Shader::Enable(bool f_full)

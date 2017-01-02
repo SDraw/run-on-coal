@@ -16,34 +16,36 @@ ROC::Collision::~Collision()
 
 bool ROC::Collision::Create(unsigned char f_type, glm::vec3 &f_size)
 {
-    if(m_rigidBody || f_type > COLLISION_TYPE_CONE) return false;
-    btCollisionShape *l_shape = NULL;
-    switch(f_type)
+    if(!m_rigidBody)
     {
-        case COLLISION_TYPE_SPHERE:
-            l_shape = new btSphereShape(f_size.x);
-            break;
-        case COLLISION_TYPE_BOX:
-            l_shape = new btBoxShape(btVector3(f_size.x,f_size.y,f_size.z));
-            break;
-        case COLLISION_TYPE_CYLINDER:
-            l_shape = new btCylinderShape(btVector3(f_size.x,f_size.y,f_size.z));
-            break;
-        case COLLISION_TYPE_CAPSULE:
-            l_shape = new btCapsuleShape(f_size.x, f_size.y);
-            break;
-        case COLLISION_TYPE_CONE:
-            l_shape = new btConeShape(f_size.x, f_size.y);
-            break;
-        default:
-            l_shape = new btEmptyShape();
+        btCollisionShape *l_shape = NULL;
+        switch(f_type)
+        {
+            case COLLISION_TYPE_SPHERE:
+                l_shape = new btSphereShape(f_size.x);
+                break;
+            case COLLISION_TYPE_BOX:
+                l_shape = new btBoxShape(btVector3(f_size.x, f_size.y, f_size.z));
+                break;
+            case COLLISION_TYPE_CYLINDER:
+                l_shape = new btCylinderShape(btVector3(f_size.x, f_size.y, f_size.z));
+                break;
+            case COLLISION_TYPE_CAPSULE:
+                l_shape = new btCapsuleShape(f_size.x, f_size.y);
+                break;
+            case COLLISION_TYPE_CONE:
+                l_shape = new btConeShape(f_size.x, f_size.y);
+                break;
+            default:
+                l_shape = new btEmptyShape();
+        }
+        btTransform l_transform;
+        l_transform.setIdentity();
+        btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
+        btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(0.f, l_fallMotionState, l_shape);
+        m_rigidBody = new btRigidBody(fallRigidBodyCI);
     }
-    btTransform l_transform;
-    l_transform.setIdentity();
-    btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
-    btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(0.f, l_fallMotionState, l_shape);
-    m_rigidBody = new btRigidBody(fallRigidBodyCI);
-    return true;
+    return (m_rigidBody != NULL);
 }
 
 void ROC::Collision::GetPosition(glm::vec3 &f_pos)

@@ -49,6 +49,8 @@ ROC::Core::Core()
     m_sfmlManager = new SfmlManager(this);
     m_preRenderManager = new PreRenderManager(this);
     m_renderManager = new RenderManager(this);
+
+    m_state = true;
 }
 ROC::Core::~Core()
 {
@@ -68,12 +70,12 @@ ROC::Core::~Core()
 bool ROC::Core::DoPulse()
 {
     SystemTick::UpdateTick();
-    bool l_result = m_sfmlManager->DoPulse();
+    m_state = m_sfmlManager->DoPulse();
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();
     m_preRenderManager->DoPulse_S2();
     m_elementManager->SetLock(true);
     m_renderManager->DoPulse();
     m_elementManager->SetLock(false);
-    return l_result;
+    return m_state;
 }

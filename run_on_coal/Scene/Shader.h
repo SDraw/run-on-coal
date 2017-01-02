@@ -1,5 +1,5 @@
 #pragma once
-#define MAX_BONES_PER_MODEL 227U
+#define SHADER_MAX_BONES_COUNT 227U
 
 namespace ROC
 {
@@ -134,11 +134,11 @@ protected:
     void SetColorUniformValue(glm::vec4 &f_value);
 
     bool Attach(Texture *f_texture, int f_uniform);
-    void Dettach(Texture *f_texture);
+    bool Dettach(Texture *f_texture);
     bool Attach(RenderTarget *f_target, int f_uniform);
-    void Dettach(RenderTarget *f_target);
+    bool Dettach(RenderTarget *f_target);
 
-    inline void GetError(std::string &f_str) { f_str.insert(f_str.begin(), m_error.begin(), m_error.end()); }
+    inline void GetError(std::string &f_str) { f_str.append(m_error); }
     friend class ElementManager;
     friend class InheritanceManager;
     friend class RenderManager;

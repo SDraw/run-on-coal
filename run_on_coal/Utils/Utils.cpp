@@ -10,44 +10,18 @@ namespace Utils
 
 std::regex g_upRegex("(\\.\\.)+(\\/|\\\\)");
 
-bool ReadFile(std::string &path, std::string &f_cont)
-{
-    std::ifstream l_file;
-    l_file.open(path, std::ios::in);
-    if(l_file.fail()) return false;
-
-    std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
-    std::back_insert_iterator<std::string> l_stringInsert(f_cont);
-    std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
-    return true;
-}
-
-GLint CheckShader(GLuint f_shader)
-{
-    GLint l_params;
-    glGetShaderiv(f_shader, GL_COMPILE_STATUS, &l_params);
-    return l_params;
-}
-void GetShaderInfoLog(GLuint f_shader, std::string &f_log)
-{
-    GLint l_logSize = 0;
-    glGetShaderiv(f_shader, GL_INFO_LOG_LENGTH, &l_logSize);
-    f_log.resize(l_logSize);
-    glGetShaderInfoLog(f_shader, l_logSize, &l_logSize, const_cast<GLchar*>(f_log.data()));
-}
-
 int ReadEnumVector(const std::vector<std::string> &f_vec, std::string &f_val)
 {
-    int l_return = -1;
+    int l_result = -1;
     for(std::vector<std::string>::const_iterator iter = f_vec.begin(); iter != f_vec.end(); ++iter)
     {
         if(!iter->compare(f_val))
         {
-            l_return = iter - f_vec.begin();
+            l_result = iter - f_vec.begin();
             break;
         }
     }
-    return l_return;
+    return l_result;
 }
 
 void AnalyzePath(std::string &f_in, std::string &f_out)
@@ -57,7 +31,7 @@ void AnalyzePath(std::string &f_in, std::string &f_out)
 void JoinPaths(std::string &f_result, std::string &f_path)
 {
     f_result.push_back('/');
-    f_result.insert(f_result.end(), f_path.begin(), f_path.end());
+    f_result.append(f_path);
 }
 
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
@@ -100,5 +74,6 @@ int GetMaxCompressedLen(int nLenSrc)
 {
     return (nLenSrc + 6 + ((nLenSrc + 16383) / 16384 * 5));
 }
+
 }
 }

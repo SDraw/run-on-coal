@@ -28,6 +28,7 @@ class Core
     SoundManager *m_soundManager;
     static Core *m_instance;
     std::string m_workingDir;
+    bool m_state;
 
     Core();
     Core(const Core& that);
@@ -38,7 +39,7 @@ public:
     static void Terminate();
 
     bool DoPulse();
-    inline void GetWorkingDirectory(std::string &f_path) { f_path.insert(f_path.begin(), m_workingDir.begin(), m_workingDir.end()); }
+    inline void GetWorkingDirectory(std::string &f_path) { f_path.append(m_workingDir); }
 
     inline ConfigManager* GetConfigManager() { return m_configManager; }
     inline ElementManager* GetElementManager() { return m_elementManager; }

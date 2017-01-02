@@ -13,46 +13,54 @@ ROC::Texture::~Texture()
 
 bool ROC::Texture::Load(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress)
 {
-    if(m_type != TEXTURE_TYPE_NONE || f_type <= TEXTURE_TYPE_NONE || f_type >= TEXTURE_TYPE_CUBEMAP) return false;
-    sf::Image l_image;
-    m_type = f_type;
-    if(l_image.loadFromFile(f_path))
+    if(m_type == TEXTURE_TYPE_NONE && (f_type > TEXTURE_TYPE_NONE && f_type < TEXTURE_TYPE_CUBEMAP))
     {
-        sf::Vector2u l_imageSize = l_image.getSize();
-        glGenTextures(1, &m_texture);
-        glBindTexture(GL_TEXTURE_2D, m_texture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST+f_filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST+f_filter);
-        glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+        sf::Image l_image;
+        m_type = f_type;
+        if(l_image.loadFromFile(f_path))
+        {
+            sf::Vector2u l_imageSize = l_image.getSize();
+            glGenTextures(1, &m_texture);
+            glBindTexture(GL_TEXTURE_2D, m_texture);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + f_filter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + f_filter);
+            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+        }
+        else GenerateBrokenTexture();
     }
-    else GenerateBrokenTexture();
-    return true;
+    return (m_type != TEXTURE_TYPE_NONE);
 }
 bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
-    if(m_type != TEXTURE_TYPE_NONE || f_path.size() != 6U) return false;
-    glGenTextures(1, &m_texture);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST+f_filter);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST+f_filter);
-
-    m_type = TEXTURE_TYPE_CUBEMAP;
-    for(int i = 0; i < 6; i++)
+    if(m_type == TEXTURE_TYPE_NONE && f_path.size() == 6U)
     {
-        sf::Image l_image;
-        if(!l_image.loadFromFile(f_path[i]))
+        glGenTextures(1, &m_texture);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST + f_filter);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST + f_filter);
+
+        m_type = TEXTURE_TYPE_CUBEMAP;
+        for(int i = 0; i < 6; i++)
         {
-            glDeleteTextures(1, &m_texture);
-            return false;
+            sf::Image l_image;
+            if(l_image.loadFromFile(f_path[i]))
+            {
+                sf::Vector2u l_imageSize = l_image.getSize();
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+            }
+            else
+            {
+                glDeleteTextures(1, &m_texture);
+                m_type = TEXTURE_TYPE_NONE;
+                break;
+            }
         }
-        sf::Vector2u l_imageSize = l_image.getSize();
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
     }
-    return true;
+    return (m_type != TEXTURE_TYPE_NONE);
 }
 void ROC::Texture::GenerateBrokenTexture()
 {
@@ -77,16 +85,18 @@ void ROC::Texture::GenerateBrokenTexture()
 
 void ROC::Texture::Bind(unsigned int f_bind)
 {
-    if(m_type == TEXTURE_TYPE_NONE) return;
-    if(f_bind) glActiveTexture(GL_TEXTURE0 + f_bind);
-    switch(m_type)
+    if(m_type != TEXTURE_TYPE_NONE)
     {
-        case TEXTURE_TYPE_RGB: case TEXTURE_TYPE_RGBA:
-            glBindTexture(GL_TEXTURE_2D, m_texture);
-            break;
-        case TEXTURE_TYPE_CUBEMAP:
-            glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
-            break;
+        if(f_bind) glActiveTexture(GL_TEXTURE0 + f_bind);
+        switch(m_type)
+        {
+            case TEXTURE_TYPE_RGB: case TEXTURE_TYPE_RGBA:
+                glBindTexture(GL_TEXTURE_2D, m_texture);
+                break;
+            case TEXTURE_TYPE_CUBEMAP:
+                glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
+                break;
+        }
+        if(f_bind) glActiveTexture(GL_TEXTURE0);
     }
-    if(f_bind) glActiveTexture(GL_TEXTURE0);
 }

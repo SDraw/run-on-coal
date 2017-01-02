@@ -323,9 +323,8 @@ bool ROC::LuaManager::OpenFile(std::string &f_path)
         l_log.append(lua_tostring(m_pVM, -1));
         m_core->GetLogManager()->Log(l_log);
         lua_pop(m_pVM, 1);
-        return false;
     }
-    return true;
+    return (error == 0);
 }
 
 void ROC::LuaManager::CallFunction(int f_func, LuaArguments *f_args)

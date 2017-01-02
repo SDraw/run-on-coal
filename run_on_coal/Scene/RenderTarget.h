@@ -37,7 +37,7 @@ protected:
     void BindTexture(unsigned int f_bind);
     void Enable();
 
-    inline void GetError(std::string &f_str) { f_str.insert(f_str.begin(), m_error.begin(), m_error.end()); }
+    inline void GetError(std::string &f_str) { f_str.append(m_error); }
     friend class ElementManager;
     friend class RenderManager;
     friend class Shader;

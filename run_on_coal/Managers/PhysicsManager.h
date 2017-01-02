@@ -11,7 +11,6 @@ class PhysicsManager
     Core *m_core;
 
     std::set<Model*> m_modelsSet;
-    std::set<Collision*> m_collisionsSet;
 
     bool m_enabled;
     btDiscreteDynamicsWorld* m_dynamicWorld;

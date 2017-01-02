@@ -82,12 +82,12 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(std::string &f_path)
     Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
-    if(!l_anim->Load(l_work))
+    if(l_anim->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_anim, ElementType::AnimationElement);
+    else
     {
         delete l_anim;
-        return NULL;
+        l_anim = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_anim, ElementType::AnimationElement);
     return l_anim;
 }
 bool ROC::ElementManager::DestroyAnimation(Animation *f_anim)
@@ -108,12 +108,12 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path)
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_geometry->Load(l_work))
+    if(l_geometry->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_geometry, ElementType::GeometryElement);
+    else
     {
         delete l_geometry;
-        return NULL;
+        l_geometry = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_geometry, ElementType::GeometryElement);
     return l_geometry;
 }
 bool ROC::ElementManager::DestroyGeometry(Geometry *f_geometry)
@@ -155,44 +155,47 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
     {
         std::string l_vertexPath;
         Utils::AnalyzePath(f_vpath, l_vertexPath);
-        l_path[0].insert(l_path[0].begin(), l_work.begin(), l_work.end());
+        l_path[0].append(l_work);
         Utils::JoinPaths(l_path[0], l_vertexPath);
     }
     if(!f_fpath.empty())
     {
         std::string l_fragmentPath;
         Utils::AnalyzePath(f_fpath, l_fragmentPath);
-        l_path[1].insert(l_path[1].begin(), l_work.begin(), l_work.end());
+        l_path[1].append(l_work);
         Utils::JoinPaths(l_path[1], l_fragmentPath);
     }
     if(!f_gpath.empty())
     {
         std::string l_geometryPath;
         Utils::AnalyzePath(f_gpath, l_geometryPath);
-        l_path[2].insert(l_path[2].begin(), l_work.begin(), l_work.end());
+        l_path[2].append(l_work);
         Utils::JoinPaths(l_path[2], l_geometryPath);
     }
-    if(!l_shader->Load(l_path[0], l_path[1], l_path[2]))
+    if(l_shader->Load(l_path[0], l_path[1], l_path[2]))
+    {
+        m_core->GetMemoryManager()->AddMemoryPointer(l_shader, ElementType::ShaderElement);
+        if(m_locked) m_core->GetRenderManager()->RestoreActiveShader(l_shader);
+    }
+    else
     {
         std::string l_shaderError;
         l_shader->GetError(l_shaderError);
         if(!l_shaderError.empty())
         {
             std::string l_error("[");
-            l_error.insert(l_error.end(), f_vpath.begin(), f_vpath.end());
-            l_error.append(",");
-            l_error.insert(l_error.end(), f_fpath.begin(), f_fpath.end());
-            l_error.append(",");
-            l_error.insert(l_error.end(), f_gpath.begin(), f_gpath.end());
+            l_error.append(f_vpath);
+            l_error.push_back(',');
+            l_error.append(f_fpath);
+            l_error.push_back(',');
+            l_error.append(f_gpath);
             l_error.append("] -> ");
-            l_error.insert(l_error.end(), l_shaderError.begin(), l_shaderError.end());
+            l_error.append(l_shaderError);
             m_core->GetLogManager()->Log(l_error);
         }
         delete l_shader;
-        return NULL;
+        l_shader = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_shader, ElementType::ShaderElement);
-    if(m_locked) m_core->GetRenderManager()->RestoreActiveShader(l_shader);
     return l_shader;
 }
 bool ROC::ElementManager::DestroyShader(Shader *f_shader)
@@ -212,12 +215,12 @@ ROC::Sound* ROC::ElementManager::CreateSound(std::string &f_path, bool f_loop)
     Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
-    if(!l_sound->Load(l_work))
+    if(l_sound->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_sound, ElementType::SoundElement);
+    else
     {
         delete l_sound;
-        return NULL;
+        l_sound = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_sound, ElementType::SoundElement);
     return l_sound;
 }
 bool ROC::ElementManager::DestroySound(Sound *f_sound)
@@ -232,15 +235,15 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, g
     RenderTarget *l_rt = new RenderTarget();
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_rt->Create(f_num, f_size, f_type))
+    if(l_rt->Create(f_num, f_size, f_type)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt, ElementType::RenderTargetElement);
+    else
     {
         std::string l_error;
         l_rt->GetError(l_error);
         m_core->GetLogManager()->Log(l_error);
         delete l_rt;
-        return NULL;
+        l_rt = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_rt, ElementType::RenderTargetElement);
     return l_rt;
 }
 bool ROC::ElementManager::DestroyRenderTarget(RenderTarget *f_rt)
@@ -261,12 +264,12 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_tex->Load(l_work, f_type, f_filter, f_compress))
+    if(l_tex->Load(l_work, f_type, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_tex, ElementType::TextureElement);
+    else
     {
         delete l_tex;
-        return NULL;
+        l_tex = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_tex, ElementType::TextureElement);
     return l_tex;
 }
 ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
@@ -287,12 +290,12 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
     }
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_tex->LoadCubemap(l_path, f_filter, f_compress))
+    if(l_tex->LoadCubemap(l_path, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_tex, ElementType::TextureElement);
+    else
     {
         delete l_tex;
-        return NULL;
+        l_tex = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_tex, ElementType::TextureElement);
     return l_tex;
 }
 bool ROC::ElementManager::DestroyTexture(Texture *f_tex)
@@ -313,12 +316,12 @@ ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size, uns
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(!l_font->LoadTTF(l_work, f_size, f_filter))
+    if(l_font->LoadTTF(l_work, f_size, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font, ElementType::FontElement);
+    else
     {
         delete l_font;
-        return NULL;
+        l_font = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_font, ElementType::FontElement);
     return l_font;
 }
 bool ROC::ElementManager::DestroyFont(Font *f_font)
@@ -337,12 +340,11 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
     Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
-    if(!l_file->Create(l_work, f_path))
+    if(l_file->Create(l_work, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
     {
         delete l_file;
-        return NULL;
+        l_file = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
     return l_file;
 }
 ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
@@ -354,12 +356,11 @@ ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
     Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
-    if(!l_file->Open(l_work, f_path, f_ro))
+    if(l_file->Open(l_work, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
     {
         delete l_file;
-        return NULL;
+        l_file = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
     return l_file;
 }
 bool ROC::ElementManager::DestroyFile(File *f_file)
@@ -372,13 +373,16 @@ bool ROC::ElementManager::DestroyFile(File *f_file)
 ROC::Collision* ROC::ElementManager::CreateCollision(unsigned char f_type, glm::vec3 &f_size)
 {
     Collision *l_col = new Collision();
-    if(!l_col->Create(f_type, f_size))
+    if(l_col->Create(f_type, f_size))
+    {
+        m_core->GetMemoryManager()->AddMemoryPointer(l_col, ElementType::CollisionElement);
+        m_core->GetPhysicsManager()->AddCollision(l_col);
+    }
+    else
     {
         delete l_col;
-        return NULL;
+        l_col = NULL;
     }
-    m_core->GetMemoryManager()->AddMemoryPointer(l_col, ElementType::CollisionElement);
-    m_core->GetPhysicsManager()->AddCollision(l_col);
     return l_col;
 }
 bool ROC::ElementManager::DestroyCollision(Collision *f_col)

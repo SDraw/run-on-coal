@@ -7,8 +7,8 @@ class ArgReader
     lua_State *m_pVM;
     Core *m_core;
     bool m_hasErrors;
-    int m_iArgIndex;
-    int m_iArgNum;
+    int m_currentArg;
+    int m_argCount;
     std::string m_error;
 public:
     ArgReader(lua_State *f_vm, Core *f_core);
@@ -43,6 +43,6 @@ public:
     void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);
 
     bool HasErrors();
-    inline int GetArgsValue() { return m_iArgNum; }
+    inline int GetArgsValue() { return m_argCount; }
 };
 }

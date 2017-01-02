@@ -15,9 +15,11 @@ class PreRenderManager
         TreeNode *m_parent = NULL;
         std::set<TreeNode*> m_children;
     };
-    std::set<TreeNode*> m_modelTreeSet;
+    std::set<TreeNode*> m_modelTreeSet; // Only parent models
     std::unordered_map<Model*, TreeNode*> m_modelToNodeMap;
-    std::list<TreeNode*> m_nodeList;
+    std::unordered_map<Model*, TreeNode*>::iterator m_modelToNodeMapEnd;
+
+    std::list<TreeNode*> m_nodeStack;
 
     LuaArguments *m_argument;
 
