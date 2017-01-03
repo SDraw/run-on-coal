@@ -41,136 +41,7 @@ void ROC::ArgReader::ReadBoolean(bool &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadNumber(lua_Number &f_val)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_isnumber(m_vm, m_currentArg))
-            {
-                f_val = lua_tonumber(m_vm, m_currentArg);
-                if(!std::isnan(f_val) && !std::isinf(f_val)) m_currentArg++;
-                else
-                {
-                    m_error.append("Got NaN/Inf");
-                    m_hasErrors = true;
-                }
-            }
-            else
-            {
-                m_error.append("Expected number");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadNumber(float &f_val)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_isnumber(m_vm, m_currentArg))
-            {
-                f_val = static_cast<float>(lua_tonumber(m_vm, m_currentArg));
-                if(!std::isnan(f_val) && !std::isinf(f_val)) m_currentArg++;
-                else
-                {
-                    m_error.append("Got NaN/Inf");
-                    m_hasErrors = true;
-                }
-            }
-            else
-            {
-                m_error.append("Expected number");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadInteger(lua_Integer &f_val)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_isinteger(m_vm, m_currentArg))
-            {
-                f_val = lua_tointeger(m_vm, m_currentArg);
-                m_currentArg++;
-            }
-            else
-            {
-                m_error.append("Expected integer");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadInteger(int &f_val)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_isinteger(m_vm, m_currentArg))
-            {
-                f_val = static_cast<int>(lua_tointeger(m_vm, m_currentArg));
-                m_currentArg++;
-            }
-            else
-            {
-                m_error.append("Expected integer");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadInteger(unsigned int &f_val)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_isinteger(m_vm, m_currentArg))
-            {
-                f_val = static_cast<unsigned int>(lua_tointeger(m_vm, m_currentArg));
-                m_currentArg++;
-            }
-            else
-            {
-                m_error.append("Expected integer");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
+
 void ROC::ArgReader::ReadText(std::string &f_val)
 {
     if(!m_hasErrors)
@@ -195,7 +66,7 @@ void ROC::ArgReader::ReadText(std::string &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadUserdata(void **f_val, unsigned int f_type)
+void ROC::ArgReader::ReadUserdata(void **f_val, unsigned char f_type)
 {
     if(!m_hasErrors)
     {
@@ -315,69 +186,6 @@ void ROC::ArgReader::ReadNextBoolean(bool &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadNextNumber(lua_Number &f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_isnumber(m_vm, m_currentArg))
-        {
-            lua_Number l_val = lua_tonumber(m_vm, m_currentArg);
-            if(!std::isnan(l_val) && !std::isinf(l_val))
-            {
-                f_val = l_val;
-                m_currentArg++;
-            }
-        }
-    }
-}
-void ROC::ArgReader::ReadNextNumber(float &f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_isnumber(m_vm, m_currentArg))
-        {
-            float l_val = static_cast<float>(lua_tonumber(m_vm, m_currentArg));
-            if(!std::isnan(l_val) && !std::isinf(l_val))
-            {
-                f_val = l_val;
-                m_currentArg++;
-            }
-        }
-    }
-}
-void ROC::ArgReader::ReadNextInteger(lua_Integer &f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_isinteger(m_vm, m_currentArg))
-        {
-            f_val = lua_tointeger(m_vm, m_currentArg);
-            m_currentArg++;
-        }
-    }
-}
-void ROC::ArgReader::ReadNextInteger(int &f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_isinteger(m_vm, m_currentArg))
-        {
-            f_val = static_cast<int>(lua_tointeger(m_vm, m_currentArg));
-            m_currentArg++;
-        }
-    }
-}
-void ROC::ArgReader::ReadNextInteger(unsigned int &f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_isinteger(m_vm, m_currentArg))
-        {
-            f_val = static_cast<unsigned int>(lua_tointeger(m_vm, m_currentArg));
-            m_currentArg++;
-        }
-    }
-}
 void ROC::ArgReader::ReadNextText(std::string &f_val)
 {
     if(!m_hasErrors && (m_currentArg <= m_argCount))
@@ -389,7 +197,7 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadNextUserdata(void **f_val, unsigned int f_type)
+void ROC::ArgReader::ReadNextUserdata(void **f_val, unsigned char f_type)
 {
     if(!m_hasErrors && (m_currentArg <= m_argCount))
     {
@@ -416,57 +224,7 @@ void ROC::ArgReader::ReadNextPointer(void **f_val)
     }
 }
 
-void ROC::ArgReader::ReadTableNumbers(std::vector<lua_Number> &f_vec, int f_size)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_istable(m_vm, m_currentArg))
-            {
-                lua_settop(m_vm, m_currentArg);
-                for(int i = 0; i < f_size; i++)
-                {
-                    lua_pushnumber(m_vm, i + 1);
-                    lua_gettable(m_vm, -2);
-                    if(lua_isnumber(m_vm, -1))
-                    {
-                        lua_Number l_val = lua_tonumber(m_vm, -1);
-                        if(!std::isnan(l_val) && !std::isinf(l_val))
-                        {
-                            f_vec.push_back(l_val);
-                            lua_pop(m_vm, 1);
-                        }
-                        else
-                        {
-                            m_error.append("Got NaN/Inf");
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        m_error.append("Not enough table values");
-                        break;
-                    }
-                }
-                lua_insert(m_vm, m_currentArg);
-                if(m_error.empty()) m_currentArg++;
-                else m_hasErrors = true;
-            }
-            else
-            {
-                m_error.append("Expected table");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadTableNumbers(std::vector<float> &f_vec, int f_size)
+void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
 {
     if(!m_hasErrors)
     {
@@ -482,11 +240,8 @@ void ROC::ArgReader::ReadTableNumbers(std::vector<float> &f_vec, int f_size)
                     if(lua_isnumber(m_vm, -1))
                     {
                         float l_val = static_cast<float>(lua_tonumber(m_vm, -1));
-                        if(!std::isnan(l_val) && !std::isinf(l_val))
-                        {
-                            f_vec.push_back(l_val);
-                            lua_pop(m_vm, 1);
-                        }
+                        lua_pop(m_vm, 1);
+                        if(!std::isnan(l_val) && !std::isinf(l_val)) f_val[i] = l_val;
                         else
                         {
                             m_error.append("Got NaN/Inf");
@@ -495,6 +250,7 @@ void ROC::ArgReader::ReadTableNumbers(std::vector<float> &f_vec, int f_size)
                     }
                     else
                     {
+                        lua_pop(m_vm, 1);
                         m_error.append("Not enough table values");
                         break;
                     }
@@ -537,6 +293,7 @@ void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
                     else
                     {
                         m_error.append("Not enough table values");
+                        lua_pop(m_vm, 1);
                         break;
                     }
                 }
@@ -583,14 +340,13 @@ void ROC::ArgReader::PushPointer(void *f_val)
     lua_pushlightuserdata(m_vm, f_val);
     m_returnValue++;
 }
-void ROC::ArgReader::PushMatrix(glm::mat4 &f_val)
+void ROC::ArgReader::PushMatrix(float *f_val, int f_size)
 {
-    float *l_matPointer = reinterpret_cast<float*>(&f_val);
     lua_newtable(m_vm);
-    for(int i = 0; i < 16; i++)
+    for(int i = 0; i < f_size; i++)
     {
         lua_pushnumber(m_vm, i + 1);
-        lua_pushnumber(m_vm, l_matPointer[i]);
+        lua_pushnumber(m_vm, f_val[i]);
         lua_settable(m_vm, -3);
     }
     m_returnValue++;

@@ -259,12 +259,10 @@ int shaderSetUniformValue(lua_State *f_vm)
             }
             case 16: // Matrix 2x2
             {
-                std::vector<float> l_vec;
-                argStream.ReadTableNumbers(l_vec, 4);
+                glm::mat2 l_mat;
+                argStream.ReadMatrix(reinterpret_cast<float*>(&l_mat), 4);
                 if(!argStream.HasErrors())
                 {
-                    glm::mat2 l_mat;
-                    std::memcpy(&l_mat, l_vec.data(), sizeof(glm::mat2));
                     LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_mat);
                     argStream.PushBoolean(true);
                 }
@@ -272,12 +270,10 @@ int shaderSetUniformValue(lua_State *f_vm)
             } break;
             case 17: // Matrix 3x3
             {
-                std::vector<float> l_vec;
-                argStream.ReadTableNumbers(l_vec, 9);
+                glm::mat3 l_mat;
+                argStream.ReadMatrix(reinterpret_cast<float*>(&l_mat), 9);
                 if(!argStream.HasErrors())
                 {
-                    glm::mat3 l_mat;
-                    std::memcpy(&l_mat, l_vec.data(), sizeof(glm::mat3));
                     LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_mat);
                     argStream.PushBoolean(true);
                 }
@@ -285,12 +281,10 @@ int shaderSetUniformValue(lua_State *f_vm)
             } break;
             case 18: // Matrix 4x4
             {
-                std::vector<float> l_vec;
-                argStream.ReadTableNumbers(l_vec, 16);
+                glm::mat4 l_mat;
+                argStream.ReadMatrix(reinterpret_cast<float*>(&l_mat), 16);
                 if(!argStream.HasErrors())
                 {
-                    glm::mat4 l_mat;
-                    std::memcpy(&l_mat, l_vec.data(), sizeof(glm::mat4));
                     LuaManager::m_corePointer->GetRenderManager()->SetShaderUniformValueM(l_shader, l_uniform, l_mat);
                     argStream.PushBoolean(true);
                 }

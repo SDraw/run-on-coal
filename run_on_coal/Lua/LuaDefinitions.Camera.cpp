@@ -176,7 +176,7 @@ int cameraGetFOV(lua_State *f_vm)
     Camera *l_camera = NULL;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
-    !argStream.HasErrors() ?  argStream.PushNumber(l_camera->GetFOV()) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetFOV()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
@@ -277,7 +277,7 @@ int cameraGetViewMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_camera->GetViewMatrix(l_mat);
-        argStream.PushMatrix(l_mat);
+        argStream.PushMatrix(reinterpret_cast<float*>(&l_mat), 16);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -292,7 +292,7 @@ int cameraGetProjectionMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_camera->GetProjectionMatrix(l_mat);
-        argStream.PushMatrix(l_mat);
+        argStream.PushMatrix(reinterpret_cast<float*>(&l_mat), 16);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

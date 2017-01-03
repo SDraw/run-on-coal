@@ -16,29 +16,93 @@ public:
     ~ArgReader();
 
     void ReadBoolean(bool &f_val);
-    void ReadNumber(lua_Number &f_val);
-    void ReadNumber(float &f_val);
-    void ReadInteger(lua_Integer &f_val);
-    void ReadInteger(int &f_val);
-    void ReadInteger(unsigned int &f_val);
+    template<typename T> void ReadNumber(T &f_val)
+    {
+        if(!m_hasErrors)
+        {
+            if(m_currentArg <= m_argCount)
+            {
+                if(lua_isnumber(m_vm, m_currentArg))
+                {
+                    f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
+                    if(!std::isnan(f_val) && !std::isinf(f_val)) m_currentArg++;
+                    else
+                    {
+                        m_error.append("Got NaN/Inf");
+                        m_hasErrors = true;
+                    }
+                }
+            }
+            else
+            {
+                m_error.append("Expected number");
+                m_hasErrors = true;
+            }
+        }
+        else
+        {
+            m_error.append("Not enough arguments");
+            m_hasErrors = true;
+        }
+    };
+    template<typename T> void ReadInteger(T &f_val)
+    {
+        if(!m_hasErrors)
+        {
+            if(m_currentArg <= m_argCount)
+            {
+                if(lua_isinteger(m_vm, m_currentArg))
+                {
+                    f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
+                    m_currentArg++;
+                }
+                else
+                {
+                    m_error.append("Expected integer");
+                    m_hasErrors = true;
+                }
+            }
+            else
+            {
+                m_error.append("Not enough arguments");
+                m_hasErrors = true;
+            }
+        }
+    };
     void ReadText(std::string &f_val);
-    void ReadUserdata(void **f_val, unsigned int f_type);
+    void ReadUserdata(void **f_val, unsigned char f_type);
     void ReadPointer(void **f_val);
     void ReadFunction(int &f_val, void **f_pointer);
     void ReadFunctionPointer(void **f_pointer);
 
     void ReadNextBoolean(bool &f_val);
-    void ReadNextNumber(lua_Number &f_val);
-    void ReadNextNumber(float &f_val);
-    void ReadNextInteger(lua_Integer &f_val);
-    void ReadNextInteger(int &f_val);
-    void ReadNextInteger(unsigned int &f_val);
+    template<typename T> void ReadNextNumber(T &f_val)
+    {
+        if(!m_hasErrors && (m_currentArg <= m_argCount))
+        {
+            if(lua_isnumber(m_vm, m_currentArg))
+            {
+                f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
+                if(!std::isnan(f_val) && !std::isinf(f_val)) m_currentArg++;
+            }
+        }
+    };
+    template<typename T> void ReadNextInteger(T &f_val)
+    {
+        if(!m_hasErrors && (m_currentArg <= m_argCount))
+        {
+            if(lua_isinteger(m_vm, m_currentArg))
+            {
+                f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
+                m_currentArg++;
+            }
+        }
+    };
     void ReadNextText(std::string &f_val);
-    void ReadNextUserdata(void **f_val, unsigned int f_type);
+    void ReadNextUserdata(void **f_val, unsigned char f_type);
     void ReadNextPointer(void **f_val);
 
-    void ReadTableNumbers(std::vector<lua_Number> &f_vec, int f_size);
-    void ReadTableNumbers(std::vector<float> &f_vec, int f_size);
+    void ReadMatrix(float *f_val, int f_size);
     void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);
 
     void PushBoolean(bool f_val);
@@ -46,7 +110,7 @@ public:
     void PushInteger(lua_Integer f_val);
     void PushText(const std::string &f_val);
     void PushPointer(void *f_val);
-    void PushMatrix(glm::mat4 &f_val);
+    void PushMatrix(float *f_val, int f_size);
 
     bool HasErrors();
     inline int GetReturnValue() { return m_returnValue; }
