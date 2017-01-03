@@ -15,7 +15,7 @@ const std::vector<std::string> g_buffersTable
 {
     "color", "depth"
 };
-const std::vector<std::string> g_drawingTable
+const std::vector<std::string> g_polygonFillTable
 {
     "point", "line", "fill"
 };
@@ -32,12 +32,12 @@ int oglClear(lua_State *f_vm)
         {
             GLbitfield l_buffer = (l_type == 0) ? GL_COLOR_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
             LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(l_buffer);
-            lua_pushboolean(f_vm, 1);
+            argStream.PushBoolean(true);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int oglClearColor(lua_State *f_vm)
 {
@@ -46,11 +46,11 @@ int oglClearColor(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetRenderManager()->SetClearColour(l_color);
-        lua_pushboolean(f_vm, 1);
+        RenderManager::SetClearColour(l_color);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int oglViewport(lua_State *f_vm)
 {
@@ -60,10 +60,10 @@ int oglViewport(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetRenderManager()->SetViewport(l_area);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int oglPolygonMode(lua_State *f_vm)
 {
@@ -72,16 +72,16 @@ int oglPolygonMode(lua_State *f_vm)
     argStream.ReadText(l_mode);
     if(!argStream.HasErrors() && !l_mode.empty())
     {
-        int l_type = Utils::ReadEnumVector(g_drawingTable, l_mode);
+        int l_type = Utils::ReadEnumVector(g_polygonFillTable, l_mode);
         if(l_type != -1)
         {
-            LuaManager::m_corePointer->GetRenderManager()->SetPolygonMode(l_type);
-            lua_pushboolean(f_vm, 1);
+            RenderManager::SetPolygonMode(l_type);
+            argStream.PushBoolean(true);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

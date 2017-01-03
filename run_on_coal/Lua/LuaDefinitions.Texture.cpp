@@ -26,11 +26,10 @@ int textureCreate(lua_State *f_vm)
 {
     std::string l_type, l_filtering;
     bool l_compress = false;
-    int l_argAddCount = 0;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadText(l_type);
-    if(argStream.ReadNextText(l_filtering)) l_argAddCount++;
-    if(argStream.ReadNextBoolean(l_compress)) l_argAddCount++;
+    argStream.ReadNextText(l_filtering);
+    argStream.ReadNextBoolean(l_compress);
     if(!argStream.HasErrors() && !l_type.empty())
     {
         Texture *l_tex = NULL;
@@ -48,15 +47,14 @@ int textureCreate(lua_State *f_vm)
             case 2:
             {
                 std::vector<std::string> l_path;
-                argStream.DecreaseArguments(3 + l_argAddCount);
                 argStream.ReadTableTexts(l_path, 6);
                 if(!argStream.HasErrors()) l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
             } break;
         }
-        l_tex ? lua_pushlightuserdata(f_vm, l_tex) : lua_pushboolean(f_vm, 0);
+        l_tex ? argStream.PushPointer(l_tex) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int textureDestroy(lua_State *f_vm)
 {
@@ -66,10 +64,10 @@ int textureDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyTexture(l_tex);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int textureDraw(lua_State *f_vm)
 {
@@ -86,10 +84,10 @@ int textureDraw(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetRenderManager()->Render(l_tex, l_pos, l_size, l_rot, l_color);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

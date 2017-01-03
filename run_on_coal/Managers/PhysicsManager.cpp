@@ -176,7 +176,7 @@ void ROC::PhysicsManager::DoPulse()
 bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
 {
     bool l_result = false;
-    if(std::memcmp(&f_start, &f_end, sizeof(glm::vec3)))
+    if(std::memcmp(&f_start, &f_end, sizeof(glm::vec3)) != 0)
     {
 
         btVector3 l_start(f_start.x, f_start.y, f_start.z), l_end(f_end.x, f_end.y, f_end.z);

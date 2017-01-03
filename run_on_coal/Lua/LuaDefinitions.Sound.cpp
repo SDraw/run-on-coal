@@ -14,6 +14,10 @@ namespace ROC
 namespace Lua
 {
 
+const std::string g_soundStatesTable[] = {
+    "stopped", "paused", "playing"
+};
+
 int soundCreate(lua_State *f_vm)
 {
     std::string l_path;
@@ -24,10 +28,10 @@ int soundCreate(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_path.empty())
     {
         Sound *l_sound = LuaManager::m_corePointer->GetElementManager()->CreateSound(l_path, l_loop);
-        l_sound ? lua_pushlightuserdata(f_vm, l_sound) : lua_pushboolean(f_vm, 0);
+        l_sound ? argStream.PushPointer(l_sound) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundDestroy(lua_State *f_vm)
 {
@@ -37,10 +41,10 @@ int soundDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroySound(l_sound);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundPlay(lua_State *f_vm)
@@ -51,10 +55,10 @@ int soundPlay(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_sound->Play();
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundPause(lua_State *f_vm)
 {
@@ -64,10 +68,10 @@ int soundPause(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_sound->Pause();
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundStop(lua_State *f_vm)
 {
@@ -77,10 +81,10 @@ int soundStop(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_sound->Stop();
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundIsLooped(lua_State *f_vm)
@@ -88,9 +92,8 @@ int soundIsLooped(lua_State *f_vm)
     Sound *l_sound;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
-    if(!argStream.HasErrors()) lua_pushboolean(f_vm, l_sound->IsLooped());
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    argStream.PushBoolean(!argStream.HasErrors() ? l_sound->IsLooped() : false);
+    return argStream.GetReturnValue();
 }
 
 int soundGetState(lua_State *f_vm)
@@ -98,13 +101,8 @@ int soundGetState(lua_State *f_vm)
     Sound *l_sound;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
-    if(!argStream.HasErrors())
-    {
-        int l_state = l_sound->GetState();
-        !l_state ? lua_pushstring(f_vm, "stopped") : ((l_state == 1) ? lua_pushstring(f_vm, "paused") : lua_pushstring(f_vm, "playing"));
-    }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    !argStream.HasErrors() ? argStream.PushText(g_soundStatesTable[l_sound->GetState()]) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundSetSpeed(lua_State *f_vm)
@@ -117,19 +115,18 @@ int soundSetSpeed(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_sound->SetSpeed(l_val);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundGetSpeed(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
-    if(!argStream.HasErrors()) lua_pushnumber(f_vm, l_sound->GetSpeed());
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetSpeed()) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundSetVolume(lua_State *f_vm)
@@ -142,19 +139,18 @@ int soundSetVolume(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_sound->SetVolume(l_val);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundGetVolume(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
-    if(!argStream.HasErrors()) lua_pushnumber(f_vm, l_sound->GetVolume());
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetVolume()) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundSetTime(lua_State *f_vm)
@@ -167,10 +163,10 @@ int soundSetTime(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_sound->SetTime(l_val);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundGetTime(lua_State *f_vm)
 {
@@ -180,23 +176,18 @@ int soundGetTime(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         float l_time = l_sound->GetTime();
-        lua_pushnumber(f_vm, l_time);
+        argStream.PushNumber(l_time);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundGetDuration(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
-    if(!argStream.HasErrors())
-    {
-        float l_duration = l_sound->GetDuration();
-        lua_pushnumber(f_vm, l_duration);
-    }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetDuration()) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundSet3DEnabled(lua_State *f_vm)
@@ -209,19 +200,18 @@ int soundSet3DEnabled(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_sound->Set3DPositionEnabled(l_state);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundGet3DEnabled(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
-    if(!argStream.HasErrors()) lua_pushboolean(f_vm, l_sound->Get3DPositionEnabled());
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    argStream.PushBoolean(!argStream.HasErrors() ? l_sound->Get3DPositionEnabled() : false);
+    return argStream.GetReturnValue();
 }
 
 int soundSet3DPosition(lua_State *f_vm)
@@ -234,28 +224,26 @@ int soundSet3DPosition(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_sound->Set3DPosition(l_pos);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundGet3DPosition(lua_State *f_vm)
 {
     Sound *l_sound;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_pos(0.f);
         l_sound->Get3DPosition(l_pos);
-        lua_pushnumber(f_vm, l_pos.x);
-        lua_pushnumber(f_vm, l_pos.y);
-        lua_pushnumber(f_vm, l_pos.z);
-        l_returnVal = 3;
+        argStream.PushNumber(l_pos.x);
+        argStream.PushNumber(l_pos.y);
+        argStream.PushNumber(l_pos.z);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundSet3DDistance(lua_State *f_vm)
@@ -268,27 +256,25 @@ int soundSet3DDistance(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_sound->Set3DDistance(l_dist);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
+    else argStream.PushBoolean(false);
     return 1;
 }
 int soundGet3DDistance(lua_State *f_vm)
 {
     Sound *l_sound;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         glm::vec2 l_dist(0.f);
         l_sound->Get3DDistance(l_dist);
-        lua_pushnumber(f_vm, l_dist.x);
-        lua_pushnumber(f_vm, l_dist.y);
-        l_returnVal++;
+        argStream.PushNumber(l_dist.x);
+        argStream.PushNumber(l_dist.y);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int soundSetListenerOrientation(lua_State *f_vm)
@@ -303,28 +289,29 @@ int soundSetListenerOrientation(lua_State *f_vm)
         LuaManager::m_corePointer->GetSoundManager()->SetListenerPosition(l_pos);
         LuaManager::m_corePointer->GetSoundManager()->SetListenerDirection(l_dir);
         LuaManager::m_corePointer->GetSoundManager()->SetListenerUp(l_up);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
+    else argStream.PushBoolean(false);
     return 1;
 }
 
 int soundGetListenerOrientation(lua_State *f_vm)
 {
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
     glm::vec3 l_pos, l_dir, l_up;
     LuaManager::m_corePointer->GetSoundManager()->GetListenerPosition(l_pos);
-    lua_pushnumber(f_vm, l_pos.x);
-    lua_pushnumber(f_vm, l_pos.y);
-    lua_pushnumber(f_vm, l_pos.z);
+    argStream.PushNumber(l_pos.x);
+    argStream.PushNumber(l_pos.y);
+    argStream.PushNumber(l_pos.z);
     LuaManager::m_corePointer->GetSoundManager()->GetListenerDirection(l_dir);
-    lua_pushnumber(f_vm, l_dir.x);
-    lua_pushnumber(f_vm, l_dir.y);
-    lua_pushnumber(f_vm, l_dir.z);
+    argStream.PushNumber(l_dir.x);
+    argStream.PushNumber(l_dir.y);
+    argStream.PushNumber(l_dir.z);
     LuaManager::m_corePointer->GetSoundManager()->GetListenerUp(l_up);
-    lua_pushnumber(f_vm, l_up.x);
-    lua_pushnumber(f_vm, l_up.y);
-    lua_pushnumber(f_vm, l_up.z);
-    return 9;
+    argStream.PushNumber(l_up.x);
+    argStream.PushNumber(l_up.y);
+    argStream.PushNumber(l_up.z);
+    return argStream.GetReturnValue();
 }
 
 int soundSetGlobalVolume(lua_State *f_vm)
@@ -335,15 +322,16 @@ int soundSetGlobalVolume(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetSoundManager()->SetGlobalVolume(l_volume);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int soundGetGlobalVolume(lua_State *f_vm)
 {
-    lua_pushnumber(f_vm, LuaManager::m_corePointer->GetSoundManager()->GetGlobalVolume());
-    return 1;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.PushNumber(LuaManager::m_corePointer->GetSoundManager()->GetGlobalVolume());
+    return argStream.GetReturnValue();
 }
 
 }

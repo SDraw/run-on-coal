@@ -6,6 +6,7 @@ class Sound
 {
     sf::Music* m_handle;
 
+    float m_duration;
     float m_speed;
     float m_volume;
     bool m_b3D;
@@ -29,7 +30,7 @@ public:
 
     void SetTime(float f_time);
     float GetTime();
-    float GetDuration();
+    inline float GetDuration() { return m_duration; };
 
     bool Set3DPositionEnabled(bool f_state);
     inline bool Get3DPositionEnabled() { return m_b3D; }

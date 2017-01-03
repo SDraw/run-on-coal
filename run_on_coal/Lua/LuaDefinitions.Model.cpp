@@ -20,6 +20,10 @@ const std::vector<std::string> g_modelCollisionTable
 {
     "sphere", "box", "cylinder", "capsule", "cone"
 };
+const std::vector<std::string> g_modelTypesTable
+{
+    "none", "static", "animated"
+};
 
 int modelCreate(lua_State *f_vm)
 {
@@ -29,10 +33,10 @@ int modelCreate(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Model *l_model = LuaManager::m_corePointer->GetElementManager()->CreateModel(l_geometry);
-        l_model ? lua_pushlightuserdata(f_vm, l_model) : lua_pushboolean(f_vm, 0);
+        l_model ? argStream.PushPointer(l_model) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelDestroy(lua_State *f_vm)
 {
@@ -42,10 +46,10 @@ int modelDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyModel(l_model);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetGeometry(lua_State *f_vm)
 {
@@ -55,23 +59,18 @@ int modelGetGeometry(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Geometry *l_geometry = l_model->GetGeometry();
-        l_geometry ? lua_pushlightuserdata(f_vm, l_geometry) : lua_pushboolean(f_vm, 0);
+        l_geometry ? argStream.PushPointer(l_geometry) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetType(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    if(!argStream.HasErrors())
-    {
-        int l_type = l_model->GetType();
-        (l_type > MODEL_TYPE_NONE) ? ((l_type == MODEL_TYPE_STATIC) ? lua_pushstring(f_vm, "static") : lua_pushstring(f_vm, "animated")) : lua_pushstring(f_vm, "none");
-    }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    !argStream.HasErrors() ? argStream.PushText(g_modelTypesTable[l_model->GetType()]) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetPosition(lua_State *f_vm)
 {
@@ -83,16 +82,15 @@ int modelSetPosition(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_model->SetPosition(l_pos);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetPosition(lua_State *f_vm)
 {
     Model *l_model;
     bool l_global = false;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadNextBoolean(l_global);
@@ -100,13 +98,12 @@ int modelGetPosition(lua_State *f_vm)
     {
         glm::vec3 l_pos;
         l_model->GetPosition(l_pos, l_global);
-        lua_pushnumber(f_vm, l_pos.x);
-        lua_pushnumber(f_vm, l_pos.y);
-        lua_pushnumber(f_vm, l_pos.z);
-        l_returnVal = 3;
+        argStream.PushNumber(l_pos.x);
+        argStream.PushNumber(l_pos.y);
+        argStream.PushNumber(l_pos.z);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetRotation(lua_State *f_vm)
 {
@@ -120,16 +117,16 @@ int modelSetRotation(lua_State *f_vm)
     {
         glm::quat l_qRot = std::isnan(l_rot.w) ? glm::quat(l_rot) : glm::quat(l_rot.w, l_rot.x, l_rot.y, l_rot.z);
         l_model->SetRotation(l_qRot);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetRotation(lua_State *f_vm)
 {
     Model *l_model;
     bool l_global = false;
     bool l_quatReq = false;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadNextBoolean(l_global);
@@ -141,22 +138,20 @@ int modelGetRotation(lua_State *f_vm)
         if(!l_quatReq)
         {
             glm::vec3 l_vRot = glm::eulerAngles(l_qRot);
-            lua_pushnumber(f_vm, l_vRot.x);
-            lua_pushnumber(f_vm, l_vRot.y);
-            lua_pushnumber(f_vm, l_vRot.z);
-            l_returnVal = 3;
+            argStream.PushNumber(l_vRot.x);
+            argStream.PushNumber(l_vRot.y);
+            argStream.PushNumber(l_vRot.z);
         }
         else
         {
-            lua_pushnumber(f_vm, l_qRot.x);
-            lua_pushnumber(f_vm, l_qRot.y);
-            lua_pushnumber(f_vm, l_qRot.z);
-            lua_pushnumber(f_vm, l_qRot.w);
-            l_returnVal = 4;
+            argStream.PushNumber(l_qRot.x);
+            argStream.PushNumber(l_qRot.y);
+            argStream.PushNumber(l_qRot.z);
+            argStream.PushNumber(l_qRot.w);
         }
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetScale(lua_State *f_vm)
 {
@@ -168,16 +163,15 @@ int modelSetScale(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_model->SetScale(l_scale);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetScale(lua_State *f_vm)
 {
     Model *l_model;
     bool l_global = false;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadNextBoolean(l_global);
@@ -185,13 +179,12 @@ int modelGetScale(lua_State *f_vm)
     {
         glm::vec3 l_scale;
         l_model->GetScale(l_scale, l_global);
-        lua_pushnumber(f_vm, l_scale.x);
-        lua_pushnumber(f_vm, l_scale.y);
-        lua_pushnumber(f_vm, l_scale.z);
-        l_returnVal = 3;
+        argStream.PushNumber(l_scale.x);
+        argStream.PushNumber(l_scale.y);
+        argStream.PushNumber(l_scale.z);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelDraw(lua_State *f_vm)
 {
@@ -207,10 +200,10 @@ int modelDraw(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetRenderManager()->Render(l_model, l_texturize, l_frustum, l_radius);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelAttach(lua_State *f_vm)
 {
@@ -224,10 +217,10 @@ int modelAttach(lua_State *f_vm)
     {
         if(l_bone < -1) l_bone = -1;
         bool l_result = LuaManager::m_corePointer->GetCore()->GetInheritManager()->AttachModelToModel(l_model, l_parent, l_bone);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelDettach(lua_State *f_vm)
 {
@@ -237,10 +230,10 @@ int modelDettach(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetInheritManager()->DettachModel(l_model);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetParent(lua_State *f_vm)
 {
@@ -250,10 +243,10 @@ int modelGetParent(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Model *l_parent = l_model->GetParent();
-        l_parent ? lua_pushlightuserdata(f_vm, l_parent) : lua_pushboolean(f_vm, 0);
+        l_parent ? argStream.PushPointer(l_parent) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int modelSetAnimation(lua_State *f_vm)
@@ -266,10 +259,10 @@ int modelSetAnimation(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetInheritManager()->SetModelAnimation(l_model, l_anim);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetAnimation(lua_State *f_vm)
 {
@@ -279,10 +272,10 @@ int modelGetAnimation(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Animation *l_anim = l_model->GetAnimation();
-        l_anim ? lua_pushlightuserdata(f_vm, l_anim) : lua_pushboolean(f_vm, 0);
+        l_anim ? argStream.PushPointer(l_anim) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelPlayAnimation(lua_State *f_vm)
 {
@@ -292,10 +285,10 @@ int modelPlayAnimation(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->PlayAnimation();
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelPauseAnimation(lua_State *f_vm)
 {
@@ -305,10 +298,10 @@ int modelPauseAnimation(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->PauseAnimation();
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelResetAnimation(lua_State *f_vm)
 {
@@ -318,10 +311,10 @@ int modelResetAnimation(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->ResetAnimation();
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetAnimationSpeed(lua_State *f_vm)
 {
@@ -333,10 +326,10 @@ int modelSetAnimationSpeed(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->SetAnimationSpeed(l_speed);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetAnimationSpeed(lua_State *f_vm)
 {
@@ -346,10 +339,10 @@ int modelGetAnimationSpeed(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         float l_speed = l_model->GetAnimationSpeed();
-        (l_speed != -1.f) ? lua_pushnumber(f_vm, l_speed) : lua_pushboolean(f_vm, 0);
+        (l_speed != -1.f) ? argStream.PushNumber(l_speed) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetAnimationProgress(lua_State *f_vm)
 {
@@ -361,10 +354,10 @@ int modelSetAnimationProgress(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->SetAnimationProgress(l_progress);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetAnimationProgress(lua_State *f_vm)
 {
@@ -374,10 +367,10 @@ int modelGetAnimationProgress(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         float l_progress = l_model->GetAnimationProgress();
-        (l_progress != -1.f) ? lua_pushnumber(f_vm, l_progress) : lua_pushboolean(f_vm, 0);
+        (l_progress != -1.f) ? argStream.PushNumber(l_progress) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int modelSetCollision(lua_State *f_vm)
@@ -397,12 +390,12 @@ int modelSetCollision(lua_State *f_vm)
         if(l_type != -1)
         {
             bool l_result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelCollision(l_model, MODEL_RIGIDITY_TYPE_SPHERE + static_cast<unsigned char>(l_type), l_mass, l_size);
-            lua_pushboolean(f_vm, l_result);
+            argStream.PushBoolean(l_result);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelRemoveCollision(lua_State *f_vm)
 {
@@ -412,10 +405,10 @@ int modelRemoveCollision(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetPhysicsManager()->RemoveModelCollision(l_model);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetMass(lua_State *f_vm)
 {
@@ -425,10 +418,10 @@ int modelGetMass(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         float l_mass = l_model->GetMass();
-        (l_mass != -1.f) ? lua_pushnumber(f_vm, l_mass) : lua_pushboolean(f_vm, 0);
+        (l_mass != -1.f) ? argStream.PushNumber(l_mass) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetFriction(lua_State *f_vm)
 {
@@ -440,10 +433,10 @@ int modelSetFriction(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->SetFriction(l_friction);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetFriction(lua_State *f_vm)
 {
@@ -453,10 +446,10 @@ int modelGetFriction(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         float l_friction = l_model->GetFriction();
-        (l_friction != -1.f) ? lua_pushnumber(f_vm, l_friction) : lua_pushboolean(f_vm, 0);
+        (l_friction != -1.f) ? argStream.PushNumber(l_friction) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetVelocity(lua_State *f_vm)
 {
@@ -468,32 +461,29 @@ int modelSetVelocity(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->SetVelocity(l_velocity);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetVelocity(lua_State *f_vm)
 {
     Model *l_model;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_velocity;
-        bool l_result = l_model->GetVelocity(l_velocity);
-        if(l_result)
+        if(l_model->GetVelocity(l_velocity))
         {
-            lua_pushnumber(f_vm, l_velocity.x);
-            lua_pushnumber(f_vm, l_velocity.y);
-            lua_pushnumber(f_vm, l_velocity.z);
-            l_returnVal = 3;
+            argStream.PushNumber(l_velocity.x);
+            argStream.PushNumber(l_velocity.y);
+            argStream.PushNumber(l_velocity.z);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelSetAngularVelocity(lua_State *f_vm)
 {
@@ -505,32 +495,30 @@ int modelSetAngularVelocity(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->SetAngularVelocity(l_velocity);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int modelGetAngularVelocity(lua_State *f_vm)
 {
     Model *l_model;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_velocity;
-        bool l_result = l_model->GetAngularVelocity(l_velocity);
-        if(l_result)
+        l_model->GetAngularVelocity(l_velocity);
+        if(l_model->GetAngularVelocity(l_velocity))
         {
-            lua_pushnumber(f_vm, l_velocity.x);
-            lua_pushnumber(f_vm, l_velocity.y);
-            lua_pushnumber(f_vm, l_velocity.z);
-            l_returnVal = 3;
+            argStream.PushNumber(l_velocity.x);
+            argStream.PushNumber(l_velocity.y);
+            argStream.PushNumber(l_velocity.z);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

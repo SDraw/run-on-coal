@@ -14,7 +14,7 @@ namespace Lua
 
 const std::vector<std::string> g_cameraTypesTable
 {
-    "perspective", "orthogonal"
+    "perspective", "orthogonal", "unknown"
 };
 
 int cameraCreate(lua_State *f_vm)
@@ -28,12 +28,12 @@ int cameraCreate(lua_State *f_vm)
         if(l_type != -1)
         {
             Camera *l_camera = LuaManager::m_corePointer->GetElementManager()->CreateCamera(CAMERA_PROJECTION_PERSPECTIVE + static_cast<unsigned char>(l_type));
-            l_camera ? lua_pushlightuserdata(f_vm, l_camera) : lua_pushboolean(f_vm, 0);
+            l_camera ? argStream.PushPointer(l_camera) : argStream.PushBoolean(false);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraDestroy(lua_State *f_vm)
 {
@@ -43,10 +43,10 @@ int cameraDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetElementManager()->DestroyCamera(l_camera);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraSetPosition(lua_State *f_vm)
@@ -59,28 +59,26 @@ int cameraSetPosition(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_camera->SetPosition(l_pos);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraGetPosition(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_vPos;
-        l_camera->GetPosition(l_vPos);
-        lua_pushnumber(f_vm, l_vPos.x);
-        lua_pushnumber(f_vm, l_vPos.y);
-        lua_pushnumber(f_vm, l_vPos.z);
-        l_returnVal = 3;
+        glm::vec3 l_pos;
+        l_camera->GetPosition(l_pos);
+        argStream.PushNumber(l_pos.x);
+        argStream.PushNumber(l_pos.y);
+        argStream.PushNumber(l_pos.z);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraSetDirection(lua_State *f_vm)
@@ -93,28 +91,26 @@ int cameraSetDirection(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_camera->SetDirection(l_dir);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraGetDirection(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_vDir;
-        l_camera->GetDirection(l_vDir);
-        lua_pushnumber(f_vm, l_vDir.x);
-        lua_pushnumber(f_vm, l_vDir.y);
-        lua_pushnumber(f_vm, l_vDir.z);
-        l_returnVal = 3;
+        glm::vec3 l_dir;
+        l_camera->GetDirection(l_dir);
+        argStream.PushNumber(l_dir.x);
+        argStream.PushNumber(l_dir.y);
+        argStream.PushNumber(l_dir.z);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraSetType(lua_State *f_vm)
@@ -130,12 +126,12 @@ int cameraSetType(lua_State *f_vm)
         if(l_type != -1)
         {
             l_camera->SetType(CAMERA_PROJECTION_PERSPECTIVE + static_cast<unsigned char>(l_type));
-            lua_pushboolean(f_vm, 1);
+            argStream.PushBoolean(true);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraGetType(lua_State *f_vm)
 {
@@ -147,17 +143,17 @@ int cameraGetType(lua_State *f_vm)
         switch(l_camera->GetType())
         {
             case CAMERA_PROJECTION_PERSPECTIVE:
-                lua_pushstring(f_vm, "perspective");
+                argStream.PushText(g_cameraTypesTable[0]);
                 break;
             case CAMERA_PROJECTION_ORTHOGONAL:
-                lua_pushstring(f_vm, "orthogonal");
+                argStream.PushText(g_cameraTypesTable[1]);
                 break;
             default:
-                lua_pushstring(f_vm, "unknown");
+                argStream.PushText(g_cameraTypesTable[2]);
         }
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraSetFOV(lua_State *f_vm)
@@ -170,19 +166,18 @@ int cameraSetFOV(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_camera->SetFOV(l_fov);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraGetFOV(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
-    if(!argStream.HasErrors()) lua_pushnumber(f_vm, l_camera->GetFOV());
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    !argStream.HasErrors() ?  argStream.PushNumber(l_camera->GetFOV()) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraSetAspectRatio(lua_State *f_vm)
@@ -195,19 +190,18 @@ int cameraSetAspectRatio(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_camera->SetAspectRatio(l_ratio);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraGetAspectRatio(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
-    if(!argStream.HasErrors()) lua_pushnumber(f_vm, l_camera->GetAspectRatio());
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetAspectRatio()) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraSetOrthoParams(lua_State *f_vm)
@@ -220,29 +214,27 @@ int cameraSetOrthoParams(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_camera->SetOrthoParams(l_params);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraGetOrthoParams(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
         glm::vec4 l_size;
         l_camera->GetOrthoParams(l_size);
-        lua_pushnumber(f_vm, l_size.x);
-        lua_pushnumber(f_vm, l_size.y);
-        lua_pushnumber(f_vm, l_size.z);
-        lua_pushnumber(f_vm, l_size.w);
-        l_returnVal = 4;
+        argStream.PushNumber(l_size.x);
+        argStream.PushNumber(l_size.y);
+        argStream.PushNumber(l_size.z);
+        argStream.PushNumber(l_size.w);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraSetDepth(lua_State *f_vm)
@@ -255,27 +247,25 @@ int cameraSetDepth(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_camera->SetDepth(l_depth);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int cameraGetDepth(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
         glm::vec2 l_depth;
         l_camera->GetDepth(l_depth);
-        lua_pushnumber(f_vm, l_depth.x);
-        lua_pushnumber(f_vm, l_depth.y);
-        l_returnVal++;
+        argStream.PushNumber(l_depth.x);
+        argStream.PushNumber(l_depth.y);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraGetViewMatrix(lua_State *f_vm)
@@ -287,17 +277,10 @@ int cameraGetViewMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_camera->GetViewMatrix(l_mat);
-        float *l_matPointer = reinterpret_cast<float*>(&l_mat);
-        lua_newtable(f_vm);
-        for(int i = 0; i < 16; i++)
-        {
-            lua_pushnumber(f_vm, i + 1);
-            lua_pushnumber(f_vm, l_matPointer[i]);
-            lua_settable(f_vm, -3);
-        }
+        argStream.PushMatrix(l_mat);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 int cameraGetProjectionMatrix(lua_State *f_vm)
@@ -309,17 +292,10 @@ int cameraGetProjectionMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_camera->GetProjectionMatrix(l_mat);
-        float *l_matPointer = reinterpret_cast<float*>(&l_mat);
-        lua_newtable(f_vm);
-        for(int i = 0; i < 16; i++)
-        {
-            lua_pushnumber(f_vm, i + 1);
-            lua_pushnumber(f_vm, l_matPointer[i]);
-            lua_settable(f_vm, -3);
-        }
+        argStream.PushMatrix(l_mat);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

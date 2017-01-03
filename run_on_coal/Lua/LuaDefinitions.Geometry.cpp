@@ -18,10 +18,10 @@ int geometryCreate(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_path.empty())
     {
         Geometry *l_geometry = LuaManager::m_corePointer->GetElementManager()->CreateGeometry(l_path);
-        l_geometry ? lua_pushlightuserdata(f_vm, l_geometry) : lua_pushboolean(f_vm, 0);
+        l_geometry ? argStream.PushPointer(l_geometry) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int geometryDestroy(lua_State *f_vm)
 {
@@ -31,10 +31,10 @@ int geometryDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyGeometry(l_geometry);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

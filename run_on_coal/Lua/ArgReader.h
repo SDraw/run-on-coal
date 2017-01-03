@@ -4,17 +4,16 @@ namespace ROC
 {
 class ArgReader
 {
-    lua_State *m_pVM;
+    lua_State *m_vm;
     Core *m_core;
-    bool m_hasErrors;
     int m_currentArg;
     int m_argCount;
+    int m_returnValue;
     std::string m_error;
+    bool m_hasErrors;
 public:
     ArgReader(lua_State *f_vm, Core *f_core);
     ~ArgReader();
-
-    void DecreaseArguments(int f_args);
 
     void ReadBoolean(bool &f_val);
     void ReadNumber(lua_Number &f_val);
@@ -28,21 +27,28 @@ public:
     void ReadFunction(int &f_val, void **f_pointer);
     void ReadFunctionPointer(void **f_pointer);
 
-    bool ReadNextBoolean(bool &f_val);
-    bool ReadNextNumber(lua_Number &f_val);
-    bool ReadNextNumber(float &f_val);
-    bool ReadNextInteger(lua_Integer &f_val);
-    bool ReadNextInteger(int &f_val);
-    bool ReadNextInteger(unsigned int &f_val);
-    bool ReadNextText(std::string &f_val);
-    bool ReadNextUserdata(void **f_val, unsigned int f_type);
-    bool ReadNextPointer(void **f_val);
+    void ReadNextBoolean(bool &f_val);
+    void ReadNextNumber(lua_Number &f_val);
+    void ReadNextNumber(float &f_val);
+    void ReadNextInteger(lua_Integer &f_val);
+    void ReadNextInteger(int &f_val);
+    void ReadNextInteger(unsigned int &f_val);
+    void ReadNextText(std::string &f_val);
+    void ReadNextUserdata(void **f_val, unsigned int f_type);
+    void ReadNextPointer(void **f_val);
 
     void ReadTableNumbers(std::vector<lua_Number> &f_vec, int f_size);
     void ReadTableNumbers(std::vector<float> &f_vec, int f_size);
     void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);
 
+    void PushBoolean(bool f_val);
+    void PushNumber(lua_Number f_val);
+    void PushInteger(lua_Integer f_val);
+    void PushText(const std::string &f_val);
+    void PushPointer(void *f_val);
+    void PushMatrix(glm::mat4 &f_val);
+
     bool HasErrors();
-    inline int GetArgsValue() { return m_argCount; }
+    inline int GetReturnValue() { return m_returnValue; }
 };
 }

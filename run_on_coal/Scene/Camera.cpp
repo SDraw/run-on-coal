@@ -33,7 +33,7 @@ void ROC::Camera::SetType(unsigned char f_type)
 
 void ROC::Camera::SetPosition(glm::vec3& f_pos)
 {
-    if(std::memcmp(&m_viewPosition, &f_pos, sizeof(glm::vec3)))
+    if(std::memcmp(&m_viewPosition, &f_pos, sizeof(glm::vec3)) != 0)
     {
         std::memcpy(&m_viewPosition, &f_pos, sizeof(glm::vec3));
         m_rebuildView = true;
@@ -41,7 +41,7 @@ void ROC::Camera::SetPosition(glm::vec3& f_pos)
 }
 void ROC::Camera::SetDirection(glm::vec3& f_pos)
 {
-    if(std::memcmp(&m_viewDirection, &f_pos, sizeof(glm::vec3)))
+    if(std::memcmp(&m_viewDirection, &f_pos, sizeof(glm::vec3)) != 0)
     {
         std::memcpy(&m_viewDirection, &f_pos, sizeof(glm::vec3));
         m_rebuildView = true;
@@ -67,7 +67,7 @@ void ROC::Camera::SetAspectRatio(float f_ratio)
 }
 void ROC::Camera::SetOrthoParams(glm::vec4 &f_size)
 {
-    if(std::memcmp(&f_size, &m_orthoParams, sizeof(glm::vec4)))
+    if(std::memcmp(&f_size, &m_orthoParams, sizeof(glm::vec4)) != 0)
     {
         std::memcpy(&m_orthoParams, &f_size, sizeof(glm::vec4));
         m_rebuildProjection = true;
@@ -75,7 +75,7 @@ void ROC::Camera::SetOrthoParams(glm::vec4 &f_size)
 }
 void ROC::Camera::SetDepth(glm::vec2 &f_depth)
 {
-    if(std::memcmp(&f_depth, &m_depth, sizeof(glm::vec2)))
+    if(std::memcmp(&f_depth, &m_depth, sizeof(glm::vec2)) != 0)
     {
         std::memcpy(&m_depth, &f_depth, sizeof(glm::vec2));
         m_rebuildProjection = true;

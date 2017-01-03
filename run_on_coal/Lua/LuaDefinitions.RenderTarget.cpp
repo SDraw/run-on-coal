@@ -33,12 +33,12 @@ int rtCreate(lua_State *f_vm)
         if(l_etype != -1)
         {
             RenderTarget *l_rt = LuaManager::m_corePointer->GetElementManager()->CreateRenderTarget(l_number, l_size, RENDERTARGET_TYPE_DEPTH + l_etype);
-            l_rt ? lua_pushlightuserdata(f_vm, l_rt) : lua_pushboolean(f_vm, 0);
+            l_rt ? argStream.PushPointer(l_rt) : argStream.PushBoolean(false);
         }
-        else lua_pushboolean(f_vm, 0);
+        else argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int rtDestroy(lua_State *f_vm)
 {
@@ -48,10 +48,10 @@ int rtDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyRenderTarget(l_rt);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int rtDraw(lua_State *f_vm)
 {
@@ -68,10 +68,10 @@ int rtDraw(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetRenderManager()->Render(l_rt, l_pos, l_size, l_rot, l_color);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

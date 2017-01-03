@@ -415,7 +415,7 @@ void ROC::Shader::SetProjectionUniformValue(glm::mat4 &f_value)
 {
     if(m_projectionUniform != -1)
     {
-        if(std::memcmp(&m_projectionUniformValue, &f_value, sizeof(glm::mat4)))
+        if(std::memcmp(&m_projectionUniformValue, &f_value, sizeof(glm::mat4)) != 0)
         {
             std::memcpy(&m_projectionUniformValue, &f_value, sizeof(glm::mat4));
             SetUniformValue(m_projectionUniform, m_projectionUniformValue);
@@ -426,7 +426,7 @@ void ROC::Shader::SetViewUniformValue(glm::mat4 &f_value)
 {
     if(m_viewUniform != -1)
     {
-        if(std::memcmp(&m_viewUniformValue, &f_value, sizeof(glm::mat4)))
+        if(std::memcmp(&m_viewUniformValue, &f_value, sizeof(glm::mat4)) != 0)
         {
             std::memcpy(&m_viewUniformValue, &f_value, sizeof(glm::mat4));
             SetUniformValue(m_viewUniform, m_viewUniformValue);
@@ -437,7 +437,7 @@ void ROC::Shader::SetModelUniformValue(glm::mat4 &f_value)
 {
     if(m_modelUniform != -1)
     {
-        if(std::memcmp(&m_modelUniformValue, &f_value, sizeof(glm::mat4)))
+        if(std::memcmp(&m_modelUniformValue, &f_value, sizeof(glm::mat4)) != 0)
         {
             std::memcpy(&m_modelUniformValue, &f_value, sizeof(glm::mat4));
             SetUniformValue(m_modelUniform, m_modelUniformValue);
@@ -448,7 +448,7 @@ void ROC::Shader::SetCameraPositionUniformValue(glm::vec3 &f_value)
 {
     if(m_cameraPositionUniform != -1)
     {
-        if(std::memcmp(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3)))
+        if(std::memcmp(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3)) != 0)
         {
             std::memcpy(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3));
             SetUniformValue(m_cameraPositionUniform, m_cameraPositionUniformValue);
@@ -459,7 +459,7 @@ void ROC::Shader::SetCameraDirectionUniformValue(glm::vec3 &f_value)
 {
     if(m_cameraDirectionUniform != -1)
     {
-        if(std::memcmp(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3)))
+        if(std::memcmp(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3)) != 0)
         {
             std::memcpy(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3));
             SetUniformValue(m_cameraDirectionUniform, m_cameraDirectionUniformValue);
@@ -470,7 +470,7 @@ void ROC::Shader::SetLightColorUniformValue(glm::vec4 &f_value)
 {
     if(m_lightColorUniform != -1)
     {
-        if(std::memcmp(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4)))
+        if(std::memcmp(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4)) != 0)
         {
             std::memcpy(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4));
             SetUniformValue(m_lightColorUniform, m_lightColorUniformValue);
@@ -481,7 +481,7 @@ void ROC::Shader::SetLightDirectionUniformValue(glm::vec3 &f_value)
 {
     if(m_lightDirectionUniform != -1)
     {
-        if(std::memcmp(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3)))
+        if(std::memcmp(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3)) != 0)
         {
             std::memcpy(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3));
             SetUniformValue(m_lightDirectionUniform, m_lightDirectionUniformValue);
@@ -492,7 +492,7 @@ void ROC::Shader::SetLightParamUniformValue(glm::vec4 &f_value)
 {
     if(m_lightParamUniform != -1)
     {
-        if(std::memcmp(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4)))
+        if(std::memcmp(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4)) != 0)
         {
             std::memcpy(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4));
             SetUniformValue(m_lightParamUniform, m_lightParamUniformValue);
@@ -503,7 +503,7 @@ void ROC::Shader::SetMaterialParamUniformValue(glm::vec4 &f_value)
 {
     if(m_materialParamUniform != -1)
     {
-        if(std::memcmp(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4)))
+        if(std::memcmp(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4)) != 0)
         {
             std::memcpy(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4));
             SetUniformValue(m_materialParamUniform, m_materialParamUniformValue);
@@ -554,7 +554,7 @@ void ROC::Shader::SetColorUniformValue(glm::vec4 &f_value)
 {
     if(m_colorUniform != -1)
     {
-        if(std::memcmp(&f_value, &m_colorUniformValue, sizeof(glm::vec4)))
+        if(std::memcmp(&f_value, &m_colorUniformValue, sizeof(glm::vec4)) != 0)
         {
             std::memcpy(&m_colorUniformValue, &f_value, sizeof(glm::vec4));
             SetUniformValue(m_colorUniform, m_colorUniformValue);

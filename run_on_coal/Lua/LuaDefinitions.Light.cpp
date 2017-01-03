@@ -13,9 +13,10 @@ namespace Lua
 
 int lightCreate(lua_State *f_vm)
 {
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
     Light *l_light = LuaManager::m_corePointer->GetElementManager()->CreateLight();
-    l_light ? lua_pushlightuserdata(f_vm, l_light) : lua_pushboolean(f_vm, 0);
-    return 1;
+    l_light ? argStream.PushPointer(l_light) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int lightDestroy(lua_State *f_vm)
 {
@@ -25,10 +26,10 @@ int lightDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyLight(l_light);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int lightSetParams(lua_State *f_vm)
 {
@@ -40,30 +41,27 @@ int lightSetParams(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_light->SetParams(l_params);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int lightGetParams(lua_State *f_vm)
 {
     Light *l_light;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {
-
         glm::vec4 l_params;
         l_light->GetParams(l_params);
-        lua_pushnumber(f_vm, l_params.x);
-        lua_pushnumber(f_vm, l_params.y);
-        lua_pushnumber(f_vm, l_params.z);
-        lua_pushnumber(f_vm, l_params.w);
-        l_returnVal = 4;
+        argStream.PushNumber(l_params.x);
+        argStream.PushNumber(l_params.y);
+        argStream.PushNumber(l_params.z);
+        argStream.PushNumber(l_params.w);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int lightSetColor(lua_State *f_vm)
 {
@@ -75,28 +73,26 @@ int lightSetColor(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_light->SetColor(l_color);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int lightGetColor(lua_State *f_vm)
 {
     Light *l_light;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {
-        glm::vec3 f_color;
-        l_light->GetColor(f_color);
-        lua_pushnumber(f_vm, f_color.x);
-        lua_pushnumber(f_vm, f_color.y);
-        lua_pushnumber(f_vm, f_color.z);
-        l_returnVal = 3;
+        glm::vec3 l_color;
+        l_light->GetColor(l_color);
+        argStream.PushNumber(l_color.x);
+        argStream.PushNumber(l_color.y);
+        argStream.PushNumber(l_color.z);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int lightSetDirection(lua_State *f_vm)
 {
@@ -108,28 +104,26 @@ int lightSetDirection(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_light->SetDirection(l_dir);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int lightGetDirection(lua_State *f_vm)
 {
     Light *l_light;
-    int l_returnVal = 1;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_dir;
         l_light->GetDirection(l_dir);
-        lua_pushnumber(f_vm, l_dir.x);
-        lua_pushnumber(f_vm, l_dir.y);
-        lua_pushnumber(f_vm, l_dir.z);
-        l_returnVal = 3;
+        argStream.PushNumber(l_dir.x);
+        argStream.PushNumber(l_dir.y);
+        argStream.PushNumber(l_dir.z);
     }
-    else lua_pushboolean(f_vm, 0);
-    return l_returnVal;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

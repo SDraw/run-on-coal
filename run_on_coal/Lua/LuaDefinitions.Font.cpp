@@ -31,10 +31,10 @@ int fontCreate(lua_State *f_vm)
         int l_filteringType = Utils::ReadEnumVector(g_fontFilteringTypesTable, l_filter);
         if(l_filteringType == -1) l_filteringType = 0;
         Font *l_font = LuaManager::m_corePointer->GetElementManager()->CreateFont_(l_path, l_size, static_cast<unsigned char>(l_filteringType));
-        l_font ? lua_pushlightuserdata(f_vm, l_font) : lua_pushboolean(f_vm, 0);
+        l_font ? argStream.PushPointer(l_font) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int fontDestroy(lua_State *f_vm)
 {
@@ -44,10 +44,10 @@ int fontDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyFont(l_font);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int fontDraw(lua_State *f_vm)
 {
@@ -64,10 +64,10 @@ int fontDraw(lua_State *f_vm)
     {
         sf::String l_utf32Text = sf::String::fromUtf8(l_text.begin(), l_text.end());
         LuaManager::m_corePointer->GetRenderManager()->Render(l_font, l_pos, l_utf32Text, l_color);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

@@ -19,10 +19,10 @@ int setActiveScene(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetRenderManager()->SetActiveScene(l_scene);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int setActiveShader(lua_State *f_vm)
 {
@@ -32,10 +32,10 @@ int setActiveShader(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         LuaManager::m_corePointer->GetRenderManager()->SetActiveShader(l_shader);
-        lua_pushboolean(f_vm, 1);
+        argStream.PushBoolean(true);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int setRenderTarget(lua_State *f_vm)
 {
@@ -43,8 +43,8 @@ int setRenderTarget(lua_State *f_vm)
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadNextUserdata(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
     LuaManager::m_corePointer->GetRenderManager()->SetRenderTarget(l_rt);
-    lua_pushboolean(f_vm, 1);
-    return 1;
+    argStream.PushBoolean(true);
+    return argStream.GetReturnValue();
 }
 
 }

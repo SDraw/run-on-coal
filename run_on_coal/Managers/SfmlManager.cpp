@@ -161,6 +161,27 @@ bool ROC::SfmlManager::IsMouseKeyPressed(int f_key)
     return sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(f_key));
 }
 
+bool ROC::SfmlManager::IsJoypadConnected(unsigned int f_jp) 
+{ 
+    return sf::Joystick::isConnected(f_jp); 
+}
+bool ROC::SfmlManager::GetJoypadButtonState(unsigned int f_jp, unsigned int f_button) 
+{ 
+    return sf::Joystick::isButtonPressed(f_jp, f_button); 
+}
+unsigned int ROC::SfmlManager::GetJoypadButtonCount(unsigned int f_jp) 
+{ 
+    return sf::Joystick::getButtonCount(f_jp); 
+}
+bool ROC::SfmlManager::CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis) 
+{ 
+    return sf::Joystick::hasAxis(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); 
+}
+float ROC::SfmlManager::GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis) 
+{ 
+    return sf::Joystick::getAxisPosition(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); 
+}
+
 bool ROC::SfmlManager::DoPulse()
 {
     bool l_mouseMoveEventFix = false;

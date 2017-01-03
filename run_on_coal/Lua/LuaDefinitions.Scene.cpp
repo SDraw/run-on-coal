@@ -15,9 +15,10 @@ namespace Lua
 
 int sceneCreate(lua_State *f_vm)
 {
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
     Scene *l_scene = LuaManager::m_corePointer->GetElementManager()->CreateScene();
-    l_scene ? lua_pushlightuserdata(f_vm, l_scene) : lua_pushboolean(f_vm, 0);
-    return 1;
+    l_scene ? argStream.PushPointer(l_scene) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int sceneDestroy(lua_State *f_vm)
 {
@@ -27,10 +28,10 @@ int sceneDestroy(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyScene(l_scene);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int sceneSetCamera(lua_State *f_vm)
 {
@@ -42,10 +43,10 @@ int sceneSetCamera(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetInheritManager()->SetSceneCamera(l_scene, l_camera);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int sceneGetCamera(lua_State *f_vm)
 {
@@ -55,10 +56,10 @@ int sceneGetCamera(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Camera *l_camera = l_scene->GetCamera();
-        l_camera ? lua_pushlightuserdata(f_vm, l_camera) : lua_pushboolean(f_vm, 0);
+        l_camera ? argStream.PushPointer(l_camera) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int sceneSetLight(lua_State *f_vm)
 {
@@ -70,10 +71,10 @@ int sceneSetLight(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::m_corePointer->GetInheritManager()->SetSceneLight(l_scene, l_light);
-        lua_pushboolean(f_vm, l_result);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int sceneGetLight(lua_State *f_vm)
 {
@@ -83,10 +84,10 @@ int sceneGetLight(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Light *l_light = l_scene->GetLight();
-        l_light ? lua_pushlightuserdata(f_vm, l_light) : lua_pushboolean(f_vm, 0);
+        l_light ? argStream.PushPointer(l_light) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 
 }

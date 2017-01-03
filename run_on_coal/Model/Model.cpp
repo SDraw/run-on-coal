@@ -48,7 +48,7 @@ ROC::Model::~Model()
 
 void ROC::Model::SetPosition(glm::vec3 &f_pos)
 {
-    if(std::memcmp(&m_position, &f_pos, sizeof(glm::vec3)))
+    if(std::memcmp(&m_position, &f_pos, sizeof(glm::vec3)) != 0)
     {
         std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
         if(m_rigidBody)
@@ -78,7 +78,7 @@ void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
 
 void ROC::Model::SetRotation(glm::quat &f_rot)
 {
-    if(std::memcmp(&m_rotation, &f_rot, sizeof(glm::quat)))
+    if(std::memcmp(&m_rotation, &f_rot, sizeof(glm::quat)) != 0)
     {
         std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
         if(m_rigidBody)
@@ -119,7 +119,7 @@ void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)
 
 void ROC::Model::SetScale(glm::vec3 &f_scl)
 {
-    if(!m_rigidBody && std::memcmp(&m_scale, &f_scl, sizeof(glm::vec3)))
+    if(!m_rigidBody && (std::memcmp(&m_scale, &f_scl, sizeof(glm::vec3)) != 0))
     {
         std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
         m_rebuildMatrix = true;

@@ -40,14 +40,14 @@ public:
     void GetCursorPosition(glm::ivec2 &f_pos);
     void SetCursorPosition(glm::ivec2 &f_pos);
 
-    bool IsKeyPressed(int f_key);
-    bool IsMouseKeyPressed(int f_key);
+    static bool IsKeyPressed(int f_key);
+    static bool IsMouseKeyPressed(int f_key);
 
-    inline bool IsJoypadConnected(unsigned int f_jp) { return sf::Joystick::isConnected(f_jp); }
-    inline bool GetJoypadButtonState(unsigned int f_jp, unsigned int f_button) { return sf::Joystick::isButtonPressed(f_jp, f_button); }
-    inline unsigned int GetJoypadButtonCount(unsigned int f_jp) { return sf::Joystick::getButtonCount(f_jp); }
-    inline bool CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis) { return sf::Joystick::hasAxis(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); }
-    inline float GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis) { return sf::Joystick::getAxisPosition(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); }
+    static bool IsJoypadConnected(unsigned int f_jp);
+    static bool GetJoypadButtonState(unsigned int f_jp, unsigned int f_button);
+    static unsigned int GetJoypadButtonCount(unsigned int f_jp);
+    static bool CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis);
+    static float GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis);
 
     inline float GetTime() { return m_time; }
 protected:

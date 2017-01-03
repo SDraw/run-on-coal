@@ -17,10 +17,10 @@ int animationCreate(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_path.empty())
     {
         Animation *l_anim = ROC::LuaManager::m_corePointer->GetElementManager()->CreateAnimation(l_path);
-        l_anim ? lua_pushlightuserdata(f_vm, l_anim) : lua_pushboolean(f_vm, 0);
+        l_anim ? argStream.PushPointer(l_anim) : argStream.PushBoolean(false);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 int animationDestroy(lua_State *f_vm)
 {
@@ -29,11 +29,11 @@ int animationDestroy(lua_State *f_vm)
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_anim), ElementType::AnimationElement);
     if(!argStream.HasErrors())
     {
-        ROC::LuaManager::m_corePointer->GetElementManager()->DestroyAnimation(l_anim);
-        lua_pushboolean(f_vm, 1);
+        bool l_result = ROC::LuaManager::m_corePointer->GetElementManager()->DestroyAnimation(l_anim);
+        argStream.PushBoolean(l_result);
     }
-    else lua_pushboolean(f_vm, 0);
-    return 1;
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
 }
 }
 }

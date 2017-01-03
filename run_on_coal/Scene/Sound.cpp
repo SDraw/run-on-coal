@@ -4,6 +4,7 @@
 ROC::Sound::Sound(bool f_loop)
 {
     m_handle = NULL;
+    m_duration = 0.f;
     m_speed = 1.f;
     m_volume = 100.f;
     m_b3D = false;
@@ -26,6 +27,7 @@ bool ROC::Sound::Load(std::string &f_path)
         {
             if(m_looped) m_handle->setLoop(true);
             m_mono = (m_handle->getChannelCount() == 1);
+            m_duration = m_handle->getDuration().asSeconds();
         }
         else
         {
@@ -55,13 +57,7 @@ void ROC::Sound::SetTime(float f_time)
 }
 float ROC::Sound::GetTime()
 {
-    sf::Time l_time = m_handle->getPlayingOffset();
-    return l_time.asSeconds();
-}
-float ROC::Sound::GetDuration()
-{
-    sf::Time l_duration = m_handle->getDuration();
-    return l_duration.asSeconds();
+    return m_handle->getPlayingOffset().asSeconds();
 }
 
 bool ROC::Sound::Set3DPositionEnabled(bool f_state)
