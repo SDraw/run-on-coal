@@ -73,7 +73,7 @@ int textureDraw(lua_State *f_vm)
 {
     Texture *l_tex;
     glm::vec2 l_pos, l_size;
-    float l_rot;
+    float l_rot = 0.f;
     glm::vec4 l_color(1.f);
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);

@@ -47,6 +47,6 @@ void ROC::SoundManager::SetGlobalVolume(float f_val)
     {
         m_globalVolume = f_val;
         btClamp(m_globalVolume, 0.f, 100.f);
-        sf::Listener::setGlobalVolume(f_val);
+        sf::Listener::setGlobalVolume(m_globalVolume);
     }
 }

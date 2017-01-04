@@ -25,24 +25,24 @@ public:
                 if(lua_isnumber(m_vm, m_currentArg))
                 {
                     f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
-                    if(!std::isnan(f_val) && !std::isinf(f_val)) m_currentArg++;
-                    else
+                    m_currentArg++;
+                    if(std::isnan(f_val) || std::isinf(f_val))
                     {
                         m_error.append("Got NaN/Inf");
                         m_hasErrors = true;
                     }
                 }
+                else
+                {
+                    m_error.append("Expected number");
+                    m_hasErrors = true;
+                }
             }
             else
             {
-                m_error.append("Expected number");
+                m_error.append("Not enough arguments");
                 m_hasErrors = true;
             }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
         }
     };
     template<typename T> void ReadInteger(T &f_val)
@@ -83,7 +83,7 @@ public:
             if(lua_isnumber(m_vm, m_currentArg))
             {
                 f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
-                if(!std::isnan(f_val) && !std::isinf(f_val)) m_currentArg++;
+                m_currentArg++;
             }
         }
     };
@@ -115,4 +115,5 @@ public:
     bool HasErrors();
     inline int GetReturnValue() { return m_returnValue; }
 };
+
 }

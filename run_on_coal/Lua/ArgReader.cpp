@@ -239,10 +239,9 @@ void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
                     lua_gettable(m_vm, -2);
                     if(lua_isnumber(m_vm, -1))
                     {
-                        float l_val = static_cast<float>(lua_tonumber(m_vm, -1));
+                        f_val[i] = static_cast<float>(lua_tonumber(m_vm, -1));
                         lua_pop(m_vm, 1);
-                        if(!std::isnan(l_val) && !std::isinf(l_val)) f_val[i] = l_val;
-                        else
+                        if(std::isnan(f_val[i]) || std::isinf(f_val[i]))
                         {
                             m_error.append("Got NaN/Inf");
                             break;

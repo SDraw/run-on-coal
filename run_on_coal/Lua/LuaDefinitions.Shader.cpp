@@ -297,9 +297,9 @@ int shaderSetUniformValue(lua_State *f_vm)
                 if(!argStream.HasErrors())
                 {
                     bool l_result = LuaManager::m_corePointer->GetInheritManager()->AttachTextureToShader(l_shader, l_texture, l_uniform);
-                    lua_pushboolean(f_vm, l_result);
+                    argStream.PushBoolean(l_result);
                 }
-                else lua_pushboolean(f_vm, 0);
+                else argStream.PushBoolean(false);
             } break;
             case 20: // Render target
             {
