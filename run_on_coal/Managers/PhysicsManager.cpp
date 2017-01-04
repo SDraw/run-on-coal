@@ -95,6 +95,7 @@ bool ROC::PhysicsManager::SetModelCollision(Model *f_model, unsigned char f_type
             {
                 f_model->GetRigidBody()->setUserPointer(f_model);
                 m_dynamicWorld->addRigidBody(f_model->GetRigidBody());
+                m_modelsSet.insert(f_model);
                 l_result = true;
             }
         }
@@ -108,14 +109,13 @@ bool ROC::PhysicsManager::RemoveModelCollision(Model *f_model)
     {
         m_dynamicWorld->removeRigidBody(f_model->GetRigidBody());
         l_result = f_model->RemoveCollision();
+        m_modelsSet.erase(f_model);
     }
     return l_result;
 }
 
 void ROC::PhysicsManager::AddModel(Model *f_model)
 {
-    m_modelsSet.insert(f_model);
-
     if(f_model->HasSkeleton())
     {
         for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef())
@@ -139,8 +139,6 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
 }
 void ROC::PhysicsManager::RemoveModel(Model *f_model)
 {
-    m_modelsSet.erase(f_model);
-
     if(f_model->HasCollision()) RemoveModelCollision(f_model);
     if(f_model->HasSkeleton())
     {

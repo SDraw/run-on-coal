@@ -30,7 +30,7 @@ public:
     void Clear();
     template<typename T> void PushArgument(T f_val)
     {
-        m_vArgs.push_back(LuaArgument(f_val));
+        m_vArgs.push_back(f_val);
         m_argCount++;
     };
     void ProccessArguments(lua_State *f_vm);

@@ -243,14 +243,17 @@ void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
                         lua_pop(m_vm, 1);
                         if(std::isnan(f_val[i]) || std::isinf(f_val[i]))
                         {
-                            m_error.append("Got NaN/Inf");
+                            m_error.append("Got NaN/Inf at table index ");
+                            m_error.append(std::to_string(i));
                             break;
                         }
                     }
                     else
                     {
                         lua_pop(m_vm, 1);
-                        m_error.append("Not enough table values");
+                        m_error.append("Table index ");
+                        m_error.append(std::to_string(i));
+                        m_error.append(" isn't a number");
                         break;
                     }
                 }
