@@ -14,7 +14,7 @@
 #include "Utils/SystemTick.h"
 
 ROC::Core* ROC::Core::m_instance = NULL;
-ROC::Core* ROC::Core::GetCore()
+ROC::Core* ROC::Core::Init()
 {
     if(!m_instance) m_instance = new Core();
     return m_instance;

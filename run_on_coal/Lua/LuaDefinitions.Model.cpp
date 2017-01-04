@@ -216,7 +216,7 @@ int modelAttach(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         if(l_bone < -1) l_bone = -1;
-        bool l_result = LuaManager::m_corePointer->GetCore()->GetInheritManager()->AttachModelToModel(l_model, l_parent, l_bone);
+        bool l_result = LuaManager::m_corePointer->GetInheritManager()->AttachModelToModel(l_model, l_parent, l_bone);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

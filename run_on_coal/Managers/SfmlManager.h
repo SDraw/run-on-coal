@@ -21,7 +21,6 @@ class SfmlManager
 
     sf::Event m_event;
     LuaArguments *m_argument;
-    std::string m_input;
 
     SfmlManager(const SfmlManager& that);
     SfmlManager &operator =(const SfmlManager &that);

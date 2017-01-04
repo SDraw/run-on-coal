@@ -35,7 +35,7 @@ class Core
     Core &operator =(const Core &that);
     ~Core();
 public:
-    static Core* GetCore();
+    static Core* Init();
     static void Terminate();
 
     bool DoPulse();

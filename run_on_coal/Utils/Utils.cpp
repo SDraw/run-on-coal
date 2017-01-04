@@ -13,7 +13,7 @@ std::regex g_upRegex("(\\.\\.)+(\\/|\\\\)");
 int ReadEnumVector(const std::vector<std::string> &f_vec, std::string &f_val)
 {
     int l_result = -1;
-    for(std::vector<std::string>::const_iterator iter = f_vec.begin(); iter != f_vec.end(); ++iter)
+    for(auto iter = f_vec.begin(), iterEnd = f_vec.end(); iter != iterEnd; ++iter)
     {
         if(!iter->compare(f_val))
         {

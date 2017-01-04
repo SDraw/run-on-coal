@@ -12,78 +12,30 @@ ROC::LuaArguments::~LuaArguments()
 
 void ROC::LuaArguments::Clear()
 {
-    for(auto iter : m_vArgs)
-    {
-        switch(iter.second)
-        {
-            case ArgumentType::Integer:
-                delete static_cast<int*>(iter.first);
-                break;
-            case ArgumentType::Double:
-                delete static_cast<double*>(iter.first);
-                break;
-            case ArgumentType::String:
-                delete static_cast<std::string*>(iter.first);
-                break;
-            case ArgumentType::Float:
-                delete static_cast<float*>(iter.first);
-                break;
-        }
-    }
     m_vArgs.clear();
     m_argCount = 0;
 }
 
-void ROC::LuaArguments::PushArgument(int f_val)
-{
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(new int(f_val), ArgumentType::Integer));
-    m_argCount++;
-}
-
-void ROC::LuaArguments::PushArgument(double f_val)
-{
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(new double(f_val), ArgumentType::Double));
-    m_argCount++;
-}
-
-void ROC::LuaArguments::PushArgument(float f_val)
-{
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(new float(f_val), ArgumentType::Float));
-    m_argCount++;
-}
-
-void ROC::LuaArguments::PushArgument(void *f_val)
-{
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(f_val, ArgumentType::Pointer));
-    m_argCount++;
-}
-
-void ROC::LuaArguments::PushArgument(const std::string &f_arg)
-{
-    m_vArgs.push_back(std::pair<void*, ArgumentType>(new std::string(f_arg), ArgumentType::String));
-    m_argCount++;
-}
-
 void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
 {
-    for(auto iter : m_vArgs)
+    for(auto iter = m_vArgs.begin(), iterEnd = m_vArgs.end(); iter != iterEnd; ++iter)
     {
-        switch(iter.second)
+        switch(iter->m_type)
         {
-            case ArgumentType::Integer:
-                lua_pushinteger(f_vm, *static_cast<int*>(iter.first));
+            case LuaArgument::ArgumentType::Integer:
+                lua_pushinteger(f_vm, iter->m_value.m_int);
                 break;
-            case ArgumentType::Double:
-                lua_pushnumber(f_vm, *static_cast<double*>(iter.first));
+            case LuaArgument::ArgumentType::Double:
+                lua_pushnumber(f_vm, iter->m_value.m_double);
                 break;
-            case ArgumentType::Float:
-                lua_pushnumber(f_vm, *static_cast<float*>(iter.first));
+            case LuaArgument::ArgumentType::Float:
+                lua_pushnumber(f_vm, iter->m_value.m_float);
                 break;
-            case ArgumentType::Pointer:
-                lua_pushlightuserdata(f_vm, iter.first);
+            case LuaArgument::ArgumentType::Pointer:
+                lua_pushlightuserdata(f_vm, iter->m_value.m_pointer);
                 break;
-            case ArgumentType::String:
-                lua_pushstring(f_vm, static_cast<std::string*>(iter.first)->c_str());
+            case LuaArgument::ArgumentType::String:
+                lua_pushstring(f_vm, iter->m_value.m_string->c_str());
                 break;
         }
     }
