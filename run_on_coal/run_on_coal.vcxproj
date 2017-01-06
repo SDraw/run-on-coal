@@ -148,6 +148,7 @@
     <ClInclude Include="Managers\PhysicsManager.h" />
     <ClInclude Include="Managers\PreRenderManager.h" />
     <ClInclude Include="Managers\RenderManager.h" />
+    <ClInclude Include="Model\BoneFrameData.h" />
     <ClInclude Include="Model\BoneJointData.h" />
     <ClInclude Include="Model\BoneData.h" />
     <ClInclude Include="Model\Geometry.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Managers\PhysicsManager.cpp" />
     <ClCompile Include="Managers\PreRenderManager.cpp" />
     <ClCompile Include="Managers\RenderManager.cpp" />
+    <ClCompile Include="Model\BoneFrameData.cpp" />
     <ClCompile Include="Model\BoneJointData.cpp" />
     <ClCompile Include="Model\BoneData.cpp" />
     <ClCompile Include="Model\Geometry.cpp" />

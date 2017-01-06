@@ -1,15 +1,12 @@
 #pragma once
 namespace ROC
 {
+
+class BoneFrameData;
 class Bone
 {
     std::string m_name;
-    struct bnStoring
-    {
-        glm::vec3 m_pos;
-        glm::quat m_rot;
-        glm::vec3 m_scl;
-    } m_data;
+    BoneFrameData *m_data;
     glm::mat4 m_matrix;
     glm::mat4 m_localMatrix;
     glm::mat4 m_bindMatrix;
@@ -28,7 +25,7 @@ protected:
     Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale);
     ~Bone();
 
-    void SetData(void *f_data);
+    void SetFrameData(BoneFrameData *f_data);
     void GenerateBindPose();
     void UpdateMatrix();
 

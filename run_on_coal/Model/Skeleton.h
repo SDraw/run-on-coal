@@ -10,6 +10,7 @@ namespace ROC
 class Bone;
 class BoneCollisionData;
 class BoneData;
+class BoneFrameData;
 class BoneJointData;
 class Skeleton
 {
@@ -44,12 +45,9 @@ class Skeleton
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
 
-    struct skFastStoring
-    {
-        glm::vec3 m_pos;
-        glm::quat m_rot;
-        glm::vec3 m_scale;
-    } m_leftData, m_rightData, m_interpolated;
+    BoneFrameData *m_leftData;
+    BoneFrameData *m_rightData;
+    BoneFrameData *m_interpolatedData;
 protected:
     explicit Skeleton(std::vector<BoneData*> &f_data);
     ~Skeleton();

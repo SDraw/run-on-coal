@@ -180,6 +180,9 @@
     <ClCompile Include="Model\BoneJointData.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="Model\BoneFrameData.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -353,6 +356,9 @@
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\BoneJointData.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BoneFrameData.h">
       <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>

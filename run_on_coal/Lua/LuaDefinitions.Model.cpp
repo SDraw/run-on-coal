@@ -378,7 +378,7 @@ int modelSetCollision(lua_State *f_vm)
     Model *l_model;
     std::string l_textType;
     float l_mass = 1.0;
-    glm::vec3 l_size;
+    glm::vec3 l_size(1.f);
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadText(l_textType);
