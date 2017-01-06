@@ -2,6 +2,8 @@
 
 namespace ROC
 {
+
+class BoneFrameData;
 class Animation
 {
     std::ifstream m_animFile;
@@ -11,11 +13,11 @@ class Animation
     unsigned int m_durationTotal;
     unsigned int m_fps;
     unsigned int m_frameDelta;
-
     unsigned int m_frameSize;
-    unsigned int m_cachedFrame;
-    std::vector<float> m_leftFrame;
-    std::vector<float> m_rightFrame;
+    unsigned int m_lastLeftFrame;
+    std::vector<BoneFrameData*> m_leftFrame;
+    std::vector<BoneFrameData*> m_rightFrame;
+    std::vector<BoneFrameData*> m_interpolatedFrame;
 
     bool m_loaded;
 
@@ -25,9 +27,8 @@ protected:
     ~Animation();
 
     bool Load(std::string &f_path);
-    bool CacheData(unsigned int f_tick, float &f_lerp);
-    inline std::vector<float>& GetLeftFrameDataRef() { return m_leftFrame; }
-    inline std::vector<float>& GetRightFrameDataRef() { return m_rightFrame; }
+    bool CacheData(unsigned int f_tick);
+    inline std::vector<BoneFrameData*>& GetCachedDataRef() { return m_interpolatedFrame; }
 
     inline unsigned int GetBonesCount() { return m_bonesValue; }
     inline unsigned int GetTotalDuration() { return m_durationTotal; }

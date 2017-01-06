@@ -264,9 +264,7 @@ void ROC::Model::UpdateSkeleton()
 {
     if(m_animation)
     {
-        float l_lerpDelta;
-        if(!m_animation->CacheData(m_animCurrentTick, l_lerpDelta)) return;
-        m_skeleton->Update(m_animation->GetLeftFrameDataRef(), m_animation->GetRightFrameDataRef(), l_lerpDelta);
+        if(m_animation->CacheData(m_animCurrentTick)) m_skeleton->Update(m_animation->GetCachedDataRef());
     }
     else m_skeleton->Update();
 }

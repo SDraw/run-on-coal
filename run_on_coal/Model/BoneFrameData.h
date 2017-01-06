@@ -19,12 +19,13 @@ protected:
             std::memcmp(&m_scale, &f_data->m_scale, sizeof(glm::vec3))
             );
     }
-    inline void CopyTo(BoneFrameData *f_data)
+    inline void CopyFrom(BoneFrameData *f_data)
     {
-        std::memcpy(&f_data->m_position, &m_position, sizeof(glm::vec3));
-        std::memcpy(&f_data->m_rotation, &m_rotation, sizeof(glm::quat));
-        std::memcpy(&f_data->m_scale, &m_scale, sizeof(glm::vec3));
+        std::memcpy(&m_position, &f_data->m_position, sizeof(glm::vec3));
+        std::memcpy(&m_rotation, &f_data->m_rotation, sizeof(glm::quat));
+        std::memcpy(&m_scale, &f_data->m_scale, sizeof(glm::vec3));
     }
+    friend class Animation;
     friend class Bone;
     friend class Skeleton;
 };

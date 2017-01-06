@@ -39,7 +39,7 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data)
     {
         if(m_data->Compare(f_data))
         {
-            f_data->CopyTo(m_data);
+            m_data->CopyFrom(f_data);
             m_rebuildMatrix = true;
         }
     }

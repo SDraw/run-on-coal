@@ -44,15 +44,11 @@ class Skeleton
     };
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
-
-    BoneFrameData *m_leftData;
-    BoneFrameData *m_rightData;
-    BoneFrameData *m_interpolatedData;
 protected:
     explicit Skeleton(std::vector<BoneData*> &f_data);
     ~Skeleton();
 
-    void Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp);
+    void Update(std::vector<BoneFrameData*> &f_data);
     void Update();
     void ResetBonesInterpolation();
 

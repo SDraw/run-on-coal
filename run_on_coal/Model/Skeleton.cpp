@@ -35,12 +35,9 @@ ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
             l_bone->GenerateBindPose();
         }
     }
-    m_boneMatrices.resize(static_cast<size_t>(m_bonesCount));
+    m_boneMatrices.resize(m_bonesCount);
     m_hasStaticBoneCollision = false;
     m_hasDynamicBoneCollision = false;
-    m_leftData = new BoneFrameData();
-    m_rightData = new BoneFrameData();
-    m_interpolatedData = new BoneFrameData();
 }
 ROC::Skeleton::~Skeleton()
 {
@@ -84,31 +81,11 @@ ROC::Skeleton::~Skeleton()
         m_jointVector.clear();
     }
     m_fastBoneVector.clear();
-
-    delete m_leftData;
-    delete m_rightData;
-    delete m_interpolatedData;
 }
 
-void ROC::Skeleton::Update(std::vector<float> &f_left, std::vector<float> &f_right, float f_lerp)
+void ROC::Skeleton::Update(std::vector<BoneFrameData*> &f_data)
 {
-    for(unsigned int i = 0, l_bonePos = 0; i < m_bonesCount; i++)
-    {
-        std::memcpy(&m_leftData->m_position, &f_left[l_bonePos], sizeof(glm::vec3));
-        std::memcpy(&m_rightData->m_position, &f_right[l_bonePos], sizeof(glm::vec3));
-        l_bonePos += 3U;
-        std::memcpy(&m_leftData->m_rotation, &f_left[l_bonePos], sizeof(glm::quat));
-        std::memcpy(&m_rightData->m_rotation, &f_right[l_bonePos], sizeof(glm::quat));
-        l_bonePos += 4U;
-        std::memcpy(&m_leftData->m_scale, &f_left[l_bonePos], sizeof(glm::vec3));
-        std::memcpy(&m_rightData->m_scale, &f_right[l_bonePos], sizeof(glm::vec3));
-        l_bonePos += 3U;
-
-        m_interpolatedData->m_position = glm::lerp(m_leftData->m_position, m_rightData->m_position, f_lerp);
-        m_interpolatedData->m_rotation = glm::slerp(m_leftData->m_rotation, m_rightData->m_rotation, f_lerp);
-        m_interpolatedData->m_scale = glm::lerp(m_leftData->m_scale, m_rightData->m_scale, f_lerp);
-        m_boneVector[i]->SetFrameData(m_interpolatedData);
-    }
+    for(unsigned int i = 0; i < m_bonesCount; i++) m_boneVector[i]->SetFrameData(f_data[i]);
     Update();
 }
 void ROC::Skeleton::Update()
