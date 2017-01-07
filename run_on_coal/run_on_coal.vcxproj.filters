@@ -22,41 +22,8 @@
     <ClCompile Include="Managers\SoundManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Animation.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Bone.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Material.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Model.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Skeleton.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Core.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Camera.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Light.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\RenderTarget.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Shader.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Sound.cpp">
-      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Lua\ArgReader.cpp">
       <Filter>Lua</Filter>
@@ -68,20 +35,11 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Scene\Texture.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
     </ClCompile>
     <ClCompile Include="Managers\ElementManager.cpp">
       <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Font.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Quad.cpp">
-      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Managers\PhysicsManager.cpp">
       <Filter>Managers</Filter>
@@ -131,14 +89,8 @@
     <ClCompile Include="Lua\LuaDefinitions.Utils.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Geometry.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.Geometry.cpp">
       <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\File.cpp">
-      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.File.cpp">
       <Filter>Lua</Filter>
@@ -153,9 +105,6 @@
     <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
       <Filter>vendor\luauft8</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Collision.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.Collision.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
@@ -168,20 +117,71 @@
     <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Model\BoneData.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\SystemTick.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Model\BoneCollisionData.cpp">
-      <Filter>Model</Filter>
+    <ClCompile Include="Elements\Camera.cpp">
+      <Filter>Elements</Filter>
     </ClCompile>
-    <ClCompile Include="Model\BoneJointData.cpp">
-      <Filter>Model</Filter>
+    <ClCompile Include="Elements\Collision.cpp">
+      <Filter>Elements</Filter>
     </ClCompile>
-    <ClCompile Include="Model\BoneFrameData.cpp">
-      <Filter>Model</Filter>
+    <ClCompile Include="Elements\File.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Font.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Light.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Quad.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\RenderTarget.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Scene.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Shader.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Sound.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Texture.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Model\Model.cpp">
+      <Filter>Elements\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Model\Skeleton.cpp">
+      <Filter>Elements\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Model\Bone.cpp">
+      <Filter>Elements\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Geometry\BoneCollisionData.cpp">
+      <Filter>Elements\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Geometry\BoneData.cpp">
+      <Filter>Elements\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Geometry\BoneJointData.cpp">
+      <Filter>Elements\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Geometry\Geometry.cpp">
+      <Filter>Elements\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Geometry\Material.cpp">
+      <Filter>Elements\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Animation\Animation.cpp">
+      <Filter>Elements\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Animation\BoneFrameData.cpp">
+      <Filter>Elements\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,41 +207,8 @@
     <ClInclude Include="Managers\SoundManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Animation.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Bone.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Material.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Model.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Skeleton.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Core.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Camera.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Light.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\RenderTarget.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Shader.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Sound.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Lua\ArgReader.h">
       <Filter>Lua</Filter>
@@ -252,17 +219,8 @@
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Texture.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\ElementManager.h">
       <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Font.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Quad.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Managers\PhysicsManager.h">
       <Filter>Managers</Filter>
@@ -312,14 +270,8 @@
     <ClInclude Include="Lua\LuaDefinitions.Texture.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Geometry.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Geometry.h">
       <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\File.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.File.h">
       <Filter>Lua</Filter>
@@ -330,9 +282,6 @@
     <ClInclude Include="RocInc.h" />
     <ClInclude Include="Managers\PreRenderManager.h">
       <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Collision.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Collision.h">
       <Filter>Lua</Filter>
@@ -346,34 +295,79 @@
     <ClInclude Include="Lua\LuaDefinitions.Sfml.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Model\BoneData.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\SystemTick.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Model\BoneCollisionData.h">
-      <Filter>Model</Filter>
+    <ClInclude Include="Elements\Camera.h">
+      <Filter>Elements</Filter>
     </ClInclude>
-    <ClInclude Include="Model\BoneJointData.h">
-      <Filter>Model</Filter>
+    <ClInclude Include="Elements\Collision.h">
+      <Filter>Elements</Filter>
     </ClInclude>
-    <ClInclude Include="Model\BoneFrameData.h">
-      <Filter>Model</Filter>
+    <ClInclude Include="Elements\File.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Font.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Light.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Quad.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\RenderTarget.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Scene.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Shader.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Sound.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Texture.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Model\Model.h">
+      <Filter>Elements\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Model\Skeleton.h">
+      <Filter>Elements\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Model\Bone.h">
+      <Filter>Elements\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\BoneCollisionData.h">
+      <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\BoneData.h">
+      <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\BoneJointData.h">
+      <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\Geometry.h">
+      <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\Material.h">
+      <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Animation\Animation.h">
+      <Filter>Elements\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Animation\BoneFrameData.h">
+      <Filter>Elements\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">
       <UniqueIdentifier>{f8d8920c-afbf-4349-a7bd-01f594fe4ff5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model">
-      <UniqueIdentifier>{a4848be8-749d-4722-b9be-60417c3d920b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{6a0ab0f6-32db-40f2-b394-ab0b541b2696}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{1dbeae52-e4c1-4b58-9f40-6efc93f827de}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lua">
       <UniqueIdentifier>{1dad6a8d-95a2-4217-90bc-abb923d239ee}</UniqueIdentifier>
@@ -389,6 +383,18 @@
     </Filter>
     <Filter Include="vendor\luauft8">
       <UniqueIdentifier>{d0c6621f-360e-48bb-9835-e3ab0b247d7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements">
+      <UniqueIdentifier>{90b8520a-62ec-487a-943f-910711e249ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Model">
+      <UniqueIdentifier>{1424056a-356b-463b-8cec-e9aa98dc1fe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Geometry">
+      <UniqueIdentifier>{a5d2d388-da69-492e-b9c7-a96250bbf692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Animation">
+      <UniqueIdentifier>{970250c9-5a45-431a-9110-a0ebdac65cc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class SoundManager
 {
@@ -26,4 +27,5 @@ protected:
     ~SoundManager();
     friend Core;
 };
+
 }

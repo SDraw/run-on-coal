@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class EventManager;
 class LuaArguments;
@@ -27,4 +28,5 @@ protected:
     friend Core;
     friend EventManager;
 };
+
 }

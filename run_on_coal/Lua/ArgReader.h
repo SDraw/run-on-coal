@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class ArgReader
 {
     lua_State *m_vm;

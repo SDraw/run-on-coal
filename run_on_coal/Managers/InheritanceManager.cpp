@@ -5,13 +5,13 @@
 #include "Managers/MemoryManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager.h"
-#include "Model/Animation.h"
-#include "Model/Model.h"
-#include "Model/Skeleton.h"
-#include "Scene/RenderTarget.h"
-#include "Scene/Scene.h"
-#include "Scene/Shader.h"
-#include "Scene/Texture.h"
+#include "Elements/Animation/Animation.h"
+#include "Elements/Model/Model.h"
+#include "Elements/Model/Skeleton.h"
+#include "Elements/RenderTarget.h"
+#include "Elements/Scene.h"
+#include "Elements/Shader.h"
+#include "Elements/Texture.h"
 
 ROC::InheritanceManager::InheritanceManager(Core *f_core)
 {
@@ -76,13 +76,13 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::ModelElement:
-                    static_cast<Model*>(f_child)->SetParent(NULL);
+                    reinterpret_cast<Model*>(f_child)->SetParent(NULL);
                     break;
                 case ElementType::GeometryElement:
-                    static_cast<Model*>(f_child)->SetGeometry(NULL);
+                    reinterpret_cast<Model*>(f_child)->SetGeometry(NULL);
                     break;
                 case ElementType::AnimationElement:
-                    static_cast<Model*>(f_child)->SetAnimation(NULL);
+                    reinterpret_cast<Model*>(f_child)->SetAnimation(NULL);
                     break;
             }
         } break;
@@ -91,7 +91,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::SceneElement:
-                    static_cast<Scene*>(f_parent)->SetCamera(NULL);
+                    reinterpret_cast<Scene*>(f_parent)->SetCamera(NULL);
                     break;
             }
         } break;
@@ -100,7 +100,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::SceneElement:
-                    static_cast<Scene*>(f_parent)->SetLight(NULL);
+                    reinterpret_cast<Scene*>(f_parent)->SetLight(NULL);
                     break;
             }
         } break;
@@ -109,7 +109,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent), static_cast<Texture*>(f_child));
+                    m_core->GetRenderManager()->DettachFromShader(reinterpret_cast<Shader*>(f_parent), reinterpret_cast<Texture*>(f_child));
                     break;
             }
         } break;
@@ -118,7 +118,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_
             switch(f_parentType)
             {
                 case ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DettachFromShader(static_cast<Shader*>(f_parent), static_cast<RenderTarget*>(f_child));
+                    m_core->GetRenderManager()->DettachFromShader(reinterpret_cast<Shader*>(f_parent), reinterpret_cast<RenderTarget*>(f_child));
                     break;
             }
         } break;

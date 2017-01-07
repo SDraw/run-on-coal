@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class Animation;
 class Camera;
@@ -40,4 +41,5 @@ protected:
     friend Core;
     friend class ElementManager;
 };
+
 }

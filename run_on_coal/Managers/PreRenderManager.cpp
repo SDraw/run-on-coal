@@ -4,8 +4,8 @@
 #include "Managers/LuaManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/PhysicsManager.h"
-#include "Model/Model.h"
-#include "Model/Skeleton.h"
+#include "Elements/Model/Model.h"
+#include "Elements/Model/Skeleton.h"
 #include "Lua/LuaArguments.h"
 
 ROC::PreRenderManager::PreRenderManager(Core *f_core)

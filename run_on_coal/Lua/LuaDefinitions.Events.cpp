@@ -18,7 +18,8 @@ const std::vector<std::string> g_eventNamesTable
     "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
     "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
-    "onTextInput"
+    "onTextInput",
+    "onNetworkDisconnect", "onNetworkDataRecieve"
 };
 
 int addEvent(lua_State *f_vm)

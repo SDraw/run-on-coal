@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 enum EventType : unsigned char
 {
     AppStart = 0U, //onAppStart
@@ -19,6 +20,8 @@ enum EventType : unsigned char
     JoypadButton, //onJoypadButton
     JoypadAxis, //onJoypadAxis
     TextInput, //onTextInput
+    NetworkDisconnect, //onNetworkDisconnect
+    NetworkDataRecieve, //onNetworkDataRecieve
     Last // None
 };
 
@@ -48,4 +51,5 @@ protected:
     ~EventManager();
     friend LuaManager;
 };
+
 }

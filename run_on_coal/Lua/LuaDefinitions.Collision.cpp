@@ -2,9 +2,9 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Elements/Collision.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Collision.h"
-#include "Scene/Collision.h"
 #include "Utils/Utils.h"
 
 namespace ROC

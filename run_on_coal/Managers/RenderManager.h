@@ -5,6 +5,7 @@
 
 namespace ROC
 {
+
 class Core;
 class Model;
 class Scene;
@@ -112,4 +113,5 @@ protected:
     friend class ElementManager;
     friend class InheritanceManager;
 };
+
 }

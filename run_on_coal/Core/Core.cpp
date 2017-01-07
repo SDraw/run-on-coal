@@ -14,19 +14,6 @@
 #include "Utils/SystemTick.h"
 
 ROC::Core* ROC::Core::m_instance = NULL;
-ROC::Core* ROC::Core::Init()
-{
-    if(!m_instance) m_instance = new Core();
-    return m_instance;
-}
-void ROC::Core::Terminate()
-{
-    if(m_instance)
-    {
-        delete m_instance;
-        m_instance = NULL;
-    }
-}
 
 ROC::Core::Core()
 {
@@ -65,6 +52,20 @@ ROC::Core::~Core()
     delete m_sfmlManager;
     delete m_logManager;
     delete m_configManager;
+}
+
+ROC::Core* ROC::Core::Init()
+{
+    if(!m_instance) m_instance = new Core();
+    return m_instance;
+}
+void ROC::Core::Terminate()
+{
+    if(m_instance)
+    {
+        delete m_instance;
+        m_instance = NULL;
+    }
 }
 
 bool ROC::Core::DoPulse()

@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class Model;
 class LuaArguments;
@@ -41,4 +42,5 @@ protected:
     friend class ElementManager;
     friend class InheritanceManager;
 };
+
 }

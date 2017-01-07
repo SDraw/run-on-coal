@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class LogManager
 {
@@ -14,4 +15,5 @@ protected:
     ~LogManager();
     friend Core;
 };
+
 }

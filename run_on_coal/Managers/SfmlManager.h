@@ -4,6 +4,7 @@
 
 namespace ROC
 {
+
 class Core;
 class LuaArguments;
 class SfmlManager
@@ -58,4 +59,5 @@ protected:
     friend Core;
     friend class RenderManager;
 };
+
 }

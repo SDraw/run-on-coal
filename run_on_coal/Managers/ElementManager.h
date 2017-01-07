@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 enum ElementType : unsigned char
 {
     GeometryElement = 0U, ModelElement, AnimationElement, SceneElement,
@@ -77,4 +78,5 @@ protected:
     friend Core;
     friend class MemoryManager;
 };
+
 }

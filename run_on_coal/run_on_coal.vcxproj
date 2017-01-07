@@ -106,7 +106,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype27\lib;..\vendor\glew\lib;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype27.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -116,6 +116,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Elements\Animation\Animation.h" />
+    <ClInclude Include="Elements\Animation\BoneFrameData.h" />
+    <ClInclude Include="Elements\Camera.h" />
+    <ClInclude Include="Elements\Collision.h" />
+    <ClInclude Include="Elements\File.h" />
+    <ClInclude Include="Elements\Font.h" />
+    <ClInclude Include="Elements\Geometry\BoneCollisionData.h" />
+    <ClInclude Include="Elements\Geometry\BoneData.h" />
+    <ClInclude Include="Elements\Geometry\BoneJointData.h" />
+    <ClInclude Include="Elements\Geometry\Geometry.h" />
+    <ClInclude Include="Elements\Geometry\Material.h" />
+    <ClInclude Include="Elements\Light.h" />
+    <ClInclude Include="Elements\Model\Bone.h" />
+    <ClInclude Include="Elements\Model\Model.h" />
+    <ClInclude Include="Elements\Model\Skeleton.h" />
+    <ClInclude Include="Elements\Quad.h" />
+    <ClInclude Include="Elements\RenderTarget.h" />
+    <ClInclude Include="Elements\Scene.h" />
+    <ClInclude Include="Elements\Shader.h" />
+    <ClInclude Include="Elements\Sound.h" />
+    <ClInclude Include="Elements\Texture.h" />
     <ClInclude Include="Lua\LuaDefinitions.Animation.h" />
     <ClInclude Include="Lua\LuaDefinitions.Camera.h" />
     <ClInclude Include="Lua\LuaDefinitions.Collision.h" />
@@ -148,29 +169,8 @@
     <ClInclude Include="Managers\PhysicsManager.h" />
     <ClInclude Include="Managers\PreRenderManager.h" />
     <ClInclude Include="Managers\RenderManager.h" />
-    <ClInclude Include="Model\BoneFrameData.h" />
-    <ClInclude Include="Model\BoneJointData.h" />
-    <ClInclude Include="Model\BoneData.h" />
-    <ClInclude Include="Model\Geometry.h" />
-    <ClInclude Include="Model\Material.h" />
-    <ClInclude Include="Model\Model.h" />
     <ClInclude Include="RocInc.h" />
-    <ClInclude Include="Scene\Camera.h" />
-    <ClInclude Include="Scene\Collision.h" />
-    <ClInclude Include="Scene\File.h" />
-    <ClInclude Include="Scene\Font.h" />
-    <ClInclude Include="Scene\Light.h" />
-    <ClInclude Include="Scene\Quad.h" />
-    <ClInclude Include="Scene\RenderTarget.h" />
-    <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="Scene\Shader.h" />
-    <ClInclude Include="Model\Animation.h" />
-    <ClInclude Include="Model\Bone.h" />
-    <ClInclude Include="Model\Skeleton.h" />
-    <ClInclude Include="Scene\Sound.h" />
     <ClInclude Include="Managers\SoundManager.h" />
-    <ClInclude Include="Scene\Texture.h" />
-    <ClInclude Include="Model\BoneCollisionData.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\SystemTick.h" />
@@ -182,6 +182,27 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Core\Core.cpp" />
+    <ClCompile Include="Elements\Animation\Animation.cpp" />
+    <ClCompile Include="Elements\Animation\BoneFrameData.cpp" />
+    <ClCompile Include="Elements\Camera.cpp" />
+    <ClCompile Include="Elements\Collision.cpp" />
+    <ClCompile Include="Elements\File.cpp" />
+    <ClCompile Include="Elements\Font.cpp" />
+    <ClCompile Include="Elements\Geometry\BoneCollisionData.cpp" />
+    <ClCompile Include="Elements\Geometry\BoneData.cpp" />
+    <ClCompile Include="Elements\Geometry\BoneJointData.cpp" />
+    <ClCompile Include="Elements\Geometry\Geometry.cpp" />
+    <ClCompile Include="Elements\Geometry\Material.cpp" />
+    <ClCompile Include="Elements\Light.cpp" />
+    <ClCompile Include="Elements\Model\Bone.cpp" />
+    <ClCompile Include="Elements\Model\Model.cpp" />
+    <ClCompile Include="Elements\Model\Skeleton.cpp" />
+    <ClCompile Include="Elements\Quad.cpp" />
+    <ClCompile Include="Elements\RenderTarget.cpp" />
+    <ClCompile Include="Elements\Scene.cpp" />
+    <ClCompile Include="Elements\Shader.cpp" />
+    <ClCompile Include="Elements\Sound.cpp" />
+    <ClCompile Include="Elements\Texture.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Animation.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Camera.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Collision.cpp" />
@@ -219,28 +240,7 @@
     <ClCompile Include="Managers\PhysicsManager.cpp" />
     <ClCompile Include="Managers\PreRenderManager.cpp" />
     <ClCompile Include="Managers\RenderManager.cpp" />
-    <ClCompile Include="Model\BoneFrameData.cpp" />
-    <ClCompile Include="Model\BoneJointData.cpp" />
-    <ClCompile Include="Model\BoneData.cpp" />
-    <ClCompile Include="Model\Geometry.cpp" />
-    <ClCompile Include="Model\Material.cpp" />
-    <ClCompile Include="Model\Model.cpp" />
-    <ClCompile Include="Model\BoneCollisionData.cpp" />
-    <ClCompile Include="Scene\Camera.cpp" />
-    <ClCompile Include="Scene\Collision.cpp" />
-    <ClCompile Include="Scene\File.cpp" />
-    <ClCompile Include="Scene\Font.cpp" />
-    <ClCompile Include="Scene\Light.cpp" />
-    <ClCompile Include="Scene\Quad.cpp" />
-    <ClCompile Include="Scene\RenderTarget.cpp" />
-    <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="Scene\Shader.cpp" />
-    <ClCompile Include="Model\Animation.cpp" />
-    <ClCompile Include="Model\Bone.cpp" />
-    <ClCompile Include="Model\Skeleton.cpp" />
-    <ClCompile Include="Scene\Sound.cpp" />
     <ClCompile Include="Managers\SoundManager.cpp" />
-    <ClCompile Include="Scene\Texture.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

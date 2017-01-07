@@ -10,6 +10,7 @@
 
 namespace ROC
 {
+
 extern const std::vector<std::string> g_keysTable;
 extern const std::vector<std::string> g_mouseKeysTable;
 extern const std::vector<std::string> g_axisNames;

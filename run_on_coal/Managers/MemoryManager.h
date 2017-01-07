@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class MemoryManager
 {
@@ -22,4 +23,5 @@ protected:
     friend Core;
     friend class ElementManager;
 };
+
 }

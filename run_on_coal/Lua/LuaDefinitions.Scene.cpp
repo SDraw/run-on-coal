@@ -3,7 +3,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LuaManager.h"
-#include "Scene/Scene.h"
+#include "Elements/Scene.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Scene.h"
 #include "Utils/Utils.h"

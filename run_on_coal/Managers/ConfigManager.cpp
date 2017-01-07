@@ -5,10 +5,12 @@
 
 namespace ROC
 {
-const std::vector<std::string> g_attributeTable
+
+const std::vector<std::string> g_configAttributeTable
 {
     "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync"
 };
+
 }
 
 ROC::ConfigManager::ConfigManager(Core* f_core)
@@ -37,7 +39,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                     l_attrib = l_node.attribute("value");
                     if(l_attrib)
                     {
-                        switch(Utils::ReadEnumVector(g_attributeTable, l_param))
+                        switch(Utils::ReadEnumVector(g_configAttributeTable, l_param))
                         {
                             case 0:
                             {

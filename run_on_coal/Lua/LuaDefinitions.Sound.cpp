@@ -4,7 +4,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/SoundManager.h"
-#include "Scene/Sound.h"
+#include "Elements/Sound.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Sound.h"
 #include "Utils/Utils.h"

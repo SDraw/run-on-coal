@@ -4,6 +4,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 int soundCreate(lua_State *f_vm);
 int soundDestroy(lua_State *f_vm);
 int soundPlay(lua_State *f_vm);
@@ -28,5 +29,6 @@ int soundSetListenerOrientation(lua_State *f_vm);
 int soundGetListenerOrientation(lua_State *f_vm);
 int soundSetGlobalVolume(lua_State *f_vm);
 int soundGetGlobalVolume(lua_State *f_vm);
+
 }
 }

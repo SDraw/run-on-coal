@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class ConfigManager
 {
@@ -24,4 +25,5 @@ protected:
     ~ConfigManager();
     friend Core;
 };
+
 }

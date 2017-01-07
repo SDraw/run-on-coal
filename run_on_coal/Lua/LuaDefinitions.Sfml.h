@@ -4,6 +4,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 int setCursorMode(lua_State *f_vm);
 int getCursorPosition(lua_State *f_vm);
 int setCursorPosition(lua_State *f_vm);
@@ -24,5 +25,6 @@ int joypadGetButtonCount(lua_State *f_vm);
 int joypadGetButtonState(lua_State *f_vm);
 int joypadHasAxis(lua_State *f_vm);
 int joypadGetAxisValue(lua_State *f_vm);
+
 }
 }

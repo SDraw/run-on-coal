@@ -11,6 +11,7 @@
 
 namespace ROC
 {
+
 extern const std::vector<std::string> g_keysTable
 {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
@@ -35,6 +36,7 @@ extern const std::vector<std::string> g_axisNames
     "R", "U", "V",
     "PovX", "PovY"
 };
+
 }
 
 ROC::SfmlManager::SfmlManager(Core *f_core)

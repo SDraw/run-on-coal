@@ -15,7 +15,6 @@ void ROC::LuaArguments::Clear()
     m_vArgs.clear();
     m_argCount = 0;
 }
-
 void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
 {
     for(auto iter = m_vArgs.begin(), iterEnd = m_vArgs.end(); iter != iterEnd; ++iter)

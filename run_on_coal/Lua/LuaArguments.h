@@ -2,9 +2,9 @@
 
 namespace ROC
 {
+
 class LuaArguments
 {
-
     struct LuaArgument
     {
         union ArgumentValue
@@ -36,4 +36,5 @@ public:
     void ProccessArguments(lua_State *f_vm);
     inline int GetArgumentsValue() { return m_argCount; }
 };
+
 }

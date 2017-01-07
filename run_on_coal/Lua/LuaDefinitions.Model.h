@@ -4,6 +4,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 int modelCreate(lua_State *f_vm);
 int modelDestroy(lua_State *f_vm);
 int modelGetGeometry(lua_State *f_vm);
@@ -36,5 +37,6 @@ int modelSetVelocity(lua_State *f_vm);
 int modelGetVelocity(lua_State *f_vm);
 int modelSetAngularVelocity(lua_State *f_vm);
 int modelGetAngularVelocity(lua_State *f_vm);
+
 }
 }

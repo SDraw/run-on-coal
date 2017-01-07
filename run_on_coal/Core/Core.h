@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class ConfigManager;
 class ElementManager;
 class SfmlManager;
@@ -13,6 +14,7 @@ class PhysicsManager;
 class PreRenderManager;
 class RenderManager;
 class SoundManager;
+class NetworkManager;
 class Core
 {
     ConfigManager *m_configManager;
@@ -53,4 +55,5 @@ public:
     inline PreRenderManager* GetPreRenderManager() { return m_preRenderManager; }
     inline SoundManager* GetSoundManager() { return m_soundManager; }
 };
+
 }

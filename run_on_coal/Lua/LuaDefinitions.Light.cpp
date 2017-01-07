@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
-#include "Scene/Light.h"
+#include "Elements/Light.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Light.h"
 

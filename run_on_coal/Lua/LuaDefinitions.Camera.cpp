@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
-#include "Scene/Camera.h"
+#include "Elements/Camera.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Camera.h"
 #include "Utils/Utils.h"

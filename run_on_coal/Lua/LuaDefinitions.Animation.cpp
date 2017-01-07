@@ -9,6 +9,7 @@ namespace ROC
 {
 namespace Lua
 {
+
 int animationCreate(lua_State *f_vm)
 {
     std::string l_path;
@@ -35,5 +36,6 @@ int animationDestroy(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 }
 }

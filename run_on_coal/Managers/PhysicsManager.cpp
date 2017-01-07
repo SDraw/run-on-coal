@@ -3,9 +3,9 @@
 #include "Managers/ConfigManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/PhysicsManager.h"
-#include "Model/Model.h"
-#include "Model/Skeleton.h"
-#include "Scene/Collision.h"
+#include "Elements/Collision.h"
+#include "Elements/Model/Model.h"
+#include "Elements/Model/Skeleton.h"
 
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
 {

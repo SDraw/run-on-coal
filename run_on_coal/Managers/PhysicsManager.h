@@ -2,6 +2,7 @@
 
 namespace ROC
 {
+
 class Core;
 class Constraint;
 class Model;
@@ -54,4 +55,5 @@ protected:
     friend class ElementManager;
     friend class SfmlManager;
 };
+
 }

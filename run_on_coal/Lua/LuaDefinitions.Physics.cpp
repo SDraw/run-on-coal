@@ -3,9 +3,9 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/PhysicsManager.h"
-#include "Lua/LuaDefinitions.Physics.h"
-#include "Model/Model.h"
+#include "Elements/Model/Model.h"
 #include "Lua/ArgReader.h"
+#include "Lua/LuaDefinitions.Physics.h"
 #include "Utils/Utils.h"
 
 namespace ROC
