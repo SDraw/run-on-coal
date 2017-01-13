@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "Core/Core.h"
-#include "Managers/LogManager.h"
 #include "Utils/Utils.h"
 
 namespace ROC
@@ -39,8 +37,8 @@ int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
     z_stream zInfo = { 0 };
     zInfo.total_in = zInfo.avail_in = f_srcLen;
     zInfo.total_out = zInfo.avail_out = f_destLen;
-    zInfo.next_in = static_cast<unsigned char*>(f_src);
-    zInfo.next_out = static_cast<unsigned char*>(f_dest);
+    zInfo.next_in = reinterpret_cast<unsigned char*>(f_src);
+    zInfo.next_out = reinterpret_cast<unsigned char*>(f_dest);
 
     int l_error, l_ret = -1;
     l_error = deflateInit(&zInfo, Z_DEFAULT_COMPRESSION);
@@ -57,8 +55,8 @@ int UncompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
     z_stream zInfo = { 0 };
     zInfo.total_in = zInfo.avail_in = f_srcLen;
     zInfo.total_out = zInfo.avail_out = f_destLen;
-    zInfo.next_in = static_cast<unsigned char*>(f_src);
-    zInfo.next_out = static_cast<unsigned char*>(f_dest);
+    zInfo.next_in = reinterpret_cast<unsigned char*>(f_src);
+    zInfo.next_out = reinterpret_cast<unsigned char*>(f_dest);
 
     int l_error, l_ret = -1;
     l_error = inflateInit(&zInfo);

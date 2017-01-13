@@ -38,7 +38,7 @@ int ROC::Pool::Allocate()
     }
     if(l_allocated != -1)
     {
-        for(unsigned int i = static_cast<int>(l_allocated + 1); i < m_size; i++)
+        for(unsigned int i = static_cast<unsigned int>(l_allocated + 1); i < m_size; i++)
         {
             if(m_poolData[i] == 0U)
             {

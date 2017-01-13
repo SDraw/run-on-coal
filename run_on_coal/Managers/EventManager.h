@@ -20,8 +20,6 @@ enum EventType : unsigned char
     JoypadButton, //onJoypadButton
     JoypadAxis, //onJoypadAxis
     TextInput, //onTextInput
-    NetworkDisconnect, //onNetworkDisconnect
-    NetworkDataRecieve, //onNetworkDataRecieve
     Last // None
 };
 
@@ -41,6 +39,7 @@ class EventManager
     std::vector<Event*> m_eventsVector[EventType::Last];
     std::vector<Event*>::iterator m_iter;
     unsigned char m_activeEvent;
+    bool m_locked;
 public:
     bool AddEvent(unsigned char f_event, int f_ref, void *f_pointer);
     bool SetEventMute(unsigned char f_event, void *f_pointer, bool f_mute);

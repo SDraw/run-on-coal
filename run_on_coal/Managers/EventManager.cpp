@@ -7,6 +7,7 @@ ROC::EventManager::EventManager(LuaManager *f_luaManager)
 {
     m_luaManager = f_luaManager;
     m_activeEvent = EventType::Last;
+    m_locked = false;
 }
 ROC::EventManager::~EventManager()
 {
@@ -53,9 +54,9 @@ bool ROC::EventManager::SetEventMute(unsigned char f_event, void *f_pointer, boo
     if(f_event < EventType::Last)
     {
         auto &l_event = m_eventsVector[f_event];
-        for(auto it = l_event.begin(); it != l_event.end(); it++)
+        for(auto iter = l_event.begin(), iterEnd = l_event.end(); iter != iterEnd; ++iter)
         {
-            Event *l_eventObj = (*it);
+            Event *l_eventObj = (*iter);
             if(l_eventObj->m_luaFunc == f_pointer)
             {
                 l_eventObj->m_muted = f_mute;
@@ -72,9 +73,9 @@ bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
     if(f_event < EventType::Last)
     {
         auto &l_event = m_eventsVector[f_event];
-        for(auto it = l_event.begin(); it != l_event.end(); it++)
+        for(auto iter = l_event.begin(), iterEnd = l_event.end(); iter != iterEnd; ++iter)
         {
-            Event *l_eventObj = (*it);
+            Event *l_eventObj = (*iter);
             if(l_eventObj->m_luaFunc == f_pointer)
             {
                 l_eventObj->m_deleted = true;
@@ -88,10 +89,12 @@ bool ROC::EventManager::RemoveEvent(unsigned char f_event, void *f_pointer)
 
 void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments *f_args)
 {
-    if(f_event < EventType::Last)
+    if(!m_locked && (f_event < EventType::Last))
     {
+        m_locked = true;
         m_activeEvent = f_event;
         auto &l_event = m_eventsVector[f_event];
+        auto l_iter = l_event.begin();
         for(m_iter = l_event.begin(); m_iter != l_event.end(); ++m_iter)
         {
             Event *l_eventObj = (*m_iter);
@@ -104,5 +107,6 @@ void ROC::EventManager::CallEvent(unsigned char f_event, LuaArguments *f_args)
                 if(m_iter == l_event.end()) break;
             }
         }
+        m_locked = false;
     }
 }

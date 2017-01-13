@@ -5,7 +5,7 @@
 #include "Managers/LuaManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
-#include "Managers/RenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Model/Model.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Model.h"

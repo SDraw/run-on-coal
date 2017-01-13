@@ -3,7 +3,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/RenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Shader.h"
 #include "Lua/ArgReader.h"

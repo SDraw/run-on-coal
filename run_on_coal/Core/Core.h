@@ -14,7 +14,6 @@ class PhysicsManager;
 class PreRenderManager;
 class RenderManager;
 class SoundManager;
-class NetworkManager;
 class Core
 {
     ConfigManager *m_configManager;

@@ -6,7 +6,7 @@
 #include "Managers/MemoryManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
-#include "Managers/RenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Animation/Animation.h"
 #include "Elements/Camera.h"
 #include "Elements/Collision.h"
@@ -401,43 +401,43 @@ void ROC::ElementManager::DestroyByPointer(void *f_pointer, unsigned char f_type
     switch(f_type)
     {
         case ElementType::SceneElement:
-            delete static_cast<Scene*>(f_pointer);
+            delete reinterpret_cast<Scene*>(f_pointer);
             break;
         case ElementType::CameraElement:
-            delete static_cast<Camera*>(f_pointer);
+            delete reinterpret_cast<Camera*>(f_pointer);
             break;
         case ElementType::LightElement:
-            delete static_cast<Light*>(f_pointer);
+            delete reinterpret_cast<Light*>(f_pointer);
             break;
         case ElementType::ShaderElement:
-            delete static_cast<Shader*>(f_pointer);
+            delete reinterpret_cast<Shader*>(f_pointer);
             break;
         case ElementType::GeometryElement:
-            delete static_cast<Geometry*>(f_pointer);
+            delete reinterpret_cast<Geometry*>(f_pointer);
             break;
         case ElementType::ModelElement:
-            delete static_cast<Model*>(f_pointer);
+            delete reinterpret_cast<Model*>(f_pointer);
             break;
         case ElementType::AnimationElement:
-            delete static_cast<Animation*>(f_pointer);
+            delete reinterpret_cast<Animation*>(f_pointer);
             break;
         case ElementType::SoundElement:
-            delete static_cast<Sound*>(f_pointer);
+            delete reinterpret_cast<Sound*>(f_pointer);
             break;
         case ElementType::RenderTargetElement:
-            delete static_cast<RenderTarget*>(f_pointer);
+            delete reinterpret_cast<RenderTarget*>(f_pointer);
             break;
         case ElementType::TextureElement:
-            delete static_cast<Texture*>(f_pointer);
+            delete reinterpret_cast<Texture*>(f_pointer);
             break;
         case ElementType::FontElement:
-            delete static_cast<Font*>(f_pointer);
+            delete reinterpret_cast<Font*>(f_pointer);
             break;
         case ElementType::FileElement:
-            delete static_cast<File*>(f_pointer);
+            delete reinterpret_cast<File*>(f_pointer);
             break;
         case ElementType::CollisionElement:
-            delete static_cast<Collision*>(f_pointer);
+            delete reinterpret_cast<Collision*>(f_pointer);
             break;
     }
 }

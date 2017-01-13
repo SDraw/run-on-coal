@@ -1,7 +1,4 @@
 #pragma once
-#ifdef __linux__
-#include "Scene/Shader.h"
-#endif
 
 namespace ROC
 {

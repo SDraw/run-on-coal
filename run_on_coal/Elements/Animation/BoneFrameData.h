@@ -16,9 +16,9 @@ protected:
     {
         return
             (
-            std::memcmp(&m_position, &f_data->m_position, sizeof(glm::vec3)) ||
-            std::memcmp(&m_rotation, &f_data->m_rotation, sizeof(glm::quat)) ||
-            std::memcmp(&m_scale, &f_data->m_scale, sizeof(glm::vec3))
+            (std::memcmp(&m_position, &f_data->m_position, sizeof(glm::vec3)) != 0) ||
+            (std::memcmp(&m_rotation, &f_data->m_rotation, sizeof(glm::quat)) != 0) ||
+            (std::memcmp(&m_scale, &f_data->m_scale, sizeof(glm::vec3)) != 0)
             );
     }
     inline void CopyFrom(BoneFrameData *f_data)

@@ -9,7 +9,7 @@
 #include "Managers/MemoryManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
-#include "Managers/RenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
 

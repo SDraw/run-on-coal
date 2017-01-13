@@ -2,7 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/RenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Texture.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Texture.h"

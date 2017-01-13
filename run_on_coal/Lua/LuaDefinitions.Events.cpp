@@ -18,8 +18,7 @@ const std::vector<std::string> g_eventNamesTable
     "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
     "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
-    "onTextInput",
-    "onNetworkDisconnect", "onNetworkDataRecieve"
+    "onTextInput"
 };
 
 int addEvent(lua_State *f_vm)
@@ -28,7 +27,6 @@ int addEvent(lua_State *f_vm)
     int l_func;
     void *l_point;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    //argStream.DecreaseArguments(2);
     argStream.ReadText(l_event);
     argStream.ReadFunction(l_func, &l_point);
     if(!argStream.HasErrors() && !l_event.empty())

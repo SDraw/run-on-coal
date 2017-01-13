@@ -4,7 +4,7 @@
 #include "Managers/InheritanceManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/PreRenderManager.h"
-#include "Managers/RenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Animation/Animation.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"

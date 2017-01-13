@@ -64,12 +64,7 @@ int getTickCount(lua_State *f_vm)
 {
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     lua_Integer l_tick = 0;
-#ifdef _WIN32
     l_tick = static_cast<lua_Integer>(GetTickCount());
-#elif __linux__
-    struct timeval tv;
-    if(!gettimeofday(&tv, NULL)) l_tick = static_cast<lua_Integer>((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-#endif
     argStream.PushInteger(l_tick);
     return argStream.GetReturnValue();
 }

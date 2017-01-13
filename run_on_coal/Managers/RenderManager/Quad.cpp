@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Elements/Quad.h"
+#include "Managers/RenderManager/Quad.h"
 
 ROC::Quad::Quad()
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/LuaManager.h"
-#include "Managers/RenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.OpenGL.h"
 #include "Utils/Utils.h"

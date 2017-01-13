@@ -16,9 +16,6 @@
     <ClCompile Include="Managers\MemoryManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\RenderManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\SoundManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -135,9 +132,6 @@
     <ClCompile Include="Elements\Light.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\Quad.cpp">
-      <Filter>Elements</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\RenderTarget.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
@@ -183,6 +177,12 @@
     <ClCompile Include="Elements\Animation\BoneFrameData.cpp">
       <Filter>Elements\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\RenderManager\RenderManager.cpp">
+      <Filter>Managers\RenderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\RenderManager\Quad.cpp">
+      <Filter>Managers\RenderManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -199,9 +199,6 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\MemoryManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\RenderManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\SoundManager.h">
@@ -313,9 +310,6 @@
     <ClInclude Include="Elements\Light.h">
       <Filter>Elements</Filter>
     </ClInclude>
-    <ClInclude Include="Elements\Quad.h">
-      <Filter>Elements</Filter>
-    </ClInclude>
     <ClInclude Include="Elements\RenderTarget.h">
       <Filter>Elements</Filter>
     </ClInclude>
@@ -361,6 +355,12 @@
     <ClInclude Include="Elements\Animation\BoneFrameData.h">
       <Filter>Elements\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\RenderManager\Quad.h">
+      <Filter>Managers\RenderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\RenderManager\RenderManager.h">
+      <Filter>Managers\RenderManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">
@@ -395,6 +395,9 @@
     </Filter>
     <Filter Include="Elements\Animation">
       <UniqueIdentifier>{970250c9-5a45-431a-9110-a0ebdac65cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\RenderManager">
+      <UniqueIdentifier>{fe45f4a7-6fe6-45d6-b4fa-92094387cefc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
