@@ -10,6 +10,7 @@ class InheritanceManager;
 class LogManager;
 class LuaManager;
 class MemoryManager;
+class NetworkManager;
 class PhysicsManager;
 class PreRenderManager;
 class RenderManager;
@@ -23,6 +24,7 @@ class Core
     LogManager *m_logManager;
     LuaManager *m_luaManager;
     MemoryManager *m_memoryManager;
+    NetworkManager *m_networkManager;
     PhysicsManager *m_physicsManager;
     RenderManager *m_renderManager;
     PreRenderManager *m_preRenderManager;
@@ -49,6 +51,7 @@ public:
     inline LogManager* GetLogManager() { return m_logManager; }
     inline LuaManager* GetLuaManager() { return m_luaManager; }
     inline MemoryManager* GetMemoryManager() { return m_memoryManager; }
+    inline NetworkManager* GetNetworkManager() { return m_networkManager; }
     inline PhysicsManager* GetPhysicsManager() { return m_physicsManager; }
     inline RenderManager* GetRenderManager() { return m_renderManager; }
     inline PreRenderManager* GetPreRenderManager() { return m_preRenderManager; }

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Core\Core.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ElementManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ConfigManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\EventManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\LogManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\LuaManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\MemoryManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\NetworkManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\SfmlManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\ArgReader.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaArguments.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Network.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Utils.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Pool.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
+      <Filter>vendor\luautf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
+      <Filter>vendor\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Events.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Client.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="RocInc.h" />
+    <ClInclude Include="Core\Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\ConfigManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\ElementManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\EventManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\LogManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\LuaManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\MemoryManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\NetworkManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\SfmlManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\ArgReader.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaArguments.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Network.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Sfml.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Utils.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Pool.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Events.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Client.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{9d1129b6-9a96-4848-8707-30785531e9d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{1b3f31b6-f13b-4c02-a1d8-9fcda054552a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{86bf85db-6d0d-40e6-8427-4b6eccc33449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{54482b7d-6497-4d41-9499-775ccfec032e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{420c2d5e-48f7-4b72-a7df-f38d215759be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\pugixml">
+      <UniqueIdentifier>{14b2ed33-1e3b-4d9c-9e53-3bdf93b21a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\luautf8">
+      <UniqueIdentifier>{ca762ed9-eaf1-4698-ae82-4c1726fb43c3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

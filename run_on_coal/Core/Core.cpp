@@ -6,6 +6,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
+#include "Managers/NetworkManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager/RenderManager.h"
@@ -36,11 +37,13 @@ ROC::Core::Core()
     m_sfmlManager = new SfmlManager(this);
     m_preRenderManager = new PreRenderManager(this);
     m_renderManager = new RenderManager(this);
+    m_networkManager = new NetworkManager(this);
 
     m_state = true;
 }
 ROC::Core::~Core()
 {
+    delete m_networkManager;
     delete m_soundManager;
     delete m_physicsManager;
     delete m_inheritManager;
@@ -71,6 +74,7 @@ void ROC::Core::Terminate()
 bool ROC::Core::DoPulse()
 {
     SystemTick::UpdateTick();
+    m_networkManager->DoPulse();
     m_state = m_sfmlManager->DoPulse();
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();

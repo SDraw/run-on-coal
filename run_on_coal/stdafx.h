@@ -1,9 +1,6 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <Windows.h>
-#include <direct.h>
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -17,6 +14,7 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
+#include <direct.h>
 
 #include "GL/glew.h"
 
@@ -43,3 +41,11 @@
 #include "lua.hpp"
 #include "pugixml.hpp"
 #include "zlib.h"
+
+#include "MessageIdentifiers.h"
+#include "RakPeerInterface.h"
+#include "RakNetStatistics.h"
+#include "RakNetTypes.h"
+#include "BitStream.h"
+#include "RakSleep.h"
+#include "PacketLogger.h"

@@ -67,14 +67,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;..\vendor\lua\include;..\vendor\sajson;..\vendor\bullet\include;..\vendor\pugixml;..\vendor\freetype27\include;..\vendor\glm;..\vendor\glew\include;..\vendor\SFML\include;..\vendor\zlib\include;..\vendor\luauft8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\vendor\lua\include;..\vendor\sajson;..\vendor\bullet\include;..\vendor\pugixml;..\vendor\freetype27\include;..\vendor\glm;..\vendor\glew\include;..\vendor\SFML\include;..\vendor\zlib\include;..\vendor\luauft8;..\vendor\RakNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype27d.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype27\lib;..\vendor\glew\lib;..\vendor\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype27d.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;zlibd.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\vendor\SFML\lib;..\vendor\lua\lib;..\vendor\bullet\lib;..\vendor\bass\lib;..\vendor\freetype27\lib;..\vendor\glew\lib;..\vendor\zlib\lib;..\vendor\RakNet\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -89,7 +89,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype27/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype27/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -106,8 +106,8 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype27.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype27.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -143,6 +143,7 @@
     <ClInclude Include="Lua\LuaDefinitions.File.h" />
     <ClInclude Include="Lua\LuaDefinitions.Font.h" />
     <ClInclude Include="Lua\LuaDefinitions.Geometry.h" />
+    <ClInclude Include="Lua\LuaDefinitions.Network.h" />
     <ClInclude Include="Lua\LuaDefinitions.Sfml.h" />
     <ClInclude Include="Lua\LuaDefinitions.Light.h" />
     <ClInclude Include="Lua\LuaDefinitions.Model.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Lua\ArgReader.h" />
     <ClInclude Include="Lua\LuaArguments.h" />
     <ClInclude Include="Managers\EventManager.h" />
+    <ClInclude Include="Managers\NetworkManager.h" />
     <ClInclude Include="Managers\RenderManager\Quad.h" />
     <ClInclude Include="Managers\RenderManager\RenderManager.h" />
     <ClInclude Include="Managers\SfmlManager.h" />
@@ -209,6 +211,7 @@
     <ClCompile Include="Lua\LuaDefinitions.File.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Font.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Geometry.cpp" />
+    <ClCompile Include="Lua\LuaDefinitions.Network.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Light.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Model.cpp" />
@@ -232,6 +235,7 @@
     <ClCompile Include="Lua\ArgReader.cpp" />
     <ClCompile Include="Lua\LuaArguments.cpp" />
     <ClCompile Include="Managers\EventManager.cpp" />
+    <ClCompile Include="Managers\NetworkManager.cpp" />
     <ClCompile Include="Managers\RenderManager\Quad.cpp" />
     <ClCompile Include="Managers\RenderManager\RenderManager.cpp" />
     <ClCompile Include="Managers\SfmlManager.cpp" />

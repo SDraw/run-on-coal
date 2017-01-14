@@ -12,6 +12,7 @@
 #include "Lua/LuaDefinitions.Light.h"
 #include "Lua/LuaDefinitions.Geometry.h"
 #include "Lua/LuaDefinitions.Model.h"
+#include "Lua/LuaDefinitions.Network.h"
 #include "Lua/LuaDefinitions.OpenGL.h"
 #include "Lua/LuaDefinitions.Physics.h"
 #include "Lua/LuaDefinitions.Rendering.h"
@@ -305,6 +306,11 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //System
     lua_register(m_pVM, "getTickCount", Lua::getTickCount);
+
+    //Network
+    lua_register(m_pVM, "networkConnect", Lua::networkConnect);
+    lua_register(m_pVM, "networkDisconnect", Lua::networkDisconnect);
+    lua_register(m_pVM, "networkSendData", Lua::networkSendData);
 
     m_eventManager = new EventManager(this);
 }

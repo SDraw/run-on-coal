@@ -183,6 +183,12 @@
     <ClCompile Include="Managers\RenderManager\Quad.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Network.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\NetworkManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -360,6 +366,12 @@
     </ClInclude>
     <ClInclude Include="Managers\RenderManager\RenderManager.h">
       <Filter>Managers\RenderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Network.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\NetworkManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

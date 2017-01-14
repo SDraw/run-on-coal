@@ -19,7 +19,9 @@ enum EventType : unsigned char
     JoypadConnect, //onJoypadConnect
     JoypadButton, //onJoypadButton
     JoypadAxis, //onJoypadAxis
-    TextInput, //onTextInput
+    TextInput, //onTextInput,
+    NetworkStateChange, //onNetworkStateChange
+    NetworkDataRecieve, //onNetworkDataRecieve
     Last // None
 };
 
@@ -48,6 +50,7 @@ public:
 protected:
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();
+
     friend LuaManager;
 };
 
