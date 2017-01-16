@@ -60,7 +60,9 @@
     <ClCompile Include="Lua\LuaDefinitions.Events.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\Client.cpp" />
+    <ClCompile Include="Elements\Client.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -116,7 +118,9 @@
     <ClInclude Include="Lua\LuaDefinitions.Events.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Elements\Client.h" />
+    <ClInclude Include="Elements\Client.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -139,6 +143,9 @@
     </Filter>
     <Filter Include="vendor\luautf8">
       <UniqueIdentifier>{ca762ed9-eaf1-4698-ae82-4c1726fb43c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements">
+      <UniqueIdentifier>{b29a6143-5d54-4661-8e92-94aa24f94b79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

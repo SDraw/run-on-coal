@@ -67,7 +67,7 @@ ROC::NetworkManager::~NetworkManager()
 
 bool ROC::NetworkManager::Disconnect(Client *f_client)
 {
-    if(m_networkInterface) m_networkInterface->CloseConnection(f_client->GetAddress(), true);
+    if(m_networkInterface) m_networkInterface->CloseConnection(m_networkInterface->GetSystemAddressFromGuid(f_client->GetGUID()), true);
     return (m_networkInterface != NULL);
 }
 bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
@@ -77,7 +77,7 @@ bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
         RakNet::BitStream l_sendData;
         l_sendData.Write(static_cast<unsigned char>(ID_ROC_DATA_PACKET));
         l_sendData.Write(RakNet::RakString(f_data.c_str()));
-        m_networkInterface->Send(&l_sendData, HIGH_PRIORITY, RELIABLE_ORDERED, 0, f_client->GetAddress(), false);
+        m_networkInterface->Send(&l_sendData, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_networkInterface->GetSystemAddressFromGuid(f_client->GetGUID()), false);
     }
     return (m_networkInterface != NULL);
 }
@@ -98,7 +98,7 @@ void ROC::NetworkManager::DoPulse()
                     {
                         std::string l_log("New client connected (");
                         Client *l_client = m_core->GetElementManager()->CreateClient();
-                        l_client->SetAddress(l_packet->systemAddress);
+                        l_client->SetGUID(l_packet->guid);
                         l_client->SetID(l_clientID);
                         m_clientMap.insert(std::pair<unsigned int, Client*>(RakNet::RakNetGUID::ToUint32(l_packet->guid), l_client));
                         m_clientMapEnd = m_clientMap.end();
@@ -121,7 +121,7 @@ void ROC::NetworkManager::DoPulse()
                     {
                         Client *l_client = (*iter).second;
                         std::string l_log("Client (");
-                        l_log.append(l_client->GetAddress().ToString(true, ':'));
+                        l_log.append(l_packet->systemAddress.ToString(true, ':'));
                         l_log.append(") with ID ");
                         l_log.append(std::to_string(l_client->GetID()));
                         l_log.append(" disconnected");

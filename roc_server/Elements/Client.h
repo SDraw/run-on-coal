@@ -5,7 +5,7 @@ namespace ROC
 
 class Client
 {
-    RakNet::SystemAddress m_address;
+    RakNet::RakNetGUID m_guid;
     int m_id;
 public:
     inline int GetID() { return m_id; }
@@ -13,8 +13,8 @@ protected:
     Client();
     ~Client();
 
-    inline void SetAddress(RakNet::SystemAddress &f_address) { m_address = f_address; }
-    inline RakNet::SystemAddress& GetAddress() { return m_address; }
+    inline void SetGUID(RakNet::RakNetGUID &f_guid) { m_guid = f_guid; }
+    inline RakNet::RakNetGUID& GetGUID() { return m_guid; }
     inline void SetID(int f_id) { m_id = f_id; }
 
     friend class ElementManager;
