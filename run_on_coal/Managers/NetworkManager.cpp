@@ -69,7 +69,7 @@ bool ROC::NetworkManager::Disconnect()
 {
     if(m_networkState == NetworkState::Connected)
     {
-        m_networkInterface->CloseConnection(m_networkInterface->GetSystemAddressFromGuid(m_guid), true);
+        m_networkInterface->CloseConnection(m_serverAddress, true);
         m_networkState = NetworkState::Disconnecting;
     }
     return (m_networkState == NetworkState::Disconnecting);
@@ -80,8 +80,9 @@ bool ROC::NetworkManager::SendData(std::string &f_data)
     {
         RakNet::BitStream l_data;
         l_data.Write(static_cast<unsigned char>(ID_ROC_DATA_PACKET));
-        l_data.Write(RakNet::RakString(f_data.c_str()));
-        m_networkInterface->Send(&l_data, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+        l_data.Write(static_cast<unsigned int>(f_data.size()));
+        l_data.Write(f_data.data(),f_data.size());
+        m_networkInterface->Send(&l_data, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, m_serverAddress, false);
     }
     return (m_networkState == NetworkState::Connected);
 }
@@ -104,7 +105,7 @@ void ROC::NetworkManager::DoPulse()
                 } break;
                 case ID_CONNECTION_REQUEST_ACCEPTED:
                 {
-                    m_guid = l_packet->guid;
+                    m_serverAddress = l_packet->systemAddress;
                     m_networkState = NetworkState::Connected;
                     m_argument->PushArgument(const_cast<std::string*>(&g_networkStateTable[0]));
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkStateChange, m_argument);
@@ -112,11 +113,13 @@ void ROC::NetworkManager::DoPulse()
                 } break;
                 case ID_ROC_DATA_PACKET:
                 {
-                    RakNet::BitStream l_dataIn(l_packet->data, l_packet->length, true);
+                    RakNet::BitStream l_dataIn(l_packet->data, l_packet->length, false);
+                    unsigned int l_textSize;
+                    std::string l_stringData;
                     l_dataIn.IgnoreBytes(sizeof(unsigned char));
-                    RakNet::RakString l_dataText;
-                    l_dataIn.Read(l_dataText);
-                    std::string l_stringData(l_dataText.C_String());
+                    l_dataIn.Read(l_textSize);
+                    l_stringData.resize(l_textSize);
+                    l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
 
                     m_argument->PushArgument(const_cast<std::string*>(&l_stringData));
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkDataRecieve, m_argument);

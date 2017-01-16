@@ -20,6 +20,6 @@ void ROC::LogManager::Log(const std::string &f_text)
 {
     std::time_t l_time = std::time(NULL);
     tm *l_tmTime = std::localtime(&l_time);
-    std::cout << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text.c_str() << std::endl;
-    if(m_enabled) m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text.c_str() << std::endl;
+    std::cout << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text << std::endl;
+    if(m_enabled) m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text << std::endl;
 }

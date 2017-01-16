@@ -15,7 +15,7 @@ class NetworkManager
 
     RakNet::RakPeerInterface *m_networkInterface;
     RakNet::SocketDescriptor m_socketDescriptor;
-    RakNet::RakNetGUID m_guid;
+    RakNet::SystemAddress m_serverAddress;
     enum NetworkIdentifier : unsigned char { ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1 };
 
     enum NetworkState : unsigned char { Disconnected = 0U, Connecting, Connected, Disconnecting };

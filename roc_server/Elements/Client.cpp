@@ -3,7 +3,6 @@
 
 ROC::Client::Client()
 {
-    m_id = -1;
 }
 ROC::Client::~Client()
 {

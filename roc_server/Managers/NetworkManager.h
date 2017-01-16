@@ -16,9 +16,8 @@ class NetworkManager
     RakNet::RakPeerInterface *m_networkInterface;
     enum NetworkIdentifier : unsigned char { ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1 };
 
-    std::unordered_map<unsigned int, Client*> m_clientMap;
-    std::unordered_map<unsigned int, Client*>::iterator m_clientMapEnd;
-    Pool *m_clientPool;
+    std::unordered_map<RakNet::SystemIndex, Client*> m_clientMap;
+    std::unordered_map<RakNet::SystemIndex, Client*>::iterator m_clientMapEnd;
 
     LuaArguments *m_argument;
 public:

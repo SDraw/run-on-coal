@@ -34,7 +34,7 @@ void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
                 lua_pushlightuserdata(f_vm, iter->m_value.m_pointer);
                 break;
             case LuaArgument::ArgumentType::String:
-                lua_pushstring(f_vm, iter->m_value.m_string->c_str());
+                lua_pushlstring(f_vm, iter->m_value.m_string->data(), iter->m_value.m_string->size());
                 break;
         }
     }

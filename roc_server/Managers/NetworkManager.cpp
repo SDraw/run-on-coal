@@ -50,10 +50,9 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
         m_networkInterface = NULL;
     }
 
-    m_clientMap = std::unordered_map<unsigned int, Client*>();
+    m_clientMap = std::unordered_map<RakNet::SystemIndex, Client*>();
     m_clientMapEnd = m_clientMap.end();
     m_argument = new LuaArguments();
-    m_clientPool = new Pool(m_core->GetConfigManager()->GetMaxClients());
 }
 ROC::NetworkManager::~NetworkManager()
 {
@@ -67,7 +66,7 @@ ROC::NetworkManager::~NetworkManager()
 
 bool ROC::NetworkManager::Disconnect(Client *f_client)
 {
-    if(m_networkInterface) m_networkInterface->CloseConnection(m_networkInterface->GetSystemAddressFromGuid(f_client->GetGUID()), true);
+    if(m_networkInterface) m_networkInterface->CloseConnection(m_networkInterface->GetSystemAddressFromIndex(f_client->GetID()), true);
     return (m_networkInterface != NULL);
 }
 bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
@@ -76,8 +75,9 @@ bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
     {
         RakNet::BitStream l_sendData;
         l_sendData.Write(static_cast<unsigned char>(ID_ROC_DATA_PACKET));
-        l_sendData.Write(RakNet::RakString(f_data.c_str()));
-        m_networkInterface->Send(&l_sendData, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_networkInterface->GetSystemAddressFromGuid(f_client->GetGUID()), false);
+        l_sendData.Write(static_cast<unsigned int>(f_data.size()));
+        l_sendData.Write(f_data.data(), f_data.size());
+        m_networkInterface->Send(&l_sendData, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, f_client->GetAddress(), false);
     }
     return (m_networkInterface != NULL);
 }
@@ -93,30 +93,24 @@ void ROC::NetworkManager::DoPulse()
             {
                 case ID_NEW_INCOMING_CONNECTION:
                 {
-                    int l_clientID = m_clientPool->Allocate();
-                    if(l_clientID != -1)
-                    {
-                        std::string l_log("New client connected (");
-                        Client *l_client = m_core->GetElementManager()->CreateClient();
-                        l_client->SetGUID(l_packet->guid);
-                        l_client->SetID(l_clientID);
-                        m_clientMap.insert(std::pair<unsigned int, Client*>(RakNet::RakNetGUID::ToUint32(l_packet->guid), l_client));
-                        m_clientMapEnd = m_clientMap.end();
+                    std::string l_log("New client connected (");
+                    Client *l_client = m_core->GetElementManager()->CreateClient();
+                    l_client->SetAddress(l_packet->systemAddress);
+                    m_clientMap.insert(std::pair<RakNet::SystemIndex, Client*>(l_packet->guid.systemIndex, l_client));
+                    m_clientMapEnd = m_clientMap.end();
 
-                        m_argument->PushArgument(reinterpret_cast<void*>(l_client));
-                        m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientConnect, m_argument);
-                        m_argument->Clear();
+                    m_argument->PushArgument(reinterpret_cast<void*>(l_client));
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientConnect, m_argument);
+                    m_argument->Clear();
 
-                        l_log.append(l_packet->systemAddress.ToString(true, ':'));
-                        l_log.append(") with ID ");
-                        l_log.append(std::to_string(l_clientID));
-                        m_core->GetLogManager()->Log(l_log);
-                    }
-                    else m_networkInterface->CloseConnection(l_packet->systemAddress, true);
+                    l_log.append(l_packet->systemAddress.ToString(true, ':'));
+                    l_log.append(") with ID ");
+                    l_log.append(std::to_string(l_packet->guid.systemIndex));
+                    m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_DISCONNECTION_NOTIFICATION: case ID_CONNECTION_LOST:
                 {
-                    auto iter = m_clientMap.find(RakNet::RakNetGUID::ToUint32(l_packet->guid));
+                    auto iter = m_clientMap.find(l_packet->guid.systemIndex);
                     if(iter != m_clientMapEnd)
                     {
                         Client *l_client = (*iter).second;
@@ -125,29 +119,30 @@ void ROC::NetworkManager::DoPulse()
                         l_log.append(") with ID ");
                         l_log.append(std::to_string(l_client->GetID()));
                         l_log.append(" disconnected");
-                        m_clientPool->Reset(static_cast<unsigned int>(l_client->GetID()));
-
-                        m_core->GetElementManager()->DestroyClient(l_client);
-                        m_clientMap.erase(iter);
-                        m_clientMapEnd = m_clientMap.end();
 
                         m_argument->PushArgument(reinterpret_cast<void*>(l_client));
                         m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientDisconnect, m_argument);
                         m_argument->Clear();
+
+                        m_core->GetElementManager()->DestroyClient(l_client);
+                        m_clientMap.erase(iter);
+                        m_clientMapEnd = m_clientMap.end();
 
                         m_core->GetLogManager()->Log(l_log);
                     }
                 } break;
                 case ID_ROC_DATA_PACKET:
                 {
-                    auto iter = m_clientMap.find(RakNet::RakNetGUID::ToUint32(l_packet->guid));
+                    auto iter = m_clientMap.find(l_packet->guid.systemIndex);
                     if(iter != m_clientMapEnd)
                     {
-                        RakNet::BitStream l_dataIn(l_packet->data, l_packet->length, true);
+                        RakNet::BitStream l_dataIn(l_packet->data, l_packet->length, false);
+                        unsigned int l_textSize;
+                        std::string l_stringData;
                         l_dataIn.IgnoreBytes(sizeof(unsigned char));
-                        RakNet::RakString l_dataText;
-                        l_dataIn.Read(l_dataText);
-                        std::string l_stringData(l_dataText.C_String());
+                        l_dataIn.Read(l_textSize);
+                        l_stringData.resize(l_textSize);
+                        l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
 
                         m_argument->PushArgument(reinterpret_cast<void*>((*iter).second));
                         m_argument->PushArgument(&l_stringData);

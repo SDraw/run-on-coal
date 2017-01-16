@@ -50,7 +50,9 @@ void ROC::ArgReader::ReadText(std::string &f_val)
         {
             if(lua_isstring(m_vm, m_currentArg))
             {
-                f_val.append(lua_tostring(m_vm, m_currentArg));
+                size_t l_size;
+                const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
+                f_val.append(l_string,l_size);
                 m_currentArg++;
             }
             else
@@ -192,7 +194,9 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
     {
         if(lua_isstring(m_vm, m_currentArg))
         {
-            f_val.append(lua_tostring(m_vm, m_currentArg));
+            size_t l_size;
+            const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
+            f_val.append(l_string,l_size);
             m_currentArg++;
         }
     }
@@ -289,7 +293,9 @@ void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
                     lua_gettable(m_vm, -2);
                     if(lua_isstring(m_vm, -1))
                     {
-                        f_vec.push_back(lua_tostring(m_vm, -1));
+                        size_t l_size;
+                        const char *l_string = lua_tolstring(m_vm, -1, &l_size);
+                        f_vec.push_back(std::string(l_string,l_size));
                         lua_pop(m_vm, 1);
                     }
                     else
@@ -334,7 +340,7 @@ void ROC::ArgReader::PushInteger(lua_Integer f_val)
 }
 void ROC::ArgReader::PushText(const std::string &f_val)
 {
-    lua_pushstring(m_vm, f_val.c_str());
+    lua_pushlstring(m_vm, f_val.data(), f_val.size());
     m_returnValue++;
 }
 void ROC::ArgReader::PushPointer(void *f_val)
