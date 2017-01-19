@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 #ifdef SIGBREAK
     signal(SIGBREAK, SignalHandleFunction);
 #endif
+
     ROC::Core *l_core = ROC::Core::Init();
     pugi::xml_document *l_meta = new pugi::xml_document();
     if(l_meta->load_file("server_scripts/meta.xml"))

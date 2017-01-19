@@ -66,7 +66,7 @@ ROC::NetworkManager::~NetworkManager()
 
 bool ROC::NetworkManager::Disconnect(Client *f_client)
 {
-    if(m_networkInterface) m_networkInterface->CloseConnection(m_networkInterface->GetSystemAddressFromIndex(f_client->GetID()), true);
+    if(m_networkInterface) m_networkInterface->CloseConnection(f_client->GetAddress(), true);
     return (m_networkInterface != NULL);
 }
 bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
@@ -74,9 +74,10 @@ bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
     if(m_networkInterface)
     {
         RakNet::BitStream l_sendData;
+        unsigned int l_dataSize = static_cast<unsigned int>(f_data.size());
         l_sendData.Write(static_cast<unsigned char>(ID_ROC_DATA_PACKET));
-        l_sendData.Write(static_cast<unsigned int>(f_data.size()));
-        l_sendData.Write(f_data.data(), f_data.size());
+        l_sendData.Write(l_dataSize);
+        l_sendData.Write(f_data.data(),l_dataSize);
         m_networkInterface->Send(&l_sendData, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, f_client->GetAddress(), false);
     }
     return (m_networkInterface != NULL);
@@ -94,6 +95,7 @@ void ROC::NetworkManager::DoPulse()
                 case ID_NEW_INCOMING_CONNECTION:
                 {
                     std::string l_log("New client connected (");
+
                     Client *l_client = m_core->GetElementManager()->CreateClient();
                     l_client->SetAddress(l_packet->systemAddress);
                     m_clientMap.insert(std::pair<RakNet::SystemIndex, Client*>(l_packet->guid.systemIndex, l_client));
@@ -148,8 +150,8 @@ void ROC::NetworkManager::DoPulse()
                         m_argument->PushArgument(&l_stringData);
                         m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkDataRecieve, m_argument);
                         m_argument->Clear();
-                    } break;
-                }
+                    }
+                } break;
             }
         }
     }
