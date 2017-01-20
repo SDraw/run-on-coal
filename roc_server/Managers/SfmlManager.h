@@ -11,8 +11,8 @@ class SfmlManager
 {
     Core *m_core;
 
-    sf::Clock m_clock;
     float m_time;
+    sf::Clock m_clock;
 
     SfmlManager(const SfmlManager& that);
     SfmlManager &operator =(const SfmlManager &that);
