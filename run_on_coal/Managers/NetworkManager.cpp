@@ -7,13 +7,17 @@
 
 unsigned char GetPacketIdentifier(RakNet::Packet *f_packet)
 {
-    if(f_packet == 0) return 255;
-    if((unsigned char)f_packet->data[0] == ID_TIMESTAMP)
+    unsigned char l_result = 255U;
+    if(f_packet)
     {
-        RakAssert(f_packet->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
-        return (unsigned char)f_packet->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
+        if(f_packet->data[0] == ID_TIMESTAMP)
+        {
+            RakAssert(f_packet->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
+            l_result = f_packet->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
+        }
+        else l_result = f_packet->data[0];
     }
-    return (unsigned char)f_packet->data[0];
+    return l_result;
 }
 
 namespace ROC
