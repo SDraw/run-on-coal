@@ -53,8 +53,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
         m_networkInterface = NULL;
     }
 
-    m_clientMap = std::unordered_map<RakNet::SystemIndex, Client*>();
-    m_clientMapEnd = m_clientMap.end();
+    m_clientVector.assign(m_core->GetConfigManager()->GetMaxClients(), NULL);
     m_argument = new LuaArguments();
 }
 ROC::NetworkManager::~NetworkManager()
@@ -80,7 +79,7 @@ bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
         unsigned int l_dataSize = static_cast<unsigned int>(f_data.size());
         l_sendData.Write(static_cast<unsigned char>(ID_ROC_DATA_PACKET));
         l_sendData.Write(l_dataSize);
-        l_sendData.Write(f_data.data(),l_dataSize);
+        l_sendData.Write(f_data.data(), l_dataSize);
         m_networkInterface->Send(&l_sendData, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, f_client->GetAddress(), false);
     }
     return (m_networkInterface != NULL);
@@ -98,62 +97,50 @@ void ROC::NetworkManager::DoPulse()
                 case ID_NEW_INCOMING_CONNECTION:
                 {
                     std::string l_log("New client connected (");
+                    l_log.append(l_packet->systemAddress.ToString(true, ':'));
+                    l_log.append(") with ID ");
+                    l_log.append(std::to_string(l_packet->guid.systemIndex));
 
                     Client *l_client = m_core->GetElementManager()->CreateClient();
+                    m_clientVector[l_packet->guid.systemIndex] = l_client;
                     l_client->SetAddress(l_packet->systemAddress);
-                    m_clientMap.insert(std::pair<RakNet::SystemIndex, Client*>(l_packet->guid.systemIndex, l_client));
-                    m_clientMapEnd = m_clientMap.end();
 
                     m_argument->PushArgument(reinterpret_cast<void*>(l_client));
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientConnect, m_argument);
                     m_argument->Clear();
-
-                    l_log.append(l_packet->systemAddress.ToString(true, ':'));
-                    l_log.append(") with ID ");
-                    l_log.append(std::to_string(l_packet->guid.systemIndex));
                     m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_DISCONNECTION_NOTIFICATION: case ID_CONNECTION_LOST:
                 {
-                    auto iter = m_clientMap.find(l_packet->guid.systemIndex);
-                    if(iter != m_clientMapEnd)
-                    {
-                        Client *l_client = (*iter).second;
-                        std::string l_log("Client (");
-                        l_log.append(l_packet->systemAddress.ToString(true, ':'));
-                        l_log.append(") with ID ");
-                        l_log.append(std::to_string(l_client->GetID()));
-                        l_log.append(" disconnected");
+                    std::string l_log("Client (");
+                    l_log.append(l_packet->systemAddress.ToString(true, ':'));
+                    l_log.append(") with ID ");
+                    l_log.append(std::to_string(l_packet->guid.systemIndex));
+                    l_log.append(" disconnected");
 
-                        m_argument->PushArgument(reinterpret_cast<void*>(l_client));
-                        m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientDisconnect, m_argument);
-                        m_argument->Clear();
+                    Client *l_client = m_clientVector[l_packet->guid.systemIndex];
+                    m_argument->PushArgument(reinterpret_cast<void*>(l_client));
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientDisconnect, m_argument);
+                    m_argument->Clear();
 
-                        m_core->GetElementManager()->DestroyClient(l_client);
-                        m_clientMap.erase(iter);
-                        m_clientMapEnd = m_clientMap.end();
-
-                        m_core->GetLogManager()->Log(l_log);
-                    }
+                    m_core->GetElementManager()->DestroyClient(l_client);
+                    m_clientVector[l_packet->guid.systemIndex] = NULL;
+                    m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_ROC_DATA_PACKET:
                 {
-                    auto iter = m_clientMap.find(l_packet->guid.systemIndex);
-                    if(iter != m_clientMapEnd)
-                    {
-                        RakNet::BitStream l_dataIn(l_packet->data, l_packet->length, false);
-                        unsigned int l_textSize;
-                        std::string l_stringData;
-                        l_dataIn.IgnoreBytes(sizeof(unsigned char));
-                        l_dataIn.Read(l_textSize);
-                        l_stringData.resize(l_textSize);
-                        l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
+                    RakNet::BitStream l_dataIn(l_packet->data, l_packet->length, false);
+                    unsigned int l_textSize;
+                    std::string l_stringData;
+                    l_dataIn.IgnoreBytes(sizeof(unsigned char));
+                    l_dataIn.Read(l_textSize);
+                    l_stringData.resize(l_textSize);
+                    l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
 
-                        m_argument->PushArgument(reinterpret_cast<void*>((*iter).second));
-                        m_argument->PushArgument(&l_stringData);
-                        m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkDataRecieve, m_argument);
-                        m_argument->Clear();
-                    }
+                    m_argument->PushArgument(reinterpret_cast<void*>(m_clientVector[l_packet->guid.systemIndex]));
+                    m_argument->PushArgument(&l_stringData);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkDataRecieve, m_argument);
+                    m_argument->Clear();
                 } break;
             }
         }

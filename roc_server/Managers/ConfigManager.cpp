@@ -19,7 +19,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
 
     m_configParsed = false;
     m_logging = true;
-    m_bindIP = std::string("127.0.0.1");
+    m_bindIP.assign("0.0.0.0");
     m_bindPort = 4200U;
     m_maxClients = 10U;
     m_pulseTick = 10U;
@@ -45,7 +45,7 @@ ROC::ConfigManager::ConfigManager(Core* f_core)
                                 m_logging = l_attrib.as_bool(true);
                                 break;
                             case 1:
-                                m_bindIP.assign(l_attrib.as_string("127.0.0.1"));
+                                m_bindIP.assign(l_attrib.as_string("0.0.0.0"));
                                 break;
                             case 2:
                                 m_bindPort = static_cast<unsigned short>(l_attrib.as_uint(4200U));
