@@ -26,6 +26,8 @@ public:
     bool Connect(std::string &f_ip, unsigned short f_port);
     bool Disconnect();
     bool SendData(std::string &f_data);
+    inline unsigned char GetNetworkState() { return m_networkState; }
+    int GetPing();
 protected:
     explicit NetworkManager(Core *f_core);
     ~NetworkManager();

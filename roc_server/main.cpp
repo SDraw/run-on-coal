@@ -15,7 +15,13 @@ int main(int argc, char *argv[])
 #ifdef SIGBREAK
     signal(SIGBREAK, SignalHandleFunction);
 #endif
-
+#ifdef _WIN32
+    EnableScrollBar(GetConsoleWindow(), SB_BOTH, ESB_DISABLE_BOTH);
+    HANDLE l_handle = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD l_handleMode;
+    GetConsoleMode(l_handle, &l_handleMode);
+    SetConsoleMode(l_handle, l_handleMode & ~ENABLE_QUICK_EDIT_MODE);
+#endif
     ROC::Core *l_core = ROC::Core::Init();
     pugi::xml_document *l_meta = new pugi::xml_document();
     if(l_meta->load_file("server_scripts/meta.xml"))

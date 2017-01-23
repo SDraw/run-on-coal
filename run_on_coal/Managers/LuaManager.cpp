@@ -311,6 +311,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "networkConnect", Lua::networkConnect);
     lua_register(m_pVM, "networkDisconnect", Lua::networkDisconnect);
     lua_register(m_pVM, "networkSendData", Lua::networkSendData);
+    lua_register(m_pVM, "networkGetState", Lua::networkGetState);
+    lua_register(m_pVM, "networkGetPing", Lua::networkGetPing);
 
     m_eventManager = new EventManager(this);
 }

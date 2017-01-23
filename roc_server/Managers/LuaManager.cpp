@@ -50,6 +50,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_pVM, "networkDisconnectClient", Lua::networkDisconnectClient);
     lua_register(m_pVM, "networkSendDataToClient", Lua::networkSendDataToClient);
     lua_register(m_pVM, "networkGetClientID", Lua::networkGetClientID);
+    lua_register(m_pVM, "networkGetClientAddress", Lua::networkGetClientAddress);
+    lua_register(m_pVM, "networkGetClientPing", Lua::networkGetClientPing);
 
     m_eventManager = new EventManager(this);
 }

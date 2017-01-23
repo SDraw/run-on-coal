@@ -11,6 +11,8 @@ namespace ROC
 namespace Lua
 {
 
+const std::string g_networkStateTable[] = { "disconnected", "connecting", "connected", "disconnecting" };
+
 int networkConnect(lua_State *f_vm)
 {
     std::string l_ip;
@@ -40,6 +42,18 @@ int networkSendData(lua_State *f_vm)
     argStream.ReadText(l_data);
     bool l_result = LuaManager::m_corePointer->GetNetworkManager()->SendData(l_data);
     argStream.PushBoolean(l_result);
+    return argStream.GetReturnValue();
+}
+int networkGetState(lua_State *f_vm)
+{
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.PushText(g_networkStateTable[LuaManager::m_corePointer->GetNetworkManager()->GetNetworkState()]);
+    return argStream.GetReturnValue();
+}
+int networkGetPing(lua_State *f_vm)
+{
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.PushInteger(LuaManager::m_corePointer->GetNetworkManager()->GetPing());
     return argStream.GetReturnValue();
 }
 

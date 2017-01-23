@@ -91,6 +91,12 @@ bool ROC::NetworkManager::SendData(std::string &f_data)
     }
     return (m_networkState == NetworkState::Connected);
 }
+int ROC::NetworkManager::GetPing() 
+{
+    int l_result = -1;
+    if(m_networkState == NetworkState::Connected) l_result = m_networkInterface->GetLastPing(m_serverAddress);
+    return l_result;
+}
 
 void ROC::NetworkManager::DoPulse()
 {
@@ -112,6 +118,7 @@ void ROC::NetworkManager::DoPulse()
                 {
                     m_serverAddress = l_packet->systemAddress;
                     m_networkState = NetworkState::Connected;
+                    m_networkInterface->SetOccasionalPing(true);
                     m_argument->PushArgument(const_cast<std::string*>(&g_networkStateTable[0]));
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkStateChange, m_argument);
                     m_argument->Clear();

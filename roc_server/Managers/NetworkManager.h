@@ -21,6 +21,7 @@ class NetworkManager
 public:
     bool Disconnect(Client *f_client);
     bool SendData(Client *f_client, std::string &f_data);
+    int GetPing(Client *f_client);
 protected:
     explicit NetworkManager(Core *f_core);
     ~NetworkManager();

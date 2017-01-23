@@ -50,6 +50,35 @@ int networkGetClientID(lua_State *f_vm)
     !argStream.HasErrors() ? argStream.PushInteger(l_client->GetID()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int networkGetClientAddress(lua_State *f_vm)
+{
+    Client *l_client;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
+    if(!argStream.HasErrors())
+    {
+        std::string l_ip;
+        unsigned short l_port;
+        l_client->GetAddress(l_ip, l_port);
+        argStream.PushText(l_ip);
+        argStream.PushNumber(l_port);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int networkGetClientPing(lua_State *f_vm)
+{
+    Client *l_client;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
+    if(!argStream.HasErrors())
+    {
+        int l_ping = LuaManager::m_corePointer->GetNetworkManager()->GetPing(l_client);
+        argStream.PushNumber(l_ping);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 
 }
 }

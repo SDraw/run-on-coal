@@ -45,6 +45,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
         m_core->GetLogManager()->Log(l_log);
 
         m_networkInterface->SetMaximumIncomingConnections(m_core->GetConfigManager()->GetMaxClients());
+        m_networkInterface->SetOccasionalPing(true);
     }
     else
     {
@@ -83,6 +84,10 @@ bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
         m_networkInterface->Send(&l_sendData, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, f_client->GetAddress(), false);
     }
     return (m_networkInterface != NULL);
+}
+int ROC::NetworkManager::GetPing(Client *f_client)
+{
+    return (m_networkInterface->GetLastPing(f_client->GetAddress()));
 }
 
 void ROC::NetworkManager::DoPulse()
