@@ -21,6 +21,13 @@ int main(int argc, char *argv[])
     DWORD l_handleMode;
     GetConsoleMode(l_handle, &l_handleMode);
     SetConsoleMode(l_handle, l_handleMode & ~ENABLE_QUICK_EDIT_MODE);
+
+    l_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO l_sbInfo;
+    GetConsoleScreenBufferInfo(l_handle, &l_sbInfo);
+    l_sbInfo.dwSize.Y = l_sbInfo.srWindow.Bottom + 1;
+    SetConsoleWindowInfo(l_handle, TRUE, &l_sbInfo.srWindow);
+    SetConsoleScreenBufferSize(l_handle, l_sbInfo.dwSize);
 #endif
     ROC::Core *l_core = ROC::Core::Init();
     pugi::xml_document *l_meta = new pugi::xml_document();
