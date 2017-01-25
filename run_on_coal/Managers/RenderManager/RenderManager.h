@@ -65,18 +65,8 @@ public:
     inline void RemoveAsActiveScene(Scene *f_scene) { if(m_activeScene == f_scene) m_activeScene = NULL; }
 
     void SetActiveShader(Shader *f_shader);
-    template<typename T> void SetShaderUniformValueO(Shader *f_shader, GLint f_uValue, T f_value)
-    {
-        EnableNonActiveShader(f_shader);
-        f_shader->SetUniformValue(f_uValue, f_value);
-        RestoreActiveShader(f_shader);
-    };
-    template<typename T> void SetShaderUniformValueM(Shader *f_shader, GLint f_uValue, T &f_value)
-    {
-        EnableNonActiveShader(f_shader);
-        f_shader->SetUniformValue(f_uValue, f_value);
-        RestoreActiveShader(f_shader);
-    };
+    template<typename T> void SetShaderUniformValue(Shader *f_shader, GLint f_uValue, T f_value);
+    template<typename T> void SetShaderUniformValueRef(Shader *f_shader, GLint f_uValue, T &f_value);
     inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader == f_shader) m_activeShader = NULL; }
 
     void Render(Model *f_model, bool f_texturize, bool f_frustum = false, float f_radius = 1.f);
@@ -112,3 +102,16 @@ protected:
 };
 
 }
+
+template<typename T> void ROC::RenderManager::SetShaderUniformValue(Shader *f_shader, GLint f_uValue, T f_value)
+{
+    EnableNonActiveShader(f_shader);
+    f_shader->SetUniformValue(f_uValue, f_value);
+    RestoreActiveShader(f_shader);
+};
+template<typename T> void ROC::RenderManager::SetShaderUniformValueRef(Shader *f_shader, GLint f_uValue, T &f_value)
+{
+    EnableNonActiveShader(f_shader);
+    f_shader->SetUniformValue(f_uValue, f_value);
+    RestoreActiveShader(f_shader);
+};

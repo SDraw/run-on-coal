@@ -17,59 +17,8 @@ public:
     ~ArgReader();
 
     void ReadBoolean(bool &f_val);
-    template<typename T> void ReadNumber(T &f_val)
-    {
-        if(!m_hasErrors)
-        {
-            if(m_currentArg <= m_argCount)
-            {
-                if(lua_isnumber(m_vm, m_currentArg))
-                {
-                    f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
-                    m_currentArg++;
-                    if(std::isnan(f_val) || std::isinf(f_val))
-                    {
-                        m_error.append("Got NaN/Inf");
-                        m_hasErrors = true;
-                    }
-                }
-                else
-                {
-                    m_error.append("Expected number");
-                    m_hasErrors = true;
-                }
-            }
-            else
-            {
-                m_error.append("Not enough arguments");
-                m_hasErrors = true;
-            }
-        }
-    };
-    template<typename T> void ReadInteger(T &f_val)
-    {
-        if(!m_hasErrors)
-        {
-            if(m_currentArg <= m_argCount)
-            {
-                if(lua_isinteger(m_vm, m_currentArg))
-                {
-                    f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
-                    m_currentArg++;
-                }
-                else
-                {
-                    m_error.append("Expected integer");
-                    m_hasErrors = true;
-                }
-            }
-            else
-            {
-                m_error.append("Not enough arguments");
-                m_hasErrors = true;
-            }
-        }
-    };
+    template<typename T> void ReadNumber(T &f_val);
+    template<typename T> void ReadInteger(T &f_val);
     void ReadText(std::string &f_val);
     void ReadUserdata(void **f_val, unsigned char f_type);
     void ReadPointer(void **f_val);
@@ -77,28 +26,8 @@ public:
     void ReadFunctionPointer(void **f_pointer);
 
     void ReadNextBoolean(bool &f_val);
-    template<typename T> void ReadNextNumber(T &f_val)
-    {
-        if(!m_hasErrors && (m_currentArg <= m_argCount))
-        {
-            if(lua_isnumber(m_vm, m_currentArg))
-            {
-                f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
-                m_currentArg++;
-            }
-        }
-    };
-    template<typename T> void ReadNextInteger(T &f_val)
-    {
-        if(!m_hasErrors && (m_currentArg <= m_argCount))
-        {
-            if(lua_isinteger(m_vm, m_currentArg))
-            {
-                f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
-                m_currentArg++;
-            }
-        }
-    };
+    template<typename T> void ReadNextNumber(T &f_val);
+    template<typename T> void ReadNextInteger(T &f_val);
     void ReadNextText(std::string &f_val);
     void ReadNextUserdata(void **f_val, unsigned char f_type);
     void ReadNextPointer(void **f_val);
@@ -118,3 +47,80 @@ public:
 };
 
 }
+
+template<typename T> void ROC::ArgReader::ReadNumber(T &f_val)
+{
+    if(!m_hasErrors)
+    {
+        if(m_currentArg <= m_argCount)
+        {
+            if(lua_isnumber(m_vm, m_currentArg))
+            {
+                f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
+                m_currentArg++;
+                if(std::isnan(f_val) || std::isinf(f_val))
+                {
+                    m_error.append("Got NaN/Inf");
+                    m_hasErrors = true;
+                }
+            }
+            else
+            {
+                m_error.append("Expected number");
+                m_hasErrors = true;
+            }
+        }
+        else
+        {
+            m_error.append("Not enough arguments");
+            m_hasErrors = true;
+        }
+    }
+};
+template<typename T> void ROC::ArgReader::ReadInteger(T &f_val)
+{
+    if(!m_hasErrors)
+    {
+        if(m_currentArg <= m_argCount)
+        {
+            if(lua_isinteger(m_vm, m_currentArg))
+            {
+                f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
+                m_currentArg++;
+            }
+            else
+            {
+                m_error.append("Expected integer");
+                m_hasErrors = true;
+            }
+        }
+        else
+        {
+            m_error.append("Not enough arguments");
+            m_hasErrors = true;
+        }
+    }
+};
+
+template<typename T> void ROC::ArgReader::ReadNextNumber(T &f_val)
+{
+    if(!m_hasErrors && (m_currentArg <= m_argCount))
+    {
+        if(lua_isnumber(m_vm, m_currentArg))
+        {
+            f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
+            m_currentArg++;
+        }
+    }
+};
+template<typename T> void ROC::ArgReader::ReadNextInteger(T &f_val)
+{
+    if(!m_hasErrors && (m_currentArg <= m_argCount))
+    {
+        if(lua_isinteger(m_vm, m_currentArg))
+        {
+            f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
+            m_currentArg++;
+        }
+    }
+};

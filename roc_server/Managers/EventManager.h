@@ -9,7 +9,7 @@ enum EventType : unsigned char
     ServerStop, //onServerStop
     ServerPulse, //onServerPulse
     NetworkClientConnect, //onNetworkClientConnect
-    NetworkClientDisconnect, //onNetworkClientConnect
+    NetworkClientDisconnect, //onNetworkClientDisconnect
     NetworkDataRecieve, //onNetworkDataRecieve
     Last // None
 };

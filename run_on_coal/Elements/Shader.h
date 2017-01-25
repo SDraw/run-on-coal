@@ -77,47 +77,28 @@ protected:
     void Enable(bool f_full = true);
 
     void SetUniformValue(GLint f_uValue, unsigned int f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<unsigned int> &f_value);
     void SetUniformValue(GLint f_uValue, glm::uvec2 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::uvec2> &f_value);
     void SetUniformValue(GLint f_uValue, glm::uvec3 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::uvec3> &f_value);
     void SetUniformValue(GLint f_uValue, glm::uvec4 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::uvec4> &f_value);
 
     void SetUniformValue(GLint f_uValue, int f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<int> &f_value);
     void SetUniformValue(GLint f_uValue, glm::ivec2 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::ivec2> &f_value);
     void SetUniformValue(GLint f_uValue, glm::ivec3 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::ivec3> &f_value);
     void SetUniformValue(GLint f_uValue, glm::ivec4 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::ivec4> &f_value);
 
     void SetUniformValue(GLint f_uValue, float f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<float> &f_value);
     void SetUniformValue(GLint f_uValue, glm::vec2 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::vec2> &f_value);
     void SetUniformValue(GLint f_uValue, glm::vec3 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::vec3> &f_value);
     void SetUniformValue(GLint f_uValue, glm::vec4 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::vec4> &f_value);
 
     void SetUniformValue(GLint f_uValue, double f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<double> &f_value);
     void SetUniformValue(GLint f_uValue, glm::dvec2 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::dvec2> &f_value);
     void SetUniformValue(GLint f_uValue, glm::dvec3 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::dvec3> &f_value);
     void SetUniformValue(GLint f_uValue, glm::dvec4 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::dvec4> &f_value);
 
     void SetUniformValue(GLint f_uValue, glm::mat2 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::mat2> &f_value);
     void SetUniformValue(GLint f_uValue, glm::mat3 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::mat3> &f_value);
     void SetUniformValue(GLint f_uValue, glm::mat4 &f_value);
-    void SetUniformValue(GLint f_uValue, std::vector<glm::mat4> &f_value);
 
     void SetProjectionUniformValue(glm::mat4 &f_value);
     void SetViewUniformValue(glm::mat4 &f_value);

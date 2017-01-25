@@ -28,13 +28,15 @@ public:
     LuaArguments();
     ~LuaArguments();
     void Clear();
-    template<typename T> void PushArgument(T f_val)
-    {
-        m_vArgs.push_back(f_val);
-        m_argCount++;
-    };
+    template<typename T> void PushArgument(T f_val);
     void ProccessArguments(lua_State *f_vm);
     inline int GetArgumentsValue() { return m_argCount; }
 };
 
 }
+
+template<typename T> void ROC::LuaArguments::PushArgument(T f_val)
+{
+    m_vArgs.push_back(f_val);
+    m_argCount++;
+};
