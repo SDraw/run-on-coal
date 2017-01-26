@@ -15,7 +15,7 @@ Simple and light-weight 3D game engine.
 * TrueType font rendering with Unicode characters support
 * Networking using [RakNet library](https://github.com/OculusVR/RakNet)
 
-[![alt text](http://i.imgur.com/spFAFnr.png "Youtube playlist")](https://www.youtube.com/playlist?list=PLiEPsxTlqsDnI36XCCsG3jw32j2Gb-JGJ)
+[![alt text](http://i.imgur.com/spFAFnr.png "Youtube playlist")](https://www.youtube.com/watch?v=L2UA3kquDpg&list=PLiEPsxTlqsDnI36XCCsG3jw32j2Gb-JGJ)
 
 # Builds
 Latest build is always avaliable at [Dropbox shared folder](https://www.dropbox.com/sh/vowd9qzzy5hosen/AADyDIJJi7bYwbPFZ8rhvolZa?dl=0).
