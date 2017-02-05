@@ -3,6 +3,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/RenderManager/RenderManager.h"
+#include "Elements/Font.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Font.h"
 #include "Utils/Utils.h"
@@ -45,6 +46,38 @@ int fontDestroy(lua_State *f_vm)
     {
         bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyFont(l_font);
         argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int fontGetTextWidth(lua_State *f_vm)
+{
+    Font *l_font;
+    std::string l_text;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
+    argStream.ReadText(l_text);
+    if(!argStream.HasErrors())
+    {
+        sf::String l_utf8 = sf::String::fromUtf8(l_text.begin(), l_text.end());
+        int l_width = l_font->GetTextWidth(l_utf8);
+        argStream.PushInteger(l_width);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int fontGetTextHeight(lua_State *f_vm)
+{
+    Font *l_font;
+    std::string l_text;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
+    argStream.ReadText(l_text);
+    if(!argStream.HasErrors())
+    {
+        sf::String l_utf8 = sf::String::fromUtf8(l_text.begin(), l_text.end());
+        int l_height = l_font->GetTextHeight(l_utf8);
+        argStream.PushInteger(l_height);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

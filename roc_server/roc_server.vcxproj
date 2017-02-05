@@ -88,9 +88,11 @@
   <ItemGroup>
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Elements\Client.h" />
+    <ClInclude Include="Elements\File.h" />
     <ClInclude Include="Lua\ArgReader.h" />
     <ClInclude Include="Lua\LuaArguments.h" />
     <ClInclude Include="Lua\LuaDefinitions.Events.h" />
+    <ClInclude Include="Lua\LuaDefinitions.File.h" />
     <ClInclude Include="Lua\LuaDefinitions.Network.h" />
     <ClInclude Include="Lua\LuaDefinitions.Sfml.h" />
     <ClInclude Include="Lua\LuaDefinitions.Utils.h" />
@@ -118,9 +120,11 @@
     </ClCompile>
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Elements\Client.cpp" />
+    <ClCompile Include="Elements\File.cpp" />
     <ClCompile Include="Lua\ArgReader.cpp" />
     <ClCompile Include="Lua\LuaArguments.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Events.cpp" />
+    <ClCompile Include="Lua\LuaDefinitions.File.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Network.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Utils.cpp" />

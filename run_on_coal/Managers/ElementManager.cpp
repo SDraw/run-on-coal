@@ -343,6 +343,7 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
     Utils::JoinPaths(l_work, l_path);
 
     if(l_file->Create(l_work, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
+    else
     {
         delete l_file;
         l_file = NULL;
@@ -359,6 +360,7 @@ ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
     Utils::JoinPaths(l_work, l_path);
 
     if(l_file->Open(l_work, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
+    else
     {
         delete l_file;
         l_file = NULL;

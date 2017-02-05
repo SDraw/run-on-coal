@@ -12,6 +12,8 @@
 #include <ctime>
 #include <thread>
 #include <csignal>
+#include <regex>
+#include <direct.h>
 
 #include "SFML/System.hpp"
 #include "lua.hpp"

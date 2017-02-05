@@ -63,6 +63,12 @@
     <ClCompile Include="Elements\Client.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\File.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.File.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -120,6 +126,12 @@
     </ClInclude>
     <ClInclude Include="Elements\Client.h">
       <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\File.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.File.h">
+      <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

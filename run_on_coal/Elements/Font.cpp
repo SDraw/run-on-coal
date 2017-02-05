@@ -95,6 +95,36 @@ bool ROC::Font::LoadChar(unsigned int l_char)
     return l_result;
 }
 
+int ROC::Font::GetTextWidth(sf::String &f_text)
+{
+    float l_width = 0.f;
+    for(auto iter : f_text)
+    {
+        m_charIter = m_charMap.find(iter);
+        if(m_charIter == m_charMapEnd)
+        {
+            if(!LoadChar(iter)) continue;
+        }
+        l_width += m_charIter->second->m_advance;
+    }
+    return static_cast<int>(l_width);
+}
+int ROC::Font::GetTextHeight(sf::String &f_text)
+{
+    int l_height = 0;
+    for(auto iter : f_text)
+    {
+        m_charIter = m_charMap.find(iter);
+        if(m_charIter == m_charMapEnd)
+        {
+            if(!LoadChar(iter)) continue;
+        }
+        int l_charHeight = m_charIter->second->m_breaing.y + abs(m_charIter->second->m_breaing.y - m_charIter->second->m_size.y);
+        if(l_charHeight > l_height) l_height = l_charHeight;
+    }
+    return l_height;
+}
+
 void ROC::Font::Draw(sf::String &f_text, glm::vec2 &f_pos, bool f_bind)
 {
     if(m_loaded)
@@ -116,7 +146,7 @@ void ROC::Font::Draw(sf::String &f_text, glm::vec2 &f_pos, bool f_bind)
                 if(!LoadChar(iter)) continue;
             }
             l_result.x = l_displacement + m_charIter->second->m_breaing.x;
-            l_result.y = f_pos.y - m_charIter->second->m_size.y + m_charIter->second->m_breaing.y;
+            l_result.y = f_pos.y - (m_charIter->second->m_size.y - m_charIter->second->m_breaing.y);
 
             m_vertices[0].x = m_vertices[1].x = m_vertices[3].x = l_result.x;
             m_vertices[1].y = m_vertices[2].y = m_vertices[4].y = l_result.y;

@@ -211,7 +211,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Font
     lua_register(m_pVM, "fontCreate", Lua::fontCreate);
     lua_register(m_pVM, "fontDestroy", Lua::fontDestroy);
-
+    lua_register(m_pVM, "fontGetTextWidth", Lua::fontGetTextWidth);
+    lua_register(m_pVM, "fontGetTextHeight", Lua::fontGetTextHeight);
     lua_register(m_pVM, "fontDraw", Lua::fontDraw);
 
     //File

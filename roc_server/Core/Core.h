@@ -21,6 +21,7 @@ class Core
     MemoryManager *m_memoryManager;
     NetworkManager *m_networkManager;
     static Core *m_instance;
+    std::string m_workingDir;
     std::chrono::milliseconds m_pulseTick;
     LuaArguments *m_argument;
 
@@ -32,6 +33,7 @@ public:
     static Core* Init();
     static void Terminate();
 
+    inline void GetWorkingDirectory(std::string &f_path) { f_path.assign(m_workingDir); }
     inline ConfigManager* GetConfigManager() { return m_configManager; }
     inline ElementManager* GetElementManager() { return m_elementManager; }
     inline SfmlManager* GetSfmlManager() { return m_sfmlManager; }

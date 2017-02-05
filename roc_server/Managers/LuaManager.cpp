@@ -5,6 +5,7 @@
 #include "Managers/LuaManager.h"
 #include "Lua/LuaArguments.h"
 #include "Lua/LuaDefinitions.Events.h"
+#include "Lua/LuaDefinitions.File.h"
 #include "Lua/LuaDefinitions.Network.h"
 #include "Lua/LuaDefinitions.Sfml.h"
 #include "Lua/LuaDefinitions.Utils.h"
@@ -33,6 +34,26 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //Sfml
     lua_register(m_pVM, "getTime", Lua::getTime);
+
+    //File
+    lua_register(m_pVM, "fileCreate", Lua::fileCreate);
+    lua_register(m_pVM, "fileOpen", Lua::fileOpen);
+    lua_register(m_pVM, "fileClose", Lua::fileClose);
+
+    lua_register(m_pVM, "fileRead", Lua::fileRead);
+    lua_register(m_pVM, "fileWrite", Lua::fileWrite);
+
+    lua_register(m_pVM, "fileGetSize", Lua::fileGetSize);
+
+    lua_register(m_pVM, "fileSetPosition", Lua::fileSetPosition);
+    lua_register(m_pVM, "fileGetPosition", Lua::fileGetPosition);
+
+    lua_register(m_pVM, "fileGetPath", Lua::fileGetPath);
+
+    lua_register(m_pVM, "fileIsEOF", Lua::fileIsEOF);
+
+    lua_register(m_pVM, "fileDelete", Lua::fileDelete);
+    lua_register(m_pVM, "fileRename", Lua::fileRename);
 
     //Elements
     lua_register(m_pVM, "isElement", Lua::isElement);

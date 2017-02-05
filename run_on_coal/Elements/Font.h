@@ -30,6 +30,9 @@ class Font
     bool LoadChar(unsigned int l_char);
 
     void Clear();
+public:
+    int GetTextWidth(sf::String &f_text);
+    int GetTextHeight(sf::String &f_text);
 protected:
     Font();
     ~Font();
