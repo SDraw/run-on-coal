@@ -37,6 +37,7 @@ public:
 
     bool SetModelCollision(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveModelCollision(Model *f_model);
+    bool SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state);
 
     bool RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model);
 protected:

@@ -12,6 +12,7 @@ int physicsGetFloorEnabled(lua_State *f_vm);
 int physicsSetGravity(lua_State *f_vm);
 int physicsGetGravity(lua_State *f_vm);
 int physicsRayCast(lua_State *f_vm);
+int physicsSetModelsCollidable(lua_State *f_vm);
 
 }
 }

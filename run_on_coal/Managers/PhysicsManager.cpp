@@ -113,6 +113,60 @@ bool ROC::PhysicsManager::RemoveModelCollision(Model *f_model)
     }
     return l_result;
 }
+bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
+{
+    bool l_result = false;
+    if((f_model1->HasCollision() || f_model1->HasSkeletonStaticBoneCollision() || f_model1->HasSkeletonDynamicBoneCollision()) && (f_model2->HasCollision() || f_model2->HasSkeletonStaticBoneCollision() || f_model2->HasSkeletonDynamicBoneCollision()))
+    {
+        std::vector<btRigidBody*> l_bodies1, l_bodies2;
+        if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetRigidBody());
+        else
+        {
+            if(f_model1->HasSkeleton())
+            {
+                if(f_model1->HasSkeletonStaticBoneCollision())
+                {
+                    for(auto iter : f_model1->GetSkeleton()->GetCollisionVectorRef()) l_bodies1.push_back(iter->m_rigidBody);
+                }
+                if(f_model1->HasSkeletonDynamicBoneCollision())
+                {
+                    for(auto iter : f_model1->GetSkeleton()->GetJointVectorRef())
+                    {
+                        for(auto iter1 : iter->m_partsVector) l_bodies1.push_back(iter1->m_rigidBody);
+                    }
+                }
+            }
+        }
+        if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetRigidBody());
+        else
+        {
+            if(f_model2->HasSkeleton())
+            {
+                if(f_model2->HasSkeletonStaticBoneCollision())
+                {
+                    for(auto iter : f_model2->GetSkeleton()->GetCollisionVectorRef()) l_bodies2.push_back(iter->m_rigidBody);
+                }
+                if(f_model2->HasSkeletonDynamicBoneCollision())
+                {
+                    for(auto iter : f_model2->GetSkeleton()->GetJointVectorRef())
+                    {
+                        for(auto iter1 : iter->m_partsVector) l_bodies2.push_back(iter1->m_rigidBody);
+                    }
+                }
+            }
+        }
+        for(auto iter1 : l_bodies1)
+        {
+            for(auto iter2 : l_bodies2)
+            {
+                iter1->setIgnoreCollisionCheck(iter2, !f_state);
+                iter2->setIgnoreCollisionCheck(iter1, !f_state);
+            }
+        }
+        l_result = true;
+    }
+    return l_result;
+}
 
 void ROC::PhysicsManager::AddModel(Model *f_model)
 {

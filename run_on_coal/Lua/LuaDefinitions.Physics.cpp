@@ -103,5 +103,22 @@ int physicsRayCast(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
+int physicsSetModelsCollidable(lua_State *f_vm)
+{
+    Model *l_model1, *l_model2;
+    bool l_state;
+    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model1), ElementType::ModelElement);
+    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model2), ElementType::ModelElement);
+    argStream.ReadBoolean(l_state);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelsCollidable(l_model1, l_model2, l_state);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
 }
 }

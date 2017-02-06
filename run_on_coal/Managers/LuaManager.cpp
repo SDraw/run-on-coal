@@ -301,6 +301,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     lua_register(m_pVM, "physicsRayCast", Lua::physicsRayCast);
 
+    lua_register(m_pVM, "physicsSetModelsCollidable", Lua::physicsSetModelsCollidable);
+
     //Elements
     lua_register(m_pVM, "isElement", Lua::isElement);
     lua_register(m_pVM, "getElementType", Lua::getElementType);
