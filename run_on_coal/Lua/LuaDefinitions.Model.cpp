@@ -24,6 +24,14 @@ const std::vector<std::string> g_modelTypesTable
 {
     "none", "static", "animated"
 };
+const std::vector<std::string> g_modelCollisionPropertiesTable
+{
+    "mass", "velocity", "angular_velocity", "friction"
+};
+const std::vector<std::string> g_modelAnimationPropertiesTable
+{
+    "speed", "progress"
+};
 
 int modelCreate(lua_State *f_vm)
 {
@@ -316,58 +324,78 @@ int modelResetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int modelSetAnimationSpeed(lua_State *f_vm)
+int modelSetAnimationProperty(lua_State *f_vm)
 {
     Model *l_model = NULL;
-    float l_speed;
+    std::string l_property;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    argStream.ReadNumber(l_speed);
+    argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->SetAnimationSpeed(l_speed);
-        argStream.PushBoolean(l_result);
+        if(l_model->GetAnimation() != NULL)
+        {
+            switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
+            {
+                case 0: // Speed
+                {
+                    float l_speed;
+                    argStream.ReadNumber(l_speed);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetAnimationSpeed(l_speed);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case 1: // Progress
+                {
+                    float l_progress;
+                    argStream.ReadNumber(l_progress);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetAnimationProgress(l_progress);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                default:
+                    argStream.PushBoolean(false);
+            }
+        }
+        else argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int modelGetAnimationSpeed(lua_State *f_vm)
+int modelGetAnimationProperty(lua_State *f_vm)
 {
-    Model *l_model;
+    Model *l_model = NULL;
+    std::string l_property;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {
-        float l_speed = l_model->GetAnimationSpeed();
-        (l_speed != -1.f) ? argStream.PushNumber(l_speed) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelSetAnimationProgress(lua_State *f_vm)
-{
-    Model *l_model;
-    float l_progress;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    argStream.ReadNumber(l_progress);
-    if(!argStream.HasErrors())
-    {
-        bool l_result = l_model->SetAnimationProgress(l_progress);
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelGetAnimationProgress(lua_State *f_vm)
-{
-    Model *l_model;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    if(!argStream.HasErrors())
-    {
-        float l_progress = l_model->GetAnimationProgress();
-        (l_progress != -1.f) ? argStream.PushNumber(l_progress) : argStream.PushBoolean(false);
+        if(l_model->GetAnimation() != NULL)
+        {
+            switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
+            {
+                case 0: // Speed
+                {
+                    float l_speed = l_model->GetAnimationSpeed();
+                    argStream.PushNumber(l_speed);
+                } break;
+                case 1: // Progress
+                {
+                    float l_progress = l_model->GetAnimationProgress();
+                    argStream.PushNumber(l_progress);
+                } break;
+                default:
+                    argStream.PushBoolean(false);
+            }
+        }
+        else argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -410,116 +438,119 @@ int modelRemoveCollision(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int modelGetMass(lua_State *f_vm)
+
+int modelSetCollisionProperty(lua_State *f_vm)
 {
     Model *l_model;
+    std::string l_property;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {
-        float l_mass = l_model->GetMass();
-        (l_mass != -1.f) ? argStream.PushNumber(l_mass) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelSetFriction(lua_State *f_vm)
-{
-    Model *l_model;
-    float l_friction;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    argStream.ReadNumber(l_friction);
-    if(!argStream.HasErrors())
-    {
-        bool l_result = l_model->SetFriction(l_friction);
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelGetFriction(lua_State *f_vm)
-{
-    Model *l_model;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    if(!argStream.HasErrors())
-    {
-        float l_friction = l_model->GetFriction();
-        (l_friction != -1.f) ? argStream.PushNumber(l_friction) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelSetVelocity(lua_State *f_vm)
-{
-    Model *l_model;
-    glm::vec3 l_velocity;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_velocity[i]);
-    if(!argStream.HasErrors())
-    {
-        bool l_result = l_model->SetVelocity(l_velocity);
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelGetVelocity(lua_State *f_vm)
-{
-    Model *l_model;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    if(!argStream.HasErrors())
-    {
-        glm::vec3 l_velocity;
-        if(l_model->GetVelocity(l_velocity))
+        if(l_model->HasCollision())
         {
-            argStream.PushNumber(l_velocity.x);
-            argStream.PushNumber(l_velocity.y);
-            argStream.PushNumber(l_velocity.z);
+            switch(Utils::ReadEnumVector(g_modelCollisionPropertiesTable, l_property))
+            {
+                case 0: // Mass
+                    argStream.PushBoolean(false); // To do
+                    break;
+                case 1: // Velocity
+                {
+                    glm::vec3 l_velocity;
+                    argStream.ReadNumber(l_velocity.x);
+                    argStream.ReadNumber(l_velocity.y);
+                    argStream.ReadNumber(l_velocity.z);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetVelocity(l_velocity);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case 2: // Angular velocity
+                {
+                    glm::vec3 l_angularVelocity;
+                    argStream.ReadNumber(l_angularVelocity.x);
+                    argStream.ReadNumber(l_angularVelocity.y);
+                    argStream.ReadNumber(l_angularVelocity.z);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetAngularVelocity(l_angularVelocity);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case 3: // Friction
+                {
+                    float l_friction;
+                    argStream.ReadNumber(l_friction);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetFriction(l_friction);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                default:
+                    argStream.PushBoolean(false);
+            }
         }
         else argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int modelSetAngularVelocity(lua_State *f_vm)
+int modelGetCollisionProperty(lua_State *f_vm)
 {
     Model *l_model;
-    glm::vec3 l_velocity;
+    std::string l_property;
     ArgReader argStream(f_vm, LuaManager::m_corePointer);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_velocity[i]);
+    argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->SetAngularVelocity(l_velocity);
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelGetAngularVelocity(lua_State *f_vm)
-{
-    Model *l_model;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    if(!argStream.HasErrors())
-    {
-        glm::vec3 l_velocity;
-        l_model->GetAngularVelocity(l_velocity);
-        if(l_model->GetAngularVelocity(l_velocity))
+        if(l_model->HasCollision())
         {
-            argStream.PushNumber(l_velocity.x);
-            argStream.PushNumber(l_velocity.y);
-            argStream.PushNumber(l_velocity.z);
+            switch(Utils::ReadEnumVector(g_modelCollisionPropertiesTable, l_property))
+            {
+                case 0: // Mass
+                {
+                    float l_mass = l_model->GetMass();
+                    argStream.PushNumber(l_mass);
+                } break;
+                case 1: // Velocity
+                {
+                    glm::vec3 l_velocity(0.f);
+                    l_model->GetVelocity(l_velocity);
+                    argStream.PushNumber(l_velocity.x);
+                    argStream.PushNumber(l_velocity.y);
+                    argStream.PushNumber(l_velocity.z);
+                } break;
+                case 2: // Angular velocity
+                {
+                    glm::vec3 l_angularVelocity;
+                    l_model->GetAngularVelocity(l_angularVelocity);
+                    argStream.PushNumber(l_angularVelocity.x);
+                    argStream.PushNumber(l_angularVelocity.y);
+                    argStream.PushNumber(l_angularVelocity.z);
+                } break;
+                case 3: // Friction
+                {
+                    float l_friction = l_model->GetFriction();
+                    argStream.PushNumber(l_friction);
+                } break;
+                default:
+                    argStream.PushBoolean(false);
+            }
         }
         else argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
+
 
 }
 }

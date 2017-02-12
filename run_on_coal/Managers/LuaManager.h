@@ -10,7 +10,7 @@ class LuaManager
 {
     Core *m_core;
 
-    lua_State *m_pVM;
+    lua_State *m_vm;
     EventManager *m_eventManager;
 
     LuaManager(const LuaManager& that);
@@ -24,7 +24,7 @@ protected:
     ~LuaManager();
 
     void CallFunction(int f_func, LuaArguments *f_args);
-    inline void RemoveReference(int f_ref) { luaL_unref(m_pVM, LUA_REGISTRYINDEX, f_ref); }
+    inline void RemoveReference(int f_ref) { luaL_unref(m_vm, LUA_REGISTRYINDEX, f_ref); }
     friend Core;
     friend EventManager;
 };

@@ -24,19 +24,12 @@ int modelGetAnimation(lua_State *f_vm);
 int modelPlayAnimation(lua_State *f_vm);
 int modelPauseAnimation(lua_State *f_vm);
 int modelResetAnimation(lua_State *f_vm);
-int modelSetAnimationSpeed(lua_State *f_vm);
-int modelGetAnimationSpeed(lua_State *f_vm);
-int modelSetAnimationProgress(lua_State *f_vm);
-int modelGetAnimationProgress(lua_State *f_vm);
+int modelSetAnimationProperty(lua_State *f_vm);
+int modelGetAnimationProperty(lua_State *f_vm);
 int modelSetCollision(lua_State *f_vm);
 int modelRemoveCollision(lua_State *f_vm);
-int modelGetMass(lua_State *f_vm);
-int modelSetFriction(lua_State *f_vm);
-int modelGetFriction(lua_State *f_vm);
-int modelSetVelocity(lua_State *f_vm);
-int modelGetVelocity(lua_State *f_vm);
-int modelSetAngularVelocity(lua_State *f_vm);
-int modelGetAngularVelocity(lua_State *f_vm);
+int modelSetCollisionProperty(lua_State *f_vm);
+int modelGetCollisionProperty(lua_State *f_vm);
 
 }
 }

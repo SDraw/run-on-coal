@@ -20,6 +20,22 @@ ROC::Animation::~Animation()
     Clean();
 }
 
+void ROC::Animation::Clean()
+{
+    m_animFile.close();
+    for(auto iter : m_rightFrame) delete iter;
+    m_rightFrame.resize(0U);
+    for(auto iter : m_leftFrame) delete iter;
+    m_leftFrame.resize(0U);
+    for(auto iter : m_interpolatedFrame) delete iter;
+    m_interpolatedFrame.resize(0U);
+    m_duration = 0U;
+    m_bonesValue = 0U;
+    m_fps = 0U;
+    m_durationTotal = 0U;
+    m_loaded = false;
+}
+
 bool ROC::Animation::Load(std::string &f_path)
 {
     if(!m_loaded)
@@ -59,6 +75,7 @@ bool ROC::Animation::CacheData(unsigned int f_tick)
     unsigned int l_delta = f_tick%m_frameDelta;
     unsigned int l_leftFrame = ((f_tick - l_delta) / m_frameDelta) % m_duration;
     float l_lerp = static_cast<float>(l_delta) / static_cast<float>(m_frameDelta);
+    bool l_interpolate = true;
     if(m_lastLeftFrame != l_leftFrame)
     {
         try
@@ -81,30 +98,20 @@ bool ROC::Animation::CacheData(unsigned int f_tick)
             }
             m_lastLeftFrame = l_leftFrame;
         }
-        catch(const std::ifstream::failure &e) {}
+        catch(const std::ifstream::failure &e)
+        {
+            l_interpolate = false;
+        }
     }
     //Interpolate
-    for(unsigned int i = 0; i < m_bonesValue; i++)
+    if(l_interpolate)
     {
-        m_interpolatedFrame[i]->m_position = glm::lerp(m_leftFrame[i]->m_position, m_rightFrame[i]->m_position, l_lerp);
-        m_interpolatedFrame[i]->m_rotation = glm::slerp(m_leftFrame[i]->m_rotation, m_rightFrame[i]->m_rotation, l_lerp);
-        m_interpolatedFrame[i]->m_scale = glm::lerp(m_leftFrame[i]->m_scale, m_rightFrame[i]->m_scale, l_lerp);
+        for(unsigned int i = 0; i < m_bonesValue; i++)
+        {
+            m_interpolatedFrame[i]->m_position = glm::lerp(m_leftFrame[i]->m_position, m_rightFrame[i]->m_position, l_lerp);
+            m_interpolatedFrame[i]->m_rotation = glm::slerp(m_leftFrame[i]->m_rotation, m_rightFrame[i]->m_rotation, l_lerp);
+            m_interpolatedFrame[i]->m_scale = glm::lerp(m_leftFrame[i]->m_scale, m_rightFrame[i]->m_scale, l_lerp);
+        }
     }
     return m_animFile.good();
-}
-
-void ROC::Animation::Clean()
-{
-    m_animFile.close();
-    for(auto iter : m_rightFrame) delete iter;
-    m_rightFrame.resize(0U);
-    for(auto iter : m_leftFrame) delete iter;
-    m_leftFrame.resize(0U);
-    for(auto iter : m_interpolatedFrame) delete iter;
-    m_interpolatedFrame.resize(0U);
-    m_duration = 0U;
-    m_bonesValue = 0U;
-    m_fps = 0U;
-    m_durationTotal = 0U;
-    m_loaded = false;
 }

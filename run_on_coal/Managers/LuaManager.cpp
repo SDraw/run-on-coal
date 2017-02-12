@@ -32,320 +32,300 @@ ROC::LuaManager::LuaManager(Core *f_core)
     m_core = f_core;
     m_corePointer = f_core;
 
-    m_pVM = luaL_newstate();
-    luaL_requiref(m_pVM, "_G", luaopen_base, 1);
-    luaL_requiref(m_pVM, "math", luaopen_math, 1);
-    luaL_requiref(m_pVM, "string", luaopen_string, 1);
-    luaL_requiref(m_pVM, "table", luaopen_table, 1);
-    luaL_requiref(m_pVM, "bit32", luaopen_bit32, 1);
-    luaL_requiref(m_pVM, "utf8", luaopen_utf8, 1);
+    m_vm = luaL_newstate();
+    luaL_requiref(m_vm, "_G", luaopen_base, 1);
+    luaL_requiref(m_vm, "math", luaopen_math, 1);
+    luaL_requiref(m_vm, "string", luaopen_string, 1);
+    luaL_requiref(m_vm, "table", luaopen_table, 1);
+    luaL_requiref(m_vm, "bit32", luaopen_bit32, 1);
+    luaL_requiref(m_vm, "utf8", luaopen_utf8, 1);
 
     //Security?
-    lua_register(m_pVM, "dofile", Lua::disabledFunction);
-    lua_register(m_pVM, "loadfile", Lua::disabledFunction);
+    lua_register(m_vm, "dofile", Lua::disabledFunction);
+    lua_register(m_vm, "loadfile", Lua::disabledFunction);
 
     //Log
-    lua_register(m_pVM, "logPrint", Lua::logPrint);
+    lua_register(m_vm, "logPrint", Lua::logPrint);
 
     //Geometry
-    lua_register(m_pVM, "geometryCreate", Lua::geometryCreate);
-    lua_register(m_pVM, "geometryDestroy", Lua::geometryDestroy);
+    lua_register(m_vm, "geometryCreate", Lua::geometryCreate);
+    lua_register(m_vm, "geometryDestroy", Lua::geometryDestroy);
 
     //Model
-    lua_register(m_pVM, "modelCreate", Lua::modelCreate);
-    lua_register(m_pVM, "modelDestroy", Lua::modelDestroy);
-    lua_register(m_pVM, "modelGetGeometry", Lua::modelGetGeometry);
-    lua_register(m_pVM, "modelGetType", Lua::modelGetType);
+    lua_register(m_vm, "modelCreate", Lua::modelCreate);
+    lua_register(m_vm, "modelDestroy", Lua::modelDestroy);
+    lua_register(m_vm, "modelGetGeometry", Lua::modelGetGeometry);
+    lua_register(m_vm, "modelGetType", Lua::modelGetType);
 
-    lua_register(m_pVM, "modelSetPosition", Lua::modelSetPosition);
-    lua_register(m_pVM, "modelGetPosition", Lua::modelGetPosition);
+    lua_register(m_vm, "modelSetPosition", Lua::modelSetPosition);
+    lua_register(m_vm, "modelGetPosition", Lua::modelGetPosition);
+    lua_register(m_vm, "modelSetRotation", Lua::modelSetRotation);
+    lua_register(m_vm, "modelGetRotation", Lua::modelGetRotation);
+    lua_register(m_vm, "modelSetScale", Lua::modelSetScale);
+    lua_register(m_vm, "modelGetScale", Lua::modelGetScale);
 
-    lua_register(m_pVM, "modelSetRotation", Lua::modelSetRotation);
-    lua_register(m_pVM, "modelGetRotation", Lua::modelGetRotation);
+    lua_register(m_vm, "modelDraw", Lua::modelDraw);
 
-    lua_register(m_pVM, "modelSetScale", Lua::modelSetScale);
-    lua_register(m_pVM, "modelGetScale", Lua::modelGetScale);
+    lua_register(m_vm, "modelAttach", Lua::modelAttach);
+    lua_register(m_vm, "modelDettach", Lua::modelDettach);
+    lua_register(m_vm, "modelGetParent", Lua::modelGetParent);
 
-    lua_register(m_pVM, "modelDraw", Lua::modelDraw);
+    lua_register(m_vm, "modelSetAnimation", Lua::modelSetAnimation);
+    lua_register(m_vm, "modelGetAnimation", Lua::modelGetAnimation);
+    lua_register(m_vm, "modelPlayAnimation", Lua::modelPlayAnimation);
+    lua_register(m_vm, "modelPauseAnimation", Lua::modelPauseAnimation);
+    lua_register(m_vm, "modelResetAnimation", Lua::modelResetAnimation);
+    lua_register(m_vm, "modelSetAnimationProperty", Lua::modelSetAnimationProperty);
+    lua_register(m_vm, "modelGetAnimationProperty", Lua::modelGetAnimationProperty);
 
-    lua_register(m_pVM, "modelAttach", Lua::modelAttach);
-    lua_register(m_pVM, "modelDettach", Lua::modelDettach);
-    lua_register(m_pVM, "modelGetParent", Lua::modelGetParent);
-
-    lua_register(m_pVM, "modelSetAnimation", Lua::modelSetAnimation);
-    lua_register(m_pVM, "modelGetAnimation", Lua::modelGetAnimation);
-
-    lua_register(m_pVM, "modelPlayAnimation", Lua::modelPlayAnimation);
-    lua_register(m_pVM, "modelPauseAnimation", Lua::modelPauseAnimation);
-    lua_register(m_pVM, "modelResetAnimation", Lua::modelResetAnimation);
-
-    lua_register(m_pVM, "modelSetAnimationSpeed", Lua::modelSetAnimationSpeed);
-    lua_register(m_pVM, "modelGetAnimationSpeed", Lua::modelGetAnimationSpeed);
-
-    lua_register(m_pVM, "modelSetAnimationProgress", Lua::modelSetAnimationProgress);
-    lua_register(m_pVM, "modelGetAnimationProgress", Lua::modelGetAnimationProgress);
-
-    lua_register(m_pVM, "modelSetCollision", Lua::modelSetCollision);
-    lua_register(m_pVM, "modelRemoveCollision", Lua::modelRemoveCollision);
-
-    lua_register(m_pVM, "modelGetMass", Lua::modelGetMass);
-
-    lua_register(m_pVM, "modelSetFriction", Lua::modelSetFriction);
-    lua_register(m_pVM, "modelGetFriction", Lua::modelGetFriction);
-
-    lua_register(m_pVM, "modelSetVelocity", Lua::modelSetVelocity);
-    lua_register(m_pVM, "modelGetVelocity", Lua::modelGetVelocity);
-
-    lua_register(m_pVM, "modelSetAngularVelocity", Lua::modelSetAngularVelocity);
-    lua_register(m_pVM, "modelGetAngularVelocity", Lua::modelGetAngularVelocity);
+    lua_register(m_vm, "modelSetCollision", Lua::modelSetCollision);
+    lua_register(m_vm, "modelRemoveCollision", Lua::modelRemoveCollision);
+    lua_register(m_vm, "modelSetCollisionProperty", Lua::modelSetCollisionProperty);
+    lua_register(m_vm, "modelGetCollisionProperty", Lua::modelGetCollisionProperty);
 
     //Shader
-    lua_register(m_pVM, "shaderCreate", Lua::shaderCreate);
-    lua_register(m_pVM, "shaderDestroy", Lua::shaderDestroy);
-    lua_register(m_pVM, "shaderGetUniform", Lua::shaderGetUniform);
-    lua_register(m_pVM, "shaderSetUniformValue", Lua::shaderSetUniformValue);
+    lua_register(m_vm, "shaderCreate", Lua::shaderCreate);
+    lua_register(m_vm, "shaderDestroy", Lua::shaderDestroy);
+    lua_register(m_vm, "shaderGetUniform", Lua::shaderGetUniform);
+    lua_register(m_vm, "shaderSetUniformValue", Lua::shaderSetUniformValue);
 
     //Scene
-    lua_register(m_pVM, "sceneCreate", Lua::sceneCreate);
-    lua_register(m_pVM, "sceneDestroy", Lua::sceneDestroy);
+    lua_register(m_vm, "sceneCreate", Lua::sceneCreate);
+    lua_register(m_vm, "sceneDestroy", Lua::sceneDestroy);
 
-    lua_register(m_pVM, "sceneSetCamera", Lua::sceneSetCamera);
-    lua_register(m_pVM, "sceneGetCamera", Lua::sceneGetCamera);
+    lua_register(m_vm, "sceneSetCamera", Lua::sceneSetCamera);
+    lua_register(m_vm, "sceneGetCamera", Lua::sceneGetCamera);
 
-    lua_register(m_pVM, "sceneSetLight", Lua::sceneSetLight);
-    lua_register(m_pVM, "sceneGetLight", Lua::sceneGetLight);
+    lua_register(m_vm, "sceneSetLight", Lua::sceneSetLight);
+    lua_register(m_vm, "sceneGetLight", Lua::sceneGetLight);
 
     //Camera
-    lua_register(m_pVM, "cameraCreate", Lua::cameraCreate);
-    lua_register(m_pVM, "cameraDestroy", Lua::cameraDestroy);
+    lua_register(m_vm, "cameraCreate", Lua::cameraCreate);
+    lua_register(m_vm, "cameraDestroy", Lua::cameraDestroy);
 
-    lua_register(m_pVM, "cameraSetPosition", Lua::cameraSetPosition);
-    lua_register(m_pVM, "cameraGetPosition", Lua::cameraGetPosition);
+    lua_register(m_vm, "cameraSetPosition", Lua::cameraSetPosition);
+    lua_register(m_vm, "cameraGetPosition", Lua::cameraGetPosition);
 
-    lua_register(m_pVM, "cameraSetDirection", Lua::cameraSetDirection);
-    lua_register(m_pVM, "cameraGetDirection", Lua::cameraGetDirection);
+    lua_register(m_vm, "cameraSetDirection", Lua::cameraSetDirection);
+    lua_register(m_vm, "cameraGetDirection", Lua::cameraGetDirection);
 
-    lua_register(m_pVM, "cameraSetType", Lua::cameraSetType);
-    lua_register(m_pVM, "cameraGetType", Lua::cameraGetType);
+    lua_register(m_vm, "cameraSetType", Lua::cameraSetType);
+    lua_register(m_vm, "cameraGetType", Lua::cameraGetType);
 
-    lua_register(m_pVM, "cameraSetFOV", Lua::cameraSetFOV);
-    lua_register(m_pVM, "cameraGetFOV", Lua::cameraGetFOV);
+    lua_register(m_vm, "cameraSetFOV", Lua::cameraSetFOV);
+    lua_register(m_vm, "cameraGetFOV", Lua::cameraGetFOV);
 
-    lua_register(m_pVM, "cameraSetAspectRatio", Lua::cameraSetAspectRatio);
-    lua_register(m_pVM, "cameraGetAspectRatio", Lua::cameraGetAspectRatio);
+    lua_register(m_vm, "cameraSetAspectRatio", Lua::cameraSetAspectRatio);
+    lua_register(m_vm, "cameraGetAspectRatio", Lua::cameraGetAspectRatio);
 
-    lua_register(m_pVM, "cameraSetOrthoParams", Lua::cameraSetOrthoParams);
-    lua_register(m_pVM, "cameraGetOrthoParams", Lua::cameraGetOrthoParams);
+    lua_register(m_vm, "cameraSetOrthoParams", Lua::cameraSetOrthoParams);
+    lua_register(m_vm, "cameraGetOrthoParams", Lua::cameraGetOrthoParams);
 
-    lua_register(m_pVM, "cameraSetDepth", Lua::cameraSetDepth);
-    lua_register(m_pVM, "cameraGetDepth", Lua::cameraGetDepth);
+    lua_register(m_vm, "cameraSetDepth", Lua::cameraSetDepth);
+    lua_register(m_vm, "cameraGetDepth", Lua::cameraGetDepth);
 
-    lua_register(m_pVM, "cameraGetViewMatrix", Lua::cameraGetViewMatrix);
-    lua_register(m_pVM, "cameraGetProjectionMatrix", Lua::cameraGetProjectionMatrix);
+    lua_register(m_vm, "cameraGetViewMatrix", Lua::cameraGetViewMatrix);
+    lua_register(m_vm, "cameraGetProjectionMatrix", Lua::cameraGetProjectionMatrix);
 
     //Light
-    lua_register(m_pVM, "lightCreate", Lua::lightCreate);
-    lua_register(m_pVM, "lightDestroy", Lua::lightDestroy);
+    lua_register(m_vm, "lightCreate", Lua::lightCreate);
+    lua_register(m_vm, "lightDestroy", Lua::lightDestroy);
 
-    lua_register(m_pVM, "lightSetParams", Lua::lightSetParams);
-    lua_register(m_pVM, "lightGetParams", Lua::lightGetParams);
+    lua_register(m_vm, "lightSetParams", Lua::lightSetParams);
+    lua_register(m_vm, "lightGetParams", Lua::lightGetParams);
 
-    lua_register(m_pVM, "lightSetColor", Lua::lightSetColor);
-    lua_register(m_pVM, "lightGetColor", Lua::lightGetColor);
+    lua_register(m_vm, "lightSetColor", Lua::lightSetColor);
+    lua_register(m_vm, "lightGetColor", Lua::lightGetColor);
 
-    lua_register(m_pVM, "lightSetDirection", Lua::lightSetDirection);
-    lua_register(m_pVM, "lightGetDirection", Lua::lightGetDirection);
+    lua_register(m_vm, "lightSetDirection", Lua::lightSetDirection);
+    lua_register(m_vm, "lightGetDirection", Lua::lightGetDirection);
 
     //Animation
-    lua_register(m_pVM, "animationCreate", Lua::animationCreate);
-    lua_register(m_pVM, "animationDestroy", Lua::animationDestroy);
+    lua_register(m_vm, "animationCreate", Lua::animationCreate);
+    lua_register(m_vm, "animationDestroy", Lua::animationDestroy);
 
     //Sound
-    lua_register(m_pVM, "soundCreate", Lua::soundCreate);
-    lua_register(m_pVM, "soundDestroy", Lua::soundDestroy);
+    lua_register(m_vm, "soundCreate", Lua::soundCreate);
+    lua_register(m_vm, "soundDestroy", Lua::soundDestroy);
 
-    lua_register(m_pVM, "soundPlay", Lua::soundPlay);
-    lua_register(m_pVM, "soundPause", Lua::soundPause);
-    lua_register(m_pVM, "soundStop", Lua::soundStop);
+    lua_register(m_vm, "soundPlay", Lua::soundPlay);
+    lua_register(m_vm, "soundPause", Lua::soundPause);
+    lua_register(m_vm, "soundStop", Lua::soundStop);
 
-    lua_register(m_pVM, "soundIsLooped", Lua::soundIsLooped);
-    lua_register(m_pVM, "soundGetState", Lua::soundGetState);
+    lua_register(m_vm, "soundIsLooped", Lua::soundIsLooped);
+    lua_register(m_vm, "soundGetState", Lua::soundGetState);
 
-    lua_register(m_pVM, "soundSetSpeed", Lua::soundSetSpeed);
-    lua_register(m_pVM, "soundGetSpeed", Lua::soundGetSpeed);
+    lua_register(m_vm, "soundSetSpeed", Lua::soundSetSpeed);
+    lua_register(m_vm, "soundGetSpeed", Lua::soundGetSpeed);
 
-    lua_register(m_pVM, "soundSetVolume", Lua::soundSetVolume);
-    lua_register(m_pVM, "soundGetVolume", Lua::soundGetVolume);
+    lua_register(m_vm, "soundSetVolume", Lua::soundSetVolume);
+    lua_register(m_vm, "soundGetVolume", Lua::soundGetVolume);
 
-    lua_register(m_pVM, "soundSetTime", Lua::soundSetTime);
-    lua_register(m_pVM, "soundGetTime", Lua::soundGetTime);
-    lua_register(m_pVM, "soundGetDuration", Lua::soundGetDuration);
+    lua_register(m_vm, "soundSetTime", Lua::soundSetTime);
+    lua_register(m_vm, "soundGetTime", Lua::soundGetTime);
+    lua_register(m_vm, "soundGetDuration", Lua::soundGetDuration);
 
-    lua_register(m_pVM, "soundSet3DEnabled", Lua::soundSet3DEnabled);
-    lua_register(m_pVM, "soundGet3DEnabled", Lua::soundGet3DEnabled);
+    lua_register(m_vm, "soundSet3DEnabled", Lua::soundSet3DEnabled);
+    lua_register(m_vm, "soundGet3DEnabled", Lua::soundGet3DEnabled);
+    lua_register(m_vm, "soundSet3DPosition", Lua::soundSet3DPosition);
+    lua_register(m_vm, "soundGet3DPosition", Lua::soundGet3DPosition);
+    lua_register(m_vm, "soundSet3DDistance", Lua::soundSet3DDistance);
+    lua_register(m_vm, "soundGet3DDistance", Lua::soundGet3DDistance);
 
-    lua_register(m_pVM, "soundSet3DPosition", Lua::soundSet3DPosition);
-    lua_register(m_pVM, "soundGet3DPosition", Lua::soundGet3DPosition);
+    lua_register(m_vm, "soundSetListenerOrientation", Lua::soundSetListenerOrientation);
+    lua_register(m_vm, "soundGetListenerOrientation", Lua::soundSetListenerOrientation);
 
-    lua_register(m_pVM, "soundSet3DDistance", Lua::soundSet3DDistance);
-    lua_register(m_pVM, "soundGet3DDistance", Lua::soundGet3DDistance);
-
-    lua_register(m_pVM, "soundSetListenerOrientation", Lua::soundSetListenerOrientation);
-    lua_register(m_pVM, "soundGetListenerOrientation", Lua::soundSetListenerOrientation);
-
-    lua_register(m_pVM, "soundSetGlobalVolume", Lua::soundSetGlobalVolume);
-    lua_register(m_pVM, "soundGetGlobalVolume", Lua::soundGetGlobalVolume);
+    lua_register(m_vm, "soundSetGlobalVolume", Lua::soundSetGlobalVolume);
+    lua_register(m_vm, "soundGetGlobalVolume", Lua::soundGetGlobalVolume);
 
     //Render Target
-    lua_register(m_pVM, "rtCreate", Lua::rtCreate);
-    lua_register(m_pVM, "rtDestroy", Lua::rtDestroy);
+    lua_register(m_vm, "rtCreate", Lua::rtCreate);
+    lua_register(m_vm, "rtDestroy", Lua::rtDestroy);
 
-    lua_register(m_pVM, "rtDraw", Lua::rtDraw);
+    lua_register(m_vm, "rtDraw", Lua::rtDraw);
 
     //Texture
-    lua_register(m_pVM, "textureCreate", Lua::textureCreate);
-    lua_register(m_pVM, "textureDestroy", Lua::textureDestroy);
+    lua_register(m_vm, "textureCreate", Lua::textureCreate);
+    lua_register(m_vm, "textureDestroy", Lua::textureDestroy);
 
-    lua_register(m_pVM, "textureDraw", Lua::textureDraw);
+    lua_register(m_vm, "textureDraw", Lua::textureDraw);
 
     //Font
-    lua_register(m_pVM, "fontCreate", Lua::fontCreate);
-    lua_register(m_pVM, "fontDestroy", Lua::fontDestroy);
-    lua_register(m_pVM, "fontGetTextWidth", Lua::fontGetTextWidth);
-    lua_register(m_pVM, "fontGetTextHeight", Lua::fontGetTextHeight);
-    lua_register(m_pVM, "fontDraw", Lua::fontDraw);
+    lua_register(m_vm, "fontCreate", Lua::fontCreate);
+    lua_register(m_vm, "fontDestroy", Lua::fontDestroy);
+    lua_register(m_vm, "fontGetTextWidth", Lua::fontGetTextWidth);
+    lua_register(m_vm, "fontGetTextHeight", Lua::fontGetTextHeight);
+    lua_register(m_vm, "fontDraw", Lua::fontDraw);
 
     //File
-    lua_register(m_pVM, "fileCreate", Lua::fileCreate);
-    lua_register(m_pVM, "fileOpen", Lua::fileOpen);
-    lua_register(m_pVM, "fileClose", Lua::fileClose);
+    lua_register(m_vm, "fileCreate", Lua::fileCreate);
+    lua_register(m_vm, "fileOpen", Lua::fileOpen);
+    lua_register(m_vm, "fileClose", Lua::fileClose);
 
-    lua_register(m_pVM, "fileRead", Lua::fileRead);
-    lua_register(m_pVM, "fileWrite", Lua::fileWrite);
+    lua_register(m_vm, "fileRead", Lua::fileRead);
+    lua_register(m_vm, "fileWrite", Lua::fileWrite);
 
-    lua_register(m_pVM, "fileGetSize", Lua::fileGetSize);
+    lua_register(m_vm, "fileGetSize", Lua::fileGetSize);
 
-    lua_register(m_pVM, "fileSetPosition", Lua::fileSetPosition);
-    lua_register(m_pVM, "fileGetPosition", Lua::fileGetPosition);
+    lua_register(m_vm, "fileSetPosition", Lua::fileSetPosition);
+    lua_register(m_vm, "fileGetPosition", Lua::fileGetPosition);
 
-    lua_register(m_pVM, "fileGetPath", Lua::fileGetPath);
+    lua_register(m_vm, "fileGetPath", Lua::fileGetPath);
 
-    lua_register(m_pVM, "fileIsEOF", Lua::fileIsEOF);
+    lua_register(m_vm, "fileIsEOF", Lua::fileIsEOF);
 
-    lua_register(m_pVM, "fileDelete", Lua::fileDelete);
-    lua_register(m_pVM, "fileRename", Lua::fileRename);
+    lua_register(m_vm, "fileDelete", Lua::fileDelete);
+    lua_register(m_vm, "fileRename", Lua::fileRename);
 
     //Collision
-    lua_register(m_pVM, "collisionCreate", Lua::collisionCreate);
-    lua_register(m_pVM, "collisionDestroy", Lua::collisionDestroy);
+    lua_register(m_vm, "collisionCreate", Lua::collisionCreate);
+    lua_register(m_vm, "collisionDestroy", Lua::collisionDestroy);
 
-    lua_register(m_pVM, "collisionSetPosition", Lua::collisionSetPosition);
-    lua_register(m_pVM, "collisionGetPosition", Lua::collisionGetPosition);
-
-    lua_register(m_pVM, "collisionSetRotation", Lua::collisionSetRotation);
-    lua_register(m_pVM, "collisionGetRotation", Lua::collisionGetRotation);
+    lua_register(m_vm, "collisionSetPosition", Lua::collisionSetPosition);
+    lua_register(m_vm, "collisionGetPosition", Lua::collisionGetPosition);
+    lua_register(m_vm, "collisionSetRotation", Lua::collisionSetRotation);
+    lua_register(m_vm, "collisionGetRotation", Lua::collisionGetRotation);
 
     //Rendering
-    lua_register(m_pVM, "setActiveScene", Lua::setActiveScene);
-    lua_register(m_pVM, "setActiveShader", Lua::setActiveShader);
-    lua_register(m_pVM, "setRenderTarget", Lua::setRenderTarget);
+    lua_register(m_vm, "setActiveScene", Lua::setActiveScene);
+    lua_register(m_vm, "setActiveShader", Lua::setActiveShader);
+    lua_register(m_vm, "setRenderTarget", Lua::setRenderTarget);
 
     //Events
-    lua_register(m_pVM, "addEvent", Lua::addEvent);
-    lua_register(m_pVM, "setEventMute", Lua::setEventMute);
-    lua_register(m_pVM, "removeEvent", Lua::removeEvent);
+    lua_register(m_vm, "addEvent", Lua::addEvent);
+    lua_register(m_vm, "setEventMute", Lua::setEventMute);
+    lua_register(m_vm, "removeEvent", Lua::removeEvent);
 
     //OpenGL
-    lua_register(m_pVM, "oglClear", Lua::oglClear);
-    lua_register(m_pVM, "oglClearColor", Lua::oglClearColor);
-    lua_register(m_pVM, "oglViewport", Lua::oglViewport);
-    lua_register(m_pVM, "oglPolygonMode", Lua::oglPolygonMode);
+    lua_register(m_vm, "oglClear", Lua::oglClear);
+    lua_register(m_vm, "oglClearColor", Lua::oglClearColor);
+    lua_register(m_vm, "oglViewport", Lua::oglViewport);
+    lua_register(m_vm, "oglPolygonMode", Lua::oglPolygonMode);
 
     //Sfml
-    lua_register(m_pVM, "setCursorMode", Lua::setCursorMode);
+    lua_register(m_vm, "setCursorMode", Lua::setCursorMode);
+    lua_register(m_vm, "setCursorPosition", Lua::setCursorPosition);
+    lua_register(m_vm, "getCursorPosition", Lua::getCursorPosition);
 
-    lua_register(m_pVM, "setCursorPosition", Lua::setCursorPosition);
-    lua_register(m_pVM, "getCursorPosition", Lua::getCursorPosition);
+    lua_register(m_vm, "isKeyPressed", Lua::isKeyPressed);
+    lua_register(m_vm, "isMouseKeyPressed", Lua::isMouseKeyPressed);
 
-    lua_register(m_pVM, "isKeyPressed", Lua::isKeyPressed);
-    lua_register(m_pVM, "isMouseKeyPressed", Lua::isMouseKeyPressed);
+    lua_register(m_vm, "getTime", Lua::getTime);
 
-    lua_register(m_pVM, "getTime", Lua::getTime);
+    lua_register(m_vm, "getWindowPosition", Lua::getWindowPosition);
+    lua_register(m_vm, "getWindowSize", Lua::getWindowSize);
+    lua_register(m_vm, "setWindowVSync", Lua::setWindowVSync);
+    lua_register(m_vm, "setWindowFramelimit", Lua::setWindowFramelimit);
+    lua_register(m_vm, "setWindowTitle", Lua::setWindowTitle);
+    lua_register(m_vm, "setWindowIcon", Lua::setWindowIcon);
+    lua_register(m_vm, "requestWindowFocus", Lua::requestWindowFocus);
+    lua_register(m_vm, "getWindowFocus", Lua::getWindowFocus);
 
-    lua_register(m_pVM, "getWindowPosition", Lua::getWindowPosition);
-    lua_register(m_pVM, "getWindowSize", Lua::getWindowSize);
-    lua_register(m_pVM, "setWindowVSync", Lua::setWindowVSync);
-    lua_register(m_pVM, "setWindowFramelimit", Lua::setWindowFramelimit);
-    lua_register(m_pVM, "setWindowTitle", Lua::setWindowTitle);
-    lua_register(m_pVM, "setWindowIcon", Lua::setWindowIcon);
-    lua_register(m_pVM, "requestWindowFocus", Lua::requestWindowFocus);
-    lua_register(m_pVM, "getWindowFocus", Lua::getWindowFocus);
+    lua_register(m_vm, "isJoypadConnected", Lua::isJoypadConnected);
+    lua_register(m_vm, "joypadGetButtonCount", Lua::joypadGetButtonCount);
+    lua_register(m_vm, "joypadGetButtonState", Lua::joypadGetButtonState);
+    lua_register(m_vm, "joypadHasAxis", Lua::joypadHasAxis);
+    lua_register(m_vm, "joypadGetAxisValue", Lua::joypadGetAxisValue);
 
-    lua_register(m_pVM, "isJoypadConnected", Lua::isJoypadConnected);
-    lua_register(m_pVM, "joypadGetButtonCount", Lua::joypadGetButtonCount);
-    lua_register(m_pVM, "joypadGetButtonState", Lua::joypadGetButtonState);
-    lua_register(m_pVM, "joypadHasAxis", Lua::joypadHasAxis);
-    lua_register(m_pVM, "joypadGetAxisValue", Lua::joypadGetAxisValue);
-
-    lua_register(m_pVM, "closeApplication", Lua::closeApp);
+    lua_register(m_vm, "closeApplication", Lua::closeApp);
 
     //Bullet Physics
-    lua_register(m_pVM, "physicsSetEnabled", Lua::physicsSetEnabled);
-    lua_register(m_pVM, "physicsGetEnabled", Lua::physicsGetEnabled);
+    lua_register(m_vm, "physicsSetEnabled", Lua::physicsSetEnabled);
+    lua_register(m_vm, "physicsGetEnabled", Lua::physicsGetEnabled);
 
-    lua_register(m_pVM, "physicsSetFloorEnabled", Lua::physicsSetFloorEnabled);
-    lua_register(m_pVM, "physicsGetFloorEnabled", Lua::physicsGetFloorEnabled);
+    lua_register(m_vm, "physicsSetFloorEnabled", Lua::physicsSetFloorEnabled);
+    lua_register(m_vm, "physicsGetFloorEnabled", Lua::physicsGetFloorEnabled);
 
-    lua_register(m_pVM, "physicsSetGravity", Lua::physicsSetGravity);
-    lua_register(m_pVM, "physicsGetGravity", Lua::physicsGetGravity);
+    lua_register(m_vm, "physicsSetGravity", Lua::physicsSetGravity);
+    lua_register(m_vm, "physicsGetGravity", Lua::physicsGetGravity);
 
-    lua_register(m_pVM, "physicsRayCast", Lua::physicsRayCast);
+    lua_register(m_vm, "physicsRayCast", Lua::physicsRayCast);
 
-    lua_register(m_pVM, "physicsSetModelsCollidable", Lua::physicsSetModelsCollidable);
+    lua_register(m_vm, "physicsSetModelsCollidable", Lua::physicsSetModelsCollidable);
 
     //Elements
-    lua_register(m_pVM, "isElement", Lua::isElement);
-    lua_register(m_pVM, "getElementType", Lua::getElementType);
+    lua_register(m_vm, "isElement", Lua::isElement);
+    lua_register(m_vm, "getElementType", Lua::getElementType);
 
     //System
-    lua_register(m_pVM, "getTickCount", Lua::getTickCount);
+    lua_register(m_vm, "getTickCount", Lua::getTickCount);
 
     //Network
-    lua_register(m_pVM, "networkConnect", Lua::networkConnect);
-    lua_register(m_pVM, "networkDisconnect", Lua::networkDisconnect);
-    lua_register(m_pVM, "networkSendData", Lua::networkSendData);
-    lua_register(m_pVM, "networkGetState", Lua::networkGetState);
-    lua_register(m_pVM, "networkGetPing", Lua::networkGetPing);
+    lua_register(m_vm, "networkConnect", Lua::networkConnect);
+    lua_register(m_vm, "networkDisconnect", Lua::networkDisconnect);
+    lua_register(m_vm, "networkSendData", Lua::networkSendData);
+    lua_register(m_vm, "networkGetState", Lua::networkGetState);
+    lua_register(m_vm, "networkGetPing", Lua::networkGetPing);
 
     m_eventManager = new EventManager(this);
 }
 ROC::LuaManager::~LuaManager()
 {
-    lua_close(m_pVM);
+    lua_close(m_vm);
     delete m_eventManager;
 }
 
 bool ROC::LuaManager::OpenFile(std::string &f_path)
 {
-    int error = luaL_loadfile(m_pVM, f_path.c_str()) || lua_pcall(m_pVM, 0, 0, 0);
+    int error = luaL_loadfile(m_vm, f_path.c_str()) || lua_pcall(m_vm, 0, 0, 0);
     if(error)
     {
         std::string l_log;
-        l_log.append(lua_tostring(m_pVM, -1));
+        l_log.append(lua_tostring(m_vm, -1));
         m_core->GetLogManager()->Log(l_log);
-        lua_pop(m_pVM, 1);
+        lua_pop(m_vm, 1);
     }
     return (error == 0);
 }
 
 void ROC::LuaManager::CallFunction(int f_func, LuaArguments *f_args)
 {
-    lua_rawgeti(m_pVM, LUA_REGISTRYINDEX, f_func);
-    f_args->ProccessArguments(m_pVM);
-    if(lua_pcall(m_pVM, f_args->GetArgumentsValue(), 0, 0))
+    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func);
+    f_args->ProccessArguments(m_vm);
+    if(lua_pcall(m_vm, f_args->GetArgumentsValue(), 0, 0))
     {
         std::string l_log;
-        l_log.append(lua_tostring(m_pVM, -1));
+        l_log.append(lua_tostring(m_vm, -1));
         m_core->GetLogManager()->Log(l_log);
     }
 }

@@ -78,10 +78,7 @@ void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
 }
 void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 {
-    btVector3 l_grav = m_dynamicWorld->getGravity();
-    f_grav.x = l_grav.x();
-    f_grav.y = l_grav.y();
-    f_grav.z = l_grav.z();
+    std::memcpy(&f_grav, m_dynamicWorld->getGravity().m_floats, sizeof(glm::vec3));
 }
 
 bool ROC::PhysicsManager::SetModelCollision(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
