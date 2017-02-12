@@ -59,7 +59,11 @@ ROC::Core::~Core()
 
 ROC::Core* ROC::Core::Init()
 {
-    if(!m_instance) m_instance = new Core();
+    if(!m_instance)
+    {
+        m_instance = new Core();
+        SystemTick::UpdateTick();
+    }
     return m_instance;
 }
 void ROC::Core::Terminate()
