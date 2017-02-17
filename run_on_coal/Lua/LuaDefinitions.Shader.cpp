@@ -77,7 +77,7 @@ int shaderSetUniformValue(lua_State *f_vm)
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
     argStream.ReadInteger(l_uniform);
     argStream.ReadText(l_type);
-    if(!argStream.HasErrors() && (l_uniform >= 0 && l_uniform <= 255) && !l_type.empty())
+    if(!argStream.HasErrors() && (l_uniform != -1) && !l_type.empty())
     {
         switch(Utils::ReadEnumVector(g_uniformTypesTable, l_type))
         {

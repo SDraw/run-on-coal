@@ -251,6 +251,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
 
 GLint ROC::Shader::GetUniform(std::string &f_uname)
 {
+    // Usually it returns value from 0 to 255, but sometimes it returns memory address. Weird OpenGL...
     return glGetUniformLocation(m_program, f_uname.c_str());
 }
 
