@@ -57,8 +57,8 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     sf::ContextSettings l_contextSettings = sf::ContextSettings();
     l_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
     l_contextSettings.depthBits = 24U;
-    l_contextSettings.majorVersion = 4U;
-    l_contextSettings.minorVersion = 0U;
+    l_contextSettings.majorVersion = 3U; // Minimum major version
+    l_contextSettings.minorVersion = 0U; // Minimum minor version
 #ifdef _DEBUG
     l_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Debug;
 #endif
