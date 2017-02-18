@@ -58,15 +58,15 @@ public:
     bool PauseAnimation();
     bool ResetAnimation();
     bool SetAnimationSpeed(float f_val);
-    inline float GetAnimationSpeed() { return (m_animation ? m_animationSpeed : -1.f); }
+    inline float GetAnimationSpeed() const { return (m_animation ? m_animationSpeed : -1.f); }
     bool SetAnimationProgress(float f_val);
-    float GetAnimationProgress();
+    float GetAnimationProgress() const;
 
-    inline bool HasSkeleton() { return (m_skeleton != NULL); }
-    bool HasSkeletonStaticBoneCollision();
-    bool HasSkeletonDynamicBoneCollision();
+    inline bool HasSkeleton() const { return (m_skeleton != NULL); }
+    bool HasSkeletonStaticBoneCollision() const;
+    bool HasSkeletonDynamicBoneCollision() const;
 
-    inline bool HasCollision() { return (m_rigidBody != NULL); }
+    inline bool HasCollision() const { return (m_rigidBody != NULL); }
     inline btRigidBody* GetRigidBody() { return m_rigidBody; }
     bool SetVelocity(glm::vec3 &f_val);
     bool GetVelocity(glm::vec3 &f_val);
@@ -74,10 +74,10 @@ public:
     bool GetAngularVelocity(glm::vec3 &f_val);
     float GetMass();
     bool SetFriction(float f_val);
-    inline float GetFriction() { return (m_rigidBody ? m_rigidBody->getFriction() : -1.f); }
+    inline float GetFriction() const { return (m_rigidBody ? m_rigidBody->getFriction() : -1.f); }
 
-    inline bool IsDrawable() { return (m_geometry != NULL); }
-    inline int GetType() { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
+    inline bool IsDrawable() const { return (m_geometry != NULL); }
+    inline int GetType() const { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
 protected:
     explicit Model(Geometry *f_geometry);
     ~Model();

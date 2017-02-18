@@ -14,11 +14,11 @@ namespace Lua
 int setActiveScene(lua_State *f_vm)
 {
     Scene *l_scene;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_scene), ElementType::SceneElement);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetRenderManager()->SetActiveScene(l_scene);
+        LuaManager::GetCore()->GetRenderManager()->SetActiveScene(l_scene);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -27,11 +27,11 @@ int setActiveScene(lua_State *f_vm)
 int setActiveShader(lua_State *f_vm)
 {
     Shader *l_shader;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetRenderManager()->SetActiveShader(l_shader);
+        LuaManager::GetCore()->GetRenderManager()->SetActiveShader(l_shader);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -40,9 +40,9 @@ int setActiveShader(lua_State *f_vm)
 int setRenderTarget(lua_State *f_vm)
 {
     RenderTarget *l_rt = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadNextUserdata(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
-    LuaManager::m_corePointer->GetRenderManager()->SetRenderTarget(l_rt);
+    LuaManager::GetCore()->GetRenderManager()->SetRenderTarget(l_rt);
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }

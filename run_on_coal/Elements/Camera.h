@@ -24,12 +24,12 @@ class Camera
     glm::vec4 m_planes[6];
 public:
     void SetType(unsigned char f_type);
-    inline unsigned char GetType() { return m_type; }
+    inline unsigned char GetType() const { return m_type; }
 
     void SetFOV(float f_fov);
-    inline float GetFOV() { return m_fov; }
+    inline float GetFOV() const { return m_fov; }
     void SetAspectRatio(float f_ratio);
-    inline float GetAspectRatio() { return m_aspectRatio; }
+    inline float GetAspectRatio() const { return m_aspectRatio; }
     void SetOrthoParams(glm::vec4 &f_size);
     inline void GetOrthoParams(glm::vec4 &f_size) { std::memcpy(&f_size, &m_orthoParams, sizeof(glm::vec4)); }
     void SetDepth(glm::vec2 &f_depth);

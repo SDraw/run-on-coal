@@ -1,10 +1,8 @@
 #include "stdafx.h"
 #include "Managers/SoundManager.h"
 
-ROC::SoundManager::SoundManager(Core *f_core)
+ROC::SoundManager::SoundManager()
 {
-    m_core = f_core;
-
     m_listenerPosition = glm::vec3(0.f);
     m_listenerDirection = glm::vec3(0.f, 0.f, -1.f);
     m_listenerUp = glm::vec3(0.f, 1.f, 0.f);

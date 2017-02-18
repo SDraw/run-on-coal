@@ -17,7 +17,7 @@ class SfmlManager
     SfmlManager(const SfmlManager& that);
     SfmlManager &operator =(const SfmlManager &that);
 public:
-    inline float GetTime() { return m_time; }
+    inline float GetTime() const { return m_time; }
 protected:
     explicit SfmlManager(Core *f_core);
     ~SfmlManager();

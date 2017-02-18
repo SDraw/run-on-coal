@@ -18,6 +18,9 @@ class NetworkManager
     std::vector<Client*> m_clientVector;
 
     LuaArguments *m_argument;
+
+    NetworkManager(const NetworkManager& that);
+    NetworkManager &operator =(const NetworkManager &that);
 public:
     bool Disconnect(Client *f_client);
     bool SendData(Client *f_client, std::string &f_data);

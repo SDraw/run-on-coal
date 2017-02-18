@@ -26,12 +26,12 @@ ROC::Core::Core()
     std::regex_replace(std::back_inserter(m_workingDir), l_appPath.begin(), l_appPath.end(), l_regex, "/");
     delete[]l_pathBuf;
 
-    m_configManager = new ConfigManager(this);
+    m_configManager = new ConfigManager();
     m_logManager = new LogManager(this);
-    m_memoryManager = new MemoryManager(this);
+    m_memoryManager = new MemoryManager();
     m_inheritManager = new InheritanceManager(this);
     m_elementManager = new ElementManager(this);
-    m_soundManager = new SoundManager(this);
+    m_soundManager = new SoundManager();
     m_physicsManager = new PhysicsManager(this);
     m_luaManager = new LuaManager(this);
     m_sfmlManager = new SfmlManager(this);

@@ -274,7 +274,7 @@ void ROC::RenderManager::DoPulse()
     m_core->GetSfmlManager()->SwapBuffers();
 }
 
-void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader)
+void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader) const
 {
     if(m_activeShader != f_shader) f_shader->Enable(false);
 }

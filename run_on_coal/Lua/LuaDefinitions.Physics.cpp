@@ -16,11 +16,11 @@ namespace Lua
 int physicsSetEnabled(lua_State *f_vm)
 {
     bool l_val;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadBoolean(l_val);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetPhysicsManager()->SetPhysicsEnabled(l_val);
+        LuaManager::GetCore()->GetPhysicsManager()->SetPhysicsEnabled(l_val);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -28,19 +28,19 @@ int physicsSetEnabled(lua_State *f_vm)
 }
 int physicsGetEnabled(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.PushBoolean(LuaManager::m_corePointer->GetPhysicsManager()->GetPhysicsEnabled());
+    ArgReader argStream(f_vm);
+    argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetPhysicsEnabled());
     return argStream.GetReturnValue();
 }
 
 int physicsSetFloorEnabled(lua_State *f_vm)
 {
     bool l_val;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadBoolean(l_val);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetPhysicsManager()->SetFloorEnabled(l_val);
+        LuaManager::GetCore()->GetPhysicsManager()->SetFloorEnabled(l_val);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -48,19 +48,19 @@ int physicsSetFloorEnabled(lua_State *f_vm)
 }
 int physicsGetFloorEnabled(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.PushBoolean(LuaManager::m_corePointer->GetPhysicsManager()->GetFloorEnabled());
+    ArgReader argStream(f_vm);
+    argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetFloorEnabled());
     return argStream.GetReturnValue();
 }
 
 int physicsSetGravity(lua_State *f_vm)
 {
     glm::vec3 l_gravity;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gravity[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetPhysicsManager()->SetGravity(l_gravity);
+        LuaManager::GetCore()->GetPhysicsManager()->SetGravity(l_gravity);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -68,9 +68,9 @@ int physicsSetGravity(lua_State *f_vm)
 }
 int physicsGetGravity(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     glm::vec3 l_grav;
-    LuaManager::m_corePointer->GetPhysicsManager()->GetGravity(l_grav);
+    LuaManager::GetCore()->GetPhysicsManager()->GetGravity(l_grav);
     argStream.PushNumber(l_grav.x);
     argStream.PushNumber(l_grav.y);
     argStream.PushNumber(l_grav.z);
@@ -80,14 +80,14 @@ int physicsGetGravity(lua_State *f_vm)
 int physicsRayCast(lua_State *f_vm)
 {
     glm::vec3 l_start, l_end;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_start[i]);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_end[i]);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_hitNormal;
         void *l_hitElement = NULL;
-        if(LuaManager::m_corePointer->GetPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, &l_hitElement))
+        if(LuaManager::GetCore()->GetPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, &l_hitElement))
         {
             argStream.PushNumber(l_end.x);
             argStream.PushNumber(l_end.y);
@@ -107,13 +107,13 @@ int physicsSetModelsCollidable(lua_State *f_vm)
 {
     Model *l_model1, *l_model2;
     bool l_state;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model1), ElementType::ModelElement);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_model2), ElementType::ModelElement);
     argStream.ReadBoolean(l_state);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetPhysicsManager()->SetModelsCollidable(l_model1, l_model2, l_state);
+        bool l_result = LuaManager::GetCore()->GetPhysicsManager()->SetModelsCollidable(l_model1, l_model2, l_state);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

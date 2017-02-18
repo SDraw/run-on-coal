@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LuaArguments.h"
+#include "Lua/LuaArguments.h"
 
 ROC::LuaArguments::LuaArguments()
 {
@@ -38,4 +38,31 @@ void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
                 break;
         }
     }
+}
+
+
+ROC::LuaArguments::LuaArgument::LuaArgument(int f_val)
+{
+    m_value.m_int = f_val;
+    m_type = Integer;
+}
+ROC::LuaArguments::LuaArgument::LuaArgument(double f_val)
+{
+    m_value.m_double = f_val;
+    m_type = Double;
+}
+ROC::LuaArguments::LuaArgument::LuaArgument(float f_val)
+{
+    m_value.m_float = f_val;
+    m_type = Float;
+}
+ROC::LuaArguments::LuaArgument::LuaArgument(void *f_val)
+{
+    m_value.m_pointer = f_val;
+    m_type = Pointer;
+}
+ROC::LuaArguments::LuaArgument::LuaArgument(std::string *f_val)
+{
+    m_value.m_string = f_val;
+    m_type = String;
 }

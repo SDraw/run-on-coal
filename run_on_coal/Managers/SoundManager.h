@@ -3,11 +3,8 @@
 namespace ROC
 {
 
-class Core;
 class SoundManager
 {
-    Core *m_core;
-
     glm::vec3 m_listenerPosition;
     glm::vec3 m_listenerDirection;
     glm::vec3 m_listenerUp;
@@ -21,11 +18,11 @@ public:
     inline void GetListenerUp(glm::vec3 &f_up) { std::memcpy(&f_up, &m_listenerUp, sizeof(glm::vec3)); }
 
     void SetGlobalVolume(float f_val);
-    inline float GetGlobalVolume() { return m_globalVolume; }
+    inline float GetGlobalVolume() const { return m_globalVolume; }
 protected:
-    explicit SoundManager(Core *f_core);
+    SoundManager();
     ~SoundManager();
-    friend Core;
+    friend class Core;
 };
 
 }

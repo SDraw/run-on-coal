@@ -20,14 +20,14 @@ const std::vector<std::string> g_cameraTypesTable
 int cameraCreate(lua_State *f_vm)
 {
     std::string l_text;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
         int l_type = Utils::ReadEnumVector(g_cameraTypesTable, l_text);
         if(l_type != -1)
         {
-            Camera *l_camera = LuaManager::m_corePointer->GetElementManager()->CreateCamera(CAMERA_PROJECTION_PERSPECTIVE + static_cast<unsigned char>(l_type));
+            Camera *l_camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(CAMERA_PROJECTION_PERSPECTIVE + static_cast<unsigned char>(l_type));
             l_camera ? argStream.PushPointer(l_camera) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
@@ -38,11 +38,11 @@ int cameraCreate(lua_State *f_vm)
 int cameraDestroy(lua_State *f_vm)
 {
     Camera *l_camera;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetElementManager()->DestroyCamera(l_camera);
+        LuaManager::GetCore()->GetElementManager()->DestroyCamera(l_camera);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -53,7 +53,7 @@ int cameraSetPosition(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     glm::vec3 l_pos;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
@@ -67,7 +67,7 @@ int cameraSetPosition(lua_State *f_vm)
 int cameraGetPosition(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
@@ -85,7 +85,7 @@ int cameraSetDirection(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     glm::vec3 l_dir;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
     if(!argStream.HasErrors())
@@ -99,7 +99,7 @@ int cameraSetDirection(lua_State *f_vm)
 int cameraGetDirection(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
@@ -117,7 +117,7 @@ int cameraSetType(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     std::string l_text;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
@@ -136,7 +136,7 @@ int cameraSetType(lua_State *f_vm)
 int cameraGetType(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
@@ -160,7 +160,7 @@ int cameraSetFOV(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     float l_fov;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     argStream.ReadNumber(l_fov);
     if(!argStream.HasErrors())
@@ -174,7 +174,7 @@ int cameraSetFOV(lua_State *f_vm)
 int cameraGetFOV(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetFOV()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -184,7 +184,7 @@ int cameraSetAspectRatio(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     float l_ratio;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     argStream.ReadNumber(l_ratio);
     if(!argStream.HasErrors())
@@ -198,7 +198,7 @@ int cameraSetAspectRatio(lua_State *f_vm)
 int cameraGetAspectRatio(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetAspectRatio()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -208,7 +208,7 @@ int cameraSetOrthoParams(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     glm::vec4 l_params;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_params[i]);
     if(!argStream.HasErrors())
@@ -222,7 +222,7 @@ int cameraSetOrthoParams(lua_State *f_vm)
 int cameraGetOrthoParams(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
@@ -241,7 +241,7 @@ int cameraSetDepth(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
     glm::vec2 l_depth;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_depth[i]);
     if(!argStream.HasErrors())
@@ -255,7 +255,7 @@ int cameraSetDepth(lua_State *f_vm)
 int cameraGetDepth(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
@@ -271,7 +271,7 @@ int cameraGetDepth(lua_State *f_vm)
 int cameraGetViewMatrix(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
@@ -286,7 +286,7 @@ int cameraGetViewMatrix(lua_State *f_vm)
 int cameraGetProjectionMatrix(lua_State *f_vm)
 {
     Camera *l_camera = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {

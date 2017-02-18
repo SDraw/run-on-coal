@@ -22,11 +22,14 @@ class NetworkManager
     NetworkState m_networkState;
 
     LuaArguments *m_argument;
+
+    NetworkManager(const NetworkManager& that);
+    NetworkManager &operator =(const NetworkManager &that);
 public:
     bool Connect(std::string &f_ip, unsigned short f_port);
     bool Disconnect();
     bool SendData(std::string &f_data);
-    inline unsigned char GetNetworkState() { return m_networkState; }
+    inline unsigned char GetNetworkState() const { return m_networkState; }
     int GetPing();
 protected:
     explicit NetworkManager(Core *f_core);

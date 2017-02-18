@@ -26,7 +26,7 @@ int textureCreate(lua_State *f_vm)
 {
     std::string l_type, l_filtering;
     bool l_compress = false;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_type);
     argStream.ReadNextText(l_filtering);
     argStream.ReadNextBoolean(l_compress);
@@ -42,13 +42,13 @@ int textureCreate(lua_State *f_vm)
             {
                 std::string l_path;
                 argStream.ReadText(l_path);
-                if(!argStream.HasErrors() && !l_path.empty()) l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path, TEXTURE_TYPE_RGB + l_textureType, static_cast<unsigned char>(l_filteringType), l_compress);
+                if(!argStream.HasErrors() && !l_path.empty()) l_tex = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, TEXTURE_TYPE_RGB + l_textureType, static_cast<unsigned char>(l_filteringType), l_compress);
             } break;
             case 2:
             {
                 std::vector<std::string> l_path;
                 argStream.ReadTableTexts(l_path, 6);
-                if(!argStream.HasErrors()) l_tex = LuaManager::m_corePointer->GetElementManager()->CreateTexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
+                if(!argStream.HasErrors()) l_tex = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
             } break;
         }
         l_tex ? argStream.PushPointer(l_tex) : argStream.PushBoolean(false);
@@ -59,11 +59,11 @@ int textureCreate(lua_State *f_vm)
 int textureDestroy(lua_State *f_vm)
 {
     Texture *l_tex;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyTexture(l_tex);
+        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyTexture(l_tex);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -75,7 +75,7 @@ int textureDraw(lua_State *f_vm)
     glm::vec2 l_pos, l_size;
     float l_rot = 0.f;
     glm::vec4 l_color(1.f);
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
@@ -83,7 +83,7 @@ int textureDraw(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetRenderManager()->Render(l_tex, l_pos, l_size, l_rot, l_color);
+        LuaManager::GetCore()->GetRenderManager()->Render(l_tex, l_pos, l_size, l_rot, l_color);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

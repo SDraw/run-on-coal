@@ -457,7 +457,7 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
         }
     }
 }
-void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value)
+void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value) const
 {
     if(m_bonesUBO != GL_INVALID_INDEX)
     {

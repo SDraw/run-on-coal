@@ -33,7 +33,7 @@ ROC::Font::Font()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    for(auto &iter : m_vertices) iter.z = 0.5f;
+    for(auto &iter : m_vertices) iter.z = 1.0f;
     m_filteringType = 0;
 }
 ROC::Font::~Font()

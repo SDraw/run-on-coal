@@ -15,7 +15,7 @@ protected:
     Quad();
     ~Quad();
     void SetProportions(glm::vec2 &f_size, bool f_bind);
-    inline GLuint GetVAO() { return m_VAO; }
+    inline GLuint GetVAO() const { return m_VAO; }
     void Draw(bool f_bind);
     friend class RenderManager;
 };

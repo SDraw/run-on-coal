@@ -10,12 +10,12 @@
 #include "Lua/LuaDefinitions.Sfml.h"
 #include "Lua/LuaDefinitions.Utils.h"
 
-ROC::Core* ROC::LuaManager::m_corePointer = NULL;
+ROC::Core* ROC::LuaManager::m_coreStatic = NULL;
 
 ROC::LuaManager::LuaManager(Core *f_core)
 {
     m_core = f_core;
-    m_corePointer = f_core;
+    m_coreStatic = f_core;
 
     m_pVM = luaL_newstate();
     luaL_requiref(m_pVM, "_G", luaopen_base, 1);

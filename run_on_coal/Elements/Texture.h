@@ -13,15 +13,18 @@ class Texture
     GLuint m_texture;
     void GenerateBrokenTexture();
 public:
-    inline bool IsTransparent() { return (m_type == TEXTURE_TYPE_RGBA); }
-    inline bool IsCubic() { return (m_type == TEXTURE_TYPE_CUBEMAP); }
+    inline bool IsTransparent() const { return (m_type == TEXTURE_TYPE_RGBA); }
+    inline bool IsCubic() const { return (m_type == TEXTURE_TYPE_CUBEMAP); }
 protected:
     Texture();
     ~Texture();
+
     bool Load(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress);
     bool LoadCubemap(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
-    inline GLuint GetID() { return m_texture; }
+
+    inline GLuint GetID() const { return m_texture; }
     void Bind(unsigned int f_bind);
+
     friend class ElementManager;
     friend class Material;
     friend class RenderManager;

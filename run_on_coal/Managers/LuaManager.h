@@ -9,6 +9,7 @@ class LuaArguments;
 class LuaManager
 {
     Core *m_core;
+    static Core *m_coreStatic;
 
     lua_State *m_vm;
     EventManager *m_eventManager;
@@ -16,7 +17,7 @@ class LuaManager
     LuaManager(const LuaManager& that);
     LuaManager &operator =(const LuaManager &that);
 public:
-    static Core *m_corePointer;
+    static inline Core* GetCore() { return m_coreStatic; }
     bool OpenFile(std::string &f_path);
     inline EventManager* GetEventManager() { return m_eventManager; }
 protected:

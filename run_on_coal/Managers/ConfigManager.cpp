@@ -13,10 +13,8 @@ const std::vector<std::string> g_configAttributeTable
 
 }
 
-ROC::ConfigManager::ConfigManager(Core* f_core)
+ROC::ConfigManager::ConfigManager()
 {
-    m_core = f_core;
-
     m_logging = false;
     m_fullscreen = false;
     m_antialiasing = 0;

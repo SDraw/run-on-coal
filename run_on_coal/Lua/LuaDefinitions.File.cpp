@@ -14,11 +14,11 @@ namespace Lua
 int fileCreate(lua_State *f_vm)
 {
     std::string l_path;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        File *l_file = LuaManager::m_corePointer->GetElementManager()->CreateFile_(l_path);
+        File *l_file = LuaManager::GetCore()->GetElementManager()->CreateFile_(l_path);
         l_file ? argStream.PushPointer(l_file) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -28,12 +28,12 @@ int fileOpen(lua_State *f_vm)
 {
     std::string l_path;
     bool l_ro = true;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
     argStream.ReadNextBoolean(l_ro);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        File *l_file = LuaManager::m_corePointer->GetElementManager()->OpenFile(l_path, l_ro);
+        File *l_file = LuaManager::GetCore()->GetElementManager()->OpenFile(l_path, l_ro);
         l_file ? argStream.PushPointer(l_file) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -42,11 +42,11 @@ int fileOpen(lua_State *f_vm)
 int fileClose(lua_State *f_vm)
 {
     File *l_file;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyFile(l_file);
+        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyFile(l_file);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -56,7 +56,7 @@ int fileRead(lua_State *f_vm)
 {
     File *l_file;
     lua_Integer l_length = 0;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     argStream.ReadInteger(l_length);
     if(!argStream.HasErrors() && l_length > 0)
@@ -77,7 +77,7 @@ int fileWrite(lua_State *f_vm)
 {
     File *l_file = NULL;
     std::string l_data;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     argStream.ReadText(l_data);
     if(!argStream.HasErrors() && !l_data.empty())
@@ -91,7 +91,7 @@ int fileWrite(lua_State *f_vm)
 int fileGetSize(lua_State *f_vm)
 {
     File *l_file = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     if(!argStream.HasErrors())
     {
@@ -105,7 +105,7 @@ int fileSetPosition(lua_State *f_vm)
 {
     File *l_file;
     lua_Integer l_pos;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     argStream.ReadInteger(l_pos);
     if(!argStream.HasErrors() && l_pos >= 0)
@@ -119,7 +119,7 @@ int fileSetPosition(lua_State *f_vm)
 int fileGetPosition(lua_State *f_vm)
 {
     File *l_file;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     !argStream.HasErrors() ? argStream.PushInteger(l_file->GetPosition()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -127,7 +127,7 @@ int fileGetPosition(lua_State *f_vm)
 int fileGetPath(lua_State *f_vm)
 {
     File *l_file;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     if(!argStream.HasErrors())
     {
@@ -141,7 +141,7 @@ int fileGetPath(lua_State *f_vm)
 int fileIsEOF(lua_State *f_vm)
 {
     File *l_file;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
     argStream.PushBoolean(!argStream.HasErrors() ? l_file->IsEOF() : false);
     return argStream.GetReturnValue();
@@ -149,11 +149,11 @@ int fileIsEOF(lua_State *f_vm)
 int fileDelete(lua_State *f_vm)
 {
     std::string l_path;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        bool l_result = File::Delete(LuaManager::m_corePointer, l_path);
+        bool l_result = File::Delete(LuaManager::GetCore(), l_path);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -162,12 +162,12 @@ int fileDelete(lua_State *f_vm)
 int fileRename(lua_State *f_vm)
 {
     std::string l_old, l_new;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_old);
     argStream.ReadText(l_new);
     if(!argStream.HasErrors() && !l_old.empty() && !l_new.empty())
     {
-        bool l_result = File::Rename(LuaManager::m_corePointer, l_old, l_new);
+        bool l_result = File::Rename(LuaManager::GetCore(), l_old, l_new);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

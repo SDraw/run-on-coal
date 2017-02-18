@@ -28,11 +28,11 @@ int disabledFunction(lua_State *f_vm)
 int logPrint(lua_State *f_vm)
 {
     std::string l_text;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetLogManager()->Log(l_text);
+        LuaManager::GetCore()->GetLogManager()->Log(l_text);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -41,20 +41,20 @@ int logPrint(lua_State *f_vm)
 int isElement(lua_State *f_vm)
 {
     void *l_pointer = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadPointer(&l_pointer);
-    argStream.PushBoolean(!argStream.HasErrors() ? LuaManager::m_corePointer->GetMemoryManager()->IsValidMemoryPointer(l_pointer) : false);
+    argStream.PushBoolean(!argStream.HasErrors() ? LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_pointer) : false);
     return argStream.GetReturnValue();
 }
 
 int getElementType(lua_State *f_vm)
 {
     void *l_pointer = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadPointer(&l_pointer);
     if(!argStream.HasErrors())
     {
-        int l_type = LuaManager::m_corePointer->GetMemoryManager()->GetMemoryPointerType(l_pointer);
+        int l_type = LuaManager::GetCore()->GetMemoryManager()->GetMemoryPointerType(l_pointer);
         argStream.PushText((l_type != -1) ? g_elementTypeName[l_type] : "invalid");
     }
     else argStream.PushBoolean(false);
@@ -62,7 +62,7 @@ int getElementType(lua_State *f_vm)
 }
 int getTickCount(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     lua_Integer l_tick = 0;
     l_tick = static_cast<lua_Integer>(GetTickCount());
     argStream.PushInteger(l_tick);

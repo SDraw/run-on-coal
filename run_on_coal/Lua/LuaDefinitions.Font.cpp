@@ -23,7 +23,7 @@ int fontCreate(lua_State *f_vm)
     std::string l_path;
     int l_size;
     std::string l_filter;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
     argStream.ReadInteger(l_size);
     argStream.ReadNextText(l_filter);
@@ -31,7 +31,7 @@ int fontCreate(lua_State *f_vm)
     {
         int l_filteringType = Utils::ReadEnumVector(g_fontFilteringTypesTable, l_filter);
         if(l_filteringType == -1) l_filteringType = 0;
-        Font *l_font = LuaManager::m_corePointer->GetElementManager()->CreateFont_(l_path, l_size, static_cast<unsigned char>(l_filteringType));
+        Font *l_font = LuaManager::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, static_cast<unsigned char>(l_filteringType));
         l_font ? argStream.PushPointer(l_font) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -40,11 +40,11 @@ int fontCreate(lua_State *f_vm)
 int fontDestroy(lua_State *f_vm)
 {
     Font *l_font;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyFont(l_font);
+        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyFont(l_font);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -54,7 +54,7 @@ int fontGetTextWidth(lua_State *f_vm)
 {
     Font *l_font;
     std::string l_text;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
@@ -70,7 +70,7 @@ int fontGetTextHeight(lua_State *f_vm)
 {
     Font *l_font;
     std::string l_text;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
@@ -88,7 +88,7 @@ int fontDraw(lua_State *f_vm)
     glm::vec2 l_pos;
     std::string l_text;
     glm::vec4 l_color(1.f);
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     argStream.ReadText(l_text);
@@ -96,7 +96,7 @@ int fontDraw(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_text.empty())
     {
         sf::String l_utf32Text = sf::String::fromUtf8(l_text.begin(), l_text.end());
-        LuaManager::m_corePointer->GetRenderManager()->Render(l_font, l_pos, l_utf32Text, l_color);
+        LuaManager::GetCore()->GetRenderManager()->Render(l_font, l_pos, l_utf32Text, l_color);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

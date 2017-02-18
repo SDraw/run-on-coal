@@ -76,29 +76,29 @@ protected:
     bool Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath);
     void Enable(bool f_full = true);
 
-    void SetUniformValue(GLint f_uValue, unsigned int f_value);
-    void SetUniformValue(GLint f_uValue, glm::uvec2 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::uvec3 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::uvec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, unsigned int f_value);
+    static void SetUniformValue(GLint f_uValue, glm::uvec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::uvec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::uvec4 &f_value);
 
-    void SetUniformValue(GLint f_uValue, int f_value);
-    void SetUniformValue(GLint f_uValue, glm::ivec2 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::ivec3 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::ivec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, int f_value);
+    static void SetUniformValue(GLint f_uValue, glm::ivec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::ivec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::ivec4 &f_value);
 
-    void SetUniformValue(GLint f_uValue, float f_value);
-    void SetUniformValue(GLint f_uValue, glm::vec2 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::vec3 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::vec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, float f_value);
+    static void SetUniformValue(GLint f_uValue, glm::vec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::vec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::vec4 &f_value);
 
-    void SetUniformValue(GLint f_uValue, double f_value);
-    void SetUniformValue(GLint f_uValue, glm::dvec2 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::dvec3 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::dvec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, double f_value);
+    static void SetUniformValue(GLint f_uValue, glm::dvec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::dvec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::dvec4 &f_value);
 
-    void SetUniformValue(GLint f_uValue, glm::mat2 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::mat3 &f_value);
-    void SetUniformValue(GLint f_uValue, glm::mat4 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::mat2 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::mat3 &f_value);
+    static void SetUniformValue(GLint f_uValue, glm::mat4 &f_value);
 
     void SetProjectionUniformValue(glm::mat4 &f_value);
     void SetViewUniformValue(glm::mat4 &f_value);
@@ -111,7 +111,7 @@ protected:
     void SetMaterialParamUniformValue(glm::vec4 &f_value);
     void SetMaterialTypeUniformValue(int f_value);
     void SetAnimatedUniformValue(unsigned int f_value);
-    void SetBonesUniformValue(std::vector<glm::mat4> &f_value);
+    void SetBonesUniformValue(std::vector<glm::mat4> &f_value) const;
     void SetTimeUniformValue(float f_value);
     void SetColorUniformValue(glm::vec4 &f_value);
 

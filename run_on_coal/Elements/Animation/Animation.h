@@ -30,8 +30,8 @@ protected:
     bool CacheData(unsigned int f_tick);
     inline std::vector<BoneFrameData*>& GetCachedDataRef() { return m_interpolatedFrame; }
 
-    inline unsigned int GetBonesCount() { return m_bonesValue; }
-    inline unsigned int GetTotalDuration() { return m_durationTotal; }
+    inline unsigned int GetBonesCount() const { return m_bonesValue; }
+    inline unsigned int GetTotalDuration() const { return m_durationTotal; }
 
     friend class Model;
     friend class ElementManager;

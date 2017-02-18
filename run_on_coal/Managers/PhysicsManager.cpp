@@ -113,7 +113,8 @@ bool ROC::PhysicsManager::RemoveModelCollision(Model *f_model)
 bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
 {
     bool l_result = false;
-    if((f_model1->HasCollision() || f_model1->HasSkeletonStaticBoneCollision() || f_model1->HasSkeletonDynamicBoneCollision()) && (f_model2->HasCollision() || f_model2->HasSkeletonStaticBoneCollision() || f_model2->HasSkeletonDynamicBoneCollision()))
+    auto l_setEnd = m_modelsSet.end();
+    if((m_modelsSet.find(f_model1) != l_setEnd) && (m_modelsSet.find(f_model2) != l_setEnd))
     {
         std::vector<btRigidBody*> l_bodies1, l_bodies2;
         if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetRigidBody());

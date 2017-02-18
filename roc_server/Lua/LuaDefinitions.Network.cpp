@@ -16,12 +16,12 @@ namespace Lua
 int networkDisconnectClient(lua_State *f_vm)
 {
     Client *l_client;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
     if(!argStream.HasErrors())
     {
 
-        bool l_result = LuaManager::m_corePointer->GetNetworkManager()->Disconnect(l_client);
+        bool l_result = LuaManager::GetCore()->GetNetworkManager()->Disconnect(l_client);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -31,12 +31,12 @@ int networkSendDataToClient(lua_State *f_vm)
 {
     Client *l_client;
     std::string l_data;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
     argStream.ReadText(l_data);
     if(!argStream.HasErrors() && !l_data.empty())
     {
-        bool l_result = LuaManager::m_corePointer->GetNetworkManager()->SendData(l_client, l_data);
+        bool l_result = LuaManager::GetCore()->GetNetworkManager()->SendData(l_client, l_data);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -45,7 +45,7 @@ int networkSendDataToClient(lua_State *f_vm)
 int networkGetClientID(lua_State *f_vm)
 {
     Client *l_client;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
     !argStream.HasErrors() ? argStream.PushInteger(l_client->GetID()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -53,7 +53,7 @@ int networkGetClientID(lua_State *f_vm)
 int networkGetClientAddress(lua_State *f_vm)
 {
     Client *l_client;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
     if(!argStream.HasErrors())
     {
@@ -69,11 +69,11 @@ int networkGetClientAddress(lua_State *f_vm)
 int networkGetClientPing(lua_State *f_vm)
 {
     Client *l_client;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
     if(!argStream.HasErrors())
     {
-        int l_ping = LuaManager::m_corePointer->GetNetworkManager()->GetPing(l_client);
+        int l_ping = LuaManager::GetCore()->GetNetworkManager()->GetPing(l_client);
         argStream.PushNumber(l_ping);
     }
     else argStream.PushBoolean(false);

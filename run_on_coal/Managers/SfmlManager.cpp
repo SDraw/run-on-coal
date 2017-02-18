@@ -47,7 +47,6 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_event = sf::Event();
 
     std::string l_log;
-    LogManager *l_logManager = m_core->GetLogManager();
 
     ConfigManager *l_configManager = m_core->GetConfigManager();
     glm::ivec2 l_windowSize;
@@ -65,6 +64,12 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_window = new sf::Window();
     m_window->create(l_videoMode, "ROC", l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default, l_contextSettings);
+    if(glGetString(GL_VERSION) == NULL)
+    {
+        l_log.append("SFML error: Unable to create OpenGL 3.0 context. Check supported version for your videocard");
+        m_core->GetLogManager()->Log(l_log);
+        exit(EXIT_FAILURE);
+    }
     m_window->setFramerateLimit(l_configManager->GetFPSLimit());
     m_window->setVerticalSyncEnabled(l_configManager->GetVSync());
     m_window->setKeyRepeatEnabled(false);
@@ -72,22 +77,20 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     GLenum l_error = glewInit();
     if(l_error != GLEW_OK)
     {
+        l_log.append("GLEW error: ");
         l_log.append(reinterpret_cast<const char*>(glewGetErrorString(l_error)));
-        l_logManager->Log(l_log);
+        m_core->GetLogManager()->Log(l_log);
         exit(EXIT_FAILURE);
     }
 
     l_log.append("OpenGL ");
     l_log.append(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-    l_logManager->Log(l_log);
-    l_log.clear();
-    l_log.append("Renderer ");
+    l_log.append(", ");
     l_log.append(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-    l_logManager->Log(l_log);
-    l_log.clear();
+    l_log.append(", ");
     l_log.append("GLEW ");
     l_log.append(reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
-    l_logManager->Log(l_log);
+    m_core->GetLogManager()->Log(l_log);
 
     m_active = true;
     m_argument = new LuaArguments();
@@ -146,7 +149,7 @@ void ROC::SfmlManager::SetCursorMode(unsigned char f_mode)
 }
 void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos)
 {
-    sf::Vector2i l_position = sf::Mouse::getPosition();
+    sf::Vector2i l_position = sf::Mouse::getPosition(*m_window);
     std::memcpy(&f_pos, &l_position, sizeof(glm::ivec2));
 }
 void ROC::SfmlManager::SetCursorPosition(glm::ivec2 &f_pos)

@@ -5,6 +5,7 @@ namespace ROC
 
 enum ElementType : unsigned char { ClientElement = 0U, FileElement };
 
+class Core;
 class Client;
 class File;
 class ElementManager
@@ -21,7 +22,7 @@ protected:
     Client* CreateClient();
     void DestroyClient(Client *f_client);
 
-    void DestroyByPointer(void* f_pointer, unsigned char f_type);
+    static void DestroyByPointer(void* f_pointer, unsigned char f_type);
 
     friend Core;
     friend class MemoryManager;

@@ -15,19 +15,19 @@ namespace Lua
 
 int sceneCreate(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    Scene *l_scene = LuaManager::m_corePointer->GetElementManager()->CreateScene();
+    ArgReader argStream(f_vm);
+    Scene *l_scene = LuaManager::GetCore()->GetElementManager()->CreateScene();
     l_scene ? argStream.PushPointer(l_scene) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int sceneDestroy(lua_State *f_vm)
 {
     Scene *l_scene = NULL;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_scene), ElementType::SceneElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyScene(l_scene);
+        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyScene(l_scene);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -37,12 +37,12 @@ int sceneSetCamera(lua_State *f_vm)
 {
     Scene *l_scene;
     Camera *l_camera;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_scene), ElementType::SceneElement);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_camera), ElementType::CameraElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetInheritManager()->SetSceneCamera(l_scene, l_camera);
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneCamera(l_scene, l_camera);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -51,7 +51,7 @@ int sceneSetCamera(lua_State *f_vm)
 int sceneGetCamera(lua_State *f_vm)
 {
     Scene *l_scene;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_scene), ElementType::SceneElement);
     if(!argStream.HasErrors())
     {
@@ -65,12 +65,12 @@ int sceneSetLight(lua_State *f_vm)
 {
     Scene *l_scene;
     Light *l_light;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_scene), ElementType::SceneElement);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetInheritManager()->SetSceneLight(l_scene, l_light);
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneLight(l_scene, l_light);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -79,7 +79,7 @@ int sceneSetLight(lua_State *f_vm)
 int sceneGetLight(lua_State *f_vm)
 {
     Scene *l_scene;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_scene), ElementType::SceneElement);
     if(!argStream.HasErrors())
     {

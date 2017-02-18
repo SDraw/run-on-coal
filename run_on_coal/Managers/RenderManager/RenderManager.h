@@ -49,7 +49,7 @@ class RenderManager
     void EnableCulling();
     bool CompareLastVAO(GLuint f_vao);
     bool CompareLastTexture(GLuint f_texture);
-    void EnableNonActiveShader(Shader *f_shader);
+    void EnableNonActiveShader(Shader *f_shader) const;
 
     RenderManager(const RenderManager& that);
     RenderManager &operator =(const RenderManager &that);
@@ -57,9 +57,9 @@ public:
     void SetRenderTarget(RenderTarget *f_rt);
 
     void ClearRenderArea(GLbitfield f_params);
-    static void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
-    inline void SetViewport(glm::ivec4 &f_area) { if(!m_locked) glViewport(f_area.r, f_area.g, f_area.b, f_area.a); }
-    static void SetPolygonMode(int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode); }
+    static inline void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
+    static inline void SetViewport(glm::ivec4 &f_area) { glViewport(f_area.r, f_area.g, f_area.b, f_area.a); }
+    static inline void SetPolygonMode(int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode); }
 
     void SetActiveScene(Scene *f_scene);
     inline void RemoveAsActiveScene(Scene *f_scene) { if(m_activeScene == f_scene) m_activeScene = NULL; }
@@ -106,12 +106,12 @@ protected:
 template<typename T> void ROC::RenderManager::SetShaderUniformValue(Shader *f_shader, GLint f_uValue, T f_value)
 {
     EnableNonActiveShader(f_shader);
-    f_shader->SetUniformValue(f_uValue, f_value);
+    Shader::SetUniformValue(f_uValue, f_value);
     RestoreActiveShader(f_shader);
 };
 template<typename T> void ROC::RenderManager::SetShaderUniformValueRef(Shader *f_shader, GLint f_uValue, T &f_value)
 {
     EnableNonActiveShader(f_shader);
-    f_shader->SetUniformValue(f_uValue, f_value);
+    Shader::SetUniformValue(f_uValue, f_value);
     RestoreActiveShader(f_shader);
 };

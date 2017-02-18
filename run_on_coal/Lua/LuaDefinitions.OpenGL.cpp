@@ -23,7 +23,7 @@ const std::vector<std::string> g_polygonFillTable
 int oglClear(lua_State *f_vm)
 {
     std::string l_param;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_param);
     if(!argStream.HasErrors() && !l_param.empty())
     {
@@ -31,7 +31,7 @@ int oglClear(lua_State *f_vm)
         if(l_type != -1)
         {
             GLbitfield l_buffer = (l_type == 0) ? GL_COLOR_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
-            LuaManager::m_corePointer->GetRenderManager()->ClearRenderArea(l_buffer);
+            LuaManager::GetCore()->GetRenderManager()->ClearRenderArea(l_buffer);
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);
@@ -42,7 +42,7 @@ int oglClear(lua_State *f_vm)
 int oglClearColor(lua_State *f_vm)
 {
     glm::vec4 l_color;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
@@ -55,11 +55,11 @@ int oglClearColor(lua_State *f_vm)
 int oglViewport(lua_State *f_vm)
 {
     glm::ivec4 l_area;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     for(int i = 0; i < 4; i++) argStream.ReadInteger(l_area[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::m_corePointer->GetRenderManager()->SetViewport(l_area);
+        LuaManager::GetCore()->GetRenderManager()->SetViewport(l_area);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -68,7 +68,7 @@ int oglViewport(lua_State *f_vm)
 int oglPolygonMode(lua_State *f_vm)
 {
     std::string l_mode;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_mode);
     if(!argStream.HasErrors() && !l_mode.empty())
     {

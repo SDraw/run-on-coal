@@ -6,14 +6,16 @@ namespace ROC
 class ArgReader
 {
     lua_State *m_vm;
-    Core *m_core;
     int m_currentArg;
     int m_argCount;
     int m_returnValue;
     std::string m_error;
     bool m_hasErrors;
+
+    ArgReader(const ArgReader& that);
+    ArgReader &operator =(const ArgReader &that);
 public:
-    ArgReader(lua_State *f_vm, Core *f_core);
+    explicit ArgReader(lua_State *f_vm);
     ~ArgReader();
 
     void ReadBoolean(bool &f_val);
@@ -43,7 +45,7 @@ public:
     void PushMatrix(float *f_val, int f_size);
 
     bool HasErrors();
-    inline int GetReturnValue() { return m_returnValue; }
+    inline int GetReturnValue() const { return m_returnValue; }
 };
 
 }

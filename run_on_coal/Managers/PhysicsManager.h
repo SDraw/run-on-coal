@@ -29,9 +29,9 @@ class PhysicsManager
     PhysicsManager &operator =(const PhysicsManager &that);
 public:
     inline void SetPhysicsEnabled(bool f_value) { m_enabled = f_value; }
-    inline bool GetPhysicsEnabled() { return m_enabled; }
+    inline bool GetPhysicsEnabled() const { return m_enabled; }
     void SetFloorEnabled(bool f_value);
-    inline bool GetFloorEnabled() { return m_floorEnabled; }
+    inline bool GetFloorEnabled() const { return m_floorEnabled; }
     void SetGravity(glm::vec3 &f_grav);
     void GetGravity(glm::vec3 &f_grav);
 

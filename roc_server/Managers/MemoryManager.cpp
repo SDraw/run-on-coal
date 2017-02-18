@@ -1,17 +1,14 @@
 #include "stdafx.h"
-#include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/MemoryManager.h"
 
-ROC::MemoryManager::MemoryManager(Core *f_core)
+ROC::MemoryManager::MemoryManager()
 {
-    m_core = f_core;
     m_memoryMapEnd = m_memoryMap.end();
 }
 ROC::MemoryManager::~MemoryManager()
 {
-    ElementManager *l_elementManager = m_core->GetElementManager();
-    for(auto iter : m_memoryMap) l_elementManager->DestroyByPointer(iter.first, iter.second);
+    for(auto iter : m_memoryMap) ElementManager::DestroyByPointer(iter.first, iter.second);
 }
 
 bool ROC::MemoryManager::CheckMemoryPointer(void *f_pointer, unsigned char f_type)

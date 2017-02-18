@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/LogManager.h"
+#include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
 #include "Lua/ArgReader.h"
 
-ROC::ArgReader::ArgReader(lua_State *f_vm, Core *f_core)
+ROC::ArgReader::ArgReader(lua_State *f_vm)
 {
     m_vm = f_vm;
-    m_core = f_core;
     m_currentArg = 1;
     m_argCount = lua_gettop(m_vm);
     m_returnValue = 0;
@@ -77,7 +77,7 @@ void ROC::ArgReader::ReadUserdata(void **f_val, unsigned char f_type)
             if(lua_islightuserdata(m_vm, m_currentArg))
             {
                 void *a = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
-                if(m_core->GetMemoryManager()->CheckMemoryPointer(a, f_type))
+                if(LuaManager::GetCore()->GetMemoryManager()->CheckMemoryPointer(a, f_type))
                 {
                     *f_val = a;
                     m_currentArg++;
@@ -208,7 +208,7 @@ void ROC::ArgReader::ReadNextUserdata(void **f_val, unsigned char f_type)
         if(lua_islightuserdata(m_vm, m_currentArg))
         {
             void *a = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
-            if(m_core->GetMemoryManager()->CheckMemoryPointer(a, f_type))
+            if(LuaManager::GetCore()->GetMemoryManager()->CheckMemoryPointer(a, f_type))
             {
                 *f_val = a;
                 m_currentArg++;
@@ -375,7 +375,7 @@ bool ROC::ArgReader::HasErrors()
         l_log.append(m_error);
         l_log.append(" at argument ");
         l_log.append(std::to_string(m_currentArg));
-        m_core->GetLogManager()->Log(l_log);
+        LuaManager::GetCore()->GetLogManager()->Log(l_log);
     }
     return m_hasErrors;
 }

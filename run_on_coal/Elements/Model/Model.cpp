@@ -255,7 +255,7 @@ bool ROC::Model::SetAnimationProgress(float f_val)
     }
     return (m_animation != NULL);
 }
-float ROC::Model::GetAnimationProgress()
+float ROC::Model::GetAnimationProgress() const
 {
     return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->GetTotalDuration())) : -1.f);
 }
@@ -268,11 +268,11 @@ void ROC::Model::UpdateSkeleton()
     }
     else m_skeleton->Update();
 }
-bool ROC::Model::HasSkeletonStaticBoneCollision()
+bool ROC::Model::HasSkeletonStaticBoneCollision() const
 {
     return (m_skeleton ? m_skeleton->HasStaticBoneCollision() : false);
 }
-bool ROC::Model::HasSkeletonDynamicBoneCollision()
+bool ROC::Model::HasSkeletonDynamicBoneCollision() const
 {
     return (m_skeleton ? m_skeleton->HasDynamicBoneCollision() : false);
 }

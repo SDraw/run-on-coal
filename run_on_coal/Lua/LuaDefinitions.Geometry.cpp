@@ -13,11 +13,11 @@ namespace Lua
 int geometryCreate(lua_State *f_vm)
 {
     std::string l_path;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        Geometry *l_geometry = LuaManager::m_corePointer->GetElementManager()->CreateGeometry(l_path);
+        Geometry *l_geometry = LuaManager::GetCore()->GetElementManager()->CreateGeometry(l_path);
         l_geometry ? argStream.PushPointer(l_geometry) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -26,11 +26,11 @@ int geometryCreate(lua_State *f_vm)
 int geometryDestroy(lua_State *f_vm)
 {
     Geometry *l_geometry;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_geometry), ElementType::GeometryElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyGeometry(l_geometry);
+        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyGeometry(l_geometry);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

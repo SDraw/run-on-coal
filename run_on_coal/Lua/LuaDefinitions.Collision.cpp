@@ -21,7 +21,7 @@ int collisionCreate(lua_State *f_vm)
 {
     std::string l_typeString;
     glm::vec3 l_size(1.f);
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_typeString);
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
     if(!argStream.HasErrors() && !l_typeString.empty())
@@ -29,7 +29,7 @@ int collisionCreate(lua_State *f_vm)
         int l_type = Utils::ReadEnumVector(g_collisionTypesTable, l_typeString);
         if(l_type != -1)
         {
-            Collision *l_col = LuaManager::m_corePointer->GetElementManager()->CreateCollision(COLLISION_TYPE_SPHERE + static_cast<unsigned char>(l_type), l_size);
+            Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(COLLISION_TYPE_SPHERE + static_cast<unsigned char>(l_type), l_size);
             l_col ? argStream.PushPointer(l_col) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
@@ -40,11 +40,11 @@ int collisionCreate(lua_State *f_vm)
 int collisionDestroy(lua_State *f_vm)
 {
     Collision *l_col;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyCollision(l_col);
+        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyCollision(l_col);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -55,7 +55,7 @@ int collisionSetPosition(lua_State *f_vm)
 {
     Collision *l_col;
     glm::vec3 l_pos;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
@@ -69,7 +69,7 @@ int collisionSetPosition(lua_State *f_vm)
 int collisionGetPosition(lua_State *f_vm)
 {
     Collision *l_col;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     if(!argStream.HasErrors())
     {
@@ -87,7 +87,7 @@ int collisionSetRotation(lua_State *f_vm)
 {
     Collision *l_col;
     glm::vec4 l_val(0.f, 0.f, 0.f, std::nanf("0"));
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
     argStream.ReadNextNumber(l_val.w);
@@ -104,7 +104,7 @@ int collisionGetRotation(lua_State *f_vm)
 {
     Collision *l_col;
     bool l_reqQuat = false;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     argStream.ReadNextBoolean(l_reqQuat);
     if(!argStream.HasErrors())

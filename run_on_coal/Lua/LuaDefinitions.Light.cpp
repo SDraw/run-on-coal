@@ -13,19 +13,19 @@ namespace Lua
 
 int lightCreate(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    Light *l_light = LuaManager::m_corePointer->GetElementManager()->CreateLight();
+    ArgReader argStream(f_vm);
+    Light *l_light = LuaManager::GetCore()->GetElementManager()->CreateLight();
     l_light ? argStream.PushPointer(l_light) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int lightDestroy(lua_State *f_vm)
 {
     Light *l_light;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetElementManager()->DestroyLight(l_light);
+        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyLight(l_light);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -35,7 +35,7 @@ int lightSetParams(lua_State *f_vm)
 {
     Light *l_light;
     glm::vec4 l_params;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_params[i]);
     if(!argStream.HasErrors())
@@ -49,7 +49,7 @@ int lightSetParams(lua_State *f_vm)
 int lightGetParams(lua_State *f_vm)
 {
     Light *l_light;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {
@@ -67,7 +67,7 @@ int lightSetColor(lua_State *f_vm)
 {
     Light *l_light;
     glm::vec3 l_color;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_color[i]);
     if(!argStream.HasErrors())
@@ -81,7 +81,7 @@ int lightSetColor(lua_State *f_vm)
 int lightGetColor(lua_State *f_vm)
 {
     Light *l_light;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {
@@ -98,7 +98,7 @@ int lightSetDirection(lua_State *f_vm)
 {
     Light *l_light;
     glm::vec3 l_dir;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
     if(!argStream.HasErrors())
@@ -112,7 +112,7 @@ int lightSetDirection(lua_State *f_vm)
 int lightGetDirection(lua_State *f_vm)
 {
     Light *l_light;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadUserdata(reinterpret_cast<void**>(&l_light), ElementType::LightElement);
     if(!argStream.HasErrors())
     {

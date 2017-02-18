@@ -37,7 +37,7 @@ protected:
     Font();
     ~Font();
     bool LoadTTF(std::string &f_path, int f_size, unsigned char f_filter);
-    inline GLuint GetVAO() { return m_VAO; }
+    inline GLuint GetVAO() const { return m_VAO; }
     void Draw(sf::String &f_text, glm::vec2 &f_pos, bool f_bind);
     friend class ElementManager;
     friend class RenderManager;

@@ -19,9 +19,9 @@ class Geometry
     bool m_loaded;
     void Clear();
 public:
-    inline bool HasBonesData() { return !m_bonesData.empty(); }
-    inline bool HasBonesCollisionData() { return !m_collisionData.empty(); }
-    inline bool HasJointsData() { return !m_jointData.empty(); }
+    inline bool HasBonesData() const { return !m_bonesData.empty(); }
+    inline bool HasBonesCollisionData() const { return !m_collisionData.empty(); }
+    inline bool HasJointsData() const { return !m_jointData.empty(); }
 protected:
     Geometry();
     ~Geometry();

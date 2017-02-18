@@ -39,11 +39,11 @@ protected:
     inline glm::mat4& GetOffsetMatrixRef() { return m_offsetMatrix; }
 
     inline void SetParent( Bone *f_bone) { m_parent = f_bone; }
-    inline bool HasParent() { return (m_parent != NULL); }
+    inline bool HasParent() const { return (m_parent != NULL); }
     inline Bone* GetParent() { return m_parent;  }
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
 
-    inline bool IsRebuilded() { return m_rebuilded; }
+    inline bool IsRebuilded() const { return m_rebuilded; }
     inline void ForceRebuildState(bool f_state) { m_rebuilded = f_state; }
 
     friend class Skeleton;

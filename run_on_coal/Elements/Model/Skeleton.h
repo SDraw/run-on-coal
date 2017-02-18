@@ -59,10 +59,10 @@ protected:
     void UpdateCollision_S2(glm::mat4 &f_model, bool f_enabled);
     inline std::vector<skCollision*> &GetCollisionVectorRef() { return m_collisionVector; }
     inline std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
-    inline bool HasStaticBoneCollision() { return m_hasStaticBoneCollision; }
-    inline bool HasDynamicBoneCollision() { return m_hasDynamicBoneCollision; }
+    inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }
+    inline bool HasDynamicBoneCollision() const { return m_hasDynamicBoneCollision; }
 
-    inline unsigned int GetBonesCount() { return m_bonesCount; }
+    inline unsigned int GetBonesCount() const { return m_bonesCount; }
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
     inline std::vector<glm::mat4>& GetBoneMatricesVectorRef() { return m_boneMatrices; }
 

@@ -34,7 +34,7 @@ public:
     inline void SetTitle(sf::String &f_title) { m_window->setTitle(f_title); }
     bool SetIcon(std::string &f_path);
     inline void RequestFocus() { m_window->requestFocus(); }
-    inline bool GetFocusState() { return m_window->hasFocus(); }
+    inline bool GetFocusState() const { return m_window->hasFocus(); }
 
     void SetCursorMode(unsigned char f_mode);
     void GetCursorPosition(glm::ivec2 &f_pos);
@@ -49,7 +49,7 @@ public:
     static bool CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis);
     static float GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis);
 
-    inline float GetTime() { return m_time; }
+    inline float GetTime() const { return m_time; }
 protected:
     explicit SfmlManager(Core *f_core);
     ~SfmlManager();

@@ -12,8 +12,8 @@ namespace Lua
 
 int getTime(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.PushNumber(LuaManager::m_corePointer->GetSfmlManager()->GetTime());
+    ArgReader argStream(f_vm);
+    argStream.PushNumber(LuaManager::GetCore()->GetSfmlManager()->GetTime());
     return argStream.GetReturnValue();
 }
 

@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Core/Core.h"
 #include "Managers/ConfigManager.h"
 #include "Utils/Utils.h"
 
@@ -13,10 +12,8 @@ const std::vector<std::string> g_configAttributeTable
 
 }
 
-ROC::ConfigManager::ConfigManager(Core* f_core)
+ROC::ConfigManager::ConfigManager()
 {
-    m_core = f_core;
-
     m_configParsed = false;
     m_logging = true;
     m_bindIP.assign("0.0.0.0");

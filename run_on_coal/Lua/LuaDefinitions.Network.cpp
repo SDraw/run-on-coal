@@ -17,12 +17,12 @@ int networkConnect(lua_State *f_vm)
 {
     std::string l_ip;
     unsigned short l_port;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_ip);
     argStream.ReadInteger(l_port);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::m_corePointer->GetNetworkManager()->Connect(l_ip, l_port);
+        bool l_result = LuaManager::GetCore()->GetNetworkManager()->Connect(l_ip, l_port);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -30,30 +30,30 @@ int networkConnect(lua_State *f_vm)
 }
 int networkDisconnect(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    bool l_result = LuaManager::m_corePointer->GetNetworkManager()->Disconnect();
+    ArgReader argStream(f_vm);
+    bool l_result = LuaManager::GetCore()->GetNetworkManager()->Disconnect();
     argStream.PushBoolean(l_result);
     return argStream.GetReturnValue();
 }
 int networkSendData(lua_State *f_vm)
 {
     std::string l_data;
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
+    ArgReader argStream(f_vm);
     argStream.ReadText(l_data);
-    bool l_result = LuaManager::m_corePointer->GetNetworkManager()->SendData(l_data);
+    bool l_result = LuaManager::GetCore()->GetNetworkManager()->SendData(l_data);
     argStream.PushBoolean(l_result);
     return argStream.GetReturnValue();
 }
 int networkGetState(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.PushText(g_networkStateTable[LuaManager::m_corePointer->GetNetworkManager()->GetNetworkState()]);
+    ArgReader argStream(f_vm);
+    argStream.PushText(g_networkStateTable[LuaManager::GetCore()->GetNetworkManager()->GetNetworkState()]);
     return argStream.GetReturnValue();
 }
 int networkGetPing(lua_State *f_vm)
 {
-    ArgReader argStream(f_vm, LuaManager::m_corePointer);
-    argStream.PushInteger(LuaManager::m_corePointer->GetNetworkManager()->GetPing());
+    ArgReader argStream(f_vm);
+    argStream.PushInteger(LuaManager::GetCore()->GetNetworkManager()->GetPing());
     return argStream.GetReturnValue();
 }
 
