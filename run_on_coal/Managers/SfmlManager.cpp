@@ -66,8 +66,15 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_window->create(l_videoMode, "ROC", l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default, l_contextSettings);
     if(glGetString(GL_VERSION) == NULL)
     {
-        l_log.append("SFML error: Unable to create OpenGL 3.0 context. Check supported version for your videocard");
+        l_log.append("SFML error: Unable to create OpenGL ");
+        l_log.append(std::to_string(l_contextSettings.majorVersion));
+        l_log.push_back('.');
+        l_log.append(std::to_string(l_contextSettings.minorVersion));
+        l_log.append(" context. Check supported version for your videocard");
         m_core->GetLogManager()->Log(l_log);
+#ifdef _WIN32
+        MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONSTOP);
+#endif
         exit(EXIT_FAILURE);
     }
     m_window->setFramerateLimit(l_configManager->GetFPSLimit());
@@ -80,6 +87,9 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         l_log.append("GLEW error: ");
         l_log.append(reinterpret_cast<const char*>(glewGetErrorString(l_error)));
         m_core->GetLogManager()->Log(l_log);
+#ifdef _WIN32
+        MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONSTOP);
+#endif
         exit(EXIT_FAILURE);
     }
 
@@ -166,25 +176,25 @@ bool ROC::SfmlManager::IsMouseKeyPressed(int f_key)
     return sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(f_key));
 }
 
-bool ROC::SfmlManager::IsJoypadConnected(unsigned int f_jp) 
-{ 
-    return sf::Joystick::isConnected(f_jp); 
+bool ROC::SfmlManager::IsJoypadConnected(unsigned int f_jp)
+{
+    return sf::Joystick::isConnected(f_jp);
 }
-bool ROC::SfmlManager::GetJoypadButtonState(unsigned int f_jp, unsigned int f_button) 
-{ 
-    return sf::Joystick::isButtonPressed(f_jp, f_button); 
+bool ROC::SfmlManager::GetJoypadButtonState(unsigned int f_jp, unsigned int f_button)
+{
+    return sf::Joystick::isButtonPressed(f_jp, f_button);
 }
-unsigned int ROC::SfmlManager::GetJoypadButtonCount(unsigned int f_jp) 
-{ 
-    return sf::Joystick::getButtonCount(f_jp); 
+unsigned int ROC::SfmlManager::GetJoypadButtonCount(unsigned int f_jp)
+{
+    return sf::Joystick::getButtonCount(f_jp);
 }
-bool ROC::SfmlManager::CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis) 
-{ 
-    return sf::Joystick::hasAxis(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); 
+bool ROC::SfmlManager::CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis)
+{
+    return sf::Joystick::hasAxis(f_jp, static_cast<sf::Joystick::Axis>(f_axis));
 }
-float ROC::SfmlManager::GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis) 
-{ 
-    return sf::Joystick::getAxisPosition(f_jp, static_cast<sf::Joystick::Axis>(f_axis)); 
+float ROC::SfmlManager::GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis)
+{
+    return sf::Joystick::getAxisPosition(f_jp, static_cast<sf::Joystick::Axis>(f_axis));
 }
 
 bool ROC::SfmlManager::DoPulse()
