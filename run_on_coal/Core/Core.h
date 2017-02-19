@@ -17,6 +17,10 @@ class RenderManager;
 class SoundManager;
 class Core
 {
+    static Core *m_instance;
+    std::string m_workingDir;
+    bool m_state;
+
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
     SfmlManager *m_sfmlManager;
@@ -29,9 +33,6 @@ class Core
     RenderManager *m_renderManager;
     PreRenderManager *m_preRenderManager;
     SoundManager *m_soundManager;
-    static Core *m_instance;
-    std::string m_workingDir;
-    bool m_state;
 
     Core();
     Core(const Core& that);

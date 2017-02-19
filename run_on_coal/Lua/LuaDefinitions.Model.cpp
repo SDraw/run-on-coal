@@ -37,7 +37,7 @@ int modelCreate(lua_State *f_vm)
 {
     Geometry *l_geometry;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_geometry), ElementType::GeometryElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_geometry), ElementType::GeometryElement);
     if(!argStream.HasErrors())
     {
         Model *l_model = LuaManager::GetCore()->GetElementManager()->CreateModel(l_geometry);
@@ -50,7 +50,7 @@ int modelDestroy(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyModel(l_model);
@@ -63,7 +63,7 @@ int modelGetGeometry(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         Geometry *l_geometry = l_model->GetGeometry();
@@ -76,7 +76,7 @@ int modelGetType(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     !argStream.HasErrors() ? argStream.PushText(g_modelTypesTable[l_model->GetType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -85,7 +85,7 @@ int modelSetPosition(lua_State *f_vm)
     Model *l_model;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
     {
@@ -100,7 +100,7 @@ int modelGetPosition(lua_State *f_vm)
     Model *l_model;
     bool l_global = false;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
@@ -118,7 +118,7 @@ int modelSetRotation(lua_State *f_vm)
     Model *l_model;
     glm::vec4 l_rot(0.f, 0.f, 0.f, std::nanf("0"));
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
     argStream.ReadNextNumber(l_rot.w);
     if(!argStream.HasErrors())
@@ -136,7 +136,7 @@ int modelGetRotation(lua_State *f_vm)
     bool l_global = false;
     bool l_quatReq = false;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadNextBoolean(l_global);
     argStream.ReadNextBoolean(l_quatReq);
     if(!argStream.HasErrors())
@@ -166,7 +166,7 @@ int modelSetScale(lua_State *f_vm)
     Model *l_model;
     glm::vec3 l_scale;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_scale[i]);
     if(!argStream.HasErrors())
     {
@@ -181,7 +181,7 @@ int modelGetScale(lua_State *f_vm)
     Model *l_model;
     bool l_global = false;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
@@ -201,7 +201,7 @@ int modelDraw(lua_State *f_vm)
     bool l_frustum = false;
     float l_radius = 1.0;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadNextBoolean(l_texturize);
     argStream.ReadNextBoolean(l_frustum);
     argStream.ReadNextNumber(l_radius);
@@ -218,8 +218,8 @@ int modelAttach(lua_State *f_vm)
     Model *l_model, *l_parent;
     int l_bone = -1;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_parent), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_parent), ElementType::ModelElement);
     argStream.ReadNextInteger(l_bone);
     if(!argStream.HasErrors())
     {
@@ -234,7 +234,7 @@ int modelDettach(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetInheritManager()->DettachModel(l_model);
@@ -247,7 +247,7 @@ int modelGetParent(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         Model *l_parent = l_model->GetParent();
@@ -262,8 +262,8 @@ int modelSetAnimation(lua_State *f_vm)
     Model *l_model;
     Animation *l_anim;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_anim), ElementType::AnimationElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_anim), ElementType::AnimationElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetInheritManager()->SetModelAnimation(l_model, l_anim);
@@ -276,7 +276,7 @@ int modelGetAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         Animation *l_anim = l_model->GetAnimation();
@@ -289,7 +289,7 @@ int modelPlayAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->PlayAnimation();
@@ -302,7 +302,7 @@ int modelPauseAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->PauseAnimation();
@@ -315,7 +315,7 @@ int modelResetAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->ResetAnimation();
@@ -329,7 +329,7 @@ int modelSetAnimationProperty(lua_State *f_vm)
     Model *l_model = NULL;
     std::string l_property;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {
@@ -373,7 +373,7 @@ int modelGetAnimationProperty(lua_State *f_vm)
     Model *l_model = NULL;
     std::string l_property;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {
@@ -408,7 +408,7 @@ int modelSetCollision(lua_State *f_vm)
     float l_mass = 1.0;
     glm::vec3 l_size(1.f);
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadText(l_textType);
     argStream.ReadNextNumber(l_mass);
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
@@ -429,7 +429,7 @@ int modelRemoveCollision(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetPhysicsManager()->RemoveModelCollision(l_model);
@@ -444,7 +444,7 @@ int modelSetCollisionProperty(lua_State *f_vm)
     Model *l_model;
     std::string l_property;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {
@@ -506,7 +506,7 @@ int modelGetCollisionProperty(lua_State *f_vm)
     Model *l_model;
     std::string l_property;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model), ElementType::ModelElement);
     argStream.ReadText(l_property);
     if(!argStream.HasErrors())
     {

@@ -22,7 +22,7 @@ public:
     template<typename T> void ReadNumber(T &f_val);
     template<typename T> void ReadInteger(T &f_val);
     void ReadText(std::string &f_val);
-    void ReadUserdata(void **f_val, unsigned char f_type);
+    void ReadElement(void **f_val, unsigned char f_type);
     void ReadPointer(void **f_val);
     void ReadFunction(int &f_val, void **f_pointer);
     void ReadFunctionPointer(void **f_pointer);
@@ -31,7 +31,7 @@ public:
     template<typename T> void ReadNextNumber(T &f_val);
     template<typename T> void ReadNextInteger(T &f_val);
     void ReadNextText(std::string &f_val);
-    void ReadNextUserdata(void **f_val, unsigned char f_type);
+    void ReadNextElement(void **f_val, unsigned char f_type);
     void ReadNextPointer(void **f_val);
 
     void ReadMatrix(float *f_val, int f_size);

@@ -1,6 +1,6 @@
 #pragma once
-#define CAMERA_PROJECTION_PERSPECTIVE 0U
-#define CAMERA_PROJECTION_ORTHOGONAL 1U
+#define CAMERA_PROJECTION_PERSPECTIVE ((unsigned char)0U)
+#define CAMERA_PROJECTION_ORTHOGONAL ((unsigned char)1U)
 
 namespace ROC
 {

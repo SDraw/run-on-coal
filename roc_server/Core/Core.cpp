@@ -27,7 +27,7 @@ ROC::Core::Core()
     m_memoryManager = new MemoryManager();
     m_elementManager = new ElementManager(this);
     m_luaManager = new LuaManager(this);
-    m_sfmlManager = new SfmlManager(this);
+    m_sfmlManager = new SfmlManager();
     m_networkManager = new NetworkManager(this);
     m_argument = new LuaArguments();
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());

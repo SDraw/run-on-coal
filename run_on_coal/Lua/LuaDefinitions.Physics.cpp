@@ -108,8 +108,8 @@ int physicsSetModelsCollidable(lua_State *f_vm)
     Model *l_model1, *l_model2;
     bool l_state;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model1), ElementType::ModelElement);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_model2), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model1), ElementType::ModelElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_model2), ElementType::ModelElement);
     argStream.ReadBoolean(l_state);
     if(!argStream.HasErrors())
     {

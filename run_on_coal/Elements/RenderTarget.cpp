@@ -21,7 +21,7 @@ bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_typ
     if(m_type == RENDERTARGET_TYPE_NONE)
     {
         m_type = f_type;
-        if(m_type > RENDERTARGET_TYPE_RGBF) m_type = RENDERTARGET_TYPE_RGBF;
+        btClamp(m_type,RENDERTARGET_TYPE_DEPTH, RENDERTARGET_TYPE_RGBAF);
         m_bRenderBuffer = false;
 
         glGenFramebuffers(1, &m_frameBuffer);
@@ -31,26 +31,29 @@ bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_typ
         glActiveTexture(GL_TEXTURE0);
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         switch(m_type)
         {
             case RENDERTARGET_TYPE_DEPTH:
             {
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, f_size.x, f_size.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
             } break;
             case RENDERTARGET_TYPE_RGB:
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, f_size.x, f_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
                 break;
             case RENDERTARGET_TYPE_RGBA:
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, f_size.x, f_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, f_size.x, f_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
                 break;
             case RENDERTARGET_TYPE_RGBF:
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, f_size.x, f_size.y, 0, GL_RGB, GL_FLOAT, NULL);
                 break;
+            case RENDERTARGET_TYPE_RGBAF:
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, f_size.x, f_size.y, 0, GL_RGBA, GL_FLOAT, NULL);
+                break;
         }
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         m_bTexture = true;
 
         if(m_type > RENDERTARGET_TYPE_DEPTH)
@@ -63,18 +66,17 @@ bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_typ
 
             glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + f_num, GL_TEXTURE_2D, m_texture, 0);
             glDrawBuffer(GL_COLOR_ATTACHMENT0 + f_num);
-            glReadBuffer(GL_NONE);
         }
         else
         {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_texture, 0);
             glDrawBuffer(GL_NONE);
-            glReadBuffer(GL_NONE);
         }
+        glReadBuffer(GL_NONE);
 
         if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         {
-            m_error.append("Unable to create RT, framebuffer status ");
+            m_error.assign("Unable to create RT, framebuffer status ");
             m_error.append(std::to_string(glCheckFramebufferStatus(GL_FRAMEBUFFER)));
             Clear();
         }

@@ -44,7 +44,7 @@ int shaderDestroy(lua_State *f_vm)
 {
     Shader *l_shader = NULL;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyShader(l_shader);
@@ -58,7 +58,7 @@ int shaderGetUniform(lua_State *f_vm)
     Shader *l_shader = NULL;
     std::string l_unif;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
     argStream.ReadText(l_unif);
     if(!argStream.HasErrors() && !l_unif.empty())
     {
@@ -74,7 +74,7 @@ int shaderSetUniformValue(lua_State *f_vm)
     int l_uniform;
     std::string l_type;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
     argStream.ReadInteger(l_uniform);
     argStream.ReadText(l_type);
     if(!argStream.HasErrors() && (l_uniform != -1) && !l_type.empty())
@@ -293,7 +293,7 @@ int shaderSetUniformValue(lua_State *f_vm)
             case 19: // Texture
             {
                 Texture *l_texture;
-                argStream.ReadUserdata(reinterpret_cast<void**>(&l_texture), ElementType::TextureElement);
+                argStream.ReadElement(reinterpret_cast<void**>(&l_texture), ElementType::TextureElement);
                 if(!argStream.HasErrors())
                 {
                     bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachTextureToShader(l_shader, l_texture, l_uniform);
@@ -304,7 +304,7 @@ int shaderSetUniformValue(lua_State *f_vm)
             case 20: // Render target
             {
                 RenderTarget *l_target;
-                argStream.ReadUserdata(reinterpret_cast<void**>(&l_target), ElementType::RenderTargetElement);
+                argStream.ReadElement(reinterpret_cast<void**>(&l_target), ElementType::RenderTargetElement);
                 if(!argStream.HasErrors())
                 {
                     bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachRenderTargetToShader(l_shader, l_target, l_uniform);

@@ -27,7 +27,7 @@ int geometryDestroy(lua_State *f_vm)
 {
     Geometry *l_geometry;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_geometry), ElementType::GeometryElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_geometry), ElementType::GeometryElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyGeometry(l_geometry);

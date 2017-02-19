@@ -2,9 +2,8 @@
 #include "Core/Core.h"
 #include "Managers/SfmlManager.h"
 
-ROC::SfmlManager::SfmlManager(Core *f_core)
+ROC::SfmlManager::SfmlManager()
 {
-    m_core = f_core;
     m_time = 0.f;
 }
 ROC::SfmlManager::~SfmlManager()

@@ -27,7 +27,7 @@ int animationDestroy(lua_State *f_vm)
 {
     Animation *l_anim = NULL;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_anim), ElementType::AnimationElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_anim), ElementType::AnimationElement);
     if(!argStream.HasErrors())
     {
         bool l_result = ROC::LuaManager::GetCore()->GetElementManager()->DestroyAnimation(l_anim);

@@ -60,7 +60,7 @@ int textureDestroy(lua_State *f_vm)
 {
     Texture *l_tex;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyTexture(l_tex);
@@ -76,7 +76,7 @@ int textureDraw(lua_State *f_vm)
     float l_rot = 0.f;
     glm::vec4 l_color(1.f);
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
     argStream.ReadNextNumber(l_rot);

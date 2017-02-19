@@ -15,7 +15,7 @@ namespace Lua
 
 const std::vector<std::string> g_targetTypesTable
 {
-    "depth", "rgb", "rgba", "rgbf"
+    "depth", "rgb", "rgba", "rgbf", "rgbaf"
 };
 
 int rtCreate(lua_State *f_vm)
@@ -44,7 +44,7 @@ int rtDestroy(lua_State *f_vm)
 {
     RenderTarget *l_rt;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyRenderTarget(l_rt);
@@ -60,7 +60,7 @@ int rtDraw(lua_State *f_vm)
     float l_rot;
     glm::vec4 l_color(1.f);
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
     argStream.ReadNextNumber(l_rot);

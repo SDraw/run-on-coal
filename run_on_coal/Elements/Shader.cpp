@@ -197,6 +197,12 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
                 if(l_geometryShader) glDeleteShader(l_geometryShader);
             }
         }
+        else
+        {
+            if(l_vertexShader) glDeleteShader(l_vertexShader);
+            if(l_fragmentShader) glDeleteShader(l_vertexShader);
+            if(l_geometryShader) glDeleteShader(l_geometryShader);
+        }
     }
     return (m_program != 0U);
 }

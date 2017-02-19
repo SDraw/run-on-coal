@@ -5,12 +5,9 @@
 namespace ROC
 {
 
-class Core;
 class LuaArguments;
 class SfmlManager
 {
-    Core *m_core;
-
     float m_time;
     sf::Clock m_clock;
 
@@ -19,12 +16,12 @@ class SfmlManager
 public:
     inline float GetTime() const { return m_time; }
 protected:
-    explicit SfmlManager(Core *f_core);
+    SfmlManager();
     ~SfmlManager();
 
     void DoPulse();
 
-    friend Core;
+    friend class Core;
 };
 
 }

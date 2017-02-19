@@ -5,8 +5,6 @@ namespace ROC
 
 class MemoryManager
 {
-    Core *m_core;
-
     std::unordered_map<void*, unsigned char> m_memoryMap;
     std::unordered_map<void*, unsigned char>::iterator m_memoryMapEnd;
 public:

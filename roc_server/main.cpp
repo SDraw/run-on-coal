@@ -8,6 +8,19 @@ void SignalHandleFunction(int f_sig)
     g_quitSetter = 1;
 }
 
+#ifdef _WIN32
+int WINAPI ConsoleHandlerRoutine(unsigned long l_type)
+{
+    if(l_type == CTRL_CLOSE_EVENT)
+    {
+        g_quitSetter = 1;
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+        return 0;
+    }
+    return 1;
+}
+#endif
+
 int main(int argc, char *argv[])
 {
     signal(SIGINT, SignalHandleFunction);
@@ -16,6 +29,7 @@ int main(int argc, char *argv[])
     signal(SIGBREAK, SignalHandleFunction);
 #endif
 #ifdef _WIN32
+    SetConsoleCtrlHandler(ConsoleHandlerRoutine, 1);
     EnableScrollBar(GetConsoleWindow(), SB_BOTH, ESB_DISABLE_BOTH);
     HANDLE l_handle = GetStdHandle(STD_INPUT_HANDLE);
     DWORD l_handleMode;

@@ -37,7 +37,7 @@ int soundDestroy(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetElementManager()->DestroySound(l_sound);
@@ -51,7 +51,7 @@ int soundPlay(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         l_sound->Play();
@@ -64,7 +64,7 @@ int soundPause(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         l_sound->Pause();
@@ -77,7 +77,7 @@ int soundStop(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         l_sound->Stop();
@@ -91,7 +91,7 @@ int soundIsLooped(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     argStream.PushBoolean(!argStream.HasErrors() ? l_sound->IsLooped() : false);
     return argStream.GetReturnValue();
 }
@@ -100,7 +100,7 @@ int soundGetState(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     !argStream.HasErrors() ? argStream.PushText(g_soundStatesTable[l_sound->GetState()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -110,7 +110,7 @@ int soundSetSpeed(lua_State *f_vm)
     Sound *l_sound;
     float l_val;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     argStream.ReadNumber(l_val);
     if(!argStream.HasErrors())
     {
@@ -124,7 +124,7 @@ int soundGetSpeed(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetSpeed()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -134,7 +134,7 @@ int soundSetVolume(lua_State *f_vm)
     Sound *l_sound;
     float l_val;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     argStream.ReadNumber(l_val);
     if(!argStream.HasErrors())
     {
@@ -148,7 +148,7 @@ int soundGetVolume(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetVolume()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -158,7 +158,7 @@ int soundSetTime(lua_State *f_vm)
     Sound *l_sound;
     float l_val;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     argStream.ReadNumber(l_val);
     if(!argStream.HasErrors())
     {
@@ -172,7 +172,7 @@ int soundGetTime(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         float l_time = l_sound->GetTime();
@@ -185,7 +185,7 @@ int soundGetDuration(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetDuration()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -195,7 +195,7 @@ int soundSet3DEnabled(lua_State *f_vm)
     Sound *l_sound;
     bool l_state;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     argStream.ReadBoolean(l_state);
     if(!argStream.HasErrors())
     {
@@ -209,7 +209,7 @@ int soundGet3DEnabled(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     argStream.PushBoolean(!argStream.HasErrors() ? l_sound->Get3DPositionEnabled() : false);
     return argStream.GetReturnValue();
 }
@@ -219,7 +219,7 @@ int soundSet3DPosition(lua_State *f_vm)
     Sound *l_sound;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
     {
@@ -233,7 +233,7 @@ int soundGet3DPosition(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_pos(0.f);
@@ -251,7 +251,7 @@ int soundSet3DDistance(lua_State *f_vm)
     Sound *l_sound;
     glm::vec2 l_dist;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_dist[i]);
     if(!argStream.HasErrors())
     {
@@ -265,7 +265,7 @@ int soundGet3DDistance(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_sound), ElementType::SoundElement);
     if(!argStream.HasErrors())
     {
         glm::vec2 l_dist(0.f);

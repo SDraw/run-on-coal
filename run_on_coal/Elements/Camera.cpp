@@ -27,6 +27,7 @@ void ROC::Camera::SetType(unsigned char f_type)
     if(m_type != f_type)
     {
         m_type = f_type;
+        btClamp(m_type, CAMERA_PROJECTION_PERSPECTIVE, CAMERA_PROJECTION_ORTHOGONAL);
         m_rebuildProjection = true;
     }
 }

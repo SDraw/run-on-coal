@@ -41,7 +41,7 @@ int collisionDestroy(lua_State *f_vm)
 {
     Collision *l_col;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     if(!argStream.HasErrors())
     {
         bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyCollision(l_col);
@@ -56,7 +56,7 @@ int collisionSetPosition(lua_State *f_vm)
     Collision *l_col;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
     {
@@ -70,7 +70,7 @@ int collisionGetPosition(lua_State *f_vm)
 {
     Collision *l_col;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_pos;
@@ -88,7 +88,7 @@ int collisionSetRotation(lua_State *f_vm)
     Collision *l_col;
     glm::vec4 l_val(0.f, 0.f, 0.f, std::nanf("0"));
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
     argStream.ReadNextNumber(l_val.w);
     if(!argStream.HasErrors())
@@ -105,7 +105,7 @@ int collisionGetRotation(lua_State *f_vm)
     Collision *l_col;
     bool l_reqQuat = false;
     ArgReader argStream(f_vm);
-    argStream.ReadUserdata(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
     argStream.ReadNextBoolean(l_reqQuat);
     if(!argStream.HasErrors())
     {

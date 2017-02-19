@@ -19,7 +19,7 @@ public:
     inline unsigned int GetPulseTick() const { return m_pulseTick; }
     inline bool IsConfigParsed() const { return m_configParsed; }
 protected:
-    explicit ConfigManager();
+    ConfigManager();
     ~ConfigManager();
     friend class Core;
 };

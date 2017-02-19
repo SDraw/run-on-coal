@@ -68,7 +68,7 @@ void ROC::ArgReader::ReadText(std::string &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadUserdata(void **f_val, unsigned char f_type)
+void ROC::ArgReader::ReadElement(void **f_val, unsigned char f_type)
 {
     if(!m_hasErrors)
     {
@@ -201,7 +201,7 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadNextUserdata(void **f_val, unsigned char f_type)
+void ROC::ArgReader::ReadNextElement(void **f_val, unsigned char f_type)
 {
     if(!m_hasErrors && (m_currentArg <= m_argCount))
     {

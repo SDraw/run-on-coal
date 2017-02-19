@@ -13,10 +13,11 @@ ROC::Texture::~Texture()
 
 bool ROC::Texture::Load(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress)
 {
-    if(m_type == TEXTURE_TYPE_NONE && (f_type > TEXTURE_TYPE_NONE && f_type < TEXTURE_TYPE_CUBEMAP))
+    if(m_type == TEXTURE_TYPE_NONE)
     {
         sf::Image l_image;
         m_type = f_type;
+        btClamp(m_type, TEXTURE_TYPE_RGB, TEXTURE_TYPE_CUBEMAP);
         if(l_image.loadFromFile(f_path))
         {
             sf::Vector2u l_imageSize = l_image.getSize();
