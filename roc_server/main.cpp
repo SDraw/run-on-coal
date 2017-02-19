@@ -1,34 +1,32 @@
 #include "stdafx.h"
 #include "RocInc.h"
 
-volatile sig_atomic_t g_quitSetter = 0;
+std::atomic<int> g_quitSetter = 0;
+
+#ifndef _WIN32 
 void SignalHandleFunction(int f_sig)
 {
     signal(f_sig, SignalHandleFunction);
     g_quitSetter = 1;
 }
-
-#ifdef _WIN32
+#else
 int WINAPI ConsoleHandlerRoutine(unsigned long l_type)
 {
-    if(l_type == CTRL_CLOSE_EVENT)
-    {
-        g_quitSetter = 1;
-        std::this_thread::sleep_for(std::chrono::seconds(10));
-        return 0;
-    }
+    g_quitSetter = 1;
+    std::this_thread::sleep_for(std::chrono::seconds(10));
     return 1;
 }
 #endif
 
 int main(int argc, char *argv[])
 {
+#ifndef _WIN32
     signal(SIGINT, SignalHandleFunction);
     signal(SIGTERM, SignalHandleFunction);
 #ifdef SIGBREAK
     signal(SIGBREAK, SignalHandleFunction);
 #endif
-#ifdef _WIN32
+#else
     SetConsoleCtrlHandler(ConsoleHandlerRoutine, 1);
     EnableScrollBar(GetConsoleWindow(), SB_BOTH, ESB_DISABLE_BOTH);
     HANDLE l_handle = GetStdHandle(STD_INPUT_HANDLE);

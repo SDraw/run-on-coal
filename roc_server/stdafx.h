@@ -11,7 +11,10 @@
 #include <sstream>
 #include <ctime>
 #include <thread>
+#include <atomic>
+#ifndef _WIN32
 #include <csignal>
+#endif
 #include <regex>
 #include <direct.h>
 
