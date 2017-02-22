@@ -56,20 +56,16 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "modelDestroy", Lua::modelDestroy);
     lua_register(m_vm, "modelGetGeometry", Lua::modelGetGeometry);
     lua_register(m_vm, "modelGetType", Lua::modelGetType);
-
     lua_register(m_vm, "modelSetPosition", Lua::modelSetPosition);
     lua_register(m_vm, "modelGetPosition", Lua::modelGetPosition);
     lua_register(m_vm, "modelSetRotation", Lua::modelSetRotation);
     lua_register(m_vm, "modelGetRotation", Lua::modelGetRotation);
     lua_register(m_vm, "modelSetScale", Lua::modelSetScale);
     lua_register(m_vm, "modelGetScale", Lua::modelGetScale);
-
     lua_register(m_vm, "modelDraw", Lua::modelDraw);
-
     lua_register(m_vm, "modelAttach", Lua::modelAttach);
     lua_register(m_vm, "modelDettach", Lua::modelDettach);
     lua_register(m_vm, "modelGetParent", Lua::modelGetParent);
-
     lua_register(m_vm, "modelSetAnimation", Lua::modelSetAnimation);
     lua_register(m_vm, "modelGetAnimation", Lua::modelGetAnimation);
     lua_register(m_vm, "modelPlayAnimation", Lua::modelPlayAnimation);
@@ -77,7 +73,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "modelResetAnimation", Lua::modelResetAnimation);
     lua_register(m_vm, "modelSetAnimationProperty", Lua::modelSetAnimationProperty);
     lua_register(m_vm, "modelGetAnimationProperty", Lua::modelGetAnimationProperty);
-
     lua_register(m_vm, "modelSetCollision", Lua::modelSetCollision);
     lua_register(m_vm, "modelRemoveCollision", Lua::modelRemoveCollision);
     lua_register(m_vm, "modelSetCollisionProperty", Lua::modelSetCollisionProperty);
@@ -92,51 +87,38 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Scene
     lua_register(m_vm, "sceneCreate", Lua::sceneCreate);
     lua_register(m_vm, "sceneDestroy", Lua::sceneDestroy);
-
     lua_register(m_vm, "sceneSetCamera", Lua::sceneSetCamera);
     lua_register(m_vm, "sceneGetCamera", Lua::sceneGetCamera);
-
     lua_register(m_vm, "sceneSetLight", Lua::sceneSetLight);
     lua_register(m_vm, "sceneGetLight", Lua::sceneGetLight);
 
     //Camera
     lua_register(m_vm, "cameraCreate", Lua::cameraCreate);
     lua_register(m_vm, "cameraDestroy", Lua::cameraDestroy);
-
     lua_register(m_vm, "cameraSetPosition", Lua::cameraSetPosition);
     lua_register(m_vm, "cameraGetPosition", Lua::cameraGetPosition);
-
     lua_register(m_vm, "cameraSetDirection", Lua::cameraSetDirection);
     lua_register(m_vm, "cameraGetDirection", Lua::cameraGetDirection);
-
     lua_register(m_vm, "cameraSetType", Lua::cameraSetType);
     lua_register(m_vm, "cameraGetType", Lua::cameraGetType);
-
     lua_register(m_vm, "cameraSetFOV", Lua::cameraSetFOV);
     lua_register(m_vm, "cameraGetFOV", Lua::cameraGetFOV);
-
     lua_register(m_vm, "cameraSetAspectRatio", Lua::cameraSetAspectRatio);
     lua_register(m_vm, "cameraGetAspectRatio", Lua::cameraGetAspectRatio);
-
     lua_register(m_vm, "cameraSetOrthoParams", Lua::cameraSetOrthoParams);
     lua_register(m_vm, "cameraGetOrthoParams", Lua::cameraGetOrthoParams);
-
     lua_register(m_vm, "cameraSetDepth", Lua::cameraSetDepth);
     lua_register(m_vm, "cameraGetDepth", Lua::cameraGetDepth);
-
     lua_register(m_vm, "cameraGetViewMatrix", Lua::cameraGetViewMatrix);
     lua_register(m_vm, "cameraGetProjectionMatrix", Lua::cameraGetProjectionMatrix);
 
     //Light
     lua_register(m_vm, "lightCreate", Lua::lightCreate);
     lua_register(m_vm, "lightDestroy", Lua::lightDestroy);
-
     lua_register(m_vm, "lightSetParams", Lua::lightSetParams);
     lua_register(m_vm, "lightGetParams", Lua::lightGetParams);
-
     lua_register(m_vm, "lightSetColor", Lua::lightSetColor);
     lua_register(m_vm, "lightGetColor", Lua::lightGetColor);
-
     lua_register(m_vm, "lightSetDirection", Lua::lightSetDirection);
     lua_register(m_vm, "lightGetDirection", Lua::lightGetDirection);
 
@@ -147,47 +129,39 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Sound
     lua_register(m_vm, "soundCreate", Lua::soundCreate);
     lua_register(m_vm, "soundDestroy", Lua::soundDestroy);
-
     lua_register(m_vm, "soundPlay", Lua::soundPlay);
     lua_register(m_vm, "soundPause", Lua::soundPause);
     lua_register(m_vm, "soundStop", Lua::soundStop);
-
     lua_register(m_vm, "soundIsLooped", Lua::soundIsLooped);
     lua_register(m_vm, "soundGetState", Lua::soundGetState);
-
     lua_register(m_vm, "soundSetSpeed", Lua::soundSetSpeed);
     lua_register(m_vm, "soundGetSpeed", Lua::soundGetSpeed);
-
     lua_register(m_vm, "soundSetVolume", Lua::soundSetVolume);
     lua_register(m_vm, "soundGetVolume", Lua::soundGetVolume);
-
     lua_register(m_vm, "soundSetTime", Lua::soundSetTime);
     lua_register(m_vm, "soundGetTime", Lua::soundGetTime);
     lua_register(m_vm, "soundGetDuration", Lua::soundGetDuration);
-
     lua_register(m_vm, "soundSet3DEnabled", Lua::soundSet3DEnabled);
     lua_register(m_vm, "soundGet3DEnabled", Lua::soundGet3DEnabled);
     lua_register(m_vm, "soundSet3DPosition", Lua::soundSet3DPosition);
     lua_register(m_vm, "soundGet3DPosition", Lua::soundGet3DPosition);
     lua_register(m_vm, "soundSet3DDistance", Lua::soundSet3DDistance);
     lua_register(m_vm, "soundGet3DDistance", Lua::soundGet3DDistance);
-
     lua_register(m_vm, "soundSetListenerOrientation", Lua::soundSetListenerOrientation);
     lua_register(m_vm, "soundGetListenerOrientation", Lua::soundSetListenerOrientation);
-
     lua_register(m_vm, "soundSetGlobalVolume", Lua::soundSetGlobalVolume);
     lua_register(m_vm, "soundGetGlobalVolume", Lua::soundGetGlobalVolume);
 
     //Render Target
     lua_register(m_vm, "rtCreate", Lua::rtCreate);
     lua_register(m_vm, "rtDestroy", Lua::rtDestroy);
-
+    lua_register(m_vm, "rtGetSize", Lua::rtGetSize);
     lua_register(m_vm, "rtDraw", Lua::rtDraw);
 
     //Texture
     lua_register(m_vm, "textureCreate", Lua::textureCreate);
     lua_register(m_vm, "textureDestroy", Lua::textureDestroy);
-
+    lua_register(m_vm, "textureGetSize", Lua::textureGetSize);
     lua_register(m_vm, "textureDraw", Lua::textureDraw);
 
     //Font
@@ -201,26 +175,19 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "fileCreate", Lua::fileCreate);
     lua_register(m_vm, "fileOpen", Lua::fileOpen);
     lua_register(m_vm, "fileClose", Lua::fileClose);
-
     lua_register(m_vm, "fileRead", Lua::fileRead);
     lua_register(m_vm, "fileWrite", Lua::fileWrite);
-
     lua_register(m_vm, "fileGetSize", Lua::fileGetSize);
-
     lua_register(m_vm, "fileSetPosition", Lua::fileSetPosition);
     lua_register(m_vm, "fileGetPosition", Lua::fileGetPosition);
-
     lua_register(m_vm, "fileGetPath", Lua::fileGetPath);
-
     lua_register(m_vm, "fileIsEOF", Lua::fileIsEOF);
-
     lua_register(m_vm, "fileDelete", Lua::fileDelete);
     lua_register(m_vm, "fileRename", Lua::fileRename);
 
     //Collision
     lua_register(m_vm, "collisionCreate", Lua::collisionCreate);
     lua_register(m_vm, "collisionDestroy", Lua::collisionDestroy);
-
     lua_register(m_vm, "collisionSetPosition", Lua::collisionSetPosition);
     lua_register(m_vm, "collisionGetPosition", Lua::collisionGetPosition);
     lua_register(m_vm, "collisionSetRotation", Lua::collisionSetRotation);
@@ -246,12 +213,9 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "setCursorMode", Lua::setCursorMode);
     lua_register(m_vm, "setCursorPosition", Lua::setCursorPosition);
     lua_register(m_vm, "getCursorPosition", Lua::getCursorPosition);
-
     lua_register(m_vm, "isKeyPressed", Lua::isKeyPressed);
     lua_register(m_vm, "isMouseKeyPressed", Lua::isMouseKeyPressed);
-
     lua_register(m_vm, "getTime", Lua::getTime);
-
     lua_register(m_vm, "getWindowPosition", Lua::getWindowPosition);
     lua_register(m_vm, "getWindowSize", Lua::getWindowSize);
     lua_register(m_vm, "setWindowVSync", Lua::setWindowVSync);
@@ -260,27 +224,21 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "setWindowIcon", Lua::setWindowIcon);
     lua_register(m_vm, "requestWindowFocus", Lua::requestWindowFocus);
     lua_register(m_vm, "getWindowFocus", Lua::getWindowFocus);
-
     lua_register(m_vm, "isJoypadConnected", Lua::isJoypadConnected);
     lua_register(m_vm, "joypadGetButtonCount", Lua::joypadGetButtonCount);
     lua_register(m_vm, "joypadGetButtonState", Lua::joypadGetButtonState);
     lua_register(m_vm, "joypadHasAxis", Lua::joypadHasAxis);
     lua_register(m_vm, "joypadGetAxisValue", Lua::joypadGetAxisValue);
-
     lua_register(m_vm, "closeApplication", Lua::closeApp);
 
     //Bullet Physics
     lua_register(m_vm, "physicsSetEnabled", Lua::physicsSetEnabled);
     lua_register(m_vm, "physicsGetEnabled", Lua::physicsGetEnabled);
-
     lua_register(m_vm, "physicsSetFloorEnabled", Lua::physicsSetFloorEnabled);
     lua_register(m_vm, "physicsGetFloorEnabled", Lua::physicsGetFloorEnabled);
-
     lua_register(m_vm, "physicsSetGravity", Lua::physicsSetGravity);
     lua_register(m_vm, "physicsGetGravity", Lua::physicsGetGravity);
-
     lua_register(m_vm, "physicsRayCast", Lua::physicsRayCast);
-
     lua_register(m_vm, "physicsSetModelsCollidable", Lua::physicsSetModelsCollidable);
 
     //Elements

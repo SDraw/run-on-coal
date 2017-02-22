@@ -54,6 +54,21 @@ int rtDestroy(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int rtGetSize(lua_State *f_vm)
+{
+    RenderTarget *l_rt;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_rt);
+    if(!argStream.HasErrors())
+    {
+        glm::ivec2 l_size;
+        l_rt->GetSize(l_size);
+        argStream.PushInteger(l_size.x);
+        argStream.PushInteger(l_size.y);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 int rtDraw(lua_State *f_vm)
 {
     RenderTarget *l_rt;

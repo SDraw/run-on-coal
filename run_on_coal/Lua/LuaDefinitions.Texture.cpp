@@ -70,6 +70,21 @@ int textureDestroy(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int textureGetSize(lua_State *f_vm)
+{
+    Texture *l_texture;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_texture);
+    if(!argStream.HasErrors())
+    {
+        glm::ivec2 l_size;
+        l_texture->GetSize(l_size);
+        argStream.PushInteger(l_size.x);
+        argStream.PushInteger(l_size.y);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 int textureDraw(lua_State *f_vm)
 {
     Texture *l_tex;

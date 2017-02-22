@@ -12,13 +12,14 @@ public:
         CameraElement, LightElement, RenderTargetElement, ShaderElement,
         SoundElement, TextureElement, FontElement, FileElement, CollisionElement
     };
+    inline unsigned char GetElementType() const { return m_elementType; }
+protected:
+    unsigned char m_elementType;
 
     Element();
     virtual ~Element();
 
-    inline unsigned char GetElementType() const { return m_elementType; }
-protected:
-    unsigned char m_elementType;
+    friend class ElementManager;
 };
 
 }

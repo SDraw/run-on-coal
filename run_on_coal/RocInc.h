@@ -16,7 +16,6 @@
 #include "Elements/Animation/Animation.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Model/Model.h"
-
 #include "Elements/Camera.h"
 #include "Elements/Collision.h"
 #include "Elements/File.h"

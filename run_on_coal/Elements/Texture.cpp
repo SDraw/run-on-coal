@@ -23,13 +23,15 @@ bool ROC::Texture::Load(std::string &f_path, int f_type, unsigned char f_filter,
         if(l_image.loadFromFile(f_path))
         {
             sf::Vector2u l_imageSize = l_image.getSize();
+            m_size.x = static_cast<int>(l_imageSize.x);
+            m_size.y = static_cast<int>(l_imageSize.y);
             glGenTextures(1, &m_texture);
             glBindTexture(GL_TEXTURE_2D, m_texture);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + f_filter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + f_filter);
-            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
         }
         else GenerateBrokenTexture();
     }
@@ -77,13 +79,14 @@ void ROC::Texture::GenerateBrokenTexture()
     }
     for(int i = 0; i < 3; i++) l_brokenImage.push_back(0x7FU);
     m_type = TEXTURE_TYPE_RGB;
+    m_size.x = m_size.y = 2;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2U, 2U, 0, GL_RGB, GL_UNSIGNED_BYTE, l_brokenImage.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_size.x, m_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, l_brokenImage.data());
 }
 
 void ROC::Texture::Bind(unsigned int f_bind)

@@ -11,11 +11,13 @@ namespace ROC
 class Texture : public Element
 {
     int m_type;
+    glm::ivec2 m_size;
     GLuint m_texture;
     void GenerateBrokenTexture();
 public:
     inline bool IsTransparent() const { return (m_type == TEXTURE_TYPE_RGBA); }
     inline bool IsCubic() const { return (m_type == TEXTURE_TYPE_CUBEMAP); }
+    inline void GetSize(glm::ivec2 &f_size) { std::memcpy(&f_size, &m_type, sizeof(glm::ivec2)); }
 protected:
     Texture();
     ~Texture();
