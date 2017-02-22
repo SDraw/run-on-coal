@@ -5,6 +5,7 @@
 
 ROC::File::File()
 {
+    m_elementType = ElementType::FileElement;
     m_file = NULL;
 }
 ROC::File::~File()

@@ -1,9 +1,10 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
 
-class Light
+class Light : public Element
 {
     glm::vec3 m_direction;
     glm::vec4 m_color;

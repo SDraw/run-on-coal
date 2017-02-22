@@ -1,9 +1,10 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
 
-class Font
+class Font : public Element
 {
     FT_Library m_library;
     FT_Face m_face;

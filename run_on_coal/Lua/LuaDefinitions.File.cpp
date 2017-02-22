@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Elements/File.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.File.h"
@@ -43,11 +44,11 @@ int fileClose(lua_State *f_vm)
 {
     File *l_file;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyFile(l_file);
-        argStream.PushBoolean(l_result);
+        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_file);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -57,7 +58,7 @@ int fileRead(lua_State *f_vm)
     File *l_file;
     lua_Integer l_length = 0;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     argStream.ReadInteger(l_length);
     if(!argStream.HasErrors() && l_length > 0)
     {
@@ -78,7 +79,7 @@ int fileWrite(lua_State *f_vm)
     File *l_file = NULL;
     std::string l_data;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     argStream.ReadText(l_data);
     if(!argStream.HasErrors() && !l_data.empty())
     {
@@ -92,7 +93,7 @@ int fileGetSize(lua_State *f_vm)
 {
     File *l_file = NULL;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     if(!argStream.HasErrors())
     {
         size_t l_size = l_file->GetSize();
@@ -106,7 +107,7 @@ int fileSetPosition(lua_State *f_vm)
     File *l_file;
     lua_Integer l_pos;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     argStream.ReadInteger(l_pos);
     if(!argStream.HasErrors() && l_pos >= 0)
     {
@@ -120,7 +121,7 @@ int fileGetPosition(lua_State *f_vm)
 {
     File *l_file;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     !argStream.HasErrors() ? argStream.PushInteger(l_file->GetPosition()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -128,7 +129,7 @@ int fileGetPath(lua_State *f_vm)
 {
     File *l_file;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     if(!argStream.HasErrors())
     {
         std::string l_path;
@@ -142,7 +143,7 @@ int fileIsEOF(lua_State *f_vm)
 {
     File *l_file;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_file), ElementType::FileElement);
+    argStream.ReadElement(l_file);
     argStream.PushBoolean(!argStream.HasErrors() ? l_file->IsEOF() : false);
     return argStream.GetReturnValue();
 }

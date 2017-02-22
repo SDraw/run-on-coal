@@ -5,7 +5,11 @@
 #include "Managers/MemoryManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager/RenderManager.h"
+
 #include "Elements/Animation/Animation.h"
+#include "Elements/Camera.h"
+#include "Elements/Geometry/Geometry.h"
+#include "Elements/Light.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
 #include "Elements/RenderTarget.h"
@@ -22,7 +26,7 @@ ROC::InheritanceManager::~InheritanceManager()
     m_inheritMap.clear();
 }
 
-void ROC::InheritanceManager::RemoveInheritance(void *f_child, void *f_parent)
+void ROC::InheritanceManager::RemoveInheritance(Element *f_child, Element *f_parent)
 {
     auto iter = m_inheritMap.equal_range(f_child);
     for(auto iter1 = iter.first; iter1 != iter.second; iter1++)
@@ -30,99 +34,96 @@ void ROC::InheritanceManager::RemoveInheritance(void *f_child, void *f_parent)
         if(iter1->second == f_parent)
         {
             MemoryManager *l_memoryManager = m_core->GetMemoryManager();
-            int l_cType = l_memoryManager->GetMemoryPointerType(f_child);
-            int l_pType = l_memoryManager->GetMemoryPointerType(f_parent);
-            if(l_cType != -1 && l_pType != -1) InheritanceBreakProcessing(f_child, f_parent, l_cType, l_pType);
+            InheritanceBreakProcessing(f_child, f_parent);
             m_inheritMap.erase(iter1);
             break;
         }
     }
 }
-void ROC::InheritanceManager::RemoveChildRelation(void *f_child)
+void ROC::InheritanceManager::RemoveChildRelation(Element *f_child)
 {
     auto iter = m_inheritMap.find(f_child);
     while(iter != m_inheritMap.end())
     {
-        MemoryManager *l_memoryManager = m_core->GetMemoryManager();
-        int l_cType = l_memoryManager->GetMemoryPointerType(f_child);
-        int l_pType = l_memoryManager->GetMemoryPointerType(iter->second);
-        if(l_cType != -1 && l_pType != -1) InheritanceBreakProcessing(iter->first, iter->second, l_cType, l_pType);
+        InheritanceBreakProcessing(iter->first, iter->second);
         m_inheritMap.erase(iter);
         iter = m_inheritMap.find(f_child);
     }
 }
-void ROC::InheritanceManager::RemoveParentRelation(void *f_parent)
+void ROC::InheritanceManager::RemoveParentRelation(Element *f_parent)
 {
     for(auto iter = m_inheritMap.begin(); iter != m_inheritMap.end();)
     {
         if(iter->second == f_parent)
         {
-            MemoryManager *l_memoryManager = m_core->GetMemoryManager();
-            int l_childType = l_memoryManager->GetMemoryPointerType(iter->first);
-            int l_parentType = l_memoryManager->GetMemoryPointerType(iter->second);
-            if(l_childType != -1 && l_parentType != -1) InheritanceBreakProcessing(iter->first, iter->second, l_childType, l_parentType);
+            InheritanceBreakProcessing(iter->first, iter->second);
             m_inheritMap.erase(iter++);
         }
         else ++iter;
     }
 }
 
-void ROC::InheritanceManager::InheritanceBreakProcessing(void *f_child, void *f_parent, unsigned char f_childType, unsigned char f_parentType)
+void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Element *f_parent)
 {
-    switch(f_childType)
+    switch(f_child->GetElementType())
     {
-        case ElementType::ModelElement:
+        case Element::ElementType::ModelElement:
         {
-            switch(f_parentType)
+            switch(f_parent->GetElementType())
             {
-                case ElementType::ModelElement:
-                    reinterpret_cast<Model*>(f_child)->SetParent(NULL);
+                case Element::ElementType::ModelElement:
+                    dynamic_cast<Model*>(f_child)->SetParent(NULL);
                     break;
-                case ElementType::GeometryElement:
-                    reinterpret_cast<Model*>(f_child)->SetGeometry(NULL);
+                case Element::ElementType::GeometryElement:
+                    dynamic_cast<Model*>(f_child)->SetGeometry(NULL);
                     break;
-                case ElementType::AnimationElement:
-                    reinterpret_cast<Model*>(f_child)->SetAnimation(NULL);
+                case Element::ElementType::AnimationElement:
+                    dynamic_cast<Model*>(f_child)->SetAnimation(NULL);
                     break;
             }
         } break;
-        case ElementType::CameraElement:
+        case Element::ElementType::CameraElement:
         {
-            switch(f_parentType)
+            switch(f_parent->GetElementType())
             {
-                case ElementType::SceneElement:
-                    reinterpret_cast<Scene*>(f_parent)->SetCamera(NULL);
+                case Element::ElementType::SceneElement:
+                    dynamic_cast<Scene*>(f_parent)->SetCamera(NULL);
                     break;
             }
         } break;
-        case ElementType::LightElement:
+        case Element::ElementType::LightElement:
         {
-            switch(f_parentType)
+            switch(f_parent->GetElementType())
             {
-                case ElementType::SceneElement:
-                    reinterpret_cast<Scene*>(f_parent)->SetLight(NULL);
+                case Element::ElementType::SceneElement:
+                    dynamic_cast<Scene*>(f_parent)->SetLight(NULL);
                     break;
             }
         } break;
-        case ElementType::TextureElement:
+        case Element::ElementType::TextureElement:
         {
-            switch(f_parentType)
+            switch(f_parent->GetElementType())
             {
-                case ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DettachFromShader(reinterpret_cast<Shader*>(f_parent), reinterpret_cast<Texture*>(f_child));
+                case Element::ElementType::ShaderElement:
+                    m_core->GetRenderManager()->DettachFromShader(dynamic_cast<Shader*>(f_parent), dynamic_cast<Texture*>(f_child));
                     break;
             }
         } break;
-        case ElementType::RenderTargetElement:
+        case Element::ElementType::RenderTargetElement:
         {
-            switch(f_parentType)
+            switch(f_parent->GetElementType())
             {
-                case ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DettachFromShader(reinterpret_cast<Shader*>(f_parent), reinterpret_cast<RenderTarget*>(f_child));
+                case Element::ElementType::ShaderElement:
+                    m_core->GetRenderManager()->DettachFromShader(dynamic_cast<Shader*>(f_parent), dynamic_cast<RenderTarget*>(f_child));
                     break;
             }
         } break;
     }
+}
+
+void ROC::InheritanceManager::SetModelGeometry(Model *f_model, Geometry *f_geometry)
+{
+    m_inheritMap.insert(std::pair<Element*, Element*>(f_model, f_geometry));
 }
 
 bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_anim)
@@ -138,7 +139,7 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
             {
                 if(l_modelAnim) RemoveInheritance(f_model, l_modelAnim);
                 f_model->SetAnimation(f_anim);
-                m_inheritMap.insert(std::pair<void*, void*>(f_model, f_anim));
+                m_inheritMap.insert(std::pair<Element*, Element*>(f_model, f_anim));
                 l_result = true;
             }
         }
@@ -166,7 +167,7 @@ bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent
             if(!f_parent->HasSkeleton()) f_bone = -1;
             else if(f_bone >= static_cast<int>(f_parent->GetSkeleton()->GetBonesCount())) f_bone = -1;
             f_model->SetParent(f_parent, f_bone);
-            m_inheritMap.insert(std::pair<void*, void*>(f_model, f_parent));
+            m_inheritMap.insert(std::pair<Element*, Element*>(f_model, f_parent));
             m_core->GetPreRenderManager()->AddLink(f_model, f_parent);
             l_result = true;
         }
@@ -195,7 +196,7 @@ bool ROC::InheritanceManager::SetSceneCamera(Scene *f_scene, Camera *f_camera)
         if(l_sceneCamera) RemoveInheritance(l_sceneCamera, f_scene);
         RemoveChildRelation(f_camera);
         f_scene->SetCamera(f_camera);
-        m_inheritMap.insert(std::pair<void*, void*>(f_camera, f_scene));
+        m_inheritMap.insert(std::pair<Element*, Element*>(f_camera, f_scene));
         l_result = true;
     }
     return l_result;
@@ -209,7 +210,7 @@ bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
         if(l_sceneLight) RemoveInheritance(l_sceneLight, f_scene);
         RemoveChildRelation(f_light);
         f_scene->SetLight(f_light);
-        m_inheritMap.insert(std::pair<void*, void*>(f_light, f_scene));
+        m_inheritMap.insert(std::pair<Element*, Element*>(f_light, f_scene));
         l_result = true;
     }
     return l_result;
@@ -230,10 +231,15 @@ bool ROC::InheritanceManager::AttachTextureToShader(Shader *f_shader, Texture *f
     if(!l_result)
     {
         l_result = m_core->GetRenderManager()->AttachToShader(f_shader, f_texture, f_uniform);
-        if(l_result) m_inheritMap.insert(std::pair<void*, void*>(f_texture, f_shader));
+        if(l_result) m_inheritMap.insert(std::pair<Element*, Element*>(f_texture, f_shader));
     }
     return l_result;
 }
+void ROC::InheritanceManager::DettachTextureFromShader(Shader *f_shader, Texture *f_texture)
+{
+    RemoveInheritance(f_texture, f_shader);
+}
+
 bool ROC::InheritanceManager::AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform)
 {
     bool l_result = false;
@@ -249,7 +255,11 @@ bool ROC::InheritanceManager::AttachRenderTargetToShader(Shader *f_shader, Rende
     if(!l_result)
     {
         l_result = m_core->GetRenderManager()->AttachToShader(f_shader, f_target, f_uniform);
-        if(l_result) m_inheritMap.insert(std::pair<void*, void*>(f_target, f_shader));
+        if(l_result) m_inheritMap.insert(std::pair<Element*, Element*>(f_target, f_shader));
     }
     return l_result;
+}
+void ROC::InheritanceManager::DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target)
+{
+    RemoveInheritance(f_target, f_shader);
 }

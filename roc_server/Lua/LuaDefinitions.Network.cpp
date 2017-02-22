@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
 #include "Managers/LogManager.h"
 #include "Elements/Client.h"
@@ -17,7 +18,7 @@ int networkDisconnectClient(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
+    argStream.ReadElement(l_client);
     if(!argStream.HasErrors())
     {
 
@@ -32,7 +33,7 @@ int networkSendDataToClient(lua_State *f_vm)
     Client *l_client;
     std::string l_data;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
+    argStream.ReadElement(l_client);
     argStream.ReadText(l_data);
     if(!argStream.HasErrors() && !l_data.empty())
     {
@@ -46,7 +47,7 @@ int networkGetClientID(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
+    argStream.ReadElement(l_client);
     !argStream.HasErrors() ? argStream.PushInteger(l_client->GetID()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -54,7 +55,7 @@ int networkGetClientAddress(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
+    argStream.ReadElement(l_client);
     if(!argStream.HasErrors())
     {
         std::string l_ip;
@@ -70,7 +71,7 @@ int networkGetClientPing(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_client), ElementType::ClientElement);
+    argStream.ReadElement(l_client);
     if(!argStream.HasErrors())
     {
         int l_ping = LuaManager::GetCore()->GetNetworkManager()->GetPing(l_client);

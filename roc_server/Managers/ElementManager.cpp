@@ -18,13 +18,8 @@ ROC::ElementManager::~ElementManager()
 ROC::Client* ROC::ElementManager::CreateClient()
 {
     Client *l_client = new Client();
-    m_core->GetMemoryManager()->AddMemoryPointer(l_client, ElementType::ClientElement);
+    m_core->GetMemoryManager()->AddMemoryPointer(l_client);
     return l_client;
-}
-void ROC::ElementManager::DestroyClient(Client *f_client)
-{
-    m_core->GetMemoryManager()->RemoveMemoryPointer(f_client, ElementType::ClientElement);
-    delete f_client;
 }
 
 ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
@@ -36,7 +31,7 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
     Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
-    if(l_file->Create(l_work, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
+    if(l_file->Create(l_work, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
     {
         delete l_file;
@@ -53,7 +48,7 @@ ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
     Utils::AnalyzePath(f_path, l_path);
     Utils::JoinPaths(l_work, l_path);
 
-    if(l_file->Open(l_work, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file, ElementType::FileElement);
+    if(l_file->Open(l_work, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
     {
         delete l_file;
@@ -61,23 +56,14 @@ ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
     }
     return l_file;
 }
-bool ROC::ElementManager::DestroyFile(File *f_file)
-{
-    m_core->GetMemoryManager()->RemoveMemoryPointer(f_file, ElementType::FileElement);
-    delete f_file;
-    return true;
-}
 
-void ROC::ElementManager::DestroyByPointer(void *f_pointer, unsigned char f_type)
+void ROC::ElementManager::DestroyElement(Element *f_element)
+{
+    m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+    delete f_element;
+}
+void ROC::ElementManager::DestroyElementByPointer(void *f_element)
 {
     //Called only at the end of work
-    switch(f_type)
-    {
-        case ElementType::ClientElement:
-            delete reinterpret_cast<Client*>(f_pointer);
-            break;
-        case ElementType::FileElement:
-            delete reinterpret_cast<File*>(f_pointer);
-            break;
-    }
+    delete reinterpret_cast<Element*>(f_element);
 }

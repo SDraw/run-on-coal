@@ -5,6 +5,8 @@
 
 ROC::Animation::Animation()
 {
+    m_elementType = ElementType::AnimationElement;
+
     m_animFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     m_duration = 0U;
     m_durationTotal = 0U;
@@ -62,7 +64,7 @@ bool ROC::Animation::Load(std::string &f_path)
 
             m_loaded = true;
         }
-        catch(const std::ifstream::failure &e)
+        catch(const std::ifstream::failure&)
         {
             Clean();
         }
@@ -98,7 +100,7 @@ bool ROC::Animation::CacheData(unsigned int f_tick)
             }
             m_lastLeftFrame = l_leftFrame;
         }
-        catch(const std::ifstream::failure &e)
+        catch(const std::ifstream::failure&)
         {
             l_interpolate = false;
         }

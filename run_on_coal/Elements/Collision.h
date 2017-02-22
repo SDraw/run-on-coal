@@ -1,4 +1,5 @@
 #pragma once
+#include "Elements/Element.h"
 #define COLLISION_TYPE_SPHERE 0U
 #define COLLISION_TYPE_BOX 1U
 #define COLLISION_TYPE_CYLINDER 2U
@@ -8,7 +9,7 @@
 namespace ROC
 {
 
-class Collision
+class Collision : public Element
 {
     btRigidBody *m_rigidBody;
 public:

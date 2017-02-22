@@ -5,18 +5,16 @@ namespace ROC
 
 class MemoryManager
 {
-    std::unordered_map<void*, unsigned char> m_memoryMap;
-    std::unordered_map<void*, unsigned char>::iterator m_memoryMapEnd;
+    std::set<void*> m_memorySet;
+    std::set<void*>::iterator m_memorySetEnd;
 public:
-    bool CheckMemoryPointer(void *f_pointer, unsigned char f_type);
-    int GetMemoryPointerType(void *f_pointer);
-    inline bool IsValidMemoryPointer(void *f_pointer) { return (m_memoryMap.find(f_pointer) != m_memoryMapEnd); }
+    bool IsValidMemoryPointer(void *f_pointer);
 protected:
     MemoryManager();
     ~MemoryManager();
 
-    void AddMemoryPointer(void *f_pointer, unsigned char f_type);
-    void RemoveMemoryPointer(void *f_pointer, unsigned char f_type);
+    void AddMemoryPointer(void *f_pointer);
+    void RemoveMemoryPointer(void *f_pointer);
     friend class Core;
     friend class ElementManager;
 };

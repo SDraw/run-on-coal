@@ -3,6 +3,8 @@
 
 ROC::Sound::Sound(bool f_loop)
 {
+    m_elementType = ElementType::SoundElement;
+
     m_handle = NULL;
     m_duration = 0.f;
     m_speed = 1.f;

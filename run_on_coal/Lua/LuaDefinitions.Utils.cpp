@@ -4,6 +4,7 @@
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/LogManager.h"
+#include "Elements/Element.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Utils.h"
 #include "Utils/Utils.h"
@@ -49,15 +50,10 @@ int isElement(lua_State *f_vm)
 
 int getElementType(lua_State *f_vm)
 {
-    void *l_pointer = NULL;
+    Element *l_element = NULL;
     ArgReader argStream(f_vm);
-    argStream.ReadPointer(&l_pointer);
-    if(!argStream.HasErrors())
-    {
-        int l_type = LuaManager::GetCore()->GetMemoryManager()->GetMemoryPointerType(l_pointer);
-        argStream.PushText((l_type != -1) ? g_elementTypeName[l_type] : "invalid");
-    }
-    else argStream.PushBoolean(false);
+    argStream.ReadElement(l_element);
+    !argStream.HasErrors() ? argStream.PushText(g_elementTypeName[l_element->GetElementType()]) :argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int getTickCount(lua_State *f_vm)

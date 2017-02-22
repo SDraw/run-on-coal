@@ -1,9 +1,10 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
 
-class Client
+class Client : public Element
 {
     RakNet::SystemAddress m_address;
 public:

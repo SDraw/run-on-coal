@@ -3,6 +3,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
+#include "Elements/Element.h"
 #include "Lua/ArgReader.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
@@ -58,39 +59,6 @@ void ROC::ArgReader::ReadText(std::string &f_val)
             else
             {
                 m_error.append("Expected string");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadElement(void **f_val, unsigned char f_type)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_islightuserdata(m_vm, m_currentArg))
-            {
-                void *a = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
-                if(LuaManager::GetCore()->GetMemoryManager()->CheckMemoryPointer(a, f_type))
-                {
-                    *f_val = a;
-                    m_currentArg++;
-                }
-                else
-                {
-                    m_error.append("Invalid userdata");
-                    m_hasErrors = true;
-                }
-            }
-            else
-            {
-                m_error.append("Expected userdata");
                 m_hasErrors = true;
             }
         }
@@ -198,21 +166,6 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
             const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
             f_val.append(l_string,l_size);
             m_currentArg++;
-        }
-    }
-}
-void ROC::ArgReader::ReadNextElement(void **f_val, unsigned char f_type)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_islightuserdata(m_vm, m_currentArg))
-        {
-            void *a = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
-            if(LuaManager::GetCore()->GetMemoryManager()->CheckMemoryPointer(a, f_type))
-            {
-                *f_val = a;
-                m_currentArg++;
-            }
         }
     }
 }

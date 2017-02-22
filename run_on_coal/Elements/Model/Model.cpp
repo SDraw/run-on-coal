@@ -11,6 +11,8 @@
 
 ROC::Model::Model(Geometry *f_geometry)
 {
+    m_elementType = ElementType::ModelElement;
+
     m_position = glm::vec3(0.f);
     m_rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
     m_scale = glm::vec3(1.f);

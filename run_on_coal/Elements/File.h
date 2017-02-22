@@ -1,9 +1,10 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
 
-class File
+class File : public Element
 {
     enum FileMode { NoneMode = -1, ReadMode, WriteMode };
     FileMode m_type = FileMode::NoneMode;

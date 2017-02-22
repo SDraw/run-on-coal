@@ -1,4 +1,5 @@
 #pragma once
+#include "Elements/Element.h"
 #define TEXTURE_TYPE_NONE -1
 #define TEXTURE_TYPE_RGB 0
 #define TEXTURE_TYPE_RGBA 1
@@ -7,7 +8,7 @@
 namespace ROC
 {
 
-class Texture
+class Texture : public Element
 {
     int m_type;
     GLuint m_texture;

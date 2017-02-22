@@ -120,6 +120,7 @@
     <ClInclude Include="Elements\Animation\BoneFrameData.h" />
     <ClInclude Include="Elements\Camera.h" />
     <ClInclude Include="Elements\Collision.h" />
+    <ClInclude Include="Elements\Element.h" />
     <ClInclude Include="Elements\File.h" />
     <ClInclude Include="Elements\Font.h" />
     <ClInclude Include="Elements\Geometry\BoneCollisionData.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="Elements\Animation\BoneFrameData.cpp" />
     <ClCompile Include="Elements\Camera.cpp" />
     <ClCompile Include="Elements\Collision.cpp" />
+    <ClCompile Include="Elements\Element.cpp" />
     <ClCompile Include="Elements\File.cpp" />
     <ClCompile Include="Elements\Font.cpp" />
     <ClCompile Include="Elements\Geometry\BoneCollisionData.cpp" />

@@ -1,4 +1,5 @@
 #pragma once
+#include "Elements/Element.h"
 #define MODEL_RIGIDITY_TYPE_SPHERE 0U
 #define MODEL_RIGIDITY_TYPE_BOX 1U
 #define MODEL_RIGIDITY_TYPE_CYLINDER 2U
@@ -14,7 +15,7 @@ namespace ROC
 class Geometry;
 class Skeleton;
 class Animation;
-class Model
+class Model : public Element
 {
     Geometry *m_geometry;
     glm::vec3 m_position;

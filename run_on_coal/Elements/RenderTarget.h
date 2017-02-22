@@ -1,4 +1,5 @@
 #pragma once
+#include "Elements/Element.h"
 #define RENDERTARGET_TYPE_NONE -1
 #define RENDERTARGET_TYPE_DEPTH 0
 #define RENDERTARGET_TYPE_RGB 1
@@ -9,7 +10,7 @@
 namespace ROC
 {
 
-class RenderTarget
+class RenderTarget : public Element
 {
     int m_type;
 

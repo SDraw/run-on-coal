@@ -3,6 +3,8 @@
 
 ROC::Font::Font()
 {
+    m_elementType = ElementType::FontElement;
+
     m_loaded = false;
     m_library = FT_Library();
     m_face = FT_Face();

@@ -7,6 +7,7 @@ enum ElementType : unsigned char { ClientElement = 0U, FileElement };
 
 class Core;
 class Client;
+class Element;
 class File;
 class ElementManager
 {
@@ -14,15 +15,15 @@ class ElementManager
 public:
     File* CreateFile_(std::string &f_path);
     File* OpenFile(std::string &f_path, bool f_ro);
-    bool DestroyFile(File *f_file);
+
+    void DestroyElement(Element *f_element);
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
 
     Client* CreateClient();
-    void DestroyClient(Client *f_client);
 
-    static void DestroyByPointer(void* f_pointer, unsigned char f_type);
+    static void DestroyElementByPointer(void* f_pointer);
 
     friend Core;
     friend class MemoryManager;

@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Elements/Collision.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Collision.h"
@@ -41,11 +42,11 @@ int collisionDestroy(lua_State *f_vm)
 {
     Collision *l_col;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(l_col);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyCollision(l_col);
-        argStream.PushBoolean(l_result);
+        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_col);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -56,7 +57,7 @@ int collisionSetPosition(lua_State *f_vm)
     Collision *l_col;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(l_col);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
     {
@@ -70,7 +71,7 @@ int collisionGetPosition(lua_State *f_vm)
 {
     Collision *l_col;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(l_col);
     if(!argStream.HasErrors())
     {
         glm::vec3 l_pos;
@@ -88,7 +89,7 @@ int collisionSetRotation(lua_State *f_vm)
     Collision *l_col;
     glm::vec4 l_val(0.f, 0.f, 0.f, std::nanf("0"));
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(l_col);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
     argStream.ReadNextNumber(l_val.w);
     if(!argStream.HasErrors())
@@ -105,7 +106,7 @@ int collisionGetRotation(lua_State *f_vm)
     Collision *l_col;
     bool l_reqQuat = false;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_col), ElementType::CollisionElement);
+    argStream.ReadElement(l_col);
     argStream.ReadNextBoolean(l_reqQuat);
     if(!argStream.HasErrors())
     {

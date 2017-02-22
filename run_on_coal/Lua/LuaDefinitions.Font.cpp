@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Font.h"
 #include "Lua/ArgReader.h"
@@ -41,11 +42,11 @@ int fontDestroy(lua_State *f_vm)
 {
     Font *l_font;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
+    argStream.ReadElement(l_font);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyFont(l_font);
-        argStream.PushBoolean(l_result);
+        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_font);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -55,7 +56,7 @@ int fontGetTextWidth(lua_State *f_vm)
     Font *l_font;
     std::string l_text;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
+    argStream.ReadElement(l_font);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
     {
@@ -71,7 +72,7 @@ int fontGetTextHeight(lua_State *f_vm)
     Font *l_font;
     std::string l_text;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
+    argStream.ReadElement(l_font);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
     {
@@ -89,7 +90,7 @@ int fontDraw(lua_State *f_vm)
     std::string l_text;
     glm::vec4 l_color(1.f);
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_font), ElementType::FontElement);
+    argStream.ReadElement(l_font);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     argStream.ReadText(l_text);
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);

@@ -1,4 +1,5 @@
 #pragma once
+#include "Elements/Element.h"
 #define SHADER_MAX_BONES_COUNT 227U
 
 namespace ROC
@@ -7,7 +8,7 @@ namespace ROC
 class Pool;
 class Texture;
 class RenderTarget;
-class Shader
+class Shader : public Element
 {
     GLuint m_program;
 

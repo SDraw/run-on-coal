@@ -2,6 +2,8 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
+#include "Elements/Geometry/Geometry.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Geometry.h"
 
@@ -27,11 +29,11 @@ int geometryDestroy(lua_State *f_vm)
 {
     Geometry *l_geometry;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_geometry), ElementType::GeometryElement);
+    argStream.ReadElement(l_geometry);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyGeometry(l_geometry);
-        argStream.PushBoolean(l_result);
+        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_geometry);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

@@ -128,7 +128,7 @@ void ROC::NetworkManager::DoPulse()
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientDisconnect, m_argument);
                     m_argument->Clear();
 
-                    m_core->GetElementManager()->DestroyClient(l_client);
+                    m_core->GetElementManager()->DestroyElement(l_client);
                     m_clientVector[l_packet->guid.systemIndex] = NULL;
                     m_core->GetLogManager()->Log(l_log);
                 } break;

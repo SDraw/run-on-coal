@@ -1,10 +1,11 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
 
 class BoneFrameData;
-class Animation
+class Animation : public Element
 {
     std::ifstream m_animFile;
 

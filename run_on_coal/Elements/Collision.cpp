@@ -3,6 +3,7 @@
 
 ROC::Collision::Collision()
 {
+    m_elementType = ElementType::CollisionElement;
     m_rigidBody = NULL;
 }
 ROC::Collision::~Collision()

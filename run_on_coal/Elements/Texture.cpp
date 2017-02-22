@@ -3,6 +3,8 @@
 
 ROC::Texture::Texture()
 {
+    m_elementType = ElementType::TextureElement;
+
     m_type = TEXTURE_TYPE_NONE;
     m_texture = 0U;
 }

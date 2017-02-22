@@ -1,11 +1,12 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
 
 class Camera;
 class Light;
-class Scene
+class Scene : public Element
 {
     Camera *m_mainCamera;
     Light *m_mainLight;

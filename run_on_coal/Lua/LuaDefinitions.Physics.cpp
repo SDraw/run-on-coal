@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Elements/Model/Model.h"
 #include "Lua/ArgReader.h"
@@ -108,8 +109,8 @@ int physicsSetModelsCollidable(lua_State *f_vm)
     Model *l_model1, *l_model2;
     bool l_state;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_model1), ElementType::ModelElement);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_model2), ElementType::ModelElement);
+    argStream.ReadElement(l_model1);
+    argStream.ReadElement(l_model2);
     argStream.ReadBoolean(l_state);
     if(!argStream.HasErrors())
     {

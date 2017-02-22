@@ -69,6 +69,9 @@
     <ClCompile Include="Lua\LuaDefinitions.File.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Element.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -132,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.File.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Element.h">
+      <Filter>Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

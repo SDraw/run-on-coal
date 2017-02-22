@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Texture.h"
 #include "Lua/ArgReader.h"
@@ -58,13 +59,13 @@ int textureCreate(lua_State *f_vm)
 }
 int textureDestroy(lua_State *f_vm)
 {
-    Texture *l_tex;
+    Texture *l_texture;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
+    argStream.ReadElement(l_texture);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyTexture(l_tex);
-        argStream.PushBoolean(l_result);
+        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_texture);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -76,7 +77,7 @@ int textureDraw(lua_State *f_vm)
     float l_rot = 0.f;
     glm::vec4 l_color(1.f);
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_tex), ElementType::TextureElement);
+    argStream.ReadElement(l_tex);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
     argStream.ReadNextNumber(l_rot);

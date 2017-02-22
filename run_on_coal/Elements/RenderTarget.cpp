@@ -3,6 +3,8 @@
 
 ROC::RenderTarget::RenderTarget()
 {
+    m_elementType = ElementType::RenderTargetElement;
+
     m_type = RENDERTARGET_TYPE_NONE;
     m_bTexture = false;
     m_bRenderBuffer = false;

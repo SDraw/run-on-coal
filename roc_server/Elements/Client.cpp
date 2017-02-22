@@ -3,6 +3,7 @@
 
 ROC::Client::Client()
 {
+    m_elementType = ElementType::ClientElement;
 }
 ROC::Client::~Client()
 {

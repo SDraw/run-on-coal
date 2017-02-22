@@ -3,6 +3,8 @@
 
 ROC::Camera::Camera(unsigned char f_type)
 {
+    m_elementType = ElementType::CameraElement;
+
     m_type = f_type;
 
     m_viewPosition = glm::vec3(0.f);

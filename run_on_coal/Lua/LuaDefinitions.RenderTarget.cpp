@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/RenderTarget.h"
 #include "Lua/ArgReader.h"
@@ -44,11 +45,11 @@ int rtDestroy(lua_State *f_vm)
 {
     RenderTarget *l_rt;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
+    argStream.ReadElement(l_rt);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyRenderTarget(l_rt);
-        argStream.PushBoolean(l_result);
+        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_rt);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -60,7 +61,7 @@ int rtDraw(lua_State *f_vm)
     float l_rot;
     glm::vec4 l_color(1.f);
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
+    argStream.ReadElement(l_rt);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
     argStream.ReadNextNumber(l_rot);

@@ -1,11 +1,12 @@
 #pragma once
+#include "Elements/Element.h"
 #define CAMERA_PROJECTION_PERSPECTIVE ((unsigned char)0U)
 #define CAMERA_PROJECTION_ORTHOGONAL ((unsigned char)1U)
 
 namespace ROC
 {
 
-class Camera
+class Camera : public Element
 {
     unsigned char m_type;
 

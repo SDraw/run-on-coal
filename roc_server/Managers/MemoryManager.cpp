@@ -4,41 +4,29 @@
 
 ROC::MemoryManager::MemoryManager()
 {
-    m_memoryMapEnd = m_memoryMap.end();
+    m_memorySetEnd = m_memorySet.end();
 }
 ROC::MemoryManager::~MemoryManager()
 {
-    for(auto iter : m_memoryMap) ElementManager::DestroyByPointer(iter.first, iter.second);
+    for(auto iter : m_memorySet) ElementManager::DestroyElementByPointer(iter);
 }
 
-bool ROC::MemoryManager::CheckMemoryPointer(void *f_pointer, unsigned char f_type)
+bool ROC::MemoryManager::IsValidMemoryPointer(void *f_pointer)
 {
-    bool l_result = false;
-    auto l_checkIterator = m_memoryMap.find(f_pointer);
-    if(l_checkIterator != m_memoryMapEnd) l_result = (l_checkIterator->second == f_type);
-    return l_result;
+    return (m_memorySet.find(f_pointer) != m_memorySetEnd);
 }
 
-int ROC::MemoryManager::GetMemoryPointerType(void *f_pointer)
+void ROC::MemoryManager::AddMemoryPointer(void *f_pointer)
 {
-    auto iter = m_memoryMap.find(f_pointer);
-    return ((iter != m_memoryMapEnd) ? iter->second : -1);
+    m_memorySet.insert(f_pointer);
+    m_memorySetEnd = m_memorySet.end();
 }
-
-void ROC::MemoryManager::AddMemoryPointer(void *f_pointer, unsigned char f_type)
-{ 
-    m_memoryMap.insert(std::pair<void*, unsigned int>(f_pointer, f_type));
-    m_memoryMapEnd = m_memoryMap.end();
-}
-void ROC::MemoryManager::RemoveMemoryPointer(void *f_pointer, unsigned char f_type)
+void ROC::MemoryManager::RemoveMemoryPointer(void *f_pointer)
 {
-    auto l_checkIterator = m_memoryMap.find(f_pointer);
-    if(l_checkIterator != m_memoryMapEnd)
+    auto l_checkIterator = m_memorySet.find(f_pointer);
+    if(l_checkIterator != m_memorySetEnd)
     {
-        if(l_checkIterator->second == f_type)
-        {
-            m_memoryMap.erase(l_checkIterator);
-            m_memoryMapEnd = m_memoryMap.end();
-        }
+        m_memorySet.erase(l_checkIterator);
+        m_memorySetEnd = m_memorySet.end();
     }
 }

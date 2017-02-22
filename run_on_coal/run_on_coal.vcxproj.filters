@@ -189,6 +189,9 @@
     <ClCompile Include="Managers\NetworkManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Element.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -372,6 +375,9 @@
     </ClInclude>
     <ClInclude Include="Managers\NetworkManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Element.h">
+      <Filter>Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

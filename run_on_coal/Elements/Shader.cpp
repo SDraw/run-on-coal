@@ -9,6 +9,8 @@ ROC::Pool *ROC::Shader::m_uboBindPool = NULL;
 
 ROC::Shader::Shader()
 {
+    m_elementType = ElementType::ShaderElement;
+
     m_program = 0U;
 
     m_projectionUniform = -1;

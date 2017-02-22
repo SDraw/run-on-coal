@@ -3,17 +3,14 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <fstream>
+#include <regex>
 #include <vector>
-#include <map>
 #include <unordered_map>
 #include <list>
-#include <fstream>
-#include <sstream>
-#include <ctime>
-#include <regex>
-#include <thread>
-#include <mutex>
 #include <atomic>
+#include <ctime>
 #include <direct.h>
 
 #include "GL/glew.h"

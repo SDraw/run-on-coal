@@ -1,9 +1,10 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
 
-class Sound
+class Sound : public Element
 {
     sf::Music* m_handle;
 

@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClInclude Include="Core\Core.h" />
     <ClInclude Include="Elements\Client.h" />
+    <ClInclude Include="Elements\Element.h" />
     <ClInclude Include="Elements\File.h" />
     <ClInclude Include="Lua\ArgReader.h" />
     <ClInclude Include="Lua\LuaArguments.h" />
@@ -120,6 +121,7 @@
     </ClCompile>
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Elements\Client.cpp" />
+    <ClCompile Include="Elements\Element.cpp" />
     <ClCompile Include="Elements\File.cpp" />
     <ClCompile Include="Lua\ArgReader.cpp" />
     <ClCompile Include="Lua\LuaArguments.cpp" />

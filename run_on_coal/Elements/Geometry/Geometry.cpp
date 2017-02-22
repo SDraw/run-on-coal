@@ -8,6 +8,8 @@
 
 ROC::Geometry::Geometry()
 {
+    m_elementType = ElementType::GeometryElement;
+
     m_loaded = false;
     m_materialCount = 0U;
 }
@@ -193,7 +195,7 @@ bool ROC::Geometry::Load(std::string &f_path)
                 m_loaded = true;
             }
         }
-        catch(const std::ifstream::failure &e)
+        catch(const std::ifstream::failure&)
         {
             Clear();
         }
@@ -267,7 +269,7 @@ bool ROC::Geometry::Load(std::string &f_path)
                     }
                 }
             }
-            catch(const std::ifstream::failure &e)
+            catch(const std::ifstream::failure&)
             {
                 for(auto iter : m_collisionData) delete iter;
                 m_collisionData.clear();

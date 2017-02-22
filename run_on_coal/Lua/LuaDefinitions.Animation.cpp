@@ -2,6 +2,8 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
+#include "Elements/Animation/Animation.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Animation.h"
 
@@ -27,11 +29,11 @@ int animationDestroy(lua_State *f_vm)
 {
     Animation *l_anim = NULL;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_anim), ElementType::AnimationElement);
+    argStream.ReadElement(l_anim);
     if(!argStream.HasErrors())
     {
-        bool l_result = ROC::LuaManager::GetCore()->GetElementManager()->DestroyAnimation(l_anim);
-        argStream.PushBoolean(l_result);
+        ROC::LuaManager::GetCore()->GetElementManager()->DestroyElement(l_anim);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

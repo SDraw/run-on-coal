@@ -1,4 +1,5 @@
 #pragma once
+#include "Elements/Element.h"
 
 namespace ROC
 {
@@ -7,7 +8,7 @@ class BoneData;
 class BoneCollisionData;
 class BoneJointData;
 class Material;
-class Geometry
+class Geometry : public Element
 {
     std::vector<Material*> m_materialVector;
     unsigned int m_materialCount;

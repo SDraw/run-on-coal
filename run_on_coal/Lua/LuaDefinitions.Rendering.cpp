@@ -2,7 +2,11 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/MemoryManager.h"
 #include "Managers/RenderManager/RenderManager.h"
+#include "Elements/RenderTarget.h"
+#include "Elements/Scene.h"
+#include "Elements/Shader.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Rendering.h"
 
@@ -15,7 +19,7 @@ int setActiveScene(lua_State *f_vm)
 {
     Scene *l_scene;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_scene), ElementType::SceneElement);
+    argStream.ReadElement(l_scene);
     if(!argStream.HasErrors())
     {
         LuaManager::GetCore()->GetRenderManager()->SetActiveScene(l_scene);
@@ -28,7 +32,7 @@ int setActiveShader(lua_State *f_vm)
 {
     Shader *l_shader;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(reinterpret_cast<void**>(&l_shader), ElementType::ShaderElement);
+    argStream.ReadElement(l_shader);
     if(!argStream.HasErrors())
     {
         LuaManager::GetCore()->GetRenderManager()->SetActiveShader(l_shader);
@@ -41,7 +45,7 @@ int setRenderTarget(lua_State *f_vm)
 {
     RenderTarget *l_rt = NULL;
     ArgReader argStream(f_vm);
-    argStream.ReadNextElement(reinterpret_cast<void**>(&l_rt), ElementType::RenderTargetElement);
+    argStream.ReadNextElement(l_rt);
     LuaManager::GetCore()->GetRenderManager()->SetRenderTarget(l_rt);
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();

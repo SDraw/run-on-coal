@@ -3,19 +3,17 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
-#include <map>
-#include <unordered_map>
-#include <list>
-#include <fstream>
 #include <sstream>
-#include <ctime>
+#include <fstream>
+#include <regex>
+#include <vector>
+#include <set>
 #include <thread>
 #include <atomic>
+#include <ctime>
 #ifndef _WIN32
 #include <csignal>
 #endif
-#include <regex>
 #include <direct.h>
 
 #include "SFML/System.hpp"

@@ -22,7 +22,7 @@ public:
     template<typename T> void ReadNumber(T &f_val);
     template<typename T> void ReadInteger(T &f_val);
     void ReadText(std::string &f_val);
-    void ReadElement(void **f_val, unsigned char f_type);
+    template<class T> void ReadElement(T *&f_element);
     void ReadPointer(void **f_val);
     void ReadFunction(int &f_val, void **f_pointer);
     void ReadFunctionPointer(void **f_pointer);
@@ -31,7 +31,7 @@ public:
     template<typename T> void ReadNextNumber(T &f_val);
     template<typename T> void ReadNextInteger(T &f_val);
     void ReadNextText(std::string &f_val);
-    void ReadNextElement(void **f_val, unsigned char f_type);
+    template<class T> void ReadNextElement(T *&f_element);
     void ReadNextPointer(void **f_val);
 
     void ReadMatrix(float *f_val, int f_size);
@@ -103,6 +103,52 @@ template<typename T> void ROC::ArgReader::ReadInteger(T &f_val)
         }
     }
 };
+template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
+{
+    if(!m_hasErrors)
+    {
+        if(m_currentArg <= m_argCount)
+        {
+            if(lua_islightuserdata(m_vm, m_currentArg))
+            {
+                Element *a = reinterpret_cast<Element*>(const_cast<void*>(lua_topointer(m_vm, m_currentArg)));
+                if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(a))
+                {
+                    try
+                    {
+                        if((f_element = dynamic_cast<T*>(a)) != NULL) m_currentArg++;
+                        else
+                        {
+                            m_error.append("Invalid userdata");
+                            m_hasErrors = true;
+                        }
+    
+                    }
+                    catch(const std::exception&)
+                    {
+                        m_error.append("Invalid userdata");
+                        m_hasErrors = true;
+                    }
+                }
+                else
+                {
+                    m_error.append("Invalid userdata");
+                    m_hasErrors = true;
+                }
+            }
+            else
+            {
+                m_error.append("Expected userdata");
+                m_hasErrors = true;
+            }
+        }
+        else
+        {
+            m_error.append("Not enough arguments");
+            m_hasErrors = true;
+        }
+    }
+}
 
 template<typename T> void ROC::ArgReader::ReadNextNumber(T &f_val)
 {
@@ -126,3 +172,21 @@ template<typename T> void ROC::ArgReader::ReadNextInteger(T &f_val)
         }
     }
 };
+template<class T> void ROC::ArgReader::ReadNextElement(T *&f_element)
+{
+    if(!m_hasErrors && (m_currentArg <= m_argCount))
+    {
+        if(lua_islightuserdata(m_vm, m_currentArg))
+        {
+            Element *a = reinterpret_cast<Element*>(const_cast<void*>(lua_topointer(m_vm, m_currentArg)));
+            if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(a))
+            {
+                try
+                {
+                    if((f_element = dynamic_cast<T*>(a)) != NULL) m_currentArg++;
+                }
+                catch(const std::exception&) {}
+            }
+        }
+    }
+}

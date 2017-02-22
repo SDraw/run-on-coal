@@ -4,6 +4,7 @@ namespace ROC
 {
 
 class Core;
+class Element;
 class Animation;
 class Camera;
 class Geometry;
@@ -17,8 +18,8 @@ class InheritanceManager
 {
     Core *m_core;
 
-    std::multimap<void*, void*> m_inheritMap; //child - parent
-    void InheritanceBreakProcessing(void *f_child, void *f_parent, unsigned char f_childType, unsigned char f_parentType);
+    std::multimap<Element*, Element*> m_inheritMap; //child - parent
+    void InheritanceBreakProcessing(Element *f_child, Element *f_parent);
 public:
     bool AttachModelToModel(Model *f_model, Model *f_parent, int f_bone = -1);
     bool DettachModel(Model *f_model);
@@ -26,18 +27,19 @@ public:
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool SetSceneLight(Scene *f_scene, Light *f_light);
     bool AttachTextureToShader(Shader *f_shader, Texture *f_texture, int f_uniform);
-    inline void DettachTextureFromShader(Shader *f_shader, Texture *f_texture) { RemoveInheritance(f_texture, f_shader); }
+    void DettachTextureFromShader(Shader *f_shader, Texture *f_texture);
     bool AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform);
-    inline void DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target) { RemoveInheritance(f_target, f_shader); }
+    void DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target);
 protected:
     explicit InheritanceManager(Core *f_core);
     ~InheritanceManager();
 
-    void RemoveInheritance(void *f_child, void *f_parent);
-    void RemoveChildRelation(void *f_child);
-    void RemoveParentRelation(void *f_parent);
+    void RemoveInheritance(Element *f_child, Element *f_parent);
+    void RemoveChildRelation(Element *f_child);
+    void RemoveParentRelation(Element *f_parent);
 
-    inline void SetModelGeometry(Model *f_model, Geometry *f_geometry) { m_inheritMap.insert(std::pair<void*, void*>(f_model, f_geometry)); }
+    void SetModelGeometry(Model *f_model, Geometry *f_geometry);
+
     friend Core;
     friend class ElementManager;
 };
