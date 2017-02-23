@@ -41,6 +41,7 @@ ROC::Model::Model(Geometry *f_geometry)
     else m_skeleton = NULL;
 
     m_rigidBody = NULL;
+    m_rigidType = MODEL_RIGIDITY_TYPE_NONE;
 }
 ROC::Model::~Model()
 {
@@ -279,15 +280,16 @@ bool ROC::Model::HasSkeletonDynamicBoneCollision() const
     return (m_skeleton ? m_skeleton->HasDynamicBoneCollision() : false);
 }
 
-bool ROC::Model::SetCollision(unsigned char f_type, float f_mass, glm::vec3 &f_dim)
+bool ROC::Model::SetCollision(int f_type, float f_mass, glm::vec3 &f_dim)
 {
     if(!m_rigidBody && !m_parent && (f_mass >= 0.f))
     {
 
         btVector3 l_inertia;
         btCollisionShape *l_shape = NULL;
-
-        switch(f_type)
+        m_rigidType = f_type;
+        btClamp(m_rigidType, MODEL_RIGIDITY_TYPE_SPHERE, MODEL_RIGIDITY_TYPE_CONE);
+        switch(m_rigidType)
         {
             case MODEL_RIGIDITY_TYPE_SPHERE:
                 l_shape = new btSphereShape(f_dim.x);
@@ -304,8 +306,6 @@ bool ROC::Model::SetCollision(unsigned char f_type, float f_mass, glm::vec3 &f_d
             case MODEL_RIGIDITY_TYPE_CONE:
                 l_shape = new btConeShape(f_dim.x, f_dim.y);
                 break;
-            default:
-                l_shape = new btEmptyShape();
         }
         l_shape->calculateLocalInertia(f_mass, l_inertia);
         btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(btTransform(btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w), btVector3(m_position.x, m_position.y, m_position.z)));
@@ -321,6 +321,7 @@ bool ROC::Model::RemoveCollision()
         delete m_rigidBody->getMotionState();
         delete m_rigidBody;
         m_rigidBody = NULL;
+        m_rigidType = MODEL_RIGIDITY_TYPE_NONE;
     }
     return (m_rigidBody == NULL);
 }

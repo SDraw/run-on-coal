@@ -420,7 +420,7 @@ int modelSetCollision(lua_State *f_vm)
         int l_type = Utils::ReadEnumVector(g_modelCollisionTable, l_textType);
         if(l_type != -1)
         {
-            bool l_result = LuaManager::GetCore()->GetPhysicsManager()->SetModelCollision(l_model, MODEL_RIGIDITY_TYPE_SPHERE + static_cast<unsigned char>(l_type), l_mass, l_size);
+            bool l_result = LuaManager::GetCore()->GetPhysicsManager()->SetModelCollision(l_model, l_type, l_mass, l_size);
             argStream.PushBoolean(l_result);
         }
         else argStream.PushBoolean(false);

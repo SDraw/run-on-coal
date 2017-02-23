@@ -3,15 +3,15 @@
 namespace ROC
 {
 
-enum EventType : unsigned char
+enum EventType
 {
-    ServerStart = 0U, //onServerStart
+    None = -1,
+    ServerStart, //onServerStart
     ServerStop, //onServerStop
     ServerPulse, //onServerPulse
     NetworkClientConnect, //onNetworkClientConnect
     NetworkClientDisconnect, //onNetworkClientDisconnect
-    NetworkDataRecieve, //onNetworkDataRecieve
-    Last // None
+    NetworkDataRecieve //onNetworkDataRecieve
 };
 
 class LuaManager;
@@ -27,15 +27,15 @@ class EventManager
         bool m_muted = false;
         bool m_deleted = false;
     };
-    std::vector<Event*> m_eventsVector[EventType::Last];
+    std::vector<Event*> m_eventsVector[EventType::NetworkDataRecieve+1];
     std::vector<Event*>::iterator m_iter;
-    unsigned char m_activeEvent;
+    EventType m_activeEvent;
     bool m_locked;
 public:
-    bool AddEvent(unsigned char f_event, int f_ref, void *f_pointer);
-    bool SetEventMute(unsigned char f_event, void *f_pointer, bool f_mute);
-    bool RemoveEvent(unsigned char f_event, void *f_pointer);
-    void CallEvent(unsigned char f_event, LuaArguments *f_args);
+    bool AddEvent(EventType f_event, int f_ref, void *f_pointer);
+    bool SetEventMute(EventType f_event, void *f_pointer, bool f_mute);
+    bool RemoveEvent(EventType f_event, void *f_pointer);
+    void CallEvent(EventType f_event, LuaArguments *f_args);
 protected:
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();

@@ -30,7 +30,7 @@ int collisionCreate(lua_State *f_vm)
         int l_type = Utils::ReadEnumVector(g_collisionTypesTable, l_typeString);
         if(l_type != -1)
         {
-            Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(COLLISION_TYPE_SPHERE + static_cast<unsigned char>(l_type), l_size);
+            Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(l_type, l_size);
             l_col ? argStream.PushPointer(l_col) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

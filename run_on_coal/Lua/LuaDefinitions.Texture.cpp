@@ -43,13 +43,13 @@ int textureCreate(lua_State *f_vm)
             {
                 std::string l_path;
                 argStream.ReadText(l_path);
-                if(!argStream.HasErrors() && !l_path.empty()) l_tex = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, TEXTURE_TYPE_RGB + l_textureType, static_cast<unsigned char>(l_filteringType), l_compress);
+                if(!argStream.HasErrors() && !l_path.empty()) l_tex = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, l_textureType, l_filteringType, l_compress);
             } break;
             case 2:
             {
                 std::vector<std::string> l_path;
                 argStream.ReadTableTexts(l_path, 6);
-                if(!argStream.HasErrors()) l_tex = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
+                if(!argStream.HasErrors()) l_tex = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, l_filteringType, l_compress);
             } break;
         }
         l_tex ? argStream.PushPointer(l_tex) : argStream.PushBoolean(false);

@@ -1,5 +1,8 @@
 #pragma once
 #include "Elements/Element.h"
+#define FONT_FILTER_NONE -1
+#define FONT_FILTER_NEAREST 0
+#define FONT_FILTER_LINEAR 1
 
 namespace ROC
 {
@@ -32,12 +35,13 @@ class Font : public Element
 
     void Clear();
 public:
+    inline int GetFiltering() const { return m_filteringType; }
     int GetTextWidth(sf::String &f_text);
     int GetTextHeight(sf::String &f_text);
 protected:
     Font();
     ~Font();
-    bool LoadTTF(std::string &f_path, int f_size, unsigned char f_filter);
+    bool LoadTTF(std::string &f_path, int f_size, int f_filter);
     inline GLuint GetVAO() const { return m_VAO; }
     void Draw(sf::String &f_text, glm::vec2 &f_pos, bool f_bind);
     friend class ElementManager;

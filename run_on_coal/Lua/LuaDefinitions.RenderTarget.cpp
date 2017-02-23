@@ -18,22 +18,29 @@ const std::vector<std::string> g_targetTypesTable
 {
     "depth", "rgb", "rgba", "rgbf", "rgbaf"
 };
+const std::vector<std::string> g_rtFilteringTypesTable
+{
+    "nearest", "linear"
+};
 
 int rtCreate(lua_State *f_vm)
 {
     glm::ivec2 l_size;
     unsigned int l_number;
-    std::string l_type;
+    std::string l_type, l_filtering;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 2; i++) argStream.ReadInteger(l_size[i]);
     argStream.ReadInteger(l_number);
     argStream.ReadText(l_type);
+    argStream.ReadNextText(l_filtering);
     if(!argStream.HasErrors() && (l_size.x >= 1) && (l_size.y >= 1) && !l_type.empty())
     {
         int l_etype = Utils::ReadEnumVector(g_targetTypesTable, l_type);
         if(l_etype != -1)
         {
-            RenderTarget *l_rt = LuaManager::GetCore()->GetElementManager()->CreateRenderTarget(l_number, l_size, RENDERTARGET_TYPE_DEPTH + l_etype);
+            int l_filteringType = Utils::ReadEnumVector(g_rtFilteringTypesTable, l_filtering);
+            if(l_filteringType == -1) l_filteringType = 0;
+            RenderTarget *l_rt = LuaManager::GetCore()->GetElementManager()->CreateRenderTarget(l_number, l_size, l_etype, l_filteringType);
             l_rt ? argStream.PushPointer(l_rt) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

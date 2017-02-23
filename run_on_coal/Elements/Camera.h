@@ -1,14 +1,14 @@
 #pragma once
 #include "Elements/Element.h"
-#define CAMERA_PROJECTION_PERSPECTIVE ((unsigned char)0U)
-#define CAMERA_PROJECTION_ORTHOGONAL ((unsigned char)1U)
+#define CAMERA_PROJECTION_PERSPECTIVE 0
+#define CAMERA_PROJECTION_ORTHOGONAL 1
 
 namespace ROC
 {
 
 class Camera : public Element
 {
-    unsigned char m_type;
+    int m_type;
 
     glm::vec3 m_viewPosition;
     glm::vec3 m_viewDirection;
@@ -24,8 +24,8 @@ class Camera : public Element
 
     glm::vec4 m_planes[6];
 public:
-    void SetType(unsigned char f_type);
-    inline unsigned char GetType() const { return m_type; }
+    void SetType(int f_type);
+    inline int GetType() const { return m_type; }
 
     void SetFOV(float f_fov);
     inline float GetFOV() const { return m_fov; }
@@ -45,7 +45,7 @@ public:
 
     bool IsInFrustum(glm::vec3 &f_pos, float f_radius);
 protected:
-    explicit Camera(unsigned char f_type);
+    explicit Camera(int f_type);
     ~Camera();
 
     inline glm::vec3& GetPositionRef() { return m_viewPosition; }

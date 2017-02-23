@@ -5,6 +5,7 @@ ROC::Collision::Collision()
 {
     m_elementType = ElementType::CollisionElement;
     m_rigidBody = NULL;
+    m_type = COLLISION_TYPE_NONE;
 }
 ROC::Collision::~Collision()
 {
@@ -15,12 +16,14 @@ ROC::Collision::~Collision()
     }
 }
 
-bool ROC::Collision::Create(unsigned char f_type, glm::vec3 &f_size)
+bool ROC::Collision::Create(int f_type, glm::vec3 &f_size)
 {
     if(!m_rigidBody)
     {
+        m_type = f_type;
+        btClamp(m_type, COLLISION_TYPE_SPHERE, COLLISION_TYPE_CONE);
         btCollisionShape *l_shape = NULL;
-        switch(f_type)
+        switch(m_type)
         {
             case COLLISION_TYPE_SPHERE:
                 l_shape = new btSphereShape(f_size.x);
@@ -37,8 +40,6 @@ bool ROC::Collision::Create(unsigned char f_type, glm::vec3 &f_size)
             case COLLISION_TYPE_CONE:
                 l_shape = new btConeShape(f_size.x, f_size.y);
                 break;
-            default:
-                l_shape = new btEmptyShape();
         }
         btTransform l_transform;
         l_transform.setIdentity();

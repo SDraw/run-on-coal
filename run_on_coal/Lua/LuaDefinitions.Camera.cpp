@@ -15,7 +15,7 @@ namespace Lua
 
 const std::vector<std::string> g_cameraTypesTable
 {
-    "perspective", "orthogonal", "unknown"
+    "perspective", "orthogonal"
 };
 
 int cameraCreate(lua_State *f_vm)
@@ -28,7 +28,7 @@ int cameraCreate(lua_State *f_vm)
         int l_type = Utils::ReadEnumVector(g_cameraTypesTable, l_text);
         if(l_type != -1)
         {
-            Camera *l_camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(CAMERA_PROJECTION_PERSPECTIVE + static_cast<unsigned char>(l_type));
+            Camera *l_camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(l_type);
             l_camera ? argStream.PushPointer(l_camera) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
@@ -126,7 +126,7 @@ int cameraSetType(lua_State *f_vm)
         int l_type = Utils::ReadEnumVector(g_cameraTypesTable, l_text);
         if(l_type != -1)
         {
-            l_camera->SetType(CAMERA_PROJECTION_PERSPECTIVE + static_cast<unsigned char>(l_type));
+            l_camera->SetType(l_type);
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);
@@ -139,21 +139,7 @@ int cameraGetType(lua_State *f_vm)
     Camera *l_camera = NULL;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
-    if(!argStream.HasErrors())
-    {
-        switch(l_camera->GetType())
-        {
-            case CAMERA_PROJECTION_PERSPECTIVE:
-                argStream.PushText(g_cameraTypesTable[0]);
-                break;
-            case CAMERA_PROJECTION_ORTHOGONAL:
-                argStream.PushText(g_cameraTypesTable[1]);
-                break;
-            default:
-                argStream.PushText(g_cameraTypesTable[2]);
-        }
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_cameraTypesTable[l_camera->GetType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

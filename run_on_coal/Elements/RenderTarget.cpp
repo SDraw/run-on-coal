@@ -6,6 +6,7 @@ ROC::RenderTarget::RenderTarget()
     m_elementType = ElementType::RenderTargetElement;
 
     m_type = RENDERTARGET_TYPE_NONE;
+    m_filtering = RENDERTARGET_FILTER_NONE;
     m_bTexture = false;
     m_bRenderBuffer = false;
     m_bFrameBuffer = false;
@@ -18,12 +19,14 @@ ROC::RenderTarget::~RenderTarget()
     Clear();
 }
 
-bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_type)
+bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter)
 {
     if(m_type == RENDERTARGET_TYPE_NONE)
     {
         m_type = f_type;
         btClamp(m_type,RENDERTARGET_TYPE_DEPTH, RENDERTARGET_TYPE_RGBAF);
+        m_filtering = f_filter;
+        btClamp(m_filtering, RENDERTARGET_FILTER_NEAREST, RENDERTARGET_FILTER_LINEAR);
         m_bRenderBuffer = false;
 
         glGenFramebuffers(1, &m_frameBuffer);
@@ -54,8 +57,8 @@ bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_typ
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, f_size.x, f_size.y, 0, GL_RGBA, GL_FLOAT, NULL);
                 break;
         }
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST+m_filtering);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST+m_filtering);
         m_bTexture = true;
 
         if(m_type > RENDERTARGET_TYPE_DEPTH)
@@ -110,6 +113,7 @@ void ROC::RenderTarget::Enable()
 void ROC::RenderTarget::Clear()
 {
     m_type = RENDERTARGET_TYPE_NONE;
+    m_filtering = RENDERTARGET_FILTER_NONE;
     if(m_bTexture)
     {
         glDeleteTextures(1, &m_texture);

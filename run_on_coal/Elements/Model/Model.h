@@ -1,10 +1,11 @@
 #pragma once
 #include "Elements/Element.h"
-#define MODEL_RIGIDITY_TYPE_SPHERE 0U
-#define MODEL_RIGIDITY_TYPE_BOX 1U
-#define MODEL_RIGIDITY_TYPE_CYLINDER 2U
-#define MODEL_RIGIDITY_TYPE_CAPSULE 3U
-#define MODEL_RIGIDITY_TYPE_CONE 4U
+#define MODEL_RIGIDITY_TYPE_NONE -1
+#define MODEL_RIGIDITY_TYPE_SPHERE 0
+#define MODEL_RIGIDITY_TYPE_BOX 1
+#define MODEL_RIGIDITY_TYPE_CYLINDER 2
+#define MODEL_RIGIDITY_TYPE_CAPSULE 3
+#define MODEL_RIGIDITY_TYPE_CONE 4
 #define MODEL_TYPE_NONE 0
 #define MODEL_TYPE_STATIC 1
 #define MODEL_TYPE_ANIMATED 2
@@ -37,6 +38,7 @@ class Model : public Element
 
     Skeleton *m_skeleton;
     btRigidBody* m_rigidBody;
+    int m_rigidType;
 
     void UpdateSkeleton();
 
@@ -69,6 +71,7 @@ public:
 
     inline bool HasCollision() const { return (m_rigidBody != NULL); }
     inline btRigidBody* GetRigidBody() { return m_rigidBody; }
+    inline int GetRigidType() const { return m_rigidType; }
     bool SetVelocity(glm::vec3 &f_val);
     bool GetVelocity(glm::vec3 &f_val);
     bool SetAngularVelocity(glm::vec3 &f_val);
@@ -90,7 +93,7 @@ protected:
     void SetAnimation(Animation *f_anim);
     void UpdateAnimation();
     inline Skeleton* GetSkeleton() { return m_skeleton; }
-    bool SetCollision(unsigned char f_type, float f_mass, glm::vec3 &f_dim);
+    bool SetCollision(int f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveCollision();
     void UpdateCollision();
 

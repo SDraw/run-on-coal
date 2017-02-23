@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Elements/Camera.h"
 
-ROC::Camera::Camera(unsigned char f_type)
+ROC::Camera::Camera(int f_type)
 {
     m_elementType = ElementType::CameraElement;
 
     m_type = f_type;
+    btClamp(m_type, CAMERA_PROJECTION_PERSPECTIVE, CAMERA_PROJECTION_ORTHOGONAL);
 
     m_viewPosition = glm::vec3(0.f);
     m_viewDirection = glm::vec3(0.f, 0.f, 1.f);
@@ -24,7 +25,7 @@ ROC::Camera::~Camera()
 {
 }
 
-void ROC::Camera::SetType(unsigned char f_type)
+void ROC::Camera::SetType(int f_type)
 {
     if(m_type != f_type)
     {

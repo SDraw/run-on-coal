@@ -35,7 +35,7 @@ public:
     void SetGravity(glm::vec3 &f_grav);
     void GetGravity(glm::vec3 &f_grav);
 
-    bool SetModelCollision(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim);
+    bool SetModelCollision(Model *f_model, int f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveModelCollision(Model *f_model);
     bool SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state);
 
@@ -44,6 +44,8 @@ protected:
     explicit PhysicsManager(Core *f_core);
     ~PhysicsManager();
 
+    void UpdateWorldSteps(unsigned int f_fps);
+
     void AddModel(Model *f_model);
     void RemoveModel(Model *f_model);
     void AddCollision(Collision *f_col);
@@ -51,7 +53,6 @@ protected:
 
     void DoPulse();
 
-    void UpdateWorldSteps(unsigned int f_fps);
     friend Core;
     friend class ElementManager;
     friend class SfmlManager;

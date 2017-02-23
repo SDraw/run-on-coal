@@ -55,7 +55,7 @@ ROC::Font::~Font()
     }
 }
 
-bool ROC::Font::LoadTTF(std::string &f_path, int f_size, unsigned char f_filter)
+bool ROC::Font::LoadTTF(std::string &f_path, int f_size, int f_filter)
 {
     if(!m_loaded)
     {
@@ -65,7 +65,8 @@ bool ROC::Font::LoadTTF(std::string &f_path, int f_size, unsigned char f_filter)
             {
                 FT_Select_Charmap(m_face, ft_encoding_unicode);
                 FT_Set_Pixel_Sizes(m_face, 0, f_size);
-                m_filteringType = GL_NEAREST + static_cast<int>(f_filter);
+                m_filteringType = f_filter;
+                btClamp(m_filteringType, FONT_FILTER_NEAREST, FONT_FILTER_LINEAR);
                 m_loaded = true;
             }
             else FT_Done_FreeType(m_library);
@@ -83,8 +84,8 @@ bool ROC::Font::LoadChar(unsigned int l_char)
         glBindTexture(GL_TEXTURE_2D, l_charData->m_texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_filteringType);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_filteringType);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filteringType);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filteringType);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_face->glyph->bitmap.width, m_face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, m_face->glyph->bitmap.buffer);
         l_charData->m_size.x = m_face->glyph->bitmap.width;
         l_charData->m_size.y = m_face->glyph->bitmap.rows;

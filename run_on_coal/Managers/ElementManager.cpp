@@ -37,7 +37,7 @@ ROC::Scene* ROC::ElementManager::CreateScene()
     return l_scene;
 }
 
-ROC::Camera* ROC::ElementManager::CreateCamera(unsigned char f_type)
+ROC::Camera* ROC::ElementManager::CreateCamera(int f_type)
 {
     Camera *l_camera = new Camera(f_type);
 
@@ -172,12 +172,12 @@ ROC::Sound* ROC::ElementManager::CreateSound(std::string &f_path, bool f_loop)
     return l_sound;
 }
 
-ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type)
+ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter)
 {
     RenderTarget *l_rt = new RenderTarget();
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_rt->Create(f_num, f_size, f_type)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt);
+    if(l_rt->Create(f_num, f_size, f_type, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt);
     else
     {
         std::string l_error;
@@ -234,7 +234,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
     return l_tex;
 }
 
-ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size, unsigned char f_filter)
+ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size, int f_filter)
 {
     Font *l_font = new Font();
 
@@ -288,7 +288,7 @@ ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
     return l_file;
 }
 
-ROC::Collision* ROC::ElementManager::CreateCollision(unsigned char f_type, glm::vec3 &f_size)
+ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_size)
 {
     Collision *l_col = new Collision();
     if(l_col->Create(f_type, f_size))

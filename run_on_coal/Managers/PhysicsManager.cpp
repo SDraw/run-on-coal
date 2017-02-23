@@ -81,7 +81,7 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
     std::memcpy(&f_grav, m_dynamicWorld->getGravity().m_floats, sizeof(glm::vec3));
 }
 
-bool ROC::PhysicsManager::SetModelCollision(Model *f_model, unsigned char f_type, float f_mass, glm::vec3 &f_dim)
+bool ROC::PhysicsManager::SetModelCollision(Model *f_model, int f_type, float f_mass, glm::vec3 &f_dim)
 {
     bool l_result = false;
     if(!f_model->HasCollision())
@@ -166,6 +166,12 @@ bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, 
     return l_result;
 }
 
+void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
+{
+    m_timeStep = (f_fps == 0U) ? (1.f / 60.f) : (1.f / static_cast<float>(f_fps));
+    m_substeps = static_cast<int>(m_timeStep / (1.f / 60.f)) + 1;
+}
+
 void ROC::PhysicsManager::AddModel(Model *f_model)
 {
     if(f_model->HasSkeleton())
@@ -218,11 +224,6 @@ void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
     m_dynamicWorld->removeRigidBody(f_col->GetRigidBody());
 }
 
-void ROC::PhysicsManager::DoPulse()
-{
-    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
-}
-
 bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
 {
     bool l_result = false;
@@ -244,8 +245,7 @@ bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec
     return l_result;
 }
 
-void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
+void ROC::PhysicsManager::DoPulse()
 {
-    m_timeStep = (f_fps == 0U) ? (1.f / 60.f) : (1.f / static_cast<float>(f_fps));
-    m_substeps = static_cast<int>(m_timeStep / (1.f / 60.f)) + 1;
+    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
 }
