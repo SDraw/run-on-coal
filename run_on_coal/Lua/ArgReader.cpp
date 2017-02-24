@@ -69,31 +69,7 @@ void ROC::ArgReader::ReadText(std::string &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadPointer(void **f_val)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_islightuserdata(m_vm, m_currentArg))
-            {
-                *f_val = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
-                m_currentArg++;
-            }
-            else
-            {
-                m_error.append("Expected userdata/pointer");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.append("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadFunction(int &f_val, void **f_pointer)
+void ROC::ArgReader::ReadFunction(int &f_val, void *&f_pointer)
 {
     if(!m_hasErrors)
     {
@@ -101,7 +77,7 @@ void ROC::ArgReader::ReadFunction(int &f_val, void **f_pointer)
         {
             if(lua_isfunction(m_vm, m_currentArg))
             {
-                *f_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
+                f_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
                 lua_settop(m_vm, m_currentArg);
                 f_val = luaL_ref(m_vm, LUA_REGISTRYINDEX);
                 lua_insert(m_vm, m_currentArg);
@@ -120,7 +96,7 @@ void ROC::ArgReader::ReadFunction(int &f_val, void **f_pointer)
         }
     }
 }
-void ROC::ArgReader::ReadFunctionPointer(void **f_pointer)
+void ROC::ArgReader::ReadFunction(void *&f_pointer)
 {
     if(!m_hasErrors)
     {
@@ -128,7 +104,7 @@ void ROC::ArgReader::ReadFunctionPointer(void **f_pointer)
         {
             if(lua_isfunction(m_vm, m_currentArg))
             {
-                *f_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
+                f_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
                 m_currentArg++;
             }
             else
@@ -165,17 +141,6 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
             size_t l_size;
             const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
             f_val.append(l_string,l_size);
-            m_currentArg++;
-        }
-    }
-}
-void ROC::ArgReader::ReadNextPointer(void **f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_islightuserdata(m_vm, m_currentArg))
-        {
-            *f_val = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
             m_currentArg++;
         }
     }

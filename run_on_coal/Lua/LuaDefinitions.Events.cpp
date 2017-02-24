@@ -29,7 +29,7 @@ int addEvent(lua_State *f_vm)
     void *l_point;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_func, &l_point);
+    argStream.ReadFunction(l_func, l_point);
     if(!argStream.HasErrors() && !l_event.empty())
     {
         int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
@@ -51,7 +51,7 @@ int setEventMute(lua_State *f_vm)
     bool l_mute;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunctionPointer(&l_point);
+    argStream.ReadFunction(l_point);
     argStream.ReadBoolean(l_mute);
     if(!argStream.HasErrors() && !l_event.empty())
     {
@@ -73,7 +73,7 @@ int removeEvent(lua_State *f_vm)
     void *l_point;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunctionPointer(&l_point);
+    argStream.ReadFunction(l_point);
     if(!argStream.HasErrors() && !l_event.empty())
     {
         int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);

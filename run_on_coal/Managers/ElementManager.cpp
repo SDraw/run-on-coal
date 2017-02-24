@@ -189,7 +189,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, g
     return l_rt;
 }
 
-ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type, int f_filter, bool f_compress)
 {
     Texture *l_tex = new Texture();
 
@@ -207,7 +207,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
     }
     return l_tex;
 }
-ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_path, int f_filter, bool f_compress)
 {
     Texture *l_tex = new Texture();
 

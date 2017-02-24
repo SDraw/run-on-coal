@@ -156,12 +156,14 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "rtCreate", Lua::rtCreate);
     lua_register(m_vm, "rtDestroy", Lua::rtDestroy);
     lua_register(m_vm, "rtGetSize", Lua::rtGetSize);
+    lua_register(m_vm, "rtGetFiltering", Lua::rtGetFiltering);
     lua_register(m_vm, "rtDraw", Lua::rtDraw);
 
     //Texture
     lua_register(m_vm, "textureCreate", Lua::textureCreate);
     lua_register(m_vm, "textureDestroy", Lua::textureDestroy);
     lua_register(m_vm, "textureGetSize", Lua::textureGetSize);
+    lua_register(m_vm, "textureGetFiltering", Lua::textureGetFiltering);
     lua_register(m_vm, "textureDraw", Lua::textureDraw);
 
     //Font

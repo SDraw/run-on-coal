@@ -6,6 +6,7 @@ ROC::Texture::Texture()
     m_elementType = ElementType::TextureElement;
 
     m_type = TEXTURE_TYPE_NONE;
+    m_filtering = TEXTURE_FILTER_NONE;
     m_texture = 0U;
 }
 ROC::Texture::~Texture()
@@ -13,13 +14,15 @@ ROC::Texture::~Texture()
     if(m_texture) glDeleteTextures(1, &m_texture);
 }
 
-bool ROC::Texture::Load(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress)
+bool ROC::Texture::Load(std::string &f_path, int f_type, int f_filter, bool f_compress)
 {
     if(m_type == TEXTURE_TYPE_NONE)
     {
         sf::Image l_image;
         m_type = f_type;
         btClamp(m_type, TEXTURE_TYPE_RGB, TEXTURE_TYPE_CUBEMAP);
+        m_filtering = f_filter;
+        btClamp(m_filtering, TEXTURE_FILTER_NEAREST, TEXTURE_FILTER_LINEAR);
         if(l_image.loadFromFile(f_path))
         {
             sf::Vector2u l_imageSize = l_image.getSize();
@@ -37,7 +40,7 @@ bool ROC::Texture::Load(std::string &f_path, int f_type, unsigned char f_filter,
     }
     return (m_type != TEXTURE_TYPE_NONE);
 }
-bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
+bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, int f_filter, bool f_compress)
 {
     if(m_type == TEXTURE_TYPE_NONE && f_path.size() == 6U)
     {
@@ -49,6 +52,8 @@ bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, unsigned char f
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST + f_filter);
 
         m_type = TEXTURE_TYPE_CUBEMAP;
+        m_filtering = f_filter;
+        btClamp(m_filtering, TEXTURE_FILTER_NEAREST, TEXTURE_FILTER_LINEAR);
         for(int i = 0; i < 6; i++)
         {
             sf::Image l_image;
@@ -79,6 +84,7 @@ void ROC::Texture::GenerateBrokenTexture()
     }
     for(int i = 0; i < 3; i++) l_brokenImage.push_back(0x7FU);
     m_type = TEXTURE_TYPE_RGB;
+    m_filtering = TEXTURE_FILTER_NEAREST;
     m_size.x = m_size.y = 2;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);

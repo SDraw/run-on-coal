@@ -76,6 +76,14 @@ int rtGetSize(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int rtGetFiltering(lua_State *f_vm)
+{
+    RenderTarget *l_rt;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_rt);
+    !argStream.HasErrors() ? argStream.PushText(g_rtFilteringTypesTable[l_rt->GetFiltering()]) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 int rtDraw(lua_State *f_vm)
 {
     RenderTarget *l_rt;

@@ -85,6 +85,14 @@ int textureGetSize(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int textureGetFiltering(lua_State *f_vm)
+{
+    Texture *l_texture;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_texture);
+    !argStream.HasErrors() ? argStream.PushText(g_textureFilteringTypesTable[l_texture->GetFiltering()]) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 int textureDraw(lua_State *f_vm)
 {
     Texture *l_tex;

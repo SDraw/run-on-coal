@@ -41,10 +41,10 @@ int logPrint(lua_State *f_vm)
 }
 int isElement(lua_State *f_vm)
 {
-    void *l_pointer = NULL;
+    Element *l_pointer;
     ArgReader argStream(f_vm);
-    argStream.ReadPointer(&l_pointer);
-    argStream.PushBoolean(!argStream.HasErrors() ? LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_pointer) : false);
+    argStream.ReadElement(l_pointer);
+    argStream.PushBoolean(!argStream.HasErrors());
     return argStream.GetReturnValue();
 }
 

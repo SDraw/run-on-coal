@@ -32,8 +32,8 @@ public:
     Animation* CreateAnimation(std::string &f_path);
     Sound* CreateSound(std::string &f_path, bool f_loop);
     RenderTarget* CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter);
-    Texture* CreateTexture(std::string &f_path, int f_type, unsigned char f_filter, bool f_compress);
-    Texture* CreateTexture(std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
+    Texture* CreateTexture(std::string &f_path, int f_type, int f_filter, bool f_compress);
+    Texture* CreateTexture(std::vector<std::string> &f_path, int f_filter, bool f_compress);
     Font* CreateFont_(std::string &f_path, int f_size, int f_filter);
     File* CreateFile_(std::string &f_path);
     File* OpenFile(std::string &f_path, bool f_ro);

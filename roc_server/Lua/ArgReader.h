@@ -23,16 +23,14 @@ public:
     template<typename T> void ReadInteger(T &f_val);
     void ReadText(std::string &f_val);
     template<class T> void ReadElement(T *&f_element);
-    void ReadPointer(void **f_val);
-    void ReadFunction(int &f_val, void **f_pointer);
-    void ReadFunctionPointer(void **f_pointer);
+    void ReadFunction(int &f_val, void *&f_pointer);
+    void ReadFunction(void *&f_pointer);
 
     void ReadNextBoolean(bool &f_val);
     template<typename T> void ReadNextNumber(T &f_val);
     template<typename T> void ReadNextInteger(T &f_val);
     void ReadNextText(std::string &f_val);
     template<class T> void ReadNextElement(T *&f_element);
-    void ReadNextPointer(void **f_val);
 
     void ReadMatrix(float *f_val, int f_size);
     void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);
@@ -116,29 +114,29 @@ template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
                 {
                     try
                     {
-                        if((f_element = dynamic_cast<T*>(a)) != nullptr) m_currentArg++;
+                        if((f_element = dynamic_cast<T*>(a)) != NULL) m_currentArg++;
                         else
                         {
-                            m_error.append("Invalid userdata");
+                            m_error.append("Wrong element type");
                             m_hasErrors = true;
                         }
     
                     }
                     catch(const std::exception&)
                     {
-                        m_error.append("Invalid userdata");
+                        m_error.append("Wrong element type");
                         m_hasErrors = true;
                     }
                 }
                 else
                 {
-                    m_error.append("Invalid userdata");
+                    m_error.append("Invalid element");
                     m_hasErrors = true;
                 }
             }
             else
             {
-                m_error.append("Expected userdata");
+                m_error.append("Expected element");
                 m_hasErrors = true;
             }
         }
@@ -183,7 +181,7 @@ template<class T> void ROC::ArgReader::ReadNextElement(T *&f_element)
             {
                 try
                 {
-                    if((f_element = dynamic_cast<T*>(a)) != nullptr) m_currentArg++;
+                    if((f_element = dynamic_cast<T*>(a)) != NULL) m_currentArg++;
                 }
                 catch(const std::exception&) {}
             }
