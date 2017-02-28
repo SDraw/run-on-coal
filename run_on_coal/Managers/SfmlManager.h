@@ -18,6 +18,7 @@ class SfmlManager
     sf::Clock m_clock;
     float m_time;
 
+    unsigned int m_frameLimit;
     unsigned char m_cursorMode;
 
     sf::Event m_event;
@@ -31,6 +32,7 @@ public:
     inline void CloseWindow() { m_active = false; }
     inline void SetVSync(bool f_sync) { m_window->setVerticalSyncEnabled(f_sync); }
     void SetFramelimit(unsigned int f_fps);
+    inline unsigned int GetFramelimit() const { return m_frameLimit; }
     inline void SetTitle(sf::String &f_title) { m_window->setTitle(f_title); }
     bool SetIcon(std::string &f_path);
     inline void RequestFocus() { m_window->requestFocus(); }

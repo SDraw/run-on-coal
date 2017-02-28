@@ -77,7 +77,8 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 #endif
         exit(EXIT_FAILURE);
     }
-    m_window->setFramerateLimit(l_configManager->GetFPSLimit());
+    m_frameLimit = l_configManager->GetFPSLimit();
+    m_window->setFramerateLimit(m_frameLimit);
     m_window->setVerticalSyncEnabled(l_configManager->GetVSync());
     m_window->setKeyRepeatEnabled(false);
 
@@ -129,8 +130,12 @@ void ROC::SfmlManager::GetWindowSize(glm::ivec2 &f_size)
 }
 void ROC::SfmlManager::SetFramelimit(unsigned int f_fps)
 {
-    m_window->setFramerateLimit(f_fps);
-    m_core->GetPhysicsManager()->UpdateWorldSteps(f_fps);
+    if(f_fps != m_frameLimit)
+    {
+        m_frameLimit = f_fps;
+        m_window->setFramerateLimit(m_frameLimit);
+        m_core->GetPhysicsManager()->UpdateWorldSteps(m_frameLimit);
+    }
 }
 bool ROC::SfmlManager::SetIcon(std::string &f_path)
 {

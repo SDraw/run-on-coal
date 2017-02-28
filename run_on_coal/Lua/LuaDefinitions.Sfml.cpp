@@ -160,6 +160,12 @@ int setWindowFramelimit(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int getWindowFramelimit(lua_State *f_vm)
+{
+    ArgReader argStream(f_vm);
+    argStream.PushInteger(LuaManager::GetCore()->GetSfmlManager()->GetFramelimit());
+    return argStream.GetReturnValue();
+}
 int setWindowTitle(lua_State *f_vm)
 {
     std::string l_title;

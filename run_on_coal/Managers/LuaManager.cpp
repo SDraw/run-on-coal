@@ -222,6 +222,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "getWindowSize", Lua::getWindowSize);
     lua_register(m_vm, "setWindowVSync", Lua::setWindowVSync);
     lua_register(m_vm, "setWindowFramelimit", Lua::setWindowFramelimit);
+    lua_register(m_vm, "getWindowFramelimit", Lua::getWindowFramelimit);
     lua_register(m_vm, "setWindowTitle", Lua::setWindowTitle);
     lua_register(m_vm, "setWindowIcon", Lua::setWindowIcon);
     lua_register(m_vm, "requestWindowFocus", Lua::requestWindowFocus);
