@@ -13,7 +13,6 @@ class SfmlManager
 
     sf::Window *m_window;
     bool m_active;
-    sf::Image m_icon;
 
     sf::Clock m_clock;
     float m_time;
