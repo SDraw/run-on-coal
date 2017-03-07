@@ -92,7 +92,7 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path)
 ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
 {
     Model *l_model = new Model(f_geometry);
-    m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
+    if(f_geometry) m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
     m_core->GetMemoryManager()->AddMemoryPointer(l_model);
     m_core->GetPreRenderManager()->AddModel(l_model);
     m_core->GetPhysicsManager()->AddModel(l_model);

@@ -38,9 +38,9 @@ const std::vector<std::string> g_modelAnimationPropertiesTable
 
 int modelCreate(lua_State *f_vm)
 {
-    Geometry *l_geometry;
+    Geometry *l_geometry = NULL;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_geometry);
+    argStream.ReadNextElement(l_geometry);
     if(!argStream.HasErrors())
     {
         Model *l_model = LuaManager::GetCore()->GetElementManager()->CreateModel(l_geometry);

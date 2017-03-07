@@ -32,13 +32,16 @@ ROC::Model::Model(Geometry *f_geometry)
     m_animState = AnimationState::None;
     m_animationSpeed = 1.f;
 
-    if(m_geometry->HasBonesData())
+    m_skeleton = NULL;
+    if(m_geometry)
     {
-        m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
-        if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionDataRef());
-        if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsDataRef());
+        if(m_geometry->HasBonesData())
+        {
+            m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
+            if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionDataRef());
+            if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsDataRef());
+        }
     }
-    else m_skeleton = NULL;
 
     m_rigidBody = NULL;
     m_rigidType = MODEL_RIGIDITY_TYPE_NONE;
