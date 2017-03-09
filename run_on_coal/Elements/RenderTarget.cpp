@@ -96,13 +96,13 @@ bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_typ
     return (m_type != RENDERTARGET_TYPE_NONE);
 }
 
-void ROC::RenderTarget::BindTexture(unsigned int f_bind)
+void ROC::RenderTarget::Bind(unsigned int f_slot)
 {
     if(m_type != RENDERTARGET_TYPE_NONE)
     {
-        if(f_bind) glActiveTexture(GL_TEXTURE0 + f_bind);
+        if(f_slot) glActiveTexture(GL_TEXTURE0 + f_slot);
         glBindTexture(GL_TEXTURE_2D, m_texture);
-        if(f_bind) glActiveTexture(GL_TEXTURE0);
+        if(f_slot) glActiveTexture(GL_TEXTURE0);
     }
 }
 void ROC::RenderTarget::Enable()

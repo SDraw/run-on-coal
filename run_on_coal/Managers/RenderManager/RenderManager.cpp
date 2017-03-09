@@ -177,7 +177,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
                     m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(iter->GetType()));
                     m_activeShader->SetMaterialParamUniformValue(iter->GetParamsRef());
                 }
-                iter->Draw(CompareLastTexture(iter->GetTexture()->GetID()) && f_texturize, l_vaoBind);
+                iter->Draw(CompareLastTexture(iter->GetTexture()->GetTextureID()) && f_texturize, l_vaoBind);
             }
         }
     }
@@ -195,12 +195,12 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_te
         f_font->Draw(f_text, f_pos, CompareLastVAO(f_font->GetVAO()));
     }
 }
-void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
+void ROC::RenderManager::Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
 {
-    if(!m_locked && m_activeShader && !f_texture->IsCubic())
+    if(!m_locked && m_activeShader)
     {
         bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
-        if(CompareLastTexture(f_texture->GetID())) f_texture->Bind(0U);
+        if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind(0U);
 
         m_activeShader->SetProjectionUniformValue(m_screenProjection);
         m_activeShader->SetColorUniformValue(f_color);
@@ -224,41 +224,7 @@ void ROC::RenderManager::Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 
 
         DisableCulling();
         DisableDepth();
-        if(f_texture->IsTransparent()) EnableBlending();
-        else DisableBlending();
-        m_quad->Draw(l_vaoBind);
-    }
-}
-void ROC::RenderManager::Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
-{
-    if(!m_locked && m_activeShader && f_rt->IsColored())
-    {
-        bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
-        if(CompareLastTexture(f_rt->GetTextureID())) f_rt->BindTexture(0U);
-
-        m_activeShader->SetProjectionUniformValue(m_screenProjection);
-        m_activeShader->SetColorUniformValue(f_color);
-
-        btTransform l_textureTransform;
-        btVector3 l_textureTranslate(f_pos.x + f_size.x / 2.f, f_pos.y + f_size.y / 2.f, 0.f);
-        l_textureTransform.setIdentity();
-        l_textureTransform.setOrigin(l_textureTranslate);
-        if(f_rot != 0.f)
-        {
-            btVector3 l_textureZAxis(0.f, 0.f, 1.f);
-            btQuaternion l_textureRotation;
-            l_textureRotation.setRotation(l_textureZAxis, f_rot);
-            l_textureTransform.setRotation(l_textureRotation);
-        }
-        l_textureTransform.getOpenGLMatrix(reinterpret_cast<float*>(&m_textureMatrix));
-        m_activeShader->SetModelUniformValue(m_textureMatrix);
-
-        m_quad->SetProportions(f_size, l_vaoBind);
-        l_vaoBind = false;
-
-        DisableCulling();
-        DisableDepth();
-        if(f_rt->IsTransparent()) EnableBlending();
+        if(f_drawable->IsTransparent()) EnableBlending();
         else DisableBlending();
         m_quad->Draw(l_vaoBind);
     }

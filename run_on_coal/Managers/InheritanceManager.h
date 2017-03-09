@@ -7,13 +7,12 @@ class Core;
 class Element;
 class Animation;
 class Camera;
+class Drawable;
 class Geometry;
 class Light;
 class Model;
 class Scene;
 class Shader;
-class RenderTarget;
-class Texture;
 class InheritanceManager
 {
     Core *m_core;
@@ -26,10 +25,8 @@ public:
     bool SetModelAnimation(Model *f_model, Animation *f_anim);
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool SetSceneLight(Scene *f_scene, Light *f_light);
-    bool AttachTextureToShader(Shader *f_shader, Texture *f_texture, int f_uniform);
-    void DettachTextureFromShader(Shader *f_shader, Texture *f_texture);
-    bool AttachRenderTargetToShader(Shader *f_shader, RenderTarget *f_target, int f_uniform);
-    void DettachRenderTargetFromShader(Shader *f_shader, RenderTarget *f_target);
+    bool AttachDrawableToShader(Shader *f_shader, Drawable *f_drawable, int f_uniform);
+    void DettachDrawableFromShader(Shader *f_shader, Drawable *f_drawable);
 protected:
     explicit InheritanceManager(Core *f_core);
     ~InheritanceManager();

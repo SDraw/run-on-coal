@@ -8,8 +8,8 @@ class Model;
 class Scene;
 class Shader;
 class Quad;
+class Drawable;
 class RenderTarget;
-class Texture;
 class Font;
 class LuaArguments;
 class RenderManager
@@ -71,8 +71,7 @@ public:
 
     void Render(Model *f_model, bool f_texturize, bool f_frustum = false, float f_radius = 1.f);
     void Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color);
-    void Render(Texture *f_texture, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
-    void Render(RenderTarget *f_rt, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
+    void Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
 protected:
     explicit RenderManager(Core *f_core);
     ~RenderManager();

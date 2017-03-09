@@ -192,6 +192,9 @@
     <ClCompile Include="Elements\Element.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Drawable.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -377,6 +380,9 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Element.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Drawable.h">
       <Filter>Elements</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,9 +5,8 @@
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/RenderManager/RenderManager.h"
-#include "Elements/RenderTarget.h"
+#include "Elements/Drawable.h"
 #include "Elements/Shader.h"
-#include "Elements/Texture.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Shader.h"
 #include "Utils/Utils.h"
@@ -24,7 +23,7 @@ const std::vector<std::string> g_uniformTypesTable
     "float", "vec2", "vec3", "vec4",
     "double", "dvec2", "dvec3", "dvec4",
     "mat2", "mat3", "mat4",
-    "texture", "target"
+    "drawable"
 };
 
 int shaderCreate(lua_State *f_vm)
@@ -292,24 +291,13 @@ int shaderSetUniformValue(lua_State *f_vm)
                 }
                 else argStream.PushBoolean(false);
             } break;
-            case 19: // Texture
+            case 19: // Drawable (texture and render target)
             {
-                Texture *l_texture;
-                argStream.ReadElement(l_texture);
+                Drawable *l_element;
+                argStream.ReadElement(l_element);
                 if(!argStream.HasErrors())
                 {
-                    bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachTextureToShader(l_shader, l_texture, l_uniform);
-                    argStream.PushBoolean(l_result);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case 20: // Render target
-            {
-                RenderTarget *l_target;
-                argStream.ReadElement(l_target);
-                if(!argStream.HasErrors())
-                {
-                    bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachRenderTargetToShader(l_shader, l_target, l_uniform);
+                    bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachDrawableToShader(l_shader, l_element, l_uniform);
                     argStream.PushBoolean(l_result);
                 }
                 else argStream.PushBoolean(false);
