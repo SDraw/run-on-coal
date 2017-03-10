@@ -78,8 +78,8 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
         }
         else
         {
-            f_rt->Enable();
-            f_rt->GetSize(m_renderTargetSize);
+            m_activeTarget->Enable();
+            m_activeTarget->GetSize(m_renderTargetSize);
         }
         m_screenProjection = glm::ortho(0.f, static_cast<float>(m_renderTargetSize.x), 0.f, static_cast<float>(m_renderTargetSize.y));
         glViewport(0, 0, m_renderTargetSize.x, m_renderTargetSize.y);

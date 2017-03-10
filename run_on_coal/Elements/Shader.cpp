@@ -89,11 +89,13 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
                     glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
                     m_error.resize(l_logSize);
                     glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
+                    m_error.insert(0U, "Vertex shader error: ");
                     glDeleteShader(l_vertexShader);
                     l_vertexShader = 0U;
                 }
             }
         }
+        else m_error.assign("Unable to load vertex shader");
         l_file.clear();
 
         GLuint l_fragmentShader = 0U;
@@ -121,11 +123,13 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
                     glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
                     m_error.resize(l_logSize);
                     glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
+                    m_error.insert(0U, "Fragment shader error: ");
                     glDeleteShader(l_fragmentShader);
                     l_fragmentShader = 0U;
                 }
             }
         }
+        else m_error.assign("Unable to load fragment shader");
         l_file.clear();
 
         GLuint l_geometryShader = 0U;
@@ -155,6 +159,7 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
                         glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
                         m_error.resize(l_logSize);
                         glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
+                        m_error.insert(0U, "Geometry shader error: ");
                         glDeleteShader(l_geometryShader);
                         l_geometryShader = 0U;
                     }
@@ -169,8 +174,8 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
             m_program = glCreateProgram();
             if(m_program)
             {
-                glAttachShader(m_program, l_vertexShader);
-                glAttachShader(m_program, l_fragmentShader);
+                if(l_vertexShader) glAttachShader(m_program, l_vertexShader);
+                if(l_fragmentShader) glAttachShader(m_program, l_fragmentShader);
                 if(l_geometryShader) glAttachShader(m_program, l_geometryShader);
 
                 GLint l_link = 0;
@@ -187,22 +192,17 @@ bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &
                 }
                 else
                 {
-                    glDetachShader(m_program, l_vertexShader);
-                    glDetachShader(m_program, l_fragmentShader);
-                    if(l_geometryShader) glDetachShader(m_program, l_vertexShader);
+                    if(l_vertexShader) glDetachShader(m_program, l_vertexShader);
+                    if(l_fragmentShader) glDetachShader(m_program, l_fragmentShader);
+                    if(l_geometryShader) glDetachShader(m_program, l_geometryShader);
                     SetupDefaultUniformsAndLocations();
                 }
-                glDeleteShader(l_vertexShader);
-                glDeleteShader(l_fragmentShader);
-                if(l_geometryShader) glDeleteShader(l_geometryShader);
             }
         }
-        else
-        {
-            if(l_vertexShader) glDeleteShader(l_vertexShader);
-            if(l_fragmentShader) glDeleteShader(l_vertexShader);
-            if(l_geometryShader) glDeleteShader(l_geometryShader);
-        }
+
+        if(l_vertexShader) glDeleteShader(l_vertexShader);
+        if(l_fragmentShader) glDeleteShader(l_fragmentShader);
+        if(l_geometryShader) glDeleteShader(l_geometryShader);
     }
     return (m_program != 0U);
 }
@@ -509,7 +509,7 @@ bool ROC::Shader::Attach(Drawable *f_drawable, int f_uniform)
         int l_slot = m_bindPool->Allocate();
         if(l_slot != -1)
         {
-            drawableBindData l_bind{f_drawable, l_slot + 1, f_uniform};
+            drawableBindData l_bind{ f_drawable, l_slot + 1, f_uniform };
             m_drawableBind.push_back(l_bind);
             SetUniformValue(f_uniform, l_slot + 1);
             l_result = true;
