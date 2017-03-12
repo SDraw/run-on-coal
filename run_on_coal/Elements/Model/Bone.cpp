@@ -2,7 +2,7 @@
 #include "Elements/Animation/BoneFrameData.h"
 #include "Elements/Model/Bone.h"
 
-glm::mat4 ROC::Bone::m_identity = glm::mat4(1.f);
+const glm::mat4 g_IdentityMatrix(1.f);
 
 ROC::Bone::Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale)
 {
@@ -51,7 +51,7 @@ void ROC::Bone::ResetInterpolation()
 }
 void ROC::Bone::GenerateBindPose()
 {
-    m_localMatrix = glm::translate(m_identity, m_data->m_position)*glm::mat4_cast(m_data->m_rotation)*glm::scale(m_identity, m_data->m_scale);
+    m_localMatrix = glm::translate(g_IdentityMatrix, m_data->m_position)*glm::mat4_cast(m_data->m_rotation)*glm::scale(g_IdentityMatrix, m_data->m_scale);
     if(m_parent == NULL) m_matrix = m_localMatrix;
     else m_matrix = m_parent->m_matrix*m_localMatrix;
     m_bindMatrix = glm::inverse(m_matrix);
@@ -62,7 +62,7 @@ void ROC::Bone::UpdateMatrix()
     m_rebuilded = false;
     if(m_rebuildMatrix)
     {
-        m_localMatrix = glm::translate(m_identity, m_data->m_position)*glm::mat4_cast(m_data->m_rotation)*glm::scale(m_identity, m_data->m_scale);
+        m_localMatrix = glm::translate(g_IdentityMatrix, m_data->m_position)*glm::mat4_cast(m_data->m_rotation)*glm::scale(g_IdentityMatrix, m_data->m_scale);
         if(!m_parent) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         else m_matrix = m_parent->m_matrix*m_localMatrix;
         m_offsetMatrix = m_matrix*m_bindMatrix;

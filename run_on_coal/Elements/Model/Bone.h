@@ -20,8 +20,6 @@ class Bone
     Bone *m_parent;
     std::vector<Bone*> m_childBoneVector;
 
-    static glm::mat4 m_identity;
-
     Bone(const Bone& that);
     Bone &operator =(const Bone &that);
 protected:

@@ -70,11 +70,18 @@ void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
 {
     btVector3 l_grav(f_grav.x, f_grav.y, f_grav.z);
     m_dynamicWorld->setGravity(l_grav);
-    for(auto iter : m_modelsSet)
+
+    btCollisionObjectArray &l_objectArray = m_dynamicWorld->getCollisionObjectArray();
+    for(int i = 0, j = l_objectArray.size(); i < j; i++)
     {
-        iter->GetRigidBody()->setGravity(l_grav);
-        iter->GetRigidBody()->activate(true);
+        btRigidBody *l_body = dynamic_cast<btRigidBody*>(l_objectArray[i]);
+        if(l_body)
+        {
+            l_body->setGravity(l_grav);
+            l_body->activate(true);
+        }
     }
+
 }
 void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 {
@@ -92,7 +99,6 @@ bool ROC::PhysicsManager::SetModelCollision(Model *f_model, int f_type, float f_
             {
                 f_model->GetRigidBody()->setUserPointer(f_model);
                 m_dynamicWorld->addRigidBody(f_model->GetRigidBody());
-                m_modelsSet.insert(f_model);
                 l_result = true;
             }
         }
@@ -106,64 +112,68 @@ bool ROC::PhysicsManager::RemoveModelCollision(Model *f_model)
     {
         m_dynamicWorld->removeRigidBody(f_model->GetRigidBody());
         l_result = f_model->RemoveCollision();
-        m_modelsSet.erase(f_model);
+    }
+    return l_result;
+}
+bool ROC::PhysicsManager::SetModelCollisionScale(Model *f_model, glm::vec3 &f_scale)
+{
+    bool l_result = false;
+    if(f_model->HasCollision())
+    {
+        m_dynamicWorld->removeRigidBody(f_model->GetRigidBody());
+        l_result = f_model->SetCollisionScale(f_scale);
+        m_dynamicWorld->addRigidBody(f_model->GetRigidBody());
     }
     return l_result;
 }
 bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
 {
-    bool l_result = false;
-    auto l_setEnd = m_modelsSet.end();
-    if((m_modelsSet.find(f_model1) != l_setEnd) && (m_modelsSet.find(f_model2) != l_setEnd))
+    std::vector<btRigidBody*> l_bodies1, l_bodies2;
+    if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetRigidBody());
+    else
     {
-        std::vector<btRigidBody*> l_bodies1, l_bodies2;
-        if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetRigidBody());
-        else
+        if(f_model1->HasSkeleton())
         {
-            if(f_model1->HasSkeleton())
+            if(f_model1->HasSkeletonStaticBoneCollision())
             {
-                if(f_model1->HasSkeletonStaticBoneCollision())
+                for(auto iter : f_model1->GetSkeleton()->GetCollisionVectorRef()) l_bodies1.push_back(iter->m_rigidBody);
+            }
+            if(f_model1->HasSkeletonDynamicBoneCollision())
+            {
+                for(auto iter : f_model1->GetSkeleton()->GetJointVectorRef())
                 {
-                    for(auto iter : f_model1->GetSkeleton()->GetCollisionVectorRef()) l_bodies1.push_back(iter->m_rigidBody);
-                }
-                if(f_model1->HasSkeletonDynamicBoneCollision())
-                {
-                    for(auto iter : f_model1->GetSkeleton()->GetJointVectorRef())
-                    {
-                        for(auto iter1 : iter->m_partsVector) l_bodies1.push_back(iter1->m_rigidBody);
-                    }
+                    for(auto iter1 : iter->m_partsVector) l_bodies1.push_back(iter1->m_rigidBody);
                 }
             }
         }
-        if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetRigidBody());
-        else
-        {
-            if(f_model2->HasSkeleton())
-            {
-                if(f_model2->HasSkeletonStaticBoneCollision())
-                {
-                    for(auto iter : f_model2->GetSkeleton()->GetCollisionVectorRef()) l_bodies2.push_back(iter->m_rigidBody);
-                }
-                if(f_model2->HasSkeletonDynamicBoneCollision())
-                {
-                    for(auto iter : f_model2->GetSkeleton()->GetJointVectorRef())
-                    {
-                        for(auto iter1 : iter->m_partsVector) l_bodies2.push_back(iter1->m_rigidBody);
-                    }
-                }
-            }
-        }
-        for(auto iter1 : l_bodies1)
-        {
-            for(auto iter2 : l_bodies2)
-            {
-                iter1->setIgnoreCollisionCheck(iter2, !f_state);
-                iter2->setIgnoreCollisionCheck(iter1, !f_state);
-            }
-        }
-        l_result = true;
     }
-    return l_result;
+    if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetRigidBody());
+    else
+    {
+        if(f_model2->HasSkeleton())
+        {
+            if(f_model2->HasSkeletonStaticBoneCollision())
+            {
+                for(auto iter : f_model2->GetSkeleton()->GetCollisionVectorRef()) l_bodies2.push_back(iter->m_rigidBody);
+            }
+            if(f_model2->HasSkeletonDynamicBoneCollision())
+            {
+                for(auto iter : f_model2->GetSkeleton()->GetJointVectorRef())
+                {
+                    for(auto iter1 : iter->m_partsVector) l_bodies2.push_back(iter1->m_rigidBody);
+                }
+            }
+        }
+    }
+    for(auto iter1 : l_bodies1)
+    {
+        for(auto iter2 : l_bodies2)
+        {
+            iter1->setIgnoreCollisionCheck(iter2, !f_state);
+            iter2->setIgnoreCollisionCheck(iter1, !f_state);
+        }
+    }
+    return (!l_bodies1.empty() && !l_bodies2.empty());
 }
 
 void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)

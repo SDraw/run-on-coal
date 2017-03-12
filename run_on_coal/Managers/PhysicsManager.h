@@ -11,8 +11,6 @@ class PhysicsManager
 {
     Core *m_core;
 
-    std::set<Model*> m_modelsSet;
-
     bool m_enabled;
     btDiscreteDynamicsWorld* m_dynamicWorld;
     btBroadphaseInterface* m_broadPhase;
@@ -37,6 +35,7 @@ public:
 
     bool SetModelCollision(Model *f_model, int f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveModelCollision(Model *f_model);
+    bool SetModelCollisionScale(Model *f_model, glm::vec3 &f_scale);
     bool SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state);
 
     bool RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model);

@@ -9,6 +9,9 @@
 #include "Utils/SystemTick.h"
 #include "Utils/Utils.h"
 
+const btVector3 g_DefaultScaleVector(1.f,1.f,1.f);
+const glm::mat4 g_IdentityMatrix(1.f);
+
 ROC::Model::Model(Geometry *f_geometry)
 {
     m_elementType = ElementType::ModelElement;
@@ -148,7 +151,7 @@ void ROC::Model::UpdateMatrix()
     m_rebuilded = false;
     if(m_rebuildMatrix)
     {
-        m_localMatrix = glm::translate(Bone::m_identity, m_position)*glm::toMat4(m_rotation)*glm::scale(Bone::m_identity, m_scale);
+        m_localMatrix = glm::translate(g_IdentityMatrix, m_position)*glm::toMat4(m_rotation)*glm::scale(g_IdentityMatrix, m_scale);
         m_rebuildMatrix = false;
         m_rebuilded = true;
     }
@@ -332,8 +335,7 @@ bool ROC::Model::SetVelocity(glm::vec3 &f_val)
 {
     if(m_rigidBody)
     {
-        btVector3 l_velocity(f_val.x, f_val.y, f_val.z);
-        m_rigidBody->setLinearVelocity(l_velocity);
+        m_rigidBody->setLinearVelocity(btVector3(f_val.x, f_val.y, f_val.z));
         m_rigidBody->activate(true);
     }
     return (m_rigidBody != NULL);
@@ -347,8 +349,7 @@ bool ROC::Model::SetAngularVelocity(glm::vec3 &f_val)
 {
     if(m_rigidBody)
     {
-        btVector3 l_velocity(f_val.x, f_val.y, f_val.z);
-        m_rigidBody->setAngularVelocity(l_velocity);
+        m_rigidBody->setAngularVelocity(btVector3(f_val.x, f_val.y, f_val.z));
         m_rigidBody->activate(true);
     }
     return (m_rigidBody != NULL);
@@ -356,6 +357,36 @@ bool ROC::Model::SetAngularVelocity(glm::vec3 &f_val)
 bool ROC::Model::GetAngularVelocity(glm::vec3 &f_val)
 {
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getAngularVelocity().m_floats, sizeof(glm::vec3));
+    return (m_rigidBody != NULL);
+}
+bool ROC::Model::SetLinearFactor(glm::vec3 &f_val)
+{
+    if(m_rigidBody) m_rigidBody->setLinearFactor(btVector3(f_val.x, f_val.y, f_val.z));
+    return (m_rigidBody != NULL);
+}
+bool ROC::Model::GetLinearFactor(glm::vec3 &f_val)
+{
+    if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getLinearFactor().m_floats, sizeof(glm::vec3));
+    return (m_rigidBody != NULL);
+}
+bool ROC::Model::SetAngularFactor(glm::vec3 &f_val)
+{
+    if(m_rigidBody) m_rigidBody->setAngularFactor(btVector3(f_val.x, f_val.y, f_val.z));
+    return (m_rigidBody != NULL);
+}
+bool ROC::Model::GetAngularFactor(glm::vec3 &f_val)
+{
+    if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getAngularFactor().m_floats, sizeof(glm::vec3));
+    return (m_rigidBody != NULL);
+}
+bool ROC::Model::SetCollisionScale(glm::vec3 &f_val)
+{
+    if(m_rigidBody) m_rigidBody->getCollisionShape()->setLocalScaling(btVector3(f_val.x, f_val.y, f_val.z));
+    return (m_rigidBody != NULL);
+}
+bool ROC::Model::GetCollisionScale(glm::vec3 &f_val)
+{
+    if(m_rigidBody) std::memcpy(&f_val,m_rigidBody->getCollisionShape()->getLocalScaling().m_floats,sizeof(glm::vec3));
     return (m_rigidBody != NULL);
 }
 float ROC::Model::GetMass()
@@ -393,6 +424,13 @@ void ROC::Model::UpdateCollision()
             m_rotation.z = l_rotation.z();
             m_rotation.w = l_rotation.w();
             l_transform.getOpenGLMatrix(reinterpret_cast<float*>(&m_localMatrix));
+
+            const btVector3 &l_bodyScale = m_rigidBody->getCollisionShape()->getLocalScaling();
+            if(l_bodyScale != g_DefaultScaleVector)
+            {
+                std::memcpy(&m_scale, l_bodyScale.m_floats, sizeof(glm::vec3));
+                m_localMatrix = m_localMatrix*glm::scale(g_IdentityMatrix, m_scale);
+            }
             std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         }
     }

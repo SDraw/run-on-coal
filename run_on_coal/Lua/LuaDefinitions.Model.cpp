@@ -29,7 +29,7 @@ const std::vector<std::string> g_modelTypesTable
 };
 const std::vector<std::string> g_modelCollisionPropertiesTable
 {
-    "mass", "velocity", "angular_velocity", "friction"
+    "mass", "velocity", "angular_velocity", "friction", "linear_factor", "angular_factor", "scale"
 };
 const std::vector<std::string> g_modelAnimationPropertiesTable
 {
@@ -495,6 +495,45 @@ int modelSetCollisionProperty(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
+                case 4: // Linear factor
+                {
+                    glm::vec3 l_linearFactor;
+                    argStream.ReadNumber(l_linearFactor.x);
+                    argStream.ReadNumber(l_linearFactor.y);
+                    argStream.ReadNumber(l_linearFactor.z);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetLinearFactor(l_linearFactor);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case 5: // Angular factor
+                {
+                    glm::vec3 l_angularFactor;
+                    argStream.ReadNumber(l_angularFactor.x);
+                    argStream.ReadNumber(l_angularFactor.y);
+                    argStream.ReadNumber(l_angularFactor.z);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetAngularFactor(l_angularFactor);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case 6: // Scale
+                {
+                    glm::vec3 l_scale;
+                    argStream.ReadNumber(l_scale.x);
+                    argStream.ReadNumber(l_scale.y);
+                    argStream.ReadNumber(l_scale.z);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = LuaManager::GetCore()->GetPhysicsManager()->SetModelCollisionScale(l_model, l_scale);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
                 default:
                     argStream.PushBoolean(false);
             }
@@ -542,6 +581,30 @@ int modelGetCollisionProperty(lua_State *f_vm)
                 {
                     float l_friction = l_model->GetFriction();
                     argStream.PushNumber(l_friction);
+                } break;
+                case 4: // Linear factor
+                {
+                    glm::vec3 l_linearFactor;
+                    l_model->GetLinearFactor(l_linearFactor);
+                    argStream.PushNumber(l_linearFactor.x);
+                    argStream.PushNumber(l_linearFactor.y);
+                    argStream.PushNumber(l_linearFactor.z);
+                } break;
+                case 5: // Angular factor
+                {
+                    glm::vec3 l_angularFactor;
+                    l_model->GetAngularFactor(l_angularFactor);
+                    argStream.PushNumber(l_angularFactor.x);
+                    argStream.PushNumber(l_angularFactor.y);
+                    argStream.PushNumber(l_angularFactor.z);
+                } break;
+                case 6: // Scale
+                {
+                    glm::vec3 l_scale;
+                    l_model->GetCollisionScale(l_scale);
+                    argStream.PushNumber(l_scale.x);
+                    argStream.PushNumber(l_scale.y);
+                    argStream.PushNumber(l_scale.z);
                 } break;
                 default:
                     argStream.PushBoolean(false);

@@ -70,12 +70,16 @@ public:
     bool HasSkeletonDynamicBoneCollision() const;
 
     inline bool HasCollision() const { return (m_rigidBody != NULL); }
-    inline btRigidBody* GetRigidBody() { return m_rigidBody; }
     inline int GetRigidType() const { return m_rigidType; }
     bool SetVelocity(glm::vec3 &f_val);
     bool GetVelocity(glm::vec3 &f_val);
     bool SetAngularVelocity(glm::vec3 &f_val);
     bool GetAngularVelocity(glm::vec3 &f_val);
+    bool SetLinearFactor(glm::vec3 &f_val);
+    bool GetLinearFactor(glm::vec3 &f_val);
+    bool SetAngularFactor(glm::vec3 &f_val);
+    bool GetAngularFactor(glm::vec3 &f_val);
+    bool GetCollisionScale(glm::vec3 &f_val);
     float GetMass();
     bool SetFriction(float f_val);
     inline float GetFriction() const { return (m_rigidBody ? m_rigidBody->getFriction() : -1.f); }
@@ -87,15 +91,22 @@ protected:
     ~Model();
 
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
+
     inline glm::mat4& GetMatrixRef() { return m_matrix; }
     void UpdateMatrix();
+
     void SetParent(Model *f_model, int f_bone = -1);
+
     void SetAnimation(Animation *f_anim);
     void UpdateAnimation();
+
     inline Skeleton* GetSkeleton() { return m_skeleton; }
+
     bool SetCollision(int f_type, float f_mass, glm::vec3 &f_dim);
     bool RemoveCollision();
     void UpdateCollision();
+    bool SetCollisionScale(glm::vec3 &f_val);
+    inline btRigidBody* GetRigidBody() { return m_rigidBody; }
 
     friend class ElementManager;
     friend class InheritanceManager;
