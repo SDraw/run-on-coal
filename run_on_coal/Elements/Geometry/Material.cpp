@@ -36,7 +36,7 @@ ROC::Material::~Material()
     if(m_texture) delete m_texture;
 }
 
-void ROC::Material::LoadVertices(std::vector<glm::vec3> &f_vector)
+void ROC::Material::LoadVertices(const std::vector<glm::vec3> &f_vector)
 {
     if(!m_bVertexVBO)
     {
@@ -47,7 +47,7 @@ void ROC::Material::LoadVertices(std::vector<glm::vec3> &f_vector)
         m_bVertexVBO = true;
     }
 }
-void ROC::Material::LoadUVs(std::vector<glm::vec2> &f_vector)
+void ROC::Material::LoadUVs(const std::vector<glm::vec2> &f_vector)
 {
     if(!m_bUvVBO)
     {
@@ -57,7 +57,7 @@ void ROC::Material::LoadUVs(std::vector<glm::vec2> &f_vector)
         m_bUvVBO = true;
     }
 }
-void ROC::Material::LoadNormals(std::vector<glm::vec3> &f_vector)
+void ROC::Material::LoadNormals(const std::vector<glm::vec3> &f_vector)
 {
     if(!m_bNormalVBO)
     {
@@ -67,7 +67,7 @@ void ROC::Material::LoadNormals(std::vector<glm::vec3> &f_vector)
         m_bNormalVBO = true;
     }
 }
-void ROC::Material::LoadWeights(std::vector<glm::vec4> &f_vector)
+void ROC::Material::LoadWeights(const std::vector<glm::vec4> &f_vector)
 {
     if(!m_bWeightVBO)
     {
@@ -77,7 +77,7 @@ void ROC::Material::LoadWeights(std::vector<glm::vec4> &f_vector)
         m_bWeightVBO = true;
     }
 }
-void ROC::Material::LoadIndices(std::vector<glm::ivec4> &f_vector)
+void ROC::Material::LoadIndices(const std::vector<glm::ivec4> &f_vector)
 {
     if(!m_bIndexVBO)
     {
@@ -130,7 +130,7 @@ void ROC::Material::GenerateVAO()
         m_bVAO = true;
     }
 }
-void ROC::Material::LoadTexture(std::string &f_path)
+void ROC::Material::LoadTexture(const std::string &f_path)
 {
     if(!m_texture)
     {

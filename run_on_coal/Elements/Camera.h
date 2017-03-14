@@ -31,19 +31,19 @@ public:
     inline float GetFOV() const { return m_fov; }
     void SetAspectRatio(float f_ratio);
     inline float GetAspectRatio() const { return m_aspectRatio; }
-    void SetOrthoParams(glm::vec4 &f_size);
+    void SetOrthoParams(const glm::vec4 &f_size);
     inline void GetOrthoParams(glm::vec4 &f_size) { std::memcpy(&f_size, &m_orthoParams, sizeof(glm::vec4)); }
-    void SetDepth(glm::vec2 &f_depth);
+    void SetDepth(const glm::vec2 &f_depth);
     inline void GetDepth(glm::vec2 &f_depth) { std::memcpy(&f_depth, &m_depth, sizeof(glm::vec2)); }
-    void SetPosition(glm::vec3 &f_pos);
+    void SetPosition(const glm::vec3 &f_pos);
     inline void GetPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_viewPosition, sizeof(glm::vec3)); }
-    void SetDirection(glm::vec3 &f_dir);
+    void SetDirection(const glm::vec3 &f_dir);
     inline void GetDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir, &m_viewDirection, sizeof(glm::vec3)); }
 
     void GetViewMatrix(glm::mat4 &f_mat);
     void GetProjectionMatrix(glm::mat4 &f_mat);
 
-    bool IsInFrustum(glm::vec3 &f_pos, float f_radius);
+    bool IsInFrustum(const glm::vec3 &f_pos, float f_radius);
 protected:
     explicit Camera(int f_type);
     ~Camera();

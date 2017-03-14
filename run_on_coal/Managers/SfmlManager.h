@@ -32,14 +32,14 @@ public:
     inline void SetVSync(bool f_sync) { m_window->setVerticalSyncEnabled(f_sync); }
     void SetFramelimit(unsigned int f_fps);
     inline unsigned int GetFramelimit() const { return m_frameLimit; }
-    inline void SetTitle(sf::String &f_title) { m_window->setTitle(f_title); }
-    bool SetIcon(std::string &f_path);
+    inline void SetTitle(const sf::String &f_title) { m_window->setTitle(f_title); }
+    bool SetIcon(const std::string &f_path);
     inline void RequestFocus() { m_window->requestFocus(); }
     inline bool GetFocusState() const { return m_window->hasFocus(); }
 
     void SetCursorMode(unsigned char f_mode);
     void GetCursorPosition(glm::ivec2 &f_pos);
-    void SetCursorPosition(glm::ivec2 &f_pos);
+    void SetCursorPosition(const glm::ivec2 &f_pos);
 
     static bool IsKeyPressed(int f_key);
     static bool IsMouseKeyPressed(int f_key);

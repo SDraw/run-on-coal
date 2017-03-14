@@ -28,10 +28,6 @@ class RenderManager
     RenderTarget *m_activeTarget;
     Quad *m_quad;
 
-    glm::vec3 m_emptyVec3;
-    glm::vec4 m_emptyVec4;
-    glm::mat4 m_emptyMat4;
-
     LuaArguments *m_argument;
 
     float m_time;

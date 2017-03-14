@@ -20,7 +20,7 @@ ROC::Sound::~Sound()
     if(m_handle) delete m_handle;
 }
 
-bool ROC::Sound::Load(std::string &f_path)
+bool ROC::Sound::Load(const std::string &f_path)
 {
     if(!m_handle)
     {
@@ -86,7 +86,7 @@ bool ROC::Sound::Set3DPositionEnabled(bool f_state)
     return m_mono;
 }
 
-bool ROC::Sound::Set3DPosition(glm::vec3 &f_pos)
+bool ROC::Sound::Set3DPosition(const glm::vec3 &f_pos)
 {
     if(m_b3D)
     {
@@ -96,7 +96,7 @@ bool ROC::Sound::Set3DPosition(glm::vec3 &f_pos)
     return m_b3D;
 }
 
-bool ROC::Sound::Set3DDistance(glm::vec2 &f_dist)
+bool ROC::Sound::Set3DDistance(const glm::vec2 &f_dist)
 {
     if(m_b3D)
     {

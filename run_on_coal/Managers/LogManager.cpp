@@ -18,7 +18,7 @@ ROC::LogManager::~LogManager()
     }
 }
 
-void ROC::LogManager::Log(std::string &f_text)
+void ROC::LogManager::Log(const std::string &f_text)
 {
     if(m_enabled)
     {

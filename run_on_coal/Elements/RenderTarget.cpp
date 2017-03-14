@@ -19,7 +19,7 @@ ROC::RenderTarget::~RenderTarget()
     Clear();
 }
 
-bool ROC::RenderTarget::Create(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter)
+bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int f_type, int f_filter)
 {
     if(m_type == RENDERTARGET_TYPE_NONE)
     {

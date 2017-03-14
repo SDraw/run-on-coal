@@ -46,17 +46,17 @@ class Skeleton
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
 protected:
-    explicit Skeleton(std::vector<BoneData*> &f_data);
+    explicit Skeleton(const std::vector<BoneData*> &f_data);
     ~Skeleton();
 
-    void Update(std::vector<BoneFrameData*> &f_data);
+    void Update(const std::vector<BoneFrameData*> &f_data);
     void Update();
     void ResetBonesInterpolation();
 
-    void InitStaticBoneCollision(std::vector<BoneCollisionData*> &f_vec);
-    void InitDynamicBoneCollision(std::vector<BoneJointData*> &f_vec);
-    void UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled);
-    void UpdateCollision_S2(glm::mat4 &f_model, bool f_enabled);
+    void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec);
+    void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec);
+    void UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled);
+    void UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled);
     inline std::vector<skCollision*> &GetCollisionVectorRef() { return m_collisionVector; }
     inline std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
     inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }

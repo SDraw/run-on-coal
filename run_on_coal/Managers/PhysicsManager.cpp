@@ -66,7 +66,7 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
         }
     }
 }
-void ROC::PhysicsManager::SetGravity(glm::vec3 &f_grav)
+void ROC::PhysicsManager::SetGravity(const glm::vec3 &f_grav)
 {
     btVector3 l_grav(f_grav.x, f_grav.y, f_grav.z);
     m_dynamicWorld->setGravity(l_grav);
@@ -88,7 +88,7 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
     std::memcpy(&f_grav, m_dynamicWorld->getGravity().m_floats, sizeof(glm::vec3));
 }
 
-bool ROC::PhysicsManager::SetModelCollision(Model *f_model, int f_type, float f_mass, glm::vec3 &f_dim)
+bool ROC::PhysicsManager::SetModelCollision(Model *f_model, int f_type, float f_mass, const glm::vec3 &f_dim)
 {
     bool l_result = false;
     if(!f_model->HasCollision())
@@ -115,7 +115,7 @@ bool ROC::PhysicsManager::RemoveModelCollision(Model *f_model)
     }
     return l_result;
 }
-bool ROC::PhysicsManager::SetModelCollisionScale(Model *f_model, glm::vec3 &f_scale)
+bool ROC::PhysicsManager::SetModelCollisionScale(Model *f_model, const glm::vec3 &f_scale)
 {
     bool l_result = false;
     if(f_model->HasCollision())
@@ -234,7 +234,7 @@ void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
     m_dynamicWorld->removeRigidBody(f_col->GetRigidBody());
 }
 
-bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model)
+bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void *&f_model)
 {
     bool l_result = false;
     if(std::memcmp(&f_start, &f_end, sizeof(glm::vec3)) != 0)
@@ -246,7 +246,7 @@ bool ROC::PhysicsManager::RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec
         if(l_rayResult.hasHit())
         {
             void *l_colObject = l_rayResult.m_collisionObject->getUserPointer();
-            *f_model = l_colObject ? (m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject) ? l_colObject : NULL) : NULL;
+            f_model = l_colObject ? (m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject) ? l_colObject : NULL) : NULL;
             std::memcpy(&f_end, l_rayResult.m_hitPointWorld.m_floats, sizeof(glm::vec3));
             std::memcpy(&f_normal, l_rayResult.m_hitNormalWorld.m_floats, sizeof(glm::vec3));
             l_result = true;

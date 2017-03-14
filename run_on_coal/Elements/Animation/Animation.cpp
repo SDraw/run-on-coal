@@ -38,7 +38,7 @@ void ROC::Animation::Clean()
     m_loaded = false;
 }
 
-bool ROC::Animation::Load(std::string &f_path)
+bool ROC::Animation::Load(const std::string &f_path)
 {
     if(!m_loaded)
     {

@@ -26,9 +26,9 @@ class NetworkManager
     NetworkManager(const NetworkManager& that);
     NetworkManager &operator =(const NetworkManager &that);
 public:
-    bool Connect(std::string &f_ip, unsigned short f_port);
+    bool Connect(const std::string &f_ip, unsigned short f_port);
     bool Disconnect();
-    bool SendData(std::string &f_data);
+    bool SendData(const std::string &f_data);
     inline unsigned char GetNetworkState() const { return m_networkState; }
     int GetPing();
 protected:

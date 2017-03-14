@@ -44,7 +44,7 @@ ROC::NetworkManager::~NetworkManager()
     delete m_argument;
 }
 
-bool ROC::NetworkManager::Connect(std::string &f_ip, unsigned short f_port)
+bool ROC::NetworkManager::Connect(const std::string &f_ip, unsigned short f_port)
 {
     if(m_networkState == NetworkState::Disconnected)
     {
@@ -78,7 +78,7 @@ bool ROC::NetworkManager::Disconnect()
     }
     return (m_networkState == NetworkState::Disconnecting);
 }
-bool ROC::NetworkManager::SendData(std::string &f_data)
+bool ROC::NetworkManager::SendData(const std::string &f_data)
 {
     if(m_networkState == NetworkState::Connected)
     {

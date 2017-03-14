@@ -33,15 +33,15 @@ protected:
     Material();
     ~Material();
 
-    void LoadVertices(std::vector<glm::vec3> &f_vector);
-    void LoadUVs(std::vector<glm::vec2> &f_vector);
-    void LoadNormals(std::vector<glm::vec3> &f_vector);
-    void LoadWeights(std::vector<glm::vec4> &f_vector);
-    void LoadIndices(std::vector<glm::ivec4> &f_vector);
-    void LoadTexture(std::string &f_path);
+    void LoadVertices(const std::vector<glm::vec3> &f_vector);
+    void LoadUVs(const std::vector<glm::vec2> &f_vector);
+    void LoadNormals(const std::vector<glm::vec3> &f_vector);
+    void LoadWeights(const std::vector<glm::vec4> &f_vector);
+    void LoadIndices(const std::vector<glm::ivec4> &f_vector);
+    void LoadTexture(const std::string &f_path);
     void GenerateVAO();
     inline void SetType(unsigned int f_type) { m_type = f_type; }
-    inline void SetParams(glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
+    inline void SetParams(const glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
 
     inline GLuint GetVAO() const { return m_VAO; }
     inline unsigned char GetType() const { return m_type; }

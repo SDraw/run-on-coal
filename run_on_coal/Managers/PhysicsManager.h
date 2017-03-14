@@ -30,15 +30,15 @@ public:
     inline bool GetPhysicsEnabled() const { return m_enabled; }
     void SetFloorEnabled(bool f_value);
     inline bool GetFloorEnabled() const { return m_floorEnabled; }
-    void SetGravity(glm::vec3 &f_grav);
+    void SetGravity(const glm::vec3 &f_grav);
     void GetGravity(glm::vec3 &f_grav);
 
-    bool SetModelCollision(Model *f_model, int f_type, float f_mass, glm::vec3 &f_dim);
+    bool SetModelCollision(Model *f_model, int f_type, float f_mass, const glm::vec3 &f_dim);
     bool RemoveModelCollision(Model *f_model);
-    bool SetModelCollisionScale(Model *f_model, glm::vec3 &f_scale);
+    bool SetModelCollisionScale(Model *f_model, const glm::vec3 &f_scale);
     bool SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state);
 
-    bool RayCast(glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void **f_model);
+    bool RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void *&f_model);
 protected:
     explicit PhysicsManager(Core *f_core);
     ~PhysicsManager();

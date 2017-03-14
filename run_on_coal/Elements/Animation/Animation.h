@@ -27,7 +27,7 @@ protected:
     Animation();
     ~Animation();
 
-    bool Load(std::string &f_path);
+    bool Load(const std::string &f_path);
     bool CacheData(unsigned int f_tick);
     inline std::vector<BoneFrameData*>& GetCachedDataRef() { return m_interpolatedFrame; }
 

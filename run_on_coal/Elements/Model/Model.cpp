@@ -9,7 +9,7 @@
 #include "Utils/SystemTick.h"
 #include "Utils/Utils.h"
 
-const btVector3 g_DefaultScaleVector(1.f,1.f,1.f);
+const glm::vec3 g_DefaultScaleVector(1.f, 1.f, 1.f);
 const glm::mat4 g_IdentityMatrix(1.f);
 
 ROC::Model::Model(Geometry *f_geometry)
@@ -48,6 +48,7 @@ ROC::Model::Model(Geometry *f_geometry)
 
     m_rigidBody = NULL;
     m_rigidType = MODEL_RIGIDITY_TYPE_NONE;
+    m_defaultRigidScale = true;
 }
 ROC::Model::~Model()
 {
@@ -55,7 +56,7 @@ ROC::Model::~Model()
     RemoveCollision();
 }
 
-void ROC::Model::SetPosition(glm::vec3 &f_pos)
+void ROC::Model::SetPosition(const glm::vec3 &f_pos)
 {
     if(std::memcmp(&m_position, &f_pos, sizeof(glm::vec3)) != 0)
     {
@@ -85,7 +86,7 @@ void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
     }
 }
 
-void ROC::Model::SetRotation(glm::quat &f_rot)
+void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
     if(std::memcmp(&m_rotation, &f_rot, sizeof(glm::quat)) != 0)
     {
@@ -126,7 +127,7 @@ void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)
     }
 }
 
-void ROC::Model::SetScale(glm::vec3 &f_scl)
+void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
     if(!m_rigidBody && (std::memcmp(&m_scale, &f_scl, sizeof(glm::vec3)) != 0))
     {
@@ -286,7 +287,7 @@ bool ROC::Model::HasSkeletonDynamicBoneCollision() const
     return (m_skeleton ? m_skeleton->HasDynamicBoneCollision() : false);
 }
 
-bool ROC::Model::SetCollision(int f_type, float f_mass, glm::vec3 &f_dim)
+bool ROC::Model::SetCollision(int f_type, float f_mass, const glm::vec3 &f_dim)
 {
     if(!m_rigidBody && !m_parent && (f_mass >= 0.f))
     {
@@ -331,7 +332,7 @@ bool ROC::Model::RemoveCollision()
     }
     return (m_rigidBody == NULL);
 }
-bool ROC::Model::SetVelocity(glm::vec3 &f_val)
+bool ROC::Model::SetVelocity(const glm::vec3 &f_val)
 {
     if(m_rigidBody)
     {
@@ -345,7 +346,7 @@ bool ROC::Model::GetVelocity(glm::vec3 &f_val)
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getLinearVelocity().m_floats, sizeof(glm::vec3));
     return (m_rigidBody != NULL);
 }
-bool ROC::Model::SetAngularVelocity(glm::vec3 &f_val)
+bool ROC::Model::SetAngularVelocity(const glm::vec3 &f_val)
 {
     if(m_rigidBody)
     {
@@ -359,7 +360,7 @@ bool ROC::Model::GetAngularVelocity(glm::vec3 &f_val)
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getAngularVelocity().m_floats, sizeof(glm::vec3));
     return (m_rigidBody != NULL);
 }
-bool ROC::Model::SetLinearFactor(glm::vec3 &f_val)
+bool ROC::Model::SetLinearFactor(const glm::vec3 &f_val)
 {
     if(m_rigidBody) m_rigidBody->setLinearFactor(btVector3(f_val.x, f_val.y, f_val.z));
     return (m_rigidBody != NULL);
@@ -369,7 +370,7 @@ bool ROC::Model::GetLinearFactor(glm::vec3 &f_val)
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getLinearFactor().m_floats, sizeof(glm::vec3));
     return (m_rigidBody != NULL);
 }
-bool ROC::Model::SetAngularFactor(glm::vec3 &f_val)
+bool ROC::Model::SetAngularFactor(const glm::vec3 &f_val)
 {
     if(m_rigidBody) m_rigidBody->setAngularFactor(btVector3(f_val.x, f_val.y, f_val.z));
     return (m_rigidBody != NULL);
@@ -379,14 +380,19 @@ bool ROC::Model::GetAngularFactor(glm::vec3 &f_val)
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getAngularFactor().m_floats, sizeof(glm::vec3));
     return (m_rigidBody != NULL);
 }
-bool ROC::Model::SetCollisionScale(glm::vec3 &f_val)
+bool ROC::Model::SetCollisionScale(const glm::vec3 &f_val)
 {
-    if(m_rigidBody) m_rigidBody->getCollisionShape()->setLocalScaling(btVector3(f_val.x, f_val.y, f_val.z));
+    if(m_rigidBody)
+    {
+        m_rigidBody->getCollisionShape()->setLocalScaling(btVector3(f_val.x, f_val.y, f_val.z));
+        m_defaultRigidScale = (memcmp(&f_val, &g_DefaultScaleVector, sizeof(glm::vec3)) == 0);
+        memcpy(&m_scale, m_defaultRigidScale ? &g_DefaultScaleVector : &f_val, sizeof(glm::vec3));
+    }
     return (m_rigidBody != NULL);
 }
 bool ROC::Model::GetCollisionScale(glm::vec3 &f_val)
 {
-    if(m_rigidBody) std::memcpy(&f_val,m_rigidBody->getCollisionShape()->getLocalScaling().m_floats,sizeof(glm::vec3));
+    if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getCollisionShape()->getLocalScaling().m_floats, sizeof(glm::vec3));
     return (m_rigidBody != NULL);
 }
 float ROC::Model::GetMass()
@@ -425,12 +431,7 @@ void ROC::Model::UpdateCollision()
             m_rotation.w = l_rotation.w();
             l_transform.getOpenGLMatrix(reinterpret_cast<float*>(&m_localMatrix));
 
-            const btVector3 &l_bodyScale = m_rigidBody->getCollisionShape()->getLocalScaling();
-            if(l_bodyScale != g_DefaultScaleVector)
-            {
-                std::memcpy(&m_scale, l_bodyScale.m_floats, sizeof(glm::vec3));
-                m_localMatrix = m_localMatrix*glm::scale(g_IdentityMatrix, m_scale);
-            }
+            if(!m_defaultRigidScale) m_localMatrix = m_localMatrix*glm::scale(g_IdentityMatrix, m_scale);
             std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         }
     }

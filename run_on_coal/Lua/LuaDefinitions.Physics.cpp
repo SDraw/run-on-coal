@@ -88,7 +88,7 @@ int physicsRayCast(lua_State *f_vm)
     {
         glm::vec3 l_hitNormal;
         void *l_hitElement = NULL;
-        if(LuaManager::GetCore()->GetPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, &l_hitElement))
+        if(LuaManager::GetCore()->GetPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, l_hitElement))
         {
             argStream.PushNumber(l_end.x);
             argStream.PushNumber(l_end.y);

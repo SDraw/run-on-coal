@@ -6,7 +6,7 @@
 #include "Elements/Model/Bone.h"
 #include "Elements/Model/Skeleton.h"
 
-ROC::Skeleton::Skeleton(std::vector<BoneData*> &f_data)
+ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
 {
     for(auto iter : f_data)
     {
@@ -83,7 +83,7 @@ ROC::Skeleton::~Skeleton()
     m_fastBoneVector.clear();
 }
 
-void ROC::Skeleton::Update(std::vector<BoneFrameData*> &f_data)
+void ROC::Skeleton::Update(const std::vector<BoneFrameData*> &f_data)
 {
     for(unsigned int i = 0; i < m_bonesCount; i++) m_boneVector[i]->SetFrameData(f_data[i]);
     Update();
@@ -98,7 +98,7 @@ void ROC::Skeleton::ResetBonesInterpolation()
     for(auto iter : m_boneVector) iter->ResetInterpolation();
 }
 
-void ROC::Skeleton::InitStaticBoneCollision(std::vector<BoneCollisionData*> &f_vec)
+void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec)
 {
     if(!m_hasStaticBoneCollision)
     {
@@ -150,7 +150,7 @@ void ROC::Skeleton::InitStaticBoneCollision(std::vector<BoneCollisionData*> &f_v
     }
 }
 
-void ROC::Skeleton::InitDynamicBoneCollision(std::vector<BoneJointData*> &f_vec)
+void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec)
 {
     if(!m_hasDynamicBoneCollision)
     {
@@ -283,13 +283,13 @@ void ROC::Skeleton::InitDynamicBoneCollision(std::vector<BoneJointData*> &f_vec)
     }
 }
 
-void ROC::Skeleton::UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled)
+void ROC::Skeleton::UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled)
 {
     if(m_hasStaticBoneCollision || m_hasDynamicBoneCollision)
     {
         btTransform l_model;
         btTransform l_transform1, l_transform2;
-        l_model.setFromOpenGLMatrix(reinterpret_cast<float*>(&f_model));
+        l_model.setFromOpenGLMatrix(reinterpret_cast<const btScalar*>(&f_model));
 
         if(m_hasStaticBoneCollision)
         {
@@ -323,13 +323,13 @@ void ROC::Skeleton::UpdateCollision_S1(glm::mat4 &f_model, bool f_enabled)
     }
 }
 
-void ROC::Skeleton::UpdateCollision_S2(glm::mat4 &f_model, bool f_enabled)
+void ROC::Skeleton::UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled)
 {
     if(m_hasDynamicBoneCollision)
     {
         btTransform l_model;
         btTransform l_transform1, l_transform2;
-        l_model.setFromOpenGLMatrix(reinterpret_cast<float*>(&f_model));
+        l_model.setFromOpenGLMatrix(reinterpret_cast<const btScalar*>(&f_model));
         if(f_enabled)
         {
             btTransform l_modelInv = l_model.inverse();

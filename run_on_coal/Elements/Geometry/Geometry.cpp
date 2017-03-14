@@ -18,7 +18,7 @@ ROC::Geometry::~Geometry()
     Clear();
 }
 
-bool ROC::Geometry::Load(std::string &f_path)
+bool ROC::Geometry::Load(const std::string &f_path)
 {
     if(!m_loaded)
     {

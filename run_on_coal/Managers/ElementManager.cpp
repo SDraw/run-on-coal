@@ -52,7 +52,7 @@ ROC::Light* ROC::ElementManager::CreateLight()
     return l_light;
 }
 
-ROC::Animation* ROC::ElementManager::CreateAnimation(std::string &f_path)
+ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
 {
     Animation *l_anim = new Animation();
 
@@ -70,7 +70,7 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(std::string &f_path)
     return l_anim;
 }
 
-ROC::Geometry* ROC::ElementManager::CreateGeometry(std::string &f_path)
+ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path)
 {
     Geometry *l_geometry = new Geometry();
 
@@ -99,7 +99,7 @@ ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
     return l_model;
 }
 
-ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath)
+ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath)
 {
     Shader *l_shader = new Shader();
 
@@ -154,7 +154,7 @@ ROC::Shader* ROC::ElementManager::CreateShader(std::string &f_vpath, std::string
     return l_shader;
 }
 
-ROC::Sound* ROC::ElementManager::CreateSound(std::string &f_path, bool f_loop)
+ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path, bool f_loop)
 {
     Sound *l_sound = new Sound(f_loop);
 
@@ -189,7 +189,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, g
     return l_rt;
 }
 
-ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type, int f_filter, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress)
 {
     Texture *l_tex = new Texture();
 
@@ -207,7 +207,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::string &f_path, int f_type
     }
     return l_tex;
 }
-ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_path, int f_filter, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
 {
     Texture *l_tex = new Texture();
 
@@ -234,7 +234,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(std::vector<std::string> &f_pat
     return l_tex;
 }
 
-ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size, int f_filter)
+ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_size, int f_filter)
 {
     Font *l_font = new Font();
 
@@ -253,7 +253,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(std::string &f_path, int f_size, int
     return l_font;
 }
 
-ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
+ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
@@ -270,7 +270,7 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
     }
     return l_file;
 }
-ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
+ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 

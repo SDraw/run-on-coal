@@ -17,7 +17,7 @@ ROC::File::~File()
     }
 }
 
-bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
+bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
 {
     m_file = new std::fstream(f_path, std::ios::out | std::ios::binary);
     if(m_file->fail()) return false;
@@ -25,7 +25,7 @@ bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
     m_path.append(f_rPath);
     return true;
 }
-bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
+bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool f_ro)
 {
     m_file = new std::fstream(f_path, (f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
     if(m_file->fail()) return false;
@@ -42,7 +42,7 @@ size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
     f_data.insert(f_data.begin(), l_data.begin(), l_data.begin() + l_read);
     return l_read;
 }
-size_t ROC::File::Write(std::string &f_data)
+size_t ROC::File::Write(const std::string &f_data)
 {
     if(m_type != FileMode::WriteMode) return 0U;
     std::streampos l_start = m_file->tellg();

@@ -14,7 +14,7 @@ ROC::Texture::~Texture()
     if(m_texture) glDeleteTextures(1, &m_texture);
 }
 
-bool ROC::Texture::Load(std::string &f_path, int f_type, int f_filter, bool f_compress)
+bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, bool f_compress)
 {
     if(m_type == TEXTURE_TYPE_NONE)
     {
@@ -40,7 +40,7 @@ bool ROC::Texture::Load(std::string &f_path, int f_type, int f_filter, bool f_co
     }
     return (m_type != TEXTURE_TYPE_NONE);
 }
-bool ROC::Texture::LoadCubemap(std::vector<std::string> &f_path, int f_filter, bool f_compress)
+bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
 {
     if(m_type == TEXTURE_TYPE_NONE && f_path.size() == 6U)
     {

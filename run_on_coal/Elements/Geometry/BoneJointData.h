@@ -27,7 +27,7 @@ protected:
     std::vector<bjdJointPart*> m_jointPartVector;
     BoneJointData();
     ~BoneJointData();
-    void AddPart(unsigned int f_bone, unsigned char f_type, glm::vec3 &f_size, glm::vec3 &f_pos, glm::quat &f_rot, float f_mass, float f_restutition, float f_friction, glm::vec2 &f_damping, glm::vec3 &f_lAL, glm::vec3 &f_uAL, glm::vec3 &f_aStiffness, glm::vec3 &f_lLL, glm::vec3 &f_uLL, glm::vec3 &f_lStiffness);
+    void AddPart(unsigned int f_bone, unsigned char f_type, const glm::vec3 &f_size, const glm::vec3 &f_pos, const glm::quat &f_rot, float f_mass, float f_restutition, float f_friction, const glm::vec2 &f_damping, const glm::vec3 &f_lAL, const glm::vec3 &f_uAL, const glm::vec3 &f_aStiffness, const glm::vec3 &f_lLL, const glm::vec3 &f_uLL, const glm::vec3 &f_lStiffness);
     friend class Geometry;
     friend class Skeleton;
 };

@@ -195,6 +195,12 @@
     <ClCompile Include="Elements\Drawable.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
+    <ClCompile Include="..\vendor\RectangleBinPack\MaxRectsBinPack.cpp">
+      <Filter>vendor\RectangleBinPack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\RectangleBinPack\Rect.cpp">
+      <Filter>vendor\RectangleBinPack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -422,6 +428,9 @@
     </Filter>
     <Filter Include="Managers\RenderManager">
       <UniqueIdentifier>{fe45f4a7-6fe6-45d6-b4fa-92094387cefc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\RectangleBinPack">
+      <UniqueIdentifier>{c76d7d5d-de20-4028-a023-81513f1b9aa6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

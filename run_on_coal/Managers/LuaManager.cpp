@@ -169,8 +169,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Font
     lua_register(m_vm, "fontCreate", Lua::fontCreate);
     lua_register(m_vm, "fontDestroy", Lua::fontDestroy);
-    lua_register(m_vm, "fontGetTextWidth", Lua::fontGetTextWidth);
-    lua_register(m_vm, "fontGetTextHeight", Lua::fontGetTextHeight);
     lua_register(m_vm, "fontDraw", Lua::fontDraw);
 
     //File
@@ -266,7 +264,7 @@ ROC::LuaManager::~LuaManager()
     delete m_eventManager;
 }
 
-bool ROC::LuaManager::OpenFile(std::string &f_path)
+bool ROC::LuaManager::OpenFile(const std::string &f_path)
 {
     int error = luaL_loadfile(m_vm, f_path.c_str()) || lua_pcall(m_vm, 0, 0, 0);
     if(error)

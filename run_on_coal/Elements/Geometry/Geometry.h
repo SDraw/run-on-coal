@@ -27,7 +27,7 @@ protected:
     Geometry();
     ~Geometry();
     inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
-    bool Load(std::string &f_path);
+    bool Load(const std::string &f_path);
 
     inline std::vector<BoneData*> &GetBonesDataRef() { return m_bonesData; };
     inline std::vector<BoneCollisionData*> &GetBonesCollisionDataRef() { return m_collisionData; }

@@ -4,7 +4,7 @@
 
 const glm::mat4 g_IdentityMatrix(1.f);
 
-ROC::Bone::Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale)
+ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scale)
 {
     m_parent = NULL;
     m_name.assign(f_name);

@@ -17,15 +17,15 @@ class Collision : public Element
 public:
     inline int GetType() const { return m_type; }
 
-    void SetPosition(glm::vec3 &f_pos);
+    void SetPosition(const glm::vec3 &f_pos);
     void GetPosition(glm::vec3 &f_pos);
-    void SetRotation(glm::quat &f_rot);
+    void SetRotation(const glm::quat &f_rot);
     void GetRotation(glm::quat &f_rot);
 protected:
     Collision();
     ~Collision();
 
-    bool Create(int f_type, glm::vec3 &f_size);
+    bool Create(int f_type, const glm::vec3 &f_size);
     inline btRigidBody* GetRigidBody() { return m_rigidBody; }
 
     friend class ElementManager;

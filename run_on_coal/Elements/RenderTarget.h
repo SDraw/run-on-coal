@@ -38,13 +38,13 @@ public:
 protected:
     RenderTarget();
     ~RenderTarget();
-    bool Create(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter);
+    bool Create(unsigned int f_num, const glm::ivec2 &f_size, int f_type, int f_filter);
     inline GLuint GetTextureID() const { return m_texture; }
 
     void Bind(unsigned int f_slot);
     void Enable();
 
-    inline void GetError(std::string &f_str) { f_str.append(m_error); }
+    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
     friend class ElementManager;
     friend class RenderManager;
     friend class Shader;

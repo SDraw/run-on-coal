@@ -12,22 +12,22 @@ class File : public Element
     std::string m_path;
 public:
     size_t Read(std::string &f_data, size_t f_lenght);
-    size_t Write(std::string &f_data);
+    size_t Write(const std::string &f_data);
 
     size_t GetSize();
     bool SetPosition(size_t f_pos);
     inline size_t GetPosition() { return static_cast<size_t>((m_type == FileMode::ReadMode) ? m_file->tellg() : m_file->tellp()); }
     inline bool IsEOF() { return m_file->eof(); }
 
-    inline void GetPath(std::string &f_string) { f_string.append(m_path); }
+    inline void GetPath(std::string &f_string) { f_string.assign(m_path); }
 
     static bool Delete(Core *f_core, std::string &f_path);
     static bool Rename(Core *f_core, std::string &f_old, std::string &f_new);
 protected:
     File();
     ~File();
-    bool Create(std::string &f_path, std::string &f_rPath);
-    bool Open(std::string &f_path, std::string &f_rPath, bool f_ro);
+    bool Create(const std::string &f_path, const std::string &f_rPath);
+    bool Open(const std::string &f_path, const std::string &f_rPath, bool f_ro);
     friend class ElementManager;
 };
 

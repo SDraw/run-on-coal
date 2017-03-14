@@ -37,17 +37,17 @@ public:
     bool Set3DPositionEnabled(bool f_state);
     inline bool Get3DPositionEnabled() const { return m_b3D; }
 
-    bool Set3DPosition(glm::vec3 &f_pos);
+    bool Set3DPosition(const glm::vec3 &f_pos);
     inline void Get3DPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_v3DPosition, sizeof(glm::vec3)); }
 
-    bool Set3DDistance(glm::vec2 &f_dist);
+    bool Set3DDistance(const glm::vec2 &f_dist);
     inline void Get3DDistance(glm::vec2 &f_dist) { std::memcpy(&f_dist, &m_v3DDistance, sizeof(glm::vec2)); }
 
     inline int GetState() const { return m_handle->getStatus(); }
 protected:
     explicit Sound(bool f_loop);
     ~Sound();
-    bool Load(std::string &f_path);
+    bool Load(const std::string &f_path);
     friend class ElementManager;
 };
 

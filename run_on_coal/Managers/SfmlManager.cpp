@@ -137,7 +137,7 @@ void ROC::SfmlManager::SetFramelimit(unsigned int f_fps)
         m_core->GetPhysicsManager()->UpdateWorldSteps(m_frameLimit);
     }
 }
-bool ROC::SfmlManager::SetIcon(std::string &f_path)
+bool ROC::SfmlManager::SetIcon(const std::string &f_path)
 {
     bool l_result = false;
     sf::Image l_image;
@@ -168,7 +168,7 @@ void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos)
     sf::Vector2i l_position = sf::Mouse::getPosition(*m_window);
     std::memcpy(&f_pos, &l_position, sizeof(glm::ivec2));
 }
-void ROC::SfmlManager::SetCursorPosition(glm::ivec2 &f_pos)
+void ROC::SfmlManager::SetCursorPosition(const glm::ivec2 &f_pos)
 {
     sf::Mouse::setPosition((sf::Vector2i&)f_pos, *m_window);
 }

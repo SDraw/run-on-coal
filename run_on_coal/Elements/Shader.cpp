@@ -58,7 +58,7 @@ ROC::Shader::~Shader()
     m_drawableBind.clear();
 }
 
-bool ROC::Shader::Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath)
+bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath)
 {
     if(!m_program && !f_vpath.empty() && !f_fpath.empty())
     {
@@ -255,7 +255,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     m_colorUniform = glGetUniformLocation(m_program, "gColor");
 }
 
-GLint ROC::Shader::GetUniform(std::string &f_uname)
+GLint ROC::Shader::GetUniform(const std::string &f_uname)
 {
     // Usually it returns value from 0 to 255, but sometimes it returns memory address. Weird OpenGL...
     return glGetUniformLocation(m_program, f_uname.c_str());
@@ -265,15 +265,15 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, unsigned int f_value)
 {
     glUniform1ui(f_uValue, f_value);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec2 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::uvec2 &f_value)
 {
     glUniform2ui(f_uValue, f_value.x, f_value.y);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec3 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::uvec3 &f_value)
 {
     glUniform3ui(f_uValue, f_value.x, f_value.y, f_value.z);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::uvec4 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::uvec4 &f_value)
 {
     glUniform4ui(f_uValue, f_value.x, f_value.y, f_value.z, f_value.w);
 }
@@ -282,15 +282,15 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, int f_value)
 {
     glUniform1i(f_uValue, f_value);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec2 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::ivec2 &f_value)
 {
     glUniform2i(f_uValue, f_value.x, f_value.y);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec3 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::ivec3 &f_value)
 {
     glUniform3i(f_uValue, f_value.x, f_value.y, f_value.z);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::ivec4 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::ivec4 &f_value)
 {
     glUniform4i(f_uValue, f_value.x, f_value.y, f_value.z, f_value.w);
 }
@@ -299,15 +299,15 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, float f_value)
 {
     glUniform1f(f_uValue, f_value);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec2 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::vec2 &f_value)
 {
     glUniform2f(f_uValue, f_value.x, f_value.y);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec3 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::vec3 &f_value)
 {
     glUniform3f(f_uValue, f_value.x, f_value.y, f_value.z);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::vec4 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::vec4 &f_value)
 {
     glUniform4f(f_uValue, f_value.x, f_value.y, f_value.z, f_value.w);
 }
@@ -316,33 +316,33 @@ void ROC::Shader::SetUniformValue(GLint f_uValue, double f_value)
 {
     glUniform1d(f_uValue, f_value);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec2 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::dvec2 &f_value)
 {
     glUniform2d(f_uValue, f_value.x, f_value.y);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec3 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::dvec3 &f_value)
 {
     glUniform3d(f_uValue, f_value.x, f_value.y, f_value.z);
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::dvec4 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::dvec4 &f_value)
 {
     glUniform4d(f_uValue, f_value.x, f_value.y, f_value.z, f_value.w);
 }
 
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::mat2 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::mat2 &f_value)
 {
-    glUniformMatrix2fv(f_uValue, 1, GL_FALSE, reinterpret_cast<GLfloat*>(&f_value));
+    glUniformMatrix2fv(f_uValue, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&f_value));
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::mat3 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::mat3 &f_value)
 {
-    glUniformMatrix3fv(f_uValue, 1, GL_FALSE, reinterpret_cast<GLfloat*>(&f_value));
+    glUniformMatrix3fv(f_uValue, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&f_value));
 }
-void ROC::Shader::SetUniformValue(GLint f_uValue, glm::mat4 &f_value)
+void ROC::Shader::SetUniformValue(GLint f_uValue, const glm::mat4 &f_value)
 {
-    glUniformMatrix4fv(f_uValue, 1, GL_FALSE, reinterpret_cast<GLfloat*>(&f_value));
+    glUniformMatrix4fv(f_uValue, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&f_value));
 }
 
-void ROC::Shader::SetProjectionUniformValue(glm::mat4 &f_value)
+void ROC::Shader::SetProjectionUniformValue(const glm::mat4 &f_value)
 {
     if(m_projectionUniform != -1)
     {
@@ -353,7 +353,7 @@ void ROC::Shader::SetProjectionUniformValue(glm::mat4 &f_value)
         }
     }
 }
-void ROC::Shader::SetViewUniformValue(glm::mat4 &f_value)
+void ROC::Shader::SetViewUniformValue(const glm::mat4 &f_value)
 {
     if(m_viewUniform != -1)
     {
@@ -364,7 +364,7 @@ void ROC::Shader::SetViewUniformValue(glm::mat4 &f_value)
         }
     }
 }
-void ROC::Shader::SetModelUniformValue(glm::mat4 &f_value)
+void ROC::Shader::SetModelUniformValue(const glm::mat4 &f_value)
 {
     if(m_modelUniform != -1)
     {
@@ -375,7 +375,7 @@ void ROC::Shader::SetModelUniformValue(glm::mat4 &f_value)
         }
     }
 }
-void ROC::Shader::SetCameraPositionUniformValue(glm::vec3 &f_value)
+void ROC::Shader::SetCameraPositionUniformValue(const glm::vec3 &f_value)
 {
     if(m_cameraPositionUniform != -1)
     {
@@ -386,7 +386,7 @@ void ROC::Shader::SetCameraPositionUniformValue(glm::vec3 &f_value)
         }
     }
 }
-void ROC::Shader::SetCameraDirectionUniformValue(glm::vec3 &f_value)
+void ROC::Shader::SetCameraDirectionUniformValue(const glm::vec3 &f_value)
 {
     if(m_cameraDirectionUniform != -1)
     {
@@ -397,7 +397,7 @@ void ROC::Shader::SetCameraDirectionUniformValue(glm::vec3 &f_value)
         }
     }
 }
-void ROC::Shader::SetLightColorUniformValue(glm::vec4 &f_value)
+void ROC::Shader::SetLightColorUniformValue(const glm::vec4 &f_value)
 {
     if(m_lightColorUniform != -1)
     {
@@ -408,7 +408,7 @@ void ROC::Shader::SetLightColorUniformValue(glm::vec4 &f_value)
         }
     }
 }
-void ROC::Shader::SetLightDirectionUniformValue(glm::vec3 &f_value)
+void ROC::Shader::SetLightDirectionUniformValue(const glm::vec3 &f_value)
 {
     if(m_lightDirectionUniform != -1)
     {
@@ -419,7 +419,7 @@ void ROC::Shader::SetLightDirectionUniformValue(glm::vec3 &f_value)
         }
     }
 }
-void ROC::Shader::SetLightParamUniformValue(glm::vec4 &f_value)
+void ROC::Shader::SetLightParamUniformValue(const glm::vec4 &f_value)
 {
     if(m_lightParamUniform != -1)
     {
@@ -430,7 +430,7 @@ void ROC::Shader::SetLightParamUniformValue(glm::vec4 &f_value)
         }
     }
 }
-void ROC::Shader::SetMaterialParamUniformValue(glm::vec4 &f_value)
+void ROC::Shader::SetMaterialParamUniformValue(const glm::vec4 &f_value)
 {
     if(m_materialParamUniform != -1)
     {
@@ -463,7 +463,7 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
         }
     }
 }
-void ROC::Shader::SetBonesUniformValue(std::vector<glm::mat4> &f_value) const
+void ROC::Shader::SetBonesUniformValue(const std::vector<glm::mat4> &f_value) const
 {
     if(m_bonesUBO != GL_INVALID_INDEX)
     {
@@ -481,7 +481,7 @@ void ROC::Shader::SetTimeUniformValue(float f_value)
         }
     }
 }
-void ROC::Shader::SetColorUniformValue(glm::vec4 &f_value)
+void ROC::Shader::SetColorUniformValue(const glm::vec4 &f_value)
 {
     if(m_colorUniform != -1)
     {

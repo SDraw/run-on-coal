@@ -61,58 +61,58 @@ class Shader : public Element
 
     void SetupDefaultUniformsAndLocations();
 public:
-    GLint GetUniform(std::string &f_uname);
+    GLint GetUniform(const std::string &f_uname);
 protected:
     static Pool *m_uboBindPool;
 
     Shader();
     ~Shader();
-    bool Load(std::string &f_vpath, std::string &f_fpath, std::string &f_gpath);
+    bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     void Enable(bool f_full = true);
 
     static void SetUniformValue(GLint f_uValue, unsigned int f_value);
-    static void SetUniformValue(GLint f_uValue, glm::uvec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::uvec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::uvec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::uvec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::uvec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::uvec4 &f_value);
 
     static void SetUniformValue(GLint f_uValue, int f_value);
-    static void SetUniformValue(GLint f_uValue, glm::ivec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::ivec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::ivec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::ivec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::ivec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::ivec4 &f_value);
 
     static void SetUniformValue(GLint f_uValue, float f_value);
-    static void SetUniformValue(GLint f_uValue, glm::vec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::vec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::vec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::vec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::vec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::vec4 &f_value);
 
     static void SetUniformValue(GLint f_uValue, double f_value);
-    static void SetUniformValue(GLint f_uValue, glm::dvec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::dvec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::dvec4 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::dvec2 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::dvec3 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::dvec4 &f_value);
 
-    static void SetUniformValue(GLint f_uValue, glm::mat2 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::mat3 &f_value);
-    static void SetUniformValue(GLint f_uValue, glm::mat4 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::mat2 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::mat3 &f_value);
+    static void SetUniformValue(GLint f_uValue, const glm::mat4 &f_value);
 
-    void SetProjectionUniformValue(glm::mat4 &f_value);
-    void SetViewUniformValue(glm::mat4 &f_value);
-    void SetModelUniformValue(glm::mat4 &f_value);
-    void SetCameraPositionUniformValue(glm::vec3 &f_value);
-    void SetCameraDirectionUniformValue(glm::vec3 &f_value);
-    void SetLightColorUniformValue(glm::vec4 &f_value);
-    void SetLightDirectionUniformValue(glm::vec3 &f_value);
-    void SetLightParamUniformValue(glm::vec4 &f_value);
-    void SetMaterialParamUniformValue(glm::vec4 &f_value);
+    void SetProjectionUniformValue(const glm::mat4 &f_value);
+    void SetViewUniformValue(const glm::mat4 &f_value);
+    void SetModelUniformValue(const glm::mat4 &f_value);
+    void SetCameraPositionUniformValue(const glm::vec3 &f_value);
+    void SetCameraDirectionUniformValue(const glm::vec3 &f_value);
+    void SetLightColorUniformValue(const glm::vec4 &f_value);
+    void SetLightDirectionUniformValue(const glm::vec3 &f_value);
+    void SetLightParamUniformValue(const glm::vec4 &f_value);
+    void SetMaterialParamUniformValue(const glm::vec4 &f_value);
     void SetMaterialTypeUniformValue(int f_value);
     void SetAnimatedUniformValue(unsigned int f_value);
-    void SetBonesUniformValue(std::vector<glm::mat4> &f_value) const;
+    void SetBonesUniformValue(const std::vector<glm::mat4> &f_value) const;
     void SetTimeUniformValue(float f_value);
-    void SetColorUniformValue(glm::vec4 &f_value);
+    void SetColorUniformValue(const glm::vec4 &f_value);
 
     bool Attach(Drawable *f_drawable, int f_uniform);
     bool Dettach(Drawable *f_drawable);
 
-    inline void GetError(std::string &f_str) { f_str.append(m_error); }
+    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
     friend class ElementManager;
     friend class InheritanceManager;
     friend class RenderManager;

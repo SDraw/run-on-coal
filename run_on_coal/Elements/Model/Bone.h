@@ -23,7 +23,7 @@ class Bone
     Bone(const Bone& that);
     Bone &operator =(const Bone &that);
 protected:
-    Bone(std::string &f_name, glm::quat &f_rot, glm::vec3 &f_pos, glm::vec3 &f_scale);
+    Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scale);
     ~Bone();
 
     void SetFrameData(BoneFrameData *f_data);

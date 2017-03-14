@@ -39,6 +39,7 @@ class Model : public Element
     Skeleton *m_skeleton;
     btRigidBody* m_rigidBody;
     int m_rigidType;
+    bool m_defaultRigidScale;
 
     void UpdateSkeleton();
 
@@ -47,11 +48,11 @@ class Model : public Element
 public:
     inline Geometry* GetGeometry() { return m_geometry; }
 
-    void SetPosition(glm::vec3 &f_pos);
+    void SetPosition(const glm::vec3 &f_pos);
     void GetPosition(glm::vec3 &f_pos, bool f_global = false);
-    void SetRotation(glm::quat &f_rot);
+    void SetRotation(const glm::quat &f_rot);
     void GetRotation(glm::quat &f_rot, bool f_global = false);
-    void SetScale(glm::vec3 &f_scl);
+    void SetScale(const glm::vec3 &f_scl);
     void GetScale(glm::vec3 &f_scl, bool f_global = false);
 
     inline Model* GetParent() { return m_parent; }
@@ -71,13 +72,13 @@ public:
 
     inline bool HasCollision() const { return (m_rigidBody != NULL); }
     inline int GetRigidType() const { return m_rigidType; }
-    bool SetVelocity(glm::vec3 &f_val);
+    bool SetVelocity(const glm::vec3 &f_val);
     bool GetVelocity(glm::vec3 &f_val);
-    bool SetAngularVelocity(glm::vec3 &f_val);
+    bool SetAngularVelocity(const glm::vec3 &f_val);
     bool GetAngularVelocity(glm::vec3 &f_val);
-    bool SetLinearFactor(glm::vec3 &f_val);
+    bool SetLinearFactor(const glm::vec3 &f_val);
     bool GetLinearFactor(glm::vec3 &f_val);
-    bool SetAngularFactor(glm::vec3 &f_val);
+    bool SetAngularFactor(const glm::vec3 &f_val);
     bool GetAngularFactor(glm::vec3 &f_val);
     bool GetCollisionScale(glm::vec3 &f_val);
     float GetMass();
@@ -102,10 +103,10 @@ protected:
 
     inline Skeleton* GetSkeleton() { return m_skeleton; }
 
-    bool SetCollision(int f_type, float f_mass, glm::vec3 &f_dim);
+    bool SetCollision(int f_type, float f_mass, const glm::vec3 &f_dim);
     bool RemoveCollision();
     void UpdateCollision();
-    bool SetCollisionScale(glm::vec3 &f_val);
+    bool SetCollisionScale(const glm::vec3 &f_val);
     inline btRigidBody* GetRigidBody() { return m_rigidBody; }
 
     friend class ElementManager;

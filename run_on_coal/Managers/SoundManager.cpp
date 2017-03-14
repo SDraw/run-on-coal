@@ -12,7 +12,7 @@ ROC::SoundManager::~SoundManager()
 {
 }
 
-void ROC::SoundManager::SetListenerPosition(glm::vec3 &f_pos)
+void ROC::SoundManager::SetListenerPosition(const glm::vec3 &f_pos)
 {
     if(std::memcmp(&f_pos, &m_listenerPosition, sizeof(glm::vec3)) != 0)
     {
@@ -21,7 +21,7 @@ void ROC::SoundManager::SetListenerPosition(glm::vec3 &f_pos)
     }
 }
 
-void ROC::SoundManager::SetListenerDirection(glm::vec3 &f_dir)
+void ROC::SoundManager::SetListenerDirection(const glm::vec3 &f_dir)
 {
     if(std::memcmp(&f_dir, &m_listenerDirection, sizeof(glm::vec3)) != 0)
     {
@@ -30,7 +30,7 @@ void ROC::SoundManager::SetListenerDirection(glm::vec3 &f_dir)
     }
 }
 
-void ROC::SoundManager::SetListenerUp(glm::vec3 &f_up)
+void ROC::SoundManager::SetListenerUp(const glm::vec3 &f_up)
 {
     if(std::memcmp(&f_up, &m_listenerUp, sizeof(glm::vec3)) != 0)
     {
