@@ -18,7 +18,7 @@ class LuaManager
     LuaManager &operator =(const LuaManager &that);
 public:
     static inline Core* GetCore() { return m_coreStatic; };
-    bool OpenFile(std::string &f_path);
+    bool OpenFile(const std::string &f_path);
     inline EventManager* GetEventManager() { return m_eventManager; }
 protected:
     explicit LuaManager(Core *f_core);

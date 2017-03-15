@@ -72,7 +72,7 @@ bool ROC::NetworkManager::Disconnect(Client *f_client)
     if(m_networkInterface) m_networkInterface->CloseConnection(f_client->GetAddress(), true);
     return (m_networkInterface != NULL);
 }
-bool ROC::NetworkManager::SendData(Client *f_client, std::string &f_data)
+bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
 {
     if(m_networkInterface)
     {

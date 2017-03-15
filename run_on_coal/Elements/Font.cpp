@@ -18,7 +18,11 @@ ROC::Font::Font()
     m_charMapEnd = m_charMap.end();
 
     m_vertices = NULL;
+    m_vertexVBO = 0U;
     m_uv = NULL;
+    m_uvVBO = 0U;
+    m_VAO = 0U;
+    m_switch = false;
 
     m_filteringType = 0;
 }
@@ -76,15 +80,15 @@ bool ROC::Font::LoadTTF(const std::string &f_path, int f_size, int f_filter)
 
                 glEnableVertexAttribArray(0);
                 glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 6 * FONT_MAX_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 6 * FONT_MAX_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
                 m_vertices = new std::vector<glm::vec3>;
                 m_vertices->assign(6 * FONT_MAX_TEXT_LENGTH, glm::vec3(0.f, 0.f, 1.f));
 
                 glEnableVertexAttribArray(1);
                 glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2 * 6 * FONT_MAX_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
-                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), NULL);
+                glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 6 * FONT_MAX_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+                glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
                 m_uv = new std::vector<glm::vec2>(6 * FONT_MAX_TEXT_LENGTH);
 
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -136,10 +140,13 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
     {
         if(f_bind)
         {
-            glBindVertexArray(m_VAO);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_atlasTexture);
+            glBindVertexArray(m_VAO);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+            m_switch = true;
         }
+        else m_switch = !m_switch;
         float l_displacement = f_pos.x;
         glm::vec2 l_result;
         int l_charIncrement = 0;
@@ -153,21 +160,22 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
             {
                 if(!LoadChar(iter)) continue;
             }
+            charData *l_charData = m_charIter->second;
 
-            if(m_charIter->second->m_size.x > 0 && m_charIter->second->m_size.y > 0)
+            if(l_charData->m_size.x > 0 && l_charData->m_size.y > 0)
             {
-                l_result.x = l_displacement + m_charIter->second->m_bearing.x;
-                l_result.y = f_pos.y - (m_charIter->second->m_size.y - m_charIter->second->m_bearing.y);
+                l_result.x = l_displacement + l_charData->m_bearing.x;
+                l_result.y = f_pos.y - (l_charData->m_size.y - l_charData->m_bearing.y);
 
                 m_vertices->operator[](l_charQueue).x = m_vertices->operator[](l_charQueue + 1).x = m_vertices->operator[](l_charQueue + 3).x = l_result.x;
                 m_vertices->operator[](l_charQueue + 1).y = m_vertices->operator[](l_charQueue + 2).y = m_vertices->operator[](l_charQueue + 4).y = l_result.y;
-                m_vertices->operator[](l_charQueue + 2).x = m_vertices->operator[](l_charQueue + 4).x = m_vertices->operator[](l_charQueue + 5).x = l_result.x + m_charIter->second->m_size.x;
-                m_vertices->operator[](l_charQueue).y = m_vertices->operator[](l_charQueue + 3).y = m_vertices->operator[](l_charQueue + 5).y = l_result.y + m_charIter->second->m_size.y;
+                m_vertices->operator[](l_charQueue + 2).x = m_vertices->operator[](l_charQueue + 4).x = m_vertices->operator[](l_charQueue + 5).x = l_result.x + l_charData->m_size.x;
+                m_vertices->operator[](l_charQueue).y = m_vertices->operator[](l_charQueue + 3).y = m_vertices->operator[](l_charQueue + 5).y = l_result.y + l_charData->m_size.y;
 
-                m_uv->operator[](l_charQueue).x = m_uv->operator[](l_charQueue + 1).x = m_uv->operator[](l_charQueue + 3).x = m_charIter->second->m_atlasPosition.x;
-                m_uv->operator[](l_charQueue).y = m_uv->operator[](l_charQueue + 3).y = m_uv->operator[](l_charQueue + 5).y = m_charIter->second->m_atlasPosition.y;
-                m_uv->operator[](l_charQueue + 2).x = m_uv->operator[](l_charQueue + 4).x = m_uv->operator[](l_charQueue + 5).x = m_charIter->second->m_atlasPosition.z;
-                m_uv->operator[](l_charQueue + 1).y = m_uv->operator[](l_charQueue + 2).y = m_uv->operator[](l_charQueue + 4).y = m_charIter->second->m_atlasPosition.w;
+                m_uv->operator[](l_charQueue).x = m_uv->operator[](l_charQueue + 1).x = m_uv->operator[](l_charQueue + 3).x = l_charData->m_atlasPosition.x;
+                m_uv->operator[](l_charQueue).y = m_uv->operator[](l_charQueue + 3).y = m_uv->operator[](l_charQueue + 5).y = l_charData->m_atlasPosition.y;
+                m_uv->operator[](l_charQueue + 2).x = m_uv->operator[](l_charQueue + 4).x = m_uv->operator[](l_charQueue + 5).x = l_charData->m_atlasPosition.z;
+                m_uv->operator[](l_charQueue + 1).y = m_uv->operator[](l_charQueue + 2).y = m_uv->operator[](l_charQueue + 4).y = l_charData->m_atlasPosition.w;
 
                 l_charIncrement++;
             }
@@ -176,10 +184,18 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
         }
         if(l_charIncrement > 0)
         {
-            glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * 6 * l_charIncrement, m_vertices->data());
-            glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 2 * 6 * l_charIncrement, m_uv->data());
+            if(m_switch)
+            {
+                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * 6 * l_charIncrement, m_vertices->data());
+                glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * 6 * l_charIncrement, m_uv->data());
+            }
+            else
+            {
+                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * 6 * l_charIncrement, m_uv->data());
+                glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * 6 * l_charIncrement, m_vertices->data());
+            }
             glDrawArrays(GL_TRIANGLES, 0, 6 * l_charIncrement);
         }
     }

@@ -45,12 +45,12 @@ bool ROC::Animation::Load(const std::string &f_path)
         try
         {
             m_animFile.open(f_path, std::ios::binary | std::ios::in);
-            m_animFile.read(reinterpret_cast<char*>(&m_fps), sizeof(m_fps));
-            m_animFile.read(reinterpret_cast<char*>(&m_duration), sizeof(m_duration));
-            m_animFile.read(reinterpret_cast<char*>(&m_bonesValue), sizeof(m_bonesValue));
+            m_animFile.read(reinterpret_cast<char*>(&m_fps), sizeof(unsigned int));
+            m_animFile.read(reinterpret_cast<char*>(&m_duration), sizeof(unsigned int));
+            m_animFile.read(reinterpret_cast<char*>(&m_bonesValue), sizeof(unsigned int));
 
-            m_durationTotal = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps)*static_cast<float>(m_duration))*1000.f));
-            m_frameDelta = static_cast<unsigned int>(((1.0 / static_cast<float>(m_fps))*1000.0));
+            m_durationTotal = static_cast<unsigned int>((static_cast<float>(m_duration) / static_cast<float>(m_fps))*1000.f);
+            m_frameDelta = static_cast<unsigned int>((1.0 / static_cast<float>(m_fps))*1000.0);
 
             m_frameSize = m_bonesValue * 10U * sizeof(float);
 

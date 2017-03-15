@@ -18,7 +18,7 @@ ROC::File::~File()
     }
 }
 
-bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
+bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
 {
     m_file = new std::fstream(f_path, std::ios::out | std::ios::binary);
     if(m_file->fail()) return false;
@@ -26,7 +26,7 @@ bool ROC::File::Create(std::string &f_path, std::string &f_rPath)
     m_path.append(f_rPath);
     return true;
 }
-bool ROC::File::Open(std::string &f_path, std::string &f_rPath, bool f_ro)
+bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool f_ro)
 {
     m_file = new std::fstream(f_path, (f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
     if(m_file->fail()) return false;
@@ -43,7 +43,7 @@ size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
     f_data.insert(f_data.begin(), l_data.begin(), l_data.begin() + l_read);
     return l_read;
 }
-size_t ROC::File::Write(std::string &f_data)
+size_t ROC::File::Write(const std::string &f_data)
 {
     if(m_type != FileMode::WriteMode) return 0U;
     std::streampos l_start = m_file->tellg();
@@ -79,7 +79,7 @@ bool ROC::File::SetPosition(size_t f_pos)
     return !m_file->fail();
 }
 
-bool ROC::File::Delete(Core *f_core, std::string &f_path)
+bool ROC::File::Delete(Core *f_core, const std::string &f_path)
 {
     std::string l_work, l_path;
     f_core->GetWorkingDirectory(l_work);
@@ -87,7 +87,7 @@ bool ROC::File::Delete(Core *f_core, std::string &f_path)
     Utils::JoinPaths(l_work, l_path);
     return !std::remove(l_work.c_str());
 }
-bool ROC::File::Rename(Core *f_core, std::string &f_old, std::string &f_new)
+bool ROC::File::Rename(Core *f_core, const std::string &f_old, const std::string &f_new)
 {
     std::string l_workOld, l_pathOld, l_workNew, l_pathNew;
 

@@ -13,8 +13,8 @@ class ElementManager
 {
     Core *m_core;
 public:
-    File* CreateFile_(std::string &f_path);
-    File* OpenFile(std::string &f_path, bool f_ro);
+    File* CreateFile_(const std::string &f_path);
+    File* OpenFile(const std::string &f_path, bool f_ro);
 
     void DestroyElement(Element *f_element);
 protected:

@@ -11,8 +11,8 @@ ROC::Quad::Quad()
 
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 18, NULL, GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 6, NULL, GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
 
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
@@ -21,7 +21,7 @@ ROC::Quad::Quad()
         { 0.0, 0.0 }, { 1.0, 1.0 }, { 1.0, 0.0 }
     };
     glBufferData(GL_ARRAY_BUFFER, sizeof(l_uvs), l_uvs, GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
 
     for(auto &iter : m_point) iter.z = 1.0f;
 }

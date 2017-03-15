@@ -18,10 +18,11 @@ class SfmlManager
     float m_time;
 
     unsigned int m_frameLimit;
-    unsigned char m_cursorMode;
 
     sf::Event m_event;
     LuaArguments *m_argument;
+
+    unsigned char m_cursorMode;
 
     SfmlManager(const SfmlManager& that);
     SfmlManager &operator =(const SfmlManager &that);

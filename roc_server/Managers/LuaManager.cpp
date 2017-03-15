@@ -82,7 +82,7 @@ ROC::LuaManager::~LuaManager()
     delete m_eventManager;
 }
 
-bool ROC::LuaManager::OpenFile(std::string &f_path)
+bool ROC::LuaManager::OpenFile(const std::string &f_path)
 {
     int error = luaL_loadfile(m_pVM, f_path.c_str()) || lua_pcall(m_pVM, 0, 0, 0);
     if(error)

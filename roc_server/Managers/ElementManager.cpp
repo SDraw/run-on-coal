@@ -22,7 +22,7 @@ ROC::Client* ROC::ElementManager::CreateClient()
     return l_client;
 }
 
-ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
+ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
@@ -39,7 +39,7 @@ ROC::File* ROC::ElementManager::CreateFile_(std::string &f_path)
     }
     return l_file;
 }
-ROC::File* ROC::ElementManager::OpenFile(std::string &f_path, bool f_ro)
+ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 

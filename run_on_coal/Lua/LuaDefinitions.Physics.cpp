@@ -114,7 +114,7 @@ int physicsSetModelsCollidable(lua_State *f_vm)
     argStream.ReadBoolean(l_state);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetPhysicsManager()->SetModelsCollidable(l_model1, l_model2, l_state);
+        bool l_result = PhysicsManager::SetModelsCollidable(l_model1, l_model2, l_state);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

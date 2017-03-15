@@ -24,15 +24,16 @@ class Font : public Element
         glm::ivec2 m_bearing;
         float m_advance;
     };
-    std::map<unsigned int, charData*> m_charMap;
-    std::map<unsigned int, charData*>::iterator m_charIter;
-    std::map<unsigned int, charData*>::iterator m_charMapEnd;
+    std::unordered_map<unsigned int, charData*> m_charMap;
+    std::unordered_map<unsigned int, charData*>::iterator m_charIter;
+    std::unordered_map<unsigned int, charData*>::iterator m_charMapEnd;
 
     std::vector<glm::vec3> *m_vertices;
     GLuint m_vertexVBO;
     std::vector<glm::vec2> *m_uv;
     GLuint m_uvVBO;
     GLuint m_VAO;
+    bool m_switch;
 
     int m_filteringType;
 

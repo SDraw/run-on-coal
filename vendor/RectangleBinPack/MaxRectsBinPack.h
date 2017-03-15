@@ -77,7 +77,7 @@ private:
 	Rect FindPositionForNewNodeContactPoint(int width, int height, int &contactScore) const;
 
 	/// @return True if the free node was split.
-	bool SplitFreeNode(Rect freeNode, const Rect &usedNode);
+	bool SplitFreeNode(Rect &freeNode, const Rect &usedNode);
 
 	/// Goes through the free rectangle list and removes any redundant entries.
 	void PruneFreeList();

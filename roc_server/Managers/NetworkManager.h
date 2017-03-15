@@ -23,7 +23,7 @@ class NetworkManager
     NetworkManager &operator =(const NetworkManager &that);
 public:
     bool Disconnect(Client *f_client);
-    bool SendData(Client *f_client, std::string &f_data);
+    bool SendData(Client *f_client, const std::string &f_data);
     int GetPing(Client *f_client);
 protected:
     explicit NetworkManager(Core *f_core);

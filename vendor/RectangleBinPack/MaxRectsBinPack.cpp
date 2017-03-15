@@ -22,7 +22,8 @@ using namespace std;
 
 MaxRectsBinPack::MaxRectsBinPack()
 :binWidth(0),
-binHeight(0)
+binHeight(0),
+allowRotations(false)
 {
 }
 
@@ -432,7 +433,7 @@ Rect MaxRectsBinPack::FindPositionForNewNodeContactPoint(int width, int height, 
 	return bestNode;
 }
 
-bool MaxRectsBinPack::SplitFreeNode(Rect freeNode, const Rect &usedNode)
+bool MaxRectsBinPack::SplitFreeNode(Rect &freeNode, const Rect &usedNode)
 {
 	// Test with SAT if the rectangles even intersect.
 	if (usedNode.x >= freeNode.x + freeNode.width || usedNode.x + usedNode.width <= freeNode.x ||
