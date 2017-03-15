@@ -15,7 +15,6 @@ class Font : public Element
     FT_Face m_face;
 
     GLuint m_atlasTexture;
-    float m_atlasPixelOffset;
     rbp::MaxRectsBinPack *m_atlasPack;
 
     struct charData
