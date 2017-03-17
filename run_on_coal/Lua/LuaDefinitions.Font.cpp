@@ -23,16 +23,19 @@ int fontCreate(lua_State *f_vm)
 {
     std::string l_path;
     int l_size;
+    glm::ivec2 l_atlasSize(FONT_ATLAS_DEFAULT_SIZE);
     std::string l_filter;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
     argStream.ReadInteger(l_size);
+    argStream.ReadNextInteger(l_atlasSize.x);
+    argStream.ReadNextInteger(l_atlasSize.y);
     argStream.ReadNextText(l_filter);
     if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
         int l_filteringType = Utils::ReadEnumVector(g_fontFilteringTypesTable, l_filter);
         if(l_filteringType == -1) l_filteringType = 0;
-        Font *l_font = LuaManager::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, static_cast<unsigned char>(l_filteringType));
+        Font *l_font = LuaManager::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, l_filteringType);
         l_font ? argStream.PushPointer(l_font) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);

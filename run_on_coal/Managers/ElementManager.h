@@ -34,7 +34,7 @@ public:
     RenderTarget* CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter);
     Texture* CreateTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress);
     Texture* CreateTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
-    Font* CreateFont_(const std::string &f_path, int f_size, int f_filter);
+    Font* CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
     File* CreateFile_(const std::string &f_path);
     File* OpenFile(const std::string &f_path, bool f_ro);
     Collision* CreateCollision(int f_type, glm::vec3 &f_size);

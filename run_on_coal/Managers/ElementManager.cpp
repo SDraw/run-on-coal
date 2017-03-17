@@ -234,7 +234,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     return l_tex;
 }
 
-ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_size, int f_filter)
+ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter)
 {
     Font *l_font = new Font();
 
@@ -244,7 +244,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
     Utils::JoinPaths(l_work, l_path);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_font->LoadTTF(l_work, f_size, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font);
+    if(l_font->LoadTTF(l_work, f_size, f_atlas, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font);
     else
     {
         delete l_font;

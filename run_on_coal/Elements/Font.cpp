@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Elements/Font.h"
+#include "Utils/Utils.h"
 
-const float g_AtlasPixelOffset = 1.f / static_cast<float>(FONT_ATLAS_SIZE);
+const float g_DefaultAtlasOffset = 1.f / static_cast<float>(FONT_ATLAS_DEFAULT_SIZE);
 
 ROC::Font::Font()
 {
@@ -12,6 +13,8 @@ ROC::Font::Font()
     m_face = FT_Face();
 
     m_atlasTexture = 0U;
+    m_atlasOffset = glm::vec2(0.f);
+    m_atlasSize = glm::ivec2(0);
     m_atlasPack = NULL;
 
     m_charIter = m_charMap.begin();
@@ -45,7 +48,7 @@ ROC::Font::~Font()
     }
 }
 
-bool ROC::Font::LoadTTF(const std::string &f_path, int f_size, int f_filter)
+bool ROC::Font::LoadTTF(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter)
 {
     if(!m_loaded)
     {
@@ -58,6 +61,27 @@ bool ROC::Font::LoadTTF(const std::string &f_path, int f_size, int f_filter)
                 m_filteringType = f_filter;
                 btClamp(m_filteringType, FONT_FILTER_NEAREST, FONT_FILTER_LINEAR);
 
+                if(Utils::IsPowerOfTwo(f_atlas.x))
+                {
+                    m_atlasSize.x = f_atlas.x;
+                    m_atlasOffset.x = 1.f / static_cast<float>(f_atlas.x);
+                }
+                else
+                {
+                    m_atlasSize.x = FONT_ATLAS_DEFAULT_SIZE;
+                    m_atlasOffset.x = g_DefaultAtlasOffset;
+                }
+                if(Utils::IsPowerOfTwo(f_atlas.y))
+                {
+                    m_atlasSize.y = f_atlas.y;
+                    m_atlasOffset.y = 1.f / static_cast<float>(f_atlas.y);
+                }
+                else
+                {
+                    m_atlasSize.y = FONT_ATLAS_DEFAULT_SIZE;
+                    m_atlasOffset.y = g_DefaultAtlasOffset;
+                }
+
                 // Generate atlas texture
                 glGenTextures(1, &m_atlasTexture);
                 glBindTexture(GL_TEXTURE_2D, m_atlasTexture);
@@ -65,11 +89,11 @@ bool ROC::Font::LoadTTF(const std::string &f_path, int f_size, int f_filter)
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filteringType);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filteringType);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_SIZE, FONT_ATLAS_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_atlasSize.x, m_atlasSize.y, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 
                 // Generate atlas
                 m_atlasPack = new rbp::MaxRectsBinPack();
-                m_atlasPack->Init(FONT_ATLAS_SIZE, FONT_ATLAS_SIZE, false);
+                m_atlasPack->Init(m_atlasSize.x, m_atlasSize.y, false);
 
                 // Generate buffers
                 glGenVertexArrays(1, &m_VAO);
@@ -115,13 +139,13 @@ bool ROC::Font::LoadChar(unsigned int f_char)
 
         if(l_charData->m_size.x > 0 && l_charData->m_size.y > 0)
         {
-            rbp::Rect l_rectangle = m_atlasPack->Insert(l_charData->m_size.x, l_charData->m_size.y, rbp::MaxRectsBinPack::RectBestLongSideFit);
+            rbp::Rect l_rectangle = m_atlasPack->Insert(l_charData->m_size.x, l_charData->m_size.y, rbp::MaxRectsBinPack::RectBestShortSideFit);
             if(l_rectangle.height > 0)
             {
-                l_charData->m_atlasPosition.x = static_cast<float>(l_rectangle.x) * g_AtlasPixelOffset;
-                l_charData->m_atlasPosition.y = static_cast<float>(l_rectangle.y) * g_AtlasPixelOffset;
-                l_charData->m_atlasPosition.z = l_charData->m_atlasPosition.x + static_cast<float>(l_charData->m_size.x) * g_AtlasPixelOffset;
-                l_charData->m_atlasPosition.w = l_charData->m_atlasPosition.y + static_cast<float>(l_charData->m_size.y) * g_AtlasPixelOffset;
+                l_charData->m_atlasPosition.x = static_cast<float>(l_rectangle.x) * m_atlasOffset.x;
+                l_charData->m_atlasPosition.y = static_cast<float>(l_rectangle.y) * m_atlasOffset.y;
+                l_charData->m_atlasPosition.z = l_charData->m_atlasPosition.x + static_cast<float>(l_charData->m_size.x) * m_atlasOffset.x;
+                l_charData->m_atlasPosition.w = l_charData->m_atlasPosition.y + static_cast<float>(l_charData->m_size.y) * m_atlasOffset.y;
                 glTexSubImage2D(GL_TEXTURE_2D, 0, l_rectangle.x, l_rectangle.y, l_rectangle.width, l_rectangle.height, GL_RED, GL_UNSIGNED_BYTE, m_face->glyph->bitmap.buffer);
             }
         }

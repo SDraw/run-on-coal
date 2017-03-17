@@ -3,7 +3,7 @@
 #define FONT_FILTER_NONE -1
 #define FONT_FILTER_NEAREST 0
 #define FONT_FILTER_LINEAR 1
-#define FONT_ATLAS_SIZE 512
+#define FONT_ATLAS_DEFAULT_SIZE 256
 #define FONT_MAX_TEXT_LENGTH 256
 
 namespace ROC
@@ -16,6 +16,8 @@ class Font : public Element
 
     GLuint m_atlasTexture;
     rbp::MaxRectsBinPack *m_atlasPack;
+    glm::vec2 m_atlasOffset;
+    glm::ivec2 m_atlasSize;
 
     struct charData
     {
@@ -47,7 +49,7 @@ public:
 protected:
     Font();
     ~Font();
-    bool LoadTTF(const std::string &f_path, int f_size, int f_filter);
+    bool LoadTTF(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
     inline GLuint GetVAO() const { return m_VAO; }
     void Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bind);
     friend class ElementManager;

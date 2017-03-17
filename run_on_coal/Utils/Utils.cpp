@@ -73,5 +73,10 @@ int GetMaxCompressedLen(int nLenSrc)
     return (nLenSrc + 6 + ((nLenSrc + 16383) / 16384 * 5));
 }
 
+bool IsPowerOfTwo(int f_value)
+{
+    return (f_value > 0 && ((f_value & (f_value - 1)) == 0));
+}
+
 }
 }
