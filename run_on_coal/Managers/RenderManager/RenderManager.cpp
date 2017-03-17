@@ -23,6 +23,8 @@ const glm::vec3 g_EmptyVec3(0.f);
 const glm::vec4 g_EmptyVec4(0.f);
 const glm::mat4 g_EmptyMat4(0.f);
 
+const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
+
 ROC::RenderManager::RenderManager(Core *f_core)
 {
     m_core = f_core;
@@ -211,23 +213,35 @@ void ROC::RenderManager::Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec
         l_textureTransform.setOrigin(l_textureTranslate);
         if(f_rot != 0.f)
         {
-            btVector3 l_textureZAxis(0.f, 0.f, 1.f);
             btQuaternion l_textureRotation;
-            l_textureRotation.setRotation(l_textureZAxis, f_rot);
+            l_textureRotation.setRotation(g_TextureZAxis, f_rot);
             l_textureTransform.setRotation(l_textureRotation);
         }
         l_textureTransform.getOpenGLMatrix(reinterpret_cast<float*>(&m_textureMatrix));
         m_activeShader->SetModelUniformValue(m_textureMatrix);
 
         m_quad->SetProportions(f_size, l_vaoBind);
-        l_vaoBind = false;
 
         DisableCulling();
         DisableDepth();
         if(f_drawable->IsTransparent()) EnableBlending();
         else DisableBlending();
-        m_quad->Draw(l_vaoBind);
+        Quad::Draw();
     }
+}
+
+bool ROC::RenderManager::AttachToShader(Shader *f_shader, Drawable *f_element, int f_uniform)
+{
+    EnableNonActiveShader(f_shader);
+    bool l_result = f_shader->Attach(f_element, f_uniform);
+    RestoreActiveShader(f_shader);
+    return l_result;
+}
+void ROC::RenderManager::DettachFromShader(Shader *f_shader, Drawable *f_element)
+{
+    EnableNonActiveShader(f_shader);
+    f_shader->Dettach(f_element);
+    RestoreActiveShader(f_shader);
 }
 
 void ROC::RenderManager::DoPulse()

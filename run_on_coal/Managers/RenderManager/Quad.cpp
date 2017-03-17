@@ -47,9 +47,3 @@ void ROC::Quad::SetProportions(glm::vec2 &f_size, bool f_bind)
     m_point[1].y = m_point[2].y = m_point[4].y = -m_size.y / 2.f;
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(m_point), m_point);
 }
-
-void ROC::Quad::Draw(bool f_bind)
-{
-    if(f_bind) glBindVertexArray(m_VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-}

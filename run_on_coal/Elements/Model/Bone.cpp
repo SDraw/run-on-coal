@@ -3,6 +3,9 @@
 #include "Elements/Model/Bone.h"
 
 const glm::mat4 g_IdentityMatrix(1.f);
+const glm::vec3 g_DefaultPosition(0.f);
+const glm::quat g_DefaultRotation(1.f, 0.f, 0.f, 0.f);
+const glm::vec3 g_DefaultScale(1.f);
 
 ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scale)
 {
@@ -51,21 +54,39 @@ void ROC::Bone::ResetInterpolation()
 }
 void ROC::Bone::GenerateBindPose()
 {
-    m_localMatrix = glm::translate(g_IdentityMatrix, m_data->m_position)*glm::mat4_cast(m_data->m_rotation)*glm::scale(g_IdentityMatrix, m_data->m_scale);
-    if(m_parent == NULL) m_matrix = m_localMatrix;
-    else m_matrix = m_parent->m_matrix*m_localMatrix;
+    if(std::memcmp(&m_data->m_position, &g_DefaultPosition, sizeof(glm::vec3)) != 0) m_localMatrix = glm::translate(g_IdentityMatrix, m_data->m_position);
+    else std::memcpy(&m_localMatrix, &g_IdentityMatrix, sizeof(glm::mat4));
+    if(std::memcmp(&m_data->m_rotation, &g_DefaultRotation, sizeof(glm::quat)) != 0) m_localMatrix *= glm::mat4_cast(m_data->m_rotation);
+    if(std::memcmp(&m_data->m_scale, &g_DefaultScale, sizeof(glm::vec3)) != 0) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
+
+    if(m_parent == NULL) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
+    else
+    {
+        std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
+        m_matrix *= m_localMatrix;
+    }
     m_bindMatrix = glm::inverse(m_matrix);
-    m_offsetMatrix = m_matrix*m_bindMatrix;
+    std::memcpy(&m_offsetMatrix, &m_matrix, sizeof(glm::mat4));
+    m_offsetMatrix *= m_bindMatrix;
 }
 void ROC::Bone::UpdateMatrix()
 {
     m_rebuilded = false;
     if(m_rebuildMatrix)
     {
-        m_localMatrix = glm::translate(g_IdentityMatrix, m_data->m_position)*glm::mat4_cast(m_data->m_rotation)*glm::scale(g_IdentityMatrix, m_data->m_scale);
+        if(std::memcmp(&m_data->m_position, &g_DefaultPosition, sizeof(glm::vec3)) != 0) m_localMatrix = glm::translate(g_IdentityMatrix, m_data->m_position);
+        else std::memcpy(&m_localMatrix, &g_IdentityMatrix, sizeof(glm::mat4));
+        if(std::memcmp(&m_data->m_rotation, &g_DefaultRotation, sizeof(glm::quat)) != 0) m_localMatrix *= glm::mat4_cast(m_data->m_rotation);
+        if(std::memcmp(&m_data->m_scale, &g_DefaultScale, sizeof(glm::vec3)) != 0) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
+
         if(!m_parent) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
-        else m_matrix = m_parent->m_matrix*m_localMatrix;
-        m_offsetMatrix = m_matrix*m_bindMatrix;
+        else
+        {
+            std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
+            m_matrix *= m_localMatrix;
+        }
+        std::memcpy(&m_offsetMatrix, &m_matrix, sizeof(glm::mat4));
+        m_offsetMatrix *= m_bindMatrix;
         m_rebuilded = true;
         m_rebuildMatrix = false;
     }
@@ -75,8 +96,10 @@ void ROC::Bone::UpdateMatrix()
         {
             if(m_parent->m_rebuilded)
             {
-                m_matrix = m_parent->m_matrix*m_localMatrix;
-                m_offsetMatrix = m_matrix*m_bindMatrix;
+                std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
+                m_matrix *= m_localMatrix;
+                std::memcpy(&m_offsetMatrix, &m_matrix, sizeof(glm::mat4));
+                m_offsetMatrix *= m_bindMatrix;
                 m_rebuilded = true;
                 m_rebuildMatrix = false;
             }

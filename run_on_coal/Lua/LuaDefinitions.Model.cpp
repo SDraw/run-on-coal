@@ -455,9 +455,7 @@ int modelSetCollisionProperty(lua_State *f_vm)
         {
             switch(Utils::ReadEnumVector(g_modelCollisionPropertiesTable, l_property))
             {
-                case 0: // Mass
-                    argStream.PushBoolean(false); // To do
-                    break;
+                // Mass is skipped
                 case 1: // Velocity
                 {
                     glm::vec3 l_velocity;
@@ -598,14 +596,7 @@ int modelGetCollisionProperty(lua_State *f_vm)
                     argStream.PushNumber(l_angularFactor.y);
                     argStream.PushNumber(l_angularFactor.z);
                 } break;
-                case 6: // Scale
-                {
-                    glm::vec3 l_scale;
-                    l_model->GetCollisionScale(l_scale);
-                    argStream.PushNumber(l_scale.x);
-                    argStream.PushNumber(l_scale.y);
-                    argStream.PushNumber(l_scale.z);
-                } break;
+                // Scale is skipped, use modelGetScale instead
                 default:
                     argStream.PushBoolean(false);
             }

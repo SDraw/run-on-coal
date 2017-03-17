@@ -72,24 +72,13 @@ protected:
     explicit RenderManager(Core *f_core);
     ~RenderManager();
 
-    void DoPulse();
-
     void RestoreActiveShader(Shader *f_shader);
-    template<typename T> bool AttachToShader(Shader *f_shader, T *f_element, int f_uniform)
-    {
-        EnableNonActiveShader(f_shader);
-        bool l_result = f_shader->Attach(f_element, f_uniform);
-        RestoreActiveShader(f_shader);
-        return l_result;
-    }
-    template<typename T> void DettachFromShader(Shader *f_shader, T *f_element)
-    {
-        EnableNonActiveShader(f_shader);
-        f_shader->Dettach(f_element);
-        RestoreActiveShader(f_shader);
-    }
+    bool AttachToShader(Shader *f_shader, Drawable *f_element, int f_uniform);
+    void DettachFromShader(Shader *f_shader, Drawable *f_element);
 
     void ResetCallsReducing();
+
+    void DoPulse();
 
     friend Core;
     friend class ElementManager;

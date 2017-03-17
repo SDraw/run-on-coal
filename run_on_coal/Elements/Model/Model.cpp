@@ -9,8 +9,10 @@
 #include "Utils/SystemTick.h"
 #include "Utils/Utils.h"
 
-const glm::vec3 g_DefaultScaleVector(1.f, 1.f, 1.f);
 const glm::mat4 g_IdentityMatrix(1.f);
+const glm::vec3 g_DefaultPosition(0.f);
+const glm::quat g_DefaultRotation(1.f, 0.f, 0.f, 0.f);
+const glm::vec3 g_DefaultScale(1.f, 1.f, 1.f);
 
 ROC::Model::Model(Geometry *f_geometry)
 {
@@ -152,7 +154,10 @@ void ROC::Model::UpdateMatrix()
     m_rebuilded = false;
     if(m_rebuildMatrix)
     {
-        m_localMatrix = glm::translate(g_IdentityMatrix, m_position)*glm::toMat4(m_rotation)*glm::scale(g_IdentityMatrix, m_scale);
+        if(std::memcmp(&m_position, &g_DefaultPosition, sizeof(glm::vec3)) != 0) m_localMatrix = glm::translate(g_IdentityMatrix, m_position);
+        else std::memcpy(&m_localMatrix, &g_IdentityMatrix, sizeof(glm::mat4));
+        if(std::memcmp(&m_rotation, &g_DefaultRotation, sizeof(glm::quat)) != 0) m_localMatrix *= glm::mat4_cast(m_rotation);
+        if(std::memcmp(&m_scale, &g_DefaultScale, sizeof(glm::vec3)) != 0) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
         m_rebuildMatrix = false;
         m_rebuilded = true;
     }
@@ -162,9 +167,9 @@ void ROC::Model::UpdateMatrix()
         {
             if(m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
             {
-                glm::mat4 l_parentMatrix;
-                std::memcpy(&l_parentMatrix, &m_parent->m_matrix, sizeof(glm::mat4));
-                m_matrix = (l_parentMatrix*m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->GetMatrixRef())*m_localMatrix;
+                std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
+                m_matrix *= m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->GetMatrixRef();
+                m_matrix *= m_localMatrix;
                 m_rebuilded = true;
             }
         }
@@ -172,9 +177,8 @@ void ROC::Model::UpdateMatrix()
         {
             if(m_parent->m_rebuilded)
             {
-                glm::mat4 l_parentMatrix;
-                std::memcpy(&l_parentMatrix, &m_parent->m_matrix, sizeof(glm::mat4));
-                m_matrix = l_parentMatrix*m_localMatrix;
+                std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
+                m_matrix *= m_localMatrix;
                 m_rebuilded = true;
             }
         }
@@ -385,14 +389,9 @@ bool ROC::Model::SetCollisionScale(const glm::vec3 &f_val)
     if(m_rigidBody)
     {
         m_rigidBody->getCollisionShape()->setLocalScaling(btVector3(f_val.x, f_val.y, f_val.z));
-        m_defaultRigidScale = (memcmp(&f_val, &g_DefaultScaleVector, sizeof(glm::vec3)) == 0);
-        memcpy(&m_scale, m_defaultRigidScale ? &g_DefaultScaleVector : &f_val, sizeof(glm::vec3));
+        m_defaultRigidScale = (memcmp(&f_val, &g_DefaultScale, sizeof(glm::vec3)) == 0);
+        std::memcpy(&m_scale, m_defaultRigidScale ? &g_DefaultScale : &f_val, sizeof(glm::vec3));
     }
-    return (m_rigidBody != NULL);
-}
-bool ROC::Model::GetCollisionScale(glm::vec3 &f_val)
-{
-    if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getCollisionShape()->getLocalScaling().m_floats, sizeof(glm::vec3));
     return (m_rigidBody != NULL);
 }
 float ROC::Model::GetMass()
@@ -431,7 +430,7 @@ void ROC::Model::UpdateCollision()
             m_rotation.w = l_rotation.w();
             l_transform.getOpenGLMatrix(reinterpret_cast<float*>(&m_localMatrix));
 
-            if(!m_defaultRigidScale) m_localMatrix = m_localMatrix*glm::scale(g_IdentityMatrix, m_scale);
+            if(!m_defaultRigidScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
             std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         }
     }

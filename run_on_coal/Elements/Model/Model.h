@@ -80,7 +80,6 @@ public:
     bool GetLinearFactor(glm::vec3 &f_val);
     bool SetAngularFactor(const glm::vec3 &f_val);
     bool GetAngularFactor(glm::vec3 &f_val);
-    bool GetCollisionScale(glm::vec3 &f_val);
     float GetMass();
     bool SetFriction(float f_val);
     inline float GetFriction() const { return (m_rigidBody ? m_rigidBody->getFriction() : -1.f); }
