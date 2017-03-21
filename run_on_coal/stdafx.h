@@ -9,7 +9,6 @@
 #include <regex>
 #include <vector>
 #include <unordered_map>
-#include <list>
 #include <atomic>
 #include <ctime>
 #include <direct.h>
@@ -40,6 +39,7 @@
 #include "lua.hpp"
 #include "pugixml.hpp"
 #include "zlib.h"
+#include "IntervalTree.h"
 
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"

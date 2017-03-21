@@ -36,7 +36,7 @@ class Skeleton
         int m_boneID;
         struct jtPart
         {
-            btAlignedObjectArray<btTransform> m_offset; // [0] - normal, [1] - inverse, [2] - bind
+            btAlignedObjectArray<btTransform> m_offset; // [0] - normal, [1] - inverse, [2] - bone bind
             btRigidBody *m_rigidBody;
             btGeneric6DofSpringConstraint *m_constraint;
             int m_boneID;
@@ -49,7 +49,6 @@ protected:
     explicit Skeleton(const std::vector<BoneData*> &f_data);
     ~Skeleton();
 
-    void Update(const std::vector<BoneFrameData*> &f_data);
     void Update();
     void ResetBonesInterpolation();
 

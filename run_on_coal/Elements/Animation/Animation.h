@@ -4,21 +4,27 @@
 namespace ROC
 {
 
+class Bone;
 class BoneFrameData;
 class Animation : public Element
 {
-    std::ifstream m_animFile;
-
     unsigned int m_bonesValue;
     unsigned int m_duration;
     unsigned int m_durationTotal;
     unsigned int m_fps;
     unsigned int m_frameDelta;
-    unsigned int m_frameSize;
-    unsigned int m_lastLeftFrame;
-    std::vector<BoneFrameData*> m_leftFrame;
-    std::vector<BoneFrameData*> m_rightFrame;
-    std::vector<BoneFrameData*> m_interpolatedFrame;
+
+    struct animData
+    {
+        BoneFrameData *m_leftData = NULL;
+        BoneFrameData *m_rightData = NULL;
+        unsigned int m_leftTime = 0U;
+        unsigned int m_duration = 0U;
+    };
+    std::vector<IntervalTree<animData>*> m_boneIntervals;
+    BoneFrameData *m_tempFrameData;
+    std::vector<Interval<animData>> m_searchResult;
+
 
     bool m_loaded;
 
@@ -28,8 +34,7 @@ protected:
     ~Animation();
 
     bool Load(const std::string &f_path);
-    bool CacheData(unsigned int f_tick);
-    inline std::vector<BoneFrameData*>& GetCachedDataRef() { return m_interpolatedFrame; }
+    void GetData(unsigned int f_tick, std::vector<Bone*> &f_bones);
 
     inline unsigned int GetBonesCount() const { return m_bonesValue; }
     inline unsigned int GetTotalDuration() const { return m_durationTotal; }

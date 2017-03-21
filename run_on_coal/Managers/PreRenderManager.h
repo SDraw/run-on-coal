@@ -20,7 +20,7 @@ class PreRenderManager
     std::unordered_map<Model*, TreeNode*> m_modelToNodeMap;
     std::unordered_map<Model*, TreeNode*>::iterator m_modelToNodeMapEnd;
 
-    std::list<TreeNode*> m_nodeStack;
+    std::vector<TreeNode*> m_nodeStack;
 
     LuaArguments *m_argument;
 

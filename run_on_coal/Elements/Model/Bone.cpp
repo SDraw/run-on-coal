@@ -13,7 +13,7 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_name.assign(f_name);
     m_data = new BoneFrameData();
     std::memcpy(&m_data->m_position, &f_pos, sizeof(glm::vec3));
-    std::memcpy(&m_data->m_rotation, &f_rot, sizeof(glm::quat));
+    std::memcpy(&m_data->m_rotation, &g_DefaultRotation, sizeof(glm::quat));
     std::memcpy(&m_data->m_scale, &f_scale, sizeof(glm::vec3));
     m_rebuildMatrix = false;
     m_rebuilded = false;

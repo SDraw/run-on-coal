@@ -4,7 +4,7 @@
 #include <sstream>
 #include "pugixml.hpp"
 
-#define Error(T) { std::cout << T << std::endl; return EXIT_FAILURE; }
+#define Error(T) { std::cout << T << std::endl; std::getchar(); return EXIT_FAILURE; }
 #define Info(T) { std::cout << T << std::endl; }
 
 struct sbcData
@@ -59,48 +59,51 @@ int main(int argc, char *argv[])
             l_sbcCount = l_sbcCountAtr.as_uint();
             l_file.write(reinterpret_cast<char*>(&l_sbcCount), sizeof(unsigned int));
 
-            for(pugi::xml_node l_sbcNode = l_statics.child("sbc"); l_sbcNode; l_sbcNode = l_sbcNode.next_sibling("sbc"))
+            if(l_sbcCount > 0U)
             {
-                if(l_sbcCount == 0U) Error("Count of 'sbc' nodes isn't equal to 'count' attribute");
-                sbcData l_sbcData;
+                for(pugi::xml_node l_sbcNode = l_statics.child("sbc"); l_sbcNode; l_sbcNode = l_sbcNode.next_sibling("sbc"))
+                {
+                    if(l_sbcCount == 0U) Error("Count of 'sbc' nodes isn't equal to 'count' attribute");
+                    sbcData l_sbcData;
 
-                pugi::xml_attribute l_attr = l_sbcNode.attribute("bone");
-                if(!l_attr) Error("One of 'sbc' nodes doesn't have 'bone' attribute");
-                l_sbcData.m_boneID = l_attr.as_uint();
+                    pugi::xml_attribute l_attr = l_sbcNode.attribute("bone");
+                    if(!l_attr) Error("One of 'sbc' nodes doesn't have 'bone' attribute");
+                    l_sbcData.m_boneID = l_attr.as_uint();
 
-                l_attr = l_sbcNode.attribute("type");
-                if(!l_attr) Error("One of sbc nodes doesn't have 'type' attribute");
-                l_sbcData.m_type = static_cast<unsigned char>(l_attr.as_uint());
+                    l_attr = l_sbcNode.attribute("type");
+                    if(!l_attr) Error("One of sbc nodes doesn't have 'type' attribute");
+                    l_sbcData.m_type = static_cast<unsigned char>(l_attr.as_uint());
 
-                l_attr = l_sbcNode.attribute("offset");
-                if(!l_attr) Error("One of 'sbc' nodes doesn't have 'offset' attribute");
-                std::stringstream l_offsetStream(l_attr.as_string("0.0 0.0 0.0"));
-                l_offsetStream >> l_sbcData.m_posX >> l_sbcData.m_posY >> l_sbcData.m_posZ;
+                    l_attr = l_sbcNode.attribute("offset");
+                    if(!l_attr) Error("One of 'sbc' nodes doesn't have 'offset' attribute");
+                    std::stringstream l_offsetStream(l_attr.as_string("0.0 0.0 0.0"));
+                    l_offsetStream >> l_sbcData.m_posX >> l_sbcData.m_posY >> l_sbcData.m_posZ;
 
-                l_attr = l_sbcNode.attribute("size");
-                if(!l_attr) Error("One of 'sbc' nodes doesn't have 'size' attribute");
-                std::stringstream l_sizeStream(l_attr.as_string("0.0 0.0 0.0"));
-                l_sizeStream >> l_sbcData.m_sizeX >> l_sbcData.m_sizeY >> l_sbcData.m_sizeZ;
+                    l_attr = l_sbcNode.attribute("size");
+                    if(!l_attr) Error("One of 'sbc' nodes doesn't have 'size' attribute");
+                    std::stringstream l_sizeStream(l_attr.as_string("0.0 0.0 0.0"));
+                    l_sizeStream >> l_sbcData.m_sizeX >> l_sbcData.m_sizeY >> l_sbcData.m_sizeZ;
 
-                l_attr = l_sbcNode.attribute("rotation");
-                if(!l_attr) Error("One of sbc nodes doesn't have 'rotation' attribute");
-                std::stringstream l_rotationStream(l_attr.as_string("0.0 0.0 0.0 1.0"));
-                l_rotationStream >> l_sbcData.m_rotX >> l_sbcData.m_rotY >> l_sbcData.m_rotZ >> l_sbcData.m_rotW;
+                    l_attr = l_sbcNode.attribute("rotation");
+                    if(!l_attr) Error("One of sbc nodes doesn't have 'rotation' attribute");
+                    std::stringstream l_rotationStream(l_attr.as_string("0.0 0.0 0.0 1.0"));
+                    l_rotationStream >> l_sbcData.m_rotX >> l_sbcData.m_rotY >> l_sbcData.m_rotZ >> l_sbcData.m_rotW;
 
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_type), sizeof(unsigned char));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeX), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeY), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeZ), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posX), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posY), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posZ), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotX), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotY), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotZ), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotW), sizeof(float));
-                l_file.write(reinterpret_cast<char*>(&l_sbcData.m_boneID), sizeof(unsigned int));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_type), sizeof(unsigned char));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_sizeZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_posZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotX), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotY), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotZ), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_rotW), sizeof(float));
+                    l_file.write(reinterpret_cast<char*>(&l_sbcData.m_boneID), sizeof(unsigned int));
 
-                l_sbcCount--;
+                    l_sbcCount--;
+                }
             }
         }
         else Error("No 'count' attribute at 'statics' subnode");
@@ -263,6 +266,5 @@ int main(int argc, char *argv[])
     l_file.flush();
     l_file.close();
     std::cout << "File converted" << std::endl;
-    getchar();
     return EXIT_SUCCESS;
 }

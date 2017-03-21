@@ -13,7 +13,7 @@ class ArgReader
     bool m_hasErrors;
 
     ArgReader(const ArgReader& that);
-    ArgReader &operator =(const ArgReader &that);
+    ArgReader &operator=(const ArgReader &that);
 public:
     explicit ArgReader(lua_State *f_vm);
     ~ArgReader();
@@ -120,7 +120,7 @@ template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
                             m_error.append("Wrong element type");
                             m_hasErrors = true;
                         }
-    
+
                     }
                     catch(const std::exception&)
                     {

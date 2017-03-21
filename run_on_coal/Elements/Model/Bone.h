@@ -46,6 +46,7 @@ protected:
 
     friend class Skeleton;
     friend class Model;
+    friend class Animation;
 };
 
 }

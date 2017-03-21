@@ -276,11 +276,8 @@ float ROC::Model::GetAnimationProgress() const
 
 void ROC::Model::UpdateSkeleton()
 {
-    if(m_animation)
-    {
-        if(m_animation->CacheData(m_animCurrentTick)) m_skeleton->Update(m_animation->GetCachedDataRef());
-    }
-    else m_skeleton->Update();
+    if(m_animation) m_animation->GetData(m_animCurrentTick, m_skeleton->GetBonesVectorRef());
+    m_skeleton->Update();
 }
 bool ROC::Model::HasSkeletonStaticBoneCollision() const
 {

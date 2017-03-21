@@ -83,11 +83,6 @@ ROC::Skeleton::~Skeleton()
     m_fastBoneVector.clear();
 }
 
-void ROC::Skeleton::Update(const std::vector<BoneFrameData*> &f_data)
-{
-    for(unsigned int i = 0; i < m_bonesCount; i++) m_boneVector[i]->SetFrameData(f_data[i]);
-    Update();
-}
 void ROC::Skeleton::Update()
 {
     for(auto iter : m_fastBoneVector) iter->UpdateMatrix();
@@ -128,15 +123,16 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
                     l_shape = new btEmptyShape();
             }
 
-            btTransform l_transform, l_resultTransform;
-            l_transform.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[iter->m_boneID]->GetMatrixRef()));
-            l_colData->m_offset.push_back(btTransform());
-            btTransform &l_collisionTransform = l_colData->m_offset[0];
-            l_collisionTransform.setIdentity();
-            l_collisionTransform.setOrigin(btVector3(iter->m_offset.x, iter->m_offset.y, iter->m_offset.z));
-            l_collisionTransform.setRotation(btQuaternion(iter->m_offsetRotation.x, iter->m_offsetRotation.y, iter->m_offsetRotation.z, iter->m_offsetRotation.w));
-            l_resultTransform.mult(l_transform, l_collisionTransform);
-            btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_resultTransform);
+            btTransform l_boneTransform, l_bodyOffset, l_bodyTransform;
+            l_boneTransform.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[iter->m_boneID]->GetMatrixRef()));
+
+            l_bodyOffset.setIdentity();
+            l_bodyOffset.setOrigin(btVector3(iter->m_offset.x, iter->m_offset.y, iter->m_offset.z));
+            l_bodyOffset.setRotation(btQuaternion(iter->m_offsetRotation.x, iter->m_offsetRotation.y, iter->m_offsetRotation.z, iter->m_offsetRotation.w));
+            l_colData->m_offset.push_back(l_bodyOffset);
+
+            l_bodyTransform.mult(l_boneTransform, l_bodyOffset);
+            btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_bodyTransform);
             btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(0.f, l_fallMotionState, l_shape);
             l_colData->m_rigidBody = new btRigidBody(fallRigidBodyCI);
             l_colData->m_rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
@@ -179,15 +175,19 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 skJoint::jtPart *l_jointPart = new skJoint::jtPart();
                 l_jointPart->m_boneID = static_cast<int>(l_dataPart->m_boneID);
 
-                btTransform l_jointPartBoneTransform, l_jointPartResultTransform;
+                btTransform l_boneTransform, l_jointPartTransform, l_jointPartResultTransform;
 
-                l_jointPartBoneTransform.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[l_jointPart->m_boneID]->GetMatrixRef()));
-                l_jointPart->m_offset.push_back(btTransform(btQuaternion(l_dataPart->m_rotation.x, l_dataPart->m_rotation.y, l_dataPart->m_rotation.z, l_dataPart->m_rotation.w), btVector3(l_dataPart->m_offset.x, l_dataPart->m_offset.y, l_dataPart->m_offset.z)));
-                l_jointPart->m_offset.push_back(l_jointPart->m_offset[0].inverse());
+                l_boneTransform.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[l_jointPart->m_boneID]->GetMatrixRef()));
+                l_jointPartTransform.setIdentity();
+                l_jointPartTransform.setOrigin(btVector3(l_dataPart->m_offset.x, l_dataPart->m_offset.y, l_dataPart->m_offset.z));
+                l_jointPartTransform.setRotation(btQuaternion(l_dataPart->m_rotation.x, l_dataPart->m_rotation.y, l_dataPart->m_rotation.z, l_dataPart->m_rotation.w));
+
+                l_jointPart->m_offset.push_back(l_jointPartTransform);
+                l_jointPart->m_offset.push_back(l_jointPartTransform.inverse());
                 l_jointPart->m_offset.push_back(btTransform());
                 l_jointPart->m_offset[2].setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[l_jointPart->m_boneID]->GetBindMatrixRef()));
 
-                l_jointPartResultTransform.mult(l_jointPartBoneTransform, l_jointPart->m_offset[0]);
+                l_jointPartResultTransform.mult(l_boneTransform, l_jointPartTransform);
 
                 btCollisionShape *l_jointPartShape = NULL;
                 btVector3 l_jointPartInertia;
@@ -221,22 +221,19 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 l_jointPart->m_rigidBody->setFriction(l_dataPart->m_friction);
                 l_jointPart->m_rigidBody->setDamping(l_dataPart->m_damping.x, l_dataPart->m_damping.y);
 
-                btTransform l_jointPartConstraintOffset;
-                l_jointPartConstraintOffset.setIdentity();
-                l_jointPartConstraintOffset.setOrigin(btVector3(-l_dataPart->m_offset.x, -l_dataPart->m_offset.y, -l_dataPart->m_offset.z));
                 if(i == 0)
                 {
                     btTransform l_jointConstraintOffset;
                     l_jointConstraintOffset.setIdentity();
-                    l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_joint->m_emptyBody, *l_jointPart->m_rigidBody, l_jointConstraintOffset, l_jointPartConstraintOffset, false);
+                    l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_joint->m_emptyBody, *l_jointPart->m_rigidBody, l_jointConstraintOffset, l_jointPart->m_offset[1], false);
                 }
                 else
                 {
                     btRigidBody *l_prevJointRigidBody = l_joint->m_partsVector.back()->m_rigidBody;
-                    btTransform l_toPrevJointPartTransform;
-                    l_toPrevJointPartTransform.mult(l_prevJointRigidBody->getCenterOfMassTransform().inverse(), l_jointPartBoneTransform);
+                    btTransform l_toPrevJointPartToBoneTransform;
+                    l_toPrevJointPartToBoneTransform.mult(l_prevJointRigidBody->getCenterOfMassTransform().inverse(), l_boneTransform);
 
-                    l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_prevJointRigidBody, *l_jointPart->m_rigidBody, l_toPrevJointPartTransform, l_jointPartConstraintOffset, false);
+                    l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_prevJointRigidBody, *l_jointPart->m_rigidBody, l_toPrevJointPartToBoneTransform, l_jointPart->m_offset[1], false);
                 }
 
                 l_jointPart->m_constraint->setLinearLowerLimit(btVector3(l_dataPart->m_lowerLinearLimit.x, l_dataPart->m_lowerLinearLimit.y, l_dataPart->m_lowerLinearLimit.z));
@@ -289,7 +286,7 @@ void ROC::Skeleton::UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled)
     {
         btTransform l_model;
         btTransform l_transform1, l_transform2;
-        l_model.setFromOpenGLMatrix(reinterpret_cast<const btScalar*>(&f_model));
+        l_model.setFromOpenGLMatrix(reinterpret_cast<const float*>(&f_model));
 
         if(m_hasStaticBoneCollision)
         {

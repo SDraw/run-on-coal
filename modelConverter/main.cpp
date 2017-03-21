@@ -76,20 +76,20 @@ bool ReadFile(std::string &path, std::string &f_cont)
     return true;
 }
 
-#define Error(T) { std::cout << "Error: " << T << std::endl; return; }
+#define Error(T) { std::cout << "Error: " << T << std::endl; std::getchar(); return; }
 #define Info(T) std::cout << "Info: " << T << std::endl
 
 void ConvertJSON(std::string &f_path, std::string &f_out)
 {
     std::string l_data;
-    if(!ReadFile(f_path, l_data)) Error("Unable to read " << f_path)
-        sajson::document l_document = sajson::parse(sajson::literal(l_data.c_str()));
-    if(l_document.get_error_line()) Error("JSON parsing error: " << l_document.get_error_message())
-        sajson::value l_documentRoot = l_document.get_root();
-    if(l_documentRoot.get_type() != sajson::TYPE_OBJECT) Error("Root node isn't object")
-        if(l_documentRoot.get_length() == 0) Error("Root node is empty")
+    if(!ReadFile(f_path, l_data)) Error("Unable to read " << f_path);
+    sajson::document l_document = sajson::parse(sajson::literal(l_data.c_str()));
+    if(l_document.get_error_line()) Error("JSON parsing error: " << l_document.get_error_message());
+    sajson::value l_documentRoot = l_document.get_root();
+    if(l_documentRoot.get_type() != sajson::TYPE_OBJECT) Error("Root node isn't an object");
+    if(l_documentRoot.get_length() == 0) Error("Root node is empty");
 
-            std::ofstream l_file(f_out.c_str(), std::ios::out | std::ios::binary);
+    std::ofstream l_file(f_out, std::ios::out | std::ios::binary);
     if(l_file.fail()) Error("Unable to create output file");
     l_file.write("ROC", 3);
     unsigned char l_setter = 0x2;
@@ -305,17 +305,18 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
     int l_iMaterialValue = l_materialValue;
     l_file.write(reinterpret_cast<char*>(&l_iMaterialValue), sizeof(int));
 
-    //////Material parsing
-    //// //42, [vertex_index, vertex_index, vertex_index],
-    //// //[material_index],
-    //// //[vertex_uv, vertex_uv, vertex_uv],
-    //// //[vertex_normal, vertex_normal, vertex_normal]
+    // Parse materials
+    // THREE.js faces structure:
+    //  42, [vertex_index, vertex_index, vertex_index],
+    //  [material_index],
+    //  [vertex_uv, vertex_uv, vertex_uv],
+    //  [vertex_normal, vertex_normal, vertex_normal]
     for(size_t i = 0; i < l_materialValue; i++)
     {
         std::vector<Face> l_facesVector;
-        for(size_t j = 0; j < l_facesValue / 11; j++)
+        for(size_t j = 0, jj = l_facesValue / 11; j < jj; j++)
         {
-            if(l_faceNode.get_array_element(j * 11 + 4).get_integer_value() == i) // Our material face, yey
+            if(l_faceNode.get_array_element(j * 11 + 4).get_integer_value() == i)
             {
                 Face l_face;
                 sajson::value l_node_v1 = l_faceNode.get_array_element(j * 11 + 1);
@@ -354,7 +355,7 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         sajson::value m_node = l_materialsNode.get_array_element(i);
         if(m_node.get_type() != sajson::TYPE_OBJECT) Error("Material " << i << " node isn't an object");
 
-        std::bitset<8U> l_materialBit; //bytefuck
+        std::bitset<8U> l_materialBit;
         l_materialBit.set(0, true);
         l_nodeIndex = m_node.find_object_key(sajson::literal("transparent"));
         if(l_nodeIndex == m_node.get_length()) l_materialBit.set(1, true);
@@ -417,9 +418,7 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         l_facesVector.clear();
     }
 
-    //SortMaterials();
-
-    ////////Parse skeleton
+    // Parse skeleton
     l_nodeIndex = l_documentRoot.find_object_key(sajson::literal("bones"));
     if(l_nodeIndex == l_documentRoot.get_length()) Error("No bones node");
     sajson::value l_bonesNode = l_documentRoot.get_object_value(l_nodeIndex);
@@ -756,31 +755,33 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
 
 int main(int argc, char *argv[])
 {
-    if(argc < 3)
+    if(argc < 3) std::cout << "Usage: [input_type] [input_file] <[output_file]>" << std::endl;
+    else
     {
-        std::cout << "Usage: [input_type] [input_file] <[output_file]>" << std::endl;
-        return EXIT_SUCCESS;
+        std::string l_inputType(argv[1]);
+        std::string l_inputFile(argv[2]);
+        std::string l_outputFile;
+        if(argc >= 4) l_outputFile.assign(argv[3]);
+        else
+        {
+            l_outputFile.assign(l_inputFile);
+            l_outputFile.append(".rmf");
+        }
+        switch(ReadEnumString(l_inputType, "obj,json"))
+        {
+            case 0:
+            {
+                Info("Converting OBJ format...");
+                ConvertOBJ(l_inputFile, l_outputFile);
+            } break;
+            case 1:
+            {
+                Info("Converting JSON (THREE.js) format...");
+                ConvertJSON(l_inputFile, l_outputFile);
+            } break;
+            default:
+                Info("Unknown format. Avaliable formats: obj, json (THREE.js animated)");
+        }
     }
-    std::string l_inputType(argv[1]);
-    std::string l_inputFile(argv[2]);
-    std::string l_outputFile(argc >= 4 ? argv[3] : l_inputFile + ".rmf");
-    switch(ReadEnumString(l_inputType, "obj,json"))
-    {
-        case 0:
-        {
-            Info("Converting OBJ format...");
-            ConvertOBJ(l_inputFile, l_outputFile);
-        } break;
-        case 1:
-        {
-            Info("Converting JSON (THREE.js) format...");
-            ConvertJSON(l_inputFile, l_outputFile);
-        } break;
-        default:
-        {
-            Info("Unknown format. Avaliable formats: obj, json (THREE.js animated)");
-        } break;
-    }
-    std::getchar();
     return EXIT_SUCCESS;
 }
