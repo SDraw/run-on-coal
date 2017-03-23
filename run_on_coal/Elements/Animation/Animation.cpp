@@ -93,7 +93,6 @@ bool ROC::Animation::Load(const std::string &f_path)
                         l_interval.value.m_rightData->m_rotation = l_rotation;
                         l_interval.value.m_rightData->m_scale = l_scale;
                         l_interval.value.m_duration = l_frameIndex*m_frameDelta - l_interval.value.m_leftTime;
-
                         l_intervals.push_back(l_interval);
 
                         l_interval.start = l_frameIndex;
@@ -128,10 +127,14 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
         if(!m_searchResult.empty())
         {
             animData &l_animData = m_searchResult.back().value;
-            float l_lerp = Utils::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
-            m_tempFrameData->m_position = glm::lerp(l_animData.m_leftData->m_position, l_animData.m_rightData->m_position, l_lerp);
-            m_tempFrameData->m_rotation = glm::slerp(l_animData.m_leftData->m_rotation, l_animData.m_rightData->m_rotation, l_lerp);
-            m_tempFrameData->m_scale = glm::lerp(l_animData.m_leftData->m_scale, l_animData.m_rightData->m_scale, l_lerp);
+            if(l_animData.m_leftData->Compare(l_animData.m_rightData))
+            {
+                float l_lerp = Utils::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
+                m_tempFrameData->m_position = glm::lerp(l_animData.m_leftData->m_position, l_animData.m_rightData->m_position, l_lerp);
+                m_tempFrameData->m_rotation = glm::slerp(l_animData.m_leftData->m_rotation, l_animData.m_rightData->m_rotation, l_lerp);
+                m_tempFrameData->m_scale = glm::lerp(l_animData.m_leftData->m_scale, l_animData.m_rightData->m_scale, l_lerp);
+            }
+            else m_tempFrameData->CopyFrom(l_animData.m_leftData);
             f_bones[i]->SetFrameData(m_tempFrameData);
 
             m_searchResult.clear();

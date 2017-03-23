@@ -1,7 +1,6 @@
 #pragma once
 #include "Elements/Element.h"
 #define SHADER_MAX_BONES_COUNT 227U
-#define SHADER_BONES_BIND_INDEX 0U
 
 namespace ROC
 {
@@ -64,6 +63,7 @@ public:
     GLint GetUniform(const std::string &f_uname);
 protected:
     static Pool *m_uboBindPool;
+    static bool m_uboFix;
 
     Shader();
     ~Shader();
@@ -116,6 +116,7 @@ protected:
     friend class ElementManager;
     friend class InheritanceManager;
     friend class RenderManager;
+    friend class SfmlManager;
 };
 
 }

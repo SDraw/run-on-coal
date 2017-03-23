@@ -1,10 +1,12 @@
 #include "stdafx.h"
+#include "Managers/SfmlManager.h"
 #include "Elements/Drawable.h"
 #include "Elements/Shader.h"
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
 ROC::Pool *ROC::Shader::m_uboBindPool = NULL;
+bool ROC::Shader::m_uboFix = false;
 
 ROC::Shader::Shader()
 {
@@ -241,9 +243,10 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
             glGenBuffers(1, &m_bonesUBO);
             glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
             glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * SHADER_MAX_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
             glBindBufferBase(GL_UNIFORM_BUFFER, m_boneBindIndex, m_bonesUBO);
             glUniformBlockBinding(m_program, l_boneUniform, m_boneBindIndex);
-            glBindBuffer(GL_UNIFORM_BUFFER, 0);
         }
     }
     //Samplers
@@ -467,6 +470,7 @@ void ROC::Shader::SetBonesUniformValue(const std::vector<glm::mat4> &f_value) co
 {
     if(m_bonesUBO != GL_INVALID_INDEX)
     {
+        if(m_uboFix) glFinish();
         glBufferSubData(GL_UNIFORM_BUFFER, 0, f_value.size()*sizeof(glm::mat4), f_value.data());
     }
 }
@@ -541,6 +545,6 @@ void ROC::Shader::Enable(bool f_full)
     if(f_full)
     {
         for(auto iter : m_drawableBind) iter.m_element->Bind(iter.m_slot);
-        if(m_bonesUBO != GL_INVALID_INDEX) glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
+        if(m_bonesUBO != GL_INVALID_INDEX) glBindBufferBase(GL_UNIFORM_BUFFER, m_boneBindIndex, m_bonesUBO);
     }
 }

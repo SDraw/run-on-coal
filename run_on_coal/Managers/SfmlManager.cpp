@@ -6,6 +6,7 @@
 #include "Managers/LuaManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/SfmlManager.h"
+#include "Elements/Shader.h"
 #include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
 
@@ -102,11 +103,13 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     l_log.append("GLEW ");
     l_log.append(reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
     m_core->GetLogManager()->Log(l_log);
-
     m_active = true;
     m_argument = new LuaArguments();
 
     m_cursorMode = CURSOR_VISIBILITY_BIT;
+
+    // Detect current GPU in list of bugged Sandy Bridge GPUs. Need to add more.
+    if(l_log.find("HD Graphics 3000") != std::string::npos)  Shader::m_uboFix = true;
 }
 
 ROC::SfmlManager::~SfmlManager()

@@ -12,6 +12,7 @@ protected:
     BoneFrameData();
     ~BoneFrameData();
 
+    // Returns true if data is different, false otherwise
     inline bool Compare(BoneFrameData *f_data)
     {
         return
