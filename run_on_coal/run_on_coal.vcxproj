@@ -107,7 +107,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

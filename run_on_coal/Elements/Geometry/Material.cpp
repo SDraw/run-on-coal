@@ -147,10 +147,7 @@ void ROC::Material::Draw(bool f_texturize, bool f_binding)
 {
     if(m_bVAO)
     {
-        if(f_texturize)
-        {
-            if(m_texture) m_texture->Bind(0U);
-        }
+        if(f_texturize && m_texture) m_texture->Bind();
         if(f_binding) glBindVertexArray(m_VAO);
         glDrawArrays(GL_TRIANGLES, 0, m_verticesCount);
     }

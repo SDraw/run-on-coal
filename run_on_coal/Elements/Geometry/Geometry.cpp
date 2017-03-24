@@ -12,6 +12,7 @@ ROC::Geometry::Geometry()
 
     m_loaded = false;
     m_materialCount = 0U;
+    m_boundSphere = 0.f;
 }
 ROC::Geometry::~Geometry()
 {
@@ -88,6 +89,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
                 //Materials
                 int l_materialSize;
+                glm::vec3 l_farthestPoint(0.f);
                 l_file.read(reinterpret_cast<char*>(&l_materialSize), sizeof(int));
                 for(int i = 0; i < l_materialSize; i++)
                 {
@@ -120,8 +122,11 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     for(int j = 0, k = static_cast<int>(l_faceIndex.size()); j < k; j += 9)
                     {
                         l_tempVertex.push_back(l_vertexData[l_faceIndex[j]]);
+                        l_farthestPoint = glm::max(l_farthestPoint, l_vertexData[l_faceIndex[j]]);
                         l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 1]]);
+                        l_farthestPoint = glm::max(l_farthestPoint, l_vertexData[l_faceIndex[j + 1]]);
                         l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 2]]);
+                        l_farthestPoint = glm::max(l_farthestPoint, l_vertexData[l_faceIndex[j + 2]]);
                         l_tempUV.push_back(l_uvData[l_faceIndex[j + 3]]);
                         l_tempUV.push_back(l_uvData[l_faceIndex[j + 4]]);
                         l_tempUV.push_back(l_uvData[l_faceIndex[j + 5]]);
@@ -168,6 +173,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     m_materialVector.insert(m_materialVector.end(), l_matVecDef.begin(), l_matVecDef.end());
                     m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
                 }
+                m_boundSphere = glm::length(l_farthestPoint);
 
                 if(l_type == 0x2U)
                 {
@@ -287,6 +293,7 @@ void ROC::Geometry::Clear()
     for(auto iter : m_materialVector) delete iter;
     m_materialVector.clear();
     m_materialCount = 0U;
+    m_boundSphere = 0.f;
     for(auto iter : m_bonesData) delete iter;
     m_bonesData.clear();
     for(auto iter : m_collisionData) delete iter;

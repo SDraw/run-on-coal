@@ -9,6 +9,7 @@
 #include <regex>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <atomic>
 #include <ctime>
 #include <direct.h>
@@ -28,6 +29,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtx/compatibility.hpp"
+#include "glm/gtx/component_wise.hpp"
 #include "glm/gtx/matrix_decompose.hpp"
 #include "glm/gtx/quaternion.hpp"
 

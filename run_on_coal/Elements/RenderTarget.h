@@ -41,7 +41,7 @@ protected:
     bool Create(unsigned int f_num, const glm::ivec2 &f_size, int f_type, int f_filter);
     inline GLuint GetTextureID() const { return m_texture; }
 
-    void Bind(unsigned int f_slot);
+    void Bind();
     void Enable();
 
     inline void GetError(std::string &f_str) { f_str.assign(m_error); }

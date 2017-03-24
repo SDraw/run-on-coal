@@ -24,6 +24,7 @@ class Model : public Element
     glm::vec3 m_scale;
     glm::mat4 m_localMatrix;
     glm::mat4 m_matrix;
+    float m_boundSphere;
     bool m_rebuildMatrix;
     bool m_rebuilded;
 
@@ -91,9 +92,11 @@ protected:
     ~Model();
 
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
-
+    
     inline glm::mat4& GetMatrixRef() { return m_matrix; }
     void UpdateMatrix();
+
+    float inline GetBoundSphere() const { return m_boundSphere; }
 
     void SetParent(Model *f_model, int f_bone = -1);
 

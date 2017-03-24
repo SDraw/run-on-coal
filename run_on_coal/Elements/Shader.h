@@ -26,9 +26,6 @@ class Shader : public Element
     GLint m_timeUniform;
     GLint m_colorUniform;
 
-    GLuint m_bonesUBO;
-    int m_boneBindIndex;
-
     glm::mat4 m_projectionUniformValue;
     glm::mat4 m_viewUniformValue;
     glm::mat4 m_modelUniformValue;
@@ -52,6 +49,7 @@ class Shader : public Element
         int m_uniform;
     };
     std::vector<drawableBindData> m_drawableBind;
+    unsigned int m_drawableCount;
 
     std::string m_error;
 
@@ -62,7 +60,7 @@ class Shader : public Element
 public:
     GLint GetUniform(const std::string &f_uname);
 protected:
-    static Pool *m_uboBindPool;
+    static GLuint m_bonesUBO;
     static bool m_uboFix;
 
     Shader();
@@ -105,12 +103,16 @@ protected:
     void SetMaterialParamUniformValue(const glm::vec4 &f_value);
     void SetMaterialTypeUniformValue(int f_value);
     void SetAnimatedUniformValue(unsigned int f_value);
-    void SetBonesUniformValue(const std::vector<glm::mat4> &f_value) const;
+    static void SetBonesUniformValue(const std::vector<glm::mat4> &f_value);
     void SetTimeUniformValue(float f_value);
     void SetColorUniformValue(const glm::vec4 &f_value);
 
     bool Attach(Drawable *f_drawable, int f_uniform);
     bool Dettach(Drawable *f_drawable);
+
+    static void CreateBonesUBO();
+    static void DestroyBonesUBO();
+    static void BindBonesUBO();
 
     inline void GetError(std::string &f_str) { f_str.assign(m_error); }
     friend class ElementManager;

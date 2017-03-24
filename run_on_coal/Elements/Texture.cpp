@@ -95,11 +95,10 @@ void ROC::Texture::GenerateBrokenTexture()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_size.x, m_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, l_brokenImage.data());
 }
 
-void ROC::Texture::Bind(unsigned int f_bind)
+void ROC::Texture::Bind()
 {
     if(m_type != TEXTURE_TYPE_NONE)
     {
-        if(f_bind) glActiveTexture(GL_TEXTURE0 + f_bind);
         switch(m_type)
         {
             case TEXTURE_TYPE_RGB: case TEXTURE_TYPE_RGBA:
@@ -109,6 +108,5 @@ void ROC::Texture::Bind(unsigned int f_bind)
                 glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
                 break;
         }
-        if(f_bind) glActiveTexture(GL_TEXTURE0);
     }
 }

@@ -30,7 +30,7 @@ protected:
     bool LoadCubemap(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
 
     inline GLuint GetTextureID() const { return m_texture; }
-    void Bind(unsigned int f_bind);
+    void Bind();
 
     friend class ElementManager;
     friend class Material;

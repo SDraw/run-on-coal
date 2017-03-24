@@ -5,7 +5,9 @@
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
-ROC::Pool *ROC::Shader::m_uboBindPool = NULL;
+#define SHADER_BONES_BINDING_POINT 0
+
+GLuint ROC::Shader::m_bonesUBO = GL_INVALID_INDEX;
 bool ROC::Shader::m_uboFix = false;
 
 ROC::Shader::Shader()
@@ -25,8 +27,6 @@ ROC::Shader::Shader()
     m_materialParamUniform = -1;
     m_materialTypeUniform = -1;
     m_animatedUniform = -1;
-    m_bonesUBO = 0xFFFFFFFF;
-    m_boneBindIndex = -1;
     m_texture0Uniform = -1;
     m_timeUniform = -1;
     m_colorUniform = -1;
@@ -47,16 +47,12 @@ ROC::Shader::Shader()
     m_colorUniformValue = glm::vec4(0.f);
 
     m_bindPool = new Pool(31U);
+    m_drawableCount = 0U;
 }
 ROC::Shader::~Shader()
 {
     if(m_program) glDeleteProgram(m_program);
     delete m_bindPool;
-    if(m_bonesUBO != 0xFFFFFFFF)
-    {
-        glDeleteBuffers(1, &m_bonesUBO);
-        m_uboBindPool->Reset(m_boneBindIndex);
-    }
     m_drawableBind.clear();
 }
 
@@ -235,20 +231,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     //Animation
     m_animatedUniform = glGetUniformLocation(m_program, "gAnimated");
     unsigned int l_boneUniform = glGetUniformBlockIndex(m_program, "gBonesUniform");
-    if(l_boneUniform != GL_INVALID_INDEX)
-    {
-        m_boneBindIndex = m_uboBindPool->Allocate();
-        if(m_boneBindIndex != -1)
-        {
-            glGenBuffers(1, &m_bonesUBO);
-            glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
-            glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * SHADER_MAX_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
-            glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-            glBindBufferBase(GL_UNIFORM_BUFFER, m_boneBindIndex, m_bonesUBO);
-            glUniformBlockBinding(m_program, l_boneUniform, m_boneBindIndex);
-        }
-    }
+    if(l_boneUniform != GL_INVALID_INDEX) glUniformBlockBinding(m_program, l_boneUniform, SHADER_BONES_BINDING_POINT);
     //Samplers
     m_texture0Uniform = glGetUniformLocation(m_program, "gTexture0");
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform, 0);
@@ -466,7 +449,7 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
         }
     }
 }
-void ROC::Shader::SetBonesUniformValue(const std::vector<glm::mat4> &f_value) const
+void ROC::Shader::SetBonesUniformValue(const std::vector<glm::mat4> &f_value)
 {
     if(m_bonesUBO != GL_INVALID_INDEX)
     {
@@ -515,6 +498,7 @@ bool ROC::Shader::Attach(Drawable *f_drawable, int f_uniform)
         {
             drawableBindData l_bind{ f_drawable, l_slot + 1, f_uniform };
             m_drawableBind.push_back(l_bind);
+            m_drawableCount++;
             SetUniformValue(f_uniform, l_slot + 1);
             l_result = true;
         }
@@ -524,7 +508,7 @@ bool ROC::Shader::Attach(Drawable *f_drawable, int f_uniform)
 bool ROC::Shader::Dettach(Drawable *f_drawable)
 {
     bool l_result = false;
-    for(unsigned int i = 0U, j = m_drawableBind.size(); i < j; i++)
+    for(unsigned int i = 0U; i < m_drawableCount; i++)
     {
         drawableBindData &l_bind = m_drawableBind[i];
         if(l_bind.m_element == f_drawable)
@@ -532,6 +516,7 @@ bool ROC::Shader::Dettach(Drawable *f_drawable)
             m_bindPool->Reset(static_cast<unsigned int>(l_bind.m_slot - 1));
             SetUniformValue(l_bind.m_uniform, -1);
             m_drawableBind.erase(m_drawableBind.begin() + i);
+            m_drawableCount--;
             l_result = true;
             break;
         }
@@ -539,12 +524,39 @@ bool ROC::Shader::Dettach(Drawable *f_drawable)
     return l_result;
 }
 
+void ROC::Shader::CreateBonesUBO()
+{
+    if(m_bonesUBO == GL_INVALID_INDEX)
+    {
+        glGenBuffers(1, &m_bonesUBO);
+        glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * SHADER_MAX_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    }
+}
+void ROC::Shader::DestroyBonesUBO()
+{
+    if(m_bonesUBO != GL_INVALID_INDEX)
+    {
+        glDeleteBuffers(1, &m_bonesUBO);
+        m_bonesUBO = GL_INVALID_INDEX;
+    }
+}
+void ROC::Shader::BindBonesUBO()
+{
+    if(m_bonesUBO != GL_INVALID_INDEX) glBindBufferBase(GL_UNIFORM_BUFFER, SHADER_BONES_BINDING_POINT, m_bonesUBO);
+}
+
 void ROC::Shader::Enable(bool f_full)
 {
     glUseProgram(m_program);
     if(f_full)
     {
-        for(auto iter : m_drawableBind) iter.m_element->Bind(iter.m_slot);
-        if(m_bonesUBO != GL_INVALID_INDEX) glBindBufferBase(GL_UNIFORM_BUFFER, m_boneBindIndex, m_bonesUBO);
+        for(unsigned int i = 0; i < m_drawableCount; i++)
+        {
+            glActiveTexture(GL_TEXTURE1 + i);
+            m_drawableBind[i].m_element->Bind();
+        }
+        if(m_drawableCount > 0U) glActiveTexture(GL_TEXTURE0);
     }
 }

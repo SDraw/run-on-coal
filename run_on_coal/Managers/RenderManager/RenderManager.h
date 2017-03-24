@@ -65,7 +65,7 @@ public:
     template<typename T> void SetShaderUniformValueRef(Shader *f_shader, GLint f_uValue, T &f_value);
     inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader == f_shader) m_activeShader = NULL; }
 
-    void Render(Model *f_model, bool f_texturize, bool f_frustum = false, float f_radius = 1.f);
+    void Render(Model *f_model, bool f_frustum = true, bool f_texturize = true);
     void Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color);
     void Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
 protected:

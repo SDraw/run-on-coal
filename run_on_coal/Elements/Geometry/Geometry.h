@@ -13,6 +13,8 @@ class Geometry : public Element
     std::vector<Material*> m_materialVector;
     unsigned int m_materialCount;
 
+    float m_boundSphere;
+
     std::vector<BoneData*> m_bonesData;
     std::vector<BoneCollisionData*> m_collisionData;
     std::vector<BoneJointData*> m_jointData;
@@ -29,6 +31,7 @@ protected:
     inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
     bool Load(const std::string &f_path);
 
+    inline float GetBoundSphere() const { return m_boundSphere; }
     inline std::vector<BoneData*> &GetBonesDataRef() { return m_bonesData; };
     inline std::vector<BoneCollisionData*> &GetBonesCollisionDataRef() { return m_collisionData; }
     inline std::vector<BoneJointData*> &GetJointsDataRef() { return m_jointData; };

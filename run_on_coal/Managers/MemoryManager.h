@@ -5,8 +5,8 @@ namespace ROC
 
 class MemoryManager
 {
-    std::set<void*> m_memorySet;
-    std::set<void*>::iterator m_memorySetEnd;
+    std::unordered_set<void*> m_memorySet;
+    std::unordered_set<void*>::iterator m_memorySetEnd;
 public:
     bool IsValidMemoryPointer(void *f_pointer);
 protected:

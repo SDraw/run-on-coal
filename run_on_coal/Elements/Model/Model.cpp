@@ -23,6 +23,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_scale = glm::vec3(1.f);
     m_localMatrix = glm::mat4(1.f);
     m_matrix = glm::mat4(1.f);
+    m_boundSphere = 0.f;
     m_rebuildMatrix = false;
     m_rebuilded = false;
 
@@ -40,6 +41,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_skeleton = NULL;
     if(m_geometry)
     {
+        m_boundSphere = m_geometry->GetBoundSphere();
         if(m_geometry->HasBonesData())
         {
             m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
@@ -134,6 +136,7 @@ void ROC::Model::SetScale(const glm::vec3 &f_scl)
     if(!m_rigidBody && (std::memcmp(&m_scale, &f_scl, sizeof(glm::vec3)) != 0))
     {
         std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
+        m_boundSphere = m_geometry->GetBoundSphere()*glm::compMax(m_scale);
         m_rebuildMatrix = true;
     }
 }
@@ -388,6 +391,7 @@ bool ROC::Model::SetCollisionScale(const glm::vec3 &f_val)
         m_rigidBody->getCollisionShape()->setLocalScaling(btVector3(f_val.x, f_val.y, f_val.z));
         m_defaultRigidScale = (memcmp(&f_val, &g_DefaultScale, sizeof(glm::vec3)) == 0);
         std::memcpy(&m_scale, m_defaultRigidScale ? &g_DefaultScale : &f_val, sizeof(glm::vec3));
+        if(m_geometry) m_boundSphere = m_geometry->GetBoundSphere()*glm::compMax(m_scale);
     }
     return (m_rigidBody != NULL);
 }

@@ -32,15 +32,14 @@ ROC::RenderManager::RenderManager(Core *f_core)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-    glEnable(GL_CULL_FACE); // [ default culling
-    glCullFace(GL_BACK); // [
+    glEnable(GL_CULL_FACE); // default culling
 
     glClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    int l_maxBindings = 0;
-    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &l_maxBindings);
-    Shader::m_uboBindPool = new Pool(l_maxBindings);
+    Shader::CreateBonesUBO();
+    Shader::BindBonesUBO();
 
     m_activeScene = NULL;
     m_activeShader = NULL;
@@ -64,8 +63,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
 ROC::RenderManager::~RenderManager()
 {
     delete m_quad;
-    delete Shader::m_uboBindPool;
     delete m_argument;
+    Shader::DestroyBonesUBO();
 }
 
 void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
@@ -134,7 +133,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
     }
 }
 
-void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum, float f_radius)
+void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize)
 {
     if(!m_locked && m_activeShader && m_activeScene && f_model->IsDrawable())
     {
@@ -145,7 +144,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
             if(l_camera)
             {
                 f_model->GetPosition(m_modelPosition, true);
-                if(!l_camera->IsInFrustum(m_modelPosition, f_radius)) l_result = false;
+                if(!l_camera->IsInFrustum(m_modelPosition, f_model->GetBoundSphere())) l_result = false;
             }
         }
         if(l_result)
@@ -154,7 +153,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_texturize, bool f_frustum
 
             if(f_model->HasSkeleton())
             {
-                m_activeShader->SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatricesVectorRef());
+                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatricesVectorRef());
                 m_activeShader->SetAnimatedUniformValue(1U);
             }
             else m_activeShader->SetAnimatedUniformValue(0U);
@@ -202,7 +201,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec
     if(!m_locked && m_activeShader)
     {
         bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
-        if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind(0U);
+        if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
 
         m_activeShader->SetProjectionUniformValue(m_screenProjection);
         m_activeShader->SetColorUniformValue(f_color);
@@ -292,7 +291,6 @@ void ROC::RenderManager::EnableBlending()
     if(!m_blendEnabled)
     {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         m_blendEnabled = true;
     }
 }

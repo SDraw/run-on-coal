@@ -14,9 +14,9 @@ class PreRenderManager
     {
         Model *m_model;
         TreeNode *m_parent = NULL;
-        std::set<TreeNode*> m_children;
+        std::unordered_set<TreeNode*> m_children;
     };
-    std::set<TreeNode*> m_modelTreeSet; // Only parent models
+    std::unordered_set<TreeNode*> m_modelTreeSet; // Only parent models
     std::unordered_map<Model*, TreeNode*> m_modelToNodeMap;
     std::unordered_map<Model*, TreeNode*>::iterator m_modelToNodeMapEnd;
 

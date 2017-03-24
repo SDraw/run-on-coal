@@ -13,7 +13,7 @@ protected:
     virtual ~Drawable();
 
     virtual GLuint GetTextureID() const = NULL;
-    virtual void Bind(unsigned int f_slot) = NULL;
+    virtual void Bind() = NULL;
 
     friend class RenderManager;
     friend class Shader;
