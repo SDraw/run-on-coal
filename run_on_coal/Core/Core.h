@@ -15,11 +15,13 @@ class PhysicsManager;
 class PreRenderManager;
 class RenderManager;
 class SoundManager;
+class LuaArguments;
 class Core
 {
     static Core *m_instance;
     std::string m_workingDir;
     bool m_state;
+    LuaArguments *m_argument;
 
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
