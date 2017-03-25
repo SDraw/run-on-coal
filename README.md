@@ -1,5 +1,7 @@
 ![](http://i.imgur.com/x3GSfPD.png)
 
+[![Build status](https://ci.appveyor.com/api/projects/status/vtcu06ofwqf4xe2s?svg=true)](https://ci.appveyor.com/project/SDraw/run-on-coal)
+
 Simple and light-weight 3D game engine.
 
 # Features
