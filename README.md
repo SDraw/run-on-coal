@@ -5,7 +5,7 @@
 Simple and light-weight 3D game engine.
 
 # Features
-* OpenGL 3.0+ rendering
+* OpenGL 3.1+ rendering
 * GLSL shaders
 * Keyframed skeletal animation with hardware skinning
 * Directional lights
