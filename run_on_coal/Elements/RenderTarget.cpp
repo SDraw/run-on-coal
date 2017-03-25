@@ -33,7 +33,6 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
         glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
         m_bFrameBuffer = true;
 
-        glActiveTexture(GL_TEXTURE0);
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
         switch(m_type)

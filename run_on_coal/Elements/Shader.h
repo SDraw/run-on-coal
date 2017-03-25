@@ -112,7 +112,6 @@ protected:
 
     static void CreateBonesUBO();
     static void DestroyBonesUBO();
-    static void BindBonesUBO();
 
     inline void GetError(std::string &f_str) { f_str.assign(m_error); }
     friend class ElementManager;

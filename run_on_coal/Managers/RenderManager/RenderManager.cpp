@@ -39,7 +39,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     Shader::CreateBonesUBO();
-    Shader::BindBonesUBO();
 
     m_activeScene = NULL;
     m_activeShader = NULL;

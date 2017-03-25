@@ -123,7 +123,7 @@ void ROC::Material::GenerateVAO()
         {
             glEnableVertexAttribArray(4);
             glBindBuffer(GL_ARRAY_BUFFER, m_indexVBO);
-            glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, 0, NULL);
+            glVertexAttribIPointer(4, 4, GL_INT, 0, NULL);
         }
         glBindVertexArray(NULL);
 

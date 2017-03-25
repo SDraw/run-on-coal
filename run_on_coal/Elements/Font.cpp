@@ -115,7 +115,6 @@ bool ROC::Font::LoadTTF(const std::string &f_path, int f_size, const glm::ivec2 
                 glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
                 m_uv = new std::vector<glm::vec2>(6 * FONT_MAX_TEXT_LENGTH);
 
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
                 glBindVertexArray(0);
 
                 m_loaded = true;
@@ -164,7 +163,6 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
     {
         if(f_bind)
         {
-            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_atlasTexture);
             glBindVertexArray(m_VAO);
             glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);

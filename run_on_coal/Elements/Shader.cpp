@@ -529,9 +529,8 @@ void ROC::Shader::CreateBonesUBO()
     if(m_bonesUBO == GL_INVALID_INDEX)
     {
         glGenBuffers(1, &m_bonesUBO);
-        glBindBuffer(GL_UNIFORM_BUFFER, m_bonesUBO);
+        glBindBufferBase(GL_UNIFORM_BUFFER, SHADER_BONES_BINDING_POINT, m_bonesUBO);
         glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * SHADER_MAX_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 }
 void ROC::Shader::DestroyBonesUBO()
@@ -541,10 +540,6 @@ void ROC::Shader::DestroyBonesUBO()
         glDeleteBuffers(1, &m_bonesUBO);
         m_bonesUBO = GL_INVALID_INDEX;
     }
-}
-void ROC::Shader::BindBonesUBO()
-{
-    if(m_bonesUBO != GL_INVALID_INDEX) glBindBufferBase(GL_UNIFORM_BUFFER, SHADER_BONES_BINDING_POINT, m_bonesUBO);
 }
 
 void ROC::Shader::Enable(bool f_full)
