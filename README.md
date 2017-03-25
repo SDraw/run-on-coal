@@ -20,9 +20,8 @@ Simple and light-weight 3D game engine.
 [![alt text](http://i.imgur.com/spFAFnr.png "Youtube playlist")](https://www.youtube.com/watch?v=L2UA3kquDpg&list=PLiEPsxTlqsDnI36XCCsG3jw32j2Gb-JGJ)
 
 # Builds
-Latest build is always avaliable at [Dropbox shared folder](https://www.dropbox.com/sh/vowd9qzzy5hosen/AADyDIJJi7bYwbPFZ8rhvolZa?dl=0).
-
-[![Dropbox folder](https://www.dropbox.com/static/images/logo.png)](https://www.dropbox.com/sh/vowd9qzzy5hosen/AADyDIJJi7bYwbPFZ8rhvolZa?dl=0)
+Builded shared libraries are available in [Dropbox shared folder](https://www.dropbox.com/sh/vowd9qzzy5hosen/AADyDIJJi7bYwbPFZ8rhvolZa?dl=0).  
+Latest release is available in [releases tab](https://github.com/SDraw/run-on-coal/releases).
 
 # Wiki
 All information about modeling and Lua is avaliable at [wiki](https://github.com/SDraw/run-on-coal/wiki).
