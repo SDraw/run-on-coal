@@ -26,7 +26,7 @@ ROC::Core::Core()
     std::string l_appPath;
     std::regex l_regex("\\\\");
     _getcwd(l_pathBuf, _MAX_PATH);
-    l_appPath.append(l_pathBuf);
+    l_appPath.assign(l_pathBuf);
     std::regex_replace(std::back_inserter(m_workingDir), l_appPath.begin(), l_appPath.end(), l_regex, "/");
     delete[]l_pathBuf;
 

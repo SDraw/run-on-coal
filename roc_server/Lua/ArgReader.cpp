@@ -31,13 +31,13 @@ void ROC::ArgReader::ReadBoolean(bool &f_val)
             }
             else
             {
-                m_error.append("Expected boolean");
+                m_error.assign("Expected boolean");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
@@ -53,18 +53,18 @@ void ROC::ArgReader::ReadText(std::string &f_val)
             {
                 size_t l_size;
                 const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
-                f_val.append(l_string,l_size);
+                f_val.assign(l_string,l_size);
                 m_currentArg++;
             }
             else
             {
-                m_error.append("Expected string");
+                m_error.assign("Expected string");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
@@ -85,13 +85,13 @@ void ROC::ArgReader::ReadFunction(int &f_val, void *&f_pointer)
             }
             else
             {
-                m_error.append("Expected function");
+                m_error.assign("Expected function");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
@@ -109,13 +109,13 @@ void ROC::ArgReader::ReadFunction(void *&f_pointer)
             }
             else
             {
-                m_error.append("Expected function");
+                m_error.assign("Expected function");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
@@ -140,7 +140,7 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
         {
             size_t l_size;
             const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
-            f_val.append(l_string,l_size);
+            f_val.assign(l_string,l_size);
             m_currentArg++;
         }
     }
@@ -165,7 +165,7 @@ void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
                         lua_pop(m_vm, 1);
                         if(std::isnan(f_val[i]) || std::isinf(f_val[i]))
                         {
-                            m_error.append("Got NaN/Inf at table index ");
+                            m_error.assign("Got NaN/Inf at table index ");
                             m_error.append(std::to_string(i));
                             break;
                         }
@@ -173,7 +173,7 @@ void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
                     else
                     {
                         lua_pop(m_vm, 1);
-                        m_error.append("Table index ");
+                        m_error.assign("Table index ");
                         m_error.append(std::to_string(i));
                         m_error.append(" isn't a number");
                         break;
@@ -185,13 +185,13 @@ void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
             }
             else
             {
-                m_error.append("Expected table");
+                m_error.assign("Expected table");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
@@ -218,7 +218,7 @@ void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
                     }
                     else
                     {
-                        m_error.append("Not enough table values");
+                        m_error.assign("Not enough table values");
                         lua_pop(m_vm, 1);
                         break;
                     }
@@ -229,13 +229,13 @@ void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
             }
             else
             {
-                m_error.append("Expected table");
+                m_error.assign("Expected table");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }

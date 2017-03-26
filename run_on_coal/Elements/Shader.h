@@ -51,6 +51,9 @@ class Shader : public Element
     std::vector<drawableBindData> m_drawableBind;
     unsigned int m_drawableCount;
 
+    static GLuint m_bonesUBO;
+    static bool m_uboFix;
+
     std::string m_error;
 
     Shader(const Shader& that);
@@ -60,9 +63,6 @@ class Shader : public Element
 public:
     GLint GetUniform(const std::string &f_uname);
 protected:
-    static GLuint m_bonesUBO;
-    static bool m_uboFix;
-
     Shader();
     ~Shader();
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
@@ -112,6 +112,7 @@ protected:
 
     static void CreateBonesUBO();
     static void DestroyBonesUBO();
+    static void EnableUBOFix();
 
     inline void GetError(std::string &f_str) { f_str.assign(m_error); }
     friend class ElementManager;

@@ -22,7 +22,7 @@ bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
     m_file = new std::fstream(f_path, std::ios::out | std::ios::binary);
     if(m_file->fail()) return false;
     m_type = FileMode::WriteMode;
-    m_path.append(f_rPath);
+    m_path.assign(f_rPath);
     return true;
 }
 bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool f_ro)
@@ -30,7 +30,7 @@ bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool
     m_file = new std::fstream(f_path, (f_ro ? std::ios::in : std::ios::out) | std::ios::binary);
     if(m_file->fail()) return false;
     m_type = f_ro ? FileMode::ReadMode : FileMode::WriteMode;
-    m_path.append(f_rPath);
+    m_path.assign(f_rPath);
     return true;
 }
 

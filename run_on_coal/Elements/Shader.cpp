@@ -541,6 +541,10 @@ void ROC::Shader::DestroyBonesUBO()
         m_bonesUBO = GL_INVALID_INDEX;
     }
 }
+void ROC::Shader::EnableUBOFix()
+{
+    m_uboFix = true;
+}
 
 void ROC::Shader::Enable(bool f_full)
 {

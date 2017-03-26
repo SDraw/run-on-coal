@@ -87,8 +87,7 @@ bool ROC::LuaManager::OpenFile(const std::string &f_path)
     int error = luaL_loadfile(m_pVM, f_path.c_str()) || lua_pcall(m_pVM, 0, 0, 0);
     if(error)
     {
-        std::string l_log;
-        l_log.append(lua_tostring(m_pVM, -1));
+        std::string l_log(lua_tostring(m_pVM, -1));
         m_core->GetLogManager()->Log(l_log);
         lua_pop(m_pVM, 1);
     }
@@ -101,8 +100,7 @@ void ROC::LuaManager::CallFunction(int f_func, LuaArguments *f_args)
     f_args->ProccessArguments(m_pVM);
     if(lua_pcall(m_pVM, f_args->GetArgumentsValue(), 0, 0))
     {
-        std::string l_log;
-        l_log.append(lua_tostring(m_pVM, -1));
+        std::string l_log(lua_tostring(m_pVM, -1));
         m_core->GetLogManager()->Log(l_log);
     }
 }

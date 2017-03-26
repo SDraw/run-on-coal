@@ -109,7 +109,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_cursorMode = CURSOR_VISIBILITY_BIT;
 
     // Detect current GPU in list of bugged Sandy Bridge GPUs. Need to add more.
-    if(l_log.find("HD Graphics 3000") != std::string::npos)  Shader::m_uboFix = true;
+    if(l_log.find("HD Graphics 3000") != std::string::npos)  Shader::EnableUBOFix();
 }
 
 ROC::SfmlManager::~SfmlManager()

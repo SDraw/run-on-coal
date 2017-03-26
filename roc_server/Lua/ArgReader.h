@@ -13,7 +13,7 @@ class ArgReader
     bool m_hasErrors;
 
     ArgReader(const ArgReader& that);
-    ArgReader &operator =(const ArgReader &that);
+    ArgReader &operator=(const ArgReader &that);
 public:
     explicit ArgReader(lua_State *f_vm);
     ~ArgReader();
@@ -60,19 +60,19 @@ template<typename T> void ROC::ArgReader::ReadNumber(T &f_val)
                 m_currentArg++;
                 if(std::isnan(f_val) || std::isinf(f_val))
                 {
-                    m_error.append("Got NaN/Inf");
+                    m_error.assign("Got NaN/Inf");
                     m_hasErrors = true;
                 }
             }
             else
             {
-                m_error.append("Expected number");
+                m_error.assign("Expected number");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
@@ -90,13 +90,13 @@ template<typename T> void ROC::ArgReader::ReadInteger(T &f_val)
             }
             else
             {
-                m_error.append("Expected integer");
+                m_error.assign("Expected integer");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
@@ -117,32 +117,32 @@ template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
                         if((f_element = dynamic_cast<T*>(a)) != NULL) m_currentArg++;
                         else
                         {
-                            m_error.append("Wrong element type");
+                            m_error.assign("Wrong element type");
                             m_hasErrors = true;
                         }
-    
+
                     }
                     catch(const std::exception&)
                     {
-                        m_error.append("Wrong element type");
+                        m_error.assign("Wrong element type");
                         m_hasErrors = true;
                     }
                 }
                 else
                 {
-                    m_error.append("Invalid element");
+                    m_error.assign("Invalid element");
                     m_hasErrors = true;
                 }
             }
             else
             {
-                m_error.append("Expected element");
+                m_error.assign("Expected element");
                 m_hasErrors = true;
             }
         }
         else
         {
-            m_error.append("Not enough arguments");
+            m_error.assign("Not enough arguments");
             m_hasErrors = true;
         }
     }
