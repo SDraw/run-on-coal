@@ -10,6 +10,9 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
 
+#define ROC_OPENGL_MIN_VERSION 31U
+#define ROC_OPENGL_MIN_VERSION_STRING "3.1"
+
 namespace ROC
 {
 
@@ -57,8 +60,6 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     sf::ContextSettings l_contextSettings = sf::ContextSettings();
     l_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
     l_contextSettings.depthBits = 24U;
-    l_contextSettings.majorVersion = 3U; // Minimum major version
-    l_contextSettings.minorVersion = 1U; // Minimum minor version
 #ifdef _DEBUG
     l_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Debug;
 #endif
@@ -67,7 +68,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_window->create(l_videoMode, "ROC", l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default, l_contextSettings);
     if(glGetString(GL_VERSION) == NULL)
     {
-        l_log.append("SFML error: Unable to create OpenGL ");
+        l_log.assign("SFML error: Unable to create OpenGL ");
         l_log.append(std::to_string(l_contextSettings.majorVersion));
         l_log.push_back('.');
         l_log.append(std::to_string(l_contextSettings.minorVersion));
@@ -78,6 +79,20 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 #endif
         exit(EXIT_FAILURE);
     }
+    else
+    {
+        sf::ContextSettings l_createdContextSettings = m_window->getSettings();
+        if(l_createdContextSettings.majorVersion * 10U + l_createdContextSettings.minorVersion < ROC_OPENGL_MIN_VERSION)
+        {
+            l_log.assign("Minimal supported version of OpenGL is ");
+            l_log.append(ROC_OPENGL_MIN_VERSION_STRING);
+            m_core->GetLogManager()->Log(l_log);
+#ifdef _WIN32
+            MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONSTOP);
+#endif
+            exit(EXIT_FAILURE);
+        }
+    }
     m_frameLimit = l_configManager->GetFPSLimit();
     m_window->setFramerateLimit(m_frameLimit);
     m_window->setVerticalSyncEnabled(l_configManager->GetVSync());
@@ -86,7 +101,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     GLenum l_error = glewInit();
     if(l_error != GLEW_OK)
     {
-        l_log.append("GLEW error: ");
+        l_log.assign("GLEW error: ");
         l_log.append(reinterpret_cast<const char*>(glewGetErrorString(l_error)));
         m_core->GetLogManager()->Log(l_log);
 #ifdef _WIN32
@@ -95,7 +110,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         exit(EXIT_FAILURE);
     }
 
-    l_log.append("OpenGL ");
+    l_log.assign("OpenGL ");
     l_log.append(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
     l_log.append(", ");
     l_log.append(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
