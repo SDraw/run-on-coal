@@ -54,31 +54,16 @@ int shaderDestroy(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int shaderGetUniform(lua_State *f_vm)
-{
-    Shader *l_shader = NULL;
-    std::string l_unif;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_shader);
-    argStream.ReadText(l_unif);
-    if(!argStream.HasErrors() && !l_unif.empty())
-    {
-        int l_result = l_shader->GetUniform(l_unif);
-        (l_result != -1) ? argStream.PushInteger(l_result) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int shaderSetUniformValue(lua_State *f_vm)
 {
     Shader *l_shader = NULL;
-    int l_uniform;
+    std::string l_uniform;
     std::string l_type;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_shader);
-    argStream.ReadInteger(l_uniform);
+    argStream.ReadText(l_uniform);
     argStream.ReadText(l_type);
-    if(!argStream.HasErrors() && (l_uniform != -1) && !l_type.empty())
+    if(!argStream.HasErrors() && !l_uniform.empty() && !l_type.empty())
     {
         switch(Utils::ReadEnumVector(g_uniformTypesTable, l_type))
         {

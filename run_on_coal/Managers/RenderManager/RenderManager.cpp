@@ -228,7 +228,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec
     }
 }
 
-bool ROC::RenderManager::AttachToShader(Shader *f_shader, Drawable *f_element, int f_uniform)
+bool ROC::RenderManager::AttachToShader(Shader *f_shader, Drawable *f_element, const std::string &f_uniform)
 {
     EnableNonActiveShader(f_shader);
     bool l_result = f_shader->Attach(f_element, f_uniform);

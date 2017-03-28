@@ -206,7 +206,7 @@ bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
     return l_result;
 }
 
-bool ROC::InheritanceManager::AttachDrawableToShader(Shader *f_shader, Drawable *f_drawable, int f_uniform)
+bool ROC::InheritanceManager::AttachDrawableToShader(Shader *f_shader, Drawable *f_drawable, const std::string &f_uniform)
 {
     bool l_result = false;
     auto iter = m_inheritMap.equal_range(f_drawable);

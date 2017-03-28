@@ -41,6 +41,9 @@ class Shader : public Element
     float m_timeUniformValue;
     glm::vec4 m_colorUniformValue;
 
+    std::unordered_map<std::string, GLint> m_uniformMap;
+    std::unordered_map<std::string, GLint>::iterator m_uniformMapEnd;
+
     Pool *m_bindPool;
     struct drawableBindData
     {
@@ -60,37 +63,35 @@ class Shader : public Element
     Shader &operator =(const Shader &that);
 
     void SetupDefaultUniformsAndLocations();
-public:
-    GLint GetUniform(const std::string &f_uname);
 protected:
     Shader();
     ~Shader();
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     void Enable(bool f_full = true);
 
-    static void SetUniformValue(GLint f_uValue, unsigned int f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::uvec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::uvec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::uvec4 &f_value);
+    void SetUniformValue(const std::string &f_uniform, unsigned int f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::uvec2 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::uvec3 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::uvec4 &f_value);
 
-    static void SetUniformValue(GLint f_uValue, int f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::ivec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::ivec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::ivec4 &f_value);
+    void SetUniformValue(const std::string &f_uniform, int f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::ivec2 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::ivec3 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::ivec4 &f_value);
 
-    static void SetUniformValue(GLint f_uValue, float f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::vec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::vec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::vec4 &f_value);
+    void SetUniformValue(const std::string &f_uniform, float f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::vec2 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::vec3 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::vec4 &f_value);
 
-    static void SetUniformValue(GLint f_uValue, double f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::dvec2 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::dvec3 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::dvec4 &f_value);
+    void SetUniformValue(const std::string &f_uniform, double f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::dvec2 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::dvec3 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::dvec4 &f_value);
 
-    static void SetUniformValue(GLint f_uValue, const glm::mat2 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::mat3 &f_value);
-    static void SetUniformValue(GLint f_uValue, const glm::mat4 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::mat2 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::mat3 &f_value);
+    void SetUniformValue(const std::string &f_uniform, const glm::mat4 &f_value);
 
     void SetProjectionUniformValue(const glm::mat4 &f_value);
     void SetViewUniformValue(const glm::mat4 &f_value);
@@ -107,7 +108,7 @@ protected:
     void SetTimeUniformValue(float f_value);
     void SetColorUniformValue(const glm::vec4 &f_value);
 
-    bool Attach(Drawable *f_drawable, int f_uniform);
+    bool Attach(Drawable *f_drawable, const std::string &f_uniform);
     bool Dettach(Drawable *f_drawable);
 
     static void CreateBonesUBO();

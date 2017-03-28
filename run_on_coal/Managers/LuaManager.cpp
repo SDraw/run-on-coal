@@ -81,7 +81,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     //Shader
     lua_register(m_vm, "shaderCreate", Lua::shaderCreate);
     lua_register(m_vm, "shaderDestroy", Lua::shaderDestroy);
-    lua_register(m_vm, "shaderGetUniform", Lua::shaderGetUniform);
     lua_register(m_vm, "shaderSetUniformValue", Lua::shaderSetUniformValue);
 
     //Scene

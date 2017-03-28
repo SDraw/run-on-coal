@@ -61,8 +61,8 @@ public:
     inline void RemoveAsActiveScene(Scene *f_scene) { if(m_activeScene == f_scene) m_activeScene = NULL; }
 
     void SetActiveShader(Shader *f_shader);
-    template<typename T> void SetShaderUniformValue(Shader *f_shader, GLint f_uValue, T f_value);
-    template<typename T> void SetShaderUniformValueRef(Shader *f_shader, GLint f_uValue, T &f_value);
+    template<typename T> void SetShaderUniformValue(Shader *f_shader, const std::string &f_uniform, T f_value);
+    template<typename T> void SetShaderUniformValueRef(Shader *f_shader, const std::string &f_uniform, T &f_value);
     inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader == f_shader) m_activeShader = NULL; }
 
     void Render(Model *f_model, bool f_frustum = true, bool f_texturize = true);
@@ -73,7 +73,7 @@ protected:
     ~RenderManager();
 
     void RestoreActiveShader(Shader *f_shader);
-    bool AttachToShader(Shader *f_shader, Drawable *f_element, int f_uniform);
+    bool AttachToShader(Shader *f_shader, Drawable *f_element, const std::string &f_uniform);
     void DettachFromShader(Shader *f_shader, Drawable *f_element);
 
     void ResetCallsReducing();
@@ -87,15 +87,15 @@ protected:
 
 }
 
-template<typename T> void ROC::RenderManager::SetShaderUniformValue(Shader *f_shader, GLint f_uValue, T f_value)
+template<typename T> void ROC::RenderManager::SetShaderUniformValue(Shader *f_shader, const std::string &f_uniform, T f_value)
 {
     EnableNonActiveShader(f_shader);
-    Shader::SetUniformValue(f_uValue, f_value);
+    f_shader->SetUniformValue(f_uniform, f_value);
     RestoreActiveShader(f_shader);
 };
-template<typename T> void ROC::RenderManager::SetShaderUniformValueRef(Shader *f_shader, GLint f_uValue, T &f_value)
+template<typename T> void ROC::RenderManager::SetShaderUniformValueRef(Shader *f_shader, const std::string &f_uniform, T &f_value)
 {
     EnableNonActiveShader(f_shader);
-    Shader::SetUniformValue(f_uValue, f_value);
+    f_shader->SetUniformValue(f_uniform, f_value);
     RestoreActiveShader(f_shader);
 };

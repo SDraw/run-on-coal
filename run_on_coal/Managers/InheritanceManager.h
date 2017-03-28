@@ -25,7 +25,7 @@ public:
     bool SetModelAnimation(Model *f_model, Animation *f_anim);
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool SetSceneLight(Scene *f_scene, Light *f_light);
-    bool AttachDrawableToShader(Shader *f_shader, Drawable *f_drawable, int f_uniform);
+    bool AttachDrawableToShader(Shader *f_shader, Drawable *f_drawable, const std::string &f_uniform);
     void DettachDrawableFromShader(Shader *f_shader, Drawable *f_drawable);
 protected:
     explicit InheritanceManager(Core *f_core);
