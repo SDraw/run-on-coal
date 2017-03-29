@@ -29,6 +29,8 @@ bool Animation::LoadFromJSON(std::string &f_path)
     if(m_loaded) ReportError("Animation has already been loaded");
 
     std::ifstream l_file;
+    l_file.open(f_path);
+    if(l_file.fail()) ReportError("Unable to open file");
     std::string l_data;
     std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
     std::back_insert_iterator<std::string> l_stringInsert(l_data);
