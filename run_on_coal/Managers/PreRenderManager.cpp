@@ -32,7 +32,7 @@ void ROC::PreRenderManager::AddModel(Model *f_model)
     TreeNode *l_node = new TreeNode();
     l_node->m_model = f_model;
     m_modelTreeSet.insert(l_node);
-    m_modelToNodeMap.insert(std::pair<Model*, TreeNode*>(f_model, l_node));
+    m_modelToNodeMap.insert(std::make_pair(f_model, l_node));
     m_modelToNodeMapEnd = m_modelToNodeMap.end();
 }
 

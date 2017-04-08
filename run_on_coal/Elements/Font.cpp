@@ -149,7 +149,7 @@ bool ROC::Font::LoadChar(unsigned int f_char)
             }
         }
 
-        m_charIter = m_charMap.insert(std::pair<unsigned int, charData*>(f_char, l_charData)).first;
+        m_charIter = m_charMap.insert(std::make_pair(f_char, l_charData)).first;
         m_charMapEnd = m_charMap.end();
 
         l_result = true;

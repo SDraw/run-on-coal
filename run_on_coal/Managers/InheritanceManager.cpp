@@ -125,7 +125,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
 
 void ROC::InheritanceManager::SetModelGeometry(Model *f_model, Geometry *f_geometry)
 {
-    m_inheritMap.insert(std::pair<Element*, Element*>(f_model, f_geometry));
+    m_inheritMap.insert(std::make_pair(f_model, f_geometry));
 }
 bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_anim)
 {
@@ -140,7 +140,7 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
             {
                 if(l_modelAnim) RemoveInheritance(f_model, l_modelAnim);
                 f_model->SetAnimation(f_anim);
-                m_inheritMap.insert(std::pair<Element*, Element*>(f_model, f_anim));
+                m_inheritMap.insert(std::make_pair(f_model, f_anim));
                 l_result = true;
             }
         }
@@ -168,7 +168,7 @@ bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent
             if(!f_parent->HasSkeleton()) f_bone = -1;
             else if(f_bone >= static_cast<int>(f_parent->GetSkeleton()->GetBonesCount())) f_bone = -1;
             f_model->SetParent(f_parent, f_bone);
-            m_inheritMap.insert(std::pair<Element*, Element*>(f_model, f_parent));
+            m_inheritMap.insert(std::make_pair(f_model, f_parent));
             m_core->GetPreRenderManager()->AddLink(f_model, f_parent);
             l_result = true;
         }
@@ -191,7 +191,7 @@ bool ROC::InheritanceManager::DetachModel(Model *f_model)
 bool ROC::InheritanceManager::AttachCollisionToModel(Collision *f_col, Model *f_model)
 {
     bool l_result = false;
-    if(!f_col->GetParentModel() && !f_model->HasCollision() && !f_model->GetParent())
+    if(!f_col->GetParentModel() && !f_model->HasCollision() && !f_model->GetParent() && !f_model->HasSkeletonStaticBoneCollision() && !f_model->HasSkeletonDynamicBoneCollision())
     {
         f_col->SetParentModel(f_model);
         f_model->SetCollision(f_col);
@@ -220,7 +220,7 @@ bool ROC::InheritanceManager::SetSceneCamera(Scene *f_scene, Camera *f_camera)
         if(l_sceneCamera) RemoveInheritance(l_sceneCamera, f_scene);
         RemoveChildRelation(f_camera);
         f_scene->SetCamera(f_camera);
-        m_inheritMap.insert(std::pair<Element*, Element*>(f_camera, f_scene));
+        m_inheritMap.insert(std::make_pair(f_camera, f_scene));
         l_result = true;
     }
     return l_result;
@@ -234,7 +234,7 @@ bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
         if(l_sceneLight) RemoveInheritance(l_sceneLight, f_scene);
         RemoveChildRelation(f_light);
         f_scene->SetLight(f_light);
-        m_inheritMap.insert(std::pair<Element*, Element*>(f_light, f_scene));
+        m_inheritMap.insert(std::make_pair(f_light, f_scene));
         l_result = true;
     }
     return l_result;
@@ -255,7 +255,7 @@ bool ROC::InheritanceManager::AttachDrawableToShader(Shader *f_shader, Drawable 
     if(!l_result)
     {
         l_result = m_core->GetRenderManager()->AttachToShader(f_shader, f_drawable, f_uniform);
-        if(l_result) m_inheritMap.insert(std::pair<Element*, Element*>(f_drawable, f_shader));
+        if(l_result) m_inheritMap.insert(std::make_pair(f_drawable, f_shader));
     }
     return l_result;
 }

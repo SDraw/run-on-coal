@@ -265,7 +265,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
         if(Utils::ReadEnumVector(g_DefaultUniformsTable, l_uniformNameString) == -1)
         {
             GLint l_uniformLocation = glGetUniformLocation(m_program, l_uniformNameString.c_str());
-            m_uniformMap.insert(std::pair<std::string, GLint>(l_uniformNameString, l_uniformLocation));
+            m_uniformMap.insert(std::make_pair(l_uniformNameString, l_uniformLocation));
         }
     }
     m_uniformMapEnd = m_uniformMap.end();

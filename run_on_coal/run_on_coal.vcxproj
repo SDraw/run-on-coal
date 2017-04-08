@@ -78,7 +78,7 @@
       <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype27d.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;zlibd.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
-      <Profile>true</Profile>
+      <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
       <Command>
