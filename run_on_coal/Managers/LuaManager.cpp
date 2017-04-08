@@ -64,7 +64,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "modelGetScale", Lua::modelGetScale);
     lua_register(m_vm, "modelDraw", Lua::modelDraw);
     lua_register(m_vm, "modelAttach", Lua::modelAttach);
-    lua_register(m_vm, "modelDettach", Lua::modelDettach);
+    lua_register(m_vm, "modelDetach", Lua::modelDetach);
     lua_register(m_vm, "modelGetParent", Lua::modelGetParent);
     lua_register(m_vm, "modelSetAnimation", Lua::modelSetAnimation);
     lua_register(m_vm, "modelGetAnimation", Lua::modelGetAnimation);
@@ -73,10 +73,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "modelResetAnimation", Lua::modelResetAnimation);
     lua_register(m_vm, "modelSetAnimationProperty", Lua::modelSetAnimationProperty);
     lua_register(m_vm, "modelGetAnimationProperty", Lua::modelGetAnimationProperty);
-    lua_register(m_vm, "modelSetCollision", Lua::modelSetCollision);
-    lua_register(m_vm, "modelRemoveCollision", Lua::modelRemoveCollision);
-    lua_register(m_vm, "modelSetCollisionProperty", Lua::modelSetCollisionProperty);
-    lua_register(m_vm, "modelGetCollisionProperty", Lua::modelGetCollisionProperty);
+    lua_register(m_vm, "modelGetCollision", Lua::modelGetCollision);
 
     //Shader
     lua_register(m_vm, "shaderCreate", Lua::shaderCreate);
@@ -191,6 +188,21 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "collisionGetPosition", Lua::collisionGetPosition);
     lua_register(m_vm, "collisionSetRotation", Lua::collisionSetRotation);
     lua_register(m_vm, "collisionGetRotation", Lua::collisionGetRotation);
+    lua_register(m_vm, "collisionSetScale", Lua::collisionSetScale);
+    lua_register(m_vm, "collisionGetScale", Lua::collisionGetScale);
+    lua_register(m_vm, "collisionGetMass", Lua::collisionGetMass);
+    lua_register(m_vm, "collisionSetVelocity", Lua::collisionSetVelocity);
+    lua_register(m_vm, "collisionGetVelocity", Lua::collisionGetVelocity);
+    lua_register(m_vm, "collisionSetAngularVelocity", Lua::collisionSetAngularVelocity);
+    lua_register(m_vm, "collisionGetAngularVelocity", Lua::collisionGetAngularVelocity);
+    lua_register(m_vm, "collisionSetFriction", Lua::collisionSetFriction);
+    lua_register(m_vm, "collisionGetFriction", Lua::collisionGetFriction);
+    lua_register(m_vm, "collisionSetLinearFactor", Lua::collisionSetLinearFactor);
+    lua_register(m_vm, "collisionGetLinearFactor", Lua::collisionGetLinearFactor);
+    lua_register(m_vm, "collisionSetAngularFactor", Lua::collisionSetAngularFactor);
+    lua_register(m_vm, "collisionGetAngularFactor", Lua::collisionGetAngularFactor);
+    lua_register(m_vm, "collisionAttach", Lua::collisionAttach);
+    lua_register(m_vm, "collisionDetach", Lua::collisionDetach);
 
     //Rendering
     lua_register(m_vm, "setActiveScene", Lua::setActiveScene);

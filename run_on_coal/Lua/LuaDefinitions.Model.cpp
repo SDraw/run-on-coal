@@ -19,17 +19,9 @@ namespace ROC
 namespace Lua
 {
 
-const std::vector<std::string> g_modelCollisionTable
-{
-    "sphere", "box", "cylinder", "capsule", "cone"
-};
 const std::vector<std::string> g_modelTypesTable
 {
     "none", "static", "animated"
-};
-const std::vector<std::string> g_modelCollisionPropertiesTable
-{
-    "mass", "velocity", "angular_velocity", "friction", "linear_factor", "angular_factor", "scale"
 };
 const std::vector<std::string> g_modelAnimationPropertiesTable
 {
@@ -231,14 +223,14 @@ int modelAttach(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int modelDettach(lua_State *f_vm)
+int modelDetach(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->DettachModel(l_model);
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->DetachModel(l_model);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -371,7 +363,7 @@ int modelSetAnimationProperty(lua_State *f_vm)
 }
 int modelGetAnimationProperty(lua_State *f_vm)
 {
-    Model *l_model = NULL;
+    Model *l_model;
     std::string l_property;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -402,210 +394,19 @@ int modelGetAnimationProperty(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int modelSetCollision(lua_State *f_vm)
+int modelGetCollision(lua_State *f_vm)
 {
-    Model *l_model;
-    std::string l_textType;
-    float l_mass = 1.0;
-    glm::vec3 l_size(1.f);
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_model);
-    argStream.ReadText(l_textType);
-    argStream.ReadNextNumber(l_mass);
-    for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
-    if(!argStream.HasErrors() && !l_textType.empty() && (l_mass >= 0.f))
-    {
-        int l_type = Utils::ReadEnumVector(g_modelCollisionTable, l_textType);
-        if(l_type != -1)
-        {
-            bool l_result = LuaManager::GetCore()->GetPhysicsManager()->SetModelCollision(l_model, l_type, l_mass, l_size);
-            argStream.PushBoolean(l_result);
-        }
-        else argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelRemoveCollision(lua_State *f_vm)
-{
-    Model *l_model;
+    Model *l_model = NULL;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetPhysicsManager()->RemoveModelCollision(l_model);
-        argStream.PushBoolean(l_result);
+        Collision *l_col = l_model->GetCollision();
+        l_col ? argStream.PushPointer(l_col) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-
-int modelSetCollisionProperty(lua_State *f_vm)
-{
-    Model *l_model;
-    std::string l_property;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_model);
-    argStream.ReadText(l_property);
-    if(!argStream.HasErrors())
-    {
-        if(l_model->HasCollision())
-        {
-            switch(Utils::ReadEnumVector(g_modelCollisionPropertiesTable, l_property))
-            {
-                // Mass is skipped
-                case 1: // Velocity
-                {
-                    glm::vec3 l_velocity;
-                    argStream.ReadNumber(l_velocity.x);
-                    argStream.ReadNumber(l_velocity.y);
-                    argStream.ReadNumber(l_velocity.z);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetVelocity(l_velocity);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                case 2: // Angular velocity
-                {
-                    glm::vec3 l_angularVelocity;
-                    argStream.ReadNumber(l_angularVelocity.x);
-                    argStream.ReadNumber(l_angularVelocity.y);
-                    argStream.ReadNumber(l_angularVelocity.z);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetAngularVelocity(l_angularVelocity);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                case 3: // Friction
-                {
-                    float l_friction;
-                    argStream.ReadNumber(l_friction);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetFriction(l_friction);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                case 4: // Linear factor
-                {
-                    glm::vec3 l_linearFactor;
-                    argStream.ReadNumber(l_linearFactor.x);
-                    argStream.ReadNumber(l_linearFactor.y);
-                    argStream.ReadNumber(l_linearFactor.z);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetLinearFactor(l_linearFactor);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                case 5: // Angular factor
-                {
-                    glm::vec3 l_angularFactor;
-                    argStream.ReadNumber(l_angularFactor.x);
-                    argStream.ReadNumber(l_angularFactor.y);
-                    argStream.ReadNumber(l_angularFactor.z);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetAngularFactor(l_angularFactor);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                case 6: // Scale
-                {
-                    glm::vec3 l_scale;
-                    argStream.ReadNumber(l_scale.x);
-                    argStream.ReadNumber(l_scale.y);
-                    argStream.ReadNumber(l_scale.z);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = LuaManager::GetCore()->GetPhysicsManager()->SetModelCollisionScale(l_model, l_scale);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                default:
-                    argStream.PushBoolean(false);
-            }
-        }
-        else argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelGetCollisionProperty(lua_State *f_vm)
-{
-    Model *l_model;
-    std::string l_property;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_model);
-    argStream.ReadText(l_property);
-    if(!argStream.HasErrors())
-    {
-        if(l_model->HasCollision())
-        {
-            switch(Utils::ReadEnumVector(g_modelCollisionPropertiesTable, l_property))
-            {
-                case 0: // Mass
-                {
-                    float l_mass = l_model->GetMass();
-                    argStream.PushNumber(l_mass);
-                } break;
-                case 1: // Velocity
-                {
-                    glm::vec3 l_velocity(0.f);
-                    l_model->GetVelocity(l_velocity);
-                    argStream.PushNumber(l_velocity.x);
-                    argStream.PushNumber(l_velocity.y);
-                    argStream.PushNumber(l_velocity.z);
-                } break;
-                case 2: // Angular velocity
-                {
-                    glm::vec3 l_angularVelocity;
-                    l_model->GetAngularVelocity(l_angularVelocity);
-                    argStream.PushNumber(l_angularVelocity.x);
-                    argStream.PushNumber(l_angularVelocity.y);
-                    argStream.PushNumber(l_angularVelocity.z);
-                } break;
-                case 3: // Friction
-                {
-                    float l_friction = l_model->GetFriction();
-                    argStream.PushNumber(l_friction);
-                } break;
-                case 4: // Linear factor
-                {
-                    glm::vec3 l_linearFactor;
-                    l_model->GetLinearFactor(l_linearFactor);
-                    argStream.PushNumber(l_linearFactor.x);
-                    argStream.PushNumber(l_linearFactor.y);
-                    argStream.PushNumber(l_linearFactor.z);
-                } break;
-                case 5: // Angular factor
-                {
-                    glm::vec3 l_angularFactor;
-                    l_model->GetAngularFactor(l_angularFactor);
-                    argStream.PushNumber(l_angularFactor.x);
-                    argStream.PushNumber(l_angularFactor.y);
-                    argStream.PushNumber(l_angularFactor.z);
-                } break;
-                // Scale is skipped, use modelGetScale instead
-                default:
-                    argStream.PushBoolean(false);
-            }
-        }
-        else argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-
-
 
 }
 }

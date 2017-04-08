@@ -134,7 +134,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 
 void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize)
 {
-    if(!m_locked && m_activeShader && m_activeScene && f_model->IsDrawable())
+    if(!m_locked && m_activeShader && m_activeScene && f_model->HasGeometry())
     {
         bool l_result = true;
         if(f_frustum)
@@ -235,10 +235,10 @@ bool ROC::RenderManager::AttachToShader(Shader *f_shader, Drawable *f_element, c
     RestoreActiveShader(f_shader);
     return l_result;
 }
-void ROC::RenderManager::DettachFromShader(Shader *f_shader, Drawable *f_element)
+void ROC::RenderManager::DetachFromShader(Shader *f_shader, Drawable *f_element)
 {
     EnableNonActiveShader(f_shader);
-    f_shader->Dettach(f_element);
+    f_shader->Detach(f_element);
     RestoreActiveShader(f_shader);
 }
 

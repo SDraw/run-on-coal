@@ -8,6 +8,7 @@
 
 #include "Elements/Animation/Animation.h"
 #include "Elements/Camera.h"
+#include "Elements/Collision.h"
 #include "Elements/Drawable.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Light.h"
@@ -81,6 +82,17 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
                     break;
             }
         } break;
+        case Element::ElementType::CollisionElement:
+        {
+            switch(f_parent->GetElementType())
+            {
+                case Element::ElementType::ModelElement:
+                {
+                    dynamic_cast<Collision*>(f_child)->SetParentModel(NULL);
+                    dynamic_cast<Model*>(f_parent)->SetCollision(NULL);
+                } break;
+            }
+        } break;
         case Element::ElementType::CameraElement:
         {
             switch(f_parent->GetElementType())
@@ -104,7 +116,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DettachFromShader(dynamic_cast<Shader*>(f_parent), dynamic_cast<Drawable*>(f_child));
+                    m_core->GetRenderManager()->DetachFromShader(dynamic_cast<Shader*>(f_parent), dynamic_cast<Drawable*>(f_child));
                     break;
             }
         } break;
@@ -115,7 +127,6 @@ void ROC::InheritanceManager::SetModelGeometry(Model *f_model, Geometry *f_geome
 {
     m_inheritMap.insert(std::pair<Element*, Element*>(f_model, f_geometry));
 }
-
 bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_anim)
 {
     bool l_result = false;
@@ -164,7 +175,7 @@ bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent
     }
     return l_result;
 }
-bool ROC::InheritanceManager::DettachModel(Model *f_model)
+bool ROC::InheritanceManager::DetachModel(Model *f_model)
 {
     bool l_result = false;
     Model *l_parent = f_model->GetParent();
@@ -172,6 +183,29 @@ bool ROC::InheritanceManager::DettachModel(Model *f_model)
     {
         RemoveInheritance(f_model, l_parent);
         m_core->GetPreRenderManager()->RemoveLink(f_model);
+        l_result = true;
+    }
+    return l_result;
+}
+
+bool ROC::InheritanceManager::AttachCollisionToModel(Collision *f_col, Model *f_model)
+{
+    bool l_result = false;
+    if(!f_col->GetParentModel() && !f_model->HasCollision() && !f_model->GetParent())
+    {
+        f_col->SetParentModel(f_model);
+        f_model->SetCollision(f_col);
+        m_inheritMap.insert(std::make_pair(f_col, f_model));
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::DetachCollision(Collision *f_col)
+{
+    bool l_result = false;
+    if(f_col->GetParentModel())
+    {
+        RemoveInheritance(f_col,f_col->GetParentModel());
         l_result = true;
     }
     return l_result;
@@ -225,7 +259,7 @@ bool ROC::InheritanceManager::AttachDrawableToShader(Shader *f_shader, Drawable 
     }
     return l_result;
 }
-void ROC::InheritanceManager::DettachDrawableFromShader(Shader *f_shader, Drawable *f_drawable)
+void ROC::InheritanceManager::DetachDrawableFromShader(Shader *f_shader, Drawable *f_drawable)
 {
     RemoveInheritance(f_drawable, f_shader);
 }

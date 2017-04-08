@@ -109,7 +109,7 @@ protected:
     void SetColorUniformValue(const glm::vec4 &f_value);
 
     bool Attach(Drawable *f_drawable, const std::string &f_uniform);
-    bool Dettach(Drawable *f_drawable);
+    bool Detach(Drawable *f_drawable);
 
     static void CreateBonesUBO();
     static void DestroyBonesUBO();

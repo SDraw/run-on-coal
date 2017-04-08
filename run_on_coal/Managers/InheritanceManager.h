@@ -5,6 +5,7 @@ namespace ROC
 
 class Core;
 class Element;
+class Collision;
 class Animation;
 class Camera;
 class Drawable;
@@ -21,12 +22,17 @@ class InheritanceManager
     void InheritanceBreakProcessing(Element *f_child, Element *f_parent);
 public:
     bool AttachModelToModel(Model *f_model, Model *f_parent, int f_bone = -1);
-    bool DettachModel(Model *f_model);
+    bool DetachModel(Model *f_model);
     bool SetModelAnimation(Model *f_model, Animation *f_anim);
+
+    bool AttachCollisionToModel(Collision *f_col, Model *f_model);
+    bool DetachCollision(Collision *f_col);
+
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool SetSceneLight(Scene *f_scene, Light *f_light);
+
     bool AttachDrawableToShader(Shader *f_shader, Drawable *f_drawable, const std::string &f_uniform);
-    void DettachDrawableFromShader(Shader *f_shader, Drawable *f_drawable);
+    void DetachDrawableFromShader(Shader *f_shader, Drawable *f_drawable);
 protected:
     explicit InheritanceManager(Core *f_core);
     ~InheritanceManager();

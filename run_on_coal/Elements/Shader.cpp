@@ -55,6 +55,8 @@ ROC::Shader::Shader()
     m_timeUniformValue = 0.f;
     m_colorUniformValue = glm::vec4(0.f);
 
+    m_uniformMapEnd = m_uniformMap.end();
+
     m_bindPool = new Pool(31U);
     m_drawableCount = 0U;
 }
@@ -550,7 +552,7 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
     }
     return l_result;
 }
-bool ROC::Shader::Dettach(Drawable *f_drawable)
+bool ROC::Shader::Detach(Drawable *f_drawable)
 {
     bool l_result = false;
     for(unsigned int i = 0U; i < m_drawableCount; i++)

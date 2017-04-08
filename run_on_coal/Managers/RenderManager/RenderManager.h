@@ -74,7 +74,7 @@ protected:
 
     void RestoreActiveShader(Shader *f_shader);
     bool AttachToShader(Shader *f_shader, Drawable *f_element, const std::string &f_uniform);
-    void DettachFromShader(Shader *f_shader, Drawable *f_element);
+    void DetachFromShader(Shader *f_shader, Drawable *f_element);
 
     void ResetCallsReducing();
 

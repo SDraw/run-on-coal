@@ -37,7 +37,7 @@ public:
     Font* CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
     File* CreateFile_(const std::string &f_path);
     File* OpenFile(const std::string &f_path, bool f_ro);
-    Collision* CreateCollision(int f_type, glm::vec3 &f_size);
+    Collision* CreateCollision(int f_type, glm::vec3 &f_size, float f_mass);
 
     void DestroyElement(Element *f_element);
 protected:

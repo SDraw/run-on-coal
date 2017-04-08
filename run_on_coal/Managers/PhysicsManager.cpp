@@ -88,48 +88,20 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
     std::memcpy(&f_grav, m_dynamicWorld->getGravity().m_floats, sizeof(glm::vec3));
 }
 
-bool ROC::PhysicsManager::SetModelCollision(Model *f_model, int f_type, float f_mass, const glm::vec3 &f_dim)
+void ROC::PhysicsManager::SetCollisionScale(Collision *f_col, const glm::vec3 &f_scale)
 {
-    bool l_result = false;
-    if(!f_model->HasCollision())
+    btRigidBody *l_body = f_col->GetRigidBody();
+    if(l_body)
     {
-        if(!f_model->HasSkeletonStaticBoneCollision() && !f_model->HasSkeletonDynamicBoneCollision())
-        {
-            if(f_model->SetCollision(f_type, f_mass, f_dim))
-            {
-                f_model->GetRigidBody()->setUserPointer(f_model);
-                m_dynamicWorld->addRigidBody(f_model->GetRigidBody());
-                l_result = true;
-            }
-        }
+        m_dynamicWorld->removeRigidBody(l_body);
+        f_col->SetScale(f_scale);
+        m_dynamicWorld->addRigidBody(l_body);
     }
-    return l_result;
-}
-bool ROC::PhysicsManager::RemoveModelCollision(Model *f_model)
-{
-    bool l_result = false;
-    if(f_model->HasCollision())
-    {
-        m_dynamicWorld->removeRigidBody(f_model->GetRigidBody());
-        l_result = f_model->RemoveCollision();
-    }
-    return l_result;
-}
-bool ROC::PhysicsManager::SetModelCollisionScale(Model *f_model, const glm::vec3 &f_scale)
-{
-    bool l_result = false;
-    if(f_model->HasCollision())
-    {
-        m_dynamicWorld->removeRigidBody(f_model->GetRigidBody());
-        l_result = f_model->SetCollisionScale(f_scale);
-        m_dynamicWorld->addRigidBody(f_model->GetRigidBody());
-    }
-    return l_result;
 }
 bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
 {
     std::vector<btRigidBody*> l_bodies1, l_bodies2;
-    if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetRigidBody());
+    if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetCollision()->GetRigidBody());
     else
     {
         if(f_model1->HasSkeleton())
@@ -147,7 +119,7 @@ bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, 
             }
         }
     }
-    if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetRigidBody());
+    if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetCollision()->GetRigidBody());
     else
     {
         if(f_model2->HasSkeleton())
@@ -207,7 +179,6 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
 }
 void ROC::PhysicsManager::RemoveModel(Model *f_model)
 {
-    if(f_model->HasCollision()) RemoveModelCollision(f_model);
     if(f_model->HasSkeleton())
     {
         for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef()) m_dynamicWorld->removeRigidBody(iter->m_rigidBody);

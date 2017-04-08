@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
+#include "Managers/InheritanceManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
+#include "Managers/PhysicsManager.h"
 #include "Elements/Collision.h"
+#include "Elements/Model/Model.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Collision.h"
 #include "Utils/Utils.h"
@@ -21,16 +24,18 @@ const std::vector<std::string> g_collisionTypesTable
 int collisionCreate(lua_State *f_vm)
 {
     std::string l_typeString;
+    float l_mass = 1.f;
     glm::vec3 l_size(1.f);
     ArgReader argStream(f_vm);
     argStream.ReadText(l_typeString);
+    argStream.ReadNextNumber(l_mass);
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
         int l_type = Utils::ReadEnumVector(g_collisionTypesTable, l_typeString);
         if(l_type != -1)
         {
-            Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(l_type, l_size);
+            Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(l_type, l_size, l_mass);
             l_col ? argStream.PushPointer(l_col) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
@@ -126,6 +131,235 @@ int collisionGetRotation(lua_State *f_vm)
             argStream.PushNumber(l_vRot.y);
             argStream.PushNumber(l_vRot.z);
         }
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int collisionSetScale(lua_State *f_vm)
+{
+    Collision *l_col;
+    glm::vec3 l_scale;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_scale[i]);
+    if(!argStream.HasErrors())
+    {
+        LuaManager::GetCore()->GetPhysicsManager()->SetCollisionScale(l_col,l_scale);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionGetScale(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        glm::vec3 l_scale;
+        l_col->GetScale(l_scale);
+        argStream.PushNumber(l_scale.x);
+        argStream.PushNumber(l_scale.y);
+        argStream.PushNumber(l_scale.z);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int collisionGetMass(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        float l_mass = l_col->GetMass();
+        argStream.PushNumber(l_mass);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int collisionSetVelocity(lua_State *f_vm)
+{
+    Collision *l_col;
+    glm::vec3 l_velocity;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_velocity[i]);
+    if(!argStream.HasErrors())
+    {
+        l_col->SetVelocity(l_velocity);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionGetVelocity(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        glm::vec3 l_velocity;
+        l_col->GetVelocity(l_velocity);
+        argStream.PushNumber(l_velocity.x);
+        argStream.PushNumber(l_velocity.y);
+        argStream.PushNumber(l_velocity.z);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int collisionSetAngularVelocity(lua_State *f_vm)
+{
+    Collision *l_col;
+    glm::vec3 l_angularVelocity;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_angularVelocity[i]);
+    if(!argStream.HasErrors())
+    {
+        l_col->SetAngularVelocity(l_angularVelocity);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionGetAngularVelocity(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        glm::vec3 l_angularVelocity;
+        l_col->GetAngularVelocity(l_angularVelocity);
+        argStream.PushNumber(l_angularVelocity.x);
+        argStream.PushNumber(l_angularVelocity.y);
+        argStream.PushNumber(l_angularVelocity.z);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionSetFriction(lua_State *f_vm)
+{
+    Collision *l_col;
+    float l_friction;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    argStream.ReadNumber(l_friction);
+    if(!argStream.HasErrors())
+    {
+        l_col->SetFriction(l_friction);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionGetFriction(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        float l_friction = l_col->GetFriction();
+        argStream.PushNumber(l_friction);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionSetLinearFactor(lua_State *f_vm)
+{
+    Collision *l_col;
+    glm::vec3 l_linearFactor;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_linearFactor[i]);
+    if(!argStream.HasErrors())
+    {
+        l_col->SetLinearFactor(l_linearFactor);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionGetLinearFactor(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        glm::vec3 l_linearFactor;
+        l_col->GetLinearFactor(l_linearFactor);
+        argStream.PushNumber(l_linearFactor.x);
+        argStream.PushNumber(l_linearFactor.y);
+        argStream.PushNumber(l_linearFactor.z);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionSetAngularFactor(lua_State *f_vm)
+{
+    Collision *l_col;
+    glm::vec3 l_angularFactor;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_angularFactor[i]);
+    if(!argStream.HasErrors())
+    {
+        l_col->SetAngularFactor(l_angularFactor);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionGetAngularFactor(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        glm::vec3 l_angularFactor;
+        l_col->GetAngularFactor(l_angularFactor);
+        argStream.PushNumber(l_angularFactor.x);
+        argStream.PushNumber(l_angularFactor.y);
+        argStream.PushNumber(l_angularFactor.z);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int collisionAttach(lua_State *f_vm)
+{
+    Collision *l_col;
+    Model *l_model;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    argStream.ReadElement(l_model);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachCollisionToModel(l_col, l_model);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionDetach(lua_State *f_vm)
+{
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->DetachCollision(l_col);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

@@ -288,10 +288,10 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     return l_file;
 }
 
-ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_size)
+ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_size, float f_mass)
 {
     Collision *l_col = new Collision();
-    if(l_col->Create(f_type, f_size))
+    if(l_col->Create(f_type, f_size, f_mass))
     {
         m_core->GetMemoryManager()->AddMemoryPointer(l_col);
         m_core->GetPhysicsManager()->AddCollision(l_col);
@@ -313,7 +313,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
             m_core->GetRenderManager()->RemoveAsActiveScene(dynamic_cast<Scene*>(f_element));
             m_core->GetInheritManager()->RemoveParentRelation(f_element);
         } break;
-        case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement : case Element::ElementType::TextureElement:
+        case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::TextureElement:
             m_core->GetInheritManager()->RemoveChildRelation(f_element);
             break;
         case Element::ElementType::AnimationElement: case Element::ElementType::GeometryElement:
@@ -333,6 +333,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
         } break;
         case Element::ElementType::CollisionElement:
             m_core->GetPhysicsManager()->RemoveCollision(dynamic_cast<Collision*>(f_element));
+            m_core->GetInheritManager()->RemoveChildRelation(f_element);
             break;
     }
     m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
