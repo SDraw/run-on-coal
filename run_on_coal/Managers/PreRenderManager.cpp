@@ -97,15 +97,15 @@ void ROC::PreRenderManager::DoPulse_S1()
     while(!m_nodeStack.empty())
     {
         TreeNode *l_current = m_nodeStack.back();
+        Model *l_model = l_current->m_model;
         m_nodeStack.pop_back();
         m_nodeStack.insert(m_nodeStack.end(), l_current->m_children.rbegin(), l_current->m_children.rend());
-        if(l_current->m_model->HasCollision() && l_physicsState) continue;
 
-        l_current->m_model->UpdateMatrix();
-        if(l_current->m_model->HasSkeleton())
+        if(!l_model->HasCollision()) l_model->UpdateMatrix();
+        if(l_model->HasSkeleton())
         {
-            l_current->m_model->UpdateAnimation();
-            l_current->m_model->GetSkeleton()->UpdateCollision_S1(l_current->m_model->GetMatrixRef(), l_physicsState);
+            if(l_model->HasAnimation()) l_model->UpdateAnimation();
+            l_model->GetSkeleton()->UpdateCollision_S1(l_model->GetMatrixRef(), l_physicsState);
         }
     }
 }
@@ -117,9 +117,11 @@ void ROC::PreRenderManager::DoPulse_S2()
     while(!m_nodeStack.empty())
     {
         TreeNode *l_current = m_nodeStack.back();
+        Model *l_model = l_current->m_model;
         m_nodeStack.pop_back();
         m_nodeStack.insert(m_nodeStack.end(), l_current->m_children.rbegin(), l_current->m_children.rend());
-        l_current->m_model->HasCollision() ? l_current->m_model->UpdateCollision() : l_current->m_model->UpdateMatrix();
-        if(l_current->m_model->HasSkeleton()) l_current->m_model->GetSkeleton()->UpdateCollision_S2(l_current->m_model->GetMatrixRef(), l_physicsState);
+
+        l_model->HasCollision() ? l_model->UpdateCollision() : l_model->UpdateMatrix();
+        if(l_model->HasSkeleton()) l_model->GetSkeleton()->UpdateCollision_S2(l_model->GetMatrixRef(), l_physicsState);
     }
 }

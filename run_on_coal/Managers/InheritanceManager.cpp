@@ -191,7 +191,7 @@ bool ROC::InheritanceManager::DetachModel(Model *f_model)
 bool ROC::InheritanceManager::AttachCollisionToModel(Collision *f_col, Model *f_model)
 {
     bool l_result = false;
-    if(!f_col->GetParentModel() && !f_model->HasCollision() && !f_model->GetParent() && !f_model->HasSkeletonStaticBoneCollision() && !f_model->HasSkeletonDynamicBoneCollision())
+    if(!f_col->GetParentModel() && !f_model->HasCollision() && !f_model->GetParent())
     {
         f_col->SetParentModel(f_model);
         f_model->SetCollision(f_col);

@@ -39,6 +39,7 @@ class Model : public Element
     float m_animationSpeed;
 
     Skeleton *m_skeleton;
+
     Collision *m_collision;
 
     void UpdateSkeleton();
@@ -58,6 +59,7 @@ public:
 
     inline Model* GetParent() { return m_parent; }
 
+    inline bool HasAnimation() const { return (m_animation != NULL); }
     inline Animation* GetAnimation() { return m_animation; }
     bool PlayAnimation();
     bool PauseAnimation();
@@ -68,8 +70,6 @@ public:
     float GetAnimationProgress() const;
 
     inline bool HasSkeleton() const { return (m_skeleton != NULL); }
-    bool HasSkeletonStaticBoneCollision() const;
-    bool HasSkeletonDynamicBoneCollision() const;
 
     inline bool HasCollision() const { return (m_collision != NULL); }
     inline Collision* GetCollision() { return m_collision; }
@@ -93,7 +93,7 @@ protected:
 
     inline Skeleton* GetSkeleton() { return m_skeleton; }
 
-    inline void SetCollision(Collision *f_col) { m_collision = f_col; };
+    void SetCollision(Collision *f_col);
     void UpdateCollision();
 
     friend class ElementManager;

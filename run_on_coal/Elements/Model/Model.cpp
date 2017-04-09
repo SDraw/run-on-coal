@@ -260,15 +260,35 @@ void ROC::Model::UpdateSkeleton()
     if(m_animation) m_animation->GetData(m_animCurrentTick, m_skeleton->GetBonesVectorRef());
     m_skeleton->Update();
 }
-bool ROC::Model::HasSkeletonStaticBoneCollision() const
-{
-    return (m_skeleton ? m_skeleton->HasStaticBoneCollision() : false);
-}
-bool ROC::Model::HasSkeletonDynamicBoneCollision() const
-{
-    return (m_skeleton ? m_skeleton->HasDynamicBoneCollision() : false);
-}
 
+void ROC::Model::SetCollision(Collision *f_col)
+{
+    if(m_skeleton)
+    {
+        btRigidBody *l_body = (f_col ? f_col->GetRigidBody() : m_collision->GetRigidBody());
+        bool l_collisionIgnoring = (f_col != NULL);
+        if(m_skeleton->HasStaticBoneCollision())
+        {
+            for(auto iter : m_skeleton->GetCollisionVectorRef())
+            {
+                l_body->setIgnoreCollisionCheck(iter->m_rigidBody, l_collisionIgnoring);
+                iter->m_rigidBody->setIgnoreCollisionCheck(l_body, l_collisionIgnoring);
+            }
+        }
+        if(m_skeleton->HasDynamicBoneCollision())
+        {
+            for(auto iter : m_skeleton->GetJointVectorRef())
+            {
+                for(auto iter1 : iter->m_partsVector)
+                {
+                    l_body->setIgnoreCollisionCheck(iter1->m_rigidBody, l_collisionIgnoring);
+                    iter1->m_rigidBody->setIgnoreCollisionCheck(l_body, l_collisionIgnoring);
+                }
+            }
+        }
+    }
+    m_collision = f_col;
+}
 void ROC::Model::UpdateCollision()
 {
     if(m_collision)
@@ -277,7 +297,7 @@ void ROC::Model::UpdateCollision()
         if(m_rebuilded)
         {
             m_collision->GetTransform(m_localMatrix, m_position, m_rotation);
-            if(std::memcmp(&m_scale,&g_DefaultScale,sizeof(glm::vec3)) != 0) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
+            if(std::memcmp(&m_scale, &g_DefaultScale, sizeof(glm::vec3)) != 0) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
             std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         }
     }
