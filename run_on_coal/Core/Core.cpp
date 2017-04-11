@@ -18,6 +18,11 @@
 
 #define CORE_DEFAULT_SCIPTS_PATH "scripts/"
 
+extern const glm::mat4 g_IdentityMatrix(1.f);
+extern const glm::vec3 g_DefaultPosition(0.f);
+extern const glm::quat g_DefaultRotation(1.f, 0.f, 0.f, 0.f);
+extern const glm::vec3 g_DefaultScale(1.f, 1.f, 1.f);
+
 ROC::Core* ROC::Core::m_instance = NULL;
 
 ROC::Core::Core()

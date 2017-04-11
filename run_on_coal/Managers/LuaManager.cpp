@@ -55,7 +55,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "modelCreate", Lua::modelCreate);
     lua_register(m_vm, "modelDestroy", Lua::modelDestroy);
     lua_register(m_vm, "modelGetGeometry", Lua::modelGetGeometry);
-    lua_register(m_vm, "modelGetType", Lua::modelGetType);
     lua_register(m_vm, "modelSetPosition", Lua::modelSetPosition);
     lua_register(m_vm, "modelGetPosition", Lua::modelGetPosition);
     lua_register(m_vm, "modelSetRotation", Lua::modelSetRotation);
@@ -277,7 +276,7 @@ ROC::LuaManager::~LuaManager()
 
 bool ROC::LuaManager::OpenFile(const std::string &f_path)
 {
-    int error = luaL_loadfile(m_vm, f_path.c_str()) || lua_pcall(m_vm, 0, 0, 0);
+    int error = (luaL_loadfile(m_vm, f_path.c_str()) || lua_pcall(m_vm, 0, 0, 0));
     if(error)
     {
         std::string l_log(lua_tostring(m_vm, -1));

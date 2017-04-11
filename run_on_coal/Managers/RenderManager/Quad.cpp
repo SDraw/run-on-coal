@@ -39,11 +39,13 @@ void ROC::Quad::SetProportions(glm::vec2 &f_size, bool f_bind)
         glBindVertexArray(m_VAO);
         glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
     }
-    if(!std::memcmp(&m_size, &f_size, sizeof(glm::vec2))) return;
-    std::memcpy(&m_size, &f_size, sizeof(glm::vec2));
-    m_point[0].x = m_point[1].x = m_point[3].x = -m_size.x / 2.f;
-    m_point[0].y = m_point[3].y = m_point[5].y = m_size.y / 2.f;
-    m_point[2].x = m_point[4].x = m_point[5].x = m_size.x / 2.f;
-    m_point[1].y = m_point[2].y = m_point[4].y = -m_size.y / 2.f;
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(m_point), m_point);
+    if(m_size != f_size)
+    {
+        std::memcpy(&m_size, &f_size, sizeof(glm::vec2));
+        m_point[0].x = m_point[1].x = m_point[3].x = -m_size.x / 2.f;
+        m_point[0].y = m_point[3].y = m_point[5].y = m_size.y / 2.f;
+        m_point[2].x = m_point[4].x = m_point[5].x = m_size.x / 2.f;
+        m_point[1].y = m_point[2].y = m_point[4].y = -m_size.y / 2.f;
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(m_point), m_point);
+    }
 }

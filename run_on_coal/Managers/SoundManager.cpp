@@ -14,7 +14,7 @@ ROC::SoundManager::~SoundManager()
 
 void ROC::SoundManager::SetListenerPosition(const glm::vec3 &f_pos)
 {
-    if(std::memcmp(&f_pos, &m_listenerPosition, sizeof(glm::vec3)) != 0)
+    if(m_listenerPosition != f_pos)
     {
         std::memcpy(&m_listenerPosition, &f_pos, sizeof(glm::vec3));
         sf::Listener::setPosition(m_listenerPosition.x, m_listenerPosition.y, m_listenerPosition.z);
@@ -23,7 +23,7 @@ void ROC::SoundManager::SetListenerPosition(const glm::vec3 &f_pos)
 
 void ROC::SoundManager::SetListenerDirection(const glm::vec3 &f_dir)
 {
-    if(std::memcmp(&f_dir, &m_listenerDirection, sizeof(glm::vec3)) != 0)
+    if(m_listenerDirection != f_dir)
     {
         std::memcpy(&m_listenerDirection, &f_dir, sizeof(glm::vec3));
         sf::Listener::setDirection(m_listenerDirection.x, m_listenerDirection.y, m_listenerDirection.z);
@@ -32,7 +32,7 @@ void ROC::SoundManager::SetListenerDirection(const glm::vec3 &f_dir)
 
 void ROC::SoundManager::SetListenerUp(const glm::vec3 &f_up)
 {
-    if(std::memcmp(&f_up, &m_listenerUp, sizeof(glm::vec3)) != 0)
+    if(m_listenerUp != f_up)
     {
         std::memcpy(&m_listenerUp, &f_up, sizeof(glm::vec3));
         sf::Listener::setUpVector(m_listenerUp.x, m_listenerUp.y, m_listenerUp.z);

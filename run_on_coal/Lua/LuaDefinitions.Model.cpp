@@ -19,10 +19,6 @@ namespace ROC
 namespace Lua
 {
 
-const std::vector<std::string> g_modelTypesTable
-{
-    "none", "static", "animated"
-};
 const std::vector<std::string> g_modelAnimationPropertiesTable
 {
     "speed", "progress"
@@ -65,14 +61,6 @@ int modelGetGeometry(lua_State *f_vm)
         l_geometry ? argStream.PushPointer(l_geometry) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int modelGetType(lua_State *f_vm)
-{
-    Model *l_model;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_model);
-    !argStream.HasErrors() ? argStream.PushText(g_modelTypesTable[l_model->GetType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int modelSetPosition(lua_State *f_vm)

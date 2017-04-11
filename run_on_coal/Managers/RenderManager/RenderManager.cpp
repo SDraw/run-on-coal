@@ -19,7 +19,7 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/Pool.h"
 
-const glm::vec3 g_EmptyVec3(0.f);
+extern const glm::vec3 g_DefaultPosition; // Same as previous g_EmptyVec3(0.f)
 const glm::vec4 g_EmptyVec4(0.f);
 const glm::mat4 g_EmptyMat4(0.f);
 
@@ -108,12 +108,12 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
                 if(l_camera) l_camera->UpdateMatrices();
                 m_activeShader->SetProjectionUniformValue(l_camera ? l_camera->GetProjectionMatrixRef() : g_EmptyMat4);
                 m_activeShader->SetViewUniformValue(l_camera ? l_camera->GetViewMatrixRef() : g_EmptyMat4);
-                m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPositionRef() : g_EmptyVec3);
-                m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirectionRef() : g_EmptyVec3);
+                m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPositionRef() : g_DefaultPosition);
+                m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirectionRef() : g_DefaultPosition);
 
                 Light *l_light = m_activeScene->GetLight();
                 m_activeShader->SetLightColorUniformValue(l_light ? l_light->GetColorRef() : g_EmptyVec4);
-                m_activeShader->SetLightDirectionUniformValue(l_light ? l_light->GetDirectionRef() : g_EmptyVec3);
+                m_activeShader->SetLightDirectionUniformValue(l_light ? l_light->GetDirectionRef() : g_DefaultPosition);
                 m_activeShader->SetLightParamUniformValue(l_light ? l_light->GetParamsRef() : g_EmptyVec4);
             }
         }

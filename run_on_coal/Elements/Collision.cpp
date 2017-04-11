@@ -2,7 +2,7 @@
 #include "Elements/Collision.h"
 #include "Elements/Model/Model.h"
 
-const glm::vec3 g_DefaultScale(1.f, 1.f, 1.f);
+extern const glm::vec3 g_DefaultScale;
 
 ROC::Collision::Collision()
 {
@@ -111,7 +111,7 @@ void ROC::Collision::SetScale(const glm::vec3 &f_val)
 {
     if(m_rigidBody)
     {
-        if(std::memcmp(&m_scale, &f_val, sizeof(glm::vec3)) != 0)
+        if(m_scale != f_val)
         {
             std::memcpy(&m_scale, &f_val, sizeof(glm::vec3));
             m_rigidBody->getCollisionShape()->setLocalScaling(btVector3(m_scale.x, m_scale.y, m_scale.z));

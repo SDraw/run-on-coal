@@ -10,20 +10,20 @@
 #include "Utils/SystemTick.h"
 #include "Utils/Utils.h"
 
-const glm::mat4 g_IdentityMatrix(1.f);
-const glm::vec3 g_DefaultPosition(0.f);
-const glm::quat g_DefaultRotation(1.f, 0.f, 0.f, 0.f);
-const glm::vec3 g_DefaultScale(1.f, 1.f, 1.f);
+extern const glm::mat4 g_IdentityMatrix;
+extern const glm::vec3 g_DefaultPosition;
+extern const glm::quat g_DefaultRotation;
+extern const glm::vec3 g_DefaultScale;
 
 ROC::Model::Model(Geometry *f_geometry)
 {
     m_elementType = ElementType::ModelElement;
 
-    m_position = glm::vec3(0.f);
-    m_rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
-    m_scale = glm::vec3(1.f);
-    m_localMatrix = glm::mat4(1.f);
-    m_matrix = glm::mat4(1.f);
+    m_position = g_DefaultPosition;
+    m_rotation = g_DefaultRotation;
+    m_scale = g_DefaultScale;
+    m_localMatrix = g_IdentityMatrix;
+    m_matrix = g_IdentityMatrix;
     m_boundSphere = 0.f;
     m_rebuildMatrix = false;
     m_rebuilded = false;
@@ -59,7 +59,7 @@ ROC::Model::~Model()
 
 void ROC::Model::SetPosition(const glm::vec3 &f_pos)
 {
-    if(std::memcmp(&m_position, &f_pos, sizeof(glm::vec3)) != 0)
+    if(m_position != f_pos)
     {
         std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
         if(m_collision) m_collision->SetPosition(f_pos);
@@ -83,7 +83,7 @@ void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
 
 void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
-    if(std::memcmp(&m_rotation, &f_rot, sizeof(glm::quat)) != 0)
+    if(m_rotation != f_rot)
     {
         std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
         if(m_collision) m_collision->SetRotation(f_rot);
@@ -111,7 +111,7 @@ void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)
 
 void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
-    if(!m_collision && (std::memcmp(&m_scale, &f_scl, sizeof(glm::vec3)) != 0))
+    if(!m_collision && (m_scale != f_scl))
     {
         std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
         m_boundSphere = m_geometry->GetBoundSphere()*glm::compMax(m_scale);
@@ -135,10 +135,10 @@ void ROC::Model::UpdateMatrix()
     m_rebuilded = false;
     if(m_rebuildMatrix)
     {
-        if(std::memcmp(&m_position, &g_DefaultPosition, sizeof(glm::vec3)) != 0) m_localMatrix = glm::translate(g_IdentityMatrix, m_position);
+        if(m_position != g_DefaultPosition) m_localMatrix = glm::translate(g_IdentityMatrix, m_position);
         else std::memcpy(&m_localMatrix, &g_IdentityMatrix, sizeof(glm::mat4));
-        if(std::memcmp(&m_rotation, &g_DefaultRotation, sizeof(glm::quat)) != 0) m_localMatrix *= glm::mat4_cast(m_rotation);
-        if(std::memcmp(&m_scale, &g_DefaultScale, sizeof(glm::vec3)) != 0) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
+        if(m_rotation != g_DefaultRotation) m_localMatrix *= glm::mat4_cast(m_rotation);
+        if(m_scale != g_DefaultScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
         m_rebuildMatrix = false;
         m_rebuilded = true;
     }
@@ -297,7 +297,7 @@ void ROC::Model::UpdateCollision()
         if(m_rebuilded)
         {
             m_collision->GetTransform(m_localMatrix, m_position, m_rotation);
-            if(std::memcmp(&m_scale, &g_DefaultScale, sizeof(glm::vec3)) != 0) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
+            if(m_scale != g_DefaultScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
             std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         }
     }

@@ -8,7 +8,6 @@ namespace Lua
 int modelCreate(lua_State *f_vm);
 int modelDestroy(lua_State *f_vm);
 int modelGetGeometry(lua_State *f_vm);
-int modelGetType(lua_State *f_vm);
 int modelSetPosition(lua_State *f_vm);
 int modelGetPosition(lua_State *f_vm);
 int modelSetRotation(lua_State *f_vm);

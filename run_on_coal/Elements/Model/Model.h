@@ -73,8 +73,6 @@ public:
 
     inline bool HasCollision() const { return (m_collision != NULL); }
     inline Collision* GetCollision() { return m_collision; }
-
-    inline int GetType() const { return (m_geometry ? (m_skeleton ? MODEL_TYPE_ANIMATED : MODEL_TYPE_STATIC) : MODEL_TYPE_NONE); }
 protected:
     explicit Model(Geometry *f_geometry);
     ~Model();
