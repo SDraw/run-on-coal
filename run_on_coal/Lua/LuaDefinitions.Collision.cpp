@@ -336,6 +336,58 @@ int collisionGetAngularFactor(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
+int collisionApplyForce(lua_State *f_vm)
+{
+    Collision *l_collision;
+    glm::vec3 l_force;
+    glm::vec3 l_relPos(0.f);
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_collision);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_force[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_relPos[i]);
+    if(!argStream.HasErrors())
+    {
+        (glm::length(l_relPos) == 0.f) ? l_collision->ApplyCentralForce(l_force) : l_collision->ApplyForce(l_force, l_relPos);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionApplyImpulse(lua_State *f_vm)
+{
+    Collision *l_collision;
+    glm::vec3 l_impulse;
+    glm::vec3 l_relPos(0.f);
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_collision);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_impulse[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_relPos[i]);
+    if(!argStream.HasErrors())
+    {
+        (glm::length(l_relPos) == 0.f) ? l_collision->ApplyCentralImpulse(l_impulse) : l_collision->ApplyImpulse(l_impulse, l_relPos);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionApplyTorque(lua_State *f_vm)
+{
+    Collision *l_collision;
+    glm::vec3 l_torque;
+    bool l_impulse = false;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_collision);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_torque[i]);
+    argStream.ReadNextBoolean(l_impulse);
+    if(!argStream.HasErrors())
+    {
+        l_collision->ApplyTorque(l_torque, l_impulse);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
 int collisionAttach(lua_State *f_vm)
 {
     Collision *l_col;

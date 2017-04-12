@@ -188,6 +188,43 @@ void ROC::Collision::SetFriction(float f_val)
     }
 }
 
+void ROC::Collision::ApplyForce(const glm::vec3 &f_force, const glm::vec3 &f_rp)
+{
+    if(m_rigidBody)
+    {
+        btVector3 l_force(f_force.x, f_force.y, f_force.z);
+        btVector3 l_relPos(f_rp.x, f_rp.y, f_rp.z);
+        m_rigidBody->applyForce(l_force, l_relPos);
+    }
+}
+void ROC::Collision::ApplyCentralForce(const glm::vec3 &f_force)
+{
+    if(m_rigidBody) m_rigidBody->applyCentralForce(btVector3(f_force.x, f_force.y, f_force.z));
+}
+
+void ROC::Collision::ApplyImpulse(const glm::vec3 &f_impulse, const glm::vec3 &f_rp)
+{
+    if(m_rigidBody)
+    {
+        btVector3 l_impulse(f_impulse.x, f_impulse.y, f_impulse.z);
+        btVector3 l_relPos(f_rp.x, f_rp.y, f_rp.z);
+        m_rigidBody->applyImpulse(l_impulse, l_relPos);
+    }
+}
+void ROC::Collision::ApplyCentralImpulse(const glm::vec3 &f_impulse)
+{
+    if(m_rigidBody) m_rigidBody->applyCentralImpulse(btVector3(f_impulse.x, f_impulse.y, f_impulse.z));
+}
+
+void ROC::Collision::ApplyTorque(const glm::vec3 &f_torque, bool f_impulse)
+{
+    if(m_rigidBody)
+    {
+        btVector3 l_torque(f_torque.x, f_torque.y, f_torque.z);
+        f_impulse ? m_rigidBody->applyTorqueImpulse(l_torque) : m_rigidBody->applyTorque(l_torque);
+    }
+}
+
 void ROC::Collision::GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat &f_rot)
 {
     if(m_rigidBody)

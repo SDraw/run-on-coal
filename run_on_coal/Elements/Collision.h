@@ -41,6 +41,14 @@ public:
 
     void SetFriction(float f_val);
     inline float GetFriction() const { return (m_rigidBody ? m_rigidBody->getFriction() : -1.f); }
+
+    void ApplyForce(const glm::vec3 &f_force, const glm::vec3 &f_rp);
+    void ApplyCentralForce(const glm::vec3 &f_force);
+
+    void ApplyImpulse(const glm::vec3 &f_impulse, const glm::vec3 &f_rp);
+    void ApplyCentralImpulse(const glm::vec3 &f_impulse);
+
+    void ApplyTorque(const glm::vec3 &f_torque, bool f_impulse);
 protected:
     Collision();
     ~Collision();

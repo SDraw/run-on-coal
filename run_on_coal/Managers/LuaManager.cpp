@@ -200,6 +200,9 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "collisionGetLinearFactor", Lua::collisionGetLinearFactor);
     lua_register(m_vm, "collisionSetAngularFactor", Lua::collisionSetAngularFactor);
     lua_register(m_vm, "collisionGetAngularFactor", Lua::collisionGetAngularFactor);
+    lua_register(m_vm, "collisionApplyForce", Lua::collisionApplyForce);
+    lua_register(m_vm, "collisionApplyImpulse", Lua::collisionApplyImpulse);
+    lua_register(m_vm, "collisionApplyTorque", Lua::collisionApplyTorque);
     lua_register(m_vm, "collisionAttach", Lua::collisionAttach);
     lua_register(m_vm, "collisionDetach", Lua::collisionDetach);
 
