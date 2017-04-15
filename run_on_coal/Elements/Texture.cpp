@@ -16,7 +16,7 @@ ROC::Texture::~Texture()
 
 bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, bool f_compress)
 {
-    if(m_type == TEXTURE_TYPE_NONE)
+    if(m_texture == 0U)
     {
         sf::Image l_image;
         m_type = f_type;
@@ -38,11 +38,11 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
         }
         else GenerateBrokenTexture();
     }
-    return (m_type != TEXTURE_TYPE_NONE);
+    return (m_texture != 0U);
 }
 bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
 {
-    if(m_type == TEXTURE_TYPE_NONE && f_path.size() == 6U)
+    if(m_texture == 0U && f_path.size() == 6U)
     {
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
@@ -70,7 +70,7 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
             }
         }
     }
-    return (m_type != TEXTURE_TYPE_NONE);
+    return (m_texture != 0U);
 }
 void ROC::Texture::GenerateBrokenTexture()
 {
@@ -97,7 +97,7 @@ void ROC::Texture::GenerateBrokenTexture()
 
 void ROC::Texture::Bind()
 {
-    if(m_type != TEXTURE_TYPE_NONE)
+    if(m_texture != 0U)
     {
         switch(m_type)
         {

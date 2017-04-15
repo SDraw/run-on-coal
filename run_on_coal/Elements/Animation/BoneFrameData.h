@@ -13,7 +13,7 @@ protected:
     ~BoneFrameData();
 
     // Returns true if data is different, false otherwise
-    inline bool Compare(BoneFrameData *f_data)
+    inline bool Compare(BoneFrameData *f_data) const
     {
         return (m_position == f_data->m_position || m_rotation == f_data->m_rotation || m_scale == f_data->m_scale);
     }

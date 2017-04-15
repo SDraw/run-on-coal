@@ -14,17 +14,11 @@ class Material
 {
     unsigned int m_verticesCount;
     GLuint m_vertexVBO;
-    bool m_bVertexVBO;
     GLuint m_uvVBO;
-    bool m_bUvVBO;
     GLuint m_normalVBO;
-    bool m_bNormalVBO;
     GLuint m_weightVBO;
-    bool m_bWeightVBO;
     GLuint m_indexVBO;
-    bool m_bIndexVBO;
     GLuint m_VAO;
-    bool m_bVAO;
 
     unsigned char m_type;
     glm::vec4 m_params;

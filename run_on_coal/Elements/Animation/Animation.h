@@ -25,7 +25,6 @@ class Animation : public Element
     BoneFrameData *m_tempFrameData;
     std::vector<Interval<animData>> m_searchResult;
 
-
     bool m_loaded;
 
     void Clean();

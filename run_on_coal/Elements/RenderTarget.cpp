@@ -7,9 +7,6 @@ ROC::RenderTarget::RenderTarget()
 
     m_type = RENDERTARGET_TYPE_NONE;
     m_filtering = RENDERTARGET_FILTER_NONE;
-    m_bTexture = false;
-    m_bRenderBuffer = false;
-    m_bFrameBuffer = false;
     m_frameBuffer = 0U;
     m_renderBuffer = 0U;
     m_texture = 0U;
@@ -27,11 +24,9 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
         btClamp(m_type,RENDERTARGET_TYPE_DEPTH, RENDERTARGET_TYPE_RGBAF);
         m_filtering = f_filter;
         btClamp(m_filtering, RENDERTARGET_FILTER_NEAREST, RENDERTARGET_FILTER_LINEAR);
-        m_bRenderBuffer = false;
 
         glGenFramebuffers(1, &m_frameBuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
-        m_bFrameBuffer = true;
 
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -58,7 +53,6 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
         }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST+m_filtering);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST+m_filtering);
-        m_bTexture = true;
 
         if(m_type > RENDERTARGET_TYPE_DEPTH)
         {
@@ -66,7 +60,6 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
             glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);
             glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, f_size.x, f_size.y);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_renderBuffer);
-            m_bRenderBuffer = true;
 
             glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + f_num, GL_TEXTURE_2D, m_texture, 0);
             glDrawBuffer(GL_COLOR_ATTACHMENT0 + f_num);
@@ -108,19 +101,19 @@ void ROC::RenderTarget::Clear()
 {
     m_type = RENDERTARGET_TYPE_NONE;
     m_filtering = RENDERTARGET_FILTER_NONE;
-    if(m_bTexture)
+    if(m_texture != 0U)
     {
         glDeleteTextures(1, &m_texture);
-        m_bTexture = false;
+        m_texture = 0U;
     }
-    if(m_bRenderBuffer)
+    if(m_renderBuffer != 0U)
     {
         glDeleteRenderbuffers(1, &m_renderBuffer);
-        m_bRenderBuffer = false;
+        m_renderBuffer = 0U;
     }
-    if(m_bFrameBuffer)
+    if(m_frameBuffer != 0U)
     {
         glDeleteFramebuffers(1, &m_frameBuffer);
-        m_bFrameBuffer = false;
+        m_frameBuffer = 0U;
     }
 }

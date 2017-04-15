@@ -19,10 +19,7 @@ class RenderTarget : public Drawable
     int m_filtering;
 
     GLuint m_frameBuffer;
-    bool m_bFrameBuffer;
     GLuint m_renderBuffer;
-    bool m_bRenderBuffer;
-    bool m_bTexture;
     GLuint m_texture;
 
     glm::ivec2 m_size;
