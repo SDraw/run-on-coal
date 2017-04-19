@@ -13,12 +13,11 @@
 #include "Lua/LuaDefinitions.Geometry.h"
 #include "Lua/LuaDefinitions.Model.h"
 #include "Lua/LuaDefinitions.Network.h"
-#include "Lua/LuaDefinitions.OpenGL.h"
 #include "Lua/LuaDefinitions.Physics.h"
 #include "Lua/LuaDefinitions.Rendering.h"
 #include "Lua/LuaDefinitions.RenderTarget.h"
 #include "Lua/LuaDefinitions.Scene.h"
-#include "Lua/LuaDefinitions.Sfml.h"
+#include "Lua/LuaDefinitions.Input.h"
 #include "Lua/LuaDefinitions.Shader.h"
 #include "Lua/LuaDefinitions.Sound.h"
 #include "Lua/LuaDefinitions.Texture.h"
@@ -210,25 +209,20 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "setActiveScene", Lua::setActiveScene);
     lua_register(m_vm, "setActiveShader", Lua::setActiveShader);
     lua_register(m_vm, "setRenderTarget", Lua::setRenderTarget);
+    lua_register(m_vm, "clearRenderArea", Lua::clearRenderArea);
+    lua_register(m_vm, "setClearColor", Lua::setClearColor);
+    lua_register(m_vm, "setRenderArea", Lua::setRenderArea);
+    lua_register(m_vm, "setPolygonMode", Lua::setPolygonMode);
 
     //Events
     lua_register(m_vm, "addEvent", Lua::addEvent);
     lua_register(m_vm, "setEventMute", Lua::setEventMute);
     lua_register(m_vm, "removeEvent", Lua::removeEvent);
 
-    //OpenGL
-    lua_register(m_vm, "oglClear", Lua::oglClear);
-    lua_register(m_vm, "oglClearColor", Lua::oglClearColor);
-    lua_register(m_vm, "oglViewport", Lua::oglViewport);
-    lua_register(m_vm, "oglPolygonMode", Lua::oglPolygonMode);
-
-    //Sfml
+    // User I/O
     lua_register(m_vm, "setCursorMode", Lua::setCursorMode);
     lua_register(m_vm, "setCursorPosition", Lua::setCursorPosition);
     lua_register(m_vm, "getCursorPosition", Lua::getCursorPosition);
-    lua_register(m_vm, "isKeyPressed", Lua::isKeyPressed);
-    lua_register(m_vm, "isMouseKeyPressed", Lua::isMouseKeyPressed);
-    lua_register(m_vm, "getTime", Lua::getTime);
     lua_register(m_vm, "getWindowPosition", Lua::getWindowPosition);
     lua_register(m_vm, "getWindowSize", Lua::getWindowSize);
     lua_register(m_vm, "setWindowVSync", Lua::setWindowVSync);
@@ -238,12 +232,14 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "setWindowIcon", Lua::setWindowIcon);
     lua_register(m_vm, "requestWindowFocus", Lua::requestWindowFocus);
     lua_register(m_vm, "getWindowFocus", Lua::getWindowFocus);
+    lua_register(m_vm, "closeWindow", Lua::closeWindow);
+    lua_register(m_vm, "isKeyPressed", Lua::isKeyPressed);
+    lua_register(m_vm, "isMouseKeyPressed", Lua::isMouseKeyPressed);
     lua_register(m_vm, "isJoypadConnected", Lua::isJoypadConnected);
     lua_register(m_vm, "joypadGetButtonCount", Lua::joypadGetButtonCount);
     lua_register(m_vm, "joypadGetButtonState", Lua::joypadGetButtonState);
     lua_register(m_vm, "joypadHasAxis", Lua::joypadHasAxis);
     lua_register(m_vm, "joypadGetAxisValue", Lua::joypadGetAxisValue);
-    lua_register(m_vm, "closeApplication", Lua::closeApp);
 
     //Bullet Physics
     lua_register(m_vm, "physicsSetEnabled", Lua::physicsSetEnabled);
@@ -261,6 +257,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //System
     lua_register(m_vm, "getTickCount", Lua::getTickCount);
+    lua_register(m_vm, "getTime", Lua::getTime);
 
     //Network
     lua_register(m_vm, "networkConnect", Lua::networkConnect);

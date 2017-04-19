@@ -4,6 +4,7 @@
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/LogManager.h"
+#include "Managers/SfmlManager.h"
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefinitions.Utils.h"
@@ -62,6 +63,12 @@ int getTickCount(lua_State *f_vm)
     lua_Integer l_tick = 0;
     l_tick = static_cast<lua_Integer>(GetTickCount());
     argStream.PushInteger(l_tick);
+    return argStream.GetReturnValue();
+}
+int getTime(lua_State *f_vm)
+{
+    ArgReader argStream(f_vm);
+    argStream.PushNumber(LuaManager::GetCore()->GetSfmlManager()->GetTime());
     return argStream.GetReturnValue();
 }
 

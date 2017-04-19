@@ -5,7 +5,7 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Managers/SfmlManager.h"
 #include "Lua/ArgReader.h"
-#include "Lua/LuaDefinitions.Sfml.h"
+#include "Lua/LuaDefinitions.Input.h"
 #include "Utils/Utils.h"
 
 namespace ROC
@@ -82,18 +82,11 @@ int getWindowSize(lua_State *f_vm)
     argStream.PushInteger(l_size.y);
     return argStream.GetReturnValue();
 }
-int closeApp(lua_State *f_vm)
+int closeWindow(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     LuaManager::GetCore()->GetSfmlManager()->CloseWindow();
     argStream.PushBoolean(true);
-    return argStream.GetReturnValue();
-}
-
-int getTime(lua_State *f_vm)
-{
-    ArgReader argStream(f_vm);
-    argStream.PushNumber(LuaManager::GetCore()->GetSfmlManager()->GetTime());
     return argStream.GetReturnValue();
 }
 

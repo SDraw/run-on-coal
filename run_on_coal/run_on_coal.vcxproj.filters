@@ -59,9 +59,6 @@
     <ClCompile Include="Lua\LuaDefinitions.Model.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.OpenGL.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.Physics.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
@@ -110,9 +107,6 @@
     </ClCompile>
     <ClCompile Include="Managers\SfmlManager.cpp">
       <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp">
-      <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="Utils\SystemTick.cpp">
       <Filter>Utils</Filter>
@@ -201,6 +195,9 @@
     <ClCompile Include="..\vendor\RectangleBinPack\Rect.cpp">
       <Filter>vendor\RectangleBinPack</Filter>
     </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Input.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -261,9 +258,6 @@
     <ClInclude Include="Lua\LuaDefinitions.Model.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.OpenGL.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Physics.h">
       <Filter>Lua</Filter>
     </ClInclude>
@@ -306,9 +300,6 @@
     </ClInclude>
     <ClInclude Include="Managers\SfmlManager.h">
       <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Sfml.h">
-      <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Utils\SystemTick.h">
       <Filter>Utils</Filter>
@@ -390,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="Elements\Drawable.h">
       <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Input.h">
+      <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

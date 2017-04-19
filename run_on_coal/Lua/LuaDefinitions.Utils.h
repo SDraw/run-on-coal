@@ -10,6 +10,7 @@ int logPrint(lua_State *f_vm);
 int isElement(lua_State *f_vm);
 int getElementType(lua_State *f_vm);
 int getTickCount(lua_State *f_vm);
+int getTime(lua_State *f_vm);
 
 }
 }

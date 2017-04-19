@@ -154,10 +154,9 @@
     <ClInclude Include="Lua\LuaDefinitions.Font.h" />
     <ClInclude Include="Lua\LuaDefinitions.Geometry.h" />
     <ClInclude Include="Lua\LuaDefinitions.Network.h" />
-    <ClInclude Include="Lua\LuaDefinitions.Sfml.h" />
+    <ClInclude Include="Lua\LuaDefinitions.Input.h" />
     <ClInclude Include="Lua\LuaDefinitions.Light.h" />
     <ClInclude Include="Lua\LuaDefinitions.Model.h" />
-    <ClInclude Include="Lua\LuaDefinitions.OpenGL.h" />
     <ClInclude Include="Lua\LuaDefinitions.Physics.h" />
     <ClInclude Include="Lua\LuaDefinitions.Rendering.h" />
     <ClInclude Include="Lua\LuaDefinitions.RenderTarget.h" />
@@ -232,10 +231,9 @@
     <ClCompile Include="Lua\LuaDefinitions.Font.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Geometry.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Network.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp" />
+    <ClCompile Include="Lua\LuaDefinitions.Input.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Light.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Model.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.OpenGL.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Physics.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Rendering.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.RenderTarget.cpp" />
