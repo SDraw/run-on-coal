@@ -111,7 +111,7 @@ void ROC::NetworkManager::DoPulse()
                 {
                     m_networkState = NetworkState::Disconnected;
                     m_argument->PushArgument(const_cast<std::string*>(&g_networkStateTable[1]));
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkStateChange, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
                     m_argument->Clear();
                 } break;
                 case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -120,7 +120,7 @@ void ROC::NetworkManager::DoPulse()
                     m_networkState = NetworkState::Connected;
                     m_networkInterface->SetOccasionalPing(true);
                     m_argument->PushArgument(const_cast<std::string*>(&g_networkStateTable[0]));
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkStateChange, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
                     m_argument->Clear();
                 } break;
                 case ID_ROC_DATA_PACKET:
@@ -134,7 +134,7 @@ void ROC::NetworkManager::DoPulse()
                     l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
 
                     m_argument->PushArgument(const_cast<std::string*>(&l_stringData));
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkDataRecieve, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
                     m_argument->Clear();
                 } break;
             }

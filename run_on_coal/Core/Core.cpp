@@ -99,7 +99,7 @@ ROC::Core* ROC::Core::Init()
         }
         delete l_meta;
 
-        m_instance->m_luaManager->GetEventManager()->CallEvent(ROC::EventType::AppStart, m_instance->m_argument);
+        m_instance->m_luaManager->GetEventManager()->CallEvent("onAppStart", m_instance->m_argument);
     }
     return m_instance;
 }
@@ -107,7 +107,7 @@ void ROC::Core::Terminate()
 {
     if(m_instance)
     {
-        m_instance->m_luaManager->GetEventManager()->CallEvent(ROC::EventType::AppStop, m_instance->m_argument);
+        m_instance->m_luaManager->GetEventManager()->CallEvent("onAppStop", m_instance->m_argument);
 
         delete m_instance;
         m_instance = NULL;

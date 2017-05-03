@@ -3,6 +3,7 @@
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 #include "Lua/ArgReader.h"
+#include "Lua/LuaArguments.h"
 #include "Lua/LuaDefinitions.Events.h"
 #include "Utils/Utils.h"
 
@@ -25,44 +26,29 @@ const std::vector<std::string> g_eventNamesTable
 int addEvent(lua_State *f_vm)
 {
     std::string l_event;
-    int l_func;
-    void *l_point;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_func, l_point);
     if(!argStream.HasErrors() && !l_event.empty())
     {
-        int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
-        if(l_enumValue != -1)
-        {
-            EventType l_eventEnum = static_cast<EventType>(l_enumValue);
-            bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->AddEvent(l_eventEnum, l_func, l_point);
-            argStream.PushBoolean(l_result);
-        }
-        else argStream.PushBoolean(false);
+        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->AddEvent(l_event);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int setEventMute(lua_State *f_vm)
+
+int addEventHandler(lua_State *f_vm)
 {
     std::string l_event;
-    void *l_point;
-    bool l_mute;
+    int l_funcRef;
+    void *l_funcPointer;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_point);
-    argStream.ReadBoolean(l_mute);
+    argStream.ReadFunction(l_funcRef, l_funcPointer);
     if(!argStream.HasErrors() && !l_event.empty())
     {
-        int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
-        if(l_enumValue != -1)
-        {
-            EventType l_eventEnum = static_cast<EventType>(l_enumValue);
-            bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->SetEventMute(l_eventEnum, l_point, l_mute);
-            argStream.PushBoolean(l_result);
-        }
-        else argStream.PushBoolean(false);
+        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->AddEventHandler(l_event, l_funcRef, l_funcPointer);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -70,20 +56,42 @@ int setEventMute(lua_State *f_vm)
 int removeEvent(lua_State *f_vm)
 {
     std::string l_event;
-    void *l_point;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_point);
     if(!argStream.HasErrors() && !l_event.empty())
     {
-        int l_enumValue = Utils::ReadEnumVector(g_eventNamesTable, l_event);
-        if(l_enumValue != -1)
-        {
-            EventType l_eventEnum = static_cast<EventType>(l_enumValue);
-            bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->RemoveEvent(l_eventEnum, l_point);
-            argStream.PushBoolean(l_result);
-        }
-        else argStream.PushBoolean(false);
+        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->RemoveEvent(l_event);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int removeEventHandler(lua_State *f_vm)
+{
+    std::string l_event;
+    void *l_funcPointer;
+    ArgReader argStream(f_vm);
+    argStream.ReadText(l_event);
+    argStream.ReadFunction(l_funcPointer);
+    if(!argStream.HasErrors() && !l_event.empty())
+    {
+        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->RemoveEventHandler(l_event,l_funcPointer);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int callEvent(lua_State *f_vm)
+{
+    std::string l_event;
+    ArgReader argStream(f_vm);
+    LuaArguments l_arguments;
+    argStream.ReadText(l_event);
+    // TODO: Add parsing of arguments until top of Lua VM is reached
+    if(!argStream.HasErrors() && !l_event.empty())
+    {
+        LuaManager::GetCore()->GetLuaManager()->GetEventManager()->CallEvent(l_event, &l_arguments);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

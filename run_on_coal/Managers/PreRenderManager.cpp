@@ -90,7 +90,7 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
 
 void ROC::PreRenderManager::DoPulse_S1()
 {
-    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::PreRender, m_argument);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent("onOGLPreRender", m_argument);
     bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
 
     m_nodeStack.insert(m_nodeStack.end(), m_modelTreeSet.rbegin(), m_modelTreeSet.rend());

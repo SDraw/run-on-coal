@@ -216,8 +216,10 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //Events
     lua_register(m_vm, "addEvent", Lua::addEvent);
-    lua_register(m_vm, "setEventMute", Lua::setEventMute);
+    lua_register(m_vm, "addEventHandler", Lua::addEventHandler);
     lua_register(m_vm, "removeEvent", Lua::removeEvent);
+    lua_register(m_vm, "removeEventHandler", Lua::removeEventHandler);
+    lua_register(m_vm, "callEvent", Lua::callEvent);
 
     // User I/O
     lua_register(m_vm, "setCursorMode", Lua::setCursorMode);

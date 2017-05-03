@@ -238,13 +238,13 @@ bool ROC::SfmlManager::DoPulse()
             {
                 m_argument->PushArgument(static_cast<int>(m_event.size.width));
                 m_argument->PushArgument(static_cast<int>(m_event.size.height));
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::WindowResize, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowResize", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::GainedFocus: case sf::Event::LostFocus:
             {
                 m_argument->PushArgument(m_event.type == sf::Event::GainedFocus ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::WindowFocus, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowFocus", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::KeyPressed: case sf::Event::KeyReleased:
@@ -253,7 +253,7 @@ bool ROC::SfmlManager::DoPulse()
                 {
                     m_argument->PushArgument(const_cast<std::string*>(&g_keysTable[m_event.key.code]));
                     m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::KeyPress, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onKeyPress", m_argument);
                     m_argument->Clear();
                 }
             } break;
@@ -265,7 +265,7 @@ bool ROC::SfmlManager::DoPulse()
                     std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
                     std::string l_input(l_utf8.begin(), l_utf8.end());
                     m_argument->PushArgument(&l_input);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::TextInput, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onTextInput", m_argument);
                     m_argument->Clear();
                 }
             } break;
@@ -275,7 +275,7 @@ bool ROC::SfmlManager::DoPulse()
                 {
                     m_argument->PushArgument(m_event.mouseMove.x);
                     m_argument->PushArgument(m_event.mouseMove.y);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::CursorMove, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorMove", m_argument);
                     m_argument->Clear();
                     l_mouseMoveEventFix = true;
                 }
@@ -283,28 +283,28 @@ bool ROC::SfmlManager::DoPulse()
             case sf::Event::MouseEntered: case sf::Event::MouseLeft:
             {
                 m_argument->PushArgument(m_event.type == sf::Event::MouseEntered ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::CursorEnter, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorEnter", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
                 m_argument->PushArgument(const_cast<std::string*>(&g_mouseKeysTable[m_event.mouseButton.button]));
                 m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::MouseKeyPress, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseKeyPress", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::MouseWheelScrolled:
             {
                 m_argument->PushArgument(m_event.mouseWheelScroll.wheel);
                 m_argument->PushArgument(m_event.mouseWheelScroll.delta);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::MouseScroll, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseScroll", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
             {
                 m_argument->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
                 m_argument->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::JoypadConnect, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadConnect", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
@@ -312,7 +312,7 @@ bool ROC::SfmlManager::DoPulse()
                 m_argument->PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
                 m_argument->PushArgument(static_cast<int>(m_event.joystickButton.button));
                 m_argument->PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::JoypadButton, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadButton", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::JoystickMoved:
@@ -320,7 +320,7 @@ bool ROC::SfmlManager::DoPulse()
                 m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
                 m_argument->PushArgument(const_cast<std::string*>(&g_axisNames[m_event.joystickMove.axis]));
                 m_argument->PushArgument(m_event.joystickMove.position);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::JoypadAxis, m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadAxis", m_argument);
                 m_argument->Clear();
             } break;
         }
