@@ -3,17 +3,6 @@
 namespace ROC
 {
 
-enum EventType
-{
-    None = -1,
-    ServerStart, //onServerStart
-    ServerStop, //onServerStop
-    ServerPulse, //onServerPulse
-    NetworkClientConnect, //onNetworkClientConnect
-    NetworkClientDisconnect, //onNetworkClientDisconnect
-    NetworkDataRecieve //onNetworkDataRecieve
-};
-
 class LuaManager;
 class LuaArguments;
 class EventManager
@@ -24,18 +13,26 @@ class EventManager
     {
         void *m_luaFunc;
         int m_luaRef;
-        bool m_muted = false;
         bool m_deleted = false;
     };
-    std::vector<Event*> m_eventsVector[EventType::NetworkDataRecieve+1];
-    std::vector<Event*>::iterator m_iter;
-    EventType m_activeEvent;
+    struct EventHeap
+    {
+        bool m_active = false;
+        bool m_deleted = false;
+        std::vector<Event*> m_eventVector;
+        std::vector<Event*>::iterator m_eventVectorIter;
+    };
+    std::unordered_map<std::string,EventHeap*> m_eventMap;
+    std::unordered_map<std::string, EventHeap*>::iterator m_eventMapEnd;
     bool m_locked;
 public:
-    bool AddEvent(EventType f_event, int f_ref, void *f_pointer);
-    bool SetEventMute(EventType f_event, void *f_pointer, bool f_mute);
-    bool RemoveEvent(EventType f_event, void *f_pointer);
-    void CallEvent(EventType f_event, LuaArguments *f_args);
+    bool AddEvent(const std::string &f_event);
+    bool AddEventHandler(const std::string &f_event, int f_ref, void *f_pointer);
+
+    bool RemoveEvent(const std::string &f_event);
+    bool RemoveEventHandler(const std::string &f_event, void *f_pointer);
+
+    void CallEvent(const std::string &f_event, LuaArguments *f_args);
 protected:
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();

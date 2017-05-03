@@ -61,8 +61,10 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //Events
     lua_register(m_pVM, "addEvent", Lua::addEvent);
-    lua_register(m_pVM, "setEventMute", Lua::setEventMute);
+    lua_register(m_pVM, "addEventHandler", Lua::addEventHandler);
     lua_register(m_pVM, "removeEvent", Lua::removeEvent);
+    lua_register(m_pVM, "removeEventHandler", Lua::removeEventHandler);
+    lua_register(m_pVM, "callEvent", Lua::callEvent);
 
     //System
     lua_register(m_pVM, "getTickCount", Lua::getTickCount);

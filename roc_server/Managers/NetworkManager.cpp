@@ -111,7 +111,7 @@ void ROC::NetworkManager::DoPulse()
                     l_client->SetAddress(l_packet->systemAddress);
 
                     m_argument->PushArgument(reinterpret_cast<void*>(l_client));
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientConnect, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientConnect", m_argument);
                     m_argument->Clear();
                     m_core->GetLogManager()->Log(l_log);
                 } break;
@@ -125,7 +125,7 @@ void ROC::NetworkManager::DoPulse()
 
                     Client *l_client = m_clientVector[l_packet->guid.systemIndex];
                     m_argument->PushArgument(reinterpret_cast<void*>(l_client));
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkClientDisconnect, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientDisconnect", m_argument);
                     m_argument->Clear();
 
                     m_core->GetElementManager()->DestroyElement(l_client);
@@ -144,7 +144,7 @@ void ROC::NetworkManager::DoPulse()
 
                     m_argument->PushArgument(reinterpret_cast<void*>(m_clientVector[l_packet->guid.systemIndex]));
                     m_argument->PushArgument(&l_stringData);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventType::NetworkDataRecieve, m_argument);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
                     m_argument->Clear();
                 } break;
             }

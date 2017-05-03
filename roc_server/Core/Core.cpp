@@ -75,7 +75,7 @@ ROC::Core* ROC::Core::Init()
         }
         delete l_meta;
 
-        m_instance->m_luaManager->GetEventManager()->CallEvent(ROC::EventType::ServerStart, m_instance->m_argument);
+        m_instance->m_luaManager->GetEventManager()->CallEvent("onServerStart", m_instance->m_argument);
     }
     return m_instance;
 }
@@ -83,7 +83,7 @@ void ROC::Core::Terminate()
 {
     if(m_instance)
     {
-        m_instance->m_luaManager->GetEventManager()->CallEvent(ROC::EventType::ServerStop, m_instance->m_argument);
+        m_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", m_instance->m_argument);
 
         delete m_instance;
         m_instance = NULL;
@@ -94,6 +94,6 @@ void ROC::Core::DoPulse()
 {
     m_sfmlManager->DoPulse();
     m_networkManager->DoPulse();
-    m_luaManager->GetEventManager()->CallEvent(EventType::ServerPulse, m_argument);
+    m_luaManager->GetEventManager()->CallEvent("onServerPulse", m_argument);
     std::this_thread::sleep_for(m_pulseTick);
 }
