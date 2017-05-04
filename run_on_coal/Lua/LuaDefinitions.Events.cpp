@@ -90,6 +90,7 @@ int callEvent(lua_State *f_vm)
     // TODO: Add parsing of arguments until top of Lua VM is reached
     if(!argStream.HasErrors() && !l_event.empty())
     {
+        argStream.ReadArguments(l_arguments);
         LuaManager::GetCore()->GetLuaManager()->GetEventManager()->CallEvent(l_event, &l_arguments);
         argStream.PushBoolean(true);
     }

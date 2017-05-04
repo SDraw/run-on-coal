@@ -110,7 +110,7 @@ void ROC::NetworkManager::DoPulse()
                 case ID_DISCONNECTION_NOTIFICATION: case ID_INCOMPATIBLE_PROTOCOL_VERSION: case ID_CONNECTION_BANNED: case ID_CONNECTION_ATTEMPT_FAILED: case ID_NO_FREE_INCOMING_CONNECTIONS: case ID_CONNECTION_LOST:
                 {
                     m_networkState = NetworkState::Disconnected;
-                    m_argument->PushArgument(const_cast<std::string*>(&g_networkStateTable[1]));
+                    m_argument->PushArgument(g_networkStateTable[1]);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
                     m_argument->Clear();
                 } break;
@@ -119,7 +119,7 @@ void ROC::NetworkManager::DoPulse()
                     m_serverAddress = l_packet->systemAddress;
                     m_networkState = NetworkState::Connected;
                     m_networkInterface->SetOccasionalPing(true);
-                    m_argument->PushArgument(const_cast<std::string*>(&g_networkStateTable[0]));
+                    m_argument->PushArgument(g_networkStateTable[0]);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
                     m_argument->Clear();
                 } break;
@@ -133,7 +133,7 @@ void ROC::NetworkManager::DoPulse()
                     l_stringData.resize(l_textSize);
                     l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
 
-                    m_argument->PushArgument(const_cast<std::string*>(&l_stringData));
+                    m_argument->PushArgument(l_stringData);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
                     m_argument->Clear();
                 } break;

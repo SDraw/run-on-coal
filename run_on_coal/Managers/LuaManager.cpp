@@ -292,7 +292,7 @@ void ROC::LuaManager::CallFunction(int f_func, LuaArguments *f_args)
 {
     lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func);
     f_args->ProccessArguments(m_vm);
-    if(lua_pcall(m_vm, f_args->GetArgumentsValue(), 0, 0))
+    if(lua_pcall(m_vm, f_args->GetArgumentsCount(), 0, 0))
     {
         std::string l_log(lua_tostring(m_vm, -1));
         m_core->GetLogManager()->Log(l_log);

@@ -5,6 +5,7 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
+#include "Lua/LuaArguments.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
 {
@@ -276,6 +277,33 @@ void ROC::ArgReader::PushMatrix(float *f_val, int f_size)
         lua_settable(m_vm, -3);
     }
     m_returnValue++;
+}
+
+void ROC::ArgReader::ReadArguments(LuaArguments &f_args)
+{
+    if(!m_hasErrors)
+    {
+        for(; m_currentArg <= m_argCount; m_currentArg++)
+        {
+            switch(lua_type(m_vm, m_currentArg))
+            {
+                case LUA_TBOOLEAN:
+                    f_args.PushArgument(lua_toboolean(m_vm, m_currentArg) == 1);
+                    break;
+                case LUA_TNUMBER:
+                    f_args.PushArgument(lua_tonumber(m_vm, m_currentArg));
+                    break;
+                case LUA_TLIGHTUSERDATA:
+                    f_args.PushArgument(const_cast<void*>(lua_topointer(m_vm, m_currentArg)));
+                case LUA_TSTRING:
+                {
+                    size_t l_len;
+                    const char *l_text = lua_tolstring(m_vm, m_currentArg, &l_len);
+                    f_args.PushArgument(l_text, l_len);
+                } break;
+            }
+        }
+    }
 }
 
 bool ROC::ArgReader::HasErrors()

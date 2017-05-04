@@ -3,6 +3,7 @@
 namespace ROC
 {
 
+class LuaArguments;
 class ArgReader
 {
     lua_State *m_vm;
@@ -41,6 +42,8 @@ public:
     void PushText(const std::string &f_val);
     void PushPointer(void *f_val);
     void PushMatrix(float *f_val, int f_size);
+
+    void ReadArguments(LuaArguments &f_args);
 
     bool HasErrors();
     inline int GetReturnValue() const { return m_returnValue; }

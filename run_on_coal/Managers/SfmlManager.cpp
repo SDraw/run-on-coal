@@ -251,7 +251,7 @@ bool ROC::SfmlManager::DoPulse()
             {
                 if(m_event.key.code != -1)
                 {
-                    m_argument->PushArgument(const_cast<std::string*>(&g_keysTable[m_event.key.code]));
+                    m_argument->PushArgument(g_keysTable[m_event.key.code]);
                     m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onKeyPress", m_argument);
                     m_argument->Clear();
@@ -264,7 +264,7 @@ bool ROC::SfmlManager::DoPulse()
                     sf::String l_text(m_event.text.unicode);
                     std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
                     std::string l_input(l_utf8.begin(), l_utf8.end());
-                    m_argument->PushArgument(&l_input);
+                    m_argument->PushArgument(l_input);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onTextInput", m_argument);
                     m_argument->Clear();
                 }
@@ -288,7 +288,7 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
-                m_argument->PushArgument(const_cast<std::string*>(&g_mouseKeysTable[m_event.mouseButton.button]));
+                m_argument->PushArgument(g_mouseKeysTable[m_event.mouseButton.button]);
                 m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseKeyPress", m_argument);
                 m_argument->Clear();
@@ -318,7 +318,7 @@ bool ROC::SfmlManager::DoPulse()
             case sf::Event::JoystickMoved:
             {
                 m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
-                m_argument->PushArgument(const_cast<std::string*>(&g_axisNames[m_event.joystickMove.axis]));
+                m_argument->PushArgument(g_axisNames[m_event.joystickMove.axis]);
                 m_argument->PushArgument(m_event.joystickMove.position);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadAxis", m_argument);
                 m_argument->Clear();

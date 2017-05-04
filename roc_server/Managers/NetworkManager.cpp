@@ -143,7 +143,7 @@ void ROC::NetworkManager::DoPulse()
                     l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
 
                     m_argument->PushArgument(reinterpret_cast<void*>(m_clientVector[l_packet->guid.systemIndex]));
-                    m_argument->PushArgument(&l_stringData);
+                    m_argument->PushArgument(l_stringData);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
                     m_argument->Clear();
                 } break;

@@ -7,36 +7,30 @@ class LuaArguments
 {
     struct LuaArgument
     {
-        union ArgumentValue
+        union
         {
             int m_int;
             double m_double;
             float m_float;
             void *m_pointer;
-            std::string *m_string;
-        } m_value;
+        };
+        std::string m_string;
         enum ArgumentType : unsigned char { Integer = 0U, Double, Float, Pointer, String } m_type;
-        explicit LuaArgument(int f_val);
-        explicit LuaArgument(double f_val);
-        explicit LuaArgument(float f_val);
-        explicit LuaArgument(void *f_val);
-        explicit LuaArgument(std::string *f_val);
     };
+    LuaArgument m_dummyArgument;
     std::vector<LuaArgument> m_vArgs;
-    int m_argCount;
 public:
     LuaArguments();
     ~LuaArguments();
     void Clear();
-    template<typename T> void PushArgument(T f_val);
+    void PushArgument(int f_val);
+    void PushArgument(double f_val);
+    void PushArgument(float f_val);
+    void PushArgument(void *f_val);
+    void PushArgument(const std::string &f_val);
+    void PushArgument(const char *f_fal, size_t f_size);
     void ProccessArguments(lua_State *f_vm);
-    inline int GetArgumentsValue() const { return m_argCount; }
+    inline int GetArgumentsCount() const { return static_cast<int>(m_vArgs.size()); }
 };
 
 }
-
-template<typename T> void ROC::LuaArguments::PushArgument(T f_val)
-{
-    m_vArgs.push_back(LuaArgument(f_val));
-    m_argCount++;
-};
