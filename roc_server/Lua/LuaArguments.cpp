@@ -40,17 +40,19 @@ void ROC::LuaArguments::PushArgument(void *f_val)
 }
 void ROC::LuaArguments::PushArgument(const std::string &f_val)
 {
-    m_dummyArgument.m_string.assign(f_val);
+    std::string &l_dummyString = m_dummyArgument.m_string;
+    l_dummyString.assign(f_val);
     m_dummyArgument.m_type = LuaArgument::ArgumentType::String;
     m_vArgs.push_back(m_dummyArgument);
-    m_dummyArgument.m_string.clear();
+    l_dummyString.clear();
 }
 void ROC::LuaArguments::PushArgument(const char *f_val, size_t f_size)
 {
-    m_dummyArgument.m_string.assign(f_val,f_size);
+    std::string &l_dummyString = m_dummyArgument.m_string;
+    l_dummyString.assign(f_val,f_size);
     m_dummyArgument.m_type = LuaArgument::ArgumentType::String;
     m_vArgs.push_back(m_dummyArgument);
-    m_dummyArgument.m_string.resize(0U);
+    l_dummyString.clear();
 }
 
 void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
