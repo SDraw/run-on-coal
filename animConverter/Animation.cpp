@@ -38,7 +38,7 @@ bool Animation::LoadFromJSON(std::string &f_path)
     l_file.close();
     if(l_data.empty()) ReportError("Empty file");
 
-    sajson::document l_document = sajson::parse(sajson::literal(l_data.c_str()));
+    sajson::document l_document = sajson::parse(sajson::dynamic_allocation(),sajson::mutable_string_view(l_data.size(),const_cast<char*>(l_data.data())));
     if(l_document.get_error_line()) ReportError("JSON parsing error: " << l_document.get_error_message().c_str());
 
     sajson::value l_documentRoot = l_document.get_root();
