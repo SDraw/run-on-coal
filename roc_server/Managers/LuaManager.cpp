@@ -4,6 +4,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Lua/LuaArguments.h"
+#include "Lua/LuaDefinitions.Element.h"
 #include "Lua/LuaDefinitions.Events.h"
 #include "Lua/LuaDefinitions.File.h"
 #include "Lua/LuaDefinitions.Network.h"
@@ -57,7 +58,10 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //Elements
     lua_register(m_pVM, "isElement", Lua::isElement);
-    lua_register(m_pVM, "getElementType", Lua::getElementType);
+    lua_register(m_pVM, "elementGetType", Lua::elementGetType);
+    lua_register(m_pVM, "elementSetData", Lua::elementSetData);
+    lua_register(m_pVM, "elementGetData", Lua::elementGetData);
+    lua_register(m_pVM, "elementRemoveData", Lua::elementRemoveData);
 
     //Events
     lua_register(m_pVM, "addEvent", Lua::addEvent);

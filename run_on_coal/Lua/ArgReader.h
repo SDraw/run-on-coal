@@ -3,6 +3,7 @@
 namespace ROC
 {
 
+class CustomData;
 class LuaArguments;
 class ArgReader
 {
@@ -26,6 +27,7 @@ public:
     template<class T> void ReadElement(T *&f_element);
     void ReadFunction(int &f_val, void *&f_pointer);
     void ReadFunction(void *&f_pointer);
+    void ReadCustomData(CustomData &f_data);
 
     void ReadNextBoolean(bool &f_val);
     template<typename T> void ReadNextNumber(T &f_val);
@@ -42,6 +44,7 @@ public:
     void PushText(const std::string &f_val);
     void PushPointer(void *f_val);
     void PushMatrix(float *f_val, int f_size);
+    void PushCustomData(CustomData &f_data);
 
     void ReadArguments(LuaArguments &f_args);
 

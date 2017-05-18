@@ -15,12 +15,6 @@ namespace ROC
 namespace Lua
 {
 
-const std::vector<std::string> g_elementTypeName
-{
-    "geometry", "model", "animation", "scene", "camera", "light",
-    "rendertarget", "shader", "sound", "texture", "font", "file", "collision",
-};
-
 int disabledFunction(lua_State *f_vm)
 {
     lua_pushboolean(f_vm, 0);
@@ -40,23 +34,7 @@ int logPrint(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int isElement(lua_State *f_vm)
-{
-    Element *l_pointer;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_pointer);
-    argStream.PushBoolean(!argStream.HasErrors());
-    return argStream.GetReturnValue();
-}
 
-int getElementType(lua_State *f_vm)
-{
-    Element *l_element;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_element);
-    !argStream.HasErrors() ? argStream.PushText(g_elementTypeName[l_element->GetElementType()]) : argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int getTickCount(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);

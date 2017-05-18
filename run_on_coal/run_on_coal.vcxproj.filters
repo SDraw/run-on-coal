@@ -198,6 +198,12 @@
     <ClCompile Include="Lua\LuaDefinitions.Input.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\CustomData.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Element.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -383,6 +389,12 @@
       <Filter>Elements</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Input.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CustomData.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Element.h">
       <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>

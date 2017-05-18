@@ -39,23 +39,6 @@ int logPrint(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int isElement(lua_State *f_vm)
-{
-    Element *l_pointer;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_pointer);
-    argStream.PushBoolean(!argStream.HasErrors());
-    return argStream.GetReturnValue();
-}
-
-int getElementType(lua_State *f_vm)
-{
-    Element *l_element = NULL;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_element);
-    !argStream.HasErrors() ? argStream.PushText(g_elementTypeName[l_element->GetElementType()]) : argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int getTickCount(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);

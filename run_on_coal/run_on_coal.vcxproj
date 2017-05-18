@@ -149,6 +149,7 @@
     <ClInclude Include="Lua\LuaDefinitions.Animation.h" />
     <ClInclude Include="Lua\LuaDefinitions.Camera.h" />
     <ClInclude Include="Lua\LuaDefinitions.Collision.h" />
+    <ClInclude Include="Lua\LuaDefinitions.Element.h" />
     <ClInclude Include="Lua\LuaDefinitions.Events.h" />
     <ClInclude Include="Lua\LuaDefinitions.File.h" />
     <ClInclude Include="Lua\LuaDefinitions.Font.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="RocInc.h" />
     <ClInclude Include="Managers\SoundManager.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utils\CustomData.h" />
     <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\SystemTick.h" />
     <ClInclude Include="Utils\Utils.h" />
@@ -226,6 +228,7 @@
     <ClCompile Include="Lua\LuaDefinitions.Animation.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Camera.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Collision.cpp" />
+    <ClCompile Include="Lua\LuaDefinitions.Element.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Events.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.File.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Font.cpp" />
@@ -267,6 +270,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Utils\CustomData.cpp" />
     <ClCompile Include="Utils\Pool.cpp" />
     <ClCompile Include="Utils\SystemTick.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />

@@ -7,6 +7,7 @@
 #include "Lua/LuaDefinitions.Animation.h"
 #include "Lua/LuaDefinitions.Camera.h"
 #include "Lua/LuaDefinitions.Collision.h"
+#include "Lua/LuaDefinitions.Element.h"
 #include "Lua/LuaDefinitions.Events.h"
 #include "Lua/LuaDefinitions.Font.h"
 #include "Lua/LuaDefinitions.Light.h"
@@ -255,7 +256,10 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //Elements
     lua_register(m_vm, "isElement", Lua::isElement);
-    lua_register(m_vm, "getElementType", Lua::getElementType);
+    lua_register(m_vm, "elementGetType", Lua::elementGetType);
+    lua_register(m_vm, "elementSetData", Lua::elementSetData);
+    lua_register(m_vm, "elementGetData", Lua::elementGetData);
+    lua_register(m_vm, "elementRemoveData", Lua::elementRemoveData);
 
     //System
     lua_register(m_vm, "getTickCount", Lua::getTickCount);

@@ -6,6 +6,7 @@
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
+#include "Utils/CustomData.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
 {
@@ -54,7 +55,7 @@ void ROC::ArgReader::ReadText(std::string &f_val)
             {
                 size_t l_size;
                 const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
-                f_val.assign(l_string,l_size);
+                f_val.assign(l_string, l_size);
                 m_currentArg++;
             }
             else
@@ -121,6 +122,44 @@ void ROC::ArgReader::ReadFunction(void *&f_pointer)
         }
     }
 }
+void ROC::ArgReader::ReadCustomData(CustomData &f_data)
+{
+    if(!m_hasErrors)
+    {
+        if(m_currentArg <= m_argCount)
+        {
+            switch(lua_type(m_vm, m_currentArg))
+            {
+                case LUA_TBOOLEAN:
+                    f_data.SetBoolean(lua_toboolean(m_vm, m_currentArg) == 1);
+                    break;
+                case LUA_TNUMBER:
+                    f_data.SetDouble(lua_tonumber(m_vm, m_currentArg));
+                    break;
+                case LUA_TLIGHTUSERDATA:
+                    f_data.SetPointer(const_cast<void*>(lua_topointer(m_vm, m_currentArg)));
+                    break;
+                case LUA_TSTRING:
+                {
+                    size_t l_len;
+                    const char *l_text = lua_tolstring(m_vm, m_currentArg, &l_len);
+                    f_data.SetString(l_text, l_len);
+                } break;
+                default:
+                {
+                    m_error.assign("Invalid data type");
+                    m_hasErrors = true;
+                }
+            }
+            if(!m_hasErrors) m_currentArg++;
+        }
+        else
+        {
+            m_error.assign("Not enough arguments");
+            m_hasErrors = true;
+        }
+    }
+}
 
 void ROC::ArgReader::ReadNextBoolean(bool &f_val)
 {
@@ -141,7 +180,7 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
         {
             size_t l_size;
             const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
-            f_val.assign(l_string,l_size);
+            f_val.assign(l_string, l_size);
             m_currentArg++;
         }
     }
@@ -214,7 +253,7 @@ void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
                     {
                         size_t l_size;
                         const char *l_string = lua_tolstring(m_vm, -1, &l_size);
-                        f_vec.push_back(std::string(l_string,l_size));
+                        f_vec.push_back(std::string(l_string, l_size));
                         lua_pop(m_vm, 1);
                     }
                     else
@@ -275,6 +314,33 @@ void ROC::ArgReader::PushMatrix(float *f_val, int f_size)
         lua_pushnumber(m_vm, i + 1);
         lua_pushnumber(m_vm, f_val[i]);
         lua_settable(m_vm, -3);
+    }
+    m_returnValue++;
+}
+void ROC::ArgReader::PushCustomData(CustomData &f_data)
+{
+    switch(f_data.GetType())
+    {
+        case CustomData::DataType::Boolean:
+            lua_pushboolean(m_vm, f_data.GetBoolean());
+            break;
+        case CustomData::DataType::Integer:
+            lua_pushinteger(m_vm, f_data.GetInteger());
+            break;
+        case CustomData::DataType::Double:
+            lua_pushnumber(m_vm, f_data.GetDouble());
+            break;
+        case CustomData::DataType::Float:
+            lua_pushnumber(m_vm, f_data.GetFloat());
+            break;
+        case CustomData::DataType::Pointer:
+            lua_pushlightuserdata(m_vm, f_data.GetPointer());
+            break;
+        case CustomData::DataType::String:
+        {
+            std::string &l_string = f_data.GetString();
+            lua_pushlstring(m_vm, l_string.data(), l_string.size());
+        } break;
     }
     m_returnValue++;
 }
