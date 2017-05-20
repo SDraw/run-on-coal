@@ -56,13 +56,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/SFML/include;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../vendor/lua/lib;../vendor/SFML/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua53.lib;sfml-system-d.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/lua/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lua53.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,15 +74,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/SFML/include;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>../vendor/lua/lib;../vendor/SFML/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua53.lib;sfml-system.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/lua/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lua53.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -96,7 +96,6 @@
     <ClInclude Include="Lua\LuaDefinitions.Events.h" />
     <ClInclude Include="Lua\LuaDefinitions.File.h" />
     <ClInclude Include="Lua\LuaDefinitions.Network.h" />
-    <ClInclude Include="Lua\LuaDefinitions.Sfml.h" />
     <ClInclude Include="Lua\LuaDefinitions.Utils.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
@@ -105,7 +104,6 @@
     <ClInclude Include="Managers\LuaManager.h" />
     <ClInclude Include="Managers\MemoryManager.h" />
     <ClInclude Include="Managers\NetworkManager.h" />
-    <ClInclude Include="Managers\SfmlManager.h" />
     <ClInclude Include="RocInc.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\CustomData.h" />
@@ -131,7 +129,6 @@
     <ClCompile Include="Lua\LuaDefinitions.Events.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.File.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Network.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Utils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Managers\ConfigManager.cpp" />
@@ -141,7 +138,6 @@
     <ClCompile Include="Managers\LuaManager.cpp" />
     <ClCompile Include="Managers\MemoryManager.cpp" />
     <ClCompile Include="Managers\NetworkManager.cpp" />
-    <ClCompile Include="Managers\SfmlManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

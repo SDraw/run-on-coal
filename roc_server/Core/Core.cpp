@@ -7,7 +7,6 @@
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
-#include "Managers/SfmlManager.h"
 #include "Lua/LuaArguments.h"
 
 #define CORE_DEFAULT_SCRIPTS_PATH "server_scripts/"
@@ -29,7 +28,6 @@ ROC::Core::Core()
     m_memoryManager = new MemoryManager();
     m_elementManager = new ElementManager(this);
     m_luaManager = new LuaManager(this);
-    m_sfmlManager = new SfmlManager();
     m_networkManager = new NetworkManager(this);
     m_argument = new LuaArguments();
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());
@@ -40,7 +38,6 @@ ROC::Core::~Core()
     delete m_memoryManager;
     delete m_elementManager;
     delete m_luaManager;
-    delete m_sfmlManager;
     delete m_logManager;
     delete m_configManager;
     delete m_argument;
@@ -92,7 +89,6 @@ void ROC::Core::Terminate()
 
 void ROC::Core::DoPulse()
 {
-    m_sfmlManager->DoPulse();
     m_networkManager->DoPulse();
     m_luaManager->GetEventManager()->CallEvent("onServerPulse", m_argument);
     std::this_thread::sleep_for(m_pulseTick);

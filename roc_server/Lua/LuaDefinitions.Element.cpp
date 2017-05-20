@@ -16,8 +16,7 @@ namespace Lua
 
 const std::vector<std::string> g_elementTypeNames
 {
-    "geometry", "model", "animation", "scene", "camera", "light",
-    "rendertarget", "shader", "sound", "texture", "font", "file", "collision",
+    "client", "file"
 };
 
 int isElement(lua_State *f_vm)

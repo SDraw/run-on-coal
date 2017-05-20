@@ -8,7 +8,6 @@
 #include "Lua/LuaDefinitions.Events.h"
 #include "Lua/LuaDefinitions.File.h"
 #include "Lua/LuaDefinitions.Network.h"
-#include "Lua/LuaDefinitions.Sfml.h"
 #include "Lua/LuaDefinitions.Utils.h"
 
 ROC::Core* ROC::LuaManager::m_coreStatic = NULL;
@@ -32,9 +31,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     //Log
     lua_register(m_pVM, "logPrint", Lua::logPrint);
-
-    //Sfml
-    lua_register(m_pVM, "getTime", Lua::getTime);
 
     //File
     lua_register(m_pVM, "fileCreate", Lua::fileCreate);

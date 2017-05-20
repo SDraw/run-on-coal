@@ -17,7 +17,6 @@
 #endif
 #include <direct.h>
 
-#include "SFML/System.hpp"
 #include "lua.hpp"
 #include "pugixml.hpp"
 

@@ -5,7 +5,6 @@ namespace ROC
 
 class ConfigManager;
 class ElementManager;
-class SfmlManager;
 class LogManager;
 class LuaManager;
 class MemoryManager;
@@ -15,7 +14,6 @@ class Core
 {
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
-    SfmlManager *m_sfmlManager;
     LogManager *m_logManager;
     LuaManager *m_luaManager;
     MemoryManager *m_memoryManager;
@@ -36,7 +34,6 @@ public:
     inline void GetWorkingDirectory(std::string &f_path) { f_path.assign(m_workingDir); }
     inline ConfigManager* GetConfigManager() { return m_configManager; }
     inline ElementManager* GetElementManager() { return m_elementManager; }
-    inline SfmlManager* GetSfmlManager() { return m_sfmlManager; }
     inline LogManager* GetLogManager() { return m_logManager; }
     inline LuaManager* GetLuaManager() { return m_luaManager; }
     inline MemoryManager* GetMemoryManager() { return m_memoryManager; }

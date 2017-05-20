@@ -27,9 +27,6 @@
     <ClCompile Include="Managers\NetworkManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\SfmlManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\ArgReader.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
@@ -37,9 +34,6 @@
       <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.Network.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Sfml.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefinitions.Utils.cpp">
@@ -106,9 +100,6 @@
     <ClInclude Include="Managers\NetworkManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\SfmlManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\ArgReader.h">
       <Filter>Lua</Filter>
     </ClInclude>
@@ -116,9 +107,6 @@
       <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Network.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Sfml.h">
       <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Utils.h">
