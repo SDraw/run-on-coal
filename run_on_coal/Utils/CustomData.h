@@ -19,6 +19,7 @@ public:
     enum DataType : unsigned char { None = 0U, Boolean, Integer, Double, Float, Pointer, String };
 
     CustomData();
+    CustomData(const CustomData& f_data);
     ~CustomData();
 
     inline unsigned char GetType() const { return m_type; }

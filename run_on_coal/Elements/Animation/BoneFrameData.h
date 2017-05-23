@@ -4,28 +4,29 @@ namespace ROC
 
 class BoneFrameData
 {
-protected:
     glm::vec3 m_position;
     glm::quat m_rotation;
     glm::vec3 m_scale;
-
+public:
     BoneFrameData();
+    BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec3 &f_scl);
     ~BoneFrameData();
 
-    // Returns true if data is different, false otherwise
-    inline bool Compare(BoneFrameData *f_data) const
+    inline bool IsEqual(BoneFrameData *f_data) const
     {
-        return (m_position == f_data->m_position || m_rotation == f_data->m_rotation || m_scale == f_data->m_scale);
+        return ((m_position == f_data->m_position) && (m_rotation == f_data->m_rotation) && (m_scale == f_data->m_scale));
     }
-    inline void CopyFrom(BoneFrameData *f_data)
-    {
-        std::memcpy(&m_position, &f_data->m_position, sizeof(glm::vec3));
-        std::memcpy(&m_rotation, &f_data->m_rotation, sizeof(glm::quat));
-        std::memcpy(&m_scale, &f_data->m_scale, sizeof(glm::vec3));
-    }
-    friend class Animation;
+
+    void SetInterpolated(BoneFrameData *f_data, float f_blend);
+    void SetInterpolated(BoneFrameData *f_leftData, BoneFrameData *f_rightData, float f_blend);
+
+    static void Copy(BoneFrameData *f_inputData, BoneFrameData *f_outputData);
+protected:
+    inline glm::vec3& GetPositionRef() { return m_position; }
+    inline glm::quat& GetRotationRef() { return m_rotation; }
+    inline glm::vec3& GetScaleRef() { return m_scale; }
+
     friend class Bone;
-    friend class Skeleton;
 };
 
 }
