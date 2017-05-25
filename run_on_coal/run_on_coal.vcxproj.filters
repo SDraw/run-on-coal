@@ -150,15 +150,6 @@
     <ClCompile Include="Elements\Model\Bone.cpp">
       <Filter>Elements\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\Geometry\BoneCollisionData.cpp">
-      <Filter>Elements\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Elements\Geometry\BoneData.cpp">
-      <Filter>Elements\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Elements\Geometry\BoneJointData.cpp">
-      <Filter>Elements\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\Geometry\Geometry.cpp">
       <Filter>Elements\Geometry</Filter>
     </ClCompile>
@@ -349,15 +340,6 @@
     <ClInclude Include="Elements\Model\Bone.h">
       <Filter>Elements\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Elements\Geometry\BoneCollisionData.h">
-      <Filter>Elements\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Elements\Geometry\BoneData.h">
-      <Filter>Elements\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Elements\Geometry\BoneJointData.h">
-      <Filter>Elements\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Elements\Geometry\Geometry.h">
       <Filter>Elements\Geometry</Filter>
     </ClInclude>
@@ -396,6 +378,15 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Element.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\BoneJointData.hpp">
+      <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\BoneData.hpp">
+      <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Geometry\BoneCollisionData.hpp">
+      <Filter>Elements\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

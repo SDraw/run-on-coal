@@ -1,7 +1,4 @@
 #include "stdafx.h"
-#include "Elements/Geometry/BoneCollisionData.h"
-#include "Elements/Geometry/BoneData.h"
-#include "Elements/Geometry/BoneJointData.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Geometry/Material.h"
 #include "Utils/Utils.h"
@@ -241,35 +238,27 @@ bool ROC::Geometry::Load(const std::string &f_path)
                             l_file.read(reinterpret_cast<char*>(&l_joint->m_boneID), sizeof(unsigned int));
                             for(unsigned int j = 0; j < l_jointParts; j++)
                             {
-                                unsigned int l_boneID;
-                                unsigned char l_type;
-                                glm::vec3 l_size, l_offset;
-                                glm::quat l_rotation;
-                                float l_mass, l_restutition, l_friction;
-                                glm::vec2 l_damping;
-                                glm::vec3 l_lowerAngularLimit, l_upperAngularLimit, l_angularStiffness;
-                                glm::vec3 l_lowerLinearLimit, l_upperLinearLimit, l_linearStiffness;
+                                BoneJointPartData *l_jointPart = new BoneJointPartData();
+                                l_joint->m_jointPartVector.push_back(l_jointPart);
 
-                                l_file.read(reinterpret_cast<char*>(&l_boneID), sizeof(unsigned int));
-                                l_file.read(reinterpret_cast<char*>(&l_type), sizeof(unsigned char));
-                                l_file.read(reinterpret_cast<char*>(&l_size), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_offset), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_rotation), sizeof(glm::quat));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_boneID), sizeof(unsigned int));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_type), sizeof(unsigned char));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_size), sizeof(glm::vec3));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_offset), sizeof(glm::vec3));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_rotation), sizeof(glm::quat));
 
-                                l_file.read(reinterpret_cast<char*>(&l_mass), sizeof(float));
-                                l_file.read(reinterpret_cast<char*>(&l_restutition), sizeof(float));
-                                l_file.read(reinterpret_cast<char*>(&l_friction), sizeof(float));
-                                l_file.read(reinterpret_cast<char*>(&l_damping), sizeof(glm::vec2));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_mass), sizeof(float));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_restutition), sizeof(float));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_restutition), sizeof(float));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_damping), sizeof(glm::vec2));
 
-                                l_file.read(reinterpret_cast<char*>(&l_lowerAngularLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_upperAngularLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_angularStiffness), sizeof(glm::vec3));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_lowerAngularLimit), sizeof(glm::vec3));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_upperAngularLimit), sizeof(glm::vec3));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_angularStiffness), sizeof(glm::vec3));
 
-                                l_file.read(reinterpret_cast<char*>(&l_lowerLinearLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_upperLinearLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_linearStiffness), sizeof(glm::vec3));
-
-                                l_joint->AddPart(l_boneID, l_type, l_size, l_offset, l_rotation, l_mass, l_restutition, l_friction, l_damping, l_lowerAngularLimit, l_upperAngularLimit, l_angularStiffness, l_lowerLinearLimit, l_upperLinearLimit, l_linearStiffness);
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_lowerLinearLimit), sizeof(glm::vec3));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_upperLinearLimit), sizeof(glm::vec3));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart->m_linearStiffness), sizeof(glm::vec3));
                             }
                         }
                     }
@@ -292,13 +281,22 @@ void ROC::Geometry::Clear()
 {
     for(auto iter : m_materialVector) delete iter;
     m_materialVector.clear();
+
     m_materialCount = 0U;
     m_boundSphere = 0.f;
+
     for(auto iter : m_bonesData) delete iter;
     m_bonesData.clear();
+
     for(auto iter : m_collisionData) delete iter;
     m_collisionData.clear();
-    for(auto iter : m_jointData) delete iter;
+
+    for(auto iter : m_jointData)
+    {
+        for(auto iter1 : iter->m_jointPartVector) delete iter1;
+        delete iter;
+    }
     m_jointData.clear();
+
     m_loaded = false;
 }

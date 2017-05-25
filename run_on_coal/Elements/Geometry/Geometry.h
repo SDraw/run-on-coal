@@ -1,12 +1,12 @@
 #pragma once
 #include "Elements/Element.h"
+#include "Elements/Geometry/BoneCollisionData.hpp"
+#include "Elements/Geometry/BoneData.hpp"
+#include "Elements/Geometry/BoneJointData.hpp"
 
 namespace ROC
 {
 
-class BoneData;
-class BoneCollisionData;
-class BoneJointData;
 class Material;
 class Geometry : public Element
 {

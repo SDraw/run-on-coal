@@ -132,9 +132,9 @@
     <ClInclude Include="Elements\Element.h" />
     <ClInclude Include="Elements\File.h" />
     <ClInclude Include="Elements\Font.h" />
-    <ClInclude Include="Elements\Geometry\BoneCollisionData.h" />
-    <ClInclude Include="Elements\Geometry\BoneData.h" />
-    <ClInclude Include="Elements\Geometry\BoneJointData.h" />
+    <ClInclude Include="Elements\Geometry\BoneCollisionData.hpp" />
+    <ClInclude Include="Elements\Geometry\BoneData.hpp" />
+    <ClInclude Include="Elements\Geometry\BoneJointData.hpp" />
     <ClInclude Include="Elements\Geometry\Geometry.h" />
     <ClInclude Include="Elements\Geometry\Material.h" />
     <ClInclude Include="Elements\Light.h" />
@@ -211,9 +211,6 @@
     <ClCompile Include="Elements\Element.cpp" />
     <ClCompile Include="Elements\File.cpp" />
     <ClCompile Include="Elements\Font.cpp" />
-    <ClCompile Include="Elements\Geometry\BoneCollisionData.cpp" />
-    <ClCompile Include="Elements\Geometry\BoneData.cpp" />
-    <ClCompile Include="Elements\Geometry\BoneJointData.cpp" />
     <ClCompile Include="Elements\Geometry\Geometry.cpp" />
     <ClCompile Include="Elements\Geometry\Material.cpp" />
     <ClCompile Include="Elements\Light.cpp" />

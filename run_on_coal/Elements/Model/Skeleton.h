@@ -1,4 +1,8 @@
 #pragma once
+#include "Elements/Geometry/BoneCollisionData.hpp"
+#include "Elements/Geometry/BoneData.hpp"
+#include "Elements/Geometry/BoneJointData.hpp"
+
 #define BC_TYPE_SPHERE 0U
 #define BC_TYPE_BOX 1U
 #define BC_TYPE_CYLINDER 2U
@@ -9,10 +13,7 @@ namespace ROC
 {
 
 class Bone;
-class BoneCollisionData;
-class BoneData;
 class BoneFrameData;
-class BoneJointData;
 class Skeleton
 {
     unsigned int m_bonesCount;

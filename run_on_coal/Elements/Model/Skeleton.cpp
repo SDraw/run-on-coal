@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "Elements/Animation/BoneFrameData.h"
-#include "Elements/Geometry/BoneCollisionData.h"
-#include "Elements/Geometry/BoneData.h"
-#include "Elements/Geometry/BoneJointData.h"
 #include "Elements/Model/Bone.h"
 #include "Elements/Model/Skeleton.h"
 
@@ -171,7 +168,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 
             for(int i = 0, j = static_cast<int>(iter->m_jointPartVector.size()); i < j; i++)
             {
-                BoneJointData::bjdJointPart *l_dataPart = iter->m_jointPartVector[i];
+                const auto &l_dataPart = iter->m_jointPartVector[i];
                 skJoint::jtPart *l_jointPart = new skJoint::jtPart();
                 l_jointPart->m_boneID = static_cast<int>(l_dataPart->m_boneID);
 
