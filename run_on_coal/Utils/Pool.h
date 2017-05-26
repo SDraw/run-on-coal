@@ -11,6 +11,7 @@ class Pool
 public:
     explicit Pool(unsigned int f_size);
     ~Pool();
+
     int Allocate();
     void Reset(unsigned int f_id);
 };

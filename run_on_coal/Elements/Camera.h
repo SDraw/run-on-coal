@@ -50,9 +50,11 @@ protected:
 
     inline glm::vec3& GetPositionRef() { return m_viewPosition; }
     inline glm::vec3& GetDirectionRef() { return m_viewDirection; }
+
+    void UpdateMatrices();
     inline glm::mat4& GetProjectionMatrixRef() { return m_projectionMatrix; }
     inline glm::mat4& GetViewMatrixRef() { return m_viewMatrix; }
-    void UpdateMatrices();
+
     friend class ElementManager;
     friend class RenderManager;
 };

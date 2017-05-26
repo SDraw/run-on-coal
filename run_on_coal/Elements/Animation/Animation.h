@@ -28,19 +28,16 @@ class Animation : public Element
     bool m_loaded;
 
     void Clean();
+public:
+    inline unsigned int GetBonesCount() const { return m_bonesValue; }
+    inline unsigned int GetTotalDuration() const { return m_durationTotal; }
+    void GetData(unsigned int f_tick, std::vector<Bone*> &f_bones);
 protected:
     Animation();
     ~Animation();
-
     bool Load(const std::string &f_path);
-    void GetData(unsigned int f_tick, std::vector<Bone*> &f_bones);
 
-    inline unsigned int GetBonesCount() const { return m_bonesValue; }
-    inline unsigned int GetTotalDuration() const { return m_durationTotal; }
-
-    friend class Model;
     friend class ElementManager;
-    friend class InheritanceManager;
 };
 
 }

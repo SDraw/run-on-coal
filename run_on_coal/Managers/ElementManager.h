@@ -45,7 +45,9 @@ protected:
     ~ElementManager();
 
     inline void SetLock(bool f_lock) { m_locked = f_lock; }
+
     static void DestroyElementByPointer(void* f_pointer);
+
     friend Core;
     friend class MemoryManager;
 };

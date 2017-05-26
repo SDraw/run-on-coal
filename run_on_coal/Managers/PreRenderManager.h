@@ -38,6 +38,7 @@ protected:
 
     void DoPulse_S1();
     void DoPulse_S2();
+
     friend Core;
     friend class ElementManager;
     friend class InheritanceManager;

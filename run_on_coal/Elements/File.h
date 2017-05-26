@@ -28,6 +28,7 @@ protected:
     ~File();
     bool Create(const std::string &f_path, const std::string &f_rPath);
     bool Open(const std::string &f_path, const std::string &f_rPath, bool f_ro);
+
     friend class ElementManager;
 };
 

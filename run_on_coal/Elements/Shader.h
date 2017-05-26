@@ -67,7 +67,7 @@ protected:
     Shader();
     ~Shader();
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
-    void Enable(bool f_full = true);
+    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
 
     void SetUniformValue(const std::string &f_uniform, unsigned int f_value);
     void SetUniformValue(const std::string &f_uniform, const glm::uvec2 &f_value);
@@ -115,7 +115,8 @@ protected:
     static void DestroyBonesUBO();
     static void EnableUBOFix();
 
-    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
+    void Enable(bool f_full = true);
+
     friend class ElementManager;
     friend class InheritanceManager;
     friend class RenderManager;

@@ -25,6 +25,7 @@ class RenderTarget : public Drawable
     glm::ivec2 m_size;
 
     std::string m_error;
+
     void Clear();
 public:
     inline void GetSize(glm::ivec2 &f_size) { std::memcpy(&f_size, &m_size, sizeof(glm::ivec2)); }
@@ -36,12 +37,13 @@ protected:
     RenderTarget();
     ~RenderTarget();
     bool Create(unsigned int f_num, const glm::ivec2 &f_size, int f_type, int f_filter);
+    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
+
     inline GLuint GetTextureID() const { return m_texture; }
 
     void Bind();
     void Enable();
 
-    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
     friend class ElementManager;
     friend class RenderManager;
     friend class Shader;

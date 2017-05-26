@@ -22,6 +22,7 @@ public:
 protected:
     SoundManager();
     ~SoundManager();
+
     friend class Core;
 };
 

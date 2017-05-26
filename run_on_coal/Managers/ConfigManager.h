@@ -21,6 +21,7 @@ public:
 protected:
     ConfigManager();
     ~ConfigManager();
+
     friend class Core;
 };
 

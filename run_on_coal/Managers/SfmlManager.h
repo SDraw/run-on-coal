@@ -56,8 +56,10 @@ protected:
     explicit SfmlManager(Core *f_core);
     ~SfmlManager();
 
-    bool DoPulse();
     inline void SwapBuffers() { m_window->display(); }
+
+    bool DoPulse();
+
     friend Core;
     friend class RenderManager;
 };

@@ -46,28 +46,30 @@ class Skeleton
     };
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
+public:
+    inline unsigned int GetBonesCount() const { return m_bonesCount; }
+
+    inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }
+    inline bool HasDynamicBoneCollision() const { return m_hasDynamicBoneCollision; }
 protected:
     explicit Skeleton(const std::vector<BoneData*> &f_data);
     ~Skeleton();
 
     void Update();
     void ResetBonesInterpolation();
-
-    void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec);
-    void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec);
-    void UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled);
-    void UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled);
-    inline std::vector<skCollision*> &GetCollisionVectorRef() { return m_collisionVector; }
-    inline std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
-    inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }
-    inline bool HasDynamicBoneCollision() const { return m_hasDynamicBoneCollision; }
-
-    inline unsigned int GetBonesCount() const { return m_bonesCount; }
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
     inline std::vector<glm::mat4>& GetBoneMatricesVectorRef() { return m_boneMatrices; }
 
+    void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec);
+    inline std::vector<skCollision*> &GetCollisionVectorRef() { return m_collisionVector; }
+
+    void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec);
+    inline std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
+
+    void UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled);
+    void UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled);
+
     friend class Model;
-    friend class InheritanceManager;
     friend class PreRenderManager;
     friend class RenderManager;
     friend class PhysicsManager;

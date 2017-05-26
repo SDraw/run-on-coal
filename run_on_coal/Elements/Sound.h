@@ -48,6 +48,7 @@ protected:
     explicit Sound(bool f_loop);
     ~Sound();
     bool Load(const std::string &f_path);
+
     friend class ElementManager;
 };
 

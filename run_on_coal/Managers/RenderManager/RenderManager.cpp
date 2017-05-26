@@ -143,7 +143,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
             if(l_camera)
             {
                 f_model->GetPosition(m_modelPosition, true);
-                if(!l_camera->IsInFrustum(m_modelPosition, f_model->GetBoundSphere())) l_result = false;
+                if(!l_camera->IsInFrustum(m_modelPosition, f_model->GetBoundSphereRadius())) l_result = false;
             }
         }
         if(l_result)

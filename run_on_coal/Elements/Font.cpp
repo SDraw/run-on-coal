@@ -48,7 +48,7 @@ ROC::Font::~Font()
     }
 }
 
-bool ROC::Font::LoadTTF(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter)
+bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter)
 {
     if(!m_loaded)
     {

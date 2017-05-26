@@ -17,6 +17,7 @@ class Texture : public Drawable
     glm::ivec2 m_size;
     int m_filtering;
     GLuint m_texture;
+
     void GenerateBrokenTexture();
 public:
     inline bool IsTransparent() const { return (m_type == TEXTURE_TYPE_RGBA); }
@@ -25,11 +26,11 @@ public:
 protected:
     Texture();
     ~Texture();
-
     bool Load(const std::string &f_path, int f_type, int f_filter, bool f_compress);
     bool LoadCubemap(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
 
     inline GLuint GetTextureID() const { return m_texture; }
+
     void Bind();
 
     friend class ElementManager;

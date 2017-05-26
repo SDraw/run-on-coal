@@ -15,6 +15,7 @@ protected:
 
     void AddMemoryPointer(void *f_pointer);
     void RemoveMemoryPointer(void *f_pointer);
+
     friend class Core;
     friend class ElementManager;
 };

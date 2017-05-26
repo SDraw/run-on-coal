@@ -49,11 +49,13 @@ public:
     void ApplyCentralImpulse(const glm::vec3 &f_impulse);
 
     void ApplyTorque(const glm::vec3 &f_torque, bool f_impulse);
+
+    void GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat &f_rot);
 protected:
     Collision();
     ~Collision();
-
     bool Create(int f_type, const glm::vec3 &f_size, float f_mass);
+
     inline btRigidBody* GetRigidBody() { return m_rigidBody; }
     inline bool IsActive() { return m_rigidBody->isActive(); }
 
@@ -61,8 +63,6 @@ protected:
     inline Model* GetParentModel() { return m_parentModel; }
 
     void SetScale(const glm::vec3 &f_val);
-
-    void GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat &f_rot);
 
     friend class ElementManager;
     friend class InheritanceManager;

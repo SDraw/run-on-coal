@@ -26,6 +26,7 @@ protected:
 
     void CallFunction(int f_func, LuaArguments *f_args);
     inline void RemoveReference(int f_ref) { luaL_unref(m_vm, LUA_REGISTRYINDEX, f_ref); }
+
     friend Core;
     friend EventManager;
 };

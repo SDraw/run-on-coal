@@ -4,7 +4,6 @@ namespace ROC
 {
 
 class Core;
-class Constraint;
 class Model;
 class Collision;
 class PhysicsManager

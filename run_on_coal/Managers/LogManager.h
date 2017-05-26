@@ -13,6 +13,7 @@ public:
 protected:
     explicit LogManager(Core *f_core);
     ~LogManager();
+
     friend Core;
 };
 

@@ -23,6 +23,15 @@ class Material
     unsigned char m_type;
     glm::vec4 m_params;
     Texture *m_texture;
+public:
+    inline unsigned char GetType() const { return m_type; }
+
+    inline bool IsDoubleSided() const { return ((m_type&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE); }
+    inline bool IsTransparent() const { return ((m_type&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT); }
+    inline bool IsShady() const { return ((m_type&MATERIAL_BIT_SHADING) == MATERIAL_BIT_SHADING); }
+    inline bool IsDepthable() const { return ((m_type&MATERIAL_BIT_DEPTH) == MATERIAL_BIT_DEPTH); }
+    inline bool IsCompressed() const { return ((m_type&MATERIAL_BIT_COMPRESSION) == MATERIAL_BIT_COMPRESSION); }
+    inline unsigned char GetFilteringType() const { return ((m_type&MATERIAL_BIT_FILTER) >> 4); }
 protected:
     Material();
     ~Material();
@@ -34,21 +43,17 @@ protected:
     void LoadIndices(const std::vector<glm::ivec4> &f_vector);
     void LoadTexture(const std::string &f_path);
     void GenerateVAO();
+
     inline void SetType(unsigned int f_type) { m_type = f_type; }
+
     inline void SetParams(const glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
+    inline glm::vec4& GetParamsRef() { return m_params; }
 
     inline GLuint GetVAO() const { return m_VAO; }
-    inline unsigned char GetType() const { return m_type; }
-    inline glm::vec4& GetParamsRef() { return m_params; }
     inline Texture* GetTexture() { return m_texture; }
 
     void Draw(bool f_texturize, bool f_binding);
-    inline bool IsDoubleSided() const { return ((m_type&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE); }
-    inline bool IsTransparent() const { return ((m_type&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT); }
-    inline bool IsShady() const { return ((m_type&MATERIAL_BIT_SHADING) == MATERIAL_BIT_SHADING); }
-    inline bool IsDepthable() const { return ((m_type&MATERIAL_BIT_DEPTH) == MATERIAL_BIT_DEPTH); }
-    inline unsigned char GetFilteringType() const { return ((m_type&MATERIAL_BIT_FILTER) >> 4); }
-    inline bool IsCompressed() const { return ((m_type&MATERIAL_BIT_COMPRESSION) == MATERIAL_BIT_COMPRESSION); }
+
     friend class RenderManager;
     friend class Geometry;
 };

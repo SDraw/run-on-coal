@@ -9,7 +9,7 @@ ROC::Geometry::Geometry()
 
     m_loaded = false;
     m_materialCount = 0U;
-    m_boundSphere = 0.f;
+    m_boundSphereRaduis = 0.f;
 }
 ROC::Geometry::~Geometry()
 {
@@ -170,7 +170,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     m_materialVector.insert(m_materialVector.end(), l_matVecDef.begin(), l_matVecDef.end());
                     m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
                 }
-                m_boundSphere = glm::length(l_farthestPoint);
+                m_boundSphereRaduis = glm::length(l_farthestPoint);
 
                 if(l_type == 0x2U)
                 {
@@ -284,7 +284,7 @@ void ROC::Geometry::Clear()
     m_materialVector.clear();
 
     m_materialCount = 0U;
-    m_boundSphere = 0.f;
+    m_boundSphereRaduis = 0.f;
 
     for(auto iter : m_bonesData) delete iter;
     m_bonesData.clear();

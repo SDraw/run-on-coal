@@ -22,7 +22,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_scale = g_DefaultScale;
     m_localMatrix = g_IdentityMatrix;
     m_matrix = g_IdentityMatrix;
-    m_boundSphere = 0.f;
+    m_boundSphereRaduis = 0.f;
     m_rebuildMatrix = false;
     m_rebuilded = false;
 
@@ -40,7 +40,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_skeleton = NULL;
     if(m_geometry)
     {
-        m_boundSphere = m_geometry->GetBoundSphere();
+        m_boundSphereRaduis = m_geometry->GetBoundSphereRadius();
         if(m_geometry->HasBonesData())
         {
             m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
@@ -112,7 +112,7 @@ void ROC::Model::SetScale(const glm::vec3 &f_scl)
     if(!m_collision && (m_scale != f_scl))
     {
         std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
-        m_boundSphere = m_geometry->GetBoundSphere()*glm::compMax(m_scale);
+        m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::compMax(m_scale);
         m_rebuildMatrix = true;
     }
 }

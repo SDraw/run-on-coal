@@ -29,6 +29,7 @@ public:
     bool Connect(const std::string &f_ip, unsigned short f_port);
     bool Disconnect();
     bool SendData(const std::string &f_data);
+
     inline unsigned char GetNetworkState() const { return m_networkState; }
     int GetPing();
 protected:
@@ -36,6 +37,7 @@ protected:
     ~NetworkManager();
 
     void DoPulse();
+
     friend Core;
 };
 

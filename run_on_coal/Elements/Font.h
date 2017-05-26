@@ -49,9 +49,12 @@ public:
 protected:
     Font();
     ~Font();
-    bool LoadTTF(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
+    bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
+
     inline GLuint GetVAO() const { return m_VAO; }
+
     void Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bind);
+
     friend class ElementManager;
     friend class RenderManager;
 };

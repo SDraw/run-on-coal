@@ -16,8 +16,10 @@ public:
 protected:
     Scene();
     ~Scene();
+
     inline void SetCamera(Camera *f_cam) { m_mainCamera = f_cam; }
     inline void SetLight(Light *f_light) { m_mainLight = f_light; }
+
     friend class ElementManager;
     friend class InheritanceManager;
 };
