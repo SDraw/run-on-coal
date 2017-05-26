@@ -22,13 +22,17 @@ class Bone
 
     Bone(const Bone& that);
     Bone &operator =(const Bone &that);
+public:
+    inline bool IsRebuilded() const { return m_rebuilded; }
+    inline void GetMatrix(glm::mat4 &f_mat) { std::memcpy(&f_mat, &m_matrix, sizeof(glm::mat4)); }
 protected:
     Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scl);
     ~Bone();
 
-    void SetFrameData(BoneFrameData *f_data);
-    void ResetInterpolation();
     void GenerateBindPose();
+    void SetFrameData(BoneFrameData *f_data);
+    inline void ForceRebuildState(bool f_state) { m_rebuilded = f_state; }
+    void ResetInterpolation();
     void UpdateMatrix();
 
     inline glm::mat4& GetLocalMatrixRef() { return m_localMatrix; }
@@ -41,11 +45,7 @@ protected:
     inline Bone* GetParent() { return m_parent;  }
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
 
-    inline bool IsRebuilded() const { return m_rebuilded; }
-    inline void ForceRebuildState(bool f_state) { m_rebuilded = f_state; }
-
     friend class Skeleton;
-    friend class Model;
     friend class Animation;
 };
 

@@ -22,24 +22,25 @@ class Geometry : public Element
     bool m_loaded;
     void Clear();
 public:
+    inline float GetBoundSphere() const { return m_boundSphere; }
+
     inline bool HasBonesData() const { return !m_bonesData.empty(); }
     inline bool HasBonesCollisionData() const { return !m_collisionData.empty(); }
     inline bool HasJointsData() const { return !m_jointData.empty(); }
 protected:
     Geometry();
     ~Geometry();
-    inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
+
     bool Load(const std::string &f_path);
 
-    inline float GetBoundSphere() const { return m_boundSphere; }
-    inline std::vector<BoneData*> &GetBonesDataRef() { return m_bonesData; };
-    inline std::vector<BoneCollisionData*> &GetBonesCollisionDataRef() { return m_collisionData; }
-    inline std::vector<BoneJointData*> &GetJointsDataRef() { return m_jointData; };
+    inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
+    inline std::vector<BoneData*>& GetBonesDataRef() { return m_bonesData; };
+    inline std::vector<BoneCollisionData*>& GetBonesCollisionDataRef() { return m_collisionData; }
+    inline std::vector<BoneJointData*>& GetJointsDataRef() { return m_jointData; };
 
     friend class ElementManager;
     friend class RenderManager;
     friend class Model;
-    friend class Skeleton;
 };
 
 }

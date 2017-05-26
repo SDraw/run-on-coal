@@ -168,16 +168,16 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 
             for(int i = 0, j = static_cast<int>(iter->m_jointPartVector.size()); i < j; i++)
             {
-                const auto &l_dataPart = iter->m_jointPartVector[i];
+                BoneJointPartData &l_partData = iter->m_jointPartVector[i];
                 skJoint::jtPart *l_jointPart = new skJoint::jtPart();
-                l_jointPart->m_boneID = static_cast<int>(l_dataPart->m_boneID);
+                l_jointPart->m_boneID = static_cast<int>(l_partData.m_boneID);
 
                 btTransform l_boneTransform, l_jointPartTransform, l_jointPartResultTransform;
 
                 l_boneTransform.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[l_jointPart->m_boneID]->GetMatrixRef()));
                 l_jointPartTransform.setIdentity();
-                l_jointPartTransform.setOrigin(btVector3(l_dataPart->m_offset.x, l_dataPart->m_offset.y, l_dataPart->m_offset.z));
-                l_jointPartTransform.setRotation(btQuaternion(l_dataPart->m_rotation.x, l_dataPart->m_rotation.y, l_dataPart->m_rotation.z, l_dataPart->m_rotation.w));
+                l_jointPartTransform.setOrigin(btVector3(l_partData.m_offset.x, l_partData.m_offset.y, l_partData.m_offset.z));
+                l_jointPartTransform.setRotation(btQuaternion(l_partData.m_rotation.x, l_partData.m_rotation.y, l_partData.m_rotation.z, l_partData.m_rotation.w));
 
                 l_jointPart->m_offset.push_back(l_jointPartTransform);
                 l_jointPart->m_offset.push_back(l_jointPartTransform.inverse());
@@ -188,35 +188,35 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 
                 btCollisionShape *l_jointPartShape = NULL;
                 btVector3 l_jointPartInertia;
-                switch(l_dataPart->m_type)
+                switch(l_partData.m_type)
                 {
                     case BC_TYPE_SPHERE:
-                        l_jointPartShape = new btSphereShape(l_dataPart->m_size.x);
+                        l_jointPartShape = new btSphereShape(l_partData.m_size.x);
                         break;
                     case BC_TYPE_BOX:
-                        l_jointPartShape = new btBoxShape(btVector3(l_dataPart->m_size.x, l_dataPart->m_size.y, l_dataPart->m_size.z));
+                        l_jointPartShape = new btBoxShape(btVector3(l_partData.m_size.x, l_partData.m_size.y, l_partData.m_size.z));
                         break;
                     case BC_TYPE_CYLINDER:
-                        l_jointPartShape = new btCylinderShape(btVector3(l_dataPart->m_size.x, l_dataPart->m_size.y, l_dataPart->m_size.z));
+                        l_jointPartShape = new btCylinderShape(btVector3(l_partData.m_size.x, l_partData.m_size.y, l_partData.m_size.z));
                         break;
                     case BC_TYPE_CAPSULE:
-                        l_jointPartShape = new btCapsuleShape(l_dataPart->m_size.x, l_dataPart->m_size.y);
+                        l_jointPartShape = new btCapsuleShape(l_partData.m_size.x, l_partData.m_size.y);
                         break;
                     case BC_TYPE_CONE:
-                        l_jointPartShape = new btConeShape(l_dataPart->m_size.x, l_dataPart->m_size.y);
+                        l_jointPartShape = new btConeShape(l_partData.m_size.x, l_partData.m_size.y);
                         break;
                     default:
                         l_jointPartShape = new btEmptyShape();
                 }
-                l_jointPartShape->calculateLocalInertia(l_dataPart->m_mass, l_jointPartInertia);
+                l_jointPartShape->calculateLocalInertia(l_partData.m_mass, l_jointPartInertia);
                 btDefaultMotionState *l_jointPartFallMotionState = new btDefaultMotionState(l_jointPartResultTransform);
-                btRigidBody::btRigidBodyConstructionInfo l_jointPartFallRigidBodyCI(l_dataPart->m_mass, l_jointPartFallMotionState, l_jointPartShape, l_jointPartInertia);
+                btRigidBody::btRigidBodyConstructionInfo l_jointPartFallRigidBodyCI(l_partData.m_mass, l_jointPartFallMotionState, l_jointPartShape, l_jointPartInertia);
                 l_jointPart->m_rigidBody = new btRigidBody(l_jointPartFallRigidBodyCI);
                 l_jointPart->m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
-                l_jointPart->m_rigidBody->setRestitution(l_dataPart->m_restutition);
-                l_jointPart->m_rigidBody->setFriction(l_dataPart->m_friction);
-                l_jointPart->m_rigidBody->setDamping(l_dataPart->m_damping.x, l_dataPart->m_damping.y);
+                l_jointPart->m_rigidBody->setRestitution(l_partData.m_restutition);
+                l_jointPart->m_rigidBody->setFriction(l_partData.m_friction);
+                l_jointPart->m_rigidBody->setDamping(l_partData.m_damping.x, l_partData.m_damping.y);
 
                 if(i == 0)
                 {
@@ -233,40 +233,40 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                     l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_prevJointRigidBody, *l_jointPart->m_rigidBody, l_toPrevJointPartToBoneTransform, l_jointPart->m_offset[1], false);
                 }
 
-                l_jointPart->m_constraint->setLinearLowerLimit(btVector3(l_dataPart->m_lowerLinearLimit.x, l_dataPart->m_lowerLinearLimit.y, l_dataPart->m_lowerLinearLimit.z));
-                l_jointPart->m_constraint->setLinearUpperLimit(btVector3(l_dataPart->m_upperLinearLimit.x, l_dataPart->m_upperLinearLimit.y, l_dataPart->m_upperLinearLimit.z));
-                if(l_dataPart->m_linearStiffness.x > 0.f)
+                l_jointPart->m_constraint->setLinearLowerLimit(btVector3(l_partData.m_lowerLinearLimit.x, l_partData.m_lowerLinearLimit.y, l_partData.m_lowerLinearLimit.z));
+                l_jointPart->m_constraint->setLinearUpperLimit(btVector3(l_partData.m_upperLinearLimit.x, l_partData.m_upperLinearLimit.y, l_partData.m_upperLinearLimit.z));
+                if(l_partData.m_linearStiffness.x > 0.f)
                 {
                     l_jointPart->m_constraint->enableSpring(0, true);
-                    l_jointPart->m_constraint->setStiffness(0, l_dataPart->m_linearStiffness.x);
+                    l_jointPart->m_constraint->setStiffness(0, l_partData.m_linearStiffness.x);
                 }
-                if(l_dataPart->m_linearStiffness.y > 0.f)
+                if(l_partData.m_linearStiffness.y > 0.f)
                 {
                     l_jointPart->m_constraint->enableSpring(1, true);
-                    l_jointPart->m_constraint->setStiffness(1, l_dataPart->m_linearStiffness.y);
+                    l_jointPart->m_constraint->setStiffness(1, l_partData.m_linearStiffness.y);
                 }
-                if(l_dataPart->m_linearStiffness.z > 0.f)
+                if(l_partData.m_linearStiffness.z > 0.f)
                 {
                     l_jointPart->m_constraint->enableSpring(2, true);
-                    l_jointPart->m_constraint->setStiffness(2, l_dataPart->m_linearStiffness.z);
+                    l_jointPart->m_constraint->setStiffness(2, l_partData.m_linearStiffness.z);
                 }
 
-                l_jointPart->m_constraint->setAngularLowerLimit(btVector3(l_dataPart->m_lowerAngularLimit.x, l_dataPart->m_lowerAngularLimit.y, l_dataPart->m_lowerAngularLimit.z));
-                l_jointPart->m_constraint->setAngularUpperLimit(btVector3(l_dataPart->m_upperAngularLimit.x, l_dataPart->m_upperAngularLimit.y, l_dataPart->m_upperAngularLimit.z));
-                if(l_dataPart->m_angularStiffness.x > 0.f)
+                l_jointPart->m_constraint->setAngularLowerLimit(btVector3(l_partData.m_lowerAngularLimit.x, l_partData.m_lowerAngularLimit.y, l_partData.m_lowerAngularLimit.z));
+                l_jointPart->m_constraint->setAngularUpperLimit(btVector3(l_partData.m_upperAngularLimit.x, l_partData.m_upperAngularLimit.y, l_partData.m_upperAngularLimit.z));
+                if(l_partData.m_angularStiffness.x > 0.f)
                 {
                     l_jointPart->m_constraint->enableSpring(3, true);
-                    l_jointPart->m_constraint->setStiffness(3, l_dataPart->m_angularStiffness.x);
+                    l_jointPart->m_constraint->setStiffness(3, l_partData.m_angularStiffness.x);
                 }
-                if(l_dataPart->m_angularStiffness.y > 0.f)
+                if(l_partData.m_angularStiffness.y > 0.f)
                 {
                     l_jointPart->m_constraint->enableSpring(4, true);
-                    l_jointPart->m_constraint->setStiffness(4, l_dataPart->m_angularStiffness.y);
+                    l_jointPart->m_constraint->setStiffness(4, l_partData.m_angularStiffness.y);
                 }
-                if(l_dataPart->m_angularStiffness.z > 0.f)
+                if(l_partData.m_angularStiffness.z > 0.f)
                 {
                     l_jointPart->m_constraint->enableSpring(5, true);
-                    l_jointPart->m_constraint->setStiffness(5, l_dataPart->m_angularStiffness.z);
+                    l_jointPart->m_constraint->setStiffness(5, l_partData.m_angularStiffness.z);
                 }
 
                 l_joint->m_partsVector.push_back(l_jointPart);

@@ -146,8 +146,10 @@ void ROC::Model::UpdateMatrix()
         {
             if(m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
             {
+                glm::mat4 l_boneMatrix;
+                m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->GetMatrix(l_boneMatrix);
                 std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
-                m_matrix *= m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->GetMatrixRef();
+                m_matrix *= l_boneMatrix;
                 m_matrix *= m_localMatrix;
                 m_rebuilded = true;
             }
