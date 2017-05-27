@@ -11,16 +11,16 @@ class EventManager
 
     struct Event
     {
-        void *m_luaFunc;
-        int m_luaRef;
+        void *m_luaFunc = NULL;
+        int m_luaRef = -1;
         bool m_deleted = false;
     };
     struct EventHeap
     {
         bool m_active = false;
         bool m_deleted = false;
-        std::vector<Event*> m_eventVector;
-        std::vector<Event*>::iterator m_eventVectorIter;
+        std::vector<Event> m_eventVector;
+        std::vector<Event>::iterator m_eventVectorIter;
     };
     std::unordered_map<std::string,EventHeap*> m_eventMap;
     std::unordered_map<std::string, EventHeap*>::iterator m_eventMapEnd;
