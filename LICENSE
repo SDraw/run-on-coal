@@ -29,4 +29,6 @@ External libraries used by RunOnCoal
 * pugixml is licensed under MIT license.
 * zlib is licensed under zlib license.
 * luautf8 is licensed under the terms of the MIT license.
-* sfeMovie is licensed under GNU Lesser General Public License.
+* RakNet is licensed under the terms of the BSD license.
+* RectangleBinPack is released to Public Domain.
+* intervaltree is licensed under MIT license.
