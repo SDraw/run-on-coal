@@ -9,7 +9,6 @@ ROC::Movie::Movie()
 }
 ROC::Movie::~Movie()
 {
-    m_movie->
     if(m_movie) delete m_movie;
 }
 
