@@ -41,6 +41,20 @@ void ROC::Movie::Stop()
     if(m_movie) m_movie->stop();
 }
 
+void ROC::Movie::SetVolume(float f_val)
+{
+    if(m_movie) m_movie->setVolume(f_val);
+}
+
+void ROC::Movie::SetTime(float f_val)
+{
+    if(m_movie)
+    {
+        sf::Time l_time = sf::seconds(f_val);
+        m_movie->setPlayingOffset(l_time);
+    }
+}
+
 void ROC::Movie::Bind()
 {
     if(m_movie)

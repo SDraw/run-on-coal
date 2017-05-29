@@ -156,6 +156,14 @@ ROC::LuaManager::LuaManager(Core *f_core)
     lua_register(m_vm, "moviePlay", Lua::moviePlay);
     lua_register(m_vm, "moviePause", Lua::moviePause);
     lua_register(m_vm, "movieStop", Lua::movieStop);
+    lua_register(m_vm, "movieGetSampleRate", Lua::movieGetSampleRate);
+    lua_register(m_vm, "movieGetChannelCount", Lua::movieGetChannelCount);
+    lua_register(m_vm, "movieGetFramerate", Lua::movieGetFramerate);
+    lua_register(m_vm, "movieGetDuration", Lua::movieGetDuration);
+    lua_register(m_vm, "movieGetVolume", Lua::movieGetVolume);
+    lua_register(m_vm, "movieSetVolume", Lua::movieSetVolume);
+    lua_register(m_vm, "movieGetTime", Lua::movieGetTime);
+    lua_register(m_vm, "movieSetTime", Lua::movieSetTime);
 
     // Drawable
     lua_register(m_vm, "drawableDraw", Lua::drawableDraw);
