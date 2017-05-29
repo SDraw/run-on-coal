@@ -41,19 +41,6 @@ int fontCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int fontDestroy(lua_State *f_vm)
-{
-    Font *l_font;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_font);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_font);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int fontDraw(lua_State *f_vm)
 {
     Font *l_font;

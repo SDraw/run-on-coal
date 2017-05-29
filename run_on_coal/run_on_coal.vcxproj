@@ -69,14 +69,16 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype27/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype27/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype27d.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;zlibd.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfeMovie-d.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype27d.lib;zlibd.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;../vendor/sfeMovie/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
@@ -93,7 +95,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype27/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype27/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -110,8 +112,8 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype27.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;../vendor/sfeMovie/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype27.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;sfeMovie.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
@@ -141,6 +143,7 @@
     <ClInclude Include="Elements\Model\Bone.h" />
     <ClInclude Include="Elements\Model\Model.h" />
     <ClInclude Include="Elements\Model\Skeleton.h" />
+    <ClInclude Include="Elements\Movie.h" />
     <ClInclude Include="Elements\RenderTarget.h" />
     <ClInclude Include="Elements\Scene.h" />
     <ClInclude Include="Elements\Shader.h" />
@@ -149,11 +152,13 @@
     <ClInclude Include="Lua\LuaDefinitions.Animation.h" />
     <ClInclude Include="Lua\LuaDefinitions.Camera.h" />
     <ClInclude Include="Lua\LuaDefinitions.Collision.h" />
+    <ClInclude Include="Lua\LuaDefinitions.Drawable.h" />
     <ClInclude Include="Lua\LuaDefinitions.Element.h" />
     <ClInclude Include="Lua\LuaDefinitions.Events.h" />
     <ClInclude Include="Lua\LuaDefinitions.File.h" />
     <ClInclude Include="Lua\LuaDefinitions.Font.h" />
     <ClInclude Include="Lua\LuaDefinitions.Geometry.h" />
+    <ClInclude Include="Lua\LuaDefinitions.Movie.h" />
     <ClInclude Include="Lua\LuaDefinitions.Network.h" />
     <ClInclude Include="Lua\LuaDefinitions.Input.h" />
     <ClInclude Include="Lua\LuaDefinitions.Light.h" />
@@ -217,6 +222,7 @@
     <ClCompile Include="Elements\Model\Bone.cpp" />
     <ClCompile Include="Elements\Model\Model.cpp" />
     <ClCompile Include="Elements\Model\Skeleton.cpp" />
+    <ClCompile Include="Elements\Movie.cpp" />
     <ClCompile Include="Elements\RenderTarget.cpp" />
     <ClCompile Include="Elements\Scene.cpp" />
     <ClCompile Include="Elements\Shader.cpp" />
@@ -225,11 +231,13 @@
     <ClCompile Include="Lua\LuaDefinitions.Animation.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Camera.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Collision.cpp" />
+    <ClCompile Include="Lua\LuaDefinitions.Drawable.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Element.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Events.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.File.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Font.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Geometry.cpp" />
+    <ClCompile Include="Lua\LuaDefinitions.Movie.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Network.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Input.cpp" />
     <ClCompile Include="Lua\LuaDefinitions.Light.cpp" />

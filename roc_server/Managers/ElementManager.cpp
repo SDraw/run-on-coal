@@ -3,6 +3,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/MemoryManager.h"
+#include "Managers/NetworkManager.h"
 #include "Elements/Client.h"
 #include "Elements/File.h"
 #include "Utils/Utils.h"
@@ -20,6 +21,14 @@ ROC::Client* ROC::ElementManager::CreateClient()
     Client *l_client = new Client();
     m_core->GetMemoryManager()->AddMemoryPointer(l_client);
     return l_client;
+}
+void ROC::ElementManager::DestroyClient(Client *f_client)
+{
+    if(m_core->GetMemoryManager()->IsValidMemoryPointer(f_client))
+    {
+        m_core->GetMemoryManager()->RemoveMemoryPointer(f_client);
+        delete f_client;
+    }
 }
 
 ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
@@ -56,12 +65,15 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     }
     return l_file;
 }
-
-void ROC::ElementManager::DestroyElement(Element *f_element)
+void ROC::ElementManager::CloseFile(File *f_file)
 {
-    m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
-    delete f_element;
+    if(m_core->GetMemoryManager()->IsValidMemoryPointer(f_file))
+    {
+        m_core->GetMemoryManager()->RemoveMemoryPointer(f_file);
+        delete f_file;
+    }
 }
+
 void ROC::ElementManager::DestroyElementByPointer(void *f_element)
 {
     //Called only at the end of work

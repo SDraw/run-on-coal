@@ -18,6 +18,7 @@ class Texture;
 class Font;
 class File;
 class Collision;
+class Movie;
 class ElementManager
 {
     Core *m_core;
@@ -38,6 +39,7 @@ public:
     File* CreateFile_(const std::string &f_path);
     File* OpenFile(const std::string &f_path, bool f_ro);
     Collision* CreateCollision(int f_type, glm::vec3 &f_size, float f_mass);
+    Movie* CreateMovie(const std::string &f_path);
 
     void DestroyElement(Element *f_element);
 protected:

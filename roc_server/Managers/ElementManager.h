@@ -15,13 +15,13 @@ class ElementManager
 public:
     File* CreateFile_(const std::string &f_path);
     File* OpenFile(const std::string &f_path, bool f_ro);
-
-    void DestroyElement(Element *f_element);
+    void CloseFile(File *f_file);
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
 
     Client* CreateClient();
+    void DestroyClient(Client *f_client);
 
     static void DestroyElementByPointer(void* f_pointer);
 

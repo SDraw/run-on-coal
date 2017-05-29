@@ -12,7 +12,7 @@ class PreRenderManager
 
     struct TreeNode
     {
-        Model *m_model;
+        Model *m_model = NULL;
         TreeNode *m_parent = NULL;
         std::unordered_set<TreeNode*> m_children;
     };

@@ -41,19 +41,7 @@ int shaderCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int shaderDestroy(lua_State *f_vm)
-{
-    Shader *l_shader = NULL;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_shader);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_shader);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
+
 int shaderSetUniformValue(lua_State *f_vm)
 {
     Shader *l_shader = NULL;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Core/Core.h"
+#include "Managers/ElementManager.h"
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
@@ -88,6 +89,20 @@ int elementRemoveData(lua_State *f_vm)
     {
         bool l_result = l_element->RemoveCustomData(l_key);
         argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int elementDestroy(lua_State *f_vm)
+{
+    Element *l_element;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_element);
+    if(!argStream.HasErrors())
+    {
+        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_element);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

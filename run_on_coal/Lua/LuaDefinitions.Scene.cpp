@@ -23,19 +23,6 @@ int sceneCreate(lua_State *f_vm)
     l_scene ? argStream.PushPointer(l_scene) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int sceneDestroy(lua_State *f_vm)
-{
-    Scene *l_scene = NULL;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_scene);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_scene);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int sceneSetCamera(lua_State *f_vm)
 {
     Scene *l_scene;

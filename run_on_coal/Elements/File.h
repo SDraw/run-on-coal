@@ -18,6 +18,7 @@ public:
     bool SetPosition(size_t f_pos);
     inline size_t GetPosition() { return static_cast<size_t>((m_type == FileMode::ReadMode) ? m_file->tellg() : m_file->tellp()); }
     inline bool IsEOF() { return m_file->eof(); }
+    inline void Flush() { m_file->flush(); }
 
     inline void GetPath(std::string &f_string) { f_string.assign(m_path); }
 

@@ -48,19 +48,6 @@ int rtCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int rtDestroy(lua_State *f_vm)
-{
-    RenderTarget *l_rt;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_rt);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_rt);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int rtGetSize(lua_State *f_vm)
 {
     RenderTarget *l_rt;
@@ -82,26 +69,6 @@ int rtGetFiltering(lua_State *f_vm)
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_rt);
     !argStream.HasErrors() ? argStream.PushText(g_rtFilteringTypesTable[l_rt->GetFiltering()]) : argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int rtDraw(lua_State *f_vm)
-{
-    RenderTarget *l_rt;
-    glm::vec2 l_pos, l_size;
-    float l_rot;
-    glm::vec4 l_color(1.f);
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_rt);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
-    argStream.ReadNextNumber(l_rot);
-    for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetRenderManager()->Render(l_rt, l_pos, l_size, l_rot, l_color);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

@@ -15,6 +15,7 @@
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Light.h"
 #include "Elements/Model/Model.h"
+#include "Elements/Movie.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader.h"
@@ -214,7 +215,6 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     std::vector<std::string> l_path;
     std::string l_work;
     m_core->GetWorkingDirectory(l_work);
-
     for(auto iter : f_path)
     {
         std::string l_iterPath;
@@ -291,6 +291,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_size, float f_mass)
 {
     Collision *l_col = new Collision();
+
     if(l_col->Create(f_type, f_size, f_mass))
     {
         m_core->GetMemoryManager()->AddMemoryPointer(l_col);
@@ -304,43 +305,64 @@ ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_si
     return l_col;
 }
 
+ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
+{
+    Movie *l_movie = new Movie();
+
+    std::string l_path, l_work;
+    m_core->GetWorkingDirectory(l_work);
+    Utils::AnalyzePath(f_path, l_path);
+    Utils::JoinPaths(l_work, l_path);
+
+    if(l_movie->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_movie);
+    else
+    {
+        delete l_movie;
+        l_movie = NULL;
+    }
+    return l_movie;
+}
+
 void ROC::ElementManager::DestroyElement(Element *f_element)
 {
-    switch(f_element->GetElementType())
+    if(m_core->GetMemoryManager()->IsValidMemoryPointer(f_element))
     {
-        case Element::ElementType::SceneElement:
+        switch(f_element->GetElementType())
         {
-            m_core->GetRenderManager()->RemoveAsActiveScene(dynamic_cast<Scene*>(f_element));
-            m_core->GetInheritManager()->RemoveParentRelation(f_element);
-        } break;
-        case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::TextureElement:
-            m_core->GetInheritManager()->RemoveChildRelation(f_element);
-            break;
-        case Element::ElementType::AnimationElement: case Element::ElementType::GeometryElement:
-            m_core->GetInheritManager()->RemoveParentRelation(f_element);
-            break;
-        case Element::ElementType::ModelElement:
-        {
-            m_core->GetInheritManager()->RemoveParentRelation(f_element);
-            m_core->GetInheritManager()->RemoveChildRelation(f_element);
-            m_core->GetPreRenderManager()->RemoveModel(dynamic_cast<Model*>(f_element));
-            m_core->GetPhysicsManager()->RemoveModel(dynamic_cast<Model*>(f_element));
-        } break;
-        case Element::ElementType::ShaderElement:
-        {
-            m_core->GetRenderManager()->RemoveAsActiveShader(dynamic_cast<Shader*>(f_element));
-            m_core->GetInheritManager()->RemoveParentRelation(f_element);
-        } break;
-        case Element::ElementType::CollisionElement:
-            m_core->GetPhysicsManager()->RemoveCollision(dynamic_cast<Collision*>(f_element));
-            m_core->GetInheritManager()->RemoveChildRelation(f_element);
-            break;
+            case Element::ElementType::SceneElement:
+            {
+                m_core->GetRenderManager()->RemoveAsActiveScene(dynamic_cast<Scene*>(f_element));
+                m_core->GetInheritManager()->RemoveParentRelation(f_element);
+            } break;
+            case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::TextureElement: case Element::ElementType::MovieElement:
+                m_core->GetInheritManager()->RemoveChildRelation(f_element);
+                break;
+            case Element::ElementType::AnimationElement: case Element::ElementType::GeometryElement:
+                m_core->GetInheritManager()->RemoveParentRelation(f_element);
+                break;
+            case Element::ElementType::ModelElement:
+            {
+                m_core->GetInheritManager()->RemoveParentRelation(f_element);
+                m_core->GetInheritManager()->RemoveChildRelation(f_element);
+                m_core->GetPreRenderManager()->RemoveModel(dynamic_cast<Model*>(f_element));
+                m_core->GetPhysicsManager()->RemoveModel(dynamic_cast<Model*>(f_element));
+            } break;
+            case Element::ElementType::ShaderElement:
+            {
+                m_core->GetRenderManager()->RemoveAsActiveShader(dynamic_cast<Shader*>(f_element));
+                m_core->GetInheritManager()->RemoveParentRelation(f_element);
+            } break;
+            case Element::ElementType::CollisionElement:
+                m_core->GetPhysicsManager()->RemoveCollision(dynamic_cast<Collision*>(f_element));
+                m_core->GetInheritManager()->RemoveChildRelation(f_element);
+                break;
+        }
+        m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+        delete f_element;
     }
-    m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
-    delete f_element;
 }
 void ROC::ElementManager::DestroyElementByPointer(void *f_pointer)
 {
-    //Called only at the end of work
+    //Called by MemoryManager at the end of work
     delete reinterpret_cast<Element*>(f_pointer);
 }

@@ -37,19 +37,6 @@ int modelCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int modelDestroy(lua_State *f_vm)
-{
-    Model *l_model;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_model);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_model);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int modelGetGeometry(lua_State *f_vm)
 {
     Model *l_model;

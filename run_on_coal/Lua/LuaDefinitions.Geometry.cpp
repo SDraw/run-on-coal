@@ -25,19 +25,6 @@ int geometryCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int geometryDestroy(lua_State *f_vm)
-{
-    Geometry *l_geometry;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_geometry);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_geometry);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 
 }
 }

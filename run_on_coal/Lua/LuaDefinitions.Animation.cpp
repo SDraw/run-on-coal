@@ -25,19 +25,6 @@ int animationCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int animationDestroy(lua_State *f_vm)
-{
-    Animation *l_anim = NULL;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_anim);
-    if(!argStream.HasErrors())
-    {
-        ROC::LuaManager::GetCore()->GetElementManager()->DestroyElement(l_anim);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 
 }
 }

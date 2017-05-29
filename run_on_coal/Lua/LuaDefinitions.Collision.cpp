@@ -43,19 +43,6 @@ int collisionCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int collisionDestroy(lua_State *f_vm)
-{
-    Collision *l_col;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_col);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_col);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 
 int collisionSetPosition(lua_State *f_vm)
 {

@@ -36,19 +36,6 @@ int cameraCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int cameraDestroy(lua_State *f_vm)
-{
-    Camera *l_camera;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_camera);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_camera);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 
 int cameraSetPosition(lua_State *f_vm)
 {

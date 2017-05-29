@@ -19,19 +19,6 @@ int lightCreate(lua_State *f_vm)
     l_light ? argStream.PushPointer(l_light) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int lightDestroy(lua_State *f_vm)
-{
-    Light *l_light;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_light);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_light);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int lightSetParams(lua_State *f_vm)
 {
     Light *l_light;

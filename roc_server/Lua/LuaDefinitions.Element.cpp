@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Core/Core.h"
 #include "Managers/EventManager.h"
+#include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
 #include "Elements/Element.h"

@@ -33,19 +33,6 @@ int soundCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int soundDestroy(lua_State *f_vm)
-{
-    Sound *l_sound;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_sound);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_sound);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 
 int soundPlay(lua_State *f_vm)
 {

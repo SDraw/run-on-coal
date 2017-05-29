@@ -6,7 +6,6 @@
 ROC::File::File()
 {
     m_elementType = ElementType::FileElement;
-
     m_file = NULL;
 }
 ROC::File::~File()
@@ -79,7 +78,7 @@ bool ROC::File::SetPosition(size_t f_pos)
     return !m_file->fail();
 }
 
-bool ROC::File::Delete(Core *f_core, const std::string &f_path)
+bool ROC::File::Delete(Core *f_core, std::string &f_path)
 {
     std::string l_work, l_path;
     f_core->GetWorkingDirectory(l_work);
@@ -87,7 +86,7 @@ bool ROC::File::Delete(Core *f_core, const std::string &f_path)
     Utils::JoinPaths(l_work, l_path);
     return !std::remove(l_work.c_str());
 }
-bool ROC::File::Rename(Core *f_core, const std::string &f_old, const std::string &f_new)
+bool ROC::File::Rename(Core *f_core, std::string &f_old, std::string &f_new)
 {
     std::string l_workOld, l_pathOld, l_workNew, l_pathNew;
 

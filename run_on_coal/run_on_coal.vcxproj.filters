@@ -195,6 +195,15 @@
     <ClCompile Include="Lua\LuaDefinitions.Element.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Movie.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Movie.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefinitions.Drawable.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -387,6 +396,15 @@
     </ClInclude>
     <ClInclude Include="Elements\Geometry\BoneCollisionData.hpp">
       <Filter>Elements\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Movie.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Movie.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefinitions.Drawable.h">
+      <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

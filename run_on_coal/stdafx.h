@@ -19,6 +19,7 @@
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
+#include "sfeMovie/Movie.hpp"
 
 #define GLM_FORCE_INLINE
 #ifndef _DEBUG

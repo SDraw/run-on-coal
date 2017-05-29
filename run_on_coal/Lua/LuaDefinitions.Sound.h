@@ -6,7 +6,6 @@ namespace Lua
 {
 
 int soundCreate(lua_State *f_vm);
-int soundDestroy(lua_State *f_vm);
 int soundPlay(lua_State *f_vm);
 int soundPause(lua_State *f_vm);
 int soundStop(lua_State *f_vm);

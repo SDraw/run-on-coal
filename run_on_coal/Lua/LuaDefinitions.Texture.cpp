@@ -57,19 +57,7 @@ int textureCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int textureDestroy(lua_State *f_vm)
-{
-    Texture *l_texture;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_texture);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_texture);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
+
 int textureGetSize(lua_State *f_vm)
 {
     Texture *l_texture;
@@ -85,32 +73,13 @@ int textureGetSize(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int textureGetFiltering(lua_State *f_vm)
 {
     Texture *l_texture;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_texture);
     !argStream.HasErrors() ? argStream.PushText(g_textureFilteringTypesTable[l_texture->GetFiltering()]) : argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int textureDraw(lua_State *f_vm)
-{
-    Texture *l_tex;
-    glm::vec2 l_pos, l_size;
-    float l_rot = 0.f;
-    glm::vec4 l_color(1.f);
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_tex);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
-    argStream.ReadNextNumber(l_rot);
-    for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetRenderManager()->Render(l_tex, l_pos, l_size, l_rot, l_color);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

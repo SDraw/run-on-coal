@@ -18,16 +18,18 @@ public:
     bool SetPosition(size_t f_pos);
     inline size_t GetPosition() { return static_cast<size_t>((m_type == FileMode::ReadMode) ? m_file->tellg() : m_file->tellp()); }
     inline bool IsEOF() { return m_file->eof(); }
+    inline void Flush() { m_file->flush(); }
 
     inline void GetPath(std::string &f_string) { f_string.assign(m_path); }
 
-    static bool Delete(Core *f_core, const std::string &f_path);
-    static bool Rename(Core *f_core, const std::string &f_old, const std::string &f_new);
+    static bool Delete(Core *f_core, std::string &f_path);
+    static bool Rename(Core *f_core, std::string &f_old, std::string &f_new);
 protected:
     File();
     ~File();
     bool Create(const std::string &f_path, const std::string &f_rPath);
     bool Open(const std::string &f_path, const std::string &f_rPath, bool f_ro);
+
     friend class ElementManager;
 };
 

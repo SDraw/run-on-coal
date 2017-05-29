@@ -13,7 +13,8 @@ public:
     {
         GeometryElement = 0U, ModelElement, AnimationElement, SceneElement,
         CameraElement, LightElement, RenderTargetElement, ShaderElement,
-        SoundElement, TextureElement, FontElement, FileElement, CollisionElement
+        SoundElement, TextureElement, FontElement, FileElement, CollisionElement,
+        MovieElement
     };
 
     bool SetCustomData(const std::string &f_key, CustomData &f_val);

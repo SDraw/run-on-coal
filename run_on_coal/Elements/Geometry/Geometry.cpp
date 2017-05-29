@@ -248,7 +248,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
                                 l_file.read(reinterpret_cast<char*>(&l_jointPart.m_mass), sizeof(float));
                                 l_file.read(reinterpret_cast<char*>(&l_jointPart.m_restutition), sizeof(float));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_restutition), sizeof(float));
+                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_friction), sizeof(float));
                                 l_file.read(reinterpret_cast<char*>(&l_jointPart.m_damping), sizeof(glm::vec2));
 
                                 l_file.read(reinterpret_cast<char*>(&l_jointPart.m_lowerAngularLimit), sizeof(glm::vec3));

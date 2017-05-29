@@ -40,19 +40,6 @@ int fileOpen(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int fileClose(lua_State *f_vm)
-{
-    File *l_file;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_file);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetElementManager()->DestroyElement(l_file);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
 int fileRead(lua_State *f_vm)
 {
     File *l_file;
@@ -123,6 +110,19 @@ int fileGetPosition(lua_State *f_vm)
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
     !argStream.HasErrors() ? argStream.PushInteger(l_file->GetPosition()) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int fileFlush(lua_State *f_vm)
+{
+    File *l_file;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_file);
+    if(!argStream.HasErrors())
+    {
+        l_file->Flush();
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int fileGetPath(lua_State *f_vm)
