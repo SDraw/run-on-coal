@@ -112,7 +112,7 @@ void ROC::Model::SetScale(const glm::vec3 &f_scl)
     if(!m_collision && (m_scale != f_scl))
     {
         std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
-        m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::compMax(m_scale);
+        m_boundSphereRaduis = (m_geometry ? m_geometry->GetBoundSphereRadius()*glm::compMax(m_scale) : glm::length(m_scale));
         m_rebuildMatrix = true;
     }
 }
