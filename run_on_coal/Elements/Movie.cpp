@@ -43,13 +43,18 @@ void ROC::Movie::Stop()
 
 void ROC::Movie::SetVolume(float f_val)
 {
-    if(m_movie) m_movie->setVolume(f_val);
+    if(m_movie)
+    {
+        btClamp(f_val, 0.f, 100.f);
+        m_movie->setVolume(f_val);
+    }
 }
 
 void ROC::Movie::SetTime(float f_val)
 {
     if(m_movie)
     {
+        btClamp(f_val, 0.f, std::numeric_limits<float>::max());
         sf::Time l_time = sf::seconds(f_val);
         m_movie->setPlayingOffset(l_time);
     }
@@ -60,6 +65,7 @@ void ROC::Movie::Bind()
     if(m_movie)
     {
         m_movie->update();
+        auto k = m_movie->getStreams(sfe::MediaType::Audio);
         glBindTexture(GL_TEXTURE_2D, m_movie->getCurrentImage().getNativeHandle());
     }
 }

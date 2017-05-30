@@ -20,7 +20,7 @@ public:
     void SetInterpolated(BoneFrameData *f_data, float f_blend);
     void SetInterpolated(BoneFrameData *f_leftData, BoneFrameData *f_rightData, float f_blend);
 
-    static void Copy(BoneFrameData *f_inputData, BoneFrameData *f_outputData);
+    static void Copy(BoneFrameData *f_src, BoneFrameData *f_dst);
 protected:
     inline glm::vec3& GetPositionRef() { return m_position; }
     inline glm::quat& GetRotationRef() { return m_rotation; }

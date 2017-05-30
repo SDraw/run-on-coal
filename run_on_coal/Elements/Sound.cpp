@@ -53,18 +53,30 @@ void ROC::Sound::Stop()
 
 void ROC::Sound::SetSpeed(float f_speed)
 {
-    if(m_handle) m_handle->setPitch(f_speed);
+    if(m_handle)
+    {
+        btClamp(f_speed, 0.f, std::numeric_limits<float>::max());
+        m_handle->setPitch(f_speed);
+    }
 }
 
 void ROC::Sound::SetVolume(float f_volume)
 {
-    if(m_handle) m_handle->setVolume(f_volume);
+    if(m_handle)
+    {
+        btClamp(f_volume, 0.f, 100.f);
+        m_handle->setVolume(f_volume);
+    }
 }
 
 void ROC::Sound::SetTime(float f_time)
 {
-    sf::Time l_time = sf::seconds(f_time);
-    m_handle->setPlayingOffset(l_time);
+    if(m_handle)
+    {
+        btClamp(f_time, 0.f, std::numeric_limits<float>::max());
+        sf::Time l_time = sf::seconds(f_time);
+        m_handle->setPlayingOffset(l_time);
+    }
 }
 
 bool ROC::Sound::Set3DPositionEnabled(bool f_state)

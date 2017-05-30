@@ -11,7 +11,7 @@ namespace ROC
 
 class Font : public Element
 {
-    FT_Library m_library;
+    static FT_Library m_library;
     FT_Face m_face;
 
     GLuint m_atlasTexture;
@@ -30,9 +30,9 @@ class Font : public Element
     std::unordered_map<unsigned int, charData*>::iterator m_charIter;
     std::unordered_map<unsigned int, charData*>::iterator m_charMapEnd;
 
-    std::vector<glm::vec3> *m_vertices;
+    std::vector<glm::vec3> m_vertices;
     GLuint m_vertexVBO;
-    std::vector<glm::vec2> *m_uv;
+    std::vector<glm::vec2> m_uv;
     GLuint m_uvVBO;
     GLuint m_VAO;
     bool m_switch;
@@ -49,6 +49,8 @@ public:
 protected:
     Font();
     ~Font();
+    static void InitLibrary();
+    static void TerminateLibrary();
     bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
 
     inline GLuint GetVAO() const { return m_VAO; }

@@ -88,7 +88,12 @@ int soundGetState(lua_State *f_vm)
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
-    !argStream.HasErrors() ? argStream.PushText(g_soundStatesTable[l_sound->GetState()]) : argStream.PushBoolean(false);
+    if(!argStream.HasErrors())
+    {
+        int l_state = l_sound->GetState();
+        (l_state != -1) ? argStream.PushText(g_soundStatesTable[l_state]) : argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
@@ -112,7 +117,12 @@ int soundGetSpeed(lua_State *f_vm)
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
-    !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetSpeed()) : argStream.PushBoolean(false);
+    if(!argStream.HasErrors())
+    {
+        float l_speed = l_sound->GetSpeed();
+        (l_speed != -1.f) ? argStream.PushNumber(l_speed) : argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
@@ -136,7 +146,12 @@ int soundGetVolume(lua_State *f_vm)
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
-    !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetVolume()) : argStream.PushBoolean(false);
+    if(!argStream.HasErrors())
+    {
+        float l_volume = l_sound->GetVolume();
+        (l_volume != -1.f) ? argStream.PushNumber(l_volume) : argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
@@ -163,7 +178,7 @@ int soundGetTime(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         float l_time = l_sound->GetTime();
-        argStream.PushNumber(l_time);
+        (l_time != -1.f) ? argStream.PushNumber(l_time) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -173,7 +188,12 @@ int soundGetDuration(lua_State *f_vm)
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
-    !argStream.HasErrors() ? argStream.PushNumber(l_sound->GetDuration()) : argStream.PushBoolean(false);
+    if(argStream.HasErrors())
+    {
+        float l_duration = l_sound->GetDuration();
+        (l_duration != -1.f) ? argStream.PushNumber(l_duration) : argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

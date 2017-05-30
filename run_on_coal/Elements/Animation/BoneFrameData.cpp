@@ -34,9 +34,9 @@ void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_leftData, BoneFrameDat
     m_scale = glm::lerp(f_leftData->m_scale, f_rightData->m_scale, f_blend);
 }
 
-void ROC::BoneFrameData::Copy(BoneFrameData *f_inputData, BoneFrameData *f_outputData)
+void ROC::BoneFrameData::Copy(BoneFrameData *f_src, BoneFrameData *f_dst)
 {
-    std::memcpy(&f_outputData->m_position, &f_inputData->m_position, sizeof(glm::vec3));
-    std::memcpy(&f_outputData->m_rotation, &f_inputData->m_rotation, sizeof(glm::quat));
-    std::memcpy(&f_outputData->m_scale, &f_inputData->m_scale, sizeof(glm::vec3));
+    std::memcpy(&f_dst->m_position, &f_src->m_position, sizeof(glm::vec3));
+    std::memcpy(&f_dst->m_rotation, &f_src->m_rotation, sizeof(glm::quat));
+    std::memcpy(&f_dst->m_scale, &f_src->m_scale, sizeof(glm::vec3));
 }

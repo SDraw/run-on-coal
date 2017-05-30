@@ -38,6 +38,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    Font::InitLibrary();
     Shader::CreateBonesUBO();
 
     m_activeScene = NULL;
@@ -63,6 +64,7 @@ ROC::RenderManager::~RenderManager()
 {
     delete m_quad;
     delete m_argument;
+    Font::TerminateLibrary();
     Shader::DestroyBonesUBO();
 }
 
