@@ -35,12 +35,12 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
-    if(l_file->Create(l_work, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
+    if(l_file->Create(l_path, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
     {
         delete l_file;
@@ -52,12 +52,12 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
-    if(l_file->Open(l_work, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
+    if(l_file->Open(l_path, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
     {
         delete l_file;

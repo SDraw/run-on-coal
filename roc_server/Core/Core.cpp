@@ -21,6 +21,7 @@ ROC::Core::Core()
     _getcwd(l_pathBuf, _MAX_PATH);
     l_appPath.assign(l_pathBuf);
     std::regex_replace(std::back_inserter(m_workingDir), l_appPath.begin(), l_appPath.end(), l_regex, "/");
+    m_workingDir.push_back('/');
     delete[]l_pathBuf;
 
     m_configManager = new ConfigManager();

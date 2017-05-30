@@ -57,12 +57,12 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
 {
     Animation *l_anim = new Animation();
 
-    std::string l_work, l_path;
+    std::string l_work, l_path(f_path);
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
-    if(l_anim->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_anim);
+    if(l_anim->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_anim);
     else
     {
         delete l_anim;
@@ -75,13 +75,13 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path)
 {
     Geometry *l_geometry = new Geometry();
 
-    std::string l_work, l_path;
+    std::string l_work, l_path(f_path);
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_geometry->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
+    if(l_geometry->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
     else
     {
         delete l_geometry;
@@ -104,29 +104,23 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
 {
     Shader *l_shader = new Shader();
 
-    std::string l_path[3], l_work;
+    std::string l_path[3] = { f_vpath, f_fpath, f_gpath }, l_work;
     m_core->GetWorkingDirectory(l_work);
 
     if(!f_vpath.empty())
     {
-        std::string l_vertexPath;
-        Utils::AnalyzePath(f_vpath, l_vertexPath);
-        l_path[0].append(l_work);
-        Utils::JoinPaths(l_path[0], l_vertexPath);
+        Utils::EscapePath(l_path[0]);
+        l_path[0].insert(0U, l_work);
     }
     if(!f_fpath.empty())
     {
-        std::string l_fragmentPath;
-        Utils::AnalyzePath(f_fpath, l_fragmentPath);
-        l_path[1].append(l_work);
-        Utils::JoinPaths(l_path[1], l_fragmentPath);
+        Utils::EscapePath(l_path[1]);
+        l_path[1].insert(0U, l_work);
     }
     if(!f_gpath.empty())
     {
-        std::string l_geometryPath;
-        Utils::AnalyzePath(f_gpath, l_geometryPath);
-        l_path[2].append(l_work);
-        Utils::JoinPaths(l_path[2], l_geometryPath);
+        Utils::EscapePath(l_path[2]);
+        l_path[2].insert(0U, l_work);
     }
     if(l_shader->Load(l_path[0], l_path[1], l_path[2]))
     {
@@ -159,12 +153,12 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path, bool f_l
 {
     Sound *l_sound = new Sound(f_loop);
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
-    if(l_sound->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_sound);
+    if(l_sound->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_sound);
     else
     {
         delete l_sound;
@@ -194,13 +188,13 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
 {
     Texture *l_tex = new Texture();
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_tex->Load(l_work, f_type, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_tex);
+    if(l_tex->Load(l_path, f_type, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_tex);
     else
     {
         delete l_tex;
@@ -217,11 +211,10 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     m_core->GetWorkingDirectory(l_work);
     for(auto iter : f_path)
     {
-        std::string l_iterPath;
-        std::string l_iterFullPath(l_work);
-        Utils::AnalyzePath(iter, l_iterPath);
-        Utils::JoinPaths(l_iterFullPath, l_iterPath);
-        l_path.push_back(l_iterFullPath);
+        std::string l_iterPath(iter);
+        Utils::EscapePath(iter);
+        l_iterPath.insert(0U, l_work);
+        l_path.push_back(l_iterPath);
     }
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
@@ -238,13 +231,13 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
 {
     Font *l_font = new Font();
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_font->Load(l_work, f_size, f_atlas, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font);
+    if(l_font->Load(l_path, f_size, f_atlas, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font);
     else
     {
         delete l_font;
@@ -257,12 +250,12 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
-    if(l_file->Create(l_work, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
+    if(l_file->Create(l_path, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
     {
         delete l_file;
@@ -274,12 +267,12 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
-    if(l_file->Open(l_work, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
+    if(l_file->Open(l_path, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
     {
         delete l_file;
@@ -309,12 +302,12 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
 {
     Movie *l_movie = new Movie();
 
-    std::string l_path, l_work;
+    std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
 
-    if(l_movie->Load(l_work)) m_core->GetMemoryManager()->AddMemoryPointer(l_movie);
+    if(l_movie->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_movie);
     else
     {
         delete l_movie;

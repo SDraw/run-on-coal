@@ -22,8 +22,8 @@ public:
 
     inline void GetPath(std::string &f_string) { f_string.assign(m_path); }
 
-    static bool Delete(Core *f_core, std::string &f_path);
-    static bool Rename(Core *f_core, std::string &f_old, std::string &f_new);
+    static bool Delete(Core *f_core, const std::string &f_path);
+    static bool Rename(Core *f_core, const std::string &f_old, const std::string &f_new);
 protected:
     File();
     ~File();

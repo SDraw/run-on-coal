@@ -104,7 +104,7 @@ size_t ROC::File::GetSize()
     return l_size;
 }
 size_t ROC::File::GetPosition()
-{ 
+{
     size_t l_pos = 0U;
     if(m_file) l_pos = static_cast<size_t>((m_type == FileMode::ReadMode) ? m_file->tellg() : m_file->tellp());
     return l_pos;
@@ -126,25 +126,23 @@ void ROC::File::Flush()
     if(m_file) m_file->flush();
 }
 
-bool ROC::File::Delete(Core *f_core, std::string &f_path)
+bool ROC::File::Delete(Core *f_core, const std::string &f_path)
 {
-    std::string l_work, l_path;
+    std::string l_work, l_path(f_path);
     f_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
     return !std::remove(l_work.c_str());
 }
-bool ROC::File::Rename(Core *f_core, std::string &f_old, std::string &f_new)
+bool ROC::File::Rename(Core *f_core, const std::string &f_old, const std::string &f_new)
 {
-    std::string l_workOld, l_pathOld, l_workNew, l_pathNew;
+    std::string l_work, l_pathOld(f_old), l_pathNew(f_new);
 
-    f_core->GetWorkingDirectory(l_workOld);
-    Utils::AnalyzePath(f_old, l_pathOld);
-    Utils::JoinPaths(l_workOld, l_pathOld);
+    f_core->GetWorkingDirectory(l_work);
+    Utils::EscapePath(l_pathOld);
+    l_pathOld.insert(0U, l_work);
+    Utils::EscapePath(l_pathNew);
+    l_pathNew.insert(0U, l_work);
 
-    f_core->GetWorkingDirectory(l_workNew);
-    Utils::AnalyzePath(f_new, l_pathNew);
-    Utils::JoinPaths(l_workNew, l_pathNew);
-
-    return !std::rename(l_workOld.c_str(), l_workNew.c_str());
+    return !std::rename(l_pathOld.c_str(), l_pathNew.c_str());
 }

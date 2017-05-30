@@ -188,7 +188,7 @@ int soundGetDuration(lua_State *f_vm)
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
-    if(argStream.HasErrors())
+    if(!argStream.HasErrors())
     {
         float l_duration = l_sound->GetDuration();
         (l_duration != -1.f) ? argStream.PushNumber(l_duration) : argStream.PushBoolean(false);

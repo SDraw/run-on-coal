@@ -155,12 +155,14 @@ void ROC::SfmlManager::SetFramelimit(unsigned int f_fps)
 bool ROC::SfmlManager::SetIcon(const std::string &f_path)
 {
     bool l_result = false;
-    sf::Image l_image;
-    std::string l_work, l_path;
+
+    std::string l_work, l_path(f_path);
     m_core->GetWorkingDirectory(l_work);
-    Utils::AnalyzePath(f_path, l_path);
-    Utils::JoinPaths(l_work, l_path);
-    if(l_image.loadFromFile(l_work))
+    Utils::EscapePath(l_path);
+    l_path.insert(0U, l_work);
+
+    sf::Image l_image;
+    if(l_image.loadFromFile(l_path))
     {
         sf::Vector2u l_size = l_image.getSize();
         m_window->setIcon(l_size.x, l_size.y, l_image.getPixelsPtr());

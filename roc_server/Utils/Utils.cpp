@@ -6,16 +6,13 @@ namespace ROC
 namespace Utils
 {
 
-std::regex g_upRegex("(\\.\\.)+(\\/|\\\\)");
+std::regex g_UpRegex("(\\.\\.)+(\\/|\\\\)");
 
-void AnalyzePath(const std::string &f_in, std::string &f_out)
+void EscapePath(std::string &f_path)
 {
-    std::regex_replace(std::back_inserter(f_out), f_in.begin(), f_in.end(), g_upRegex, "");
-}
-void JoinPaths(std::string &f_result, const std::string &f_path)
-{
-    f_result.push_back('/');
-    f_result.append(f_path);
+    std::string l_result;
+    std::regex_replace(std::back_inserter(l_result), f_path.begin(), f_path.end(), g_UpRegex, "");
+    f_path.assign(l_result);
 }
 int ReadEnumVector(const std::vector<std::string> &f_vec, const std::string &f_val)
 {
