@@ -8,6 +8,7 @@ class Model;
 class Scene;
 class Shader;
 class Quad;
+class Quad3D;
 class Drawable;
 class RenderTarget;
 class Font;
@@ -27,6 +28,8 @@ class RenderManager
     Shader *m_activeShader;
     RenderTarget *m_activeTarget;
     Quad *m_quad;
+    Quad3D *m_quad3D;
+    
 
     LuaArguments *m_argument;
 
@@ -53,8 +56,8 @@ public:
     void SetRenderTarget(RenderTarget *f_rt);
 
     void ClearRenderArea(GLbitfield f_params);
-    static inline void SetClearColour(glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
-    static inline void SetViewport(glm::ivec4 &f_area) { glViewport(f_area.r, f_area.g, f_area.b, f_area.a); }
+    static inline void SetClearColour(const glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
+    static inline void SetViewport(const glm::ivec4 &f_area) { glViewport(f_area.r, f_area.g, f_area.b, f_area.a); }
     static inline void SetPolygonMode(int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode); }
 
     void SetActiveScene(Scene *f_scene);
@@ -66,8 +69,9 @@ public:
     inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader == f_shader) m_activeShader = NULL; }
 
     void Render(Model *f_model, bool f_frustum = true, bool f_texturize = true);
-    void Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color);
-    void Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color);
+    void Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color);
+    void Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
+    void Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
 protected:
     explicit RenderManager(Core *f_core);
     ~RenderManager();

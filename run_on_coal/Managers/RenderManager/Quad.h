@@ -1,11 +1,12 @@
 #pragma once
+#define ROC_QUAD_VERTEX_COUNT 6U
 
 namespace ROC
 {
 
 class Quad
 {
-    glm::vec3 m_point[6];
+    glm::vec3 m_vertex[ROC_QUAD_VERTEX_COUNT];
     glm::vec2 m_size;
 
     GLuint m_vertexVBO;
@@ -15,11 +16,12 @@ protected:
     Quad();
     ~Quad();
 
-    void SetProportions(glm::vec2 &f_size, bool f_bind);
-
     inline GLuint GetVAO() const { return m_VAO; }
 
-    static inline void Draw() { glDrawArrays(GL_TRIANGLES, 0, 6); }
+    void Bind();
+    void SetTransformation(const glm::vec2 &f_size);
+
+    static inline void Draw() { glDrawArrays(GL_TRIANGLES, 0, ROC_QUAD_VERTEX_COUNT); }
 
     friend class RenderManager;
 };

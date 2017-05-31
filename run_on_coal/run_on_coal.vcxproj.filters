@@ -204,6 +204,9 @@
     <ClCompile Include="Lua\LuaDefinitions.Drawable.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\RenderManager\Quad3D.cpp">
+      <Filter>Managers\RenderManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -405,6 +408,9 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefinitions.Drawable.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\RenderManager\Quad3D.h">
+      <Filter>Managers\RenderManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -167,6 +167,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
 
     // Drawable
     lua_register(m_vm, "drawableDraw", Lua::drawableDraw);
+    lua_register(m_vm, "drawableDraw3D", Lua::drawableDraw3D);
 
     //Font
     lua_register(m_vm, "fontCreate", Lua::fontCreate);

@@ -4,6 +4,7 @@
 #include "Managers/LuaManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Managers/RenderManager/Quad.h"
+#include "Managers/RenderManager/Quad3D.h"
 #include "Managers/SfmlManager.h"
 #include "Elements/Camera.h"
 #include "Elements/Font.h"
@@ -45,6 +46,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_activeShader = NULL;
     m_activeTarget = NULL;
     m_quad = new Quad();
+    m_quad3D = new Quad3D();
     m_lastVAO = 0U;
     m_lastTexture = 0U;
     m_depthEnabled = true;
@@ -63,6 +65,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 ROC::RenderManager::~RenderManager()
 {
     delete m_quad;
+    delete m_quad3D;
     delete m_argument;
     Font::TerminateLibrary();
     Shader::DestroyBonesUBO();
@@ -184,7 +187,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
         }
     }
 }
-void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_text, glm::vec4 &f_color)
+void ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color)
 {
     if(!m_locked && m_activeShader)
     {
@@ -197,12 +200,15 @@ void ROC::RenderManager::Render(Font *f_font, glm::vec2 &f_pos, sf::String &f_te
         f_font->Draw(f_text, f_pos, CompareLastVAO(f_font->GetVAO()));
     }
 }
-void ROC::RenderManager::Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec2 &f_size, float f_rot, glm::vec4 &f_color)
+void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)
 {
     if(!m_locked && m_activeShader)
     {
         bool l_vaoBind = CompareLastVAO(m_quad->GetVAO());
         if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
+
+        if(l_vaoBind) m_quad->Bind();
+        m_quad->SetTransformation(f_size);
 
         m_activeShader->SetProjectionUniformValue(m_screenProjection);
         m_activeShader->SetColorUniformValue(f_color);
@@ -220,13 +226,37 @@ void ROC::RenderManager::Render(Drawable *f_drawable, glm::vec2 &f_pos, glm::vec
         l_textureTransform.getOpenGLMatrix(reinterpret_cast<float*>(&m_textureMatrix));
         m_activeShader->SetModelUniformValue(m_textureMatrix);
 
-        m_quad->SetProportions(f_size, l_vaoBind);
-
         DisableCulling();
         DisableDepth();
-        if(f_drawable->IsTransparent()) EnableBlending();
-        else DisableBlending();
+        f_drawable->IsTransparent() ? EnableBlending() : DisableBlending();
         Quad::Draw();
+    }
+}
+void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
+{
+    if(!m_locked && m_activeShader)
+    {
+        bool l_vaoBind = CompareLastVAO(m_quad3D->GetVAO());
+        if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
+
+        if(l_vaoBind) m_quad3D->Bind();
+        m_quad3D->SetTransformation(f_pos, f_rot, f_size);
+
+        m_activeShader->SetAnimatedUniformValue(0U);
+        m_activeShader->SetModelUniformValue(m_quad3D->GetMatrixRef());
+        m_activeShader->SetMaterialParamUniformValue(g_EmptyVec4);
+
+        int l_materialType = 0;
+        if(f_params.x) l_materialType |= MATERIAL_BIT_SHADING;
+        if(f_params.y) l_materialType |= MATERIAL_BIT_DEPTH;
+        if(f_params.z) l_materialType |= MATERIAL_BIT_TRANSPARENT;
+        if(f_params.w) l_materialType |= MATERIAL_BIT_DOUBLESIDE;
+        m_activeShader->SetMaterialTypeUniformValue(l_materialType);
+
+        f_params.w ? EnableCulling() : DisableCulling();
+        f_params.y ? EnableDepth() : DisableDepth();
+        (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
+        Quad3D::Draw();
     }
 }
 

@@ -33,6 +33,28 @@ int drawableDraw(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int drawableDraw3D(lua_State *f_vm)
+{
+    Drawable *l_drawable;
+    glm::vec3 l_pos;
+    glm::vec3 l_rot;
+    glm::vec2 l_size;
+    glm::bvec4 l_params(true, true, false, false);
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_drawable);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
+    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
+    for(int i = 0; i < 4; i++) argStream.ReadNextBoolean(l_params[i]);
+    if(!argStream.HasErrors())
+    {
+        glm::quat l_rotQuat(l_rot);
+        LuaManager::GetCore()->GetRenderManager()->Render(l_drawable, l_pos, l_rot, l_size, l_params);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 
 }
 }

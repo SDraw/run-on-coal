@@ -197,7 +197,7 @@ void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
                 lua_settop(m_vm, m_currentArg);
                 for(int i = 0; i < f_size; i++)
                 {
-                    lua_pushnumber(m_vm, i + 1);
+                    lua_pushinteger(m_vm, i + 1);
                     lua_gettable(m_vm, -2);
                     if(lua_isnumber(m_vm, -1))
                     {
@@ -311,7 +311,7 @@ void ROC::ArgReader::PushMatrix(float *f_val, int f_size)
     lua_newtable(m_vm);
     for(int i = 0; i < f_size; i++)
     {
-        lua_pushnumber(m_vm, i + 1);
+        lua_pushinteger(m_vm, i + 1);
         lua_pushnumber(m_vm, f_val[i]);
         lua_settable(m_vm, -3);
     }
