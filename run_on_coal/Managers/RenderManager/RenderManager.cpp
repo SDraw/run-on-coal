@@ -253,7 +253,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
         if(f_params.w) l_materialType |= MATERIAL_BIT_DOUBLESIDE;
         m_activeShader->SetMaterialTypeUniformValue(l_materialType);
 
-        f_params.w ? EnableCulling() : DisableCulling();
+        f_params.w ? DisableCulling() : EnableCulling();
         f_params.y ? EnableDepth() : DisableDepth();
         (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
         Quad3D::Draw();
