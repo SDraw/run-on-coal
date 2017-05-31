@@ -1,10 +1,10 @@
 #pragma once
-#define MATERIAL_BIT_SHADING 1U
-#define MATERIAL_BIT_DEPTH 2U
-#define MATERIAL_BIT_TRANSPARENT 4U
-#define MATERIAL_BIT_DOUBLESIDE 8U
-#define MATERIAL_BIT_FILTER 16U
-#define MATERIAL_BIT_COMPRESSION 32U
+#define ROC_MATERIAL_BIT_SHADING 1U
+#define ROC_MATERIAL_BIT_DEPTH 2U
+#define ROC_MATERIAL_BIT_TRANSPARENCY 4U
+#define ROC_MATERIAL_BIT_DOUBLESIDE 8U
+#define ROC_MATERIAL_BIT_FILTER 16U
+#define ROC_MATERIAL_BIT_COMPRESSION 32U
 
 namespace ROC
 {
@@ -26,12 +26,12 @@ class Material
 public:
     inline unsigned char GetType() const { return m_type; }
 
-    inline bool IsDoubleSided() const { return ((m_type&MATERIAL_BIT_DOUBLESIDE) == MATERIAL_BIT_DOUBLESIDE); }
-    inline bool IsTransparent() const { return ((m_type&MATERIAL_BIT_TRANSPARENT) == MATERIAL_BIT_TRANSPARENT); }
-    inline bool IsShady() const { return ((m_type&MATERIAL_BIT_SHADING) == MATERIAL_BIT_SHADING); }
-    inline bool IsDepthable() const { return ((m_type&MATERIAL_BIT_DEPTH) == MATERIAL_BIT_DEPTH); }
-    inline bool IsCompressed() const { return ((m_type&MATERIAL_BIT_COMPRESSION) == MATERIAL_BIT_COMPRESSION); }
-    inline unsigned char GetFilteringType() const { return ((m_type&MATERIAL_BIT_FILTER) >> 4); }
+    inline bool IsDoubleSided() const { return CheckBit(m_type, ROC_MATERIAL_BIT_DOUBLESIDE); }
+    inline bool IsTransparent() const { return CheckBit(m_type, ROC_MATERIAL_BIT_TRANSPARENCY); }
+    inline bool IsShady() const { return CheckBit(m_type, ROC_MATERIAL_BIT_SHADING); }
+    inline bool IsDepthable() const { return CheckBit(m_type, ROC_MATERIAL_BIT_DEPTH); }
+    inline bool IsCompressed() const { return CheckBit(m_type, ROC_MATERIAL_BIT_COMPRESSION); }
+    inline unsigned char GetFilteringType() const { return ((m_type&ROC_MATERIAL_BIT_FILTER) >> 4); }
 protected:
     Material();
     ~Material();

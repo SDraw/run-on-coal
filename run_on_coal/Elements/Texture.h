@@ -1,12 +1,12 @@
 #pragma once
 #include "Elements/Drawable.h"
-#define TEXTURE_TYPE_NONE -1
-#define TEXTURE_TYPE_RGB 0
-#define TEXTURE_TYPE_RGBA 1
-#define TEXTURE_TYPE_CUBEMAP 2
-#define TEXTURE_FILTER_NONE -1
-#define TEXTURE_FILTER_NEAREST 0
-#define TEXTURE_FILTER_LINEAR 1
+#define ROC_TEXTURE_TYPE_NONE -1
+#define ROC_TEXTURE_TYPE_RGB 0
+#define ROC_TEXTURE_TYPE_RGBA 1
+#define ROC_TEXTURE_TYPE_CUBEMAP 2
+#define ROC_TEXTURE_FILTER_NONE -1
+#define ROC_TEXTURE_FILTER_NEAREST 0
+#define ROC_TEXTURE_FILTER_LINEAR 1
 
 namespace ROC
 {
@@ -20,7 +20,7 @@ class Texture : public Drawable
 
     void GenerateBrokenTexture();
 public:
-    inline bool IsTransparent() const { return (m_type == TEXTURE_TYPE_RGBA); }
+    inline bool IsTransparent() const { return (m_type == ROC_TEXTURE_TYPE_RGBA); }
     inline void GetSize(glm::ivec2 &f_size) { std::memcpy(&f_size, &m_size, sizeof(glm::ivec2)); }
     inline int GetFiltering() const { return m_filtering; }
 protected:

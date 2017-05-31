@@ -1,14 +1,14 @@
 #pragma once
 #include "Elements/Drawable.h"
-#define RENDERTARGET_TYPE_NONE -1
-#define RENDERTARGET_TYPE_DEPTH 0
-#define RENDERTARGET_TYPE_RGB 1
-#define RENDERTARGET_TYPE_RGBA 2
-#define RENDERTARGET_TYPE_RGBF 3
-#define RENDERTARGET_TYPE_RGBAF 4
-#define RENDERTARGET_FILTER_NONE -1
-#define RENDERTARGET_FILTER_NEAREST 0
-#define RENDERTARGET_FILTER_LINEAR 1
+#define ROC_RENDERTARGET_TYPE_NONE -1
+#define ROC_RENDERTARGET_TYPE_DEPTH 0
+#define ROC_RENDERTARGET_TYPE_RGB 1
+#define ROC_RENDERTARGET_TYPE_RGBA 2
+#define ROC_RENDERTARGET_TYPE_RGBF 3
+#define ROC_RENDERTARGET_TYPE_RGBAF 4
+#define ROC_RENDERTARGET_FILTER_NONE -1
+#define ROC_RENDERTARGET_FILTER_NEAREST 0
+#define ROC_RENDERTARGET_FILTER_LINEAR 1
 
 namespace ROC
 {
@@ -31,8 +31,8 @@ public:
     inline void GetSize(glm::ivec2 &f_size) { std::memcpy(&f_size, &m_size, sizeof(glm::ivec2)); }
     inline int GetFiltering() const { return m_filtering; }
 
-    inline bool IsTransparent() const { return ((m_type == RENDERTARGET_TYPE_RGBA) || (m_type == RENDERTARGET_TYPE_RGBAF)); }
-    inline bool IsDepthable() const { return (m_type == RENDERTARGET_TYPE_DEPTH); }
+    inline bool IsTransparent() const { return ((m_type == ROC_RENDERTARGET_TYPE_RGBA) || (m_type == ROC_RENDERTARGET_TYPE_RGBAF)); }
+    inline bool HasDepthBuffer() const { return (m_type == ROC_RENDERTARGET_TYPE_DEPTH); }
 protected:
     RenderTarget();
     ~RenderTarget();

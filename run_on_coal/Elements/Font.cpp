@@ -4,7 +4,7 @@
 
 FT_Library ROC::Font::m_library = FT_Library();
 
-const float g_DefaultAtlasOffset = 1.f / static_cast<float>(FONT_ATLAS_DEFAULT_SIZE);
+const float g_DefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE);
 
 ROC::Font::Font()
 {
@@ -64,7 +64,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             FT_Select_Charmap(m_face, ft_encoding_unicode);
             FT_Set_Pixel_Sizes(m_face, 0, f_size);
             m_filteringType = f_filter;
-            btClamp(m_filteringType, FONT_FILTER_NEAREST, FONT_FILTER_LINEAR);
+            btClamp(m_filteringType, ROC_FONT_FILTER_NEAREST, ROC_FONT_FILTER_LINEAR);
 
             if(Utils::IsPowerOfTwo(f_atlas.x))
             {
@@ -73,7 +73,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             }
             else
             {
-                m_atlasSize.x = FONT_ATLAS_DEFAULT_SIZE;
+                m_atlasSize.x = ROC_FONT_ATLAS_SIZE;
                 m_atlasOffset.x = g_DefaultAtlasOffset;
             }
             if(Utils::IsPowerOfTwo(f_atlas.y))
@@ -83,7 +83,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             }
             else
             {
-                m_atlasSize.y = FONT_ATLAS_DEFAULT_SIZE;
+                m_atlasSize.y = ROC_FONT_ATLAS_SIZE;
                 m_atlasOffset.y = g_DefaultAtlasOffset;
             }
 
@@ -109,15 +109,15 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
 
             glEnableVertexAttribArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 6 * FONT_MAX_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 6 * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
-            m_vertices.assign(6 * FONT_MAX_TEXT_LENGTH, glm::vec3(0.f, 0.f, 1.f));
+            m_vertices.assign(6 * ROC_FONT_TEXT_LENGTH, glm::vec3(0.f, 0.f, 1.f));
 
             glEnableVertexAttribArray(1);
             glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 6 * FONT_MAX_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 6 * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
-            m_uv.assign(6 * FONT_MAX_TEXT_LENGTH, glm::vec2(0.f));
+            m_uv.assign(6 * ROC_FONT_TEXT_LENGTH, glm::vec2(0.f));
 
             glBindVertexArray(0);
 
@@ -176,7 +176,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
         int l_charIncrement = 0;
         for(auto iter : f_text)
         {
-            if(l_charIncrement >= FONT_MAX_TEXT_LENGTH) break;
+            if(l_charIncrement >= ROC_FONT_TEXT_LENGTH) break;
             int l_charQueue = l_charIncrement * 6;
 
             m_charIter = m_charMap.find(iter);

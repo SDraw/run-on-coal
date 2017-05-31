@@ -101,19 +101,19 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
             btCollisionShape *l_shape = NULL;
             switch(iter->m_type)
             {
-                case BC_TYPE_SPHERE:
+                case ROC_BONECOL_TYPE_SPHERE:
                     l_shape = new btSphereShape(iter->m_size.x);
                     break;
-                case BC_TYPE_BOX:
+                case ROC_BONECOL_TYPE_BOX:
                     l_shape = new btBoxShape(btVector3(iter->m_size.x, iter->m_size.y, iter->m_size.z));
                     break;
-                case BC_TYPE_CYLINDER:
+                case ROC_BONECOL_TYPE_CYLINDER:
                     l_shape = new btCylinderShape(btVector3(iter->m_size.x, iter->m_size.y, iter->m_size.z));
                     break;
-                case BC_TYPE_CAPSULE:
+                case ROC_BONECOL_TYPE_CAPSULE:
                     l_shape = new btCapsuleShape(iter->m_size.x, iter->m_size.y);
                     break;
-                case BC_TYPE_CONE:
+                case ROC_BONECOL_TYPE_CONE:
                     l_shape = new btConeShape(iter->m_size.x, iter->m_size.y);
                     break;
                 default:
@@ -190,19 +190,19 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 btVector3 l_jointPartInertia;
                 switch(l_partData.m_type)
                 {
-                    case BC_TYPE_SPHERE:
+                    case ROC_BONECOL_TYPE_SPHERE:
                         l_jointPartShape = new btSphereShape(l_partData.m_size.x);
                         break;
-                    case BC_TYPE_BOX:
+                    case ROC_BONECOL_TYPE_BOX:
                         l_jointPartShape = new btBoxShape(btVector3(l_partData.m_size.x, l_partData.m_size.y, l_partData.m_size.z));
                         break;
-                    case BC_TYPE_CYLINDER:
+                    case ROC_BONECOL_TYPE_CYLINDER:
                         l_jointPartShape = new btCylinderShape(btVector3(l_partData.m_size.x, l_partData.m_size.y, l_partData.m_size.z));
                         break;
-                    case BC_TYPE_CAPSULE:
+                    case ROC_BONECOL_TYPE_CAPSULE:
                         l_jointPartShape = new btCapsuleShape(l_partData.m_size.x, l_partData.m_size.y);
                         break;
-                    case BC_TYPE_CONE:
+                    case ROC_BONECOL_TYPE_CONE:
                         l_jointPartShape = new btConeShape(l_partData.m_size.x, l_partData.m_size.y);
                         break;
                     default:

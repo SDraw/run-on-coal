@@ -48,3 +48,5 @@
 #include "MessageIdentifiers.h"
 #include "BitStream.h"
 #include "RakPeerInterface.h"
+
+#define CheckBit(f_val,f_bit) ((f_val&f_bit) == f_bit)

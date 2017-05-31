@@ -24,24 +24,24 @@ bool ROC::Collision::Create(int f_type, const glm::vec3 &f_size, float f_mass)
 {
     if(!m_rigidBody)
     {
-        btClamp(f_type, COLLISION_TYPE_SPHERE, COLLISION_TYPE_CONE);
+        btClamp(f_type, ROC_COLLISION_TYPE_SPHERE, ROC_COLLISION_TYPE_CONE);
         btVector3 l_inertia;
         btCollisionShape *l_shape = NULL;
         switch(f_type)
         {
-            case COLLISION_TYPE_SPHERE:
+            case ROC_COLLISION_TYPE_SPHERE:
                 l_shape = new btSphereShape(f_size.x);
                 break;
-            case COLLISION_TYPE_BOX:
+            case ROC_COLLISION_TYPE_BOX:
                 l_shape = new btBoxShape(btVector3(f_size.x, f_size.y, f_size.z));
                 break;
-            case COLLISION_TYPE_CYLINDER:
+            case ROC_COLLISION_TYPE_CYLINDER:
                 l_shape = new btCylinderShape(btVector3(f_size.x, f_size.y, f_size.z));
                 break;
-            case COLLISION_TYPE_CAPSULE:
+            case ROC_COLLISION_TYPE_CAPSULE:
                 l_shape = new btCapsuleShape(f_size.x, f_size.y);
                 break;
-            case COLLISION_TYPE_CONE:
+            case ROC_COLLISION_TYPE_CONE:
                 l_shape = new btConeShape(f_size.x, f_size.y);
                 break;
         }

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Elements/Geometry/Material.h"
 #include "Elements/Texture.h"
+#include "Utils/Utils.h"
 
 ROC::Material::Material()
 {
@@ -122,7 +123,7 @@ void ROC::Material::LoadTexture(const std::string &f_path)
     if(!m_texture)
     {
         m_texture = new Texture();
-        if(!m_texture->Load(f_path, IsTransparent() ? TEXTURE_TYPE_RGBA : TEXTURE_TYPE_RGB, GetFilteringType(), IsCompressed()))
+        if(!m_texture->Load(f_path, IsTransparent() ? ROC_TEXTURE_TYPE_RGBA : ROC_TEXTURE_TYPE_RGB, GetFilteringType(), IsCompressed()))
         {
             delete m_texture;
             m_texture = NULL;

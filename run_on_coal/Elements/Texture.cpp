@@ -5,8 +5,8 @@ ROC::Texture::Texture()
 {
     m_elementType = ElementType::TextureElement;
 
-    m_type = TEXTURE_TYPE_NONE;
-    m_filtering = TEXTURE_FILTER_NONE;
+    m_type = ROC_TEXTURE_TYPE_NONE;
+    m_filtering = ROC_TEXTURE_FILTER_NONE;
     m_texture = 0U;
 }
 ROC::Texture::~Texture()
@@ -20,9 +20,9 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
     {
         sf::Image l_image;
         m_type = f_type;
-        btClamp(m_type, TEXTURE_TYPE_RGB, TEXTURE_TYPE_CUBEMAP);
+        btClamp(m_type, ROC_TEXTURE_TYPE_RGB, ROC_TEXTURE_TYPE_CUBEMAP);
         m_filtering = f_filter;
-        btClamp(m_filtering, TEXTURE_FILTER_NEAREST, TEXTURE_FILTER_LINEAR);
+        btClamp(m_filtering, ROC_TEXTURE_FILTER_NEAREST, ROC_TEXTURE_FILTER_LINEAR);
         if(l_image.loadFromFile(f_path))
         {
             sf::Vector2u l_imageSize = l_image.getSize();
@@ -34,7 +34,7 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + f_filter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + f_filter);
-            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == ROC_TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
         }
         else GenerateBrokenTexture();
     }
@@ -51,9 +51,9 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST + f_filter);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST + f_filter);
 
-        m_type = TEXTURE_TYPE_CUBEMAP;
+        m_type = ROC_TEXTURE_TYPE_CUBEMAP;
         m_filtering = f_filter;
-        btClamp(m_filtering, TEXTURE_FILTER_NEAREST, TEXTURE_FILTER_LINEAR);
+        btClamp(m_filtering, ROC_TEXTURE_FILTER_NEAREST, ROC_TEXTURE_FILTER_LINEAR);
         for(int i = 0; i < 6; i++)
         {
             sf::Image l_image;
@@ -65,7 +65,7 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
             else
             {
                 glDeleteTextures(1, &m_texture);
-                m_type = TEXTURE_TYPE_NONE;
+                m_type = ROC_TEXTURE_TYPE_NONE;
                 break;
             }
         }
@@ -83,8 +83,8 @@ void ROC::Texture::GenerateBrokenTexture()
         l_brokenImage.push_back(0x1DU);
     }
     for(int i = 0; i < 3; i++) l_brokenImage.push_back(0x7FU);
-    m_type = TEXTURE_TYPE_RGB;
-    m_filtering = TEXTURE_FILTER_NEAREST;
+    m_type = ROC_TEXTURE_TYPE_RGB;
+    m_filtering = ROC_TEXTURE_FILTER_NEAREST;
     m_size.x = m_size.y = 2;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -101,10 +101,10 @@ void ROC::Texture::Bind()
     {
         switch(m_type)
         {
-            case TEXTURE_TYPE_RGB: case TEXTURE_TYPE_RGBA:
+            case ROC_TEXTURE_TYPE_RGB: case ROC_TEXTURE_TYPE_RGBA:
                 glBindTexture(GL_TEXTURE_2D, m_texture);
                 break;
-            case TEXTURE_TYPE_CUBEMAP:
+            case ROC_TEXTURE_TYPE_CUBEMAP:
                 glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
                 break;
         }

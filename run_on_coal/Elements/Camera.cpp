@@ -6,7 +6,7 @@ ROC::Camera::Camera(int f_type)
     m_elementType = ElementType::CameraElement;
 
     m_type = f_type;
-    btClamp(m_type, CAMERA_PROJECTION_PERSPECTIVE, CAMERA_PROJECTION_ORTHOGONAL);
+    btClamp(m_type, ROC_CAMERA_PROJECTION_PERSPECTIVE, ROC_CAMERA_PROJECTION_ORTHOGONAL);
 
     m_viewPosition = glm::vec3(0.f);
     m_viewDirection = glm::vec3(0.f, 0.f, 1.f);
@@ -30,7 +30,7 @@ void ROC::Camera::SetType(int f_type)
     if(m_type != f_type)
     {
         m_type = f_type;
-        btClamp(m_type, CAMERA_PROJECTION_PERSPECTIVE, CAMERA_PROJECTION_ORTHOGONAL);
+        btClamp(m_type, ROC_CAMERA_PROJECTION_PERSPECTIVE, ROC_CAMERA_PROJECTION_ORTHOGONAL);
         m_rebuildProjection = true;
     }
 }
@@ -103,10 +103,10 @@ void ROC::Camera::UpdateMatrices()
     {
         switch(m_type)
         {
-            case CAMERA_PROJECTION_PERSPECTIVE:
+            case ROC_CAMERA_PROJECTION_PERSPECTIVE:
                 m_projectionMatrix = glm::perspective(m_fov, m_aspectRatio, m_depth.x, m_depth.y);
                 break;
-            case CAMERA_PROJECTION_ORTHOGONAL:
+            case ROC_CAMERA_PROJECTION_ORTHOGONAL:
                 m_projectionMatrix = glm::ortho(m_orthoParams.x, m_orthoParams.y, m_orthoParams.z, m_orthoParams.w, m_depth.x, m_depth.y);
                 break;
         }

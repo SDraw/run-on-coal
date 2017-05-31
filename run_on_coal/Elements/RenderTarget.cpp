@@ -5,8 +5,8 @@ ROC::RenderTarget::RenderTarget()
 {
     m_elementType = ElementType::RenderTargetElement;
 
-    m_type = RENDERTARGET_TYPE_NONE;
-    m_filtering = RENDERTARGET_FILTER_NONE;
+    m_type = ROC_RENDERTARGET_TYPE_NONE;
+    m_filtering = ROC_RENDERTARGET_FILTER_NONE;
     m_frameBuffer = 0U;
     m_renderBuffer = 0U;
     m_texture = 0U;
@@ -18,12 +18,12 @@ ROC::RenderTarget::~RenderTarget()
 
 bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int f_type, int f_filter)
 {
-    if(m_type == RENDERTARGET_TYPE_NONE)
+    if(m_type == ROC_RENDERTARGET_TYPE_NONE)
     {
         m_type = f_type;
-        btClamp(m_type,RENDERTARGET_TYPE_DEPTH, RENDERTARGET_TYPE_RGBAF);
+        btClamp(m_type,ROC_RENDERTARGET_TYPE_DEPTH, ROC_RENDERTARGET_TYPE_RGBAF);
         m_filtering = f_filter;
-        btClamp(m_filtering, RENDERTARGET_FILTER_NEAREST, RENDERTARGET_FILTER_LINEAR);
+        btClamp(m_filtering, ROC_RENDERTARGET_FILTER_NEAREST, ROC_RENDERTARGET_FILTER_LINEAR);
 
         glGenFramebuffers(1, &m_frameBuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
@@ -32,29 +32,29 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
         glBindTexture(GL_TEXTURE_2D, m_texture);
         switch(m_type)
         {
-            case RENDERTARGET_TYPE_DEPTH:
+            case ROC_RENDERTARGET_TYPE_DEPTH:
             {
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, f_size.x, f_size.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
             } break;
-            case RENDERTARGET_TYPE_RGB:
+            case ROC_RENDERTARGET_TYPE_RGB:
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, f_size.x, f_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
                 break;
-            case RENDERTARGET_TYPE_RGBA:
+            case ROC_RENDERTARGET_TYPE_RGBA:
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, f_size.x, f_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
                 break;
-            case RENDERTARGET_TYPE_RGBF:
+            case ROC_RENDERTARGET_TYPE_RGBF:
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, f_size.x, f_size.y, 0, GL_RGB, GL_FLOAT, NULL);
                 break;
-            case RENDERTARGET_TYPE_RGBAF:
+            case ROC_RENDERTARGET_TYPE_RGBAF:
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, f_size.x, f_size.y, 0, GL_RGBA, GL_FLOAT, NULL);
                 break;
         }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST+m_filtering);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST+m_filtering);
 
-        if(m_type > RENDERTARGET_TYPE_DEPTH)
+        if(m_type > ROC_RENDERTARGET_TYPE_DEPTH)
         {
             glGenRenderbuffers(1, &m_renderBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);
@@ -85,22 +85,22 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
             std::memcpy(&m_size, &f_size, sizeof(glm::ivec2));
         }
     }
-    return (m_type != RENDERTARGET_TYPE_NONE);
+    return (m_type != ROC_RENDERTARGET_TYPE_NONE);
 }
 
 void ROC::RenderTarget::Bind()
 {
-    if(m_type != RENDERTARGET_TYPE_NONE) glBindTexture(GL_TEXTURE_2D, m_texture);
+    if(m_type != ROC_RENDERTARGET_TYPE_NONE) glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 void ROC::RenderTarget::Enable()
 {
-    if(m_type != RENDERTARGET_TYPE_NONE) glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+    if(m_type != ROC_RENDERTARGET_TYPE_NONE) glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
 }
 
 void ROC::RenderTarget::Clear()
 {
-    m_type = RENDERTARGET_TYPE_NONE;
-    m_filtering = RENDERTARGET_FILTER_NONE;
+    m_type = ROC_RENDERTARGET_TYPE_NONE;
+    m_filtering = ROC_RENDERTARGET_FILTER_NONE;
     if(m_texture != 0U)
     {
         glDeleteTextures(1, &m_texture);

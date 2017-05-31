@@ -1,7 +1,7 @@
 #pragma once
 #include "Elements/Element.h"
-#define CAMERA_PROJECTION_PERSPECTIVE 0
-#define CAMERA_PROJECTION_ORTHOGONAL 1
+#define ROC_CAMERA_PROJECTION_PERSPECTIVE 0
+#define ROC_CAMERA_PROJECTION_ORTHOGONAL 1
 
 namespace ROC
 {

@@ -3,11 +3,11 @@
 #include "Elements/Geometry/BoneData.hpp"
 #include "Elements/Geometry/BoneJointData.hpp"
 
-#define BC_TYPE_SPHERE 0U
-#define BC_TYPE_BOX 1U
-#define BC_TYPE_CYLINDER 2U
-#define BC_TYPE_CAPSULE 3U
-#define BC_TYPE_CONE 4U
+#define ROC_BONECOL_TYPE_SPHERE 0U
+#define ROC_BONECOL_TYPE_BOX 1U
+#define ROC_BONECOL_TYPE_CYLINDER 2U
+#define ROC_BONECOL_TYPE_CAPSULE 3U
+#define ROC_BONECOL_TYPE_CONE 4U
 
 namespace ROC
 {

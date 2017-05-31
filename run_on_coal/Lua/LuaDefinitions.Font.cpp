@@ -23,7 +23,7 @@ int fontCreate(lua_State *f_vm)
 {
     std::string l_path;
     int l_size;
-    glm::ivec2 l_atlasSize(FONT_ATLAS_DEFAULT_SIZE);
+    glm::ivec2 l_atlasSize(ROC_FONT_ATLAS_SIZE);
     std::string l_filter;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_path);

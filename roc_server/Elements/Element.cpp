@@ -13,7 +13,7 @@ ROC::Element::~Element()
 bool ROC::Element::SetCustomData(const std::string &f_key, CustomData &f_val)
 {
     bool l_result = false;
-    if(f_key.size() <= CUSTOM_DATA_MAX_LENGTH)
+    if(f_key.size() <= ROC_CUSTOM_DATA_LENGTH)
     {
         auto iter = m_customDataMap.find(f_key);
         if(iter == m_customDataMapEnd)

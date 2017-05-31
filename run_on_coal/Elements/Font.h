@@ -1,10 +1,10 @@
 #pragma once
 #include "Elements/Element.h"
-#define FONT_FILTER_NONE -1
-#define FONT_FILTER_NEAREST 0
-#define FONT_FILTER_LINEAR 1
-#define FONT_ATLAS_DEFAULT_SIZE 256
-#define FONT_MAX_TEXT_LENGTH 256
+#define ROC_FONT_FILTER_NONE -1
+#define ROC_FONT_FILTER_NEAREST 0
+#define ROC_FONT_FILTER_LINEAR 1
+#define ROC_FONT_ATLAS_SIZE 256
+#define ROC_FONT_TEXT_LENGTH 256
 
 namespace ROC
 {

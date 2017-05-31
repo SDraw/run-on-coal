@@ -1,6 +1,6 @@
 #pragma once
-#define CURSOR_LOCK_BIT 1U
-#define CURSOR_VISIBILITY_BIT 2U
+#define ROC_CURSOR_BIT_LOCK 1U
+#define ROC_CURSOR_BIT_VISIBILITY 2U
 
 namespace ROC
 {

@@ -51,7 +51,7 @@ bool ROC::NetworkManager::Connect(const std::string &f_ip, unsigned short f_port
         m_networkInterface = RakNet::RakPeerInterface::GetInstance();
         if(m_networkInterface->Startup(ROC_NETWORK_MAX_CONNECTIONS, &m_socketDescriptor, 1) == RakNet::StartupResult::RAKNET_STARTED)
         {
-            if(m_networkInterface->Connect(f_ip.c_str(), f_port, NULL, 0, NULL, 0, ROC_NETWORK_CONNECTION_TRIES, ROC_NETWORK_CONNECTION_PER_TRY_TIME) == RakNet::CONNECTION_ATTEMPT_STARTED)
+            if(m_networkInterface->Connect(f_ip.c_str(), f_port, NULL, 0, NULL, 0, ROC_NETWORK_CONNECTION_TRIES, ROC_NETWORK_CONNECTION_TRYTIME) == RakNet::CONNECTION_ATTEMPT_STARTED)
             {
                 m_networkState = NetworkState::Connecting;
             }

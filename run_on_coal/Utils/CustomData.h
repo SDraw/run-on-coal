@@ -1,5 +1,5 @@
 #pragma once
-#define CUSTOM_DATA_MAX_LENGTH 128U
+#define ROC_CUSTOM_DATA_LENGTH 128U
 
 namespace ROC
 {

@@ -118,7 +118,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_active = true;
     m_argument = new LuaArguments();
 
-    m_cursorMode = CURSOR_VISIBILITY_BIT;
+    m_cursorMode = ROC_CURSOR_BIT_VISIBILITY;
 
     // Detect current GPU in list of bugged Sandy Bridge GPUs. Need to add more.
     if(l_log.find("HD Graphics 3000") != std::string::npos)  Shader::EnableUBOFix();
@@ -176,8 +176,8 @@ void ROC::SfmlManager::SetCursorMode(unsigned char f_mode)
     if(f_mode != m_cursorMode)
     {
         m_cursorMode = f_mode;
-        m_window->setMouseCursorGrabbed((m_cursorMode & CURSOR_LOCK_BIT) == CURSOR_LOCK_BIT);
-        m_window->setMouseCursorVisible((m_cursorMode & CURSOR_VISIBILITY_BIT) == CURSOR_VISIBILITY_BIT);
+        m_window->setMouseCursorGrabbed(CheckBit(m_cursorMode,ROC_CURSOR_BIT_LOCK));
+        m_window->setMouseCursorVisible(CheckBit(m_cursorMode,ROC_CURSOR_BIT_VISIBILITY));
     }
 }
 void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos)

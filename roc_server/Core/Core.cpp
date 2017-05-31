@@ -9,8 +9,6 @@
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
 
-#define CORE_DEFAULT_SCRIPTS_PATH "server_scripts/"
-
 ROC::Core* ROC::Core::m_instance = NULL;
 
 ROC::Core::Core()
@@ -51,7 +49,7 @@ ROC::Core* ROC::Core::Init()
         m_instance = new Core();
 
         // Load default scripts
-        std::string l_metaPath(CORE_DEFAULT_SCRIPTS_PATH);
+        std::string l_metaPath(ROC_DEFAULT_SCRIPTS_PATH);
         l_metaPath.append("meta.xml");
         pugi::xml_document *l_meta = new pugi::xml_document();
         if(l_meta->load_file(l_metaPath.c_str()))
@@ -64,7 +62,7 @@ ROC::Core* ROC::Core::Init()
                     pugi::xml_attribute l_attrib = l_node.attribute("src");
                     if(l_attrib)
                     {
-                        std::string l_path(CORE_DEFAULT_SCRIPTS_PATH);
+                        std::string l_path(ROC_DEFAULT_SCRIPTS_PATH);
                         l_path.append(l_attrib.as_string());
                         m_instance->m_luaManager->OpenFile(l_path);
                     }

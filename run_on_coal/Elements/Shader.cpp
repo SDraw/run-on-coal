@@ -5,8 +5,6 @@
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
-#define SHADER_BONES_BINDING_POINT 0
-
 const std::vector<std::string> g_DefaultUniformsTable = {
     "gProjectionMatrix", "gViewMatrix", "gModelMatrix", "gAnimated", "gBonesUniform", "gBoneMatrix",
     "gLightColor", "gLightDirection", "gLightParam",
@@ -241,7 +239,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     //Animation
     m_animatedUniform = glGetUniformLocation(m_program, "gAnimated");
     unsigned int l_boneUniform = glGetUniformBlockIndex(m_program, "gBonesUniform");
-    if(l_boneUniform != GL_INVALID_INDEX) glUniformBlockBinding(m_program, l_boneUniform, SHADER_BONES_BINDING_POINT);
+    if(l_boneUniform != GL_INVALID_INDEX) glUniformBlockBinding(m_program, l_boneUniform, ROC_SHADER_BONES_BINDPOINT);
     //Samplers
     m_texture0Uniform = glGetUniformLocation(m_program, "gTexture0");
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform, 0);
@@ -575,8 +573,8 @@ void ROC::Shader::CreateBonesUBO()
     if(m_bonesUBO == GL_INVALID_INDEX)
     {
         glGenBuffers(1, &m_bonesUBO);
-        glBindBufferBase(GL_UNIFORM_BUFFER, SHADER_BONES_BINDING_POINT, m_bonesUBO);
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * SHADER_MAX_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
+        glBindBufferBase(GL_UNIFORM_BUFFER, ROC_SHADER_BONES_BINDPOINT, m_bonesUBO);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * ROC_SHADER_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
     }
 }
 void ROC::Shader::DestroyBonesUBO()
