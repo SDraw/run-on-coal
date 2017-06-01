@@ -111,6 +111,7 @@ protected:
 
     bool Attach(Drawable *f_drawable, const std::string &f_uniform);
     bool Detach(Drawable *f_drawable);
+    bool HasAttached(Drawable *f_drawable);
 
     static void CreateBonesUBO();
     static void DestroyBonesUBO();

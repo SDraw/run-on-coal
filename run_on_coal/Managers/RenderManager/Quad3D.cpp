@@ -54,7 +54,7 @@ void ROC::Quad3D::Bind()
     glBindVertexArray(m_VAO);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
 }
-void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos,const glm::quat &f_rot, const glm::vec2 &f_size)
+void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size)
 {
     if(f_pos != m_position || f_rot != m_rotation)
     {
@@ -71,6 +71,6 @@ void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos,const glm::quat &f_ro
         m_vertex[0].y = m_vertex[3].y = m_vertex[5].y = m_size.y / 2.f;
         m_vertex[2].x = m_vertex[4].x = m_vertex[5].x = m_size.x / 2.f;
         m_vertex[1].y = m_vertex[2].y = m_vertex[4].y = -m_size.y / 2.f;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(m_vertex), m_vertex);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3)*ROC_QUAD3D_VERTEX_COUNT, m_vertex);
     }
 }

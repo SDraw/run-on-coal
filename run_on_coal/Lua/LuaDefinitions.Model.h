@@ -19,6 +19,7 @@ int modelDetach(lua_State *f_vm);
 int modelGetParent(lua_State *f_vm);
 int modelSetAnimation(lua_State *f_vm);
 int modelGetAnimation(lua_State *f_vm);
+int modelRemoveAnimation(lua_State *f_vm);
 int modelPlayAnimation(lua_State *f_vm);
 int modelPauseAnimation(lua_State *f_vm);
 int modelResetAnimation(lua_State *f_vm);

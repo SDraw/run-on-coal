@@ -26,6 +26,10 @@ ROC::InheritanceManager::~InheritanceManager()
     m_inheritMap.clear();
 }
 
+void ROC::InheritanceManager::AddInheritance(Element *f_child, Element *f_parent)
+{
+    m_inheritMap.insert(std::make_pair(f_child, f_parent));
+}
 void ROC::InheritanceManager::RemoveInheritance(Element *f_child, Element *f_parent)
 {
     auto iter = m_inheritMap.equal_range(f_child);
@@ -33,14 +37,13 @@ void ROC::InheritanceManager::RemoveInheritance(Element *f_child, Element *f_par
     {
         if(iter1->second == f_parent)
         {
-            MemoryManager *l_memoryManager = m_core->GetMemoryManager();
             InheritanceBreakProcessing(f_child, f_parent);
             m_inheritMap.erase(iter1);
             break;
         }
     }
 }
-void ROC::InheritanceManager::RemoveChildRelation(Element *f_child)
+void ROC::InheritanceManager::RemoveChildRelations(Element *f_child)
 {
     auto iter = m_inheritMap.find(f_child);
     while(iter != m_inheritMap.end())
@@ -50,7 +53,7 @@ void ROC::InheritanceManager::RemoveChildRelation(Element *f_child)
         iter = m_inheritMap.find(f_child);
     }
 }
-void ROC::InheritanceManager::RemoveParentRelation(Element *f_parent)
+void ROC::InheritanceManager::RemoveParentRelations(Element *f_parent)
 {
     for(auto iter = m_inheritMap.begin(); iter != m_inheritMap.end();)
     {
@@ -125,7 +128,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
 
 void ROC::InheritanceManager::SetModelGeometry(Model *f_model, Geometry *f_geometry)
 {
-    m_inheritMap.insert(std::make_pair(f_model, f_geometry));
+    AddInheritance(f_model, f_geometry);
 }
 bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_anim)
 {
@@ -139,11 +142,21 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
             if(f_model->GetSkeleton()->GetBonesCount() == f_anim->GetBonesCount())
             {
                 if(l_modelAnim) RemoveInheritance(f_model, l_modelAnim);
+                AddInheritance(f_model, f_anim);
                 f_model->SetAnimation(f_anim);
-                m_inheritMap.insert(std::make_pair(f_model, f_anim));
                 l_result = true;
             }
         }
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::RemoveModelAnimation(Model *f_model)
+{
+    bool l_result = false;
+    if(f_model->HasAnimation())
+    {
+        RemoveInheritance(f_model, f_model->GetAnimation());
+        l_result = true;
     }
     return l_result;
 }
@@ -167,9 +180,10 @@ bool ROC::InheritanceManager::AttachModelToModel(Model *f_model, Model *f_parent
         {
             if(!f_parent->HasSkeleton()) f_bone = -1;
             else if(f_bone >= static_cast<int>(f_parent->GetSkeleton()->GetBonesCount())) f_bone = -1;
-            f_model->SetParent(f_parent, f_bone);
-            m_inheritMap.insert(std::make_pair(f_model, f_parent));
+
+            AddInheritance(f_model, f_parent);
             m_core->GetPreRenderManager()->AddLink(f_model, f_parent);
+            f_model->SetParent(f_parent, f_bone);
             l_result = true;
         }
     }
@@ -193,9 +207,9 @@ bool ROC::InheritanceManager::AttachCollisionToModel(Collision *f_col, Model *f_
     bool l_result = false;
     if(!f_col->GetParentModel() && !f_model->HasCollision() && !f_model->GetParent())
     {
+        AddInheritance(f_col, f_model);
         f_col->SetParentModel(f_model);
         f_model->SetCollision(f_col);
-        m_inheritMap.insert(std::make_pair(f_col, f_model));
         l_result = true;
     }
     return l_result;
@@ -218,9 +232,19 @@ bool ROC::InheritanceManager::SetSceneCamera(Scene *f_scene, Camera *f_camera)
     if(l_sceneCamera != f_camera)
     {
         if(l_sceneCamera) RemoveInheritance(l_sceneCamera, f_scene);
-        RemoveChildRelation(f_camera);
+        AddInheritance(f_camera, f_scene);
         f_scene->SetCamera(f_camera);
-        m_inheritMap.insert(std::make_pair(f_camera, f_scene));
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::RemoveSceneCamera(Scene *f_scene)
+{
+    bool l_result = false;
+    Camera *l_camera = f_scene->GetCamera();
+    if(l_camera)
+    {
+        RemoveInheritance(l_camera, f_scene);
         l_result = true;
     }
     return l_result;
@@ -232,9 +256,19 @@ bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
     if(l_sceneLight != f_light)
     {
         if(l_sceneLight) RemoveInheritance(l_sceneLight, f_scene);
-        RemoveChildRelation(f_light);
+        AddInheritance(f_light, f_scene);
         f_scene->SetLight(f_light);
-        m_inheritMap.insert(std::make_pair(f_light, f_scene));
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::RemoveSceneLight(Scene *f_scene)
+{
+    bool l_result = false;
+    Light *l_light = f_scene->GetLight();
+    if(l_light)
+    {
+        RemoveInheritance(l_light, f_scene);
         l_result = true;
     }
     return l_result;
@@ -243,23 +277,20 @@ bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
 bool ROC::InheritanceManager::AttachDrawableToShader(Shader *f_shader, Drawable *f_drawable, const std::string &f_uniform)
 {
     bool l_result = false;
-    auto iter = m_inheritMap.equal_range(f_drawable);
-    for(auto iter1 = iter.first; iter1 != iter.second; iter1++)
-    {
-        if(iter1->second == f_shader)
-        {
-            l_result = true;
-            break;
-        }
-    }
-    if(!l_result)
+    if(!f_shader->HasAttached(f_drawable))
     {
         l_result = m_core->GetRenderManager()->AttachToShader(f_shader, f_drawable, f_uniform);
-        if(l_result) m_inheritMap.insert(std::make_pair(f_drawable, f_shader));
+        if(l_result) AddInheritance(f_drawable, f_shader);
     }
     return l_result;
 }
-void ROC::InheritanceManager::DetachDrawableFromShader(Shader *f_shader, Drawable *f_drawable)
+bool ROC::InheritanceManager::DetachDrawableFromShader(Shader *f_shader, Drawable *f_drawable)
 {
-    RemoveInheritance(f_drawable, f_shader);
+    bool l_result = false;
+    if(f_shader->HasAttached(f_drawable))
+    {
+        RemoveInheritance(f_drawable, f_shader);
+        l_result = true;
+    }
+    return l_result;
 }

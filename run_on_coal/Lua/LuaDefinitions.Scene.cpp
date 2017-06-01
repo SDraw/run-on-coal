@@ -51,6 +51,19 @@ int sceneGetCamera(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int sceneRemoveCamera(lua_State *f_vm)
+{
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneCamera(l_scene);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 int sceneSetLight(lua_State *f_vm)
 {
     Scene *l_scene;
@@ -75,6 +88,19 @@ int sceneGetLight(lua_State *f_vm)
     {
         Light *l_light = l_scene->GetLight();
         l_light ? argStream.PushPointer(l_light) : argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int sceneRemoveLight(lua_State *f_vm)
+{
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneLight(l_scene);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

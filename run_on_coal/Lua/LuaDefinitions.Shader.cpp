@@ -22,8 +22,7 @@ const std::vector<std::string> g_uniformTypesTable
     "int", "ivec2", "ivec3", "ivec4",
     "float", "vec2", "vec3", "vec4",
     "double", "dvec2", "dvec3", "dvec4",
-    "mat2", "mat3", "mat4",
-    "drawable"
+    "mat2", "mat3", "mat4"
 };
 
 int shaderCreate(lua_State *f_vm)
@@ -264,20 +263,41 @@ int shaderSetUniformValue(lua_State *f_vm)
                 }
                 else argStream.PushBoolean(false);
             } break;
-            case 19: // Drawable (texture and render target)
-            {
-                Drawable *l_element;
-                argStream.ReadElement(l_element);
-                if(!argStream.HasErrors())
-                {
-                    bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachDrawableToShader(l_shader, l_element, l_uniform);
-                    argStream.PushBoolean(l_result);
-                }
-                else argStream.PushBoolean(false);
-            } break;
             default:
                 argStream.PushBoolean(false);
         }
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int shaderAttachDrawable(lua_State *f_vm)
+{
+    Shader *l_shader;
+    Drawable *l_drawable;
+    std::string l_uniform;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_shader);
+    argStream.ReadElement(l_drawable);
+    argStream.ReadText(l_uniform);
+    if(!argStream.HasErrors() && !l_uniform.empty())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachDrawableToShader(l_shader, l_drawable, l_uniform);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int shaderDetachDrawable(lua_State *f_vm)
+{
+    Shader *l_shader;
+    Drawable *l_drawable;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_shader);
+    argStream.ReadElement(l_drawable);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->DetachDrawableFromShader(l_shader, l_drawable);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

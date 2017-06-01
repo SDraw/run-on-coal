@@ -523,28 +523,17 @@ void ROC::Shader::SetColorUniformValue(const glm::vec4 &f_value)
 bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
 {
     bool l_result = false;
-    for(auto iter : m_drawableBind)
+    auto l_mapResult = m_uniformMap.find(f_uniform);
+    if(l_mapResult != m_uniformMapEnd)
     {
-        if(iter.m_element == f_drawable)
+        int l_slot = m_bindPool->Allocate();
+        if(l_slot != -1)
         {
+            drawableBindData l_bind{ f_drawable, l_slot + 1, l_mapResult->second };
+            m_drawableBind.push_back(l_bind);
+            m_drawableCount++;
+            glUniform1i(l_bind.m_uniform, l_slot + 1);
             l_result = true;
-            break;
-        }
-    }
-    if(!l_result)
-    {
-        auto l_mapResult = m_uniformMap.find(f_uniform);
-        if(l_mapResult != m_uniformMapEnd)
-        {
-            int l_slot = m_bindPool->Allocate();
-            if(l_slot != -1)
-            {
-                drawableBindData l_bind{ f_drawable, l_slot + 1, l_mapResult->second };
-                m_drawableBind.push_back(l_bind);
-                m_drawableCount++;
-                glUniform1i(l_bind.m_uniform, l_slot + 1);
-                l_result = true;
-            }
         }
     }
     return l_result;
@@ -558,9 +547,22 @@ bool ROC::Shader::Detach(Drawable *f_drawable)
         if(l_bind.m_element == f_drawable)
         {
             m_bindPool->Reset(static_cast<unsigned int>(l_bind.m_slot - 1));
-            glUniform1i(l_bind.m_uniform, -1);
             m_drawableBind.erase(m_drawableBind.begin() + i);
             m_drawableCount--;
+            glUniform1i(l_bind.m_uniform, 0);
+            l_result = true;
+            break;
+        }
+    }
+    return l_result;
+}
+bool ROC::Shader::HasAttached(Drawable *f_drawable)
+{
+    bool l_result = false;
+    for(auto &iter : m_drawableBind)
+    {
+        if(iter.m_element == f_drawable)
+        {
             l_result = true;
             break;
         }

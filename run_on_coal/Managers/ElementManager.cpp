@@ -325,29 +325,29 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
             case Element::ElementType::SceneElement:
             {
                 m_core->GetRenderManager()->RemoveAsActiveScene(dynamic_cast<Scene*>(f_element));
-                m_core->GetInheritManager()->RemoveParentRelation(f_element);
+                m_core->GetInheritManager()->RemoveParentRelations(f_element);
             } break;
             case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::TextureElement: case Element::ElementType::MovieElement:
-                m_core->GetInheritManager()->RemoveChildRelation(f_element);
+                m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 break;
             case Element::ElementType::AnimationElement: case Element::ElementType::GeometryElement:
-                m_core->GetInheritManager()->RemoveParentRelation(f_element);
+                m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 break;
             case Element::ElementType::ModelElement:
             {
-                m_core->GetInheritManager()->RemoveParentRelation(f_element);
-                m_core->GetInheritManager()->RemoveChildRelation(f_element);
+                m_core->GetInheritManager()->RemoveParentRelations(f_element);
+                m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetPreRenderManager()->RemoveModel(dynamic_cast<Model*>(f_element));
                 m_core->GetPhysicsManager()->RemoveModel(dynamic_cast<Model*>(f_element));
             } break;
             case Element::ElementType::ShaderElement:
             {
                 m_core->GetRenderManager()->RemoveAsActiveShader(dynamic_cast<Shader*>(f_element));
-                m_core->GetInheritManager()->RemoveParentRelation(f_element);
+                m_core->GetInheritManager()->RemoveParentRelations(f_element);
             } break;
             case Element::ElementType::CollisionElement:
                 m_core->GetPhysicsManager()->RemoveCollision(dynamic_cast<Collision*>(f_element));
-                m_core->GetInheritManager()->RemoveChildRelation(f_element);
+                m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 break;
         }
         m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);

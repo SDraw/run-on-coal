@@ -253,6 +253,19 @@ int modelGetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+int modelRemoveAnimation(lua_State *f_vm)
+{
+    Model *l_model;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_model);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveModelAnimation(l_model);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 int modelPlayAnimation(lua_State *f_vm)
 {
     Model *l_model;
