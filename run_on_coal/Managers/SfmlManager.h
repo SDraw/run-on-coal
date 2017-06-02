@@ -7,25 +7,35 @@ namespace ROC
 
 class Core;
 class LuaArguments;
+
 class SfmlManager
 {
     Core *m_core;
 
+    sf::VideoMode m_windowVideoMode;
+    sf::ContextSettings m_contextSettings;
+    sf::Uint32 m_windowStyle;
     sf::Window *m_window;
-    bool m_active;
+    std::atomic<bool> m_created;
+    std::atomic<bool> m_recieveEvents;
+    std::atomic<bool> m_active;
+    std::mutex m_eventMutex;
+    std::thread *m_eventPollThread;
+    std::queue<sf::Event> m_eventQueue;
 
     sf::Clock m_clock;
     float m_time;
 
     unsigned int m_frameLimit;
 
-    sf::Event m_event;
     LuaArguments *m_argument;
 
     unsigned char m_cursorMode;
 
     SfmlManager(const SfmlManager& that);
     SfmlManager &operator =(const SfmlManager &that);
+
+    void EventPollingThread();
 public:
     void GetWindowPosition(glm::ivec2 &f_pos);
     void GetWindowSize(glm::ivec2 &f_size);

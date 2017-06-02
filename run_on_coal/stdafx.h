@@ -8,10 +8,13 @@
 #include <fstream>
 #include <regex>
 #include <vector>
+#include <queue>
 #include <unordered_map>
 #include <unordered_set>
 #include <limits>
 #include <atomic>
+#include <thread>
+#include <mutex>
 #include <ctime>
 #include <direct.h>
 

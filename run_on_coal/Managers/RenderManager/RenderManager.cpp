@@ -233,28 +233,37 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
 }
 void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
 {
-    if(!m_locked && m_activeShader)
+    if(!m_locked && m_activeShader && m_activeScene)
     {
-        if(CompareLastVAO(m_quad3D->GetVAO())) m_quad3D->Bind();
-        if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
+        Camera *l_camera = m_activeScene->GetCamera();
+        if(l_camera)
+        {
+            glm::vec2 l_halfSize = f_size / 2.f;
+            float l_radius = glm::length(l_halfSize);
+            if(l_camera->IsInFrustum(f_pos, l_radius))
+            {
+                if(CompareLastVAO(m_quad3D->GetVAO())) m_quad3D->Bind();
+                if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
 
-        m_quad3D->SetTransformation(f_pos, f_rot, f_size);
+                m_quad3D->SetTransformation(f_pos, f_rot, f_size);
 
-        m_activeShader->SetAnimatedUniformValue(0U);
-        m_activeShader->SetModelUniformValue(m_quad3D->GetMatrixRef());
-        m_activeShader->SetMaterialParamUniformValue(g_EmptyVec4);
+                m_activeShader->SetAnimatedUniformValue(0U);
+                m_activeShader->SetModelUniformValue(m_quad3D->GetMatrixRef());
+                m_activeShader->SetMaterialParamUniformValue(g_EmptyVec4);
 
-        int l_materialType = 0;
-        if(f_params.x) l_materialType |= ROC_MATERIAL_BIT_SHADING;
-        if(f_params.y) l_materialType |= ROC_MATERIAL_BIT_DEPTH;
-        if(f_params.z) l_materialType |= ROC_MATERIAL_BIT_TRANSPARENCY;
-        if(f_params.w) l_materialType |= ROC_MATERIAL_BIT_DOUBLESIDE;
-        m_activeShader->SetMaterialTypeUniformValue(l_materialType);
+                int l_materialType = 0;
+                if(f_params.x) l_materialType |= ROC_MATERIAL_BIT_SHADING;
+                if(f_params.y) l_materialType |= ROC_MATERIAL_BIT_DEPTH;
+                if(f_params.z) l_materialType |= ROC_MATERIAL_BIT_TRANSPARENCY;
+                if(f_params.w) l_materialType |= ROC_MATERIAL_BIT_DOUBLESIDE;
+                m_activeShader->SetMaterialTypeUniformValue(l_materialType);
 
-        f_params.w ? DisableCulling() : EnableCulling();
-        f_params.y ? EnableDepth() : DisableDepth();
-        (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
-        Quad3D::Draw();
+                f_params.w ? DisableCulling() : EnableCulling();
+                f_params.y ? EnableDepth() : DisableDepth();
+                (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
+                Quad3D::Draw();
+            }
+        }
     }
 }
 
