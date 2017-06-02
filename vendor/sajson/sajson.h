@@ -24,12 +24,12 @@
 
 #pragma once
 
-#include <assert.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <string.h>
-#include <math.h>
-#include <limits.h>
+#include <cassert>
+#include <cstdarg>
+#include <cstddef>
+#include <cstring>
+#include <cmath>
+#include <climits>
 #include <algorithm>
 #include <cstdio>
 #include <limits>
@@ -51,7 +51,7 @@
 namespace sajson {
     namespace internal {
         // This template utilizes the One Definition Rule to create global arrays in a header.
-        // This trick courtesy of Rich Geldrich's Purple JSON parser.
+        // This trick courtesy of Rich Geldreich's Purple JSON parser.
         template<typename unused=void>
         struct globals_struct {
             static const unsigned char parse_flags[256];
@@ -269,7 +269,7 @@ namespace sajson {
         char* get_data() const {
             return data;
         }
-        
+
     private:
         refcount uses;
         size_t length_;
@@ -420,10 +420,23 @@ namespace sajson {
         }
 
         // valid iff get_type() is TYPE_STRING
+        // WARNING: if a string has embedded NULs, it will be appear
+        // truncated to the caller of this function.
+        const char* as_cstring() const {
+            assert_type(TYPE_STRING);
+            return text + payload[0];
+        }
+
+        // valid iff get_type() is TYPE_STRING
         std::string as_string() const {
             assert_type(TYPE_STRING);
             return std::string(text + payload[0], text + payload[1]);
         }
+
+        const size_t* _internal_get_payload() const {
+            return payload;
+        }
+
 
     private:
         void assert_type(type expected) const {
@@ -457,7 +470,7 @@ namespace sajson {
         : p(p.p) {
             p.p = 0;
         }
-        
+
         ~ownership() {
             delete[] p;
         }
@@ -523,8 +536,22 @@ namespace sajson {
             return error_column;
         }
 
-        std::string get_error_message() const {
+        const std::string& get_error_message() const {
             return error_message;
+        }
+
+        /// WARNING: Internal function exposed only for high-performance language bindings.
+        type _internal_get_root_type() const {
+            return root_type;
+        }
+
+        /// WARNING: Internal function exposed only for high-performance language bindings.
+        const size_t* _internal_get_root() const {
+            return root;
+        }
+
+        const mutable_string_view& _internal_get_input() const {
+            return input;
         }
 
     private:
@@ -613,7 +640,7 @@ namespace sajson {
                 , write_cursor(structure_end)
                 , should_deallocate(should_deallocate)
             {}
-            
+
             explicit allocator(std::nullptr_t)
                 : structure(0)
                 , structure_end(0)
@@ -1045,7 +1072,7 @@ namespace sajson {
 
             error_line = 1;
             error_column = 1;
-            
+
             char* c = input.get_data();
             while (c < p) {
                 if (*c == '\r') {
@@ -1066,7 +1093,7 @@ namespace sajson {
                 }
                 ++c;
             }
-            
+
             char buf[1024];
             buf[1023] = 0;
             va_list ap;
@@ -1386,7 +1413,7 @@ namespace sajson {
             }
             return p + 4;
         }
-        
+
         static double pow10(int exponent) {
             if (exponent > 308) {
                 return std::numeric_limits<double>::infinity();
@@ -1475,7 +1502,7 @@ namespace sajson {
                 if (c < '0' || c > '9') {
                     break;
                 }
-                
+
                 ++p;
                 if (SAJSON_UNLIKELY(at_eof(p))) {
                     return std::make_pair(error(p, "unexpected end of input"), TYPE_NULL);
@@ -1637,7 +1664,7 @@ namespace sajson {
                 type element_type = get_element_type(element);
                 size_t element_value = get_element_value(element);
                 size_t* element_ptr = structure_end - element_value;
-                
+
                 *--out = make_element(element_type, element_ptr - new_base);
                 *--out = *--object_end;
                 *--out = *--object_end;
@@ -1649,19 +1676,16 @@ namespace sajson {
         char* parse_string(char* p, size_t* tag) {
             ++p; // "
             size_t start = p - input.get_data();
-            for (;;) {
-                if (SAJSON_UNLIKELY(input_end - p < 4)) {
-                    goto end_of_buffer;
-                }
+            char* input_end_local = input_end;
+            while (input_end_local - p >= 4) {
                 if (!internal::is_plain_string_character(p[0])) { goto found; }
                 if (!internal::is_plain_string_character(p[1])) { p += 1; goto found; }
                 if (!internal::is_plain_string_character(p[2])) { p += 2; goto found; }
                 if (!internal::is_plain_string_character(p[3])) { p += 3; goto found; }
                 p += 4;
             }
-        end_of_buffer:
             for (;;) {
-                if (SAJSON_UNLIKELY(p >= input_end)) {
+                if (SAJSON_UNLIKELY(p >= input_end_local)) {
                     return error(p, "unexpected end of input");
                 }
 
@@ -1671,11 +1695,11 @@ namespace sajson {
 
                 ++p;
             }
-
         found:
             if (SAJSON_LIKELY(*p == '"')) {
                 tag[0] = start;
                 tag[1] = p - input.get_data();
+                *p = '\0';
                 return p + 1;
             }
 
@@ -1729,25 +1753,27 @@ namespace sajson {
 
         char* parse_string_slow(char* p, size_t* tag, size_t start) {
             char* end = p;
-            
+            char* input_end_local = input_end;
+
             for (;;) {
-                if (SAJSON_UNLIKELY(p >= input_end)) {
+                if (SAJSON_UNLIKELY(p >= input_end_local)) {
                     return error(p, "unexpected end of input");
                 }
 
                 if (SAJSON_UNLIKELY(*p >= 0 && *p < 0x20)) {
                     return error(p, "illegal unprintable codepoint in string: %d", static_cast<int>(*p));
                 }
-            
+
                 switch (*p) {
                     case '"':
                         tag[0] = start;
                         tag[1] = end - input.get_data();
+                        *end = '\0';
                         return p + 1;
 
                     case '\\':
                         ++p;
-                        if (SAJSON_UNLIKELY(p >= input_end)) {
+                        if (SAJSON_UNLIKELY(p >= input_end_local)) {
                             return error(p, "unexpected end of input");
                         }
 
@@ -1755,7 +1781,7 @@ namespace sajson {
                         switch (*p) {
                             case '"': replacement = '"'; goto replace;
                             case '\\': replacement = '\\'; goto replace;
-                            case '/': replacement = '/'; goto replace; 
+                            case '/': replacement = '/'; goto replace;
                             case 'b': replacement = '\b'; goto replace;
                             case 'f': replacement = '\f'; goto replace;
                             case 'n': replacement = '\n'; goto replace;
@@ -1803,10 +1829,66 @@ namespace sajson {
                                 return error(p, "unknown escape");
                         }
                         break;
-                        
+
                     default:
-                        // TODO: if *p > 127, validate UTF-8
-                        *end++ = *p++;
+                        // validate UTF-8
+                        unsigned char c0 = p[0];
+                        if (c0 < 128) {
+                            *end++ = *p++;
+                        } else if (c0 < 224) {
+                            if (SAJSON_UNLIKELY(!has_remaining_characters(p, 2))) {
+                                return unexpected_end(p);
+                            }
+                            unsigned char c1 = p[1];
+                            if (c1 < 128 || c1 >= 192) {
+                                return error(p + 1, "invalid UTF-8");
+                            }
+                            end[0] = c0;
+                            end[1] = c1;
+                            end += 2;
+                            p += 2;
+                        } else if (c0 < 240) {
+                            if (SAJSON_UNLIKELY(!has_remaining_characters(p, 3))) {
+                                return unexpected_end(p);
+                            }
+                            unsigned char c1 = p[1];
+                            if (c1 < 128 || c1 >= 192) {
+                                return error(p + 1, "invalid UTF-8");
+                            }
+                            unsigned char c2 = p[2];
+                            if (c2 < 128 || c2 >= 192) {
+                                return error(p + 2, "invalid UTF-8");
+                            }
+                            end[0] = c0;
+                            end[1] = c1;
+                            end[2] = c2;
+                            end += 3;
+                            p += 3;
+                        } else if (c0 < 248) {
+                            if (SAJSON_UNLIKELY(!has_remaining_characters(p, 4))) {
+                                return unexpected_end(p);
+                            }
+                            unsigned char c1 = p[1];
+                            if (c1 < 128 || c1 >= 192) {
+                                return error(p + 1, "invalid UTF-8");
+                            }
+                            unsigned char c2 = p[2];
+                            if (c2 < 128 || c2 >= 192) {
+                                return error(p + 2, "invalid UTF-8");
+                            }
+                            unsigned char c3 = p[3];
+                            if (c3 < 128 || c3 >= 192) {
+                                return error(p + 3, "invalid UTF-8");
+                            }
+                            end[0] = c0;
+                            end[1] = c1;
+                            end[2] = c2;
+                            end[3] = c3;
+                            end += 4;
+                            p += 4;
+                        } else {
+                            return error(p, "invalid UTF-8");
+                        }
                         break;
                 }
             }

@@ -69,7 +69,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype27/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -77,8 +77,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfeMovie-d.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype27d.lib;zlibd.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;../vendor/sfeMovie/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfeMovie-d.lib;BulletDynamics_d.lib;BulletCollision_d.lib;LinearMath_d.lib;freetype28d.lib;zlibd.lib;RakNet_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype2/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;../vendor/sfeMovie/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
@@ -95,7 +95,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype27/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -112,8 +112,8 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype27/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;../vendor/sfeMovie/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype27.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;sfeMovie.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype2/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;../vendor/sfeMovie/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype28.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;sfeMovie.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
