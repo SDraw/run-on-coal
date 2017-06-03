@@ -541,15 +541,15 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
 bool ROC::Shader::Detach(Drawable *f_drawable)
 {
     bool l_result = false;
-    for(unsigned int i = 0U; i < m_drawableCount; i++)
+    for(auto iter = m_drawableBind.begin(), iterEnd = m_drawableBind.end(); iter != iterEnd; ++iter)
     {
-        drawableBindData &l_bind = m_drawableBind[i];
-        if(l_bind.m_element == f_drawable)
+        if(iter->m_element == f_drawable)
         {
-            m_bindPool->Reset(static_cast<unsigned int>(l_bind.m_slot - 1));
-            m_drawableBind.erase(m_drawableBind.begin() + i);
+            m_bindPool->Reset(static_cast<unsigned int>(iter->m_slot - 1));
+            glUniform1i(iter->m_uniform, 0);
+
+            m_drawableBind.erase(iter);
             m_drawableCount--;
-            glUniform1i(l_bind.m_uniform, 0);
             l_result = true;
             break;
         }

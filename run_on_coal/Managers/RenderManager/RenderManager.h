@@ -10,6 +10,7 @@ class Shader;
 class Quad;
 class Quad3D;
 class Drawable;
+class Movie;
 class RenderTarget;
 class Font;
 class LuaArguments;
@@ -29,7 +30,9 @@ class RenderManager
     RenderTarget *m_activeTarget;
     Quad *m_quad;
     Quad3D *m_quad3D;
-    
+
+    std::vector<Movie*> m_movieVector;
+    std::vector<Movie*>::iterator m_movieVectorEnd;
 
     LuaArguments *m_argument;
 
@@ -79,6 +82,9 @@ protected:
     void RestoreActiveShader(Shader *f_shader);
     bool AttachToShader(Shader *f_shader, Drawable *f_element, const std::string &f_uniform);
     void DetachFromShader(Shader *f_shader, Drawable *f_element);
+
+    void AddMovie(Movie *f_movie);
+    void RemoveMovie(Movie *f_movie);
 
     void ResetCallsReducing();
 

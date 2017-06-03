@@ -13,6 +13,7 @@
 #include "Elements/Light.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
+#include "Elements/Movie.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader.h"
@@ -56,6 +57,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_locked = true;
     m_textureMatrix = glm::mat4(1.f);
 
+    m_movieVectorEnd = m_movieVector.end();
+
     glm::ivec2 l_size;
     m_core->GetSfmlManager()->GetWindowSize(l_size);
     m_screenProjection = glm::ortho(0.f, static_cast<float>(l_size.x), 0.f, static_cast<float>(l_size.y));
@@ -69,6 +72,7 @@ ROC::RenderManager::~RenderManager()
     delete m_argument;
     Font::TerminateLibrary();
     Shader::DestroyBonesUBO();
+    m_movieVector.clear();
 }
 
 void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
@@ -281,9 +285,30 @@ void ROC::RenderManager::DetachFromShader(Shader *f_shader, Drawable *f_element)
     RestoreActiveShader(f_shader);
 }
 
+void ROC::RenderManager::AddMovie(Movie *f_movie)
+{
+    if(std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie) == m_movieVectorEnd)
+    {
+        m_movieVector.push_back(f_movie);
+        m_movieVectorEnd = m_movieVector.end();
+    }
+}
+void ROC::RenderManager::RemoveMovie(Movie *f_movie)
+{
+    auto iter = std::find(m_movieVector.begin(), m_movieVectorEnd,f_movie);
+    if(iter != m_movieVectorEnd)
+    {
+        m_movieVector.erase(iter);
+        m_movieVectorEnd = m_movieVector.end();
+    }
+}
+
 void ROC::RenderManager::DoPulse()
 {
     m_time = m_core->GetSfmlManager()->GetTime();
+
+    ResetCallsReducing();
+    for(auto iter : m_movieVector) iter->Update();
 
     m_locked = false;
     m_core->GetLuaManager()->GetEventManager()->CallEvent("onOGLRender", m_argument);

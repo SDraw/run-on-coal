@@ -307,7 +307,11 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
     Utils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
-    if(l_movie->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_movie);
+    if(l_movie->Load(l_path))
+    {
+        m_core->GetMemoryManager()->AddMemoryPointer(l_movie);
+        m_core->GetRenderManager()->AddMovie(l_movie);
+    }
     else
     {
         delete l_movie;
@@ -327,7 +331,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetRenderManager()->RemoveAsActiveScene(dynamic_cast<Scene*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
             } break;
-            case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::TextureElement: case Element::ElementType::MovieElement:
+            case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::TextureElement:
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 break;
             case Element::ElementType::AnimationElement: case Element::ElementType::GeometryElement:
@@ -349,6 +353,11 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetPhysicsManager()->RemoveCollision(dynamic_cast<Collision*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 break;
+            case Element::ElementType::MovieElement:
+            {
+                m_core->GetRenderManager()->RemoveMovie(dynamic_cast<Movie*>(f_element));
+                m_core->GetInheritManager()->RemoveChildRelations(f_element);
+            } break;
         }
         m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
         delete f_element;

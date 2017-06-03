@@ -31,9 +31,11 @@ protected:
 
     inline GLuint GetTextureID() const { return (m_movie ? m_movie->getCurrentImage().getNativeHandle() : 0U); }
 
+    void Update();
     void Bind();
 
     friend class ElementManager;
+    friend class RenderManager;
 };
 
 }

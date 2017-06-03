@@ -60,12 +60,12 @@ void ROC::Movie::SetTime(float f_val)
     }
 }
 
+void ROC::Movie::Update()
+{
+    if(m_movie) m_movie->update();
+}
+
 void ROC::Movie::Bind()
 {
-    if(m_movie)
-    {
-        m_movie->update();
-        auto k = m_movie->getStreams(sfe::MediaType::Audio);
-        glBindTexture(GL_TEXTURE_2D, m_movie->getCurrentImage().getNativeHandle());
-    }
+    if(m_movie) glBindTexture(GL_TEXTURE_2D, m_movie->getCurrentImage().getNativeHandle());
 }
