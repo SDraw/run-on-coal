@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Core/Core.h"
+#include "Managers/AsyncManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
@@ -71,32 +72,51 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
     return l_anim;
 }
 
-ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path)
+ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bool f_async)
 {
-    Geometry *l_geometry = new Geometry();
+    Geometry *l_geometry = new Geometry(f_async);
 
     std::string l_work, l_path(f_path);
     m_core->GetWorkingDirectory(l_work);
     Utils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
-    if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_geometry->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
+    if(!f_async && m_locked) m_core->GetRenderManager()->ResetCallsReducing();
+    if(f_async)
+    {
+        m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
+        m_core->GetAsyncManager()->AddGeometryToQueue(l_geometry, l_path);
+    }
     else
     {
-        delete l_geometry;
-        l_geometry = NULL;
+        if(l_geometry->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
+        else
+        {
+            delete l_geometry;
+            l_geometry = NULL;
+        }
     }
     return l_geometry;
 }
 
 ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
 {
-    Model *l_model = new Model(f_geometry);
-    if(f_geometry) m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
-    m_core->GetMemoryManager()->AddMemoryPointer(l_model);
-    m_core->GetPreRenderManager()->AddModel(l_model);
-    m_core->GetPhysicsManager()->AddModel(l_model);
+    Model *l_model = NULL;
+    if(f_geometry)
+    {
+        if(f_geometry->IsLoaded())
+        {
+            l_model = new Model(f_geometry);
+            m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
+        }
+    }
+    else l_model = new Model(NULL);
+    if(l_model)
+    {
+        m_core->GetMemoryManager()->AddMemoryPointer(l_model);
+        m_core->GetPreRenderManager()->AddModel(l_model);
+        m_core->GetPhysicsManager()->AddModel(l_model);
+    }
     return l_model;
 }
 
@@ -330,41 +350,71 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
             {
                 m_core->GetRenderManager()->RemoveAsActiveScene(dynamic_cast<Scene*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
             } break;
-            case Element::ElementType::CameraElement: case Element::ElementType::LightElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::TextureElement:
+
+            case Element::ElementType::CameraElement:
+            case Element::ElementType::LightElement:
+            case Element::ElementType::RenderTargetElement:
+            case Element::ElementType::TextureElement:
+            {
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                break;
-            case Element::ElementType::AnimationElement: case Element::ElementType::GeometryElement:
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
+            } break;
+
+            case Element::ElementType::AnimationElement:
+            {
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                break;
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
+            } break;
+
+            case Element::ElementType::GeometryElement:
+            {
+                m_core->GetInheritManager()->RemoveParentRelations(f_element);
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                if(!dynamic_cast<Geometry*>(f_element)->IsAsyncLoad()) delete f_element;
+            } break;
+
             case Element::ElementType::ModelElement:
             {
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetPreRenderManager()->RemoveModel(dynamic_cast<Model*>(f_element));
                 m_core->GetPhysicsManager()->RemoveModel(dynamic_cast<Model*>(f_element));
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
             } break;
+
             case Element::ElementType::ShaderElement:
             {
                 m_core->GetRenderManager()->RemoveAsActiveShader(dynamic_cast<Shader*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
             } break;
+
             case Element::ElementType::CollisionElement:
+            {
                 m_core->GetPhysicsManager()->RemoveCollision(dynamic_cast<Collision*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                break;
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
+            } break;
+
             case Element::ElementType::MovieElement:
             {
                 m_core->GetRenderManager()->RemoveMovie(dynamic_cast<Movie*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
             } break;
         }
-        m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
-        delete f_element;
     }
 }
 void ROC::ElementManager::DestroyElementByPointer(void *f_pointer)
 {
-    //Called by MemoryManager at the end of work
     delete reinterpret_cast<Element*>(f_pointer);
 }

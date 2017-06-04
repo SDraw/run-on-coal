@@ -6,6 +6,7 @@ namespace ROC
 class ConfigManager;
 class ElementManager;
 class SfmlManager;
+class AsyncManager;
 class InheritanceManager;
 class LogManager;
 class LuaManager;
@@ -26,6 +27,7 @@ class Core
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
     SfmlManager *m_sfmlManager;
+    AsyncManager *m_asyncManager;
     InheritanceManager *m_inheritManager;
     LogManager *m_logManager;
     LuaManager *m_luaManager;
@@ -50,6 +52,7 @@ public:
     inline ConfigManager* GetConfigManager() { return m_configManager; }
     inline ElementManager* GetElementManager() { return m_elementManager; }
     inline SfmlManager* GetSfmlManager() { return m_sfmlManager; }
+    inline AsyncManager* GetAsyncManager() { return m_asyncManager; }
     inline InheritanceManager* GetInheritManager() { return m_inheritManager; }
     inline LogManager* GetLogManager() { return m_logManager; }
     inline LuaManager* GetLuaManager() { return m_luaManager; }

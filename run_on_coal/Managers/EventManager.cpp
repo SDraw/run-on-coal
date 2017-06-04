@@ -16,7 +16,8 @@ const std::vector<std::string> g_DefaultEventsNames
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
     "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
     "onTextInput",
-    "onNetworkStateChange", "onNetworkDataRecieve"
+    "onNetworkStateChange", "onNetworkDataRecieve",
+    "onGeometryLoad"
 };
 
 ROC::EventManager::EventManager(LuaManager *f_luaManager)

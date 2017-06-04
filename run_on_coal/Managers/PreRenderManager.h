@@ -6,17 +6,12 @@ namespace ROC
 class Core;
 class Model;
 class LuaArguments;
+class TreeNode;
 class PreRenderManager
 {
     Core *m_core;
 
-    struct TreeNode
-    {
-        Model *m_model = NULL;
-        TreeNode *m_parent = NULL;
-        std::unordered_set<TreeNode*> m_children;
-    };
-    std::unordered_set<TreeNode*> m_modelTreeSet; // Only parent models
+    TreeNode *m_modelTreeRoot;
     std::unordered_map<Model*, TreeNode*> m_modelToNodeMap;
     std::unordered_map<Model*, TreeNode*>::iterator m_modelToNodeMapEnd;
 

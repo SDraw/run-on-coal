@@ -17,6 +17,7 @@ protected:
     void RemoveMemoryPointer(void *f_pointer);
 
     friend class Core;
+    friend class AsyncManager;
     friend class ElementManager;
 };
 

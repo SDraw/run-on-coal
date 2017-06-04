@@ -19,25 +19,32 @@ class Geometry : public Element
     std::vector<BoneCollisionData*> m_collisionData;
     std::vector<BoneJointData*> m_jointData;
 
-    bool m_loaded;
+    enum gmLoadState : unsigned char { NotLoaded, Loading, Loaded };
+    std::atomic<gmLoadState> m_loadState;
+    bool m_async;
 
     void Clear();
 public:
+    inline bool IsLoaded() { return (m_loadState == gmLoadState::Loaded); }
     inline float GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
     inline bool HasBonesData() const { return !m_bonesData.empty(); }
     inline bool HasBonesCollisionData() const { return !m_collisionData.empty(); }
     inline bool HasJointsData() const { return !m_jointData.empty(); }
 protected:
-    Geometry();
+    Geometry(bool f_async);
     ~Geometry();
     bool Load(const std::string &f_path);
+    void GenerateVAOs();
+
+    inline bool IsAsyncLoad() { return m_async; }
 
     inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
     inline std::vector<BoneData*>& GetBonesDataRef() { return m_bonesData; };
     inline std::vector<BoneCollisionData*>& GetBonesCollisionDataRef() { return m_collisionData; }
     inline std::vector<BoneJointData*>& GetJointsDataRef() { return m_jointData; };
 
+    friend class AsyncManager;
     friend class ElementManager;
     friend class RenderManager;
     friend class Model;

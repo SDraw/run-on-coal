@@ -131,10 +131,9 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
 ROC::SfmlManager::~SfmlManager()
 {
-    std::chrono::milliseconds l_windowTerminationWait(10U);
     m_window->setActive(false);
     m_recieveEvents = false;
-    while(m_created) std::this_thread::sleep_for(l_windowTerminationWait);
+    m_eventPollThread->join();
     delete m_argument;
 }
 

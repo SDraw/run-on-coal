@@ -27,7 +27,7 @@ public:
     Scene* CreateScene();
     Camera* CreateCamera(int f_type);
     Light* CreateLight();
-    Geometry* CreateGeometry(const std::string &f_path);
+    Geometry* CreateGeometry(const std::string &f_path, bool f_async = false);
     Model* CreateModel(Geometry *f_geometry);
     Shader* CreateShader(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     Animation* CreateAnimation(const std::string &f_path);
@@ -51,6 +51,7 @@ protected:
     static void DestroyElementByPointer(void* f_pointer);
 
     friend Core;
+    friend class AsyncManager;
     friend class MemoryManager;
 };
 

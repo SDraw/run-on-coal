@@ -171,6 +171,7 @@
     <ClInclude Include="Lua\LuaDefinitions.Sound.h" />
     <ClInclude Include="Lua\LuaDefinitions.Texture.h" />
     <ClInclude Include="Lua\LuaDefinitions.Utils.h" />
+    <ClInclude Include="Managers\AsyncManager.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
     <ClInclude Include="Managers\LogManager.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Utils\CustomData.h" />
     <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\SystemTick.h" />
+    <ClInclude Include="Utils\TreeNode.h" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -256,6 +258,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Managers\AsyncManager.cpp" />
     <ClCompile Include="Managers\ConfigManager.cpp" />
     <ClCompile Include="Managers\ElementManager.cpp" />
     <ClCompile Include="Managers\LogManager.cpp" />
@@ -280,6 +283,7 @@
     <ClCompile Include="Utils\CustomData.cpp" />
     <ClCompile Include="Utils\Pool.cpp" />
     <ClCompile Include="Utils\SystemTick.cpp" />
+    <ClCompile Include="Utils\TreeNode.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
     <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

@@ -207,6 +207,12 @@
     <ClCompile Include="Managers\RenderManager\Quad3D.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\TreeNode.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\AsyncManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -411,6 +417,12 @@
     </ClInclude>
     <ClInclude Include="Managers\RenderManager\Quad3D.h">
       <Filter>Managers\RenderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\TreeNode.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\AsyncManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

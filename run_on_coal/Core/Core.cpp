@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Core/Core.h"
+#include "Managers/AsyncManager.h"
 #include "Managers/ConfigManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/EventManager.h"
@@ -45,6 +46,7 @@ ROC::Core::Core()
     m_physicsManager = new PhysicsManager(this);
     m_luaManager = new LuaManager(this);
     m_sfmlManager = new SfmlManager(this);
+    m_asyncManager = new AsyncManager(this);
     m_preRenderManager = new PreRenderManager(this);
     m_renderManager = new RenderManager(this);
     m_networkManager = new NetworkManager(this);
@@ -58,6 +60,7 @@ ROC::Core::~Core()
     delete m_soundManager;
     delete m_physicsManager;
     delete m_inheritManager;
+    delete m_asyncManager;
     delete m_memoryManager;
     delete m_elementManager;
     delete m_luaManager;
@@ -119,6 +122,7 @@ bool ROC::Core::DoPulse()
 {
     SystemTick::UpdateTick();
     m_networkManager->DoPulse();
+    m_asyncManager->DoPulse();
     m_state = m_sfmlManager->DoPulse();
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();

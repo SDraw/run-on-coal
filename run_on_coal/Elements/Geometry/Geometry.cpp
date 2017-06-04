@@ -3,11 +3,12 @@
 #include "Elements/Geometry/Material.h"
 #include "Utils/Utils.h"
 
-ROC::Geometry::Geometry()
+ROC::Geometry::Geometry(bool f_async)
 {
     m_elementType = ElementType::GeometryElement;
 
-    m_loaded = false;
+    m_loadState = gmLoadState::NotLoaded;
+    m_async = f_async;
     m_materialCount = 0U;
     m_boundSphereRaduis = 0.f;
 }
@@ -18,8 +19,11 @@ ROC::Geometry::~Geometry()
 
 bool ROC::Geometry::Load(const std::string &f_path)
 {
-    if(!m_loaded)
+    bool l_result = false;
+    if(m_loadState == gmLoadState::NotLoaded)
     {
+        m_loadState = gmLoadState::Loading;
+
         unsigned char l_type;
         std::ifstream l_file;
         l_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -153,7 +157,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         l_material->LoadWeights(l_tempWeight);
                         l_material->LoadIndices(l_tempIndex);
                     }
-                    l_material->GenerateVAO();
+                    if(!m_async) l_material->GenerateVAO();
                     l_material->LoadTexture(l_difTexture);
                 }
                 m_materialCount = static_cast<unsigned int>(m_materialVector.size());
@@ -195,15 +199,16 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         l_file.read(reinterpret_cast<char*>(&l_boneData->m_scale), sizeof(glm::vec3));
                     }
                 }
-                m_loaded = true;
+                l_result = true;
             }
         }
         catch(const std::ifstream::failure&)
         {
             Clear();
         }
+        if(l_result && !m_async) m_loadState = gmLoadState::Loaded;
 
-        if(m_loaded && (l_type == 0x2U))
+        if(l_result && (l_type == 0x2U))
         {
             try
             {
@@ -275,7 +280,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
             }
         }
     }
-    return m_loaded;
+    return l_result;
 }
 
 void ROC::Geometry::Clear()
@@ -295,5 +300,14 @@ void ROC::Geometry::Clear()
     for(auto iter : m_jointData) delete iter;
     m_jointData.clear();
 
-    m_loaded = false;
+    m_loadState = gmLoadState::NotLoaded;
+}
+
+void ROC::Geometry::GenerateVAOs()
+{
+    if(m_async && (m_loadState == gmLoadState::Loading))
+    {
+        for(auto iter : m_materialVector) iter->GenerateVAO();
+        m_loadState = gmLoadState::Loaded;
+    }
 }
