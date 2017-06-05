@@ -25,19 +25,19 @@ class Geometry : public Element
 
     void Clear();
 public:
-    inline bool IsLoaded() { return (m_loadState == gmLoadState::Loaded); }
+    inline bool IsLoaded() const { return (m_loadState == gmLoadState::Loaded); }
     inline float GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
     inline bool HasBonesData() const { return !m_bonesData.empty(); }
     inline bool HasBonesCollisionData() const { return !m_collisionData.empty(); }
     inline bool HasJointsData() const { return !m_jointData.empty(); }
 protected:
-    Geometry(bool f_async);
+    explicit Geometry(bool f_async);
     ~Geometry();
     bool Load(const std::string &f_path);
     void GenerateVAOs();
 
-    inline bool IsAsyncLoad() { return m_async; }
+    inline bool IsAsyncLoad() const { return m_async; }
 
     inline std::vector<Material*>& GetMaterialVectorRef() { return m_materialVector; }
     inline std::vector<BoneData*>& GetBonesDataRef() { return m_bonesData; };

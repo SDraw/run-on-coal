@@ -110,8 +110,8 @@ int movieGetDuration(lua_State *f_vm)
     argStream.ReadElement(l_movie);
     if(!argStream.HasErrors())
     {
-        float l_framerate = l_movie->GetFramerate();
-        (l_framerate != -1.f) ? argStream.PushNumber(l_framerate) : argStream.PushBoolean(false);
+        float l_duration = l_movie->GetDuration();
+        (l_duration != -1.f) ? argStream.PushNumber(l_duration) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

@@ -21,7 +21,7 @@ protected:
     ~Quad3D();
 
     inline glm::mat4& GetMatrixRef() { return m_matrix; }
-    inline GLuint GetVAO() { return m_VAO; }
+    inline GLuint GetVAO() const { return m_VAO; }
 
     void Bind();
     void SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size);

@@ -10,7 +10,7 @@ class TreeNode
     TreeNode *m_parent;
     std::vector<TreeNode*> m_children;
 public:
-    TreeNode(Model *f_model);
+    explicit TreeNode(Model *f_model);
     ~TreeNode();
 
     inline Model* GetModel() { return m_model; }

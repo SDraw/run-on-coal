@@ -29,8 +29,11 @@ class AsyncManager
     LuaArguments *m_argument;
 
     void LoadThread();
+
+    AsyncManager(const AsyncManager& that);
+    AsyncManager &operator =(const AsyncManager &that);
 protected:
-    AsyncManager(Core *f_core);
+    explicit AsyncManager(Core *f_core);
     ~AsyncManager();
 
     void AddGeometryToQueue(Geometry *f_geometry, const std::string &f_path);
