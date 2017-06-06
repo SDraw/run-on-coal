@@ -16,12 +16,8 @@ class SfmlManager
     sf::ContextSettings m_contextSettings;
     sf::Uint32 m_windowStyle;
     sf::Window *m_window;
-    std::atomic<bool> m_created;
-    std::atomic<bool> m_recieveEvents;
-    std::atomic<bool> m_active;
-    std::mutex m_eventMutex;
-    std::thread *m_eventPollThread;
-    std::queue<sf::Event> m_eventQueue;
+    sf::Event m_event;
+    bool m_active;
 
     sf::Clock m_clock;
     float m_time;
@@ -34,8 +30,6 @@ class SfmlManager
 
     SfmlManager(const SfmlManager& that);
     SfmlManager &operator =(const SfmlManager &that);
-
-    void EventPollingThread();
 public:
     void GetWindowPosition(glm::ivec2 &f_pos);
     void GetWindowSize(glm::ivec2 &f_size);

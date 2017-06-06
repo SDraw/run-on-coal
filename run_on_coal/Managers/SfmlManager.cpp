@@ -65,8 +65,8 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     std::chrono::milliseconds l_windowInitWait(10U);
     m_active = true;
-    m_eventPollThread = new std::thread(&ROC::SfmlManager::EventPollingThread, this);
-    while(!m_created) std::this_thread::sleep_for(l_windowInitWait);
+    m_window = new sf::Window();
+    m_window->create(m_windowVideoMode, "RunOnCoal", m_windowStyle, m_contextSettings);
     m_window->setActive(true);
 
     if(glGetString(GL_VERSION) == NULL)
@@ -125,14 +125,12 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     // Detect current GPU in list of bugged Sandy Bridge GPUs. Need to add more.
     if(l_log.find("HD Graphics 3000") != std::string::npos)  Shader::EnableUBOFix();
-
-    m_recieveEvents = true;
 }
 ROC::SfmlManager::~SfmlManager()
 {
     m_window->setActive(false);
-    m_recieveEvents = false;
-    m_eventPollThread->join();
+    m_window->close();
+    delete m_window;
     delete m_argument;
 }
 
@@ -225,139 +223,108 @@ float ROC::SfmlManager::GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axi
     return sf::Joystick::getAxisPosition(f_jp, static_cast<sf::Joystick::Axis>(f_axis));
 }
 
-void ROC::SfmlManager::EventPollingThread()
-{
-    m_window = new sf::Window();
-    m_window->create(m_windowVideoMode, "RunOnCoal", m_windowStyle, m_contextSettings);
-    m_window->setActive(false);
-    m_created = true;
-
-    auto l_sleepTime = std::chrono::milliseconds(10U);
-    sf::Event l_event;
-    std::queue<sf::Event> l_tempQueue;
-    while(m_active || m_recieveEvents)
-    {
-        if(m_recieveEvents)
-        {
-            while(m_window->pollEvent(l_event)) l_tempQueue.push(l_event);
-            if(m_eventMutex.try_lock())
-            {
-                l_tempQueue.swap(m_eventQueue);
-                m_eventMutex.unlock();
-            }
-        }
-        std::this_thread::sleep_for(l_sleepTime);
-    }
-    m_window->setActive(true);
-    m_window->close();
-    delete m_window;
-    m_window = NULL;
-    m_created = false;
-}
-
 bool ROC::SfmlManager::DoPulse()
 {
     m_time = m_clock.getElapsedTime().asSeconds();
 
-    if(m_eventMutex.try_lock())
+    bool l_mouseFix = false;
+    while(m_window->pollEvent(m_event))
     {
-        while(!m_eventQueue.empty())
+        switch(m_event.type)
         {
-            sf::Event &l_event = m_eventQueue.front();
-            switch(l_event.type)
+            case sf::Event::Closed:
+                m_active = false;
+                break;
+            case sf::Event::Resized:
             {
-                case sf::Event::Closed:
-                    m_active = false;
-                    break;
-                case sf::Event::Resized:
+                m_argument->PushArgument(static_cast<int>(m_event.size.width));
+                m_argument->PushArgument(static_cast<int>(m_event.size.height));
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowResize", m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::GainedFocus: case sf::Event::LostFocus:
+            {
+                m_argument->PushArgument(m_event.type == sf::Event::GainedFocus ? 1 : 0);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowFocus", m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::KeyPressed: case sf::Event::KeyReleased:
+            {
+                if(m_event.key.code != -1)
                 {
-                    m_argument->PushArgument(static_cast<int>(l_event.size.width));
-                    m_argument->PushArgument(static_cast<int>(l_event.size.height));
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowResize", m_argument);
+                    m_argument->PushArgument(g_keysTable[m_event.key.code]);
+                    m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onKeyPress", m_argument);
                     m_argument->Clear();
-                } break;
-                case sf::Event::GainedFocus: case sf::Event::LostFocus:
+                }
+            } break;
+            case sf::Event::TextEntered:
+            {
+                if(m_event.text.unicode > 31 && !(m_event.text.unicode >= 127 && m_event.text.unicode <= 160))
                 {
-                    m_argument->PushArgument(l_event.type == sf::Event::GainedFocus ? 1 : 0);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowFocus", m_argument);
+                    sf::String l_text(m_event.text.unicode);
+                    std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
+                    std::string l_input(l_utf8.begin(), l_utf8.end());
+                    m_argument->PushArgument(l_input);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onTextInput", m_argument);
                     m_argument->Clear();
-                } break;
-                case sf::Event::KeyPressed: case sf::Event::KeyReleased:
+                }
+            } break;
+            case sf::Event::MouseMoved:
+            {
+                if(!l_mouseFix)
                 {
-                    if(l_event.key.code != -1)
-                    {
-                        m_argument->PushArgument(g_keysTable[l_event.key.code]);
-                        m_argument->PushArgument(l_event.type == sf::Event::KeyPressed ? 1 : 0);
-                        m_core->GetLuaManager()->GetEventManager()->CallEvent("onKeyPress", m_argument);
-                        m_argument->Clear();
-                    }
-                } break;
-                case sf::Event::TextEntered:
-                {
-                    if(l_event.text.unicode > 31 && !(l_event.text.unicode >= 127 && l_event.text.unicode <= 160))
-                    {
-                        sf::String l_text(l_event.text.unicode);
-                        std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
-                        std::string l_input(l_utf8.begin(), l_utf8.end());
-                        m_argument->PushArgument(l_input);
-                        m_core->GetLuaManager()->GetEventManager()->CallEvent("onTextInput", m_argument);
-                        m_argument->Clear();
-                    }
-                } break;
-                case sf::Event::MouseMoved:
-                {
-                    m_argument->PushArgument(l_event.mouseMove.x);
-                    m_argument->PushArgument(l_event.mouseMove.y);
+                    m_argument->PushArgument(m_event.mouseMove.x);
+                    m_argument->PushArgument(m_event.mouseMove.y);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorMove", m_argument);
                     m_argument->Clear();
-                } break;
-                case sf::Event::MouseEntered: case sf::Event::MouseLeft:
-                {
-                    m_argument->PushArgument(l_event.type == sf::Event::MouseEntered ? 1 : 0);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorEnter", m_argument);
-                    m_argument->Clear();
-                } break;
-                case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
-                {
-                    m_argument->PushArgument(g_mouseKeysTable[l_event.mouseButton.button]);
-                    m_argument->PushArgument(l_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseKeyPress", m_argument);
-                    m_argument->Clear();
-                } break;
-                case sf::Event::MouseWheelScrolled:
-                {
-                    m_argument->PushArgument(l_event.mouseWheelScroll.wheel);
-                    m_argument->PushArgument(l_event.mouseWheelScroll.delta);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseScroll", m_argument);
-                    m_argument->Clear();
-                } break;
-                case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
-                {
-                    m_argument->PushArgument(static_cast<int>(l_event.joystickConnect.joystickId));
-                    m_argument->PushArgument(l_event.type == sf::Event::JoystickConnected ? 1 : 0);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadConnect", m_argument);
-                    m_argument->Clear();
-                } break;
-                case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
-                {
-                    m_argument->PushArgument(static_cast<int>(l_event.joystickButton.joystickId));
-                    m_argument->PushArgument(static_cast<int>(l_event.joystickButton.button));
-                    m_argument->PushArgument(l_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadButton", m_argument);
-                    m_argument->Clear();
-                } break;
-                case sf::Event::JoystickMoved:
-                {
-                    m_argument->PushArgument(static_cast<int>(l_event.joystickMove.joystickId));
-                    m_argument->PushArgument(g_axisNames[l_event.joystickMove.axis]);
-                    m_argument->PushArgument(l_event.joystickMove.position);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadAxis", m_argument);
-                    m_argument->Clear();
-                } break;
-            }
-            m_eventQueue.pop();
+                    l_mouseFix = true;
+                }
+            } break;
+            case sf::Event::MouseEntered: case sf::Event::MouseLeft:
+            {
+                m_argument->PushArgument(m_event.type == sf::Event::MouseEntered ? 1 : 0);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorEnter", m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
+            {
+                m_argument->PushArgument(g_mouseKeysTable[m_event.mouseButton.button]);
+                m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseKeyPress", m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::MouseWheelScrolled:
+            {
+                m_argument->PushArgument(m_event.mouseWheelScroll.wheel);
+                m_argument->PushArgument(m_event.mouseWheelScroll.delta);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseScroll", m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
+            {
+                m_argument->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
+                m_argument->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadConnect", m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
+            {
+                m_argument->PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
+                m_argument->PushArgument(static_cast<int>(m_event.joystickButton.button));
+                m_argument->PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadButton", m_argument);
+                m_argument->Clear();
+            } break;
+            case sf::Event::JoystickMoved:
+            {
+                m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
+                m_argument->PushArgument(g_axisNames[m_event.joystickMove.axis]);
+                m_argument->PushArgument(m_event.joystickMove.position);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadAxis", m_argument);
+                m_argument->Clear();
+            } break;
         }
-        m_eventMutex.unlock();
     }
     return m_active;
 }
