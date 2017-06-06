@@ -128,7 +128,6 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_recieveEvents = true;
 }
-
 ROC::SfmlManager::~SfmlManager()
 {
     m_window->setActive(false);
@@ -235,13 +234,17 @@ void ROC::SfmlManager::EventPollingThread()
 
     auto l_sleepTime = std::chrono::milliseconds(10U);
     sf::Event l_event;
+    std::queue<sf::Event> l_tempQueue;
     while(m_active || m_recieveEvents)
     {
         if(m_recieveEvents)
         {
-            m_eventMutex.lock();
-            while(m_window->pollEvent(l_event)) m_eventQueue.push(l_event);
-            m_eventMutex.unlock();
+            while(m_window->pollEvent(l_event)) l_tempQueue.push(l_event);
+            if(m_eventMutex.try_lock())
+            {
+                l_tempQueue.swap(m_eventQueue);
+                m_eventMutex.unlock();
+            }
         }
         std::this_thread::sleep_for(l_sleepTime);
     }
