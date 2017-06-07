@@ -54,12 +54,14 @@ int modelSetPosition(lua_State *f_vm)
 {
     Model *l_model;
     glm::vec3 l_pos;
+    bool l_saveMotion = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
+    argStream.ReadNextBoolean(l_saveMotion);
     if(!argStream.HasErrors())
     {
-        l_model->SetPosition(l_pos);
+        l_model->SetPosition(l_pos,l_saveMotion);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

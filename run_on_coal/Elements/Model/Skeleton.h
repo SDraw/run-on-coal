@@ -46,6 +46,9 @@ class Skeleton
     };
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
+    
+    bool m_ignoreMotion;
+    glm::mat4 m_prevModelMatrix;
 public:
     inline unsigned int GetBonesCount() const { return m_bonesCount; }
 
@@ -57,6 +60,7 @@ protected:
 
     void Update();
     void ResetBonesInterpolation();
+    inline void SetMotionIgnore() { m_ignoreMotion = true; }
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
     inline std::vector<glm::mat4>& GetBoneMatricesVectorRef() { return m_boneMatrices; }
 
