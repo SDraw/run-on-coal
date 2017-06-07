@@ -54,14 +54,14 @@ int modelSetPosition(lua_State *f_vm)
 {
     Model *l_model;
     glm::vec3 l_pos;
-    bool l_saveMotion = false;
+    bool l_preserveMotion = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
-    argStream.ReadNextBoolean(l_saveMotion);
+    argStream.ReadNextBoolean(l_preserveMotion);
     if(!argStream.HasErrors())
     {
-        l_model->SetPosition(l_pos,l_saveMotion);
+        l_model->SetPosition(l_pos,l_preserveMotion);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -89,14 +89,16 @@ int modelSetRotation(lua_State *f_vm)
 {
     Model *l_model;
     glm::vec4 l_rot(0.f, 0.f, 0.f, std::nanf("0"));
+    bool l_preserveMotion = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
     argStream.ReadNextNumber(l_rot.w);
+    argStream.ReadNextBoolean(l_preserveMotion);
     if(!argStream.HasErrors())
     {
         glm::quat l_qRot = std::isnan(l_rot.w) ? glm::quat(l_rot) : glm::quat(l_rot.w, l_rot.x, l_rot.y, l_rot.z);
-        l_model->SetRotation(l_qRot);
+        l_model->SetRotation(l_qRot,l_preserveMotion);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

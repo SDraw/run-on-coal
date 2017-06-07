@@ -37,7 +37,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
     m_boneMatrices.resize(m_bonesCount);
     m_hasStaticBoneCollision = false;
     m_hasDynamicBoneCollision = false;
-    m_ignoreMotion = false;
+    m_preserveMotion = false;
     m_prevModelMatrix = g_IdentityMatrix;
 }
 ROC::Skeleton::~Skeleton()
@@ -293,11 +293,11 @@ void ROC::Skeleton::UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled)
         {
             for(auto iter : m_collisionVector)
             {
-                if(f_enabled && m_ignoreMotion) iter->m_rigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
+                if(f_enabled && m_preserveMotion) iter->m_rigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
                 l_transform1.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[iter->m_boneID]->GetMatrixRef()));
                 l_transform2.mult(l_transform1, iter->m_offset[0]);
                 l_transform1.mult(l_model, l_transform2);
-                (f_enabled && !m_ignoreMotion) ? iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_rigidBody->setCenterOfMassTransform(l_transform1);
+                (f_enabled && !m_preserveMotion) ? iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_rigidBody->setCenterOfMassTransform(l_transform1);
             }
         }
 
@@ -305,24 +305,22 @@ void ROC::Skeleton::UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled)
         {
             for(auto iter : m_jointVector)
             {
-                if(f_enabled && m_ignoreMotion) iter->m_emptyBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
+                if(f_enabled && m_preserveMotion) iter->m_emptyBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
                 if(m_boneVector[iter->m_boneID]->HasParent())
                 {
                     l_transform1.setFromOpenGLMatrix(reinterpret_cast<float*>(&m_boneVector[iter->m_boneID]->GetParent()->GetMatrixRef()));
                     l_transform2.mult(l_transform1, iter->m_localMatrix[0]);
                     l_transform1.mult(l_model, l_transform2);
-                    (f_enabled && !m_ignoreMotion) ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
-                    iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
+                    (f_enabled && !m_preserveMotion) ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
                 }
                 else
                 {
                     l_transform1.mult(l_model, iter->m_localMatrix[0]);
-                    f_enabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
-                    iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
+                    (f_enabled && !m_preserveMotion) ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
                 }
             }
 
-            if(m_ignoreMotion && f_enabled)
+            if(m_preserveMotion && f_enabled)
             {
                 l_transform1.setFromOpenGLMatrix(reinterpret_cast<const float*>(&m_prevModelMatrix));
                 btTransform l_prevModelMatrixInv = l_transform1.inverse();
@@ -346,7 +344,7 @@ void ROC::Skeleton::UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled)
 
 void ROC::Skeleton::UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled)
 {
-    if(m_hasStaticBoneCollision && m_ignoreMotion)
+    if(m_hasStaticBoneCollision && m_preserveMotion)
     {
         for(auto iter : m_collisionVector) iter->m_rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
     }
@@ -360,7 +358,7 @@ void ROC::Skeleton::UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled)
             btTransform l_modelInv = l_model.inverse();
             for(auto iter : m_jointVector)
             {
-                if(m_ignoreMotion) iter->m_emptyBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+                if(m_preserveMotion) iter->m_emptyBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
 
                 for(auto iter1 : iter->m_partsVector)
                 {
@@ -379,7 +377,7 @@ void ROC::Skeleton::UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled)
         {
             for(auto iter : m_jointVector)
             {
-                if(m_ignoreMotion) iter->m_emptyBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+                if(m_preserveMotion) iter->m_emptyBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
 
                 for(auto iter1 : iter->m_partsVector)
                 {
@@ -391,5 +389,5 @@ void ROC::Skeleton::UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled)
             }
         }
     }
-    m_ignoreMotion = false;
+    m_preserveMotion = false;
 }

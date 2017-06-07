@@ -55,14 +55,14 @@ ROC::Model::~Model()
     if(m_skeleton) delete m_skeleton;
 }
 
-void ROC::Model::SetPosition(const glm::vec3 &f_pos, bool f_ignoreMotion)
+void ROC::Model::SetPosition(const glm::vec3 &f_pos, bool f_preserveMotion)
 {
     if(m_position != f_pos)
     {
         std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
         if(m_collision) m_collision->SetPosition(f_pos);
         else m_rebuildMatrix = true;
-        if(m_skeleton && f_ignoreMotion) m_skeleton->SetMotionIgnore();
+        if(m_skeleton && f_preserveMotion) m_skeleton->PreserveMotion();
     }
 }
 void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
@@ -87,7 +87,7 @@ void ROC::Model::SetRotation(const glm::quat &f_rot, bool f_ignoreMotion)
         std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
         if(m_collision) m_collision->SetRotation(f_rot);
         else m_rebuildMatrix = true;
-        if(m_skeleton && f_ignoreMotion) m_skeleton->SetMotionIgnore();
+        if(m_skeleton && f_ignoreMotion) m_skeleton->PreserveMotion();
     }
 }
 void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)

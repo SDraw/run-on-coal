@@ -44,9 +44,9 @@ public:
     inline bool HasGeometry() const { return (m_geometry != NULL); }
     inline Geometry* GetGeometry() { return m_geometry; }
 
-    void SetPosition(const glm::vec3 &f_pos, bool f_ignoreMotion = false);
+    void SetPosition(const glm::vec3 &f_pos, bool f_preserveMotion = false);
     void GetPosition(glm::vec3 &f_pos, bool f_global = false);
-    void SetRotation(const glm::quat &f_rot, bool f_ignoreMotion = false);
+    void SetRotation(const glm::quat &f_rot, bool f_preserveMotion = false);
     void GetRotation(glm::quat &f_rot, bool f_global = false);
     void SetScale(const glm::vec3 &f_scl);
     void GetScale(glm::vec3 &f_scl, bool f_global = false);
