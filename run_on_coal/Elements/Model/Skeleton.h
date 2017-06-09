@@ -47,6 +47,7 @@ class Skeleton
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
     
+    float m_blendFactor;
     bool m_preserveMotion;
     glm::mat4 m_prevModelMatrix;
 public:
@@ -59,8 +60,11 @@ protected:
     ~Skeleton();
 
     void Update();
-    void ResetBonesInterpolation();
+    void EnableBoneBlending();
     inline void PreserveMotion() { m_preserveMotion = true; }
+    void SetBoneBlendFactor(float f_blend);
+    inline float GetBoneBlendFactor() const { return m_blendFactor; }
+
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
     inline std::vector<glm::mat4>& GetBoneMatricesVectorRef() { return m_boneMatrices; }
 

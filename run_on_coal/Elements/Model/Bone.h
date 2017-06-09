@@ -15,7 +15,8 @@ class Bone
     bool m_rebuilded;
 
     bool m_interpolation;
-    float m_interpolationValue;
+    float m_blendFactor;
+    float m_blendValue;
 
     Bone *m_parent;
     std::vector<Bone*> m_childBoneVector;
@@ -32,7 +33,7 @@ protected:
     void GenerateBindPose();
     void SetFrameData(BoneFrameData *f_data);
     inline void ForceRebuildState(bool f_state) { m_rebuilded = f_state; }
-    void ResetInterpolation();
+    void EnableBlending(float f_blend);
     void UpdateMatrix();
 
     inline glm::mat4& GetLocalMatrixRef() { return m_localMatrix; }

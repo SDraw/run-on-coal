@@ -2,6 +2,8 @@
 #include "Elements/Animation/BoneFrameData.h"
 #include "Elements/Model/Bone.h"
 
+#define ROC_BONE_BLEND_FACTOR 0.1f
+
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
@@ -15,7 +17,8 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_rebuildMatrix = false;
     m_rebuilded = false;
     m_interpolation = true;
-    m_interpolationValue = 0.f;
+    m_blendFactor = ROC_BONE_BLEND_FACTOR;
+    m_blendValue = 0.f;
 }
 ROC::Bone::~Bone()
 {
@@ -28,9 +31,10 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data)
 {
     if(m_interpolation)
     {
-        m_interpolationValue += 0.1f;
-        m_data->SetInterpolated(f_data, m_interpolationValue);
-        if(m_interpolationValue >= 0.9f) m_interpolation = false;
+        m_blendValue += m_blendFactor;
+        if(m_blendValue >= 1.f) m_interpolation = false;
+        btClamp(m_blendValue, 0.f, 1.f);
+        m_data->SetInterpolated(f_data, m_blendValue);
         m_rebuildMatrix = true;
     }
     else
@@ -42,10 +46,11 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data)
         }
     }
 }
-void ROC::Bone::ResetInterpolation()
+void ROC::Bone::EnableBlending(float f_blend)
 {
     m_interpolation = true;
-    m_interpolationValue = 0.f;
+    m_blendFactor = f_blend;
+    m_blendValue = 0.f;
 }
 void ROC::Bone::GenerateBindPose()
 {

@@ -62,6 +62,8 @@ public:
     inline float GetAnimationSpeed() const { return (m_animation ? m_animationSpeed : -1.f); }
     bool SetAnimationProgress(float f_val);
     float GetAnimationProgress() const;
+    bool SetAnimationBlendFactor(float f_val);
+    float GetAnimationBlendFactor() const;
 
     inline bool HasSkeleton() const { return (m_skeleton != NULL); }
 

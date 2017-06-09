@@ -21,7 +21,7 @@ namespace Lua
 
 const std::vector<std::string> g_modelAnimationPropertiesTable
 {
-    "speed", "progress"
+    "speed", "progress", "blendFactor"
 };
 
 int modelCreate(lua_State *f_vm)
@@ -344,6 +344,17 @@ int modelSetAnimationProperty(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
+                case 2: // Blend factor
+                {
+                    float l_factor;
+                    argStream.ReadNumber(l_factor);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_model->SetAnimationBlendFactor(l_factor);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
                 default:
                     argStream.PushBoolean(false);
             }
@@ -375,6 +386,11 @@ int modelGetAnimationProperty(lua_State *f_vm)
                 {
                     float l_progress = l_model->GetAnimationProgress();
                     argStream.PushNumber(l_progress);
+                } break;
+                case 2: // Blend factor
+                {
+                    float l_factor = l_model->GetAnimationBlendFactor();
+                    argStream.PushNumber(l_factor);
                 } break;
                 default:
                     argStream.PushBoolean(false);

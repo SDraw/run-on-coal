@@ -186,7 +186,7 @@ void ROC::Model::SetAnimation(Animation *f_anim)
     {
         m_animState = AnimationState::Paused;
         m_animCurrentTick = 0U;
-        m_skeleton->ResetBonesInterpolation();
+        m_skeleton->EnableBoneBlending();
         UpdateSkeleton();
     }
     else
@@ -255,6 +255,15 @@ bool ROC::Model::SetAnimationProgress(float f_val)
 float ROC::Model::GetAnimationProgress() const
 {
     return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->GetTotalDuration())) : -1.f);
+}
+bool ROC::Model::SetAnimationBlendFactor(float f_val)
+{
+    if(m_skeleton) m_skeleton->SetBoneBlendFactor(f_val);
+    return (m_skeleton != NULL);
+}
+float ROC::Model::GetAnimationBlendFactor() const
+{
+    return (m_skeleton ? m_skeleton->GetBoneBlendFactor() : -1.f);
 }
 
 void ROC::Model::UpdateSkeleton()

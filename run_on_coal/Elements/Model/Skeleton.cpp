@@ -3,6 +3,8 @@
 #include "Elements/Model/Bone.h"
 #include "Elements/Model/Skeleton.h"
 
+#define ROC_SKELETON_BLEND_FACTOR 0.1f
+
 extern const glm::mat4 g_IdentityMatrix;
 
 ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
@@ -39,6 +41,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
     m_hasDynamicBoneCollision = false;
     m_preserveMotion = false;
     m_prevModelMatrix = g_IdentityMatrix;
+    m_blendFactor = ROC_SKELETON_BLEND_FACTOR;
 }
 ROC::Skeleton::~Skeleton()
 {
@@ -89,9 +92,17 @@ void ROC::Skeleton::Update()
     for(auto iter : m_fastBoneVector) iter->UpdateMatrix();
     for(unsigned int i = 0; i < m_bonesCount; i++) std::memcpy(&m_boneMatrices[i], &m_boneVector[i]->GetOffsetMatrixRef(), sizeof(glm::mat4));
 }
-void ROC::Skeleton::ResetBonesInterpolation()
+void ROC::Skeleton::EnableBoneBlending()
 {
-    for(auto iter : m_boneVector) iter->ResetInterpolation();
+    for(auto iter : m_boneVector) iter->EnableBlending(m_blendFactor);
+}
+void ROC::Skeleton::SetBoneBlendFactor(float f_blend)
+{
+    if(m_blendFactor != f_blend)
+    {
+        m_blendFactor = f_blend;
+        btClamp(m_blendFactor, 0.f, 1.f);
+    }
 }
 
 void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec)
