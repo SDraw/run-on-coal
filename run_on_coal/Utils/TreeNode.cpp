@@ -4,7 +4,7 @@
 ROC::TreeNode::TreeNode(Model *f_model)
 {
     m_model = f_model;
-    m_parent = NULL;
+    m_parent = nullptr;
 }
 ROC::TreeNode::~TreeNode()
 {

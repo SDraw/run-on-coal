@@ -63,11 +63,10 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 #endif
     m_windowStyle = (l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default);
 
-    std::chrono::milliseconds l_windowInitWait(10U);
-    m_active = true;
     m_window = new sf::Window();
     m_window->create(m_windowVideoMode, "RunOnCoal", m_windowStyle, m_contextSettings);
     m_window->setActive(true);
+    m_active = true;
 
     if(glGetString(GL_VERSION) == NULL)
     {

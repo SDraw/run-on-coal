@@ -7,7 +7,7 @@ ROC::Sound::Sound(bool f_loop)
 {
     m_elementType = ElementType::SoundElement;
 
-    m_handle = NULL;
+    m_handle = nullptr;
     m_relative = false;
     m_looped = f_loop;
     m_mono = false;
@@ -32,10 +32,10 @@ bool ROC::Sound::Load(const std::string &f_path)
         else
         {
             delete m_handle;
-            m_handle = NULL;
+            m_handle = nullptr;
         }
     }
-    return (m_handle != NULL);
+    return (m_handle != nullptr);
 }
 
 void ROC::Sound::Play()

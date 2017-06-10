@@ -20,7 +20,7 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
     m_dynamicWorld->setGravity(btVector3(0.f, -9.8f, 0.f));
 
     m_floorEnabled = false;
-    m_groundBody = NULL;
+    m_groundBody = nullptr;
 
     m_enabled = false;
 
@@ -62,7 +62,7 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
             m_dynamicWorld->removeRigidBody(m_groundBody);
             delete m_groundBody->getMotionState();
             delete m_groundBody;
-            m_groundBody = NULL;
+            m_groundBody = nullptr;
         }
     }
 }
@@ -218,7 +218,7 @@ bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, gl
         if(l_rayResult.hasHit())
         {
             void *l_colObject = l_rayResult.m_collisionObject->getUserPointer();
-            f_model = l_colObject ? (m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject) ? l_colObject : NULL) : NULL;
+            f_model = l_colObject ? (m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject) ? l_colObject : nullptr) : nullptr;
             std::memcpy(&f_end, l_rayResult.m_hitPointWorld.m_floats, sizeof(glm::vec3));
             std::memcpy(&f_normal, l_rayResult.m_hitNormalWorld.m_floats, sizeof(glm::vec3));
             l_result = true;

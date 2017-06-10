@@ -30,7 +30,7 @@ const std::string g_networkStateTable[] = { "connected", "disconnected" };
 ROC::NetworkManager::NetworkManager(Core *f_core)
 {
     m_core = f_core;
-    m_networkInterface = NULL;
+    m_networkInterface = nullptr;
     m_networkState = NetworkState::Disconnected;
     m_argument = new LuaArguments();
 }
@@ -51,20 +51,20 @@ bool ROC::NetworkManager::Connect(const std::string &f_ip, unsigned short f_port
         m_networkInterface = RakNet::RakPeerInterface::GetInstance();
         if(m_networkInterface->Startup(ROC_NETWORK_MAX_CONNECTIONS, &m_socketDescriptor, 1) == RakNet::StartupResult::RAKNET_STARTED)
         {
-            if(m_networkInterface->Connect(f_ip.c_str(), f_port, NULL, 0, NULL, 0, ROC_NETWORK_CONNECTION_TRIES, ROC_NETWORK_CONNECTION_TRYTIME) == RakNet::CONNECTION_ATTEMPT_STARTED)
+            if(m_networkInterface->Connect(f_ip.c_str(), f_port, nullptr, 0, nullptr, 0, ROC_NETWORK_CONNECTION_TRIES, ROC_NETWORK_CONNECTION_TRYTIME) == RakNet::CONNECTION_ATTEMPT_STARTED)
             {
                 m_networkState = NetworkState::Connecting;
             }
             else
             {
                 RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
-                m_networkInterface = NULL;
+                m_networkInterface = nullptr;
             }
         }
         else
         {
             RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
-            m_networkInterface = NULL;
+            m_networkInterface = nullptr;
         }
     }
     return (m_networkState == NetworkState::Connecting);
@@ -143,7 +143,7 @@ void ROC::NetworkManager::DoPulse()
         {
             m_networkInterface->Shutdown(ROC_NETWORK_SHUTDOWN_DURATION);
             RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
-            m_networkInterface = NULL;
+            m_networkInterface = nullptr;
         }
     }
 }

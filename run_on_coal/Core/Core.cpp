@@ -24,7 +24,7 @@ extern const glm::vec3 g_DefaultPosition(0.f);
 extern const glm::quat g_DefaultRotation(1.f, 0.f, 0.f, 0.f);
 extern const glm::vec3 g_DefaultScale(1.f, 1.f, 1.f);
 
-ROC::Core* ROC::Core::m_instance = NULL;
+ROC::Core* ROC::Core::m_instance = nullptr;
 
 ROC::Core::Core()
 {
@@ -114,7 +114,7 @@ void ROC::Core::Terminate()
         m_instance->m_luaManager->GetEventManager()->CallEvent("onAppStop", m_instance->m_argument);
 
         delete m_instance;
-        m_instance = NULL;
+        m_instance = nullptr;
     }
 }
 

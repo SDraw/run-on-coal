@@ -41,7 +41,7 @@ class Model : public Element
     Model(const Model& that);
     Model &operator =(const Model &that);
 public:
-    inline bool HasGeometry() const { return (m_geometry != NULL); }
+    inline bool HasGeometry() const { return (m_geometry != nullptr); }
     inline Geometry* GetGeometry() { return m_geometry; }
 
     void SetPosition(const glm::vec3 &f_pos, bool f_preserveMotion = false);
@@ -53,7 +53,7 @@ public:
 
     inline Model* GetParent() { return m_parent; }
 
-    inline bool HasAnimation() const { return (m_animation != NULL); }
+    inline bool HasAnimation() const { return (m_animation != nullptr); }
     inline Animation* GetAnimation() { return m_animation; }
     bool PlayAnimation();
     bool PauseAnimation();
@@ -65,9 +65,9 @@ public:
     bool SetAnimationBlendFactor(float f_val);
     float GetAnimationBlendFactor() const;
 
-    inline bool HasSkeleton() const { return (m_skeleton != NULL); }
+    inline bool HasSkeleton() const { return (m_skeleton != nullptr); }
 
-    inline bool HasCollision() const { return (m_collision != NULL); }
+    inline bool HasCollision() const { return (m_collision != nullptr); }
     inline Collision* GetCollision() { return m_collision; }
 protected:
     explicit Model(Geometry *f_geometry);

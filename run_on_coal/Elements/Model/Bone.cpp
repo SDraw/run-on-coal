@@ -11,7 +11,7 @@ extern const glm::vec3 g_DefaultScale;
 
 ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scl)
 {
-    m_parent = NULL;
+    m_parent = nullptr;
     m_name.assign(f_name);
     m_data = new BoneFrameData(f_pos,f_rot,f_scl);
     m_rebuildMatrix = false;
@@ -24,7 +24,7 @@ ROC::Bone::~Bone()
 {
     delete m_data;
     m_childBoneVector.clear();
-    m_parent = NULL;
+    m_parent = nullptr;
 }
 
 void ROC::Bone::SetFrameData(BoneFrameData *f_data)
@@ -32,8 +32,11 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data)
     if(m_interpolation)
     {
         m_blendValue += m_blendFactor;
-        if(m_blendValue >= 1.f) m_interpolation = false;
-        btClamp(m_blendValue, 0.f, 1.f);
+        if(m_blendValue >= 1.f)
+        {
+            m_interpolation = false;
+            m_blendValue = 1.f;
+        }
         m_data->SetInterpolated(f_data, m_blendValue);
         m_rebuildMatrix = true;
     }
@@ -59,7 +62,7 @@ void ROC::Bone::GenerateBindPose()
     if(m_data->GetRotationRef() != g_DefaultRotation) m_localMatrix *= glm::mat4_cast(m_data->GetRotationRef());
     if(m_data->GetScaleRef() != g_DefaultScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->GetScaleRef());
 
-    if(m_parent == NULL) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
+    if(m_parent == nullptr) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
     else
     {
         std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));

@@ -16,7 +16,7 @@ ROC::Font::Font()
     m_atlasTexture = 0U;
     m_atlasOffset = glm::vec2(0.f);
     m_atlasSize = glm::ivec2(0);
-    m_atlasPack = NULL;
+    m_atlasPack = nullptr;
 
     m_charIter = m_charMap.begin();
     m_charMapEnd = m_charMap.end();

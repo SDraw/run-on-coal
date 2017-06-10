@@ -17,7 +17,7 @@ ROC::Material::Material()
     m_params = glm::vec4(1.f);
     m_type = 0;
 
-    m_texture = NULL;
+    m_texture = nullptr;
 }
 
 ROC::Material::~Material()
@@ -126,7 +126,7 @@ void ROC::Material::LoadTexture(const std::string &f_path)
         if(!m_texture->Load(f_path, IsTransparent() ? ROC_TEXTURE_TYPE_RGBA : ROC_TEXTURE_TYPE_RGB, GetFilteringType(), IsCompressed()))
         {
             delete m_texture;
-            m_texture = NULL;
+            m_texture = nullptr;
         }
     }
 }

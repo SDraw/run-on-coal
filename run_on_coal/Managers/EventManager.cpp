@@ -39,7 +39,7 @@ bool ROC::EventManager::AddEvent(const std::string &f_event)
 {
     bool l_result = false;
     auto iter = m_eventMap.find(f_event);
-    EventHeap *l_eventHeap = NULL;
+    EventHeap *l_eventHeap = nullptr;
     if(iter == m_eventMapEnd)
     {
         l_eventHeap = new EventHeap();

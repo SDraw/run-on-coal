@@ -113,7 +113,7 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
         {
             skCollision *l_colData = new skCollision();
 
-            btCollisionShape *l_shape = NULL;
+            btCollisionShape *l_shape = nullptr;
             switch(iter->m_type)
             {
                 case ROC_BONECOL_TYPE_SPHERE:
@@ -201,7 +201,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 
                 l_jointPartResultTransform.mult(l_boneTransform, l_jointPartTransform);
 
-                btCollisionShape *l_jointPartShape = NULL;
+                btCollisionShape *l_jointPartShape = nullptr;
                 btVector3 l_jointPartInertia;
                 switch(l_partData.m_type)
                 {

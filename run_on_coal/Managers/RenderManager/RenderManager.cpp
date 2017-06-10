@@ -43,9 +43,9 @@ ROC::RenderManager::RenderManager(Core *f_core)
     Font::InitLibrary();
     Shader::CreateBonesUBO();
 
-    m_activeScene = NULL;
-    m_activeShader = NULL;
-    m_activeTarget = NULL;
+    m_activeScene = nullptr;
+    m_activeShader = nullptr;
+    m_activeTarget = nullptr;
     m_quad = new Quad();
     m_quad3D = new Quad3D();
     m_lastVAO = 0U;
@@ -128,6 +128,11 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
         }
     }
 }
+void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
+{
+    if(m_activeScene == f_scene) m_activeScene = nullptr;
+}
+
 void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 {
     if(!m_locked)
@@ -139,6 +144,10 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
             m_activeShader->SetTimeUniformValue(m_time);
         }
     }
+}
+void ROC::RenderManager::RemoveAsActiveShader(Shader *f_shader)
+{
+    if(m_activeShader == f_shader) m_activeShader = nullptr;
 }
 
 void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize)
@@ -295,7 +304,7 @@ void ROC::RenderManager::AddMovie(Movie *f_movie)
 }
 void ROC::RenderManager::RemoveMovie(Movie *f_movie)
 {
-    auto iter = std::find(m_movieVector.begin(), m_movieVectorEnd,f_movie);
+    auto iter = std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie);
     if(iter != m_movieVectorEnd)
     {
         m_movieVector.erase(iter);

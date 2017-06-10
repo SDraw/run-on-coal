@@ -12,7 +12,7 @@ ROC::Animation::Animation()
     m_durationTotal = 0U;
     m_fps = 0U;
     m_frameDelta = 0U;
-    m_tempFrameData = NULL;
+    m_tempFrameData = nullptr;
     m_bonesValue = 0U;
     m_loaded = false;
 }
@@ -92,7 +92,7 @@ bool ROC::Animation::Load(const std::string &f_path)
                         l_interval.start = l_frameIndex;
                         l_interval.value.m_leftData = l_interval.value.m_rightData;
                         l_interval.value.m_leftTime = l_frameIndex*m_frameDelta;
-                        l_interval.value.m_rightData = NULL;
+                        l_interval.value.m_rightData = nullptr;
                     }
                 }
                 m_boneIntervals.push_back(new IntervalTree<animData>(l_intervals));

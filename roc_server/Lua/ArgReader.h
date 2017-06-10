@@ -120,7 +120,7 @@ template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
                 {
                     try
                     {
-                        if((f_element = dynamic_cast<T*>(a)) != NULL) m_currentArg++;
+                        if((f_element = dynamic_cast<T*>(a)) != nullptr) m_currentArg++;
                         else
                         {
                             m_error.assign("Wrong element type");
@@ -187,7 +187,7 @@ template<class T> void ROC::ArgReader::ReadNextElement(T *&f_element)
             {
                 try
                 {
-                    if((f_element = dynamic_cast<T*>(a)) != NULL) m_currentArg++;
+                    if((f_element = dynamic_cast<T*>(a)) != nullptr) m_currentArg++;
                 }
                 catch(const std::exception&) {}
             }

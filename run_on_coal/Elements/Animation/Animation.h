@@ -16,8 +16,8 @@ class Animation : public Element
 
     struct animData
     {
-        BoneFrameData *m_leftData = NULL;
-        BoneFrameData *m_rightData = NULL;
+        BoneFrameData *m_leftData = nullptr;
+        BoneFrameData *m_rightData = nullptr;
         unsigned int m_leftTime = 0U;
         unsigned int m_duration = 0U;
     };

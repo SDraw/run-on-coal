@@ -44,7 +44,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
     else
     {
         delete l_file;
-        l_file = NULL;
+        l_file = nullptr;
     }
     return l_file;
 }
@@ -61,7 +61,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     else
     {
         delete l_file;
-        l_file = NULL;
+        l_file = nullptr;
     }
     return l_file;
 }

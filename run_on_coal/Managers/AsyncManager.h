@@ -12,7 +12,7 @@ class AsyncManager
 
     struct amLoadQuery
     {
-        Geometry *m_geometry = NULL;
+        Geometry *m_geometry = nullptr;
         std::string m_path;
         bool m_result = false;
     };

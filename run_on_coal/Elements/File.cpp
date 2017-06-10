@@ -6,7 +6,7 @@
 ROC::File::File()
 {
     m_elementType = ElementType::FileElement;
-    m_file = NULL;
+    m_file = nullptr;
 }
 ROC::File::~File()
 {
@@ -25,7 +25,7 @@ bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
         if(m_file->fail())
         {
             delete m_file;
-            m_file = NULL;
+            m_file = nullptr;
         }
         else
         {
@@ -33,7 +33,7 @@ bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
             m_path.assign(f_rPath);
         }
     }
-    return (m_file != NULL);
+    return (m_file != nullptr);
 }
 bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool f_ro)
 {
@@ -43,7 +43,7 @@ bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool
         if(m_file->fail())
         {
             delete m_file;
-            m_file = NULL;
+            m_file = nullptr;
         }
         else
         {
@@ -51,7 +51,7 @@ bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool
             m_path.assign(f_rPath);
         }
     }
-    return (m_file != NULL);
+    return (m_file != nullptr);
 }
 
 size_t ROC::File::Read(std::string &f_data, size_t f_lenght)

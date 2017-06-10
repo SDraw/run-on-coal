@@ -28,16 +28,16 @@ ROC::Model::Model(Geometry *f_geometry)
 
     m_geometry = f_geometry;
 
-    m_parent = NULL;
+    m_parent = nullptr;
     m_parentBone = -1;
 
-    m_animation = NULL;
+    m_animation = nullptr;
     m_animLastTick = 0U;
     m_animCurrentTick = 0U;
     m_animState = AnimationState::None;
-    m_animationSpeed = 1.f;
+    m_animationSpeed = -1.f;
 
-    m_skeleton = NULL;
+    m_skeleton = nullptr;
     if(m_geometry)
     {
         m_boundSphereRaduis = m_geometry->GetBoundSphereRadius();
@@ -48,7 +48,7 @@ ROC::Model::Model(Geometry *f_geometry)
             if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsDataRef());
         }
     }
-    m_collision = NULL;
+    m_collision = nullptr;
 }
 ROC::Model::~Model()
 {
@@ -186,12 +186,13 @@ void ROC::Model::SetAnimation(Animation *f_anim)
     {
         m_animState = AnimationState::Paused;
         m_animCurrentTick = 0U;
+        m_animationSpeed = 1.f;
         m_skeleton->EnableBoneBlending();
         UpdateSkeleton();
     }
     else
     {
-        m_animationSpeed = 1.f;
+        m_animationSpeed = -1.f;
         m_animState = AnimationState::None;
     }
 }
@@ -217,12 +218,12 @@ bool ROC::Model::PlayAnimation()
             m_animState = AnimationState::Playing;
         }
     }
-    return (m_animation != NULL);
+    return (m_animation != nullptr);
 }
 bool ROC::Model::PauseAnimation()
 {
     if(m_animation) m_animState = AnimationState::Paused;
-    return (m_animation != NULL);
+    return (m_animation != nullptr);
 }
 bool ROC::Model::ResetAnimation()
 {
@@ -232,7 +233,7 @@ bool ROC::Model::ResetAnimation()
         m_animLastTick = SystemTick::GetTick();
         UpdateSkeleton();
     }
-    return (m_animation != NULL);
+    return (m_animation != nullptr);
 }
 bool ROC::Model::SetAnimationSpeed(float f_val)
 {
@@ -241,7 +242,7 @@ bool ROC::Model::SetAnimationSpeed(float f_val)
         m_animationSpeed = f_val;
         if(m_animationSpeed < 0.f) m_animationSpeed = 0.f;
     }
-    return (m_animation != NULL);
+    return (m_animation != nullptr);
 }
 bool ROC::Model::SetAnimationProgress(float f_val)
 {
@@ -250,7 +251,7 @@ bool ROC::Model::SetAnimationProgress(float f_val)
         btClamp(f_val, 0.f, 1.f);
         m_animCurrentTick = static_cast<unsigned int>(float(m_animation->GetTotalDuration())*f_val);
     }
-    return (m_animation != NULL);
+    return (m_animation != nullptr);
 }
 float ROC::Model::GetAnimationProgress() const
 {
@@ -259,7 +260,7 @@ float ROC::Model::GetAnimationProgress() const
 bool ROC::Model::SetAnimationBlendFactor(float f_val)
 {
     if(m_skeleton) m_skeleton->SetBoneBlendFactor(f_val);
-    return (m_skeleton != NULL);
+    return (m_skeleton != nullptr);
 }
 float ROC::Model::GetAnimationBlendFactor() const
 {
@@ -277,7 +278,7 @@ void ROC::Model::SetCollision(Collision *f_col)
     if(m_skeleton)
     {
         btRigidBody *l_body = (f_col ? f_col->GetRigidBody() : m_collision->GetRigidBody());
-        bool l_collisionIgnoring = (f_col != NULL);
+        bool l_collisionIgnoring = (f_col != nullptr);
         if(m_skeleton->HasStaticBoneCollision())
         {
             for(auto iter : m_skeleton->GetCollisionVectorRef())

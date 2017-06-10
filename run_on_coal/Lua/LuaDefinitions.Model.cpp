@@ -26,7 +26,7 @@ const std::vector<std::string> g_modelAnimationPropertiesTable
 
 int modelCreate(lua_State *f_vm)
 {
-    Geometry *l_geometry = NULL;
+    Geometry *l_geometry = nullptr;
     ArgReader argStream(f_vm);
     argStream.ReadNextElement(l_geometry);
     if(!argStream.HasErrors())
@@ -61,7 +61,7 @@ int modelSetPosition(lua_State *f_vm)
     argStream.ReadNextBoolean(l_preserveMotion);
     if(!argStream.HasErrors())
     {
-        l_model->SetPosition(l_pos,l_preserveMotion);
+        l_model->SetPosition(l_pos, l_preserveMotion);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -98,7 +98,7 @@ int modelSetRotation(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         glm::quat l_qRot = std::isnan(l_rot.w) ? glm::quat(l_rot) : glm::quat(l_rot.w, l_rot.x, l_rot.y, l_rot.z);
-        l_model->SetRotation(l_qRot,l_preserveMotion);
+        l_model->SetRotation(l_qRot, l_preserveMotion);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -117,19 +117,19 @@ int modelGetRotation(lua_State *f_vm)
     {
         glm::quat l_qRot;
         l_model->GetRotation(l_qRot, l_global);
-        if(!l_quatReq)
-        {
-            glm::vec3 l_vRot = glm::eulerAngles(l_qRot);
-            argStream.PushNumber(l_vRot.x);
-            argStream.PushNumber(l_vRot.y);
-            argStream.PushNumber(l_vRot.z);
-        }
-        else
+        if(l_quatReq)
         {
             argStream.PushNumber(l_qRot.x);
             argStream.PushNumber(l_qRot.y);
             argStream.PushNumber(l_qRot.z);
             argStream.PushNumber(l_qRot.w);
+        }
+        else
+        {
+            glm::vec3 l_euler = glm::eulerAngles(l_qRot);
+            argStream.PushNumber(l_euler.x);
+            argStream.PushNumber(l_euler.y);
+            argStream.PushNumber(l_euler.z);
         }
     }
     else argStream.PushBoolean(false);
@@ -311,55 +311,29 @@ int modelResetAnimation(lua_State *f_vm)
 }
 int modelSetAnimationProperty(lua_State *f_vm)
 {
-    Model *l_model = NULL;
+    Model *l_model;
     std::string l_property;
+    float l_value;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     argStream.ReadText(l_property);
-    if(!argStream.HasErrors())
+    argStream.ReadNumber(l_value);
+    if(!argStream.HasErrors() && !l_property.empty())
     {
-        if(l_model->GetAnimation() != NULL)
+        bool l_result = false;
+        switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
         {
-            switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
-            {
-                case 0: // Speed
-                {
-                    float l_speed;
-                    argStream.ReadNumber(l_speed);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetAnimationSpeed(l_speed);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                case 1: // Progress
-                {
-                    float l_progress;
-                    argStream.ReadNumber(l_progress);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetAnimationProgress(l_progress);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                case 2: // Blend factor
-                {
-                    float l_factor;
-                    argStream.ReadNumber(l_factor);
-                    if(!argStream.HasErrors())
-                    {
-                        bool l_result = l_model->SetAnimationBlendFactor(l_factor);
-                        argStream.PushBoolean(l_result);
-                    }
-                    else argStream.PushBoolean(false);
-                } break;
-                default:
-                    argStream.PushBoolean(false);
-            }
+            case 0: // Speed
+                l_result = l_model->SetAnimationSpeed(l_value);
+                break;
+            case 1: // Progress
+                l_result = l_model->SetAnimationProgress(l_value);
+                break;
+            case 2: // Blend factor
+                l_model->SetAnimationBlendFactor(l_value);
+                break;
         }
-        else argStream.PushBoolean(false);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -371,32 +345,22 @@ int modelGetAnimationProperty(lua_State *f_vm)
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     argStream.ReadText(l_property);
-    if(!argStream.HasErrors())
+    if(!argStream.HasErrors() && !l_property.empty())
     {
-        if(l_model->GetAnimation() != NULL)
+        float l_value = -1.f;
+        switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
         {
-            switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
-            {
-                case 0: // Speed
-                {
-                    float l_speed = l_model->GetAnimationSpeed();
-                    argStream.PushNumber(l_speed);
-                } break;
-                case 1: // Progress
-                {
-                    float l_progress = l_model->GetAnimationProgress();
-                    argStream.PushNumber(l_progress);
-                } break;
-                case 2: // Blend factor
-                {
-                    float l_factor = l_model->GetAnimationBlendFactor();
-                    argStream.PushNumber(l_factor);
-                } break;
-                default:
-                    argStream.PushBoolean(false);
-            }
+            case 0: // Speed
+                l_value = l_model->GetAnimationSpeed();
+                break;
+            case 1: // Progress
+                l_value = l_model->GetAnimationProgress();
+                break;
+            case 2: // Blend factor
+                l_value = l_model->GetAnimationBlendFactor();
+                break;
         }
-        else argStream.PushBoolean(false);
+        (l_value != -1.f) ? argStream.PushNumber(l_value) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -404,7 +368,7 @@ int modelGetAnimationProperty(lua_State *f_vm)
 
 int modelGetCollision(lua_State *f_vm)
 {
-    Model *l_model = NULL;
+    Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())

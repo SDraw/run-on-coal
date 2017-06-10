@@ -7,13 +7,13 @@ namespace ROC
 class Drawable : public Element
 {
 public:
-    virtual bool IsTransparent() const = NULL;
+    virtual bool IsTransparent() const = 0;
 protected:
     Drawable();
     virtual ~Drawable();
 
-    virtual GLuint GetTextureID() const = NULL;
-    virtual void Bind() = NULL;
+    virtual GLuint GetTextureID() const = 0;
+    virtual void Bind() = 0;
 
     friend class RenderManager;
     friend class Shader;

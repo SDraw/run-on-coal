@@ -51,10 +51,10 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     {
         m_core->GetLogManager()->Log("Unable to start network interface. Check IP and port in configuration file");
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
-        m_networkInterface = NULL;
+        m_networkInterface = nullptr;
     }
 
-    m_clientVector.assign(m_core->GetConfigManager()->GetMaxClients(), NULL);
+    m_clientVector.assign(m_core->GetConfigManager()->GetMaxClients(), nullptr);
     m_argument = new LuaArguments();
 }
 ROC::NetworkManager::~NetworkManager()
@@ -70,7 +70,7 @@ ROC::NetworkManager::~NetworkManager()
 bool ROC::NetworkManager::Disconnect(Client *f_client)
 {
     if(m_networkInterface) m_networkInterface->CloseConnection(f_client->GetAddress(), true);
-    return (m_networkInterface != NULL);
+    return (m_networkInterface != nullptr);
 }
 bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
 {
@@ -83,7 +83,7 @@ bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
         l_sendData.Write(f_data.data(), l_dataSize);
         m_networkInterface->Send(&l_sendData, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, f_client->GetAddress(), false);
     }
-    return (m_networkInterface != NULL);
+    return (m_networkInterface != nullptr);
 }
 int ROC::NetworkManager::GetPing(Client *f_client)
 {
@@ -128,7 +128,7 @@ void ROC::NetworkManager::DoPulse()
                     m_argument->Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
-                    m_clientVector[l_packet->guid.systemIndex] = NULL;
+                    m_clientVector[l_packet->guid.systemIndex] = nullptr;
                     m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_ROC_DATA_PACKET:

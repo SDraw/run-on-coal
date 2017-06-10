@@ -7,9 +7,9 @@ extern const glm::vec3 g_DefaultScale;
 ROC::Collision::Collision()
 {
     m_elementType = ElementType::CollisionElement;
-    m_rigidBody = NULL;
+    m_rigidBody = nullptr;
     m_scale = g_DefaultScale;
-    m_parentModel = NULL;
+    m_parentModel = nullptr;
 }
 ROC::Collision::~Collision()
 {
@@ -26,7 +26,7 @@ bool ROC::Collision::Create(int f_type, const glm::vec3 &f_size, float f_mass)
     {
         btClamp(f_type, ROC_COLLISION_TYPE_SPHERE, ROC_COLLISION_TYPE_CONE);
         btVector3 l_inertia;
-        btCollisionShape *l_shape = NULL;
+        btCollisionShape *l_shape = nullptr;
         switch(f_type)
         {
             case ROC_COLLISION_TYPE_SPHERE:
@@ -52,7 +52,7 @@ bool ROC::Collision::Create(int f_type, const glm::vec3 &f_size, float f_mass)
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(f_mass, l_fallMotionState, l_shape, l_inertia);
         m_rigidBody = new btRigidBody(fallRigidBodyCI);
     }
-    return (m_rigidBody != NULL);
+    return (m_rigidBody != nullptr);
 }
 
 void ROC::Collision::SetParentModel(Model *f_model)

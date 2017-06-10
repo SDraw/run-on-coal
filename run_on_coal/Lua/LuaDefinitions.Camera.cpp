@@ -39,7 +39,7 @@ int cameraCreate(lua_State *f_vm)
 
 int cameraSetPosition(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
@@ -54,7 +54,7 @@ int cameraSetPosition(lua_State *f_vm)
 }
 int cameraGetPosition(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
@@ -71,7 +71,7 @@ int cameraGetPosition(lua_State *f_vm)
 
 int cameraSetDirection(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     glm::vec3 l_dir;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
@@ -86,7 +86,7 @@ int cameraSetDirection(lua_State *f_vm)
 }
 int cameraGetDirection(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
@@ -103,7 +103,7 @@ int cameraGetDirection(lua_State *f_vm)
 
 int cameraSetType(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     std::string l_text;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
@@ -123,7 +123,7 @@ int cameraSetType(lua_State *f_vm)
 }
 int cameraGetType(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     !argStream.HasErrors() ? argStream.PushText(g_cameraTypesTable[l_camera->GetType()]) : argStream.PushBoolean(false);
@@ -132,7 +132,7 @@ int cameraGetType(lua_State *f_vm)
 
 int cameraSetFOV(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     float l_fov;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
@@ -147,7 +147,7 @@ int cameraSetFOV(lua_State *f_vm)
 }
 int cameraGetFOV(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetFOV()) : argStream.PushBoolean(false);
@@ -156,7 +156,7 @@ int cameraGetFOV(lua_State *f_vm)
 
 int cameraSetAspectRatio(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     float l_ratio;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
@@ -171,7 +171,7 @@ int cameraSetAspectRatio(lua_State *f_vm)
 }
 int cameraGetAspectRatio(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetAspectRatio()) : argStream.PushBoolean(false);
@@ -180,7 +180,7 @@ int cameraGetAspectRatio(lua_State *f_vm)
 
 int cameraSetOrthoParams(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     glm::vec4 l_params;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
@@ -195,7 +195,7 @@ int cameraSetOrthoParams(lua_State *f_vm)
 }
 int cameraGetOrthoParams(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
@@ -213,7 +213,7 @@ int cameraGetOrthoParams(lua_State *f_vm)
 
 int cameraSetDepth(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     glm::vec2 l_depth;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
@@ -228,7 +228,7 @@ int cameraSetDepth(lua_State *f_vm)
 }
 int cameraGetDepth(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
@@ -244,7 +244,7 @@ int cameraGetDepth(lua_State *f_vm)
 
 int cameraGetViewMatrix(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
@@ -259,7 +259,7 @@ int cameraGetViewMatrix(lua_State *f_vm)
 
 int cameraGetProjectionMatrix(lua_State *f_vm)
 {
-    Camera *l_camera = NULL;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())

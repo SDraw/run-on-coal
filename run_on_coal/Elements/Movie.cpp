@@ -5,7 +5,7 @@ ROC::Movie::Movie()
 {
     m_elementType = ElementType::MovieElement;
 
-    m_movie = NULL;
+    m_movie = nullptr;
 }
 ROC::Movie::~Movie()
 {
@@ -22,7 +22,7 @@ bool ROC::Movie::Load(const std::string &f_path)
         if(!l_result)
         {
             delete m_movie;
-            m_movie = NULL;
+            m_movie = nullptr;
         }
     }
     return l_result;

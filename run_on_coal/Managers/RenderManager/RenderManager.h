@@ -56,20 +56,20 @@ class RenderManager
     RenderManager(const RenderManager& that);
     RenderManager &operator =(const RenderManager &that);
 public:
-    void SetRenderTarget(RenderTarget *f_rt);
-
     void ClearRenderArea(GLbitfield f_params);
     static inline void SetClearColour(const glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
     static inline void SetViewport(const glm::ivec4 &f_area) { glViewport(f_area.r, f_area.g, f_area.b, f_area.a); }
     static inline void SetPolygonMode(int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode); }
 
+    void SetRenderTarget(RenderTarget *f_rt);
+
     void SetActiveScene(Scene *f_scene);
-    inline void RemoveAsActiveScene(Scene *f_scene) { if(m_activeScene == f_scene) m_activeScene = NULL; }
+    void RemoveAsActiveScene(Scene *f_scene);
 
     void SetActiveShader(Shader *f_shader);
     template<typename T> void SetShaderUniformValue(Shader *f_shader, const std::string &f_uniform, T f_value);
     template<typename T> void SetShaderUniformValueRef(Shader *f_shader, const std::string &f_uniform, T &f_value);
-    inline void RemoveAsActiveShader(Shader *f_shader) { if(m_activeShader == f_shader) m_activeShader = NULL; }
+    void RemoveAsActiveShader(Shader *f_shader);
 
     void Render(Model *f_model, bool f_frustum = true, bool f_texturize = true);
     void Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color);

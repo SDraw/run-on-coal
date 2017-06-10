@@ -75,13 +75,13 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::ModelElement:
-                    dynamic_cast<Model*>(f_child)->SetParent(NULL);
+                    dynamic_cast<Model*>(f_child)->SetParent(nullptr);
                     break;
                 case Element::ElementType::GeometryElement:
-                    dynamic_cast<Model*>(f_child)->SetGeometry(NULL);
+                    dynamic_cast<Model*>(f_child)->SetGeometry(nullptr);
                     break;
                 case Element::ElementType::AnimationElement:
-                    dynamic_cast<Model*>(f_child)->SetAnimation(NULL);
+                    dynamic_cast<Model*>(f_child)->SetAnimation(nullptr);
                     break;
             }
         } break;
@@ -91,8 +91,8 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             {
                 case Element::ElementType::ModelElement:
                 {
-                    dynamic_cast<Collision*>(f_child)->SetParentModel(NULL);
-                    dynamic_cast<Model*>(f_parent)->SetCollision(NULL);
+                    dynamic_cast<Collision*>(f_child)->SetParentModel(nullptr);
+                    dynamic_cast<Model*>(f_parent)->SetCollision(nullptr);
                 } break;
             }
         } break;
@@ -101,7 +101,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::SceneElement:
-                    dynamic_cast<Scene*>(f_parent)->SetCamera(NULL);
+                    dynamic_cast<Scene*>(f_parent)->SetCamera(nullptr);
                     break;
             }
         } break;
@@ -110,7 +110,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::SceneElement:
-                    dynamic_cast<Scene*>(f_parent)->SetLight(NULL);
+                    dynamic_cast<Scene*>(f_parent)->SetLight(nullptr);
                     break;
             }
         } break;

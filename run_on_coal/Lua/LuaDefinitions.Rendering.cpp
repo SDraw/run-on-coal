@@ -53,7 +53,7 @@ int setActiveShader(lua_State *f_vm)
 }
 int setRenderTarget(lua_State *f_vm)
 {
-    RenderTarget *l_rt = NULL;
+    RenderTarget *l_rt = nullptr;
     ArgReader argStream(f_vm);
     argStream.ReadNextElement(l_rt);
     LuaManager::GetCore()->GetRenderManager()->SetRenderTarget(l_rt);

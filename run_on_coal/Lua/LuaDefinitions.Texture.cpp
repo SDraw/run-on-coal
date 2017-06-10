@@ -32,7 +32,7 @@ int textureCreate(lua_State *f_vm)
     argStream.ReadNextBoolean(l_compress);
     if(!argStream.HasErrors() && !l_type.empty())
     {
-        Texture *l_tex = NULL;
+        Texture *l_tex = nullptr;
         int l_textureType = Utils::ReadEnumVector(g_textureTypesTable, l_type);
         int l_filteringType = Utils::ReadEnumVector(g_textureFilteringTypesTable, l_filtering);
         if(l_filteringType == -1) l_filteringType = 0;

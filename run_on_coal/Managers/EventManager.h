@@ -11,7 +11,7 @@ class EventManager
 
     struct Event
     {
-        void *m_luaFunc = NULL;
+        void *m_luaFunc = nullptr;
         int m_luaRef = -1;
         bool m_deleted = false;
     };

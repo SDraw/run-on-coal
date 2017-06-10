@@ -7,8 +7,8 @@ ROC::Scene::Scene()
 {
     m_elementType = ElementType::SceneElement;
 
-    m_mainCamera = NULL;
-    m_mainLight = NULL;
+    m_mainCamera = nullptr;
+    m_mainLight = nullptr;
 }
 ROC::Scene::~Scene()
 {

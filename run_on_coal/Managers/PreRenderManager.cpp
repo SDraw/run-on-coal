@@ -13,7 +13,7 @@ ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
     m_argument = new LuaArguments();
-    m_modelTreeRoot = new TreeNode(NULL);
+    m_modelTreeRoot = new TreeNode(nullptr);
     m_modelToNodeMapEnd = m_modelToNodeMap.end();
 }
 ROC::PreRenderManager::~PreRenderManager()
@@ -52,7 +52,7 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
 
         for(auto iter : l_node->GetChildrenVectorRef())
         {
-            iter->SetParent(NULL);
+            iter->SetParent(nullptr);
             m_modelTreeRoot->AddChild(iter);
         }
 
@@ -95,7 +95,7 @@ void ROC::PreRenderManager::RemoveLink(Model *f_model)
         {
             l_parentNode->RemoveChild(l_node);
             m_modelTreeRoot->AddChild(l_node);
-            l_node->SetParent(NULL);
+            l_node->SetParent(nullptr);
         }
     }
 }

@@ -42,7 +42,7 @@ int fileOpen(lua_State *f_vm)
 }
 int fileClose(lua_State *f_vm)
 {
-    File *l_file = NULL;
+    File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
     if(!argStream.HasErrors())
@@ -76,7 +76,7 @@ int fileRead(lua_State *f_vm)
 }
 int fileWrite(lua_State *f_vm)
 {
-    File *l_file = NULL;
+    File *l_file;
     std::string l_data;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
@@ -91,7 +91,7 @@ int fileWrite(lua_State *f_vm)
 }
 int fileGetSize(lua_State *f_vm)
 {
-    File *l_file = NULL;
+    File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
     if(!argStream.HasErrors())

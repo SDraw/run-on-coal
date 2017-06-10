@@ -9,7 +9,7 @@
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
 
-ROC::Core* ROC::Core::m_instance = NULL;
+ROC::Core* ROC::Core::m_instance = nullptr;
 
 ROC::Core::Core()
 {
@@ -82,7 +82,7 @@ void ROC::Core::Terminate()
         m_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", m_instance->m_argument);
 
         delete m_instance;
-        m_instance = NULL;
+        m_instance = nullptr;
     }
 }
 

@@ -43,7 +43,7 @@ int shaderCreate(lua_State *f_vm)
 
 int shaderSetUniformValue(lua_State *f_vm)
 {
-    Shader *l_shader = NULL;
+    Shader *l_shader;
     std::string l_uniform;
     std::string l_type;
     ArgReader argStream(f_vm);

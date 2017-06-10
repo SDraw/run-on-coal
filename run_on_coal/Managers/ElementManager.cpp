@@ -67,7 +67,7 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
     else
     {
         delete l_anim;
-        l_anim = NULL;
+        l_anim = nullptr;
     }
     return l_anim;
 }
@@ -93,7 +93,7 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
         else
         {
             delete l_geometry;
-            l_geometry = NULL;
+            l_geometry = nullptr;
         }
     }
     return l_geometry;
@@ -101,7 +101,7 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
 
 ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
 {
-    Model *l_model = NULL;
+    Model *l_model = nullptr;
     if(f_geometry)
     {
         if(f_geometry->IsLoaded())
@@ -110,7 +110,7 @@ ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
             m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
         }
     }
-    else l_model = new Model(NULL);
+    else l_model = new Model(nullptr);
     if(l_model)
     {
         m_core->GetMemoryManager()->AddMemoryPointer(l_model);
@@ -164,7 +164,7 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
             m_core->GetLogManager()->Log(l_error);
         }
         delete l_shader;
-        l_shader = NULL;
+        l_shader = nullptr;
     }
     return l_shader;
 }
@@ -182,7 +182,7 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path, bool f_l
     else
     {
         delete l_sound;
-        l_sound = NULL;
+        l_sound = nullptr;
     }
     return l_sound;
 }
@@ -199,7 +199,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, g
         l_rt->GetError(l_error);
         m_core->GetLogManager()->Log(l_error);
         delete l_rt;
-        l_rt = NULL;
+        l_rt = nullptr;
     }
     return l_rt;
 }
@@ -218,7 +218,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
     else
     {
         delete l_tex;
-        l_tex = NULL;
+        l_tex = nullptr;
     }
     return l_tex;
 }
@@ -242,7 +242,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     else
     {
         delete l_tex;
-        l_tex = NULL;
+        l_tex = nullptr;
     }
     return l_tex;
 }
@@ -261,7 +261,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
     else
     {
         delete l_font;
-        l_font = NULL;
+        l_font = nullptr;
     }
     return l_font;
 }
@@ -279,7 +279,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
     else
     {
         delete l_file;
-        l_file = NULL;
+        l_file = nullptr;
     }
     return l_file;
 }
@@ -296,7 +296,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     else
     {
         delete l_file;
-        l_file = NULL;
+        l_file = nullptr;
     }
     return l_file;
 }
@@ -313,7 +313,7 @@ ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_si
     else
     {
         delete l_col;
-        l_col = NULL;
+        l_col = nullptr;
     }
     return l_col;
 }
@@ -335,7 +335,7 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
     else
     {
         delete l_movie;
-        l_movie = NULL;
+        l_movie = nullptr;
     }
     return l_movie;
 }
