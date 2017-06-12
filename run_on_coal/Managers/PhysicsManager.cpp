@@ -7,6 +7,8 @@
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
 
+#define ROC_PHYSICS_DEFAULT_TIMESTEP 1.f/60.f
+
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
 {
     m_core = f_core;
@@ -19,22 +21,21 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
     m_dynamicWorld = new btDiscreteDynamicsWorld(m_dispatcher, m_broadPhase, m_solver, m_collisionConfig);
     m_dynamicWorld->setGravity(btVector3(0.f, -9.8f, 0.f));
 
-    m_floorEnabled = false;
-    m_groundBody = nullptr;
+    m_floorBody = nullptr;
 
     m_enabled = false;
 
     unsigned int l_fpsLimit = m_core->GetConfigManager()->GetFPSLimit();
-    m_timeStep = (l_fpsLimit == 0U) ? (1.f / 60.f) : (1.f / static_cast<float>(l_fpsLimit));
-    m_substeps = static_cast<int>(m_timeStep / (1.f / 60.f)) + 1;
+    m_timeStep = (l_fpsLimit == 0U) ? ROC_PHYSICS_DEFAULT_TIMESTEP : (1.f / static_cast<float>(l_fpsLimit));
+    m_substeps = static_cast<int>(m_timeStep / ROC_PHYSICS_DEFAULT_TIMESTEP) + 1;
 }
 ROC::PhysicsManager::~PhysicsManager()
 {
-    if(m_groundBody)
+    if(m_floorBody)
     {
-        m_dynamicWorld->removeRigidBody(m_groundBody);
-        delete m_groundBody->getMotionState();
-        delete m_groundBody;
+        m_dynamicWorld->removeRigidBody(m_floorBody);
+        delete m_floorBody->getMotionState();
+        delete m_floorBody;
     }
 
     delete m_dynamicWorld;
@@ -46,24 +47,20 @@ ROC::PhysicsManager::~PhysicsManager()
 
 void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
 {
-    if(m_floorEnabled != f_value)
+    if(f_value && (m_floorBody == nullptr))
     {
-        m_floorEnabled = f_value;
-        if(m_floorEnabled)
-        {
-            btStaticPlaneShape *l_groundShape = new btStaticPlaneShape(btVector3(0.f, 1.f, 0.f), 1.f);
-            btDefaultMotionState *l_groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0.f, 0.f, 0.f, 1.f), btVector3(0.f, -1.f, 0.f)));
-            btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0.f, l_groundMotionState, l_groundShape);
-            m_groundBody = new btRigidBody(groundRigidBodyCI);
-            m_dynamicWorld->addRigidBody(m_groundBody);
-        }
-        else
-        {
-            m_dynamicWorld->removeRigidBody(m_groundBody);
-            delete m_groundBody->getMotionState();
-            delete m_groundBody;
-            m_groundBody = nullptr;
-        }
+        btStaticPlaneShape *l_groundShape = new btStaticPlaneShape(btVector3(0.f, 1.f, 0.f), 0.f);
+        btDefaultMotionState *l_groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0.f, 0.f, 0.f, 1.f), btVector3(0.f, 0.f, 0.f)));
+        btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0.f, l_groundMotionState, l_groundShape);
+        m_floorBody = new btRigidBody(groundRigidBodyCI);
+        m_dynamicWorld->addRigidBody(m_floorBody);
+    }
+    else if(!f_value && (m_floorBody != nullptr))
+    {
+        m_dynamicWorld->removeRigidBody(m_floorBody);
+        delete m_floorBody->getMotionState();
+        delete m_floorBody;
+        m_floorBody = nullptr;
     }
 }
 void ROC::PhysicsManager::SetGravity(const glm::vec3 &f_grav)
@@ -152,8 +149,8 @@ bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, 
 
 void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
 {
-    m_timeStep = (f_fps == 0U) ? (1.f / 60.f) : (1.f / static_cast<float>(f_fps));
-    m_substeps = static_cast<int>(m_timeStep / (1.f / 60.f)) + 1;
+    m_timeStep = (f_fps == 0U) ? ROC_PHYSICS_DEFAULT_TIMESTEP : (1.f / static_cast<float>(f_fps));
+    m_substeps = static_cast<int>(m_timeStep / ROC_PHYSICS_DEFAULT_TIMESTEP) + 1;
 }
 
 void ROC::PhysicsManager::AddModel(Model *f_model)
@@ -229,5 +226,5 @@ bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, gl
 
 void ROC::PhysicsManager::DoPulse()
 {
-    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, m_substeps);
+    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, m_substeps, ROC_PHYSICS_DEFAULT_TIMESTEP);
 }

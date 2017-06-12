@@ -171,6 +171,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
             m_switch = true;
         }
         else m_switch = !m_switch;
+
         float l_displacement = f_pos.x;
         glm::vec2 l_result;
         int l_charIncrement = 0;
@@ -203,7 +204,6 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
 
                 l_charIncrement++;
             }
-
             l_displacement += m_charIter->second->m_advance;
         }
         if(l_charIncrement > 0)

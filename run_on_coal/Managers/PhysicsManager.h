@@ -11,16 +11,15 @@ class PhysicsManager
     Core *m_core;
 
     bool m_enabled;
-    btDiscreteDynamicsWorld* m_dynamicWorld;
-    btBroadphaseInterface* m_broadPhase;
-    btDefaultCollisionConfiguration* m_collisionConfig;
-    btCollisionDispatcher* m_dispatcher;
-    btSequentialImpulseConstraintSolver* m_solver;
+    btDiscreteDynamicsWorld *m_dynamicWorld;
+    btBroadphaseInterface *m_broadPhase;
+    btDefaultCollisionConfiguration *m_collisionConfig;
+    btCollisionDispatcher *m_dispatcher;
+    btSequentialImpulseConstraintSolver *m_solver;
     float m_timeStep;
     int m_substeps;
 
-    bool m_floorEnabled;
-    btRigidBody* m_groundBody;
+    btRigidBody *m_floorBody;
 
     PhysicsManager(const PhysicsManager& that);
     PhysicsManager &operator =(const PhysicsManager &that);
@@ -28,7 +27,7 @@ public:
     inline void SetPhysicsEnabled(bool f_value) { m_enabled = f_value; }
     inline bool GetPhysicsEnabled() const { return m_enabled; }
     void SetFloorEnabled(bool f_value);
-    inline bool GetFloorEnabled() const { return m_floorEnabled; }
+    inline bool GetFloorEnabled() const { return (m_floorBody != nullptr); }
     void SetGravity(const glm::vec3 &f_grav);
     void GetGravity(glm::vec3 &f_grav);
 
