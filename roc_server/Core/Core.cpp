@@ -13,14 +13,13 @@ ROC::Core* ROC::Core::m_instance = nullptr;
 
 ROC::Core::Core()
 {
-    char *l_pathBuf = new char[_MAX_PATH];
-    std::string l_appPath;
+    std::string l_appPath(_MAX_PATH, '\0');
+    _getcwd(const_cast<char*>(l_appPath.data()), _MAX_PATH);
+    l_appPath.erase(std::remove(l_appPath.begin(), l_appPath.end(), '\0'), l_appPath.end());
+
     std::regex l_regex("\\\\");
-    _getcwd(l_pathBuf, _MAX_PATH);
-    l_appPath.assign(l_pathBuf);
     std::regex_replace(std::back_inserter(m_workingDir), l_appPath.begin(), l_appPath.end(), l_regex, "/");
     m_workingDir.push_back('/');
-    delete[]l_pathBuf;
 
     m_configManager = new ConfigManager();
     m_logManager = new LogManager(this);
