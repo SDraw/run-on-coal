@@ -17,7 +17,6 @@ class PhysicsManager
     btCollisionDispatcher *m_dispatcher;
     btSequentialImpulseConstraintSolver *m_solver;
     float m_timeStep;
-    int m_substeps;
 
     btRigidBody *m_floorBody;
 

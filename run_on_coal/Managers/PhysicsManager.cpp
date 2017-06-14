@@ -6,8 +6,10 @@
 #include "Elements/Collision.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
+#include "Utils/SystemTick.h"
 
 #define ROC_PHYSICS_DEFAULT_TIMESTEP 1.f/60.f
+#define ROC_PHYSICS_DEFAULT_SUBSTEPS 10
 
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
 {
@@ -27,7 +29,6 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
 
     unsigned int l_fpsLimit = m_core->GetConfigManager()->GetFPSLimit();
     m_timeStep = (l_fpsLimit == 0U) ? ROC_PHYSICS_DEFAULT_TIMESTEP : (1.f / static_cast<float>(l_fpsLimit));
-    m_substeps = static_cast<int>(m_timeStep / ROC_PHYSICS_DEFAULT_TIMESTEP) + 1;
 }
 ROC::PhysicsManager::~PhysicsManager()
 {
@@ -150,7 +151,6 @@ bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, 
 void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
 {
     m_timeStep = (f_fps == 0U) ? ROC_PHYSICS_DEFAULT_TIMESTEP : (1.f / static_cast<float>(f_fps));
-    m_substeps = static_cast<int>(m_timeStep / ROC_PHYSICS_DEFAULT_TIMESTEP) + 1;
 }
 
 void ROC::PhysicsManager::AddModel(Model *f_model)
@@ -226,5 +226,5 @@ bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, gl
 
 void ROC::PhysicsManager::DoPulse()
 {
-    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, m_substeps, ROC_PHYSICS_DEFAULT_TIMESTEP);
+    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, ROC_PHYSICS_DEFAULT_SUBSTEPS, ROC_PHYSICS_DEFAULT_TIMESTEP);
 }
