@@ -51,6 +51,7 @@ bool ROC::Collision::Create(int f_type, const glm::vec3 &f_size, float f_mass)
         btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
         btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(f_mass, l_fallMotionState, l_shape, l_inertia);
         m_rigidBody = new btRigidBody(fallRigidBodyCI);
+        m_rigidBody->setUserPointer(this);
     }
     return (m_rigidBody != nullptr);
 }

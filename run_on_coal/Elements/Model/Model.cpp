@@ -44,8 +44,8 @@ ROC::Model::Model(Geometry *f_geometry)
         if(m_geometry->HasBonesData())
         {
             m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
-            if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionDataRef());
-            if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsDataRef());
+            if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionDataRef(), this);
+            if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsDataRef(), this);
         }
     }
     m_collision = nullptr;

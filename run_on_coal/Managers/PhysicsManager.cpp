@@ -157,19 +157,13 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
 {
     if(f_model->HasSkeleton())
     {
-        for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef())
-        {
-            iter->m_rigidBody->setUserPointer(f_model);
-            m_dynamicWorld->addRigidBody(iter->m_rigidBody);
-        }
+        for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef()) m_dynamicWorld->addRigidBody(iter->m_rigidBody);
 
         for(auto iter : f_model->GetSkeleton()->GetJointVectorRef())
         {
             m_dynamicWorld->addRigidBody(iter->m_emptyBody);
             for(auto iter1 : iter->m_partsVector)
             {
-
-                iter1->m_rigidBody->setUserPointer(f_model);
                 m_dynamicWorld->addRigidBody(iter1->m_rigidBody);
                 m_dynamicWorld->addConstraint(iter1->m_constraint, true);
             }
@@ -197,7 +191,6 @@ void ROC::PhysicsManager::RemoveModel(Model *f_model)
 void ROC::PhysicsManager::AddCollision(Collision *f_col)
 {
     m_dynamicWorld->addRigidBody(f_col->GetRigidBody());
-    f_col->GetRigidBody()->setUserPointer(f_col);
 }
 void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
 {

@@ -161,7 +161,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_material->LoadTexture(l_difTexture);
                 }
                 m_materialCount = static_cast<unsigned int>(m_materialVector.size());
-                if(m_materialCount)
+                if(m_materialCount > 0U)
                 {
                     std::vector<Material*> l_matVecDef, l_matVecDefDouble, l_matVecDefTransp;
                     for(auto iter : m_materialVector)

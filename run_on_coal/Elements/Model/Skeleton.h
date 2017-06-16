@@ -46,7 +46,7 @@ class Skeleton
     };
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
-    
+
     float m_blendFactor;
     bool m_preserveMotion;
     glm::mat4 m_prevModelMatrix;
@@ -68,10 +68,10 @@ protected:
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
     inline std::vector<glm::mat4>& GetBoneMatricesVectorRef() { return m_boneMatrices; }
 
-    void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec);
+    void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);
     inline std::vector<skCollision*> &GetCollisionVectorRef() { return m_collisionVector; }
 
-    void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec);
+    void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
     inline std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
 
     void UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled);

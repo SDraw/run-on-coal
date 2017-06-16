@@ -105,7 +105,7 @@ void ROC::Skeleton::SetBoneBlendFactor(float f_blend)
     }
 }
 
-void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec)
+void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model)
 {
     if(!m_hasStaticBoneCollision)
     {
@@ -149,6 +149,7 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
             l_colData->m_rigidBody = new btRigidBody(fallRigidBodyCI);
             l_colData->m_rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
             l_colData->m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+            l_colData->m_rigidBody->setUserPointer(f_model);
 
             l_colData->m_boneID = static_cast<int>(iter->m_boneID);
 
@@ -158,7 +159,7 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
     }
 }
 
-void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec)
+void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model)
 {
     if(!m_hasDynamicBoneCollision)
     {
@@ -178,6 +179,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
             l_joint->m_emptyBody = new btRigidBody(l_jointFallRigidBodyCI);
             l_joint->m_emptyBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
             l_joint->m_emptyBody->setActivationState(DISABLE_DEACTIVATION);
+            l_joint->m_emptyBody->setUserPointer(f_model);
 
             m_jointVector.push_back(l_joint);
 
@@ -228,6 +230,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 btRigidBody::btRigidBodyConstructionInfo l_jointPartFallRigidBodyCI(l_partData.m_mass, l_jointPartFallMotionState, l_jointPartShape, l_jointPartInertia);
                 l_jointPart->m_rigidBody = new btRigidBody(l_jointPartFallRigidBodyCI);
                 l_jointPart->m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+                l_jointPart->m_rigidBody->setUserPointer(f_model);
 
                 l_jointPart->m_rigidBody->setRestitution(l_partData.m_restutition);
                 l_jointPart->m_rigidBody->setFriction(l_partData.m_friction);
