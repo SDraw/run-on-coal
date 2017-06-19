@@ -338,7 +338,7 @@ void ROC::ArgReader::PushCustomData(CustomData &f_data)
             break;
         case CustomData::DataType::String:
         {
-            std::string &l_string = f_data.GetString();
+            const std::string &l_string = f_data.GetString();
             lua_pushlstring(m_vm, l_string.data(), l_string.size());
         } break;
     }

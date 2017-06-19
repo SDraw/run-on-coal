@@ -321,7 +321,7 @@ int modelSetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_property.empty())
     {
         bool l_result = false;
-        switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
+        switch(Utils::Enum::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
         {
             case 0: // Speed
                 l_result = l_model->SetAnimationSpeed(l_value);
@@ -348,7 +348,7 @@ int modelGetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_property.empty())
     {
         float l_value = -1.f;
-        switch(Utils::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
+        switch(Utils::Enum::ReadEnumVector(g_modelAnimationPropertiesTable, l_property))
         {
             case 0: // Speed
                 l_value = l_model->GetAnimationSpeed();

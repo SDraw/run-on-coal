@@ -25,7 +25,7 @@ int cameraCreate(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = Utils::ReadEnumVector(g_cameraTypesTable, l_text);
+        int l_type = Utils::Enum::ReadEnumVector(g_cameraTypesTable, l_text);
         if(l_type != -1)
         {
             Camera *l_camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(l_type);
@@ -110,7 +110,7 @@ int cameraSetType(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = Utils::ReadEnumVector(g_cameraTypesTable, l_text);
+        int l_type = Utils::Enum::ReadEnumVector(g_cameraTypesTable, l_text);
         if(l_type != -1)
         {
             l_camera->SetType(l_type);

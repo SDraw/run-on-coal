@@ -36,7 +36,7 @@ int collisionCreate(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = Utils::ReadEnumVector(g_collisionTypesTable, l_typeString);
+        int l_type = Utils::Enum::ReadEnumVector(g_collisionTypesTable, l_typeString);
         if(l_type != -1)
         {
             Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(l_type, l_size, l_mass);
@@ -388,7 +388,7 @@ int collisionSetMotionType(lua_State *f_vm)
     argStream.ReadText(l_type);
     if(!argStream.HasErrors() && !l_type.empty())
     {
-        int l_idx = Utils::ReadEnumVector(g_collisionMotionTypesTable, l_type);
+        int l_idx = Utils::Enum::ReadEnumVector(g_collisionMotionTypesTable, l_type);
         if(l_idx != -1)
         {
             l_collision->SetMotionType(ROC_COLLISION_MOTION_DEFAULT + l_idx);

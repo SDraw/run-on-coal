@@ -75,7 +75,7 @@ void ROC::LuaArguments::ProccessArguments(lua_State *f_vm)
                 break;
             case CustomData::DataType::String:
             {
-                std::string &l_string = iter.GetString();
+                const std::string &l_string = iter.GetString();
                 lua_pushlstring(f_vm, l_string.data(), l_string.size());
             } break;
         }

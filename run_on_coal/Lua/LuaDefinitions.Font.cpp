@@ -33,7 +33,7 @@ int fontCreate(lua_State *f_vm)
     argStream.ReadNextText(l_filter);
     if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
-        int l_filteringType = Utils::ReadEnumVector(g_fontFilteringTypesTable, l_filter);
+        int l_filteringType = Utils::Enum::ReadEnumVector(g_fontFilteringTypesTable, l_filter);
         if(l_filteringType == -1) l_filteringType = 0;
         Font *l_font = LuaManager::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, l_filteringType);
         l_font ? argStream.PushPointer(l_font) : argStream.PushBoolean(false);

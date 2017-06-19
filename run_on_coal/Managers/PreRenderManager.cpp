@@ -115,7 +115,7 @@ void ROC::PreRenderManager::DoPulse_S1()
         auto &l_nodeChildren = l_current->GetChildrenVectorRef();
         m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
 
-        Model *l_model = l_current->GetModel();
+        Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
         if(!l_model->HasCollision()) l_model->UpdateMatrix();
         if(l_model->HasSkeleton())
         {
@@ -138,7 +138,7 @@ void ROC::PreRenderManager::DoPulse_S2()
         auto &l_nodeChildren = l_current->GetChildrenVectorRef();
         m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
 
-        Model *l_model = l_current->GetModel();
+        Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
         l_model->HasCollision() ? l_model->UpdateCollision() : l_model->UpdateMatrix();
         if(l_model->HasSkeleton()) l_model->GetSkeleton()->UpdateCollision_S2(l_model->GetMatrixRef(), l_physicsState);
     }

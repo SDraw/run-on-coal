@@ -68,7 +68,7 @@ int clearRenderArea(lua_State *f_vm)
     argStream.ReadText(l_param);
     if(!argStream.HasErrors() && !l_param.empty())
     {
-        int l_type = Utils::ReadEnumVector(g_buffersTable, l_param);
+        int l_type = Utils::Enum::ReadEnumVector(g_buffersTable, l_param);
         if(l_type != -1)
         {
             GLbitfield l_buffer = (l_type == 0) ? GL_COLOR_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
@@ -113,7 +113,7 @@ int setPolygonMode(lua_State *f_vm)
     argStream.ReadText(l_mode);
     if(!argStream.HasErrors() && !l_mode.empty())
     {
-        int l_type = Utils::ReadEnumVector(g_polygonFillTable, l_mode);
+        int l_type = Utils::Enum::ReadEnumVector(g_polygonFillTable, l_mode);
         if(l_type != -1)
         {
             RenderManager::SetPolygonMode(l_type);

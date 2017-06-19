@@ -40,6 +40,7 @@ public:
     void SetPointer(void *f_val);
 
     inline void GetString(std::string &f_val) { f_val.assign(m_string); }
+    inline const std::string& GetString() { return m_string; }
     void SetString(const std::string &f_val);
     void SetString(const char *f_val, size_t f_size);
     inline void ClearString() { m_string.clear(); }
@@ -47,11 +48,6 @@ public:
     CustomData& operator=(CustomData &f_data);
 private:
     DataType m_type;
-protected:
-    inline std::string& GetString() { return m_string; }
-
-    friend class ArgReader;
-    friend class LuaArguments;
 };
 
 }

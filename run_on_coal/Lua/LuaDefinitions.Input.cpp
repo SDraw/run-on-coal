@@ -30,7 +30,7 @@ int setCursorMode(lua_State *f_vm)
     argStream.ReadText(l_state);
     if(!argStream.HasErrors() && !l_state.empty())
     {
-        int l_type = Utils::ReadEnumVector(g_cursorLocksTable, l_state);
+        int l_type = Utils::Enum::ReadEnumVector(g_cursorLocksTable, l_state);
         if(l_type != -1)
         {
             LuaManager::GetCore()->GetSfmlManager()->SetCursorMode(static_cast<unsigned char>(l_type));
@@ -97,7 +97,7 @@ int isKeyPressed(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        int l_numKey = Utils::ReadEnumVector(g_keysTable, l_key);
+        int l_numKey = Utils::Enum::ReadEnumVector(g_keysTable, l_key);
         if(l_numKey != -1)
         {
             bool l_result = SfmlManager::IsKeyPressed(l_numKey);
@@ -115,7 +115,7 @@ int isMouseKeyPressed(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        int l_numKey = Utils::ReadEnumVector(g_mouseKeysTable, l_key);
+        int l_numKey = Utils::Enum::ReadEnumVector(g_mouseKeysTable, l_key);
         if(l_numKey != -1)
         {
             bool l_result = SfmlManager::IsMouseKeyPressed(l_numKey);
@@ -249,7 +249,7 @@ int joypadHasAxis(lua_State *f_vm)
     argStream.ReadText(l_axis);
     if(!argStream.HasErrors() && !l_axis.empty())
     {
-        int l_axisID = Utils::ReadEnumVector(g_axisNames, l_axis);
+        int l_axisID = Utils::Enum::ReadEnumVector(g_axisNames, l_axis);
         if(l_axisID != -1)
         {
             bool l_result = SfmlManager::CheckJoypadAxis(l_joypad, static_cast<unsigned int>(l_axisID));
@@ -269,7 +269,7 @@ int joypadGetAxisValue(lua_State *f_vm)
     argStream.ReadText(l_axis);
     if(!argStream.HasErrors() && !l_axis.empty())
     {
-        int l_axisID = Utils::ReadEnumVector(g_axisNames, l_axis);
+        int l_axisID = Utils::Enum::ReadEnumVector(g_axisNames, l_axis);
         if(l_axisID != -1)
         {
             float l_val = SfmlManager::GetJoypadAxisValue(l_joypad, static_cast<unsigned int>(l_axisID));

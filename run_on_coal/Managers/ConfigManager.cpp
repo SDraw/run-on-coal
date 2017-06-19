@@ -37,7 +37,7 @@ ROC::ConfigManager::ConfigManager()
                     l_attrib = l_node.attribute("value");
                     if(l_attrib)
                     {
-                        switch(Utils::ReadEnumVector(g_configAttributeTable, l_param))
+                        switch(Utils::Enum::ReadEnumVector(g_configAttributeTable, l_param))
                         {
                             case 0:
                             {

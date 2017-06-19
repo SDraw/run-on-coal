@@ -6,7 +6,21 @@ namespace ROC
 namespace Utils
 {
 
-std::regex g_UpRegex("(\\.\\.)+(\\/|\\\\)");
+namespace Path
+{
+
+const std::regex g_UpRegex("(\\.\\.)+(\\/|\\\\)");
+void EscapePath(std::string &f_path)
+{
+    std::string l_result;
+    std::regex_replace(std::back_inserter(l_result), f_path.begin(), f_path.end(), g_UpRegex, "");
+    f_path.assign(l_result);
+}
+
+}
+
+namespace Enum
+{
 
 int ReadEnumVector(const std::vector<std::string> &f_vec, const std::string &f_val)
 {
@@ -22,12 +36,10 @@ int ReadEnumVector(const std::vector<std::string> &f_vec, const std::string &f_v
     return l_result;
 }
 
-void EscapePath(std::string &f_path)
-{
-    std::string l_result;
-    std::regex_replace(std::back_inserter(l_result), f_path.begin(), f_path.end(), g_UpRegex, "");
-    f_path.assign(l_result);
 }
+
+namespace zlib
+{
 
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
 {
@@ -70,6 +82,11 @@ int GetMaxCompressedLen(int nLenSrc)
     return (nLenSrc + 6 + ((nLenSrc + 16383) / 16384 * 5));
 }
 
+}
+
+namespace Math
+{
+
 bool IsPowerOfTwo(int f_value)
 {
     return (f_value > 0 && ((f_value & (f_value - 1)) == 0));
@@ -77,6 +94,8 @@ bool IsPowerOfTwo(int f_value)
 float EaseInOut(float f_value)
 {
     return -0.5f*(cos(3.141592f*f_value) - 1.f);
+}
+
 }
 
 }

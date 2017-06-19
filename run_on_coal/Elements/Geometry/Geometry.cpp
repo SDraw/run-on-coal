@@ -51,7 +51,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 l_tempData.resize(l_compressedSize);
                 l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
                 l_vertexData.resize(l_uncompressedSize / sizeof(glm::vec3));
-                Utils::UncompressData(l_tempData.data(), l_compressedSize, l_vertexData.data(), l_uncompressedSize);
+                Utils::zlib::UncompressData(l_tempData.data(), l_compressedSize, l_vertexData.data(), l_uncompressedSize);
 
                 //UVs
                 l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -59,7 +59,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 l_tempData.resize(l_compressedSize);
                 l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
                 l_uvData.resize(l_uncompressedSize / sizeof(glm::vec2));
-                Utils::UncompressData(l_tempData.data(), l_compressedSize, l_uvData.data(), l_uncompressedSize);
+                Utils::zlib::UncompressData(l_tempData.data(), l_compressedSize, l_uvData.data(), l_uncompressedSize);
 
                 //Normals
                 l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -67,7 +67,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 l_tempData.resize(l_compressedSize);
                 l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
                 l_normalData.resize(l_uncompressedSize / sizeof(glm::vec3));
-                Utils::UncompressData(l_tempData.data(), l_compressedSize, l_normalData.data(), l_uncompressedSize);
+                Utils::zlib::UncompressData(l_tempData.data(), l_compressedSize, l_normalData.data(), l_uncompressedSize);
 
                 if(l_type == 0x2U) // If has skeletal animation
                 {
@@ -77,7 +77,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_tempData.resize(l_compressedSize);
                     l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
                     l_weightData.resize(l_uncompressedSize / sizeof(glm::vec4));
-                    Utils::UncompressData(l_tempData.data(), l_compressedSize, l_weightData.data(), l_uncompressedSize);
+                    Utils::zlib::UncompressData(l_tempData.data(), l_compressedSize, l_weightData.data(), l_uncompressedSize);
 
                     //Indices
                     l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -85,7 +85,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_tempData.resize(l_compressedSize);
                     l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
                     l_indexData.resize(l_uncompressedSize / sizeof(glm::vec4));
-                    Utils::UncompressData(l_tempData.data(), l_compressedSize, l_indexData.data(), l_uncompressedSize);
+                    Utils::zlib::UncompressData(l_tempData.data(), l_compressedSize, l_indexData.data(), l_uncompressedSize);
                 }
 
                 //Materials
@@ -118,7 +118,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_tempData.resize(l_compressedSize);
                     l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
                     l_faceIndex.resize(l_uncompressedSize / sizeof(int));
-                    Utils::UncompressData(l_tempData.data(), l_compressedSize, l_faceIndex.data(), l_uncompressedSize);
+                    Utils::zlib::UncompressData(l_tempData.data(), l_compressedSize, l_faceIndex.data(), l_uncompressedSize);
 
                     for(int j = 0, k = static_cast<int>(l_faceIndex.size()); j < k; j += 9)
                     {

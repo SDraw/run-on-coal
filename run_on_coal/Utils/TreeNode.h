@@ -3,17 +3,16 @@
 namespace ROC
 {
 
-class Model;
 class TreeNode
 {
-    Model *m_model;
+    void *m_pointer;
     TreeNode *m_parent;
     std::vector<TreeNode*> m_children;
 public:
-    explicit TreeNode(Model *f_model);
+    explicit TreeNode(void *f_model);
     ~TreeNode();
 
-    inline Model* GetModel() { return m_model; }
+    inline void* GetPointer() { return m_pointer; }
 
     void AddChild(TreeNode *f_node);
     void RemoveChild(TreeNode *f_node);

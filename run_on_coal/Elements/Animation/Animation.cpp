@@ -123,7 +123,7 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
             animData &l_animData = m_searchResult.back().value;
             if(!l_animData.m_leftData->IsEqual(l_animData.m_rightData))
             {
-                float l_blend = Utils::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
+                float l_blend = Utils::Math::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
                 m_tempFrameData->SetInterpolated(l_animData.m_leftData, l_animData.m_rightData, l_blend);
             }
             else BoneFrameData::Copy(l_animData.m_leftData,m_tempFrameData);

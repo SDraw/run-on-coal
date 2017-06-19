@@ -93,7 +93,7 @@ bool ROC::EventManager::AddEventHandler(const std::string &f_event, int f_ref, v
 bool ROC::EventManager::RemoveEvent(const std::string &f_event)
 {
     bool l_result = false;
-    if(Utils::ReadEnumVector(g_DefaultEventsNames, f_event) == -1)
+    if(Utils::Enum::ReadEnumVector(g_DefaultEventsNames, f_event) == -1)
     {
         auto iter = m_eventMap.find(f_event);
         if(iter != m_eventMapEnd)

@@ -34,10 +34,10 @@ int rtCreate(lua_State *f_vm)
     argStream.ReadNextText(l_filtering);
     if(!argStream.HasErrors() && (l_size.x >= 1) && (l_size.y >= 1) && !l_type.empty())
     {
-        int l_etype = Utils::ReadEnumVector(g_targetTypesTable, l_type);
+        int l_etype = Utils::Enum::ReadEnumVector(g_targetTypesTable, l_type);
         if(l_etype != -1)
         {
-            int l_filteringType = Utils::ReadEnumVector(g_rtFilteringTypesTable, l_filtering);
+            int l_filteringType = Utils::Enum::ReadEnumVector(g_rtFilteringTypesTable, l_filtering);
             if(l_filteringType == -1) l_filteringType = 0;
             RenderTarget *l_rt = LuaManager::GetCore()->GetElementManager()->CreateRenderTarget(l_number, l_size, l_etype, l_filteringType);
             l_rt ? argStream.PushPointer(l_rt) : argStream.PushBoolean(false);

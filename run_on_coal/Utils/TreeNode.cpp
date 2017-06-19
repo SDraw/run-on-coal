@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Utils/TreeNode.h"
 
-ROC::TreeNode::TreeNode(Model *f_model)
+ROC::TreeNode::TreeNode(void *f_model)
 {
-    m_model = f_model;
+    m_pointer = f_model;
     m_parent = nullptr;
 }
 ROC::TreeNode::~TreeNode()
