@@ -251,7 +251,7 @@ int cameraGetViewMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_camera->GetViewMatrix(l_mat);
-        argStream.PushMatrix(reinterpret_cast<float*>(&l_mat), 16);
+        argStream.PushMatrix(glm::value_ptr(l_mat), 16);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -266,7 +266,7 @@ int cameraGetProjectionMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_camera->GetProjectionMatrix(l_mat);
-        argStream.PushMatrix(reinterpret_cast<float*>(&l_mat), 16);
+        argStream.PushMatrix(glm::value_ptr(l_mat), 16);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

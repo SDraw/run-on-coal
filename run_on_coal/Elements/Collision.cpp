@@ -7,7 +7,9 @@ extern const glm::vec3 g_DefaultScale;
 ROC::Collision::Collision()
 {
     m_elementType = ElementType::CollisionElement;
+
     m_rigidBody = nullptr;
+    m_motionType = ROC_COLLISION_MOTION_DEFAULT;
     m_scale = g_DefaultScale;
     m_parentModel = nullptr;
 }
@@ -83,9 +85,27 @@ void ROC::Collision::SetPosition(const glm::vec3 &f_pos)
 {
     if(m_rigidBody)
     {
-        btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
-        l_transform.setOrigin(btVector3(f_pos.x, f_pos.y, f_pos.z));
-        m_rigidBody->setCenterOfMassTransform(l_transform);
+        btTransform l_transform;
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+                l_transform = m_rigidBody->getCenterOfMassTransform();
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->getMotionState()->getWorldTransform(l_transform);
+                break;
+        }
+        btVector3 l_pos(f_pos.x, f_pos.y, f_pos.z);
+        l_transform.setOrigin(l_pos);
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+                m_rigidBody->setCenterOfMassTransform(l_transform);
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->getMotionState()->setWorldTransform(l_transform);
+                break;
+        }
         m_rigidBody->activate(true);
     }
 }
@@ -101,9 +121,27 @@ void ROC::Collision::SetRotation(const glm::quat &f_rot)
 {
     if(m_rigidBody)
     {
-        btTransform l_transform = m_rigidBody->getCenterOfMassTransform();
-        l_transform.setRotation((btQuaternion&)f_rot);
-        m_rigidBody->setCenterOfMassTransform(l_transform);
+        btTransform l_transform;
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+                l_transform = m_rigidBody->getCenterOfMassTransform();
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->getMotionState()->getWorldTransform(l_transform);
+                break;
+        }
+        btQuaternion l_rotation(f_rot.x, f_rot.y, f_rot.z, f_rot.w);
+        l_transform.setRotation(l_rotation);
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+                m_rigidBody->setCenterOfMassTransform(l_transform);
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->getMotionState()->setWorldTransform(l_transform);
+                break;
+        }
         m_rigidBody->activate(true);
     }
 }
@@ -226,17 +264,47 @@ void ROC::Collision::ApplyTorque(const glm::vec3 &f_torque, bool f_impulse)
     }
 }
 
+void ROC::Collision::SetMotionType(int f_type)
+{
+    if(m_rigidBody)
+    {
+        m_motionType = f_type;
+        btClamp(m_motionType, ROC_COLLISION_MOTION_DEFAULT, ROC_COLLISION_MOTION_KINEMATIC);
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT:
+                m_rigidBody->setCollisionFlags(0);
+                break;
+            case ROC_COLLISION_MOTION_STATIC:
+                m_rigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
+                break;
+        }
+    }
+}
+
 void ROC::Collision::GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat &f_rot)
 {
     if(m_rigidBody)
     {
-        const btTransform &l_transform = m_rigidBody->getCenterOfMassTransform();
+        btTransform l_transform;
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+                l_transform = m_rigidBody->getCenterOfMassTransform();
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->getMotionState()->getWorldTransform(l_transform);
+                break;
+        }
         btQuaternion l_rotation = l_transform.getRotation();
         std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
         f_rot.x = l_rotation.x();
         f_rot.y = l_rotation.y();
         f_rot.z = l_rotation.z();
         f_rot.w = l_rotation.w();
-        l_transform.getOpenGLMatrix(reinterpret_cast<float*>(&f_mat));
+        l_transform.getOpenGLMatrix(glm::value_ptr(f_mat));
     }
 }

@@ -233,7 +233,7 @@ int shaderSetUniformValue(lua_State *f_vm)
             case 16: // Matrix 2x2
             {
                 glm::mat2 l_mat;
-                argStream.ReadMatrix(reinterpret_cast<float*>(&l_mat), 4);
+                argStream.ReadMatrix(glm::value_ptr(l_mat), 4);
                 if(!argStream.HasErrors())
                 {
                     LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
@@ -244,7 +244,7 @@ int shaderSetUniformValue(lua_State *f_vm)
             case 17: // Matrix 3x3
             {
                 glm::mat3 l_mat;
-                argStream.ReadMatrix(reinterpret_cast<float*>(&l_mat), 9);
+                argStream.ReadMatrix(glm::value_ptr(l_mat), 9);
                 if(!argStream.HasErrors())
                 {
                     LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
@@ -255,7 +255,7 @@ int shaderSetUniformValue(lua_State *f_vm)
             case 18: // Matrix 4x4
             {
                 glm::mat4 l_mat;
-                argStream.ReadMatrix(reinterpret_cast<float*>(&l_mat), 16);
+                argStream.ReadMatrix(glm::value_ptr(l_mat), 16);
                 if(!argStream.HasErrors())
                 {
                     LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);

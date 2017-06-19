@@ -26,6 +26,8 @@ int collisionGetAngularFactor(lua_State *f_vm);
 int collisionApplyForce(lua_State *f_vm);
 int collisionApplyImpulse(lua_State *f_vm);
 int collisionApplyTorque(lua_State *f_vm);
+int collisionSetMotionType(lua_State *f_vm);
+int collisionGetMotionType(lua_State *f_vm);
 int collisionAttach(lua_State *f_vm);
 int collisionDetach(lua_State *f_vm);
 

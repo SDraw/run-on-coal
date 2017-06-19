@@ -99,7 +99,7 @@ void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)
 {
     if(!m_locked)
     {
-        if((f_params&GL_DEPTH_BUFFER_BIT) == GL_DEPTH_BUFFER_BIT) EnableDepth();
+        if(CheckBit(f_params,GL_DEPTH_BUFFER_BIT)) EnableDepth();
         glClear(f_params);
     }
 }
@@ -235,7 +235,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
             l_textureRotation.setRotation(g_TextureZAxis, f_rot);
             l_textureTransform.setRotation(l_textureRotation);
         }
-        l_textureTransform.getOpenGLMatrix(reinterpret_cast<float*>(&m_textureMatrix));
+        l_textureTransform.getOpenGLMatrix(glm::value_ptr(m_textureMatrix));
         m_activeShader->SetModelUniformValue(m_textureMatrix);
 
         DisableCulling();

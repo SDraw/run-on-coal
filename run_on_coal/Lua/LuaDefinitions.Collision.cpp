@@ -20,6 +20,10 @@ const std::vector<std::string> g_collisionTypesTable
 {
     "sphere", "box", "cylinder", "capsule", "cone"
 };
+const std::vector<std::string> g_collisionMotionTypesTable
+{
+    "default", "static", "kinematic"
+};
 
 int collisionCreate(lua_State *f_vm)
 {
@@ -132,7 +136,7 @@ int collisionSetScale(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_scale[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetPhysicsManager()->SetCollisionScale(l_col,l_scale);
+        LuaManager::GetCore()->GetPhysicsManager()->SetCollisionScale(l_col, l_scale);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -372,6 +376,35 @@ int collisionApplyTorque(lua_State *f_vm)
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int collisionSetMotionType(lua_State *f_vm)
+{
+    Collision *l_collision;
+    std::string l_type;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_collision);
+    argStream.ReadText(l_type);
+    if(!argStream.HasErrors() && !l_type.empty())
+    {
+        int l_idx = Utils::ReadEnumVector(g_collisionMotionTypesTable, l_type);
+        if(l_idx != -1)
+        {
+            l_collision->SetMotionType(ROC_COLLISION_MOTION_DEFAULT + l_idx);
+            argStream.PushBoolean(true);
+        }
+        else argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int collisionGetMotionType(lua_State *f_vm)
+{
+    Collision *l_collision;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_collision);
+    !argStream.HasErrors() ? argStream.PushText(g_collisionMotionTypesTable[l_collision->GetMotionType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
