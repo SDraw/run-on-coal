@@ -11,6 +11,8 @@ class LuaManager;
 class MemoryManager;
 class NetworkManager;
 class LuaArguments;
+typedef void(*onServerPulseCallback)(void);
+
 class Core
 {
     ConfigManager *m_configManager;
@@ -23,6 +25,7 @@ class Core
     std::string m_workingDir;
     std::chrono::milliseconds m_pulseTick;
     LuaArguments *m_argument;
+    onServerPulseCallback m_serverPulseCallback;
 
     Core();
     Core(const Core& that);
@@ -39,6 +42,8 @@ public:
     inline LuaManager* GetLuaManager() { return m_luaManager; }
     inline MemoryManager* GetMemoryManager() { return m_memoryManager; }
     inline NetworkManager* GetNetworkManager() { return m_networkManager; }
+
+    inline void SetServerPulseCallback(onServerPulseCallback f_callback) { m_serverPulseCallback = f_callback; }
 
     void DoPulse();
 };

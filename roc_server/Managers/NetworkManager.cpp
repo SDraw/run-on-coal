@@ -56,6 +56,10 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
 
     m_clientVector.assign(m_core->GetConfigManager()->GetMaxClients(), nullptr);
     m_argument = new LuaArguments();
+
+    m_networkClientConnectCallback = nullptr;
+    m_networkClientDisconnectCallback = nullptr;
+    m_networkDataRecieveCallback = nullptr;
 }
 ROC::NetworkManager::~NetworkManager()
 {
@@ -106,8 +110,10 @@ void ROC::NetworkManager::DoPulse()
                     l_log.append(std::to_string(l_packet->guid.systemIndex));
 
                     Client *l_client = m_core->GetElementManager()->CreateClient();
-                    m_clientVector[l_packet->guid.systemIndex] = l_client;
                     l_client->SetAddress(l_packet->systemAddress);
+                    m_clientVector[l_packet->guid.systemIndex] = l_client;
+
+                    if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);
 
                     m_argument->PushArgument(reinterpret_cast<void*>(l_client));
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientConnect", m_argument);
@@ -123,6 +129,9 @@ void ROC::NetworkManager::DoPulse()
                     l_log.append(" disconnected");
 
                     Client *l_client = m_clientVector[l_packet->guid.systemIndex];
+
+                    if(m_networkClientDisconnectCallback) (*m_networkClientDisconnectCallback)(l_client);
+
                     m_argument->PushArgument(reinterpret_cast<void*>(l_client));
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientDisconnect", m_argument);
                     m_argument->Clear();
@@ -141,7 +150,11 @@ void ROC::NetworkManager::DoPulse()
                     l_stringData.resize(l_textSize);
                     l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
 
-                    m_argument->PushArgument(reinterpret_cast<void*>(m_clientVector[l_packet->guid.systemIndex]));
+                    Client *l_client = m_clientVector[l_packet->guid.systemIndex];
+
+                    if(m_networkDataRecieveCallback) (*m_networkDataRecieveCallback)(l_client, l_stringData);
+
+                    m_argument->PushArgument(reinterpret_cast<void*>(l_client));
                     m_argument->PushArgument(l_stringData);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
                     m_argument->Clear();

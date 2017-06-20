@@ -29,6 +29,8 @@ ROC::Core::Core()
     m_networkManager = new NetworkManager(this);
     m_argument = new LuaArguments();
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());
+
+    m_serverPulseCallback = nullptr;
 }
 ROC::Core::~Core()
 {
@@ -88,6 +90,9 @@ void ROC::Core::Terminate()
 void ROC::Core::DoPulse()
 {
     m_networkManager->DoPulse();
+
+    if(m_serverPulseCallback) (*m_serverPulseCallback)();
     m_luaManager->GetEventManager()->CallEvent("onServerPulse", m_argument);
+
     std::this_thread::sleep_for(m_pulseTick);
 }
