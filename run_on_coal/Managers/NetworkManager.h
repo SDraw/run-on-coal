@@ -9,6 +9,9 @@ namespace ROC
 
 class Core;
 class LuaArguments;
+typedef void(*OnNetworkStateChangeCallback)(const std::string&);
+typedef void(*OnNetworkDataRecieveCallback)(const std::string&);
+
 class NetworkManager
 {
     Core *m_core;
@@ -22,6 +25,8 @@ class NetworkManager
     NetworkState m_networkState;
 
     LuaArguments *m_argument;
+    OnNetworkStateChangeCallback m_stateCallback;
+    OnNetworkDataRecieveCallback m_dataCallback;
 
     NetworkManager(const NetworkManager& that);
     NetworkManager &operator =(const NetworkManager &that);
@@ -32,6 +37,9 @@ public:
 
     inline unsigned char GetNetworkState() const { return m_networkState; }
     int GetPing();
+
+    inline void SetStateCallback(OnNetworkStateChangeCallback f_callback) { m_stateCallback = f_callback; }
+    inline void SetDataCallback(OnNetworkDataRecieveCallback f_callback) { m_dataCallback = f_callback; }
 protected:
     explicit NetworkManager(Core *f_core);
     ~NetworkManager();

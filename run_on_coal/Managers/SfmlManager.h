@@ -7,6 +7,17 @@ namespace ROC
 
 class Core;
 class LuaArguments;
+typedef void(*OnWindowResizeCallback)(unsigned int, unsigned int);
+typedef void(*OnWindowFocusCallback)(bool);
+typedef void(*OnKeyPressCallback)(int, bool);
+typedef void(*OnTextInputCallback)(const std::string&);
+typedef void(*OnMouseMoveCallback)(int, int);
+typedef void(*OnCursorEnterCallback)(bool);
+typedef void(*OnMouseKeyPressCallback)(int, bool);
+typedef void(*OnMouseScrollCallback)(int, float);
+typedef void(*OnJoypadConnectCallback)(unsigned int, bool);
+typedef void(*OnJoypadButtonCallback)(unsigned int, unsigned int, bool);
+typedef void(*OnJoypadAxisCallback)(unsigned int, int, float);
 
 class SfmlManager
 {
@@ -27,6 +38,18 @@ class SfmlManager
     LuaArguments *m_argument;
 
     unsigned char m_cursorMode;
+
+    OnWindowResizeCallback m_windowResizeCallback;
+    OnWindowFocusCallback m_windowFocusCallback;
+    OnKeyPressCallback m_keyPressCallback;
+    OnTextInputCallback m_textInputCallback;
+    OnMouseMoveCallback m_mouseMoveCallback;
+    OnCursorEnterCallback m_cursorEnterCallback;
+    OnMouseKeyPressCallback m_mouseKeyPressCallback;
+    OnMouseScrollCallback m_mouseScrollCallback;
+    OnJoypadConnectCallback m_joypadConnectCallback;
+    OnJoypadButtonCallback m_joypadButtonCallback;
+    OnJoypadAxisCallback m_joypadAxisCallback;
 
     SfmlManager(const SfmlManager& that);
     SfmlManager &operator =(const SfmlManager &that);
@@ -56,6 +79,18 @@ public:
     static float GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis);
 
     inline float GetTime() const { return m_time; }
+
+    inline void SetWindowResizeCallback(OnWindowResizeCallback f_callback) { m_windowResizeCallback = f_callback; }
+    inline void SetWindowFocusCallback(OnWindowFocusCallback f_callback) { m_windowFocusCallback = f_callback; }
+    inline void SetKeyPressCallback(OnKeyPressCallback f_callback) { m_keyPressCallback = f_callback; }
+    inline void SetTextInputCallback(OnTextInputCallback f_callback) { m_textInputCallback = f_callback; }
+    inline void SetMouseMoveCallback(OnMouseMoveCallback f_callback) { m_mouseMoveCallback = f_callback; }
+    inline void SetCursorEnterCallback(OnCursorEnterCallback f_callback) { m_cursorEnterCallback = f_callback; }
+    inline void SetMouseKeyPressCallback(OnMouseKeyPressCallback f_callback) { m_mouseKeyPressCallback = f_callback; }
+    inline void SetMouseScrollCallback(OnMouseScrollCallback f_callback) { m_mouseScrollCallback = f_callback; }
+    inline void SetJoypadConnectCallback(OnJoypadConnectCallback f_callback) { m_joypadConnectCallback = f_callback; }
+    inline void SetJoypadButtonCallback(OnJoypadButtonCallback f_callback) { m_joypadButtonCallback = f_callback; }
+    inline void SetJoypadAxisCallback(OnJoypadAxisCallback f_callback) { m_joypadAxisCallback = f_callback; }
 protected:
     explicit SfmlManager(Core *f_core);
     ~SfmlManager();

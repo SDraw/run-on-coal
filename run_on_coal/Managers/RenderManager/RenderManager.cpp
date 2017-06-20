@@ -64,6 +64,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_screenProjection = glm::ortho(0.f, static_cast<float>(l_size.x), 0.f, static_cast<float>(l_size.y));
 
     m_argument = new LuaArguments();
+    m_callback = nullptr;
 }
 ROC::RenderManager::~RenderManager()
 {
@@ -320,6 +321,8 @@ void ROC::RenderManager::DoPulse()
     for(auto iter : m_movieVector) iter->Update();
 
     m_locked = false;
+    if(m_callback) (*m_callback)();
+
     m_core->GetLuaManager()->GetEventManager()->CallEvent("onOGLRender", m_argument);
     m_locked = true;
     m_core->GetSfmlManager()->SwapBuffers();

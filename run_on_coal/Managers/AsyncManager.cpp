@@ -16,6 +16,7 @@ ROC::AsyncManager::AsyncManager(Core *f_core)
     m_loadThread = new std::thread(&ROC::AsyncManager::LoadThread, this);
 
     m_argument = new LuaArguments();
+    m_callback = nullptr;
 }
 ROC::AsyncManager::~AsyncManager()
 {
@@ -83,6 +84,8 @@ void ROC::AsyncManager::DoPulse()
                     m_core->GetMemoryManager()->RemoveMemoryPointer(iter.m_geometry);
                     m_core->GetElementManager()->DestroyElementByPointer(iter.m_geometry);
                 }
+
+                if(m_callback)(*m_callback)(iter.m_geometry, iter.m_result);
 
                 m_argument->PushArgument(iter.m_geometry);
                 m_argument->PushArgument(iter.m_result);

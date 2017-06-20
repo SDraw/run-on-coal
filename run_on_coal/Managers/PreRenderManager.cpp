@@ -13,6 +13,7 @@ ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
     m_argument = new LuaArguments();
+    m_callback = nullptr;
     m_modelTreeRoot = new TreeNode(nullptr);
     m_modelToNodeMapEnd = m_modelToNodeMap.end();
 }
@@ -102,6 +103,7 @@ void ROC::PreRenderManager::RemoveLink(Model *f_model)
 
 void ROC::PreRenderManager::DoPulse_S1()
 {
+    if(m_callback) (*m_callback)();
     m_core->GetLuaManager()->GetEventManager()->CallEvent("onOGLPreRender", m_argument);
     bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
 

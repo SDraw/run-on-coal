@@ -122,6 +122,18 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_cursorMode = ROC_CURSOR_BIT_VISIBILITY;
 
+    m_windowResizeCallback = nullptr;
+    m_windowFocusCallback = nullptr;
+    m_keyPressCallback = nullptr;
+    m_textInputCallback = nullptr;
+    m_mouseMoveCallback = nullptr;
+    m_cursorEnterCallback = nullptr;
+    m_mouseKeyPressCallback = nullptr;
+    m_mouseScrollCallback = nullptr;
+    m_joypadConnectCallback = nullptr;
+    m_joypadButtonCallback = nullptr;
+    m_joypadAxisCallback = nullptr;
+
     // Detect current GPU in list of bugged Sandy Bridge GPUs. Need to add more.
     if(l_log.find("HD Graphics 3000") != std::string::npos)  Shader::EnableUBOFix();
 }
@@ -236,6 +248,8 @@ bool ROC::SfmlManager::DoPulse()
                 break;
             case sf::Event::Resized:
             {
+                if(m_windowResizeCallback) (*m_windowResizeCallback)(m_event.size.width, m_event.size.height);
+
                 m_argument->PushArgument(static_cast<int>(m_event.size.width));
                 m_argument->PushArgument(static_cast<int>(m_event.size.height));
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowResize", m_argument);
@@ -243,6 +257,8 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::GainedFocus: case sf::Event::LostFocus:
             {
+                if(m_windowFocusCallback) (*m_windowFocusCallback)(m_event.type == sf::Event::GainedFocus);
+
                 m_argument->PushArgument(m_event.type == sf::Event::GainedFocus ? 1 : 0);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowFocus", m_argument);
                 m_argument->Clear();
@@ -251,6 +267,8 @@ bool ROC::SfmlManager::DoPulse()
             {
                 if(m_event.key.code != -1)
                 {
+                    if(m_keyPressCallback) (*m_keyPressCallback)(m_event.key.code, m_event.type == sf::Event::KeyPressed);
+
                     m_argument->PushArgument(g_keysTable[m_event.key.code]);
                     m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onKeyPress", m_argument);
@@ -264,6 +282,9 @@ bool ROC::SfmlManager::DoPulse()
                     sf::String l_text(m_event.text.unicode);
                     std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
                     std::string l_input(l_utf8.begin(), l_utf8.end());
+
+                    if(m_textInputCallback) (*m_textInputCallback)(l_input);
+
                     m_argument->PushArgument(l_input);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onTextInput", m_argument);
                     m_argument->Clear();
@@ -273,6 +294,8 @@ bool ROC::SfmlManager::DoPulse()
             {
                 if(!l_mouseFix)
                 {
+                    if(m_mouseMoveCallback) (*m_mouseMoveCallback)(m_event.mouseMove.x, m_event.mouseMove.y);
+
                     m_argument->PushArgument(m_event.mouseMove.x);
                     m_argument->PushArgument(m_event.mouseMove.y);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorMove", m_argument);
@@ -282,12 +305,16 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseEntered: case sf::Event::MouseLeft:
             {
+                if(m_cursorEnterCallback) (*m_cursorEnterCallback)(m_event.type == sf::Event::MouseEntered);
+
                 m_argument->PushArgument(m_event.type == sf::Event::MouseEntered ? 1 : 0);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorEnter", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
+                if(m_mouseKeyPressCallback) (*m_mouseKeyPressCallback)(m_event.mouseButton.button, m_event.type == sf::Event::MouseButtonPressed);
+
                 m_argument->PushArgument(g_mouseKeysTable[m_event.mouseButton.button]);
                 m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseKeyPress", m_argument);
@@ -295,6 +322,8 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseWheelScrolled:
             {
+                if(m_mouseScrollCallback) (*m_mouseScrollCallback)(m_event.mouseWheelScroll.wheel, m_event.mouseWheelScroll.delta);
+
                 m_argument->PushArgument(m_event.mouseWheelScroll.wheel);
                 m_argument->PushArgument(m_event.mouseWheelScroll.delta);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseScroll", m_argument);
@@ -302,6 +331,8 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
             {
+                if(m_joypadConnectCallback) (*m_joypadConnectCallback)(m_event.joystickConnect.joystickId, m_event.type == sf::Event::JoystickConnected);
+
                 m_argument->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
                 m_argument->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadConnect", m_argument);
@@ -309,6 +340,8 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
             {
+                if(m_joypadButtonCallback) (*m_joypadButtonCallback)(m_event.joystickButton.joystickId, m_event.joystickButton.button, m_event.type == sf::Event::JoystickButtonPressed);
+
                 m_argument->PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
                 m_argument->PushArgument(static_cast<int>(m_event.joystickButton.button));
                 m_argument->PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
@@ -317,6 +350,8 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::JoystickMoved:
             {
+                if(m_joypadAxisCallback) (*m_joypadAxisCallback)(m_event.joystickButton.joystickId, m_event.joystickMove.axis, m_event.joystickMove.position);
+
                 m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
                 m_argument->PushArgument(g_axisNames[m_event.joystickMove.axis]);
                 m_argument->PushArgument(m_event.joystickMove.position);

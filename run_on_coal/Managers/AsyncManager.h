@@ -6,6 +6,8 @@ namespace ROC
 class Core;
 class Geometry;
 class LuaArguments;
+typedef void(*OnGeometryLoadCallback)(Geometry*, bool);
+
 class AsyncManager
 {
     Core *m_core;
@@ -28,10 +30,14 @@ class AsyncManager
 
     LuaArguments *m_argument;
 
+    OnGeometryLoadCallback m_callback;
+
     void LoadThread();
 
     AsyncManager(const AsyncManager& that);
     AsyncManager &operator =(const AsyncManager &that);
+public:
+    inline void SetCallback(OnGeometryLoadCallback f_callback) { m_callback = f_callback; }
 protected:
     explicit AsyncManager(Core *f_core);
     ~AsyncManager();

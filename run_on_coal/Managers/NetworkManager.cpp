@@ -33,6 +33,8 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     m_networkInterface = nullptr;
     m_networkState = NetworkState::Disconnected;
     m_argument = new LuaArguments();
+    m_stateCallback = nullptr;
+    m_dataCallback = nullptr;
 }
 ROC::NetworkManager::~NetworkManager()
 {
@@ -110,6 +112,8 @@ void ROC::NetworkManager::DoPulse()
                 case ID_DISCONNECTION_NOTIFICATION: case ID_INCOMPATIBLE_PROTOCOL_VERSION: case ID_CONNECTION_BANNED: case ID_CONNECTION_ATTEMPT_FAILED: case ID_NO_FREE_INCOMING_CONNECTIONS: case ID_CONNECTION_LOST:
                 {
                     m_networkState = NetworkState::Disconnected;
+                    if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[1]);
+
                     m_argument->PushArgument(g_networkStateTable[1]);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
                     m_argument->Clear();
@@ -119,6 +123,8 @@ void ROC::NetworkManager::DoPulse()
                     m_serverAddress = l_packet->systemAddress;
                     m_networkState = NetworkState::Connected;
                     m_networkInterface->SetOccasionalPing(true);
+                    if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[0]);
+
                     m_argument->PushArgument(g_networkStateTable[0]);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
                     m_argument->Clear();
@@ -132,6 +138,7 @@ void ROC::NetworkManager::DoPulse()
                     l_dataIn.Read(l_textSize);
                     l_stringData.resize(l_textSize);
                     l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
+                    if(m_dataCallback) (*m_dataCallback)(l_stringData);
 
                     m_argument->PushArgument(l_stringData);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
