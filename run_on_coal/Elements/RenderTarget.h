@@ -13,7 +13,7 @@
 namespace ROC
 {
 
-class RenderTarget : public Drawable
+class RenderTarget final : public Drawable
 {
     int m_type;
     int m_filtering;

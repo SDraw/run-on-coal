@@ -6,7 +6,7 @@ namespace ROC
 
 class Bone;
 class BoneFrameData;
-class Animation : public Element
+class Animation final : public Element
 {
     unsigned int m_bonesValue;
     unsigned int m_duration;

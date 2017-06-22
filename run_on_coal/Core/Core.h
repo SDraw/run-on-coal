@@ -17,7 +17,7 @@ class PreRenderManager;
 class RenderManager;
 class SoundManager;
 class LuaArguments;
-class Core
+class Core final
 {
     static Core *m_instance;
     std::string m_workingDir;

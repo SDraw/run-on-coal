@@ -6,7 +6,7 @@ namespace ROC
 class Core;
 class Model;
 class Collision;
-class PhysicsManager
+class PhysicsManager final
 {
     Core *m_core;
 

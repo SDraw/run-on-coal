@@ -16,7 +16,7 @@ class Font;
 class LuaArguments;
 typedef void(*OnOGLRenderCallback)(void);
 
-class RenderManager
+class RenderManager final
 {
     Core *m_core;
 

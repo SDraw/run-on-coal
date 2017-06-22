@@ -14,7 +14,7 @@ class Light;
 class Model;
 class Scene;
 class Shader;
-class InheritanceManager
+class InheritanceManager final
 {
     Core *m_core;
 

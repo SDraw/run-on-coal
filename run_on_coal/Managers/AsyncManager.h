@@ -8,7 +8,7 @@ class Geometry;
 class LuaArguments;
 typedef void(*OnGeometryLoadCallback)(Geometry*, bool);
 
-class AsyncManager
+class AsyncManager final
 {
     Core *m_core;
 

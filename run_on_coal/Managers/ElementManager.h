@@ -19,7 +19,7 @@ class Font;
 class File;
 class Collision;
 class Movie;
-class ElementManager
+class ElementManager final
 {
     Core *m_core;
     bool m_locked;

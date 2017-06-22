@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class Client : public Element
+class Client final : public Element
 {
     RakNet::SystemAddress m_address;
 public:

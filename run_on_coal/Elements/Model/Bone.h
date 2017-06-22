@@ -3,7 +3,7 @@ namespace ROC
 {
 
 class BoneFrameData;
-class Bone
+class Bone final
 {
     std::string m_name;
     BoneFrameData *m_data;

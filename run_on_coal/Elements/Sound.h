@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class Sound : public Element
+class Sound final : public Element
 {
     sf::Music *m_handle;
 

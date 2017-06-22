@@ -4,7 +4,7 @@ namespace ROC
 {
 
 class Core;
-class LogManager
+class LogManager final
 {
     std::ofstream m_log;
     bool m_enabled;

@@ -12,7 +12,7 @@ typedef void(*OnNetworkClientConnectCallback)(Client*);
 typedef void(*OnNetworkClientDisconnectCallback)(Client*);
 typedef void(*OnNetworkDataRecieveCallback)(Client*, const std::string&);
 
-class NetworkManager
+class NetworkManager final
 {
     Core *m_core;
 

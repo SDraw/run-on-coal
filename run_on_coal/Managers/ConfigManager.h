@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class ConfigManager
+class ConfigManager final
 {
     bool m_logging;
     bool m_fullscreen;

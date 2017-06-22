@@ -13,7 +13,7 @@ class NetworkManager;
 class LuaArguments;
 typedef void(*onServerPulseCallback)(void);
 
-class Core
+class Core final
 {
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;

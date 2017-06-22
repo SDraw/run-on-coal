@@ -14,7 +14,7 @@ namespace ROC
 
 class Bone;
 class BoneFrameData;
-class Skeleton
+class Skeleton final
 {
     unsigned int m_bonesCount;
     std::vector<Bone*> m_boneVector;

@@ -8,7 +8,7 @@ namespace ROC
 {
 
 class Material;
-class Geometry : public Element
+class Geometry final : public Element
 {
     std::vector<Material*> m_materialVector;
     unsigned int m_materialCount;

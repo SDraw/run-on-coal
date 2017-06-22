@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class SoundManager
+class SoundManager final
 {
     glm::vec3 m_listenerPosition;
     glm::vec3 m_listenerDirection;

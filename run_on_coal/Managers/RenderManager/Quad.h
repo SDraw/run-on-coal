@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class Quad
+class Quad final
 {
     glm::vec3 m_vertex[ROC_QUAD_VERTEX_COUNT];
     glm::vec2 m_size;

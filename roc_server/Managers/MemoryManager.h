@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class MemoryManager
+class MemoryManager final
 {
     std::set<void*> m_memorySet;
     std::set<void*>::iterator m_memorySetEnd;

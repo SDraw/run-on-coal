@@ -6,7 +6,7 @@ namespace ROC
 
 class Camera;
 class Light;
-class Scene : public Element
+class Scene final : public Element
 {
     Camera *m_mainCamera;
     Light *m_mainLight;

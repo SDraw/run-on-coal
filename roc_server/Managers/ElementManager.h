@@ -9,7 +9,7 @@ class Core;
 class Client;
 class Element;
 class File;
-class ElementManager
+class ElementManager final
 {
     Core *m_core;
 public:

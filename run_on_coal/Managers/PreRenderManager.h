@@ -9,7 +9,7 @@ class LuaArguments;
 class TreeNode;
 typedef void(*OnOGLPreRender)(void);
 
-class PreRenderManager
+class PreRenderManager final
 {
     Core *m_core;
 

@@ -6,7 +6,7 @@ namespace ROC
 class Core;
 class EventManager;
 class LuaArguments;
-class LuaManager
+class LuaManager final
 {
     Core *m_core;
     static Core *m_coreStatic;

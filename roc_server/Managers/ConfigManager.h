@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class ConfigManager
+class ConfigManager final
 {
     bool m_configParsed;
     bool m_logging;

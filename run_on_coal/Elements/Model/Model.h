@@ -11,7 +11,7 @@ class Collision;
 class Geometry;
 class Skeleton;
 class Animation;
-class Model : public Element
+class Model final : public Element
 {
     Geometry *m_geometry;
     glm::vec3 m_position;

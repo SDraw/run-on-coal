@@ -14,7 +14,7 @@ namespace ROC
 {
 
 class Model;
-class Collision : public Element
+class Collision final: public Element
 {
     btRigidBody *m_rigidBody;
     int m_motionType;

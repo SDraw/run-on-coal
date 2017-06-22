@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class Quad3D
+class Quad3D final
 {
     glm::vec3 m_position;
     glm::quat m_rotation;

@@ -6,7 +6,7 @@
 namespace ROC
 {
 
-class Camera : public Element
+class Camera final : public Element
 {
     int m_type;
 

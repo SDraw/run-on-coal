@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class Light : public Element
+class Light final : public Element
 {
     glm::vec3 m_direction;
     glm::vec4 m_color;

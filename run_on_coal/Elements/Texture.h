@@ -11,7 +11,7 @@
 namespace ROC
 {
 
-class Texture : public Drawable
+class Texture final : public Drawable
 {
     int m_type;
     glm::ivec2 m_size;

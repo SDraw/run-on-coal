@@ -19,7 +19,7 @@ typedef void(*OnJoypadConnectCallback)(unsigned int, bool);
 typedef void(*OnJoypadButtonCallback)(unsigned int, unsigned int, bool);
 typedef void(*OnJoypadAxisCallback)(unsigned int, int, float);
 
-class SfmlManager
+class SfmlManager final
 {
     Core *m_core;
 

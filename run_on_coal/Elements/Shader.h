@@ -8,7 +8,7 @@ namespace ROC
 
 class Drawable;
 class Pool;
-class Shader : public Element
+class Shader final : public Element
 {
     GLuint m_program;
 

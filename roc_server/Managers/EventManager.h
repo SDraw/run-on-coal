@@ -5,7 +5,7 @@ namespace ROC
 
 class LuaManager;
 class LuaArguments;
-class EventManager
+class EventManager final
 {
     LuaManager *m_luaManager;
 

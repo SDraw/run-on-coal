@@ -9,7 +9,7 @@
 namespace ROC
 {
 
-class Font : public Element
+class Font final : public Element
 {
     static FT_Library m_library;
     FT_Face m_face;

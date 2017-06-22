@@ -10,7 +10,7 @@ namespace ROC
 {
 
 class Texture;
-class Material
+class Material final
 {
     unsigned int m_verticesCount;
     GLuint m_vertexVBO;

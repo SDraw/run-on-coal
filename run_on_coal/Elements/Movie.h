@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class Movie : public Drawable
+class Movie final : public Drawable
 {
     sfe::Movie *m_movie;
 public:

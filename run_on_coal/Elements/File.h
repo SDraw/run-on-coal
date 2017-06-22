@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class File : public Element
+class File final : public Element
 {
     enum FileMode { NoneMode = -1, ReadMode, WriteMode };
     FileMode m_type = FileMode::NoneMode;

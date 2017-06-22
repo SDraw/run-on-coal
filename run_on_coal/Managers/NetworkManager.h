@@ -12,7 +12,7 @@ class LuaArguments;
 typedef void(*OnNetworkStateChangeCallback)(const std::string&);
 typedef void(*OnNetworkDataRecieveCallback)(const std::string&);
 
-class NetworkManager
+class NetworkManager final
 {
     Core *m_core;
 
