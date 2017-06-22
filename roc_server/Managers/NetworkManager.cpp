@@ -109,8 +109,7 @@ void ROC::NetworkManager::DoPulse()
                     l_log.append(") with ID ");
                     l_log.append(std::to_string(l_packet->guid.systemIndex));
 
-                    Client *l_client = m_core->GetElementManager()->CreateClient();
-                    l_client->SetAddress(l_packet->systemAddress);
+                    Client *l_client = m_core->GetElementManager()->CreateClient(l_packet->systemAddress);
                     m_clientVector[l_packet->guid.systemIndex] = l_client;
 
                     if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);

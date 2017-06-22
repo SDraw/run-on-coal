@@ -20,7 +20,7 @@ protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
 
-    Client* CreateClient();
+    Client* CreateClient(const RakNet::SystemAddress &f_address);
     void DestroyClient(Client *f_client);
 
     static void DestroyElementByPointer(void* f_pointer);

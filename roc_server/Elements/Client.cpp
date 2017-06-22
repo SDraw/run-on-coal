@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "Elements/Client.h"
 
-ROC::Client::Client()
+ROC::Client::Client(const RakNet::SystemAddress &f_address)
 {
     m_elementType = ElementType::ClientElement;
+
+    m_address = f_address;
 }
 ROC::Client::~Client()
 {

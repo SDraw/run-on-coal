@@ -16,9 +16,9 @@ ROC::ElementManager::~ElementManager()
 {
 }
 
-ROC::Client* ROC::ElementManager::CreateClient()
+ROC::Client* ROC::ElementManager::CreateClient(const RakNet::SystemAddress &f_address)
 {
-    Client *l_client = new Client();
+    Client *l_client = new Client(f_address);
     m_core->GetMemoryManager()->AddMemoryPointer(l_client);
     return l_client;
 }
