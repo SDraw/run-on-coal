@@ -14,7 +14,7 @@ class Movie;
 class RenderTarget;
 class Font;
 class LuaArguments;
-typedef void(*OnOGLRenderCallback)(void);
+typedef void(*OnRenderCallback)(void);
 
 class RenderManager final
 {
@@ -55,7 +55,7 @@ class RenderManager final
     bool CompareLastTexture(GLuint f_texture);
     void EnableNonActiveShader(Shader *f_shader) const;
 
-    OnOGLRenderCallback m_callback;
+    OnRenderCallback m_callback;
 
     RenderManager(const RenderManager& that);
     RenderManager &operator =(const RenderManager &that);
@@ -80,7 +80,7 @@ public:
     void Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
     void Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
 
-    inline void SetRenderCallback(OnOGLRenderCallback f_callback) { m_callback = f_callback; }
+    inline void SetRenderCallback(OnRenderCallback f_callback) { m_callback = f_callback; }
 protected:
     explicit RenderManager(Core *f_core);
     ~RenderManager();

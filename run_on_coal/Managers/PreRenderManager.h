@@ -7,7 +7,7 @@ class Core;
 class Model;
 class LuaArguments;
 class TreeNode;
-typedef void(*OnOGLPreRender)(void);
+typedef void(*OnPreRender)(void);
 
 class PreRenderManager final
 {
@@ -20,12 +20,12 @@ class PreRenderManager final
     std::vector<TreeNode*> m_nodeStack;
 
     LuaArguments *m_argument;
-    OnOGLPreRender m_callback;
+    OnPreRender m_callback;
 
     PreRenderManager(const PreRenderManager& that);
     PreRenderManager &operator =(const PreRenderManager &that);
 public:
-    inline void SetPreRenderCallback(OnOGLPreRender f_callback) { m_callback = f_callback; }
+    inline void SetPreRenderCallback(OnPreRender f_callback) { m_callback = f_callback; }
 protected:
     explicit PreRenderManager(Core *f_core);
     ~PreRenderManager();

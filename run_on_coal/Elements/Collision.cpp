@@ -273,14 +273,20 @@ void ROC::Collision::SetMotionType(int f_type)
         switch(m_motionType)
         {
             case ROC_COLLISION_MOTION_DEFAULT:
+            {
                 m_rigidBody->setCollisionFlags(0);
-                break;
+                m_rigidBody->setActivationState(ACTIVE_TAG);
+            } break;
             case ROC_COLLISION_MOTION_STATIC:
+            {
                 m_rigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
-                break;
+                m_rigidBody->setActivationState(ACTIVE_TAG);
+            } break;
             case ROC_COLLISION_MOTION_KINEMATIC:
+            {
                 m_rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
-                break;
+                m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
+            } break;
         }
     }
 }

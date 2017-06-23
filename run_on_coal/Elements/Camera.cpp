@@ -120,6 +120,7 @@ void ROC::Camera::UpdateMatrices()
         m_planes[3] = glm::row(l_mat, 3) - glm::row(l_mat, 1);
         m_planes[4] = glm::row(l_mat, 3) + glm::row(l_mat, 2);
         m_planes[5] = glm::row(l_mat, 3) - glm::row(l_mat, 2);
+
         for(auto &iter : m_planes) iter /= glm::sqrt(iter.x*iter.x + iter.y*iter.y + iter.z*iter.z);
         m_rebuildView = false;
         m_rebuildProjection = false;

@@ -323,7 +323,7 @@ void ROC::RenderManager::DoPulse()
     m_locked = false;
     if(m_callback) (*m_callback)();
 
-    m_core->GetLuaManager()->GetEventManager()->CallEvent("onOGLRender", m_argument);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent("onRender", m_argument);
     m_locked = true;
     m_core->GetSfmlManager()->SwapBuffers();
 }

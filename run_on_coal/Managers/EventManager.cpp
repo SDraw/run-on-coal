@@ -10,9 +10,9 @@
 
 const std::vector<std::string> g_DefaultEventsNames
 {
-    "onAppStart", "onAppStop",
-    "onOGLPreRender", "onOGLRender",
-    "onWindowResize", "onWindowFocus",
+    "onEngineStart", "onEngineStop",
+    "onRender", "onPreRender",
+    "onWindowClose", "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
     "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
     "onTextInput",

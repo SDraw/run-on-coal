@@ -104,7 +104,7 @@ void ROC::PreRenderManager::RemoveLink(Model *f_model)
 void ROC::PreRenderManager::DoPulse_S1()
 {
     if(m_callback) (*m_callback)();
-    m_core->GetLuaManager()->GetEventManager()->CallEvent("onOGLPreRender", m_argument);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent("onPreRender", m_argument);
     bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
 
     auto &l_rootNodes = m_modelTreeRoot->GetChildrenVectorRef();
