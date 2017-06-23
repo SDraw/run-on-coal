@@ -171,6 +171,7 @@
     <ClInclude Include="Lua\LuaDefinitions.Sound.h" />
     <ClInclude Include="Lua\LuaDefinitions.Texture.h" />
     <ClInclude Include="Lua\LuaDefinitions.Utils.h" />
+    <ClInclude Include="Lua\LuaFunction.hpp" />
     <ClInclude Include="Managers\AsyncManager.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />

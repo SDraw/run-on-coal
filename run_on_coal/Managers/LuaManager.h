@@ -1,4 +1,5 @@
 #pragma once
+#include "Lua/LuaFunction.hpp"
 
 namespace ROC
 {
@@ -24,11 +25,11 @@ protected:
     explicit LuaManager(Core *f_core);
     ~LuaManager();
 
-    void CallFunction(int f_func, LuaArguments *f_args);
-    inline void RemoveReference(int f_ref) { luaL_unref(m_vm, LUA_REGISTRYINDEX, f_ref); }
+    void CallFunction(const LuaFunction &f_func, LuaArguments *f_args);
+    inline void RemoveReference(const LuaFunction &f_func) { luaL_unref(m_vm, LUA_REGISTRYINDEX, f_func.m_reference); }
 
-    friend Core;
-    friend EventManager;
+    friend class Core;
+    friend class EventManager;
 };
 
 }

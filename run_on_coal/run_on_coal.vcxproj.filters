@@ -424,6 +424,9 @@
     <ClInclude Include="Managers\AsyncManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Lua\LuaFunction.hpp">
+      <Filter>Lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">

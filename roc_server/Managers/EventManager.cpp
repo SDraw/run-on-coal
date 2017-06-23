@@ -20,8 +20,6 @@ ROC::EventManager::EventManager(LuaManager *f_luaManager)
 
     for(auto &iter : g_DefaultEventsNames) m_eventMap.insert(std::make_pair(iter, new EventHeap()));
     m_eventMapEnd = m_eventMap.end();
-
-    m_locked = false;
 }
 ROC::EventManager::~EventManager()
 {
@@ -52,7 +50,7 @@ bool ROC::EventManager::AddEvent(const std::string &f_event)
     }
     return l_result;
 }
-bool ROC::EventManager::AddEventHandler(const std::string &f_event, int f_ref, void *f_pointer)
+bool ROC::EventManager::AddEventHandler(const std::string &f_event, const LuaFunction &f_func)
 {
     bool l_result = false;
     auto iter = m_eventMap.find(f_event);
@@ -65,7 +63,7 @@ bool ROC::EventManager::AddEventHandler(const std::string &f_event, int f_ref, v
             unsigned char l_check = ROC_EVENT_MISSING;
             for(auto &l_event : l_eventVector)
             {
-                if(l_event.m_luaFunc == f_pointer)
+                if(l_event.m_function.m_pointer == f_func.m_pointer)
                 {
                     if(!l_event.m_deleted) l_check = ROC_EVENT_EXISTS;
                     else
@@ -73,13 +71,14 @@ bool ROC::EventManager::AddEventHandler(const std::string &f_event, int f_ref, v
                         l_event.m_deleted = false;
                         l_check = ROC_EVENT_DELETED;
                     }
+                    m_luaManager->RemoveReference(f_func);
+                    break;
                 }
             }
             if(l_check == ROC_EVENT_MISSING)
             {
                 Event l_eventObj;
-                l_eventObj.m_luaFunc = f_pointer;
-                l_eventObj.m_luaRef = f_ref;
+                l_eventObj.m_function = f_func;
 
                 if(l_heap->m_active) l_heap->m_eventVectorIter = l_eventVector.insert(l_heap->m_eventVectorIter, l_eventObj) + 1;
                 else l_eventVector.push_back(l_eventObj);
@@ -118,7 +117,7 @@ bool ROC::EventManager::RemoveEvent(const std::string &f_event)
     }
     return l_result;
 }
-bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, void *f_pointer)
+bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, const LuaFunction &f_func)
 {
     bool l_result = false;
     auto iter = m_eventMap.find(f_event);
@@ -130,7 +129,7 @@ bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, void *f_p
             auto &l_eventVector = l_heap->m_eventVector;
             for(auto &l_event : l_eventVector)
             {
-                if(l_event.m_luaFunc == f_pointer && !l_event.m_deleted)
+                if(l_event.m_function.m_pointer == f_func.m_pointer && !l_event.m_deleted)
                 {
                     l_event.m_deleted = true;
                     l_result = true;
@@ -157,10 +156,10 @@ void ROC::EventManager::CallEvent(const std::string &f_event, LuaArguments *f_ar
                 auto &l_heapIter = l_heap->m_eventVectorIter;
                 for(l_heapIter = l_eventVector.begin(); l_heapIter != l_eventVector.end(); ++l_heapIter)
                 {
-                    if(!l_heapIter->m_deleted) m_luaManager->CallFunction(l_heapIter->m_luaRef, f_args);
+                    if(!l_heapIter->m_deleted) m_luaManager->CallFunction(l_heapIter->m_function, f_args);
                     if(l_heapIter->m_deleted)
                     {
-                        m_luaManager->RemoveReference(l_heapIter->m_luaRef);
+                        m_luaManager->RemoveReference(l_heapIter->m_function);
                         l_heapIter = l_eventVector.erase(l_heapIter);
                         if(l_heapIter == l_eventVector.end()) break;
                     }

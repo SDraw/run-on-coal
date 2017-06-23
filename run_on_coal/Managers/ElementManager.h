@@ -50,7 +50,7 @@ protected:
 
     static void DestroyElementByPointer(void* f_pointer);
 
-    friend Core;
+    friend class Core;
     friend class AsyncManager;
     friend class MemoryManager;
 };

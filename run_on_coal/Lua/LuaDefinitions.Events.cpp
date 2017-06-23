@@ -4,6 +4,7 @@
 #include "Managers/LuaManager.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
+#include "Lua/LuaFunction.hpp"
 #include "Lua/LuaDefinitions.Events.h"
 #include "Utils/Utils.h"
 
@@ -11,17 +12,6 @@ namespace ROC
 {
 namespace Lua
 {
-
-const std::vector<std::string> g_eventNamesTable
-{
-    "onAppStart", "onAppStop",
-    "onOGLPreRender", "onOGLRender",
-    "onWindowResize", "onWindowFocus",
-    "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
-    "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
-    "onTextInput",
-    "onNetworkStateChange", "onNetworkDataRecieve"
-};
 
 int addEvent(lua_State *f_vm)
 {
@@ -40,14 +30,13 @@ int addEvent(lua_State *f_vm)
 int addEventHandler(lua_State *f_vm)
 {
     std::string l_event;
-    int l_funcRef;
-    void *l_funcPointer;
+    LuaFunction l_func;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_funcRef, l_funcPointer);
+    argStream.ReadFunction(l_func,true);
     if(!argStream.HasErrors() && !l_event.empty())
     {
-        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->AddEventHandler(l_event, l_funcRef, l_funcPointer);
+        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->AddEventHandler(l_event, l_func);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -69,13 +58,13 @@ int removeEvent(lua_State *f_vm)
 int removeEventHandler(lua_State *f_vm)
 {
     std::string l_event;
-    void *l_funcPointer;
+    LuaFunction l_func;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_funcPointer);
+    argStream.ReadFunction(l_func);
     if(!argStream.HasErrors() && !l_event.empty())
     {
-        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->RemoveEventHandler(l_event,l_funcPointer);
+        bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->RemoveEventHandler(l_event,l_func);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -87,7 +76,6 @@ int callEvent(lua_State *f_vm)
     ArgReader argStream(f_vm);
     LuaArguments l_arguments;
     argStream.ReadText(l_event);
-    // TODO: Add parsing of arguments until top of Lua VM is reached
     if(!argStream.HasErrors() && !l_event.empty())
     {
         argStream.ReadArguments(l_arguments);

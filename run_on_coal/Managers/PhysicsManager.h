@@ -47,7 +47,7 @@ protected:
 
     void DoPulse();
 
-    friend Core;
+    friend class Core;
     friend class ElementManager;
     friend class SfmlManager;
 };

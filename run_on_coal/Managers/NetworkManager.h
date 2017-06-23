@@ -46,7 +46,7 @@ protected:
 
     void DoPulse();
 
-    friend Core;
+    friend class Core;
 };
 
 }

@@ -139,6 +139,9 @@
     <ClInclude Include="Lua\LuaDefinitions.Element.h">
       <Filter>Lua</Filter>
     </ClInclude>
+    <ClInclude Include="Lua\LuaFunction.hpp">
+      <Filter>Lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

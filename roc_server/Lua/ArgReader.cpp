@@ -6,6 +6,7 @@
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
+#include "Lua/LuaFunction.hpp"
 #include "Utils/CustomData.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
@@ -71,7 +72,7 @@ void ROC::ArgReader::ReadText(std::string &f_val)
         }
     }
 }
-void ROC::ArgReader::ReadFunction(int &f_val, void *&f_pointer)
+void ROC::ArgReader::ReadFunction(LuaFunction &f_func, bool f_ref)
 {
     if(!m_hasErrors)
     {
@@ -79,34 +80,13 @@ void ROC::ArgReader::ReadFunction(int &f_val, void *&f_pointer)
         {
             if(lua_isfunction(m_vm, m_currentArg))
             {
-                f_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
-                lua_settop(m_vm, m_currentArg);
-                f_val = luaL_ref(m_vm, LUA_REGISTRYINDEX);
-                lua_insert(m_vm, m_currentArg);
-                m_currentArg++;
-            }
-            else
-            {
-                m_error.assign("Expected function");
-                m_hasErrors = true;
-            }
-        }
-        else
-        {
-            m_error.assign("Not enough arguments");
-            m_hasErrors = true;
-        }
-    }
-}
-void ROC::ArgReader::ReadFunction(void *&f_pointer)
-{
-    if(!m_hasErrors)
-    {
-        if(m_currentArg <= m_argCount)
-        {
-            if(lua_isfunction(m_vm, m_currentArg))
-            {
-                f_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
+                f_func.m_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
+                if(f_ref)
+                {
+                    lua_settop(m_vm, m_currentArg);
+                    f_func.m_reference = luaL_ref(m_vm, LUA_REGISTRYINDEX);
+                    lua_insert(m_vm, m_currentArg);
+                }
                 m_currentArg++;
             }
             else

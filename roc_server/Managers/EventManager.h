@@ -1,4 +1,5 @@
 #pragma once
+#include "Lua/LuaFunction.hpp"
 
 namespace ROC
 {
@@ -11,8 +12,7 @@ class EventManager final
 
     struct Event
     {
-        void *m_luaFunc = nullptr;
-        int m_luaRef = -1;
+        LuaFunction m_function;
         bool m_deleted = false;
     };
     struct EventHeap
@@ -27,17 +27,17 @@ class EventManager final
     bool m_locked;
 public:
     bool AddEvent(const std::string &f_event);
-    bool AddEventHandler(const std::string &f_event, int f_ref, void *f_pointer);
+    bool AddEventHandler(const std::string &f_event, const LuaFunction &f_func);
 
     bool RemoveEvent(const std::string &f_event);
-    bool RemoveEventHandler(const std::string &f_event, void *f_pointer);
+    bool RemoveEventHandler(const std::string &f_event, const LuaFunction &f_func);
 
     void CallEvent(const std::string &f_event, LuaArguments *f_args);
 protected:
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();
 
-    friend LuaManager;
+    friend class LuaManager;
 };
 
 }

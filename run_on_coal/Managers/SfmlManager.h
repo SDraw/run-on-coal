@@ -99,7 +99,7 @@ protected:
 
     bool DoPulse();
 
-    friend Core;
+    friend class Core;
     friend class RenderManager;
 };
 

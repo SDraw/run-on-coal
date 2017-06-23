@@ -97,6 +97,7 @@
     <ClInclude Include="Lua\LuaDefinitions.File.h" />
     <ClInclude Include="Lua\LuaDefinitions.Network.h" />
     <ClInclude Include="Lua\LuaDefinitions.Utils.h" />
+    <ClInclude Include="Lua\LuaFunction.hpp" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
     <ClInclude Include="Managers\EventManager.h" />

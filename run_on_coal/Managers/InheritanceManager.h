@@ -49,7 +49,7 @@ protected:
 
     void SetModelGeometry(Model *f_model, Geometry *f_geometry);
 
-    friend Core;
+    friend class Core;
     friend class ElementManager;
 };
 

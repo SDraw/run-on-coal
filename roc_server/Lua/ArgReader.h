@@ -5,6 +5,7 @@ namespace ROC
 
 class CustomData;
 class LuaArguments;
+struct LuaFunction;
 class ArgReader
 {
     lua_State *m_vm;
@@ -25,8 +26,7 @@ public:
     template<typename T> void ReadInteger(T &f_val);
     void ReadText(std::string &f_val);
     template<class T> void ReadElement(T *&f_element);
-    void ReadFunction(int &f_val, void *&f_pointer);
-    void ReadFunction(void *&f_pointer);
+    void ReadFunction(LuaFunction &f_func, bool f_ref = false);
     void ReadCustomData(CustomData &f_data);
 
     void ReadNextBoolean(bool &f_val);
