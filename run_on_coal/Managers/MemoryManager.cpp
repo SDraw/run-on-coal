@@ -11,19 +11,19 @@ ROC::MemoryManager::~MemoryManager()
     for(auto iter : m_memorySet) ElementManager::DestroyElementByPointer(iter);
 }
 
-bool ROC::MemoryManager::IsValidMemoryPointer(void *f_pointer)
+bool ROC::MemoryManager::IsValidMemoryPointer(void *f_ptr)
 {
-    return (m_memorySet.find(f_pointer) != m_memorySetEnd);
+    return (m_memorySet.find(f_ptr) != m_memorySetEnd);
 }
 
-void ROC::MemoryManager::AddMemoryPointer(void *f_pointer)
+void ROC::MemoryManager::AddMemoryPointer(void *f_ptr)
 {
-    m_memorySet.insert(f_pointer);
+    m_memorySet.insert(f_ptr);
     m_memorySetEnd = m_memorySet.end();
 }
-void ROC::MemoryManager::RemoveMemoryPointer(void *f_pointer)
+void ROC::MemoryManager::RemoveMemoryPointer(void *f_ptr)
 {
-    auto l_checkIterator = m_memorySet.find(f_pointer);
+    auto l_checkIterator = m_memorySet.find(f_ptr);
     if(l_checkIterator != m_memorySetEnd)
     {
         m_memorySet.erase(l_checkIterator);

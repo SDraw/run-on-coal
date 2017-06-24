@@ -48,7 +48,7 @@ protected:
 
     inline void SetLock(bool f_lock) { m_locked = f_lock; }
 
-    static void DestroyElementByPointer(void* f_pointer);
+    static void DestroyElementByPointer(void* f_ptr);
 
     friend class Core;
     friend class AsyncManager;

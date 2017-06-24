@@ -48,6 +48,8 @@ public:
 
     void ReadArguments(LuaArguments &f_args);
 
+    void RemoveReference(const LuaFunction &f_func);
+
     bool HasErrors();
     inline int GetReturnValue() const { return m_returnValue; }
 };

@@ -8,13 +8,13 @@ class MemoryManager final
     std::unordered_set<void*> m_memorySet;
     std::unordered_set<void*>::iterator m_memorySetEnd;
 public:
-    bool IsValidMemoryPointer(void *f_pointer);
+    bool IsValidMemoryPointer(void *f_ptr);
 protected:
     MemoryManager();
     ~MemoryManager();
 
-    void AddMemoryPointer(void *f_pointer);
-    void RemoveMemoryPointer(void *f_pointer);
+    void AddMemoryPointer(void *f_ptr);
+    void RemoveMemoryPointer(void *f_ptr);
 
     friend class Core;
     friend class AsyncManager;

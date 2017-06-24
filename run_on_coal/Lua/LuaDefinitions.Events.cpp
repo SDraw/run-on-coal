@@ -40,6 +40,7 @@ int addEventHandler(lua_State *f_vm)
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
+    argStream.RemoveReference(l_func);
     return argStream.GetReturnValue();
 }
 int removeEvent(lua_State *f_vm)

@@ -414,7 +414,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
         }
     }
 }
-void ROC::ElementManager::DestroyElementByPointer(void *f_pointer)
+void ROC::ElementManager::DestroyElementByPointer(void *f_ptr)
 {
-    delete reinterpret_cast<Element*>(f_pointer);
+    delete reinterpret_cast<Element*>(f_ptr);
 }

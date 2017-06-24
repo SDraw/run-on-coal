@@ -23,7 +23,7 @@ ROC::CustomData::CustomData(const CustomData& f_data)
             m_float = f_data.m_float;
             break;
         case DataType::Pointer:
-            m_pointer = f_data.m_pointer;
+            m_ptr = f_data.m_ptr;
             break;
         case DataType::String:
             m_string.assign(f_data.m_string);
@@ -56,7 +56,7 @@ void ROC::CustomData::SetFloat(float f_val)
 }
 void ROC::CustomData::SetPointer(void *f_val)
 {
-    m_pointer = f_val;
+    m_ptr = f_val;
     m_type = DataType::Pointer;
 }
 void ROC::CustomData::SetString(const std::string &f_val)
@@ -88,7 +88,7 @@ ROC::CustomData& ROC::CustomData::operator=(CustomData &f_data)
             m_float = f_data.m_float;
             break;
         case DataType::Pointer:
-            m_pointer = f_data.m_pointer;
+            m_ptr = f_data.m_ptr;
             break;
         case DataType::String:
             m_string.assign(f_data.m_string);

@@ -309,7 +309,7 @@ bool ROC::LuaManager::OpenFile(const std::string &f_path)
 
 void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_args)
 {
-    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.m_reference);
+    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.m_ref);
     f_args->ProccessArguments(m_vm);
     if(lua_pcall(m_vm, f_args->GetArgumentsCount(), 0, 0))
     {

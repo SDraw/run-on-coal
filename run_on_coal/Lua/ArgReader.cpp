@@ -80,11 +80,11 @@ void ROC::ArgReader::ReadFunction(LuaFunction &f_func, bool f_ref)
         {
             if(lua_isfunction(m_vm, m_currentArg))
             {
-                f_func.m_pointer = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
+                f_func.m_ptr = const_cast<void*>(lua_topointer(m_vm, m_currentArg));
                 if(f_ref)
                 {
                     lua_settop(m_vm, m_currentArg);
-                    f_func.m_reference = luaL_ref(m_vm, LUA_REGISTRYINDEX);
+                    f_func.m_ref = luaL_ref(m_vm, LUA_REGISTRYINDEX);
                     lua_insert(m_vm, m_currentArg);
                 }
                 m_currentArg++;
@@ -350,6 +350,11 @@ void ROC::ArgReader::ReadArguments(LuaArguments &f_args)
             }
         }
     }
+}
+
+void ROC::ArgReader::RemoveReference(const LuaFunction &f_func)
+{
+    if(f_func.m_removeRef && (f_func.m_ref != 0)) luaL_unref(m_vm, LUA_REGISTRYINDEX, f_func.m_ref);
 }
 
 bool ROC::ArgReader::HasErrors()

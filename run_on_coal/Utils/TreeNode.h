@@ -5,14 +5,14 @@ namespace ROC
 
 class TreeNode
 {
-    void *m_pointer;
+    void *m_ptr;
     TreeNode *m_parent;
     std::vector<TreeNode*> m_children;
 public:
-    explicit TreeNode(void *f_pointer);
+    explicit TreeNode(void *f_ptr);
     ~TreeNode();
 
-    inline void* GetPointer() { return m_pointer; }
+    inline void* GetPointer() { return m_ptr; }
 
     void AddChild(TreeNode *f_node);
     void RemoveChild(TreeNode *f_node);

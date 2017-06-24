@@ -23,7 +23,7 @@ protected:
     Client* CreateClient(const RakNet::SystemAddress &f_address);
     void DestroyClient(Client *f_client);
 
-    static void DestroyElementByPointer(void* f_pointer);
+    static void DestroyElementByPointer(void* f_ptr);
 
     friend class Core;
     friend class MemoryManager;

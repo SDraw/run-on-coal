@@ -26,7 +26,7 @@ protected:
     ~LuaManager();
 
     void CallFunction(const LuaFunction &f_func, LuaArguments *f_args);
-    inline void RemoveReference(const LuaFunction &f_func) { luaL_unref(m_vm, LUA_REGISTRYINDEX, f_func.m_reference); }
+    inline void RemoveReference(const LuaFunction &f_func) { luaL_unref(m_vm, LUA_REGISTRYINDEX, f_func.m_ref); }
 
     friend class Core;
     friend class EventManager;

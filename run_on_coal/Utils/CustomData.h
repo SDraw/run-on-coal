@@ -12,7 +12,7 @@ class CustomData
         int m_int;
         double m_double;
         float m_float;
-        void *m_pointer;
+        void *m_ptr;
     };
     std::string m_string;
 public:
@@ -36,7 +36,7 @@ public:
     inline float GetFloat() const { return m_float; }
     void SetFloat(float f_val);
 
-    inline void* GetPointer() const { return m_pointer; }
+    inline void* GetPointer() const { return m_ptr; }
     void SetPointer(void *f_val);
 
     inline void GetString(std::string &f_val) { f_val.assign(m_string); }

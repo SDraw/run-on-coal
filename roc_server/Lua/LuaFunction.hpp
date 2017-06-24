@@ -5,8 +5,9 @@ namespace ROC
 
 struct LuaFunction
 {
-    void *m_pointer = nullptr;
-    int m_reference = 0;
+    void *m_ptr = nullptr;
+    int m_ref = 0;
+    bool m_removeRef = false;
 };
 
 }
