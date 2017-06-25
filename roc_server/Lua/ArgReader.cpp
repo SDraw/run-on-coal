@@ -141,32 +141,7 @@ void ROC::ArgReader::ReadCustomData(CustomData &f_data)
     }
 }
 
-void ROC::ArgReader::ReadNextBoolean(bool &f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_isboolean(m_vm, m_currentArg))
-        {
-            f_val = (lua_toboolean(m_vm, m_currentArg) == 1);
-            m_currentArg++;
-        }
-    }
-}
-void ROC::ArgReader::ReadNextText(std::string &f_val)
-{
-    if(!m_hasErrors && (m_currentArg <= m_argCount))
-    {
-        if(lua_isstring(m_vm, m_currentArg))
-        {
-            size_t l_size;
-            const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
-            f_val.assign(l_string, l_size);
-            m_currentArg++;
-        }
-    }
-}
-
-void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
+void ROC::ArgReader::ReadVector(float *f_val, int f_size)
 {
     if(!m_hasErrors)
     {
@@ -216,7 +191,7 @@ void ROC::ArgReader::ReadMatrix(float *f_val, int f_size)
         }
     }
 }
-void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
+void ROC::ArgReader::ReadVector(std::vector<std::string> &f_vec, int f_size)
 {
     if(!m_hasErrors)
     {
@@ -261,6 +236,31 @@ void ROC::ArgReader::ReadTableTexts(std::vector<std::string> &f_vec, int f_size)
     }
 }
 
+void ROC::ArgReader::ReadNextBoolean(bool &f_val)
+{
+    if(!m_hasErrors && (m_currentArg <= m_argCount))
+    {
+        if(lua_isboolean(m_vm, m_currentArg))
+        {
+            f_val = (lua_toboolean(m_vm, m_currentArg) == 1);
+            m_currentArg++;
+        }
+    }
+}
+void ROC::ArgReader::ReadNextText(std::string &f_val)
+{
+    if(!m_hasErrors && (m_currentArg <= m_argCount))
+    {
+        if(lua_isstring(m_vm, m_currentArg))
+        {
+            size_t l_size;
+            const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
+            f_val.assign(l_string, l_size);
+            m_currentArg++;
+        }
+    }
+}
+
 void ROC::ArgReader::PushBoolean(bool f_val)
 {
     lua_pushboolean(m_vm, f_val);
@@ -286,7 +286,7 @@ void ROC::ArgReader::PushPointer(void *f_val)
     lua_pushlightuserdata(m_vm, f_val);
     m_returnValue++;
 }
-void ROC::ArgReader::PushMatrix(float *f_val, int f_size)
+void ROC::ArgReader::PushVector(float *f_val, int f_size)
 {
     lua_newtable(m_vm);
     for(int i = 0; i < f_size; i++)

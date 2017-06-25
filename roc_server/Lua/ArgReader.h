@@ -28,6 +28,8 @@ public:
     template<class T> void ReadElement(T *&f_element);
     void ReadFunction(LuaFunction &f_func, bool f_ref = false);
     void ReadCustomData(CustomData &f_data);
+    void ReadVector(float *f_val, int f_size);
+    void ReadVector(std::vector<std::string> &f_vec, int f_size);
 
     void ReadNextBoolean(bool &f_val);
     template<typename T> void ReadNextNumber(T &f_val);
@@ -35,15 +37,12 @@ public:
     void ReadNextText(std::string &f_val);
     template<class T> void ReadNextElement(T *&f_element);
 
-    void ReadMatrix(float *f_val, int f_size);
-    void ReadTableTexts(std::vector<std::string> &f_vec, int f_size);
-
     void PushBoolean(bool f_val);
     void PushNumber(lua_Number f_val);
     void PushInteger(lua_Integer f_val);
     void PushText(const std::string &f_val);
     void PushPointer(void *f_val);
-    void PushMatrix(float *f_val, int f_size);
+    void PushVector(float *f_val, int f_size);
     void PushCustomData(CustomData &f_data);
 
     void ReadArguments(LuaArguments &f_args);

@@ -47,7 +47,7 @@ int textureCreate(lua_State *f_vm)
             case 2:
             {
                 std::vector<std::string> l_path;
-                argStream.ReadTableTexts(l_path, 6);
+                argStream.ReadVector(l_path, 6);
                 if(!argStream.HasErrors()) l_tex = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, l_filteringType, l_compress);
             } break;
         }

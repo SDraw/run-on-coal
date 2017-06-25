@@ -31,6 +31,7 @@
 
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
+#include "Lua/LuaFunction.hpp"
 
 #include "Utils/CustomData.h"
 #include "Utils/Pool.h"
