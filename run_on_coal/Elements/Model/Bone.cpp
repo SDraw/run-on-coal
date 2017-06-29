@@ -4,10 +4,15 @@
 
 #define ROC_BONE_BLEND_FACTOR 0.1f
 
+namespace ROC
+{
+
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
 extern const glm::vec3 g_DefaultScale;
+
+}
 
 ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scl)
 {

@@ -21,7 +21,7 @@ class Texture final : public Drawable
     void GenerateBrokenTexture();
 public:
     inline bool IsTransparent() const { return (m_type == ROC_TEXTURE_TYPE_RGBA); }
-    inline void GetSize(glm::ivec2 &f_size) { std::memcpy(&f_size, &m_size, sizeof(glm::ivec2)); }
+    inline void GetSize(glm::ivec2 &f_size) const { std::memcpy(&f_size, &m_size, sizeof(glm::ivec2)); }
     inline int GetFiltering() const { return m_filtering; }
 protected:
     Texture();

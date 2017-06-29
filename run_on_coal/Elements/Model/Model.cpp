@@ -8,10 +8,15 @@
 #include "Utils/SystemTick.h"
 #include "Utils/Utils.h"
 
+namespace ROC
+{
+
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
 extern const glm::vec3 g_DefaultScale;
+
+}
 
 ROC::Model::Model(Geometry *f_geometry)
 {
@@ -67,17 +72,13 @@ void ROC::Model::SetPosition(const glm::vec3 &f_pos, bool f_preserveMotion)
 }
 void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
 {
-    if(m_collision) m_collision->GetPosition(f_pos);
-    else
+    if(f_global && m_parent)
     {
-        if(f_global && m_parent)
-        {
-            btTransform l_transform;
-            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_matrix));
-            std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-        }
-        else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
+        btTransform l_transform;
+        l_transform.setFromOpenGLMatrix(glm::value_ptr(m_matrix));
+        std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
     }
+    else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
 }
 
 void ROC::Model::SetRotation(const glm::quat &f_rot, bool f_ignoreMotion)
@@ -92,26 +93,22 @@ void ROC::Model::SetRotation(const glm::quat &f_rot, bool f_ignoreMotion)
 }
 void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)
 {
-    if(m_collision) m_collision->GetRotation(f_rot);
-    else
+    if(f_global && m_parent)
     {
-        if(f_global && m_parent)
-        {
-            btTransform l_transform;
-            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_matrix));
-            btQuaternion l_rot = l_transform.getRotation();
-            f_rot.x = l_rot.x();
-            f_rot.y = l_rot.y();
-            f_rot.z = l_rot.z();
-            f_rot.w = l_rot.w();
-        }
-        else std::memcpy(&f_rot, &m_rotation, sizeof(glm::quat));
+        btTransform l_transform;
+        l_transform.setFromOpenGLMatrix(glm::value_ptr(m_matrix));
+        btQuaternion l_rot = l_transform.getRotation();
+        f_rot.x = l_rot.x();
+        f_rot.y = l_rot.y();
+        f_rot.z = l_rot.z();
+        f_rot.w = l_rot.w();
     }
+    else std::memcpy(&f_rot, &m_rotation, sizeof(glm::quat));
 }
 
 void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
-    if(!m_collision && (m_scale != f_scl))
+    if(m_scale != f_scl)
     {
         std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
         m_boundSphereRaduis = (m_geometry ? m_geometry->GetBoundSphereRadius()*glm::compMax(m_scale) : glm::length(m_scale));

@@ -2,7 +2,12 @@
 #include "Elements/Collision.h"
 #include "Elements/Model/Model.h"
 
+namespace ROC
+{
+
 extern const glm::vec3 g_DefaultScale;
+
+}
 
 ROC::Collision::Collision()
 {
@@ -79,7 +84,20 @@ void ROC::Collision::SetParentModel(Model *f_model)
 
 void ROC::Collision::GetPosition(glm::vec3 &f_pos)
 {
-    if(m_rigidBody) std::memcpy(&f_pos, m_rigidBody->getCenterOfMassTransform().getOrigin().m_floats, sizeof(glm::vec3));
+    if(m_rigidBody)
+    {
+        btTransform l_transform;
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+                l_transform = m_rigidBody->getCenterOfMassTransform();
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->getMotionState()->getWorldTransform(l_transform);
+                break;
+        }
+        std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+    }
 }
 void ROC::Collision::SetPosition(const glm::vec3 &f_pos)
 {
@@ -111,11 +129,24 @@ void ROC::Collision::SetPosition(const glm::vec3 &f_pos)
 }
 void ROC::Collision::GetRotation(glm::quat &f_rot)
 {
-    btQuaternion l_rotation = m_rigidBody->getCenterOfMassTransform().getRotation();
-    f_rot.x = l_rotation.x();
-    f_rot.y = l_rotation.y();
-    f_rot.z = l_rotation.z();
-    f_rot.w = l_rotation.w();
+    if(m_rigidBody)
+    {
+        btTransform l_transform;
+        switch(m_motionType)
+        {
+            case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+                l_transform = m_rigidBody->getCenterOfMassTransform();
+                break;
+            case ROC_COLLISION_MOTION_KINEMATIC:
+                m_rigidBody->getMotionState()->getWorldTransform(l_transform);
+                break;
+        }
+        btQuaternion l_rotation = l_transform.getRotation();
+        f_rot.x = l_rotation.x();
+        f_rot.y = l_rotation.y();
+        f_rot.z = l_rotation.z();
+        f_rot.w = l_rotation.w();
+    }
 }
 void ROC::Collision::SetRotation(const glm::quat &f_rot)
 {

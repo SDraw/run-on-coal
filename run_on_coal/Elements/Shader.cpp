@@ -5,6 +5,9 @@
 #include "Utils/Pool.h"
 #include "Utils/Utils.h"
 
+namespace ROC
+{
+
 const std::vector<std::string> g_DefaultUniformsTable = {
     "gProjectionMatrix", "gViewMatrix", "gModelMatrix", "gAnimated", "gBonesUniform", "gBoneMatrix",
     "gLightColor", "gLightDirection", "gLightParam",
@@ -13,6 +16,8 @@ const std::vector<std::string> g_DefaultUniformsTable = {
     "gTexture0", "gColor",
     "gTime"
 };
+
+}
 
 GLuint ROC::Shader::m_bonesUBO = GL_INVALID_INDEX;
 bool ROC::Shader::m_uboFix = false;

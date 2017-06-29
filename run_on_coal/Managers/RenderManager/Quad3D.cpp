@@ -1,9 +1,14 @@
 #include "stdafx.h"
 #include "Managers/RenderManager/Quad3D.h"
 
+namespace ROC
+{
+
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
+
+}
 
 ROC::Quad3D::Quad3D()
 {

@@ -3,6 +3,13 @@
 #include "Managers/ConfigManager.h"
 #include "Utils/Utils.h"
 
+#define ROC_CONFIG_ATTRIB_ANTIALIASING 0
+#define ROC_CONFIG_ATTRIB_DIMENSION 1
+#define ROC_CONFIG_ATTRIB_FULLSCREEN 2
+#define ROC_CONFIG_ATTRIB_LOGGING 3
+#define ROC_CONFIG_ATTRIB_FPSLIMIT 4
+#define ROC_CONFIG_ATTRIB_VSYNC 5
+
 namespace ROC
 {
 
@@ -39,30 +46,30 @@ ROC::ConfigManager::ConfigManager()
                     {
                         switch(Utils::Enum::ReadEnumVector(g_configAttributeTable, l_param))
                         {
-                            case 0:
+                            case ROC_CONFIG_ATTRIB_ANTIALIASING:
                             {
                                 m_antialiasing = l_attrib.as_int(0);
                                 if(m_antialiasing < 0) m_antialiasing = 0;
                             } break;
-                            case 1:
+                            case ROC_CONFIG_ATTRIB_DIMENSION:
                             {
                                 std::string l_size = l_attrib.as_string("854x480");
                                 std::replace(l_size.begin(), l_size.end(), 'x', ' ');
                                 std::stringstream l_sizeStream(l_size);
                                 l_sizeStream >> m_windowSize.x >> m_windowSize.y;
                             } break;
-                            case 2:
+                            case ROC_CONFIG_ATTRIB_FULLSCREEN:
                                 m_fullscreen = l_attrib.as_bool(false);
                                 break;
-                            case 3:
+                            case ROC_CONFIG_ATTRIB_LOGGING:
                                 m_logging = l_attrib.as_bool(false);
                                 break;
-                            case 4:
+                            case ROC_CONFIG_ATTRIB_FPSLIMIT:
                             {
                                 m_fpsLimit = l_attrib.as_uint(60U);
                                 if(m_fpsLimit == 0U) m_fpsLimit = 60U;
                             } break;
-                            case 5:
+                            case ROC_CONFIG_ATTRIB_VSYNC:
                                 m_vsync = l_attrib.as_bool(false);
                         }
                     }

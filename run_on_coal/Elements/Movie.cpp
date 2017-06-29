@@ -60,6 +60,17 @@ void ROC::Movie::SetTime(float f_val)
     }
 }
 
+void ROC::Movie::GetSize(glm::ivec2 &f_size) const
+{
+    if(m_movie)
+    {
+        auto &l_texture = m_movie->getCurrentImage();
+        auto l_size = l_texture.getSize();
+        f_size.x = static_cast<int>(l_size.x);
+        f_size.y = static_cast<int>(l_size.y);
+    }
+}
+
 void ROC::Movie::Update()
 {
     if(m_movie) m_movie->update();

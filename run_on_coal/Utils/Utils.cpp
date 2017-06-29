@@ -10,6 +10,7 @@ namespace Path
 {
 
 const std::regex g_UpRegex("(\\.\\.)+(\\/|\\\\)");
+
 void EscapePath(std::string &f_path)
 {
     std::string l_result;
@@ -94,6 +95,46 @@ bool IsPowerOfTwo(int f_value)
 float EaseInOut(float f_value)
 {
     return -0.5f*(cos(3.141592f*f_value) - 1.f);
+}
+
+}
+
+namespace Lua
+{
+
+void lua_registerClass(lua_State *f_vm, const char *f_name, lua_CFunction f_func)
+{
+    lua_register(f_vm, f_name, f_func);
+    luaL_newmetatable(f_vm, f_name);
+    lua_pushvalue(f_vm, -1);
+    lua_setfield(f_vm, -2, "__index");
+    lua_pushboolean(f_vm, 0);
+    lua_setfield(f_vm, -2, "__metatable");
+}
+void lua_registerClassMethod(lua_State *f_vm, const char *f_name, lua_CFunction f_func)
+{
+    lua_pushcfunction(f_vm, f_func);
+    lua_setfield(f_vm, -2, f_name);
+}
+
+}
+
+namespace Network
+{
+
+unsigned char GetPacketIdentifier(RakNet::Packet *f_packet)
+{
+    unsigned char l_result = 255U;
+    if(f_packet)
+    {
+        if(f_packet->data[0] == ID_TIMESTAMP)
+        {
+            RakAssert(f_packet->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
+            l_result = f_packet->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
+        }
+        else l_result = f_packet->data[0];
+    }
+    return l_result;
 }
 
 }

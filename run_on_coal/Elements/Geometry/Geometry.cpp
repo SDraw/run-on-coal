@@ -9,6 +9,7 @@ ROC::Geometry::Geometry(bool f_async)
 
     m_loadState = gmLoadState::NotLoaded;
     m_async = f_async;
+    m_released = !m_async;
     m_materialCount = 0U;
     m_boundSphereRaduis = 0.f;
 }
@@ -301,6 +302,8 @@ void ROC::Geometry::Clear()
     m_jointData.clear();
 
     m_loadState = gmLoadState::NotLoaded;
+
+    if(m_async) m_released = true;
 }
 
 void ROC::Geometry::GenerateVAOs()

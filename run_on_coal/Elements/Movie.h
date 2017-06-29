@@ -24,6 +24,8 @@ public:
     void SetTime(float f_val);
 
     inline bool IsTransparent() const { return true; }
+    void GetSize(glm::ivec2 &f_size) const;
+    inline int GetFiltering() const { return 0; }
 protected:
     Movie();
     ~Movie();

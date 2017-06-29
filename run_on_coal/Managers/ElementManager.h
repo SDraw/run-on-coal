@@ -41,7 +41,7 @@ public:
     Collision* CreateCollision(int f_type, glm::vec3 &f_size, float f_mass);
     Movie* CreateMovie(const std::string &f_path);
 
-    void DestroyElement(Element *f_element);
+    bool DestroyElement(Element *f_element);
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();

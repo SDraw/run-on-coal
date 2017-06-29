@@ -78,19 +78,16 @@ void ROC::AsyncManager::DoPulse()
         {
             for(auto &iter : m_loadedQueue)
             {
-                if(iter.m_result && m_core->GetMemoryManager()->IsValidMemoryPointer(iter.m_geometry)) iter.m_geometry->GenerateVAOs();
-                else
-                {
-                    m_core->GetMemoryManager()->RemoveMemoryPointer(iter.m_geometry);
-                    m_core->GetElementManager()->DestroyElementByPointer(iter.m_geometry);
-                }
+                if(iter.m_result) iter.m_geometry->GenerateVAOs();
 
-                if(m_callback)(*m_callback)(iter.m_geometry, iter.m_result);
+                if(m_callback) (*m_callback)(iter.m_geometry, iter.m_result);
 
-                m_argument->PushArgument(iter.m_geometry);
+                m_argument->PushArgument(iter.m_geometry, "Geometry");
                 m_argument->PushArgument(iter.m_result);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onGeometryLoad", m_argument);
                 m_argument->Clear();
+
+                if(!iter.m_result) m_core->GetElementManager()->DestroyElement(iter.m_geometry);
             }
             m_loadedQueue.clear();
         }

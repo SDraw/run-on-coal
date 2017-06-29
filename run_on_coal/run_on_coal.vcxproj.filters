@@ -41,54 +41,6 @@
     <ClCompile Include="Managers\PhysicsManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Animation.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Camera.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Events.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Font.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Light.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Model.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Physics.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Rendering.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.RenderTarget.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Scene.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Shader.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Sound.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Texture.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Utils.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Geometry.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.File.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\ConfigManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -98,9 +50,6 @@
     </ClCompile>
     <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
       <Filter>vendor\luauft8</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Collision.cpp">
-      <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="Utils\Pool.cpp">
       <Filter>Utils</Filter>
@@ -168,9 +117,6 @@
     <ClCompile Include="Managers\RenderManager\Quad.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Network.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\NetworkManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -186,23 +132,11 @@
     <ClCompile Include="..\vendor\RectangleBinPack\Rect.cpp">
       <Filter>vendor\RectangleBinPack</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Input.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\CustomData.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Element.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\Movie.cpp">
       <Filter>Elements</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Movie.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Drawable.cpp">
-      <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="Managers\RenderManager\Quad3D.cpp">
       <Filter>Managers\RenderManager</Filter>
@@ -212,6 +146,75 @@
     </ClCompile>
     <ClCompile Include="Managers\AsyncManager.cpp">
       <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaAnimationDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaCameraDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaCollisionDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaDrawableDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaElementDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaFontDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaGeometryDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaInputDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaLightDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaModelDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaMovieDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaNetworkDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaPhysicsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaRenderingDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaRenderTargetDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaSceneDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaShaderDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaSoundDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaTextureDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\GlobalConstants.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -252,63 +255,12 @@
     <ClInclude Include="Managers\PhysicsManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Utils.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Animation.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Camera.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Events.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Font.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Light.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Model.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Physics.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Rendering.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.RenderTarget.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Scene.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Shader.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Sound.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Texture.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Geometry.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.File.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\ConfigManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="RocInc.h" />
     <ClInclude Include="Managers\PreRenderManager.h">
       <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Collision.h">
-      <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Pool.h">
       <Filter>Utils</Filter>
@@ -376,9 +328,6 @@
     <ClInclude Include="Managers\RenderManager\RenderManager.h">
       <Filter>Managers\RenderManager</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Network.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\NetworkManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
@@ -388,14 +337,8 @@
     <ClInclude Include="Elements\Drawable.h">
       <Filter>Elements</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Input.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\CustomData.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Element.h">
-      <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Geometry\BoneJointData.hpp">
       <Filter>Elements\Geometry</Filter>
@@ -409,12 +352,6 @@
     <ClInclude Include="Elements\Movie.h">
       <Filter>Elements</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Movie.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Drawable.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\RenderManager\Quad3D.h">
       <Filter>Managers\RenderManager</Filter>
     </ClInclude>
@@ -426,6 +363,72 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaFunction.hpp">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaAnimationDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaCameraDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaCollisionDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaDrawableDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaElementDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaFileDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaFontDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaGeometryDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaInputDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaLightDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaModelDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaMovieDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaNetworkDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaPhysicsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaRenderingDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaRenderTargetDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaSceneDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaShaderDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaSoundDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaTextureDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -467,6 +470,9 @@
     </Filter>
     <Filter Include="vendor\RectangleBinPack">
       <UniqueIdentifier>{c76d7d5d-de20-4028-a023-81513f1b9aa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\LuaDefs">
+      <UniqueIdentifier>{d49e28e1-7ff0-4271-b886-f458090d571a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

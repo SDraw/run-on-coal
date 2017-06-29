@@ -8,7 +8,12 @@
 #define ROC_SKELETON_TRANSFORMATION_INVERSE 1
 #define ROC_SKELETON_TRANSFORMATION_BIND 2
 
+namespace ROC
+{
+
 extern const glm::mat4 g_IdentityMatrix;
+
+}
 
 ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
 {

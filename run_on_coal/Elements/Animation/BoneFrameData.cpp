@@ -1,9 +1,14 @@
 #include "stdafx.h"
 #include "Elements/Animation/BoneFrameData.h"
 
+namespace ROC
+{
+
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
 extern const glm::vec3 g_DefaultScale;
+
+}
 
 ROC::BoneFrameData::BoneFrameData()
 {

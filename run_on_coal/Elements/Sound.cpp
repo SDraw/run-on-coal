@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "Elements/Sound.h"
 
+namespace ROC
+{
+
 extern const glm::vec3 g_DefaultPosition;
+
+}
 
 ROC::Sound::Sound(bool f_loop)
 {

@@ -8,6 +8,9 @@
 #define ROC_EVENT_DELETED 1U
 #define ROC_EVENT_EXISTS 2U
 
+namespace ROC
+{
+
 const std::vector<std::string> g_DefaultEventsNames
 {
     "onEngineStart", "onEngineStop",
@@ -19,6 +22,8 @@ const std::vector<std::string> g_DefaultEventsNames
     "onNetworkStateChange", "onNetworkDataRecieve",
     "onGeometryLoad"
 };
+
+}
 
 ROC::EventManager::EventManager(LuaManager *f_luaManager)
 {

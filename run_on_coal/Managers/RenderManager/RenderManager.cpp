@@ -21,11 +21,16 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/Pool.h"
 
-extern const glm::vec3 g_DefaultPosition; // Same as previous g_EmptyVec3(0.f)
+
+namespace ROC
+{
+
+extern const glm::vec3 g_DefaultPosition;
 const glm::vec4 g_EmptyVec4(0.f);
 const glm::mat4 g_EmptyMat4(0.f);
-
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
+
+}
 
 ROC::RenderManager::RenderManager(Core *f_core)
 {

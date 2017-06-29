@@ -16,30 +16,9 @@
 namespace ROC
 {
 
-extern const std::vector<std::string> g_keysTable
-{
-    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-    "esc", "lctrl", "lshift", "lalt", "lsys", "rctrl", "rshift", "ralt", "rsys", "menu",
-    "lbracket", "rbracket", "semicolon", "comma", "period", "quote", "slash", "backslash", "tilde", "equal", "dash",
-    "space", "return", "backspace", "tab", "pgup", "pgdn", "end", "home", "insert", "delete",
-    "num+", "num-", "num*", "num/",
-    "arrow_l", "arrow_r", "arrow_u", "arrow_d",
-    "num0", "num1", "num2", "num3", "num4", "num5", "num6", "num7", "num8", "num9",
-    "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
-    "pause"
-};
-extern const std::vector<std::string> g_mouseKeysTable
-{
-    "left", "right", "middle",
-    "x1", "x2"
-};
-extern const std::vector<std::string> g_axisNames
-{
-    "X", "Y", "Z",
-    "R", "U", "V",
-    "PovX", "PovY"
-};
+extern const std::vector<std::string> g_KeyNamesTable;
+extern const std::vector<std::string> g_MouseKeyNamesTable;
+extern const std::vector<std::string> g_JoypadAxisNamesTable;
 
 }
 
@@ -269,7 +248,7 @@ bool ROC::SfmlManager::DoPulse()
                 {
                     if(m_keyPressCallback) (*m_keyPressCallback)(m_event.key.code, m_event.type == sf::Event::KeyPressed);
 
-                    m_argument->PushArgument(g_keysTable[m_event.key.code]);
+                    m_argument->PushArgument(g_KeyNamesTable[m_event.key.code]);
                     m_argument->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onKeyPress", m_argument);
                     m_argument->Clear();
@@ -315,7 +294,7 @@ bool ROC::SfmlManager::DoPulse()
             {
                 if(m_mouseKeyPressCallback) (*m_mouseKeyPressCallback)(m_event.mouseButton.button, m_event.type == sf::Event::MouseButtonPressed);
 
-                m_argument->PushArgument(g_mouseKeysTable[m_event.mouseButton.button]);
+                m_argument->PushArgument(g_MouseKeyNamesTable[m_event.mouseButton.button]);
                 m_argument->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseKeyPress", m_argument);
                 m_argument->Clear();
@@ -353,7 +332,7 @@ bool ROC::SfmlManager::DoPulse()
                 if(m_joypadAxisCallback) (*m_joypadAxisCallback)(m_event.joystickButton.joystickId, m_event.joystickMove.axis, m_event.joystickMove.position);
 
                 m_argument->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
-                m_argument->PushArgument(g_axisNames[m_event.joystickMove.axis]);
+                m_argument->PushArgument(g_JoypadAxisNamesTable[m_event.joystickMove.axis]);
                 m_argument->PushArgument(m_event.joystickMove.position);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadAxis", m_argument);
                 m_argument->Clear();

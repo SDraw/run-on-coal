@@ -4,6 +4,7 @@ namespace ROC
 {
 
 class Core;
+class Element;
 class Model;
 class Collision;
 class PhysicsManager final
@@ -33,7 +34,7 @@ public:
     void SetCollisionScale(Collision *f_col, const glm::vec3 &f_scale);
     static bool SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state);
 
-    bool RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void *&f_model);
+    bool RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, Element *&f_element);
 protected:
     explicit PhysicsManager(Core *f_core);
     ~PhysicsManager();

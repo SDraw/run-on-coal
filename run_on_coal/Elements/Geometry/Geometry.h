@@ -22,6 +22,7 @@ class Geometry final : public Element
     enum gmLoadState : unsigned char { NotLoaded, Loading, Loaded };
     std::atomic<gmLoadState> m_loadState;
     bool m_async;
+    bool m_released;
 
     void Clear();
 public:
@@ -38,6 +39,7 @@ protected:
     void GenerateVAOs();
 
     inline bool IsAsyncLoad() const { return m_async; }
+    inline bool IsReleased() const { return m_released; }
 
     inline const std::vector<Material*>& GetMaterialVectorRef() const { return m_materialVector; }
     inline const std::vector<BoneData*>& GetBonesDataRef() const { return m_bonesData; };

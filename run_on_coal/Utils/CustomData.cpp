@@ -22,9 +22,11 @@ ROC::CustomData::CustomData(const CustomData& f_data)
         case DataType::Float:
             m_float = f_data.m_float;
             break;
-        case DataType::Pointer:
+        case DataType::Element:
+        {
             m_ptr = f_data.m_ptr;
-            break;
+            m_string.assign(f_data.m_string);
+        } break;
         case DataType::String:
             m_string.assign(f_data.m_string);
             break;
@@ -54,10 +56,16 @@ void ROC::CustomData::SetFloat(float f_val)
     m_float = f_val;
     m_type = DataType::Float;
 }
-void ROC::CustomData::SetPointer(void *f_val)
+void ROC::CustomData::GetElement(void *&f_ptr, std::string &f_name) const
 {
-    m_ptr = f_val;
-    m_type = DataType::Pointer;
+    f_ptr = m_ptr;
+    f_name.assign(m_string);
+}
+void ROC::CustomData::SetElement(void *f_ptr, const std::string &f_name)
+{
+    m_ptr = f_ptr;
+    m_string.assign(f_name);
+    m_type = DataType::Element;
 }
 void ROC::CustomData::SetString(const std::string &f_val)
 {
@@ -87,9 +95,11 @@ ROC::CustomData& ROC::CustomData::operator=(CustomData &f_data)
         case DataType::Float:
             m_float = f_data.m_float;
             break;
-        case DataType::Pointer:
+        case DataType::Element:
+        {
             m_ptr = f_data.m_ptr;
-            break;
+            m_string.assign(f_data.m_string);
+        } break;
         case DataType::String:
             m_string.assign(f_data.m_string);
             break;

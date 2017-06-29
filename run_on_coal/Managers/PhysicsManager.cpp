@@ -197,7 +197,7 @@ void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
     m_dynamicWorld->removeRigidBody(f_col->GetRigidBody());
 }
 
-bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, void *&f_model)
+bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, Element *&f_element)
 {
     bool l_result = false;
     if(f_start != f_end)
@@ -208,7 +208,10 @@ bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, gl
         if(l_rayResult.hasHit())
         {
             void *l_colObject = l_rayResult.m_collisionObject->getUserPointer();
-            f_model = l_colObject ? (m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject) ? l_colObject : nullptr) : nullptr;
+            if(l_colObject)
+            {
+                if(m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject)) f_element = reinterpret_cast<Element*>(l_colObject);
+            }
             std::memcpy(&f_end, l_rayResult.m_hitPointWorld.m_floats, sizeof(glm::vec3));
             std::memcpy(&f_normal, l_rayResult.m_hitNormalWorld.m_floats, sizeof(glm::vec3));
             l_result = true;

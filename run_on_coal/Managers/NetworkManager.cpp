@@ -4,26 +4,15 @@
 #include "Managers/LuaManager.h"
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
-
-unsigned char GetPacketIdentifier(RakNet::Packet *f_packet)
-{
-    unsigned char l_result = 255U;
-    if(f_packet)
-    {
-        if(f_packet->data[0] == ID_TIMESTAMP)
-        {
-            RakAssert(f_packet->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
-            l_result = f_packet->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
-        }
-        else l_result = f_packet->data[0];
-    }
-    return l_result;
-}
+#include "Utils/Utils.h"
 
 namespace ROC
 {
 
-const std::string g_networkStateTable[] = { "connected", "disconnected" };
+const std::string g_networkStateTable[]
+{
+    "connected", "disconnected"
+};
 
 }
 
@@ -107,7 +96,7 @@ void ROC::NetworkManager::DoPulse()
         RakNet::Packet *l_packet;
         for(l_packet = m_networkInterface->Receive(); l_packet; m_networkInterface->DeallocatePacket(l_packet), l_packet = m_networkInterface->Receive())
         {
-            switch(GetPacketIdentifier(l_packet))
+            switch(Utils::Network::GetPacketIdentifier(l_packet))
             {
                 case ID_DISCONNECTION_NOTIFICATION: case ID_INCOMPATIBLE_PROTOCOL_VERSION: case ID_CONNECTION_BANNED: case ID_CONNECTION_ATTEMPT_FAILED: case ID_NO_FREE_INCOMING_CONNECTIONS: case ID_CONNECTION_LOST:
                 {

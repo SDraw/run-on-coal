@@ -340,8 +340,9 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
     return l_movie;
 }
 
-void ROC::ElementManager::DestroyElement(Element *f_element)
+bool ROC::ElementManager::DestroyElement(Element *f_element)
 {
+    bool l_result = false;
     if(m_core->GetMemoryManager()->IsValidMemoryPointer(f_element))
     {
         switch(f_element->GetElementType())
@@ -352,6 +353,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
+                l_result = true;
             } break;
 
             case Element::ElementType::CameraElement:
@@ -362,6 +364,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
+                l_result = true;
             } break;
 
             case Element::ElementType::AnimationElement:
@@ -369,13 +372,19 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
+                l_result = true;
             } break;
 
             case Element::ElementType::GeometryElement:
             {
-                m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
-                if(!dynamic_cast<Geometry*>(f_element)->IsAsyncLoad()) delete f_element;
+                Geometry *l_geometry = dynamic_cast<Geometry*>(f_element);
+                if(!l_geometry->IsAsyncLoad() || l_geometry->IsReleased())
+                {
+                    m_core->GetInheritManager()->RemoveParentRelations(f_element);
+                    m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                    delete l_geometry;
+                    l_result = true;
+                }
             } break;
 
             case Element::ElementType::ModelElement:
@@ -386,6 +395,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetPhysicsManager()->RemoveModel(dynamic_cast<Model*>(f_element));
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
+                l_result = true;
             } break;
 
             case Element::ElementType::ShaderElement:
@@ -394,6 +404,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
+                l_result = true;
             } break;
 
             case Element::ElementType::CollisionElement:
@@ -402,6 +413,7 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
+                l_result = true;
             } break;
 
             case Element::ElementType::MovieElement:
@@ -410,9 +422,11 @@ void ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
+                l_result = true;
             } break;
         }
     }
+    return l_result;
 }
 void ROC::ElementManager::DestroyElementByPointer(void *f_ptr)
 {
