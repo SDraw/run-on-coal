@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaDrawableDef
+class LuaDrawableDef final
 {
     static int IsDrawable(lua_State *f_vm);
     static int DrawableDraw(lua_State *f_vm);

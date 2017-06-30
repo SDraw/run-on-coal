@@ -1,13 +1,15 @@
 #include "stdafx.h"
+
+#include "Lua/ArgReader.h"
+#include "Elements/Element.h"
+#include "Lua/LuaArguments.h"
+#include "Lua/LuaFunction.hpp"
+#include "Utils/CustomData.h"
+
 #include "Core/Core.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
-#include "Elements/Element.h"
-#include "Lua/ArgReader.h"
-#include "Lua/LuaArguments.h"
-#include "Lua/LuaFunction.hpp"
-#include "Utils/CustomData.h"
 
 namespace ROC
 {

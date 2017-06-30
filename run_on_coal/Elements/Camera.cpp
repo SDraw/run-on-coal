@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Elements/Camera.h"
 
 ROC::Camera::Camera(int f_type)

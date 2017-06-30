@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Utils/CustomData.h"
 
 ROC::CustomData::CustomData()

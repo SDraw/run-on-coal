@@ -1,12 +1,13 @@
 #include "stdafx.h"
+
+#include "Elements/Model/Model.h"
 #include "Elements/Animation/Animation.h"
+#include "Elements/Model/Bone.h"
 #include "Elements/Collision.h"
 #include "Elements/Geometry/Geometry.h"
-#include "Elements/Model/Bone.h"
-#include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
+
 #include "Utils/SystemTick.h"
-#include "Utils/Utils.h"
 
 namespace ROC
 {

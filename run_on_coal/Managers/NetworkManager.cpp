@@ -1,9 +1,11 @@
 #include "stdafx.h"
+
+#include "Managers/NetworkManager.h"
 #include "Core/Core.h"
+#include "Lua/LuaArguments.h"
+
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/NetworkManager.h"
-#include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
 
 namespace ROC

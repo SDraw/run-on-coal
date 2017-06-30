@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Elements/Element.h"
 
 namespace ROC

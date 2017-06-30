@@ -1,13 +1,13 @@
 #pragma once
 #include "Elements/Element.h"
-#include "Elements/Geometry/BoneCollisionData.hpp"
-#include "Elements/Geometry/BoneData.hpp"
-#include "Elements/Geometry/BoneJointData.hpp"
 
 namespace ROC
 {
 
 class Material;
+struct BoneCollisionData;
+struct BoneData;
+struct BoneJointData;
 class Geometry final : public Element
 {
     std::vector<Material*> m_materialVector;

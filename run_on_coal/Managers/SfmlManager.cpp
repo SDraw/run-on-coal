@@ -1,13 +1,15 @@
 #include "stdafx.h"
+
+#include "Managers/SfmlManager.h"
 #include "Core/Core.h"
+#include "Lua/LuaArguments.h"
+
 #include "Managers/ConfigManager.h"
 #include "Managers/EventManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/PhysicsManager.h"
-#include "Managers/SfmlManager.h"
 #include "Elements/Shader.h"
-#include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"
 
 #define ROC_OPENGL_MIN_VERSION 31U

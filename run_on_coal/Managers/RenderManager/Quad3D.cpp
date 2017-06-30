@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Managers/RenderManager/Quad3D.h"
 
 namespace ROC

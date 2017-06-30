@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "RocInc.h"
 
 std::atomic<int> g_quitSetter = 0;

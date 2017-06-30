@@ -1,12 +1,14 @@
 #include "stdafx.h"
-#include "Core/Core.h"
+
 #include "Managers/AsyncManager.h"
+#include "Elements/Geometry/Geometry.h"
+#include "Lua/LuaArguments.h"
+
+#include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
-#include "Elements/Geometry/Geometry.h"
-#include "Lua/LuaArguments.h"
 
 ROC::AsyncManager::AsyncManager(Core *f_core)
 {

@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
+#include "Managers/LuaManager.h"
 #include "Core/Core.h"
 #include "Managers/EventManager.h"
-#include "Managers/LogManager.h"
-#include "Managers/LuaManager.h"
-#include "Elements/Element.h"
 #include "Lua/LuaArguments.h"
 
+#include "Managers/LogManager.h"
 #include "Lua/LuaDefs/LuaAnimationDef.h"
 #include "Lua/LuaDefs/LuaCameraDef.h"
 #include "Lua/LuaDefs/LuaCollisionDef.h"

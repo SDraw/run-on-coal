@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Elements/Animation/BoneFrameData.h"
 
 namespace ROC

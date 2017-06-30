@@ -1,6 +1,14 @@
 #include "stdafx.h"
+
 #include "Managers/ConfigManager.h"
+
 #include "Utils/Utils.h"
+
+#define ROC_CONFIG_ATTRIB_LOGGING 0
+#define ROC_CONFIG_ATTRIB_IP 1
+#define ROC_CONFIG_ATTRIB_PORT 2
+#define ROC_CONFIG_ATTRIB_MAXCLIENTS 3
+#define ROC_CONFIG_ATTRIB_PULSETICK 4
 
 namespace ROC
 {
@@ -38,19 +46,19 @@ ROC::ConfigManager::ConfigManager()
                     {
                         switch(Utils::Enum::ReadEnumVector(g_configAttributeTable, l_param))
                         {
-                            case 0:
+                            case ROC_CONFIG_ATTRIB_LOGGING:
                                 m_logging = l_attrib.as_bool(true);
                                 break;
-                            case 1:
+                            case ROC_CONFIG_ATTRIB_IP:
                                 m_bindIP.assign(l_attrib.as_string("0.0.0.0"));
                                 break;
-                            case 2:
+                            case ROC_CONFIG_ATTRIB_PORT:
                                 m_bindPort = static_cast<unsigned short>(l_attrib.as_uint(4200U));
                                 break;
-                            case 3:
+                            case ROC_CONFIG_ATTRIB_MAXCLIENTS:
                                 m_maxClients = static_cast<unsigned short>(l_attrib.as_uint(10U));
                                 break;
-                            case 4:
+                            case ROC_CONFIG_ATTRIB_PULSETICK:
                                 m_pulseTick = l_attrib.as_uint(10U);
                                 break;
                         }

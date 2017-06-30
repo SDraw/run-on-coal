@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
+#include "Elements/Model/Skeleton.h"
 #include "Elements/Animation/BoneFrameData.h"
 #include "Elements/Model/Bone.h"
-#include "Elements/Model/Skeleton.h"
 
 #define ROC_SKELETON_BLEND_FACTOR 0.1f
 #define ROC_SKELETON_TRANSFORMATION_DEFAULT 0

@@ -1,6 +1,8 @@
 #include "stdafx.h"
-#include "Managers/ElementManager.h"
+
 #include "Managers/MemoryManager.h"
+
+#include "Managers/ElementManager.h"
 
 ROC::MemoryManager::MemoryManager()
 {

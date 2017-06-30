@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaPhysicsDef
+class LuaPhysicsDef final
 {
     static int PhysicsSetEnabled(lua_State *f_vm);
     static int PhysicsGetEnabled(lua_State *f_vm);

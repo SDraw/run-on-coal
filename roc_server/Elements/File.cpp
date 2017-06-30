@@ -1,6 +1,8 @@
 #include "stdafx.h"
-#include "Core/Core.h"
+
 #include "Elements/File.h"
+
+#include "Core/Core.h"
 #include "Utils/Utils.h"
 
 ROC::File::File()

@@ -1,13 +1,15 @@
 #include "stdafx.h"
-#include "Core/Core.h"
-#include "Managers/EventManager.h"
-#include "Managers/LuaManager.h"
+
 #include "Managers/PreRenderManager.h"
-#include "Managers/PhysicsManager.h"
+#include "Core/Core.h"
 #include "Elements/Model/Model.h"
-#include "Elements/Model/Skeleton.h"
 #include "Lua/LuaArguments.h"
 #include "Utils/TreeNode.h"
+
+#include "Managers/EventManager.h"
+#include "Managers/LuaManager.h"
+#include "Managers/PhysicsManager.h"
+#include "Elements/Model/Skeleton.h"
 
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {

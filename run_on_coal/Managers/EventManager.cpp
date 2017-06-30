@@ -1,5 +1,7 @@
 #include "stdafx.h"
+
 #include "Managers/EventManager.h"
+
 #include "Managers/LuaManager.h"
 #include "Lua/LuaArguments.h"
 #include "Utils/Utils.h"

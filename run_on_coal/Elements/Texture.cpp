@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Elements/Texture.h"
 
 ROC::Texture::Texture()

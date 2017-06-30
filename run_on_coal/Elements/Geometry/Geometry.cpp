@@ -1,6 +1,11 @@
 #include "stdafx.h"
+
 #include "Elements/Geometry/Geometry.h"
+#include "Elements/Geometry/BoneCollisionData.hpp"
+#include "Elements/Geometry/BoneData.hpp"
+#include "Elements/Geometry/BoneJointData.hpp"
 #include "Elements/Geometry/Material.h"
+
 #include "Utils/Utils.h"
 
 ROC::Geometry::Geometry(bool f_async)

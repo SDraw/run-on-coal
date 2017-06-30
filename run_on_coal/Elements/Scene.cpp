@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
+#include "Elements/Scene.h"
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
-#include "Elements/Scene.h"
 
 ROC::Scene::Scene()
 {

@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaCameraDef
+class LuaCameraDef final
 {
     static int CameraCreate(lua_State *f_vm);
     static int CameraSetPosition(lua_State *f_vm);

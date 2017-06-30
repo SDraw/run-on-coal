@@ -1,14 +1,18 @@
 #include "stdafx.h"
+
+#include "Managers/LuaManager.h"
 #include "Core/Core.h"
 #include "Managers/EventManager.h"
-#include "Managers/LogManager.h"
-#include "Managers/LuaManager.h"
 #include "Lua/LuaArguments.h"
-#include "Lua/LuaDefinitions.Element.h"
-#include "Lua/LuaDefinitions.Events.h"
-#include "Lua/LuaDefinitions.File.h"
-#include "Lua/LuaDefinitions.Network.h"
-#include "Lua/LuaDefinitions.Utils.h"
+
+#include "Managers/LogManager.h"
+#include "Lua/LuaDefs/LuaClientDef.h"
+#include "Lua/LuaDefs/LuaElementDef.h"
+#include "Lua/LuaDefs/LuaEventsDef.h"
+#include "Lua/LuaDefs/LuaFileDef.h"
+#include "Lua/LuaDefs/LuaUtilsDef.h"
+
+#define ROC_LUA_METATABLE "roc_mt"
 
 ROC::Core* ROC::LuaManager::m_coreStatic = nullptr;
 
@@ -25,56 +29,24 @@ ROC::LuaManager::LuaManager(Core *f_core)
     luaL_requiref(m_vm, "bit32", luaopen_bit32, 1);
     luaL_requiref(m_vm, "utf8", luaopen_utf8, 1);
 
-    //Security?
-    lua_register(m_vm, "dofile", Lua::disabledFunction);
-    lua_register(m_vm, "loadfile", Lua::disabledFunction);
+    LuaElementDef::Init(m_vm);
 
-    //Log
-    lua_register(m_vm, "logPrint", Lua::logPrint);
+    LuaFileDef::Init(m_vm);
+    LuaClientDef::Init(m_vm);
 
-    //File
-    lua_register(m_vm, "fileCreate", Lua::fileCreate);
-    lua_register(m_vm, "fileOpen", Lua::fileOpen);
-    lua_register(m_vm, "fileClose", Lua::fileClose);
+    LuaEventsDef::Init(m_vm);
+    LuaUtilsDef::Init(m_vm);
 
-    lua_register(m_vm, "fileRead", Lua::fileRead);
-    lua_register(m_vm, "fileWrite", Lua::fileWrite);
-
-    lua_register(m_vm, "fileGetSize", Lua::fileGetSize);
-
-    lua_register(m_vm, "fileSetPosition", Lua::fileSetPosition);
-    lua_register(m_vm, "fileGetPosition", Lua::fileGetPosition);
-
-    lua_register(m_vm, "fileGetPath", Lua::fileGetPath);
-
-    lua_register(m_vm, "fileIsEOF", Lua::fileIsEOF);
-
-    lua_register(m_vm, "fileDelete", Lua::fileDelete);
-    lua_register(m_vm, "fileRename", Lua::fileRename);
-
-    //Elements
-    lua_register(m_vm, "isElement", Lua::isElement);
-    lua_register(m_vm, "elementGetType", Lua::elementGetType);
-    lua_register(m_vm, "elementSetData", Lua::elementSetData);
-    lua_register(m_vm, "elementGetData", Lua::elementGetData);
-    lua_register(m_vm, "elementRemoveData", Lua::elementRemoveData);
-
-    //Events
-    lua_register(m_vm, "addEvent", Lua::addEvent);
-    lua_register(m_vm, "addEventHandler", Lua::addEventHandler);
-    lua_register(m_vm, "removeEvent", Lua::removeEvent);
-    lua_register(m_vm, "removeEventHandler", Lua::removeEventHandler);
-    lua_register(m_vm, "callEvent", Lua::callEvent);
-
-    //System
-    lua_register(m_vm, "getTickCount", Lua::getTickCount);
-
-    //Network
-    lua_register(m_vm, "networkDisconnectClient", Lua::networkDisconnectClient);
-    lua_register(m_vm, "networkSendDataToClient", Lua::networkSendDataToClient);
-    lua_register(m_vm, "networkGetClientID", Lua::networkGetClientID);
-    lua_register(m_vm, "networkGetClientAddress", Lua::networkGetClientAddress);
-    lua_register(m_vm, "networkGetClientPing", Lua::networkGetClientPing);
+    // Hidden metatable with weak values
+    luaL_newmetatable(m_vm, ROC_LUA_METATABLE);
+    lua_pushvalue(m_vm, -1);
+    lua_setfield(m_vm, -2, "__index");
+    lua_pushstring(m_vm, "v");
+    lua_setfield(m_vm, -2, "__mode");
+    lua_pushboolean(m_vm, 0);
+    lua_setfield(m_vm, -2, "__metatable");
+    lua_setfield(m_vm, LUA_REGISTRYINDEX, ROC_LUA_METATABLE_USERDATA);
+    lua_pop(m_vm, 1);
 
     m_eventManager = new EventManager(this);
 }
@@ -86,7 +58,7 @@ ROC::LuaManager::~LuaManager()
 
 bool ROC::LuaManager::OpenFile(const std::string &f_path)
 {
-    int error = luaL_loadfile(m_vm, f_path.c_str()) || lua_pcall(m_vm, 0, 0, 0);
+    int error = (luaL_loadfile(m_vm, f_path.c_str()) || lua_pcall(m_vm, 0, 0, 0));
     if(error)
     {
         std::string l_log(lua_tostring(m_vm, -1));
@@ -99,7 +71,50 @@ bool ROC::LuaManager::OpenFile(const std::string &f_path)
 void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_args)
 {
     lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.m_ref);
-    f_args->ProccessArguments(m_vm);
+
+    for(auto &iter : f_args->GetArgumentsVectorRef())
+    {
+        switch(iter.GetType())
+        {
+            case CustomData::DataType::Boolean:
+                lua_pushboolean(m_vm, iter.GetBoolean());
+                break;
+            case CustomData::DataType::Integer:
+                lua_pushinteger(m_vm, iter.GetInteger());
+                break;
+            case CustomData::DataType::Double:
+                lua_pushnumber(m_vm, iter.GetDouble());
+                break;
+            case CustomData::DataType::Float:
+                lua_pushnumber(m_vm, iter.GetFloat());
+                break;
+            case CustomData::DataType::Element:
+            {
+                void *l_ptr;
+                std::string l_className;
+                iter.GetElement(l_ptr, l_className);
+
+                luaL_getmetatable(m_vm, ROC_LUA_METATABLE_USERDATA);
+                lua_pushlightuserdata(m_vm, l_ptr);
+                lua_rawget(m_vm, -2);
+                if(lua_isnil(m_vm, -1))
+                {
+                    lua_pop(m_vm, 1);
+                    *reinterpret_cast<void**>(lua_newuserdata(m_vm, sizeof(void*))) = l_ptr;
+                    luaL_setmetatable(m_vm, l_className.c_str());
+                    lua_pushlightuserdata(m_vm, l_ptr);
+                    lua_pushvalue(m_vm, -2);
+                    lua_rawset(m_vm, -4);
+                }
+                lua_remove(m_vm, -2);
+            } break;
+            case CustomData::DataType::String:
+            {
+                const std::string &l_string = iter.GetString();
+                lua_pushlstring(m_vm, l_string.data(), l_string.size());
+            } break;
+        }
+    }
     if(lua_pcall(m_vm, f_args->GetArgumentsCount(), 0, 0))
     {
         std::string l_log(lua_tostring(m_vm, -1));

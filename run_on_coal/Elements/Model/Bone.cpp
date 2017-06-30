@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "Elements/Animation/BoneFrameData.h"
+
 #include "Elements/Model/Bone.h"
+#include "Elements/Animation/BoneFrameData.h"
 
 #define ROC_BONE_BLEND_FACTOR 0.1f
 

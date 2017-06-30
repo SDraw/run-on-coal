@@ -16,7 +16,7 @@ class CustomData
     };
     std::string m_string;
 public:
-    enum DataType : unsigned char { None = 0U, Boolean, Integer, Double, Float, Pointer, String };
+    enum DataType : unsigned char { None = 0U, Boolean, Integer, Double, Float, String, Element };
 
     CustomData();
     CustomData(const CustomData& f_data);
@@ -36,11 +36,11 @@ public:
     inline float GetFloat() const { return m_float; }
     void SetFloat(float f_val);
 
-    inline void* GetPointer() const { return m_ptr; }
-    void SetPointer(void *f_val);
+    void GetElement(void *&f_ptr, std::string &f_name) const;
+    void SetElement(void *f_ptr, const std::string &f_name);
 
     inline void GetString(std::string &f_val) { f_val.assign(m_string); }
-    inline const std::string& GetString() { return m_string; }
+    inline const std::string& GetString() const { return m_string; }
     void SetString(const std::string &f_val);
     void SetString(const char *f_val, size_t f_size);
     inline void ClearString() { m_string.clear(); }

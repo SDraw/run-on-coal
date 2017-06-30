@@ -16,20 +16,8 @@ protected:
     static void AddHierarchyMethods(lua_State *f_vm);
 
     friend class LuaManager;
-    friend class LuaAnimationDef;
-    friend class LuaCameraDef;
-    friend class LuaCollisionDef;
+    friend class LuaClientDef;
     friend class LuaFileDef;
-    friend class LuaFontDef;
-    friend class LuaGeometryDef;
-    friend class LuaLightDef;
-    friend class LuaModelDef;
-    friend class LuaMovieDef;
-    friend class LuaRenderTargetDef;
-    friend class LuaSceneDef;
-    friend class LuaShaderDef;
-    friend class LuaSoundDef;
-    friend class LuaTextureDef;
 };
 
 }

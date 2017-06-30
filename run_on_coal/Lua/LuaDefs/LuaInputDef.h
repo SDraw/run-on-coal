@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaInputDef
+class LuaInputDef final
 {
     static int SetCursorMode(lua_State *f_vm);
     static int GetCursorPosition(lua_State *f_vm);

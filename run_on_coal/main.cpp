@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "RocInc.h"
 
 #ifdef _DEBUG

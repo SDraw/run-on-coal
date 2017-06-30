@@ -1,13 +1,7 @@
 #include "stdafx.h"
-#include "Core/Core.h"
-#include "Managers/AsyncManager.h"
+
 #include "Managers/ElementManager.h"
-#include "Managers/InheritanceManager.h"
-#include "Managers/LogManager.h"
-#include "Managers/MemoryManager.h"
-#include "Managers/PhysicsManager.h"
-#include "Managers/PreRenderManager.h"
-#include "Managers/RenderManager/RenderManager.h"
+#include "Core/Core.h"
 #include "Elements/Animation/Animation.h"
 #include "Elements/Camera.h"
 #include "Elements/Collision.h"
@@ -22,6 +16,14 @@
 #include "Elements/Shader.h"
 #include "Elements/Sound.h"
 #include "Elements/Texture.h"
+
+#include "Managers/AsyncManager.h"
+#include "Managers/InheritanceManager.h"
+#include "Managers/LogManager.h"
+#include "Managers/MemoryManager.h"
+#include "Managers/PhysicsManager.h"
+#include "Managers/PreRenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Utils/Utils.h"
 
 ROC::ElementManager::ElementManager(Core *f_core)

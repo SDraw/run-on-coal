@@ -33,16 +33,7 @@
     <ClCompile Include="Lua\LuaArguments.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Network.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Utils.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\Utils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils\Pool.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
@@ -51,17 +42,11 @@
     <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Events.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\Client.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
     <ClCompile Include="Elements\File.cpp">
       <Filter>Elements</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.File.cpp">
-      <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="Elements\Element.cpp">
       <Filter>Elements</Filter>
@@ -69,8 +54,23 @@
     <ClCompile Include="Utils\CustomData.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefinitions.Element.cpp">
-      <Filter>Lua</Filter>
+    <ClCompile Include="Lua\LuaDefs\LuaElementDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaClientDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\GlobalConstants.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,20 +106,8 @@
     <ClInclude Include="Lua\LuaArguments.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Network.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Utils.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\Pool.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Events.h">
-      <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Client.h">
       <Filter>Elements</Filter>
@@ -127,20 +115,29 @@
     <ClInclude Include="Elements\File.h">
       <Filter>Elements</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.File.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Elements\Element.h">
       <Filter>Elements</Filter>
     </ClInclude>
     <ClInclude Include="Utils\CustomData.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefinitions.Element.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaFunction.hpp">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaElementDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaFileDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaClientDef.h">
+      <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +164,9 @@
     </Filter>
     <Filter Include="Elements">
       <UniqueIdentifier>{b29a6143-5d54-4661-8e92-94aa24f94b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\LuaDefs">
+      <UniqueIdentifier>{27625308-a46c-41bf-bbad-fe1d88a35cda}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

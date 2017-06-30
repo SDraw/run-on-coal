@@ -92,11 +92,11 @@
     <ClInclude Include="Elements\File.h" />
     <ClInclude Include="Lua\ArgReader.h" />
     <ClInclude Include="Lua\LuaArguments.h" />
-    <ClInclude Include="Lua\LuaDefinitions.Element.h" />
-    <ClInclude Include="Lua\LuaDefinitions.Events.h" />
-    <ClInclude Include="Lua\LuaDefinitions.File.h" />
-    <ClInclude Include="Lua\LuaDefinitions.Network.h" />
-    <ClInclude Include="Lua\LuaDefinitions.Utils.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaClientDef.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaElementDef.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaFileDef.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h" />
     <ClInclude Include="Lua\LuaFunction.hpp" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
@@ -108,7 +108,6 @@
     <ClInclude Include="RocInc.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\CustomData.h" />
-    <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -126,11 +125,11 @@
     <ClCompile Include="Elements\File.cpp" />
     <ClCompile Include="Lua\ArgReader.cpp" />
     <ClCompile Include="Lua\LuaArguments.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.Element.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.Events.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.File.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.Network.cpp" />
-    <ClCompile Include="Lua\LuaDefinitions.Utils.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaClientDef.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaElementDef.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Managers\ConfigManager.cpp" />
     <ClCompile Include="Managers\ElementManager.cpp" />
@@ -144,7 +143,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Utils\CustomData.cpp" />
-    <ClCompile Include="Utils\Pool.cpp" />
+    <ClCompile Include="Utils\GlobalConstants.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

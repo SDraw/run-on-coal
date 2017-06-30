@@ -1,10 +1,17 @@
 #include "stdafx.h"
+
 #include "Elements/Font.h"
+
 #include "Utils/Utils.h"
 
-FT_Library ROC::Font::m_library = FT_Library();
+namespace ROC
+{
 
 const float g_DefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE);
+
+}
+
+FT_Library ROC::Font::m_library = FT_Library();
 
 ROC::Font::Font()
 {

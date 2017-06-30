@@ -1,7 +1,7 @@
 #include "stdafx.h"
+
 #include "Elements/Geometry/Material.h"
 #include "Elements/Texture.h"
-#include "Utils/Utils.h"
 
 ROC::Material::Material()
 {

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Utils/TreeNode.h"
 
 ROC::TreeNode::TreeNode(void *f_ptr)

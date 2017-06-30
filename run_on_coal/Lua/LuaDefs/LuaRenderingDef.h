@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaRenderingDef
+class LuaRenderingDef final
 {
     static int SetActiveScene(lua_State *f_vm);
     static int SetActiveShader(lua_State *f_vm);

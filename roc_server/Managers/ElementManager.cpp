@@ -1,11 +1,13 @@
 #include "stdafx.h"
-#include "Core/Core.h"
+
 #include "Managers/ElementManager.h"
+#include "Core/Core.h"
+#include "Elements/Client.h"
+#include "Elements/File.h"
+
 #include "Managers/LogManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
-#include "Elements/Client.h"
-#include "Elements/File.h"
 #include "Utils/Utils.h"
 
 ROC::ElementManager::ElementManager(Core *f_core)
@@ -65,13 +67,23 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     }
     return l_file;
 }
-void ROC::ElementManager::CloseFile(File *f_file)
+
+bool ROC::ElementManager::DestroyElement(Element *f_element)
 {
-    if(m_core->GetMemoryManager()->IsValidMemoryPointer(f_file))
+    bool l_result = false;
+    if(m_core->GetMemoryManager()->IsValidMemoryPointer(f_element))
     {
-        m_core->GetMemoryManager()->RemoveMemoryPointer(f_file);
-        delete f_file;
+        switch(f_element->GetElementType())
+        {
+            case ElementType::FileElement:
+            {
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
+                l_result = true;
+            } break;
+        }
     }
+    return l_result;
 }
 
 void ROC::ElementManager::DestroyElementByPointer(void *f_element)

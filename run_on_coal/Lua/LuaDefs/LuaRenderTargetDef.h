@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaRenderTargetDef
+class LuaRenderTargetDef final
 {
     static int RenderTargetCreate(lua_State *f_vm);
 protected:

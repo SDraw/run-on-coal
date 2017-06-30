@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "Managers/SfmlManager.h"
-#include "Elements/Drawable.h"
+
 #include "Elements/Shader.h"
+#include "Elements/Drawable.h"
 #include "Utils/Pool.h"
+
 #include "Utils/Utils.h"
 
 namespace ROC

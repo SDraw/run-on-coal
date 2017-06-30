@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Lua/LuaDefs/LuaAnimationDef.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 
@@ -13,6 +14,8 @@
 void ROC::LuaAnimationDef::Init(lua_State *f_vm)
 {
     Utils::Lua::lua_registerClass(f_vm, "Animation", AnimationCreate);
+    Utils::Lua::lua_registerClassMethod(f_vm, "getBonesCount", AnimationGetBonesCount);
+    Utils::Lua::lua_registerClassMethod(f_vm, "getDuration", AnimationGetDuration);
     LuaElementDef::AddHierarchyMethods(f_vm);
     Utils::Lua::lua_registerClassFinish(f_vm);
 }
@@ -28,5 +31,22 @@ int ROC::LuaAnimationDef::AnimationCreate(lua_State *f_vm)
         l_anim ? argStream.PushElement(l_anim) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaAnimationDef::AnimationGetBonesCount(lua_State *f_vm)
+{
+    Animation *l_anim;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_anim);
+    !argStream.HasErrors() ? argStream.PushNumber(l_anim->GetBonesCount()) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaAnimationDef::AnimationGetDuration(lua_State *f_vm)
+{
+    Animation *l_anim;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_anim);
+    !argStream.HasErrors() ? argStream.PushNumber(l_anim->GetTotalDuration()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

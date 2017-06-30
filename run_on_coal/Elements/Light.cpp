@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Elements/Light.h"
 
 ROC::Light::Light()

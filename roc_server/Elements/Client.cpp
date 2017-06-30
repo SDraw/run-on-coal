@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Elements/Client.h"
 
 ROC::Client::Client(const RakNet::SystemAddress &f_address)

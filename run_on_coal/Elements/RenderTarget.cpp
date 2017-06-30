@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Elements/RenderTarget.h"
 
 ROC::RenderTarget::RenderTarget()

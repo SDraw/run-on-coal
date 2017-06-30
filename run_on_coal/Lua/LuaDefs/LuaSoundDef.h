@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaSoundDef
+class LuaSoundDef final
 {
     static int SoundCreate(lua_State *f_vm);
     static int SoundPlay(lua_State *f_vm);

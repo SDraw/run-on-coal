@@ -3,9 +3,8 @@
 namespace ROC
 {
 
-class LuaNetworkDef
+class LuaNetworkDef final
 {
-
     static int NetworkConnect(lua_State *f_vm);
     static int NetworkDisconnect(lua_State *f_vm);
     static int NetworkSendData(lua_State *f_vm);

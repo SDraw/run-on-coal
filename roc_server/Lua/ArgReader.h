@@ -3,10 +3,11 @@
 namespace ROC
 {
 
+class Element;
 class CustomData;
 class LuaArguments;
 struct LuaFunction;
-class ArgReader
+class ArgReader final
 {
     lua_State *m_vm;
     int m_currentArg;
@@ -27,9 +28,10 @@ public:
     void ReadText(std::string &f_val);
     template<class T> void ReadElement(T *&f_element);
     void ReadFunction(LuaFunction &f_func, bool f_ref = false);
-    void ReadCustomData(CustomData &f_data);
     void ReadVector(float *f_val, int f_size);
     void ReadVector(std::vector<std::string> &f_vec, int f_size);
+    void ReadCustomData(CustomData &f_data);
+    void ReadArguments(LuaArguments &f_args);
 
     void ReadNextBoolean(bool &f_val);
     template<typename T> void ReadNextNumber(T &f_val);
@@ -41,11 +43,10 @@ public:
     void PushNumber(lua_Number f_val);
     void PushInteger(lua_Integer f_val);
     void PushText(const std::string &f_val);
-    void PushPointer(void *f_val);
     void PushVector(float *f_val, int f_size);
     void PushCustomData(CustomData &f_data);
-
-    void ReadArguments(LuaArguments &f_args);
+    void PushElement(Element *f_element);
+    void PushElement(void *f_ptr, const std::string &f_name);
 
     void RemoveReference(const LuaFunction &f_func);
 
@@ -114,24 +115,23 @@ template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
     {
         if(m_currentArg <= m_argCount)
         {
-            if(lua_islightuserdata(m_vm, m_currentArg))
+            if(lua_isuserdata(m_vm, m_currentArg))
             {
-                Element *a = reinterpret_cast<Element*>(const_cast<void*>(lua_topointer(m_vm, m_currentArg)));
-                if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(a))
+                Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_currentArg));
+                if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element))
                 {
                     try
                     {
-                        if((f_element = dynamic_cast<T*>(a)) != nullptr) m_currentArg++;
+                        if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_currentArg++;
                         else
                         {
-                            m_error.assign("Wrong element type");
+                            m_error.assign("Invalid element");
                             m_hasErrors = true;
                         }
-
                     }
                     catch(const std::exception&)
                     {
-                        m_error.assign("Wrong element type");
+                        m_error.assign("Invalid element");
                         m_hasErrors = true;
                     }
                 }
@@ -181,14 +181,14 @@ template<class T> void ROC::ArgReader::ReadNextElement(T *&f_element)
 {
     if(!m_hasErrors && (m_currentArg <= m_argCount))
     {
-        if(lua_islightuserdata(m_vm, m_currentArg))
+        if(lua_isuserdata(m_vm, m_currentArg))
         {
-            Element *a = reinterpret_cast<Element*>(const_cast<void*>(lua_topointer(m_vm, m_currentArg)));
-            if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(a))
+            Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_currentArg));
+            if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element))
             {
                 try
                 {
-                    if((f_element = dynamic_cast<T*>(a)) != nullptr) m_currentArg++;
+                    if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_currentArg++;
                 }
                 catch(const std::exception&) {}
             }

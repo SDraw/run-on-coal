@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaMovieDef
+class LuaMovieDef final
 {
     static int MovieCreate(lua_State *f_vm);
     static int MoviePlay(lua_State *f_vm);

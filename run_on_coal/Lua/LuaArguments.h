@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-class LuaArguments
+class LuaArguments final
 {
     CustomData m_dummyData;
     std::vector<CustomData> m_vArgs;

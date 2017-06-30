@@ -1,6 +1,8 @@
 #pragma once
 #include "Lua/LuaFunction.hpp"
 
+#define ROC_LUA_METATABLE_USERDATA "roc_ud"
+
 namespace ROC
 {
 

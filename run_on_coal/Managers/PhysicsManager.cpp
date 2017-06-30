@@ -1,11 +1,13 @@
 #include "stdafx.h"
-#include "Core/Core.h"
-#include "Managers/ConfigManager.h"
-#include "Managers/MemoryManager.h"
+
 #include "Managers/PhysicsManager.h"
+#include "Core/Core.h"
 #include "Elements/Collision.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
+
+#include "Managers/ConfigManager.h"
+#include "Managers/MemoryManager.h"
 #include "Utils/SystemTick.h"
 
 #define ROC_PHYSICS_DEFAULT_TIMESTEP 1.f/60.f

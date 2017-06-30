@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaShaderDef
+class LuaShaderDef final
 {
     static int ShaderCreate(lua_State *f_vm);
     static int ShaderSetUniformValue(lua_State *f_vm);

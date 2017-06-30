@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Core/Core.h"
 #include "Managers/ConfigManager.h"
 #include "Managers/EventManager.h"

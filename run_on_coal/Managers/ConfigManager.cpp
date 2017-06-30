@@ -1,6 +1,8 @@
 #include "stdafx.h"
-#include "Core/Core.h"
+
 #include "Managers/ConfigManager.h"
+
+#include "Core/Core.h"
 #include "Utils/Utils.h"
 
 #define ROC_CONFIG_ATTRIB_ANTIALIASING 0

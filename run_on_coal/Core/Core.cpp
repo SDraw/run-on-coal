@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Core/Core.h"
 #include "Managers/AsyncManager.h"
 #include "Managers/ConfigManager.h"
@@ -15,6 +16,7 @@
 #include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
 #include "Lua/LuaArguments.h"
+
 #include "Utils/SystemTick.h"
 
 #define CORE_DEFAULT_SCIPTS_PATH "scripts/"

@@ -1,18 +1,25 @@
 #include "stdafx.h"
+
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 #include "Lua/LuaArguments.h"
+
 #include "Utils/Utils.h"
 
 #define ROC_EVENT_MISSING 0U
 #define ROC_EVENT_DELETED 1U
 #define ROC_EVENT_EXISTS 2U
 
+namespace ROC
+{
+
 const std::vector<std::string> g_DefaultEventsNames
 {
     "onServerStart", "onServerStop", "onServerPulse",
     "onNetworkClientConnect", "onNetworkClientDisconnect", "onNetworkDataRecieve"
 };
+
+}
 
 ROC::EventManager::EventManager(LuaManager *f_luaManager)
 {

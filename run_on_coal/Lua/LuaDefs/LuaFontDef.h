@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaFontDef
+class LuaFontDef final
 {
     static int FontCreate(lua_State *f_vm);
     static int FontDraw(lua_State *f_vm);

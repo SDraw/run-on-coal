@@ -1,11 +1,7 @@
 #include "stdafx.h"
-#include "Core/Core.h"
-#include "Managers/ElementManager.h"
-#include "Managers/InheritanceManager.h"
-#include "Managers/MemoryManager.h"
-#include "Managers/PreRenderManager.h"
-#include "Managers/RenderManager/RenderManager.h"
 
+#include "Managers/InheritanceManager.h"
+#include "Core/Core.h"
 #include "Elements/Animation/Animation.h"
 #include "Elements/Camera.h"
 #include "Elements/Collision.h"
@@ -16,6 +12,11 @@
 #include "Elements/Model/Skeleton.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader.h"
+
+#include "Managers/ElementManager.h"
+#include "Managers/MemoryManager.h"
+#include "Managers/PreRenderManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 
 ROC::InheritanceManager::InheritanceManager(Core *f_core)
 {

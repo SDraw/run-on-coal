@@ -1,28 +1,16 @@
 #include "stdafx.h"
+
+#include "Managers/NetworkManager.h"
 #include "Core/Core.h"
+#include "Elements/Client.h"
+#include "Lua/LuaArguments.h"
+
 #include "Managers/ConfigManager.h"
 #include "Managers/EventManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/NetworkManager.h"
-#include "Elements/Client.h"
-#include "Lua/LuaArguments.h"
-
-unsigned char GetPacketIdentifier(RakNet::Packet *f_packet)
-{
-    unsigned char l_result = 255U;
-    if(f_packet)
-    {
-        if(f_packet->data[0] == ID_TIMESTAMP)
-        {
-            RakAssert(f_packet->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
-            l_result = f_packet->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
-        }
-        else l_result = f_packet->data[0];
-    }
-    return l_result;
-}
+#include "Utils/Utils.h"
 
 ROC::NetworkManager::NetworkManager(Core *f_core)
 {
@@ -100,7 +88,7 @@ void ROC::NetworkManager::DoPulse()
     {
         for(RakNet::Packet *l_packet = m_networkInterface->Receive(); l_packet; m_networkInterface->DeallocatePacket(l_packet), l_packet = m_networkInterface->Receive())
         {
-            switch(GetPacketIdentifier(l_packet))
+            switch(Utils::Network::GetPacketIdentifier(l_packet))
             {
                 case ID_NEW_INCOMING_CONNECTION:
                 {
@@ -114,7 +102,7 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);
 
-                    m_argument->PushArgument(reinterpret_cast<void*>(l_client));
+                    m_argument->PushArgument(l_client, "Client");
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientConnect", m_argument);
                     m_argument->Clear();
                     m_core->GetLogManager()->Log(l_log);
@@ -131,7 +119,7 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientDisconnectCallback) (*m_networkClientDisconnectCallback)(l_client);
 
-                    m_argument->PushArgument(reinterpret_cast<void*>(l_client));
+                    m_argument->PushArgument(l_client, "Client");
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientDisconnect", m_argument);
                     m_argument->Clear();
 
@@ -153,7 +141,7 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkDataRecieveCallback) (*m_networkDataRecieveCallback)(l_client, l_stringData);
 
-                    m_argument->PushArgument(reinterpret_cast<void*>(l_client));
+                    m_argument->PushArgument(l_client, "Client");
                     m_argument->PushArgument(l_stringData);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
                     m_argument->Clear();

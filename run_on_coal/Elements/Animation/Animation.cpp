@@ -1,6 +1,8 @@
 #include "stdafx.h"
+
 #include "Elements/Animation/Animation.h"
 #include "Elements/Animation/BoneFrameData.h"
+
 #include "Elements/Model/Bone.h"
 #include "Utils/Utils.h"
 

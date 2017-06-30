@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaCollisionDef
+class LuaCollisionDef final
 {
     static int CollisionCreate(lua_State *f_vm);
     static int CollisionSetPosition(lua_State *f_vm);

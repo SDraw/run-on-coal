@@ -7,7 +7,7 @@ class Element;
 class CustomData;
 class LuaArguments;
 struct LuaFunction;
-class ArgReader
+class ArgReader final
 {
     lua_State *m_vm;
     int m_currentArg;

@@ -11,7 +11,7 @@ public:
     inline RakNet::SystemIndex GetID() const { return m_address.systemIndex; }
     void GetAddress(std::string &f_ip, unsigned short &f_port);
 protected:
-    Client(const RakNet::SystemAddress &f_address);
+    explicit Client(const RakNet::SystemAddress &f_address);
     ~Client();
 
     inline RakNet::SystemAddress& GetAddress() { return m_address; }

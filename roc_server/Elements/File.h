@@ -4,6 +4,7 @@
 namespace ROC
 {
 
+class Core;
 class File final : public Element
 {
     enum FileMode { NoneMode = -1, ReadMode, WriteMode };

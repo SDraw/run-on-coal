@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class LuaModelDef
+class LuaModelDef final
 {
     static int ModelCreate(lua_State *f_vm);
     static int ModelGetGeometry(lua_State *f_vm);

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Utils/Pool.h"
 
 ROC::Pool::Pool(unsigned int f_size)

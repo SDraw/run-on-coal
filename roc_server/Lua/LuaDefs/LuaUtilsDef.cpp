@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include "Lua/LuaDefs/LuaUtilsDef.h"
+
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
@@ -6,27 +9,23 @@
 #include "Managers/LogManager.h"
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
-#include "Lua/LuaDefinitions.Utils.h"
 #include "Utils/Utils.h"
 
-namespace ROC
+void ROC::LuaUtilsDef::Init(lua_State *f_vm)
 {
-namespace Lua
-{
+    lua_register(f_vm, "dofile", DisabledFunction);
+    lua_register(f_vm, "loadfile", DisabledFunction);
+    lua_register(f_vm, "logPrint", LogPrint);
+    lua_register(f_vm, "getTickCount", GetTick);
+}
 
-const std::vector<std::string> g_elementTypeName
-{
-    "geometry", "model", "animation", "scene", "camera", "light",
-    "rendertarget", "shader", "sound", "texture", "font", "file", "collision",
-};
-
-int disabledFunction(lua_State *f_vm)
+int ROC::LuaUtilsDef::DisabledFunction(lua_State *f_vm)
 {
     lua_pushboolean(f_vm, 0);
     return 1;
 }
 
-int logPrint(lua_State *f_vm)
+int ROC::LuaUtilsDef::LogPrint(lua_State *f_vm)
 {
     std::string l_text;
     ArgReader argStream(f_vm);
@@ -39,14 +38,12 @@ int logPrint(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int getTickCount(lua_State *f_vm)
+
+int ROC::LuaUtilsDef::GetTick(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     lua_Integer l_tick = 0;
     l_tick = static_cast<lua_Integer>(GetTickCount());
     argStream.PushInteger(l_tick);
     return argStream.GetReturnValue();
-}
-
-}
 }

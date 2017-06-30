@@ -1,19 +1,25 @@
 #include "stdafx.h"
+
+#include "Lua/LuaDefs/LuaEventsDef.h"
+
 #include "Core/Core.h"
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
 #include "Lua/LuaFunction.hpp"
-#include "Lua/LuaDefinitions.Events.h"
 #include "Utils/Utils.h"
 
-namespace ROC
+void ROC::LuaEventsDef::Init(lua_State *f_vm)
 {
-namespace Lua
-{
+    lua_register(f_vm, "addEvent", AddEvent);
+    lua_register(f_vm, "addEventHandler", AddEventHandler);
+    lua_register(f_vm, "removeEvent", RemoveEvent);
+    lua_register(f_vm, "removeEventHandler", RemoveEventHandler);
+    lua_register(f_vm, "callEvent", CallEvent);
+}
 
-int addEvent(lua_State *f_vm)
+int ROC::LuaEventsDef::AddEvent(lua_State *f_vm)
 {
     std::string l_event;
     ArgReader argStream(f_vm);
@@ -27,7 +33,7 @@ int addEvent(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int addEventHandler(lua_State *f_vm)
+int ROC::LuaEventsDef::AddEventHandler(lua_State *f_vm)
 {
     std::string l_event;
     LuaFunction l_func;
@@ -43,7 +49,7 @@ int addEventHandler(lua_State *f_vm)
     argStream.RemoveReference(l_func);
     return argStream.GetReturnValue();
 }
-int removeEvent(lua_State *f_vm)
+int ROC::LuaEventsDef::RemoveEvent(lua_State *f_vm)
 {
     std::string l_event;
     ArgReader argStream(f_vm);
@@ -56,7 +62,7 @@ int removeEvent(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int removeEventHandler(lua_State *f_vm)
+int ROC::LuaEventsDef::RemoveEventHandler(lua_State *f_vm)
 {
     std::string l_event;
     LuaFunction l_func;
@@ -71,7 +77,7 @@ int removeEventHandler(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int callEvent(lua_State *f_vm)
+int ROC::LuaEventsDef::CallEvent(lua_State *f_vm)
 {
     std::string l_event;
     ArgReader argStream(f_vm);
@@ -85,7 +91,4 @@ int callEvent(lua_State *f_vm)
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
-}
-
-}
 }

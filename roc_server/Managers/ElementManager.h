@@ -16,6 +16,8 @@ public:
     File* CreateFile_(const std::string &f_path);
     File* OpenFile(const std::string &f_path, bool f_ro);
     void CloseFile(File *f_file);
+
+    bool DestroyElement(Element *f_element);
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
