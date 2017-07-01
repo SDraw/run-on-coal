@@ -26,7 +26,7 @@ ROC::Camera::~Camera()
 {
 }
 
-void ROC::Camera::SetType(int f_type)
+void ROC::Camera::SetProjectionType(int f_type)
 {
     if(m_type != f_type)
     {

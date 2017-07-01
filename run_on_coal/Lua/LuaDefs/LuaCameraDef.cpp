@@ -28,8 +28,8 @@ void ROC::LuaCameraDef::Init(lua_State *f_vm)
     Utils::Lua::lua_registerClassMethod(f_vm, "getPosition", CameraGetPosition);
     Utils::Lua::lua_registerClassMethod(f_vm, "setDirection", CameraSetDirection);
     Utils::Lua::lua_registerClassMethod(f_vm, "getDirection", CameraGetDirection);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setProjectionType", CameraSetType);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getProjectionType", CameraGetType);
+    Utils::Lua::lua_registerClassMethod(f_vm, "setProjectionType", CameraSetProjectionType);
+    Utils::Lua::lua_registerClassMethod(f_vm, "getProjectionType", CameraGetProjectionType);
     Utils::Lua::lua_registerClassMethod(f_vm, "setFOV", CameraSetFOV);
     Utils::Lua::lua_registerClassMethod(f_vm, "getFOV", CameraGetFOV);
     Utils::Lua::lua_registerClassMethod(f_vm, "setAspectRatio", CameraSetAspectRatio);
@@ -127,7 +127,7 @@ int ROC::LuaCameraDef::CameraGetDirection(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetType(lua_State *f_vm)
+int ROC::LuaCameraDef::CameraSetProjectionType(lua_State *f_vm)
 {
     Camera *l_Camera;
     std::string l_text;
@@ -139,7 +139,7 @@ int ROC::LuaCameraDef::CameraSetType(lua_State *f_vm)
         int l_type = Utils::Enum::ReadEnumVector(g_CameraTypesTable, l_text);
         if(l_type != -1)
         {
-            l_Camera->SetType(l_type);
+            l_Camera->SetProjectionType(l_type);
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);
@@ -147,12 +147,12 @@ int ROC::LuaCameraDef::CameraSetType(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetType(lua_State *f_vm)
+int ROC::LuaCameraDef::CameraGetProjectionType(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_Camera);
-    !argStream.HasErrors() ? argStream.PushText(g_CameraTypesTable[l_Camera->GetType()]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_CameraTypesTable[l_Camera->GetProjectionType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

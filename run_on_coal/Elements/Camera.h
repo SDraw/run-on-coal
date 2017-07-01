@@ -24,8 +24,8 @@ class Camera final : public Element
 
     glm::vec4 m_planes[6];
 public:
-    void SetType(int f_type);
-    inline int GetType() const { return m_type; }
+    void SetProjectionType(int f_type);
+    inline int GetProjectionType() const { return m_type; }
 
     void SetFOV(float f_fov);
     inline float GetFOV() const { return m_fov; }
