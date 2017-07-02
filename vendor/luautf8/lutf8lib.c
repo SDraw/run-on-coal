@@ -494,7 +494,7 @@ static int Lutf8_remove(lua_State *L) {
   const char *e, *s = check_utf8(L, 1, &e);
   const char *start = s, *end = e;
   if (!u_posrange(&start, &end,
-        luaL_checkinteger(L, 2), luaL_optinteger(L, 3, -1)))
+        luaL_optinteger(L, 2, 1), luaL_optinteger(L, 3, -1)))
     lua_settop(L, 1);
   else {
     luaL_Buffer b;

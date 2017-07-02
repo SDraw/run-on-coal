@@ -16,8 +16,8 @@ int main(int argc, char* argv[])
         }
         Animation *l_anim = new Animation();
         if(l_anim->LoadFromJSON(l_inputFile)) l_anim->GenerateBinary(l_outputFile);
-        else std::getchar();
         delete l_anim;
+        std::getchar();
     }
     return EXIT_SUCCESS;
 }
