@@ -16,10 +16,6 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_BufferNamesTable
-{
-    "color", "depth"
-};
 const std::vector<std::string> g_PolygonFillTable
 {
     "point", "line", "fill"
@@ -76,19 +72,15 @@ int ROC::LuaRenderingDef::SetRenderTarget(lua_State *f_vm)
 
 int ROC::LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
 {
-    std::string l_param;
+    bool l_depth = true;
+    bool l_color = true;
     ArgReader argStream(f_vm);
-    argStream.ReadText(l_param);
-    if(!argStream.HasErrors() && !l_param.empty())
+    argStream.ReadNextBoolean(l_depth);
+    argStream.ReadNextBoolean(l_color);
+    if(!argStream.HasErrors())
     {
-        int l_type = Utils::Enum::ReadEnumVector(g_BufferNamesTable, l_param);
-        if(l_type != -1)
-        {
-            GLbitfield l_buffer = (l_type == 0) ? GL_COLOR_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
-            LuaManager::GetCore()->GetRenderManager()->ClearRenderArea(l_buffer);
-            argStream.PushBoolean(true);
-        }
-        else argStream.PushBoolean(false);
+        LuaManager::GetCore()->GetRenderManager()->ClearRenderArea(l_depth, l_color);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

@@ -60,7 +60,7 @@ class RenderManager final
     RenderManager(const RenderManager& that);
     RenderManager &operator =(const RenderManager &that);
 public:
-    void ClearRenderArea(GLbitfield f_params);
+    void ClearRenderArea(bool f_depth = true, bool f_color = true);
     static inline void SetClearColour(const glm::vec4 &f_color) { glClearColor(f_color.r, f_color.g, f_color.b, f_color.a); }
     static inline void SetViewport(const glm::ivec4 &f_area) { glViewport(f_area.r, f_area.g, f_area.b, f_area.a); }
     static inline void SetPolygonMode(int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode); }

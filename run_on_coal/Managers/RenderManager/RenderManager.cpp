@@ -102,12 +102,18 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
     }
 }
 
-void ROC::RenderManager::ClearRenderArea(GLbitfield f_params)
+void ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
 {
     if(!m_locked)
     {
-        if(CheckBit(f_params,GL_DEPTH_BUFFER_BIT)) EnableDepth();
-        glClear(f_params);
+        int l_params = 0;
+        if(f_depth)
+        {
+            l_params |= GL_DEPTH_BUFFER_BIT;
+            EnableDepth();
+        }
+        if(f_color) l_params |= GL_COLOR_BUFFER_BIT;
+        glClear(l_params);
     }
 }
 
