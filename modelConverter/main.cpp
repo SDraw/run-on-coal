@@ -15,13 +15,6 @@ struct Face
     int m_materialIndices[9];
 };
 
-int ReadEnumString(std::string &f_val, const std::string &f_enum)
-{
-    size_t first = f_enum.find(f_val);
-    if(first == std::string::npos) return -1;
-    return std::count(f_enum.begin(), f_enum.begin() + first, ',');
-}
-
 int CompressData(void *f_src, int f_srcLen, void *f_dest, int f_destLen)
 {
     z_stream zInfo = { 0 };
@@ -76,7 +69,7 @@ bool ReadFile(std::string &path, std::string &f_cont)
     return true;
 }
 
-#define Error(T) { std::cout << "Error: " << T << std::endl; std::getchar(); return; }
+#define Error(T) { std::cout << "Error: " << T << std::endl; return; }
 #define Info(T) std::cout << "Info: " << T << std::endl
 
 void ConvertJSON(std::string &f_path, std::string &f_out)
@@ -132,7 +125,6 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
     l_file.write(reinterpret_cast<char*>(&l_origSize), sizeof(int));
     l_file.write(reinterpret_cast<char*>(l_compressedData), l_compressedSized);
     delete[]l_compressedData;
-    Info("Vertices data compressed from " << l_origSize << " to " << l_compressedSized << " bytes");
 
     l_nodeIndex = l_documentRoot.find_object_key(sajson::literal("uvs"));
     if(l_nodeIndex == l_documentRoot.get_length()) Error("No UVs node");
@@ -514,7 +506,7 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
     }
     l_file.flush();
     l_file.close();
-    Info("Model is reconverted to " << f_out.c_str());
+    Info("Model has been converted to " << f_out);
 }
 
 void ConvertOBJ(std::string &f_path, std::string &f_out)
@@ -750,38 +742,40 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
     l_objectFile.close();
     l_outputFile.flush();
     l_outputFile.close();
-    Info("Model converted to " << f_out.c_str());
+    Info("Model has been converted to " << f_out);
 }
 
 int main(int argc, char *argv[])
 {
-    if(argc < 3) std::cout << "Usage: [input_type] [input_file] <[output_file]>" << std::endl;
-    else
+    if(argc >= 2)
     {
-        std::string l_inputType(argv[1]);
-        std::string l_inputFile(argv[2]);
+        std::string l_inputFile(argv[1]);
         std::string l_outputFile;
-        if(argc >= 4) l_outputFile.assign(argv[3]);
-        else
+
+        size_t l_searchResult = l_inputFile.find(std::string(".obj"));
+        if(l_searchResult != std::string::npos)
         {
+            Info("Converting OBJ ...");
+            l_inputFile = l_inputFile.substr(0, l_searchResult);
             l_outputFile.assign(l_inputFile);
             l_outputFile.append(".rmf");
+            ConvertOBJ(l_inputFile, l_outputFile);
         }
-        switch(ReadEnumString(l_inputType, "obj,json"))
+        else
         {
-            case 0:
+            l_searchResult = l_inputFile.find(std::string(".json"));
+            if(l_searchResult != std::string::npos)
             {
-                Info("Converting OBJ format...");
-                ConvertOBJ(l_inputFile, l_outputFile);
-            } break;
-            case 1:
-            {
-                Info("Converting JSON (THREE.js) format...");
+                Info("Converting THREE.js JSON (animated)...");
+                l_outputFile = l_inputFile.substr(0, l_searchResult);
+                l_outputFile.append(".rmf");
                 ConvertJSON(l_inputFile, l_outputFile);
-            } break;
-            default:
-                Info("Unknown format. Avaliable formats: obj, json (THREE.js animated)");
+            }
+            else Info("Unknown format. Avaliable formats: obj, json (THREE.js animated)");
         }
     }
+    else std::cout << "Usage: [input_file]" << std::endl;
+    Info("Press any key to exit");
+    std::getchar();
     return EXIT_SUCCESS;
 }
