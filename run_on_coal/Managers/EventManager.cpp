@@ -19,7 +19,7 @@ const std::vector<std::string> g_DefaultEventsNames
     "onRender", "onPreRender",
     "onWindowClose", "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
-    "onJoypadConnect", "onJoypadButton", "onJoypadAxis",
+    "onJoypadStateChange", "onJoypadButton", "onJoypadAxis",
     "onTextInput",
     "onNetworkStateChange", "onNetworkDataRecieve",
     "onGeometryLoad"

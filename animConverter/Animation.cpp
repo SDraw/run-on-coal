@@ -1,4 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include "glm/glm.hpp"
+#include "glm/gtx/compatibility.hpp"
+#include "sajson.h"
+
 #include "Animation.h"
 
 Animation::Animation()
@@ -24,7 +32,7 @@ void Animation::Clean()
 
 #define ReportError(first) { std::cout << first << std::endl; return false; }
 #define ReportErrorAndClean(first) { std::cout << first << std::endl; Clean(); return false; }
-bool Animation::LoadFromJSON(std::string &f_path)
+bool Animation::Load(const std::string &f_path)
 {
     if(m_loaded) ReportError("Animation has already been loaded");
 
@@ -171,7 +179,7 @@ bool Animation::LoadFromJSON(std::string &f_path)
     return true;
 }
 
-bool Animation::GenerateBinary(std::string &f_path)
+bool Animation::Generate(const std::string &f_path)
 {
     if(!m_loaded)
     {
@@ -195,6 +203,6 @@ bool Animation::GenerateBinary(std::string &f_path)
     }
     l_file.flush();
     l_file.close();
-    std::cout << "Animation successfully has been generated to " << f_path.c_str() << " file" << std::endl;
+    std::cout << "Animation has been converted to " << f_path << std::endl;
     return true;
 }

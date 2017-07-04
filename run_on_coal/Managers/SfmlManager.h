@@ -15,7 +15,7 @@ typedef void(*OnMouseMoveCallback)(int, int);
 typedef void(*OnCursorEnterCallback)(bool);
 typedef void(*OnMouseKeyPressCallback)(int, bool);
 typedef void(*OnMouseScrollCallback)(int, float);
-typedef void(*OnJoypadConnectCallback)(unsigned int, bool);
+typedef void(*OnJoypadStateChangeCallback)(unsigned int, bool);
 typedef void(*OnJoypadButtonCallback)(unsigned int, unsigned int, bool);
 typedef void(*OnJoypadAxisCallback)(unsigned int, int, float);
 
@@ -47,7 +47,7 @@ class SfmlManager final
     OnCursorEnterCallback m_cursorEnterCallback;
     OnMouseKeyPressCallback m_mouseKeyPressCallback;
     OnMouseScrollCallback m_mouseScrollCallback;
-    OnJoypadConnectCallback m_joypadConnectCallback;
+    OnJoypadStateChangeCallback m_joypadStateChangeCallback;
     OnJoypadButtonCallback m_joypadButtonCallback;
     OnJoypadAxisCallback m_joypadAxisCallback;
 
@@ -88,7 +88,7 @@ public:
     inline void SetCursorEnterCallback(OnCursorEnterCallback f_callback) { m_cursorEnterCallback = f_callback; }
     inline void SetMouseKeyPressCallback(OnMouseKeyPressCallback f_callback) { m_mouseKeyPressCallback = f_callback; }
     inline void SetMouseScrollCallback(OnMouseScrollCallback f_callback) { m_mouseScrollCallback = f_callback; }
-    inline void SetJoypadConnectCallback(OnJoypadConnectCallback f_callback) { m_joypadConnectCallback = f_callback; }
+    inline void SetJoypadStateChangeCallback(OnJoypadStateChangeCallback f_callback) { m_joypadStateChangeCallback = f_callback; }
     inline void SetJoypadButtonCallback(OnJoypadButtonCallback f_callback) { m_joypadButtonCallback = f_callback; }
     inline void SetJoypadAxisCallback(OnJoypadAxisCallback f_callback) { m_joypadAxisCallback = f_callback; }
 protected:

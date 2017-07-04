@@ -1,10 +1,14 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <vector>
+#include "glm/glm.hpp"
+#include "glm/gtx/compatibility.hpp"
+
 #include "Animation.h"
 
 int main(int argc, char* argv[])
 {
-    if(argc < 2) std::cout << "Usage: [input file] <[output file]>" << std::endl;
-    else
+    if(argc > 1)
     {
         std::string l_inputFile(argv[1]);
         std::string l_outputFile;
@@ -15,9 +19,10 @@ int main(int argc, char* argv[])
             l_outputFile.append(".raf");
         }
         Animation *l_anim = new Animation();
-        if(l_anim->LoadFromJSON(l_inputFile)) l_anim->GenerateBinary(l_outputFile);
+        if(l_anim->Load(l_inputFile)) l_anim->Generate(l_outputFile);
         delete l_anim;
-        std::getchar();
     }
+    else std::cout << "Usage: [input file] <[output file]>" << std::endl;
+    std::getchar();
     return EXIT_SUCCESS;
 }

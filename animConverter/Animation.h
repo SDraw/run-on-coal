@@ -1,11 +1,4 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include "glm/glm.hpp"
-#include "glm/gtx/compatibility.hpp"
-#include "sajson.h"
 
 class Animation
 {
@@ -38,6 +31,6 @@ class Animation
 public:
     Animation();
     ~Animation();
-    bool LoadFromJSON(std::string &f_path);
-    bool GenerateBinary(std::string &f_path);
+    bool Load(const std::string &f_path);
+    bool Generate(const std::string &f_path);
 };

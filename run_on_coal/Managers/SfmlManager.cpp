@@ -111,7 +111,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_cursorEnterCallback = nullptr;
     m_mouseKeyPressCallback = nullptr;
     m_mouseScrollCallback = nullptr;
-    m_joypadConnectCallback = nullptr;
+    m_joypadStateChangeCallback = nullptr;
     m_joypadButtonCallback = nullptr;
     m_joypadAxisCallback = nullptr;
 
@@ -312,11 +312,11 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
             {
-                if(m_joypadConnectCallback) (*m_joypadConnectCallback)(m_event.joystickConnect.joystickId, m_event.type == sf::Event::JoystickConnected);
+                if(m_joypadStateChangeCallback) (*m_joypadStateChangeCallback)(m_event.joystickConnect.joystickId, m_event.type == sf::Event::JoystickConnected);
 
                 m_argument->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
                 m_argument->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadConnect", m_argument);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadStateChange", m_argument);
                 m_argument->Clear();
             } break;
             case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
