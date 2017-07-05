@@ -36,11 +36,13 @@ int main(int argc, char *argv[])
     if(argc > 1)
     {
         pugi::xml_document l_meta;
-        if(!l_meta.load_file(argv[1])) Error("Not XML file\n");
+        pugi::xml_parse_result l_parseResult = l_meta.load_file(argv[1]);
+        if(!l_parseResult) Error("XML parsing error: " << l_parseResult.description());
+
         pugi::xml_node l_root = l_meta.child("collision");
-        if(!l_root) Error("No 'collision' root\n");
+        if(!l_root) Error("No 'collision' root");
         std::ofstream l_file(std::string(argv[1]) + ".bin", std::ios::out | std::ios::binary);
-        if(l_file.fail()) Error("Unable to create binary file\n");
+        if(l_file.fail()) Error("Unable to create binary file");
 
         unsigned char l_setter = 0xCBU;
         l_file.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
@@ -128,7 +130,7 @@ int main(int argc, char *argv[])
 
                     pugi::xml_attribute l_attr = l_chain.attribute("count");
                     pugi::xml_attribute l_boneIDAtr = l_chain.attribute("bone");
-                    if(!l_attr || !l_boneIDAtr) Error("No 'count' or 'bone' attribute at 'chain' node\n");
+                    if(!l_attr || !l_boneIDAtr) Error("No 'count' or 'bone' attribute at 'chain' node");
 
                     unsigned int l_chainPartsCount = l_attr.as_uint();
                     l_file.write(reinterpret_cast<char*>(&l_chainPartsCount), sizeof(unsigned int));
@@ -143,72 +145,72 @@ int main(int argc, char *argv[])
                         chainPartData l_chainPartData;
 
                         l_attr = l_part.attribute("bone");
-                        if(!l_attr) Error("No 'boneID' attribute at part node\n");
+                        if(!l_attr) Error("No 'boneID' attribute at part node");
                         l_chainPartData.m_boneID = l_attr.as_int();
 
                         l_attr = l_part.attribute("type");
-                        if(!l_attr) Error("No 'type' attribute at part node\n");
+                        if(!l_attr) Error("No 'type' attribute at part node");
                         l_chainPartData.m_type = static_cast<unsigned char>(l_attr.as_uint());
 
                         l_attr = l_part.attribute("size");
-                        if(!l_attr) Error("No 'size' attribute at part node\n");
+                        if(!l_attr) Error("No 'size' attribute at part node");
                         std::stringstream l_sizeStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_sizeStream >> l_chainPartData.m_sizeX >> l_chainPartData.m_sizeY >> l_chainPartData.m_sizeZ;
 
                         l_attr = l_part.attribute("offset");
-                        if(!l_attr) Error("No 'offset' attribute at part node\n");
+                        if(!l_attr) Error("No 'offset' attribute at part node");
                         std::stringstream l_offsetStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_offsetStream >> l_chainPartData.m_offsetX >> l_chainPartData.m_offsetY >> l_chainPartData.m_offsetZ;
 
                         l_attr = l_part.attribute("rotation");
-                        if(!l_attr) Error("No 'rotation' attribute at part node\n");
+                        if(!l_attr) Error("No 'rotation' attribute at part node");
                         std::stringstream l_rotationStream(l_attr.as_string("0.0 0.0 0.0 1.0"));
                         l_rotationStream >> l_chainPartData.m_rotationX >> l_chainPartData.m_rotationY >> l_chainPartData.m_rotationZ >> l_chainPartData.m_rotationW;
 
                         l_attr = l_part.attribute("mass");
-                        if(!l_attr) Error("No 'mass' attribute at part node\n");
+                        if(!l_attr) Error("No 'mass' attribute at part node");
                         l_chainPartData.m_mass = l_attr.as_float(1.f);
 
                         l_attr = l_part.attribute("restutition");
-                        if(!l_attr) Error("No 'restutition' attribute at part node\n");
+                        if(!l_attr) Error("No 'restutition' attribute at part node");
                         l_chainPartData.m_restutition = l_attr.as_float(0.f);
 
                         l_attr = l_part.attribute("friction");
-                        if(!l_attr) Error("No 'friction' attribute at part node\n");
+                        if(!l_attr) Error("No 'friction' attribute at part node");
                         l_chainPartData.m_friction = l_attr.as_float(0.5f);
 
                         l_attr = l_part.attribute("damping");
-                        if(!l_attr) Error("No 'damping' attribute at part node\n");
+                        if(!l_attr) Error("No 'damping' attribute at part node");
                         std::stringstream l_dampingStream(l_attr.as_string("0.0 0.0"));
                         l_dampingStream >> l_chainPartData.m_linearDamping >> l_chainPartData.m_angularDamping;
 
                         l_attr = l_part.attribute("lowAngLim");
-                        if(!l_attr) Error("No 'lowAngLim' attribute at part node\n");
+                        if(!l_attr) Error("No 'lowAngLim' attribute at part node");
                         std::stringstream l_lowAngLimStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_lowAngLimStream >> l_chainPartData.m_lowerAngularLimitX >> l_chainPartData.m_lowerAngularLimitY >> l_chainPartData.m_lowerAngularLimitZ;
 
                         l_attr = l_part.attribute("uppAngLim");
-                        if(!l_attr) Error("No 'uppAngLim' attribute at part node\n");
+                        if(!l_attr) Error("No 'uppAngLim' attribute at part node");
                         std::stringstream l_uppAngLimStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_uppAngLimStream >> l_chainPartData.m_upperAngularLimitX >> l_chainPartData.m_upperAngularLimitY >> l_chainPartData.m_upperAngularLimitZ;
 
                         l_attr = l_part.attribute("angStiff");
-                        if(!l_attr) Error("No 'angStiff' attribute at part node\n");
+                        if(!l_attr) Error("No 'angStiff' attribute at part node");
                         std::stringstream l_angStiffStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_angStiffStream >> l_chainPartData.m_angularStiffnessX >> l_chainPartData.m_angularStiffnessY >> l_chainPartData.m_angularStiffnessZ;
 
                         l_attr = l_part.attribute("lowLinLim");
-                        if(!l_attr) Error("No 'lowLinLim' attribute at part node\n");
+                        if(!l_attr) Error("No 'lowLinLim' attribute at part node");
                         std::stringstream l_lowLinLimStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_lowLinLimStream >> l_chainPartData.m_lowerLinearLimitX >> l_chainPartData.m_lowerLinearLimitY >> l_chainPartData.m_lowerLinearLimitZ;
 
                         l_attr = l_part.attribute("uppLinLim");
-                        if(!l_attr) Error("No 'uppLinLim' attribute at part node\n");
+                        if(!l_attr) Error("No 'uppLinLim' attribute at part node");
                         std::stringstream l_uppLinLimStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_uppLinLimStream >> l_chainPartData.m_upperLinearLimitX >> l_chainPartData.m_upperLinearLimitY >> l_chainPartData.m_upperLinearLimitZ;
 
                         l_attr = l_part.attribute("linStiff");
-                        if(!l_attr) Error("No 'linStiff' attribute at part node\n");
+                        if(!l_attr) Error("No 'linStiff' attribute at part node");
                         std::stringstream l_linStiffStream(l_attr.as_string("0.0 0.0 0.0"));
                         l_linStiffStream >> l_chainPartData.m_linearStiffnessX >> l_chainPartData.m_linearStiffnessY >> l_chainPartData.m_linearStiffnessZ;
 

@@ -77,7 +77,8 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
     std::string l_data;
     if(!ReadFile(f_path, l_data)) Error("Unable to read " << f_path);
     sajson::document l_document = sajson::parse(sajson::dynamic_allocation(),sajson::mutable_string_view(l_data.size(),const_cast<char*>(l_data.data())));
-    if(l_document.get_error_line()) Error("JSON parsing error: " << l_document.get_error_message_as_string());
+    size_t l_errorLine = l_document.get_error_line();
+    if(l_errorLine) Error("JSON parsing error, line " << l_errorLine << ": " << l_document.get_error_message_as_string());
     sajson::value l_documentRoot = l_document.get_root();
     if(l_documentRoot.get_type() != sajson::TYPE_OBJECT) Error("Root node isn't an object");
     if(l_documentRoot.get_length() == 0) Error("Root node is empty");
