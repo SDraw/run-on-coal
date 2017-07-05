@@ -104,7 +104,7 @@ bool ROC::Animation::Load(const std::string &f_path)
             m_tempFrameData = new BoneFrameData();
             m_loaded = true;
         }
-        catch(const std::ifstream::failure&)
+        catch(const std::exception&)
         {
             Clean();
         }

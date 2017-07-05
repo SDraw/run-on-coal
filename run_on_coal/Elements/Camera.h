@@ -26,7 +26,6 @@ class Camera final : public Element
 public:
     void SetProjectionType(int f_type);
     inline int GetProjectionType() const { return m_type; }
-
     void SetFOV(float f_fov);
     inline float GetFOV() const { return m_fov; }
     void SetAspectRatio(float f_ratio);

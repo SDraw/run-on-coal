@@ -39,12 +39,8 @@ bool Animation::Load(const std::string &f_path)
     std::ifstream l_file;
     l_file.open(f_path);
     if(l_file.fail()) ReportError("Unable to open file");
-    std::string l_data;
-    std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
-    std::back_insert_iterator<std::string> l_stringInsert(l_data);
-    std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
+    std::string l_data((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
     l_file.close();
-    if(l_data.empty()) ReportError("Empty file");
 
     sajson::document l_document = sajson::parse(sajson::dynamic_allocation(),sajson::mutable_string_view(l_data.size(),const_cast<char*>(l_data.data())));
     size_t l_errorLine = l_document.get_error_line();

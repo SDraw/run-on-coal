@@ -81,10 +81,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
         l_file.open(f_vpath, std::ios::in);
         if(!l_file.fail())
         {
-            std::string l_shaderData;
-            std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
-            std::back_insert_iterator<std::string> l_stringInsert(l_shaderData);
-            std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
+            std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
             l_vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -115,10 +112,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
         l_file.open(f_fpath, std::ios::in);
         if(!l_file.fail())
         {
-            std::string l_shaderData;
-            std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
-            std::back_insert_iterator<std::string> l_stringInsert(l_shaderData);
-            std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
+            std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
             l_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -151,10 +145,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             l_file.open(f_gpath, std::ios::in);
             if(!l_file.fail())
             {
-                std::string l_shaderData;
-                std::istreambuf_iterator<char> l_inputIt(l_file), l_emptyInputIt;
-                std::back_insert_iterator<std::string> l_stringInsert(l_shaderData);
-                std::copy(l_inputIt, l_emptyInputIt, l_stringInsert);
+                std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
                 l_file.close();
 
                 l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);

@@ -208,7 +208,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 l_result = true;
             }
         }
-        catch(const std::ifstream::failure&)
+        catch(const std::exception&)
         {
             Clear();
         }
@@ -276,7 +276,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     }
                 }
             }
-            catch(const std::ifstream::failure&)
+            catch(const std::exception&)
             {
                 for(auto iter : m_collisionData) delete iter;
                 m_collisionData.clear();

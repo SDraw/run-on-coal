@@ -115,6 +115,7 @@
       <AdditionalLibraryDirectories>../vendor/SFML/lib;../vendor/lua/lib;../vendor/bullet/lib;../vendor/bass/lib;../vendor/freetype2/lib;../vendor/glew/lib;../vendor/zlib/lib;../vendor/RakNet/lib;../vendor/sfeMovie/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;opengl32.lib;lua53.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype28.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;sfeMovie.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
+      <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
       <Command>

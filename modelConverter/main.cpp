@@ -56,26 +56,18 @@ int GetMaxCompressedLen(int nLenSrc)
     int n16kBlocks = (nLenSrc + 16383) / 16384;
     return (nLenSrc + 6 + (n16kBlocks * 5));
 }
-bool ReadFile(std::string &path, std::string &f_cont)
-{
-    std::ifstream l_file;
-    l_file.open(path, std::ios::in);
-    if(l_file.fail()) return false;
-
-    std::ostringstream l_data;
-    l_data << l_file.rdbuf();
-    l_file.close();
-    f_cont.append(l_data.str());
-    return true;
-}
 
 #define Error(T) { std::cout << "Error: " << T << std::endl; return; }
 #define Info(T) std::cout << "Info: " << T << std::endl
 
 void ConvertJSON(std::string &f_path, std::string &f_out)
 {
-    std::string l_data;
-    if(!ReadFile(f_path, l_data)) Error("Unable to read " << f_path);
+    std::ifstream l_inputFile;
+    l_inputFile.open(f_path);
+    if(l_inputFile.fail()) Error("Unable to open file");
+    std::string l_data((std::istreambuf_iterator<char>(l_inputFile)), std::istreambuf_iterator<char>());
+    l_inputFile.close();
+
     sajson::document l_document = sajson::parse(sajson::dynamic_allocation(),sajson::mutable_string_view(l_data.size(),const_cast<char*>(l_data.data())));
     size_t l_errorLine = l_document.get_error_line();
     if(l_errorLine) Error("JSON parsing error, line " << l_errorLine << ": " << l_document.get_error_message_as_string());
