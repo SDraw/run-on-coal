@@ -37,7 +37,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
         try
         {
             l_file.open(f_path, std::ios::binary);
-            std::string l_header(3, '0');
+            std::string l_header(3, '\0');
             l_file.read(const_cast<char*>(l_header.data()), 3);
             if(!l_header.compare("ROC"))
             {
@@ -129,11 +129,11 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     for(int j = 0, k = static_cast<int>(l_faceIndex.size()); j < k; j += 9)
                     {
                         l_tempVertex.push_back(l_vertexData[l_faceIndex[j]]);
-                        l_farthestPoint = glm::max(l_farthestPoint, l_vertexData[l_faceIndex[j]]);
+                        l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
                         l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 1]]);
-                        l_farthestPoint = glm::max(l_farthestPoint, l_vertexData[l_faceIndex[j + 1]]);
+                        l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
                         l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 2]]);
-                        l_farthestPoint = glm::max(l_farthestPoint, l_vertexData[l_faceIndex[j + 2]]);
+                        l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
                         l_tempUV.push_back(l_uvData[l_faceIndex[j + 3]]);
                         l_tempUV.push_back(l_uvData[l_faceIndex[j + 4]]);
                         l_tempUV.push_back(l_uvData[l_faceIndex[j + 5]]);

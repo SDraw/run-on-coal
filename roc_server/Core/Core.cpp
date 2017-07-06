@@ -10,7 +10,7 @@
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
 
-ROC::Core* ROC::Core::m_instance = nullptr;
+ROC::Core* ROC::Core::s_instance = nullptr;
 
 ROC::Core::Core()
 {
@@ -26,7 +26,10 @@ ROC::Core::Core()
     m_logManager = new LogManager(this);
     m_memoryManager = new MemoryManager();
     m_elementManager = new ElementManager(this);
+
     m_luaManager = new LuaManager(this);
+    LuaManager::SetCore(this);
+
     m_networkManager = new NetworkManager(this);
     m_argument = new LuaArguments();
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());
@@ -46,9 +49,9 @@ ROC::Core::~Core()
 
 ROC::Core* ROC::Core::Init()
 {
-    if(!m_instance)
+    if(!s_instance)
     {
-        m_instance = new Core();
+        s_instance = new Core();
 
         // Load default scripts
         std::string l_metaPath(ROC_DEFAULT_SCRIPTS_PATH);
@@ -66,25 +69,25 @@ ROC::Core* ROC::Core::Init()
                     {
                         std::string l_path(ROC_DEFAULT_SCRIPTS_PATH);
                         l_path.append(l_attrib.as_string());
-                        m_instance->m_luaManager->OpenFile(l_path);
+                        s_instance->m_luaManager->OpenFile(l_path);
                     }
                 }
             }
         }
         delete l_meta;
 
-        m_instance->m_luaManager->GetEventManager()->CallEvent("onServerStart", m_instance->m_argument);
+        s_instance->m_luaManager->GetEventManager()->CallEvent("onServerStart", s_instance->m_argument);
     }
-    return m_instance;
+    return s_instance;
 }
 void ROC::Core::Terminate()
 {
-    if(m_instance)
+    if(s_instance)
     {
-        m_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", m_instance->m_argument);
+        s_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", s_instance->m_argument);
 
-        delete m_instance;
-        m_instance = nullptr;
+        delete s_instance;
+        s_instance = nullptr;
     }
 }
 

@@ -21,7 +21,7 @@ class Core final
     LuaManager *m_luaManager;
     MemoryManager *m_memoryManager;
     NetworkManager *m_networkManager;
-    static Core *m_instance;
+    static Core *s_instance;
     std::string m_workingDir;
     std::chrono::milliseconds m_pulseTick;
     LuaArguments *m_argument;

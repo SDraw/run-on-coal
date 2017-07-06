@@ -19,7 +19,7 @@ class SoundManager;
 class LuaArguments;
 class Core final
 {
-    static Core *m_instance;
+    static Core *s_instance;
     std::string m_workingDir;
     bool m_state;
     LuaArguments *m_argument;

@@ -64,13 +64,13 @@ template<typename T> void ROC::ArgReader::ReadNumber(T &f_val)
         {
             if(lua_isnumber(m_vm, m_currentArg))
             {
-                f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
-                m_currentArg++;
-                if(std::isnan(f_val) || std::isinf(f_val))
+                lua_Number l_number = lua_tonumber(m_vm, m_currentArg++);
+                if(std::isnan(l_number) || std::isinf(l_number))
                 {
                     m_error.assign("Got NaN/Inf");
                     m_hasErrors = true;
                 }
+                else f_val = static_cast<T>(l_number);
             }
             else
             {
@@ -91,11 +91,7 @@ template<typename T> void ROC::ArgReader::ReadInteger(T &f_val)
     {
         if(m_currentArg <= m_argCount)
         {
-            if(lua_isinteger(m_vm, m_currentArg))
-            {
-                f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
-                m_currentArg++;
-            }
+            if(lua_isinteger(m_vm, m_currentArg)) f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg++));
             else
             {
                 m_error.assign("Expected integer");
@@ -159,22 +155,14 @@ template<typename T> void ROC::ArgReader::ReadNextNumber(T &f_val)
 {
     if(!m_hasErrors && (m_currentArg <= m_argCount))
     {
-        if(lua_isnumber(m_vm, m_currentArg))
-        {
-            f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg));
-            m_currentArg++;
-        }
+        if(lua_isnumber(m_vm, m_currentArg)) f_val = static_cast<T>(lua_tonumber(m_vm, m_currentArg++));
     }
 };
 template<typename T> void ROC::ArgReader::ReadNextInteger(T &f_val)
 {
     if(!m_hasErrors && (m_currentArg <= m_argCount))
     {
-        if(lua_isinteger(m_vm, m_currentArg))
-        {
-            f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg));
-            m_currentArg++;
-        }
+        if(lua_isinteger(m_vm, m_currentArg)) f_val = static_cast<T>(lua_tointeger(m_vm, m_currentArg++));
     }
 };
 template<class T> void ROC::ArgReader::ReadNextElement(T *&f_element)

@@ -11,7 +11,7 @@ const float g_DefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE)
 
 }
 
-FT_Library ROC::Font::m_library = FT_Library();
+FT_Library ROC::Font::s_library = FT_Library();
 
 ROC::Font::Font()
 {
@@ -55,18 +55,18 @@ ROC::Font::~Font()
 
 void ROC::Font::InitLibrary()
 {
-    FT_Init_FreeType(&m_library);
+    FT_Init_FreeType(&s_library);
 }
 void ROC::Font::TerminateLibrary()
 {
-    FT_Done_FreeType(m_library);
+    FT_Done_FreeType(s_library);
 }
 
 bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter)
 {
     if(!m_loaded)
     {
-        if(!FT_New_Face(m_library, f_path.c_str(), 0, &m_face))
+        if(!FT_New_Face(s_library, f_path.c_str(), 0, &m_face))
         {
             FT_Select_Charmap(m_face, ft_encoding_unicode);
             FT_Set_Pixel_Sizes(m_face, 0, f_size);

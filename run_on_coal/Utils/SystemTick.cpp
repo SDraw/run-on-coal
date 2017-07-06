@@ -2,9 +2,9 @@
 
 #include "Utils/SystemTick.h"
 
-unsigned int ROC::SystemTick::m_tick = 0U;
+unsigned int ROC::SystemTick::s_tick = 0U;
 
 void ROC::SystemTick::UpdateTick()
 {
-    m_tick = GetTickCount();
+    s_tick = GetTickCount();
 }

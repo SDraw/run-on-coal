@@ -21,7 +21,7 @@
 
 #define CORE_DEFAULT_SCIPTS_PATH "scripts/"
 
-ROC::Core* ROC::Core::m_instance = nullptr;
+ROC::Core* ROC::Core::s_instance = nullptr;
 
 ROC::Core::Core()
 {
@@ -40,7 +40,10 @@ ROC::Core::Core()
     m_elementManager = new ElementManager(this);
     m_soundManager = new SoundManager();
     m_physicsManager = new PhysicsManager(this);
+
     m_luaManager = new LuaManager(this);
+    LuaManager::SetCore(this);
+
     m_sfmlManager = new SfmlManager(this);
     m_asyncManager = new AsyncManager(this);
     m_preRenderManager = new PreRenderManager(this);
@@ -71,9 +74,9 @@ ROC::Core::~Core()
 
 ROC::Core* ROC::Core::Init()
 {
-    if(!m_instance)
+    if(!s_instance)
     {
-        m_instance = new Core();
+        s_instance = new Core();
         SystemTick::UpdateTick();
 
         // Load default scripts
@@ -92,25 +95,25 @@ ROC::Core* ROC::Core::Init()
                     {
                         std::string l_path(CORE_DEFAULT_SCIPTS_PATH);
                         l_path.append(l_attrib.as_string());
-                        m_instance->m_luaManager->OpenFile(l_path);
+                        s_instance->m_luaManager->OpenFile(l_path);
                     }
                 }
             }
         }
         delete l_meta;
 
-        m_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStart", m_instance->m_argument);
+        s_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStart", s_instance->m_argument);
     }
-    return m_instance;
+    return s_instance;
 }
 void ROC::Core::Terminate()
 {
-    if(m_instance)
+    if(s_instance)
     {
-        m_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStop", m_instance->m_argument);
+        s_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStop", s_instance->m_argument);
 
-        delete m_instance;
-        m_instance = nullptr;
+        delete s_instance;
+        s_instance = nullptr;
     }
 }
 

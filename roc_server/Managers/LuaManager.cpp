@@ -14,12 +14,11 @@
 
 #define ROC_LUA_METATABLE "roc_mt"
 
-ROC::Core* ROC::LuaManager::m_coreStatic = nullptr;
+ROC::Core* ROC::LuaManager::s_core = nullptr;
 
 ROC::LuaManager::LuaManager(Core *f_core)
 {
     m_core = f_core;
-    m_coreStatic = f_core;
 
     m_vm = luaL_newstate();
     luaL_requiref(m_vm, "_G", luaopen_base, 1);
@@ -54,6 +53,11 @@ ROC::LuaManager::~LuaManager()
 {
     lua_close(m_vm);
     delete m_eventManager;
+}
+
+void ROC::LuaManager::SetCore(Core *f_core)
+{
+    s_core = f_core;
 }
 
 bool ROC::LuaManager::OpenFile(const std::string &f_path)

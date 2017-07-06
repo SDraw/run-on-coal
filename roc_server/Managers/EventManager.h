@@ -24,7 +24,6 @@ class EventManager final
     };
     std::unordered_map<std::string,EventHeap*> m_eventMap;
     std::unordered_map<std::string, EventHeap*>::iterator m_eventMapEnd;
-    bool m_locked;
 public:
     bool AddEvent(const std::string &f_event);
     bool AddEventHandler(const std::string &f_event, LuaFunction &f_func);

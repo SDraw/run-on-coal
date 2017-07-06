@@ -36,11 +36,7 @@ void ROC::ArgReader::ReadBoolean(bool &f_val)
     {
         if(m_currentArg <= m_argCount)
         {
-            if(lua_isboolean(m_vm, m_currentArg))
-            {
-                f_val = (lua_toboolean(m_vm, m_currentArg) == 1);
-                m_currentArg++;
-            }
+            if(lua_isboolean(m_vm, m_currentArg)) f_val = (lua_toboolean(m_vm, m_currentArg++) == 1);
             else
             {
                 m_error.assign("Expected boolean");
@@ -64,9 +60,8 @@ void ROC::ArgReader::ReadText(std::string &f_val)
             if(lua_isstring(m_vm, m_currentArg))
             {
                 size_t l_size;
-                const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
+                const char *l_string = lua_tolstring(m_vm, m_currentArg++, &l_size);
                 f_val.assign(l_string, l_size);
-                m_currentArg++;
             }
             else
             {
@@ -251,11 +246,7 @@ void ROC::ArgReader::ReadNextBoolean(bool &f_val)
 {
     if(!m_hasErrors && (m_currentArg <= m_argCount))
     {
-        if(lua_isboolean(m_vm, m_currentArg))
-        {
-            f_val = (lua_toboolean(m_vm, m_currentArg) == 1);
-            m_currentArg++;
-        }
+        if(lua_isboolean(m_vm, m_currentArg)) f_val = (lua_toboolean(m_vm, m_currentArg++) == 1);
     }
 }
 void ROC::ArgReader::ReadNextText(std::string &f_val)
@@ -265,9 +256,8 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
         if(lua_isstring(m_vm, m_currentArg))
         {
             size_t l_size;
-            const char *l_string = lua_tolstring(m_vm, m_currentArg, &l_size);
+            const char *l_string = lua_tolstring(m_vm, m_currentArg++, &l_size);
             f_val.assign(l_string, l_size);
-            m_currentArg++;
         }
     }
 }

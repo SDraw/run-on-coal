@@ -11,7 +11,7 @@ namespace ROC
 
 class Font final : public Element
 {
-    static FT_Library m_library;
+    static FT_Library s_library;
     FT_Face m_face;
 
     GLuint m_atlasTexture;
