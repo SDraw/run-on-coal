@@ -218,7 +218,7 @@ int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
                     argStream.PushBoolean(true);
                 }
                 else argStream.PushBoolean(false);
-            }
+            } break;
             case ROC_SHADER_UNIFORM_DOUBLE:
             {
                 double l_val;
@@ -262,7 +262,7 @@ int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
                     argStream.PushBoolean(true);
                 }
                 else argStream.PushBoolean(false);
-            }
+            } break;
             case ROC_SHADER_UNIFORM_MAT2:
             {
                 glm::mat2 l_mat;
