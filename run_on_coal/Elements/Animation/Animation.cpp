@@ -57,8 +57,8 @@ bool ROC::Animation::Load(const std::string &f_path)
             l_animFile.read(reinterpret_cast<char*>(&m_duration), sizeof(unsigned int));
             l_animFile.read(reinterpret_cast<char*>(&m_bonesValue), sizeof(unsigned int));
 
-            m_durationTotal = static_cast<unsigned int>((static_cast<float>(m_duration) / static_cast<float>(m_fps))*1000.f);
-            m_frameDelta = static_cast<unsigned int>((1.0 / static_cast<float>(m_fps))*1000.0);
+            m_frameDelta = 1000U / m_fps;
+            m_durationTotal = m_duration * m_frameDelta;
 
             for(unsigned int i = 0; i < m_bonesValue; i++)
             {
@@ -82,12 +82,12 @@ bool ROC::Animation::Load(const std::string &f_path)
                     if(j == 0)
                     {
                         l_interval.start = l_frameIndex;
-                        l_interval.value.m_leftData = new BoneFrameData(l_position,l_rotation,l_scale);
+                        l_interval.value.m_leftData = new BoneFrameData(l_position, l_rotation, l_scale);
                     }
                     else
                     {
                         l_interval.stop = l_frameIndex;
-                        l_interval.value.m_rightData = new BoneFrameData(l_position,l_rotation,l_scale);
+                        l_interval.value.m_rightData = new BoneFrameData(l_position, l_rotation, l_scale);
                         l_interval.value.m_duration = l_frameIndex*m_frameDelta - l_interval.value.m_leftTime;
                         l_intervals.push_back(l_interval);
 
@@ -127,9 +127,9 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
             {
                 float l_blend = Utils::Math::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
                 m_tempFrameData->SetInterpolated(l_animData.m_leftData, l_animData.m_rightData, l_blend);
+                f_bones[i]->SetFrameData(m_tempFrameData);
             }
-            else BoneFrameData::Copy(l_animData.m_leftData,m_tempFrameData);
-            f_bones[i]->SetFrameData(m_tempFrameData);
+            else f_bones[i]->SetFrameData(l_animData.m_leftData);
 
             m_searchResult.clear();
         }

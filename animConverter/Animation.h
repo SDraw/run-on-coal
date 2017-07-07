@@ -16,7 +16,7 @@ class Animation
     std::vector<frameData> m_bones;
     unsigned int m_duration;
     unsigned int m_fps;
-    unsigned int m_bonesValue;
+    unsigned int m_bonesCount;
 
     bool m_loaded;
 

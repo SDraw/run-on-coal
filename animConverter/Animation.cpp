@@ -13,7 +13,7 @@ Animation::Animation()
 {
     m_duration = 0U;
     m_fps = 0U;
-    m_bonesValue = 0U;
+    m_bonesCount = 0U;
     m_loaded = false;
 }
 Animation::~Animation()
@@ -26,12 +26,14 @@ void Animation::Clean()
     m_bones.clear();
     m_duration = 0U;
     m_fps = 0U;
-    m_bonesValue = 0U;
+    m_bonesCount = 0U;
     m_loaded = false;
 }
 
-#define ReportError(first) { std::cout << first << std::endl; return false; }
-#define ReportErrorAndClean(first) { std::cout << first << std::endl; Clean(); return false; }
+#define ReportError(T) { std::cout << ">>> " << T << std::endl; return false; }
+#define ReportErrorAndClean(T) { std::cout << ">>> " T << std::endl; Clean(); return false; }
+#define Info(T) std::cout << "> " << T << std::endl
+
 bool Animation::Load(const std::string &f_path)
 {
     if(m_loaded) ReportError("Animation has already been loaded");
@@ -42,7 +44,7 @@ bool Animation::Load(const std::string &f_path)
     std::string l_data((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
     l_file.close();
 
-    sajson::document l_document = sajson::parse(sajson::dynamic_allocation(),sajson::mutable_string_view(l_data.size(),const_cast<char*>(l_data.data())));
+    sajson::document l_document = sajson::parse(sajson::dynamic_allocation(), sajson::mutable_string_view(l_data.size(), const_cast<char*>(l_data.data())));
     size_t l_errorLine = l_document.get_error_line();
     if(l_errorLine) ReportError("JSON parsing error, line " << l_errorLine << ": " << l_document.get_error_message_as_string());
 
@@ -53,36 +55,66 @@ bool Animation::Load(const std::string &f_path)
     if(l_nodeIndex == l_documentRoot.get_length()) ReportError("No animation node");
     sajson::value l_animContNode = l_documentRoot.get_object_value(l_nodeIndex);
     if(l_animContNode.get_type() != sajson::TYPE_ARRAY) ReportError("Animation node isn't an array");
-    if(l_animContNode.get_length() == 0) ReportError("Animation node is empty");
-    sajson::value l_animNode = l_animContNode.get_array_element(0);
-    if(l_animNode.get_type() != sajson::TYPE_OBJECT) ReportError("Animation subnode doesn't exist");
 
+    size_t l_animCount = l_animContNode.get_length();
+    if(l_animCount == 0U) ReportError("Animation node is empty");
+
+    std::vector<std::pair<size_t, std::string>> l_animNamesVector;
+    for(size_t i = 0; i < l_animCount; i++)
+    {
+        sajson::value l_animNode = l_animContNode.get_array_element(i);
+        if(l_animNode.get_type() == sajson::TYPE_OBJECT)
+        {
+            size_t l_animNameIndex = l_animNode.find_object_key(sajson::literal("name"));
+            if(l_animNameIndex != 0U)
+            {
+                sajson::value l_animNameValue = l_animNode.get_object_value(l_animNameIndex);
+                if(l_animNameValue.get_type() == sajson::TYPE_STRING) l_animNamesVector.push_back(std::make_pair(i, l_animNameValue.as_string()));
+            }
+        }
+    }
+
+    Info("Available animations list:");
+    for(auto &iter : l_animNamesVector) Info(iter.first << ". " << iter.second);
+    Info("Enter animation index");
+    std::cout << "> ";
+
+    size_t l_selectedAnim = 0U;
+    std::cin >> l_selectedAnim;
+    bool l_selectionCheck = false;
+    for(auto &iter : l_animNamesVector)
+    {
+        if(iter.first == l_selectedAnim) l_selectionCheck = true;
+    }
+    if(!l_selectionCheck) ReportError("Invalid animation list index");
+
+    sajson::value l_animNode = l_animContNode.get_array_element(l_selectedAnim);
     l_nodeIndex = l_animNode.find_object_key(sajson::literal("fps"));
     if(l_nodeIndex == l_animNode.get_length()) ReportError("No FPS node");
     sajson::value l_fpsNode = l_animNode.get_object_value(l_nodeIndex);
     if(l_fpsNode.get_type() != sajson::TYPE_INTEGER) ReportError("FPS node isn't an integer value");
     m_fps = l_fpsNode.get_integer_value();
-    std::cout << "FPS is " << m_fps << std::endl;
-    if(m_fps < 1) ReportError("FPS is lower than one frame");
+    Info("FPS is " << m_fps);
+    if(m_fps == 0U) ReportError("FPS is invalid");
 
     l_nodeIndex = l_animNode.find_object_key(sajson::literal("length"));
     if(l_nodeIndex == l_animNode.get_length()) ReportError("No length node");
     sajson::value l_durationNode = l_animNode.get_object_value(l_nodeIndex);
     if(l_durationNode.get_type() != sajson::TYPE_INTEGER && l_durationNode.get_type() != sajson::TYPE_DOUBLE) ReportError("Length node isn't a number value");
-    m_duration = (l_durationNode.get_type() == sajson::TYPE_INTEGER ? l_durationNode.get_integer_value()*m_fps + 1 : unsigned int(float(l_durationNode.get_double_value())*float(m_fps)) + 1);
-    std::cout << "Animation duration is " << m_duration << " frames" << std::endl;
-    if(m_duration < 1) ReportError("Animation duration less than one frame");
+    m_duration = static_cast<unsigned int>((l_durationNode.get_type() == sajson::TYPE_INTEGER) ? l_durationNode.get_integer_value()*m_fps : l_durationNode.get_double_value()*static_cast<double>(m_fps))+1U;
+    Info("Animation duration is " << m_duration << " frames");
+    if(m_duration == 0U) ReportError("Animation duration is invalid");
 
     l_nodeIndex = l_animNode.find_object_key(sajson::literal("hierarchy"));
     if(l_nodeIndex == l_animNode.get_length()) ReportError("No hierarchy node");
     sajson::value l_hierarchyNode = l_animNode.get_object_value(l_nodeIndex);
     if(l_hierarchyNode.get_type() != sajson::TYPE_ARRAY) ReportError("Hierarchy node isn't an array");
-    m_bonesValue = l_hierarchyNode.get_length();
-    std::cout << "Bones value is " << m_bonesValue << std::endl;
-    if(m_bonesValue == 0U) ReportError("Bones array is empty");
-    m_bones.resize(m_bonesValue);
+    m_bonesCount = l_hierarchyNode.get_length();
+    Info("Bones count is " << m_bonesCount);
+    if(m_bonesCount == 0U) ReportError("Bones array is empty");
+    m_bones.resize(m_bonesCount);
 
-    for(unsigned int i = 0; i < m_bonesValue; i++)
+    for(unsigned int i = 0; i < m_bonesCount; i++)
     {
         sajson::value l_boneNode = l_hierarchyNode.get_array_element(i);
         if(l_boneNode.get_type() != sajson::TYPE_OBJECT) ReportErrorAndClean("Bone " << i << " node isn't an object");
@@ -92,10 +124,11 @@ bool Animation::Load(const std::string &f_path)
         sajson::value l_dataNode = l_boneNode.get_object_value(l_nodeIndex);
         if(l_dataNode.get_type() != sajson::TYPE_ARRAY) ReportErrorAndClean("Bone " << i << " keys node isn't an array");
 
+        Info("Bone " << i << ", " << l_dataNode.get_length() << " keyframes ");
+
         keyframeData l_previousKeyframe;
         for(size_t j = 0, jj = l_dataNode.get_length(); j < jj; j++)
         {
-            std::cout << "Fetching [" << i << ',' << j << ']' << std::endl;
             keyframeData l_keyframeData;
             sajson::value b_node = l_dataNode.get_array_element(j);
             if(b_node.get_type() != sajson::TYPE_OBJECT) ReportErrorAndClean("Bone " << i << " frame " << j << " isn't an object");
@@ -171,35 +204,42 @@ bool Animation::Load(const std::string &f_path)
             l_previousKeyframe = l_keyframeData;
         }
     }
-    std::cout << "Animation " << f_path.c_str() << " loaded successfully" << std::endl;
+    Info("Animation " << f_path << " loaded successfully");
     m_loaded = true;
     return true;
 }
 
 bool Animation::Generate(const std::string &f_path)
 {
-    if(!m_loaded)
+    bool l_result = false;
+    if(m_loaded)
     {
-        std::cout << "Animation hasn't been loaded yet" << std::endl;
-        return false;
+        std::ofstream l_file(f_path, std::ios::out | std::ios::binary);
+        if(!l_file.fail())
+        {
+            l_file.write(reinterpret_cast<char*>(&m_fps), sizeof(unsigned int));
+            l_file.write(reinterpret_cast<char*>(&m_duration), sizeof(unsigned int));
+            l_file.write(reinterpret_cast<char*>(&m_bonesCount), sizeof(unsigned int));
+            for(auto &iter : m_bones)
+            {
+                int l_keyframesCount = iter.m_keyframes.size();
+                l_file.write(reinterpret_cast<char*>(&l_keyframesCount), sizeof(int));
+                for(auto &iter1 : iter.m_keyframes)
+                {
+                    l_file.write(reinterpret_cast<char*>(&iter1.m_position), sizeof(glm::vec3));
+                    l_file.write(reinterpret_cast<char*>(&iter1.m_rotation), sizeof(glm::quat));
+                    l_file.write(reinterpret_cast<char*>(&iter1.m_scale), sizeof(glm::vec3));
+                    l_file.write(reinterpret_cast<char*>(&iter1.m_frameIndex), sizeof(int));
+                }
+            }
+            l_file.flush();
+            l_file.close();
+
+            Info("Animation has been converted to " << f_path);
+            l_result = true;
+        }
+        else Info("Unable to create file " << f_path);
     }
-    std::ofstream l_file(f_path, std::ios::out | std::ios::binary);
-    if(l_file.fail())
-    {
-        std::cout << "Unable to create file " << f_path.c_str() << std::endl;
-        return false;
-    }
-    l_file.write(reinterpret_cast<char*>(&m_fps), sizeof(unsigned int));
-    l_file.write(reinterpret_cast<char*>(&m_duration), sizeof(unsigned int));
-    l_file.write(reinterpret_cast<char*>(&m_bonesValue), sizeof(unsigned int));
-    for(auto iter : m_bones)
-    {
-        int l_keyframesCount = iter.m_keyframes.size();
-        l_file.write(reinterpret_cast<char*>(&l_keyframesCount), sizeof(int));
-        for(auto iter1 : iter.m_keyframes) l_file.write(reinterpret_cast<char*>(&iter1), sizeof(keyframeData));
-    }
-    l_file.flush();
-    l_file.close();
-    std::cout << "Animation has been converted to " << f_path << std::endl;
-    return true;
+    else Info("Animation hasn't been loaded yet");
+    return l_result;
 }
