@@ -60,7 +60,7 @@ bool Animation::Load(const std::string &f_path)
     if(l_animCount == 0U) ReportError("Animation node is empty");
 
     std::vector<std::pair<size_t, std::string>> l_animNamesVector;
-    for(size_t i = 0; i < l_animCount; i++)
+    for(size_t i = 0U; i < l_animCount; i++)
     {
         sajson::value l_animNode = l_animContNode.get_array_element(i);
         if(l_animNode.get_type() == sajson::TYPE_OBJECT)
@@ -84,7 +84,11 @@ bool Animation::Load(const std::string &f_path)
     bool l_selectionCheck = false;
     for(auto &iter : l_animNamesVector)
     {
-        if(iter.first == l_selectedAnim) l_selectionCheck = true;
+        if(iter.first == l_selectedAnim)
+        {
+            l_selectionCheck = true;
+            break;
+        }
     }
     if(!l_selectionCheck) ReportError("Invalid animation list index");
 
@@ -114,11 +118,11 @@ bool Animation::Load(const std::string &f_path)
     if(m_bonesCount == 0U) ReportError("Bones array is empty");
     m_bones.resize(m_bonesCount);
 
-    for(unsigned int i = 0; i < m_bonesCount; i++)
+    for(unsigned int i = 0U; i < m_bonesCount; i++)
     {
         sajson::value l_boneNode = l_hierarchyNode.get_array_element(i);
         if(l_boneNode.get_type() != sajson::TYPE_OBJECT) ReportErrorAndClean("Bone " << i << " node isn't an object");
-        if(l_boneNode.get_length() == 0) ReportErrorAndClean("Bone " << i << " node is empty");
+        if(l_boneNode.get_length() == 0U) ReportErrorAndClean("Bone " << i << " node is empty");
         l_nodeIndex = l_boneNode.find_object_key(sajson::literal("keys"));
         if(l_nodeIndex == l_boneNode.get_length()) ReportErrorAndClean("Bone " << i << " keys node doesn't exist");
         sajson::value l_dataNode = l_boneNode.get_object_value(l_nodeIndex);
@@ -127,25 +131,25 @@ bool Animation::Load(const std::string &f_path)
         Info("Bone " << i << ", " << l_dataNode.get_length() << " keyframes ");
 
         keyframeData l_previousKeyframe;
-        for(size_t j = 0, jj = l_dataNode.get_length(); j < jj; j++)
+        for(size_t j = 0U, jj = l_dataNode.get_length(); j < jj; j++)
         {
             keyframeData l_keyframeData;
             sajson::value b_node = l_dataNode.get_array_element(j);
             if(b_node.get_type() != sajson::TYPE_OBJECT) ReportErrorAndClean("Bone " << i << " frame " << j << " isn't an object");
-            if(b_node.get_length() == 0) ReportErrorAndClean("Bone " << i << " frame " << j << " is empty");
+            if(b_node.get_length() == 0U) ReportErrorAndClean("Bone " << i << " frame " << j << " is empty");
             l_nodeIndex = b_node.find_object_key(sajson::literal("pos"));
             if(l_nodeIndex != b_node.get_length())
             {
                 sajson::value l_node1 = b_node.get_object_value(l_nodeIndex);
                 if(l_node1.get_type() != sajson::TYPE_ARRAY) ReportErrorAndClean("Bone " << i << " frame " << j << " position node isn't an array");
-                if(l_node1.get_length() != 3) ReportErrorAndClean("Bone " << i << " frame " << j << " position node size isn't equal 3");
+                if(l_node1.get_length() != 3U) ReportErrorAndClean("Bone " << i << " frame " << j << " position node size isn't equal 3");
 
-                for(size_t k = 0; k < 3; k++)
+                for(size_t k = 0U; k < 3U; k++)
                 {
                     sajson::value l_valueNode = l_node1.get_array_element(k);
                     size_t l_nodeType = l_valueNode.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) ReportErrorAndClean("Bone " << i << " frame " << j << " position node value " << k << " isn't a number");
-                    l_keyframeData.m_position[k] = float(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
+                    l_keyframeData.m_position[k] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
                 }
             }
             else
@@ -159,13 +163,13 @@ bool Animation::Load(const std::string &f_path)
             {
                 sajson::value l_node2 = b_node.get_object_value(l_nodeIndex);
                 if(l_node2.get_type() != sajson::TYPE_ARRAY) ReportErrorAndClean("Bone " << i << " frame " << j << " rotation node isn't an array");
-                if(l_node2.get_length() != 4) ReportErrorAndClean("Bone " << i << " frame " << j << " rotation node size isn't equal 4");
-                for(size_t k = 0; k < 4; k++)
+                if(l_node2.get_length() != 4U) ReportErrorAndClean("Bone " << i << " frame " << j << " rotation node size isn't equal 4");
+                for(size_t k = 0U; k < 4U; k++)
                 {
                     sajson::value l_valueNode = l_node2.get_array_element(k);
                     size_t l_nodeType = l_valueNode.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) ReportErrorAndClean("Bone " << i << " frame " << j << " rotation node value " << k << " isn't a number");
-                    l_keyframeData.m_rotation[k] = float(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
+                    l_keyframeData.m_rotation[k] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
                 }
             }
             else
@@ -179,13 +183,13 @@ bool Animation::Load(const std::string &f_path)
             {
                 sajson::value l_node3 = b_node.get_object_value(l_nodeIndex);
                 if(l_node3.get_type() != sajson::TYPE_ARRAY) ReportErrorAndClean("Bone " << i << " frame " << j << " scale node isn't an array");
-                if(l_node3.get_length() != 3) ReportErrorAndClean("Bone " << i << " frame " << j << " scale node size isn't equal 3");
-                for(size_t k = 0; k < 3; k++)
+                if(l_node3.get_length() != 3U) ReportErrorAndClean("Bone " << i << " frame " << j << " scale node size isn't equal 3");
+                for(size_t k = 0U; k < 3U; k++)
                 {
                     sajson::value l_valueNode = l_node3.get_array_element(k);
                     size_t l_nodeType = l_valueNode.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) ReportErrorAndClean("Bone " << i << " frame " << j << " scale node value " << k << " isn't a number");
-                    l_keyframeData.m_scale[k] = float(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
+                    l_keyframeData.m_scale[k] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
                 }
             }
             else
@@ -198,7 +202,7 @@ bool Animation::Load(const std::string &f_path)
             if(l_nodeIndex == b_node.get_length()) ReportErrorAndClean("Bone " << i << " frame " << j << " time node doesn't exist");
             sajson::value l_node4 = b_node.get_object_value(l_nodeIndex);
             if(l_node4.get_type() != sajson::TYPE_INTEGER && l_node4.get_type() != sajson::TYPE_DOUBLE) ReportErrorAndClean("Bone " << i << " frame " << j << " time node type isn't a number");
-            l_keyframeData.m_frameIndex = int(l_node4.get_type() == sajson::TYPE_INTEGER ? l_node4.get_integer_value()*m_fps : float(l_node4.get_double_value())*float(m_fps));
+            l_keyframeData.m_frameIndex = static_cast<int>(l_node4.get_type() == sajson::TYPE_INTEGER ? l_node4.get_integer_value()*m_fps : l_node4.get_double_value()*static_cast<double>(m_fps));
 
             m_bones[i].m_keyframes.push_back(l_keyframeData);
             l_previousKeyframe = l_keyframeData;

@@ -395,8 +395,8 @@ bool ROC::ArgReader::HasErrors()
 {
     if(m_hasErrors)
     {
-        std::string l_log("Warning at ");
         lua_Debug l_ar;
+        std::string l_log("Warning at ");
         lua_getstack(m_vm, 1, &l_ar);
         lua_getinfo(m_vm, "nSl", &l_ar);
         l_log.append(l_ar.source);
