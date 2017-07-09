@@ -42,8 +42,6 @@ class Font final : public Element
     bool m_loaded;
 
     bool LoadChar(unsigned int f_char);
-
-    void Clear();
 public:
     inline int GetFiltering() const { return m_filteringType; }
 protected:

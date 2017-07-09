@@ -27,6 +27,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     luaL_requiref(m_vm, "table", luaopen_table, 1);
     luaL_requiref(m_vm, "bit32", luaopen_bit32, 1);
     luaL_requiref(m_vm, "utf8", luaopen_utf8, 1);
+    luaL_requiref(m_vm, "package", luaopen_package, 1);
 
     LuaElementDef::Init(m_vm);
 
