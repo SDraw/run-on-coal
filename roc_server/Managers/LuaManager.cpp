@@ -61,16 +61,16 @@ void ROC::LuaManager::SetCore(Core *f_core)
     s_core = f_core;
 }
 
-bool ROC::LuaManager::OpenFile(const std::string &f_path)
+bool ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)
 {
-    int error = (luaL_loadfile(m_vm, f_path.c_str()) || lua_pcall(m_vm, 0, 0, 0));
-    if(error)
+    int l_error = ((f_asFile ? luaL_loadfile(m_vm, f_script.c_str()) : luaL_loadstring(m_vm, f_script.c_str())) || lua_pcall(m_vm, 0, 0, 0));
+    if(l_error)
     {
         std::string l_log(lua_tostring(m_vm, -1));
         m_core->GetLogManager()->Log(l_log);
         lua_pop(m_vm, 1);
     }
-    return (error == 0);
+    return (l_error == 0);
 }
 
 void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_args)

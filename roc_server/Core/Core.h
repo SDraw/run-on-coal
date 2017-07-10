@@ -11,21 +11,29 @@ class LuaManager;
 class MemoryManager;
 class NetworkManager;
 class LuaArguments;
-typedef void(*onServerPulseCallback)(void);
+
+typedef void(*OnServerStartCallback)(void);
+typedef void(*OnServerPulseCallback)(void);
+typedef void(*OnServerStopCallback)(void);
 
 class Core final
 {
+    static Core *s_instance;
+
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
     LogManager *m_logManager;
     LuaManager *m_luaManager;
     MemoryManager *m_memoryManager;
     NetworkManager *m_networkManager;
-    static Core *s_instance;
+
     std::string m_workingDir;
     std::chrono::milliseconds m_pulseTick;
     LuaArguments *m_argument;
-    onServerPulseCallback m_serverPulseCallback;
+
+    static OnServerStartCallback s_serverStartCallback;
+    OnServerPulseCallback m_serverPulseCallback;
+    OnServerStopCallback m_serverStopCallback;
 
     Core();
     Core(const Core& that);
@@ -43,7 +51,9 @@ public:
     inline MemoryManager* GetMemoryManager() { return m_memoryManager; }
     inline NetworkManager* GetNetworkManager() { return m_networkManager; }
 
-    inline void SetServerPulseCallback(onServerPulseCallback f_callback) { m_serverPulseCallback = f_callback; }
+    static inline void SetServerStartCallback(OnServerStartCallback f_callback) { s_serverStartCallback = f_callback; }
+    inline void SetServerPulseCallback(OnServerPulseCallback f_callback) { m_serverPulseCallback = f_callback; }
+    inline void SetServerStopCallback(OnServerStopCallback f_callback) { m_serverStopCallback = f_callback; }
 
     void DoPulse();
 };

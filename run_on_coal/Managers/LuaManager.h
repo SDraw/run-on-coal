@@ -21,8 +21,9 @@ class LuaManager final
     LuaManager &operator =(const LuaManager &that);
 public:
     static inline Core* GetCore() { return s_core; }
-    bool OpenFile(const std::string &f_path);
     inline EventManager* GetEventManager() { return m_eventManager; }
+
+    bool LoadScript(const std::string &f_script, bool f_asFile = true);
 protected:
     explicit LuaManager(Core *f_core);
     ~LuaManager();

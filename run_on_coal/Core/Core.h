@@ -17,12 +17,13 @@ class PreRenderManager;
 class RenderManager;
 class SoundManager;
 class LuaArguments;
+
+typedef void(*OnEngineStartCallback)(void);
+typedef void(*OnEngineStopCallback)(void);
+
 class Core final
 {
     static Core *s_instance;
-    std::string m_workingDir;
-    bool m_state;
-    LuaArguments *m_argument;
 
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
@@ -38,6 +39,13 @@ class Core final
     PreRenderManager *m_preRenderManager;
     SoundManager *m_soundManager;
 
+    std::string m_workingDir;
+    bool m_state;
+    LuaArguments *m_argument;
+
+    static OnEngineStartCallback s_engineStartCallback;
+    OnEngineStopCallback m_engineStopCallback;
+
     Core();
     Core(const Core& that);
     Core &operator =(const Core &that);
@@ -45,6 +53,9 @@ class Core final
 public:
     static Core* Init();
     static void Terminate();
+
+    static inline void SetEngineStartCallback(OnEngineStartCallback f_callback) { s_engineStartCallback = f_callback; }
+    inline void SetEngineStopCallback(OnEngineStopCallback f_callback) { m_engineStopCallback = f_callback; }
 
     bool DoPulse();
     inline void GetWorkingDirectory(std::string &f_path) { f_path.assign(m_workingDir); }

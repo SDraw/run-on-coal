@@ -11,6 +11,7 @@
 #include "Lua/LuaArguments.h"
 
 ROC::Core* ROC::Core::s_instance = nullptr;
+ROC::OnServerStartCallback ROC::Core::s_serverStartCallback = nullptr;
 
 ROC::Core::Core()
 {
@@ -35,6 +36,7 @@ ROC::Core::Core()
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());
 
     m_serverPulseCallback = nullptr;
+    m_serverStopCallback = nullptr;
 }
 ROC::Core::~Core()
 {
@@ -69,13 +71,14 @@ ROC::Core* ROC::Core::Init()
                     {
                         std::string l_path(ROC_DEFAULT_SCRIPTS_PATH);
                         l_path.append(l_attrib.as_string());
-                        s_instance->m_luaManager->OpenFile(l_path);
+                        s_instance->m_luaManager->LoadScript(l_path);
                     }
                 }
             }
         }
         delete l_meta;
 
+        if(s_serverStartCallback) (*s_serverStartCallback)();
         s_instance->m_luaManager->GetEventManager()->CallEvent("onServerStart", s_instance->m_argument);
     }
     return s_instance;
@@ -84,6 +87,7 @@ void ROC::Core::Terminate()
 {
     if(s_instance)
     {
+        if(s_instance->m_serverStopCallback) (*s_instance->m_serverStopCallback)();
         s_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", s_instance->m_argument);
 
         delete s_instance;

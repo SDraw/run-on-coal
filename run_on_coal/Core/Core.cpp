@@ -22,6 +22,7 @@
 #define CORE_DEFAULT_SCIPTS_PATH "scripts/"
 
 ROC::Core* ROC::Core::s_instance = nullptr;
+ROC::OnEngineStartCallback ROC::Core::s_engineStartCallback = nullptr;
 
 ROC::Core::Core()
 {
@@ -49,6 +50,8 @@ ROC::Core::Core()
     m_preRenderManager = new PreRenderManager(this);
     m_renderManager = new RenderManager(this);
     m_networkManager = new NetworkManager(this);
+
+    m_engineStopCallback = nullptr;
 
     m_state = true;
     m_argument = new LuaArguments();
@@ -95,13 +98,14 @@ ROC::Core* ROC::Core::Init()
                     {
                         std::string l_path(CORE_DEFAULT_SCIPTS_PATH);
                         l_path.append(l_attrib.as_string());
-                        s_instance->m_luaManager->OpenFile(l_path);
+                        s_instance->m_luaManager->LoadScript(l_path);
                     }
                 }
             }
         }
         delete l_meta;
 
+        if(s_engineStartCallback) (*s_engineStartCallback)();
         s_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStart", s_instance->m_argument);
     }
     return s_instance;
@@ -110,6 +114,7 @@ void ROC::Core::Terminate()
 {
     if(s_instance)
     {
+        if(s_instance->m_engineStopCallback) (*s_instance->m_engineStopCallback)();
         s_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStop", s_instance->m_argument);
 
         delete s_instance;
