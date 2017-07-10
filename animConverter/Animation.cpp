@@ -65,11 +65,15 @@ bool Animation::Load(const std::string &f_path)
         sajson::value l_animNode = l_animContNode.get_array_element(i);
         if(l_animNode.get_type() == sajson::TYPE_OBJECT)
         {
-            size_t l_animNameIndex = l_animNode.find_object_key(sajson::literal("name"));
-            if(l_animNameIndex != 0U)
+            size_t l_animNodeLength = l_animNode.get_length();
+            if(l_animNodeLength > 0U)
             {
-                sajson::value l_animNameValue = l_animNode.get_object_value(l_animNameIndex);
-                if(l_animNameValue.get_type() == sajson::TYPE_STRING) l_animNamesVector.push_back(std::make_pair(i, l_animNameValue.as_string()));
+                size_t l_animNameIndex = l_animNode.find_object_key(sajson::literal("name"));
+                if(l_animNameIndex != l_animNodeLength)
+                {
+                    sajson::value l_animNameValue = l_animNode.get_object_value(l_animNameIndex);
+                    if(l_animNameValue.get_type() == sajson::TYPE_STRING) l_animNamesVector.push_back(std::make_pair(i, l_animNameValue.as_string()));
+                }
             }
         }
     }
