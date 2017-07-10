@@ -17,11 +17,6 @@ extern const std::vector<std::string> g_KeyNamesTable;
 extern const std::vector<std::string> g_MouseKeyNamesTable;
 extern const std::vector<std::string> g_JoypadAxisNamesTable;
 
-const std::vector<std::string> g_CursorLockNamesTable
-{
-    "hu", "hl", "vu", "vl"
-};
-
 }
 
 void ROC::LuaInputDef::Init(lua_State *f_vm)
@@ -50,18 +45,14 @@ void ROC::LuaInputDef::Init(lua_State *f_vm)
 
 int ROC::LuaInputDef::SetCursorMode(lua_State *f_vm)
 {
-    std::string l_state;
+    bool l_visible, l_locked;
     ArgReader argStream(f_vm);
-    argStream.ReadText(l_state);
-    if(!argStream.HasErrors() && !l_state.empty())
+    argStream.ReadBoolean(l_visible);
+    argStream.ReadBoolean(l_locked);
+    if(!argStream.HasErrors())
     {
-        int l_type = Utils::Enum::ReadEnumVector(g_CursorLockNamesTable, l_state);
-        if(l_type != -1)
-        {
-            LuaManager::GetCore()->GetSfmlManager()->SetCursorMode(static_cast<unsigned char>(l_type));
-            argStream.PushBoolean(true);
-        }
-        else argStream.PushBoolean(false);
+        LuaManager::GetCore()->GetSfmlManager()->SetCursorMode(l_visible, l_locked);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

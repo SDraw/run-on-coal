@@ -101,8 +101,6 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_argument = new LuaArguments();
 
-    m_cursorMode = ROC_CURSOR_BIT_VISIBILITY;
-
     m_windowResizeCallback = nullptr;
     m_windowFocusCallback = nullptr;
     m_keyPressCallback = nullptr;
@@ -166,14 +164,10 @@ bool ROC::SfmlManager::SetIcon(const std::string &f_path)
     return l_result;
 }
 
-void ROC::SfmlManager::SetCursorMode(unsigned char f_mode)
+void ROC::SfmlManager::SetCursorMode(bool f_visible, bool f_lock)
 {
-    if(f_mode != m_cursorMode)
-    {
-        m_cursorMode = f_mode;
-        m_window->setMouseCursorGrabbed(CheckBit(m_cursorMode, ROC_CURSOR_BIT_LOCK));
-        m_window->setMouseCursorVisible(CheckBit(m_cursorMode, ROC_CURSOR_BIT_VISIBILITY));
-    }
+    m_window->setMouseCursorGrabbed(f_lock);
+    m_window->setMouseCursorVisible(f_visible);
 }
 void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos)
 {

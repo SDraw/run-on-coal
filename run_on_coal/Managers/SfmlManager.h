@@ -1,6 +1,4 @@
 #pragma once
-#define ROC_CURSOR_BIT_LOCK 1U
-#define ROC_CURSOR_BIT_VISIBILITY 2U
 
 namespace ROC
 {
@@ -26,6 +24,7 @@ class SfmlManager final
     sf::VideoMode m_windowVideoMode;
     sf::ContextSettings m_contextSettings;
     sf::Uint32 m_windowStyle;
+    unsigned int m_frameLimit;
     sf::Window *m_window;
     sf::Event m_event;
     bool m_active;
@@ -33,11 +32,7 @@ class SfmlManager final
     sf::Clock m_clock;
     float m_time;
 
-    unsigned int m_frameLimit;
-
     LuaArguments *m_argument;
-
-    unsigned char m_cursorMode;
 
     OnWindowResizeCallback m_windowResizeCallback;
     OnWindowFocusCallback m_windowFocusCallback;
@@ -65,7 +60,7 @@ public:
     inline void RequestFocus() { m_window->requestFocus(); }
     inline bool GetFocusState() const { return m_window->hasFocus(); }
 
-    void SetCursorMode(unsigned char f_mode);
+    void SetCursorMode(bool f_visible, bool f_lock);
     void GetCursorPosition(glm::ivec2 &f_pos);
     void SetCursorPosition(const glm::ivec2 &f_pos);
 
