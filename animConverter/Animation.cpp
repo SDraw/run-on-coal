@@ -132,10 +132,12 @@ bool Animation::Load(const std::string &f_path)
         sajson::value l_dataNode = l_boneNode.get_object_value(l_nodeIndex);
         if(l_dataNode.get_type() != sajson::TYPE_ARRAY) ReportErrorAndClean("Bone " << i << " keys node isn't an array");
 
-        Info("Bone " << i << ", " << l_dataNode.get_length() << " keyframes ");
+        size_t l_dataNodeLength = l_dataNode.get_length();
+        Info("Bone " << i << ", " << l_dataNodeLength << " keyframes ");
+        if(l_dataNodeLength < 2U) ReportErrorAndClean("Bone " << i << " has less than 2 keyframes");
 
         keyframeData l_previousKeyframe;
-        for(size_t j = 0U, jj = l_dataNode.get_length(); j < jj; j++)
+        for(size_t j = 0U; j < l_dataNodeLength; j++)
         {
             keyframeData l_keyframeData;
             sajson::value b_node = l_dataNode.get_array_element(j);
@@ -158,7 +160,7 @@ bool Animation::Load(const std::string &f_path)
             }
             else
             {
-                if(j == 0U) { ReportErrorAndClean("Bone " << i << " frame " << j << " position node doesn't exist"); }
+                if(j == 0U) ReportErrorAndClean("Bone " << i << " frame " << j << " position node doesn't exist")
                 else l_keyframeData.m_position = l_previousKeyframe.m_position;
             }
 
@@ -178,7 +180,7 @@ bool Animation::Load(const std::string &f_path)
             }
             else
             {
-                if(j == 0U) { ReportErrorAndClean("Bone " << i << " frame " << j << " rotation node doesn't exist"); }
+                if(j == 0U) ReportErrorAndClean("Bone " << i << " frame " << j << " rotation node doesn't exist")
                 else l_keyframeData.m_rotation = l_previousKeyframe.m_rotation;
             }
 
@@ -198,7 +200,7 @@ bool Animation::Load(const std::string &f_path)
             }
             else
             {
-                if(j == 0U) { ReportErrorAndClean("Bone " << i << " frame " << j << " scale node doesn't exist"); }
+                if(j == 0U) ReportErrorAndClean("Bone " << i << " frame " << j << " scale node doesn't exist")
                 else l_keyframeData.m_scale = l_previousKeyframe.m_scale;
             }
 
