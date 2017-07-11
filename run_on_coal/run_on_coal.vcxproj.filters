@@ -28,9 +28,6 @@
     <ClCompile Include="Lua\LuaArguments.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\Utils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
@@ -216,6 +213,21 @@
     <ClCompile Include="Utils\GlobalConstants.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\LuaUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\MathUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\zlibUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PathUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\EnumUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -245,9 +257,6 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaArguments.h">
       <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\Utils.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Managers\ElementManager.h">
       <Filter>Managers</Filter>
@@ -429,6 +438,21 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h">
       <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\LuaUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\MathUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\zlibUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PathUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\EnumUtils.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -27,6 +27,8 @@ class NetworkManager final
     OnNetworkClientDisconnectCallback m_networkClientDisconnectCallback;
     OnNetworkDataRecieveCallback m_networkDataRecieveCallback;
 
+    static unsigned char GetPacketIdentifier(RakNet::Packet *f_packet);
+
     NetworkManager(const NetworkManager& that);
     NetworkManager &operator =(const NetworkManager &that);
 public:

@@ -8,7 +8,6 @@
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
 #include "Lua/LuaFunction.hpp"
-#include "Utils/Utils.h"
 
 void ROC::LuaEventsDef::Init(lua_State *f_vm)
 {

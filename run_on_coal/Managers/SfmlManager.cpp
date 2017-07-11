@@ -10,7 +10,7 @@
 #include "Managers/LuaManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Elements/Shader.h"
-#include "Utils/Utils.h"
+#include "Utils/PathUtils.h"
 
 #define ROC_OPENGL_MIN_VERSION 31U
 #define ROC_OPENGL_MIN_VERSION_STRING "3.1"
@@ -151,7 +151,7 @@ bool ROC::SfmlManager::SetIcon(const std::string &f_path)
 
     std::string l_work, l_path(f_path);
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     sf::Image l_image;

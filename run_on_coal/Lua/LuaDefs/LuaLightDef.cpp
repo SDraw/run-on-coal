@@ -9,19 +9,19 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/Light.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 void ROC::LuaLightDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Light", LightCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setParams", LightSetParams);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getParams", LightGetParams);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setColor", LightSetColor);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getColor", LightGetColor);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setDirection", LightSetDirection);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getDirection", LightGetDirection);
+    LuaUtils::lua_registerClass(f_vm, "Light", LightCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "setParams", LightSetParams);
+    LuaUtils::lua_registerClassMethod(f_vm, "getParams", LightGetParams);
+    LuaUtils::lua_registerClassMethod(f_vm, "setColor", LightSetColor);
+    LuaUtils::lua_registerClassMethod(f_vm, "getColor", LightGetColor);
+    LuaUtils::lua_registerClassMethod(f_vm, "setDirection", LightSetDirection);
+    LuaUtils::lua_registerClassMethod(f_vm, "getDirection", LightGetDirection);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaLightDef::LightCreate(lua_State *f_vm)

@@ -9,14 +9,14 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 void ROC::LuaGeometryDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Geometry", GeometryCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getBoundSphereRadius", GeometryGetBoundSphereRadius);
+    LuaUtils::lua_registerClass(f_vm, "Geometry", GeometryCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "getBoundSphereRadius", GeometryGetBoundSphereRadius);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaGeometryDef::GeometryCreate(lua_State *f_vm)

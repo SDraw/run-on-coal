@@ -9,7 +9,8 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/Camera.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
+#include "Utils/LuaUtils.h"
 
 namespace ROC
 {
@@ -23,25 +24,25 @@ const std::vector<std::string> g_CameraTypesTable
 
 void ROC::LuaCameraDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Camera", CameraCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setPosition", CameraSetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getPosition", CameraGetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setDirection", CameraSetDirection);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getDirection", CameraGetDirection);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setProjectionType", CameraSetProjectionType);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getProjectionType", CameraGetProjectionType);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setFOV", CameraSetFOV);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getFOV", CameraGetFOV);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setAspectRatio", CameraSetAspectRatio);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getAspectRatio", CameraGetAspectRatio);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setOrthoParams", CameraSetOrthoParams);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getOrthoParams", CameraGetOrthoParams);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setDepth", CameraSetDepth);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getDepth", CameraGetDepth);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getViewMatrix", CameraGetViewMatrix);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getProjectionMatrix", CameraGetProjectionMatrix);
+    LuaUtils::lua_registerClass(f_vm, "Camera", CameraCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "setPosition", CameraSetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "getPosition", CameraGetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "setDirection", CameraSetDirection);
+    LuaUtils::lua_registerClassMethod(f_vm, "getDirection", CameraGetDirection);
+    LuaUtils::lua_registerClassMethod(f_vm, "setProjectionType", CameraSetProjectionType);
+    LuaUtils::lua_registerClassMethod(f_vm, "getProjectionType", CameraGetProjectionType);
+    LuaUtils::lua_registerClassMethod(f_vm, "setFOV", CameraSetFOV);
+    LuaUtils::lua_registerClassMethod(f_vm, "getFOV", CameraGetFOV);
+    LuaUtils::lua_registerClassMethod(f_vm, "setAspectRatio", CameraSetAspectRatio);
+    LuaUtils::lua_registerClassMethod(f_vm, "getAspectRatio", CameraGetAspectRatio);
+    LuaUtils::lua_registerClassMethod(f_vm, "setOrthoParams", CameraSetOrthoParams);
+    LuaUtils::lua_registerClassMethod(f_vm, "getOrthoParams", CameraGetOrthoParams);
+    LuaUtils::lua_registerClassMethod(f_vm, "setDepth", CameraSetDepth);
+    LuaUtils::lua_registerClassMethod(f_vm, "getDepth", CameraGetDepth);
+    LuaUtils::lua_registerClassMethod(f_vm, "getViewMatrix", CameraGetViewMatrix);
+    LuaUtils::lua_registerClassMethod(f_vm, "getProjectionMatrix", CameraGetProjectionMatrix);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaCameraDef::CameraCreate(lua_State *f_vm)
@@ -51,7 +52,7 @@ int ROC::LuaCameraDef::CameraCreate(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = Utils::Enum::ReadEnumVector(g_CameraTypesTable, l_text);
+        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypesTable);
         if(l_type != -1)
         {
             Camera *l_Camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(l_type);
@@ -136,7 +137,7 @@ int ROC::LuaCameraDef::CameraSetProjectionType(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = Utils::Enum::ReadEnumVector(g_CameraTypesTable, l_text);
+        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypesTable);
         if(l_type != -1)
         {
             l_Camera->SetProjectionType(l_type);

@@ -2,7 +2,7 @@
 
 #include "Elements/Font.h"
 
-#include "Utils/Utils.h"
+#include "Utils/MathUtils.h"
 
 namespace ROC
 {
@@ -73,7 +73,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             m_filteringType = f_filter;
             btClamp(m_filteringType, ROC_FONT_FILTER_NEAREST, ROC_FONT_FILTER_LINEAR);
 
-            if(Utils::Math::IsPowerOfTwo(f_atlas.x))
+            if(MathUtils::IsPowerOfTwo(f_atlas.x))
             {
                 m_atlasSize.x = f_atlas.x;
                 m_atlasOffset.x = 1.f / static_cast<float>(f_atlas.x);
@@ -83,7 +83,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
                 m_atlasSize.x = ROC_FONT_ATLAS_SIZE;
                 m_atlasOffset.x = g_DefaultAtlasOffset;
             }
-            if(Utils::Math::IsPowerOfTwo(f_atlas.y))
+            if(MathUtils::IsPowerOfTwo(f_atlas.y))
             {
                 m_atlasSize.y = f_atlas.y;
                 m_atlasOffset.y = 1.f / static_cast<float>(f_atlas.y);

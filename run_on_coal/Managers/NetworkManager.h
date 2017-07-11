@@ -28,6 +28,8 @@ class NetworkManager final
     OnNetworkStateChangeCallback m_stateCallback;
     OnNetworkDataRecieveCallback m_dataCallback;
 
+    static unsigned char GetPacketIdentifier(RakNet::Packet *f_packet);
+
     NetworkManager(const NetworkManager& that);
     NetworkManager &operator =(const NetworkManager &that);
 public:

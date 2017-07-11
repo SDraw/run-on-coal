@@ -2,7 +2,7 @@
 
 #include "Managers/ConfigManager.h"
 
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
 
 #define ROC_CONFIG_ATTRIB_LOGGING 0
 #define ROC_CONFIG_ATTRIB_IP 1
@@ -44,7 +44,7 @@ ROC::ConfigManager::ConfigManager()
                     l_attrib = l_node.attribute("value");
                     if(l_attrib)
                     {
-                        switch(Utils::Enum::ReadEnumVector(g_configAttributeTable, l_param))
+                        switch(EnumUtils::ReadEnumVector(l_param, g_configAttributeTable))
                         {
                             case ROC_CONFIG_ATTRIB_LOGGING:
                                 m_logging = l_attrib.as_bool(true);

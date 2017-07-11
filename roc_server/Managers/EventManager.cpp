@@ -4,7 +4,7 @@
 #include "Managers/LuaManager.h"
 #include "Lua/LuaArguments.h"
 
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
 
 #define ROC_EVENT_MISSING 0U
 #define ROC_EVENT_DELETED 1U
@@ -99,7 +99,7 @@ bool ROC::EventManager::AddEventHandler(const std::string &f_event, LuaFunction 
 bool ROC::EventManager::RemoveEvent(const std::string &f_event)
 {
     bool l_result = false;
-    if(Utils::Enum::ReadEnumVector(g_DefaultEventsNames, f_event) == -1)
+    if(EnumUtils::ReadEnumVector(f_event, g_DefaultEventsNames) == -1)
     {
         auto iter = m_eventMap.find(f_event);
         if(iter != m_eventMapEnd)

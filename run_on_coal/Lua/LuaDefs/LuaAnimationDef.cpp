@@ -9,15 +9,15 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/Animation/Animation.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 void ROC::LuaAnimationDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Animation", AnimationCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getBonesCount", AnimationGetBonesCount);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getDuration", AnimationGetDuration);
+    LuaUtils::lua_registerClass(f_vm, "Animation", AnimationCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "getBonesCount", AnimationGetBonesCount);
+    LuaUtils::lua_registerClassMethod(f_vm, "getDuration", AnimationGetDuration);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaAnimationDef::AnimationCreate(lua_State *f_vm)

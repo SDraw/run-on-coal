@@ -9,7 +9,6 @@
 #include "Managers/PhysicsManager.h"
 #include "Elements/Model/Model.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
 
 void ROC::LuaPhysicsDef::Init(lua_State *f_vm)
 {

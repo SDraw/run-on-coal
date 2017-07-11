@@ -3,7 +3,7 @@
 #include "Elements/File.h"
 
 #include "Core/Core.h"
-#include "Utils/Utils.h"
+#include "Utils/PathUtils.h"
 
 ROC::File::File()
 {
@@ -132,7 +132,7 @@ bool ROC::File::Delete(Core *f_core, const std::string &f_path)
 {
     std::string l_work, l_path(f_path);
     f_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
     return !std::remove(l_work.c_str());
 }
@@ -141,9 +141,9 @@ bool ROC::File::Rename(Core *f_core, const std::string &f_old, const std::string
     std::string l_work, l_pathOld(f_old), l_pathNew(f_new);
 
     f_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_pathOld);
+    PathUtils::EscapePath(l_pathOld);
     l_pathOld.insert(0U, l_work);
-    Utils::Path::EscapePath(l_pathNew);
+    PathUtils::EscapePath(l_pathNew);
     l_pathNew.insert(0U, l_work);
 
     return !std::rename(l_pathOld.c_str(), l_pathNew.c_str());

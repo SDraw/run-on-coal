@@ -4,7 +4,7 @@
 #include "Elements/Drawable.h"
 #include "Utils/Pool.h"
 
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
 
 #define ROC_SHADER_BONES_BINDPOINT 0
 
@@ -258,7 +258,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
         glGetActiveUniform(m_program, static_cast<GLuint>(i), 256, &l_uniformNameSize, &l_uniformSize, &l_uniformType, l_uniformName.data());
 
         std::string l_uniformNameString(l_uniformName.data(), l_uniformNameSize);
-        if(Utils::Enum::ReadEnumVector(g_DefaultUniformsTable, l_uniformNameString) == -1)
+        if(EnumUtils::ReadEnumVector(l_uniformNameString, g_DefaultUniformsTable) == -1)
         {
             GLint l_uniformLocation = glGetUniformLocation(m_program, l_uniformNameString.c_str());
             m_uniformMap.insert(std::make_pair(l_uniformNameString, l_uniformLocation));

@@ -11,7 +11,7 @@
 #include "Elements/Scene.h"
 #include "Elements/Shader.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
 
 namespace ROC
 {
@@ -118,7 +118,7 @@ int ROC::LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
     argStream.ReadText(l_mode);
     if(!argStream.HasErrors() && !l_mode.empty())
     {
-        int l_type = Utils::Enum::ReadEnumVector(g_PolygonFillTable, l_mode);
+        int l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFillTable);
         if(l_type != -1)
         {
             RenderManager::SetPolygonMode(l_type);

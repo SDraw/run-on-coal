@@ -24,7 +24,7 @@
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager/RenderManager.h"
-#include "Utils/Utils.h"
+#include "Utils/PathUtils.h"
 
 ROC::ElementManager::ElementManager(Core *f_core)
 {
@@ -62,7 +62,7 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
 
     std::string l_work, l_path(f_path);
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(l_anim->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_anim);
@@ -80,7 +80,7 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
 
     std::string l_work, l_path(f_path);
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(!f_async && m_locked) m_core->GetRenderManager()->ResetCallsReducing();
@@ -131,17 +131,17 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
 
     if(!f_vpath.empty())
     {
-        Utils::Path::EscapePath(l_path[0]);
+        PathUtils::EscapePath(l_path[0]);
         l_path[0].insert(0U, l_work);
     }
     if(!f_fpath.empty())
     {
-        Utils::Path::EscapePath(l_path[1]);
+        PathUtils::EscapePath(l_path[1]);
         l_path[1].insert(0U, l_work);
     }
     if(!f_gpath.empty())
     {
-        Utils::Path::EscapePath(l_path[2]);
+        PathUtils::EscapePath(l_path[2]);
         l_path[2].insert(0U, l_work);
     }
     if(l_shader->Load(l_path[0], l_path[1], l_path[2]))
@@ -177,7 +177,7 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path, bool f_l
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(l_sound->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_sound);
@@ -212,7 +212,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
@@ -234,7 +234,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     for(auto iter : f_path)
     {
         std::string l_iterPath(iter);
-        Utils::Path::EscapePath(iter);
+        PathUtils::EscapePath(iter);
         l_iterPath.insert(0U, l_work);
         l_path.push_back(l_iterPath);
     }
@@ -255,7 +255,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
@@ -274,7 +274,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(l_file->Create(l_path, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
@@ -291,7 +291,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(l_file->Open(l_path, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
@@ -326,7 +326,7 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(l_movie->Load(l_path))

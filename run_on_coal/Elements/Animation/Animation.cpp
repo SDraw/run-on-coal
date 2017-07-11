@@ -4,7 +4,7 @@
 #include "Elements/Animation/BoneFrameData.h"
 
 #include "Elements/Model/Bone.h"
-#include "Utils/Utils.h"
+#include "Utils/MathUtils.h"
 
 ROC::Animation::Animation()
 {
@@ -125,7 +125,7 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
             animData &l_animData = m_searchResult.back().value;
             if(!l_animData.m_leftData->IsEqual(l_animData.m_rightData))
             {
-                float l_blend = Utils::Math::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
+                float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
                 m_tempFrameData->SetInterpolated(l_animData.m_leftData, l_animData.m_rightData, l_blend);
                 f_bones[i]->SetFrameData(m_tempFrameData);
             }

@@ -12,7 +12,8 @@
 #include "Elements/Collision.h"
 #include "Elements/Model/Model.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
+#include "Utils/LuaUtils.h"
 
 namespace ROC
 {
@@ -30,33 +31,33 @@ const std::vector<std::string> g_CollisionMotionTypesTable
 
 void ROC::LuaCollisionDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Collision", CollisionCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setPosition", CollisionSetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getPosition", CollisionGetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setRotation", CollisionSetRotation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getRotation", CollisionGetRotation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setScale", CollisionSetScale);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getScale", CollisionGetScale);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getMass", CollisionGetMass);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setVelocity", CollisionSetVelocity);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getVelocity", CollisionGetVelocity);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setAngularVelocity", CollisionSetAngularVelocity);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getAngularVelocity", CollisionGetAngularVelocity);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setFriction", CollisionSetFriction);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getFriction", CollisionGetFriction);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setLinearFactor", CollisionSetLinearFactor);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getLinearFactor", CollisionGetLinearFactor);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setAngularFactor", CollisionSetAngularFactor);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getAngularFactor", CollisionGetAngularFactor);
-    Utils::Lua::lua_registerClassMethod(f_vm, "applyForce", CollisionApplyForce);
-    Utils::Lua::lua_registerClassMethod(f_vm, "applyImpulse", CollisionApplyImpulse);
-    Utils::Lua::lua_registerClassMethod(f_vm, "applyTorque", CollisionApplyTorque);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setMotionType", CollisionSetMotionType);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getMotionType", CollisionGetMotionType);
-    Utils::Lua::lua_registerClassMethod(f_vm, "attach", CollisionAttach);
-    Utils::Lua::lua_registerClassMethod(f_vm, "detach", CollisionDetach);
+    LuaUtils::lua_registerClass(f_vm, "Collision", CollisionCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "setPosition", CollisionSetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "getPosition", CollisionGetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "setRotation", CollisionSetRotation);
+    LuaUtils::lua_registerClassMethod(f_vm, "getRotation", CollisionGetRotation);
+    LuaUtils::lua_registerClassMethod(f_vm, "setScale", CollisionSetScale);
+    LuaUtils::lua_registerClassMethod(f_vm, "getScale", CollisionGetScale);
+    LuaUtils::lua_registerClassMethod(f_vm, "getMass", CollisionGetMass);
+    LuaUtils::lua_registerClassMethod(f_vm, "setVelocity", CollisionSetVelocity);
+    LuaUtils::lua_registerClassMethod(f_vm, "getVelocity", CollisionGetVelocity);
+    LuaUtils::lua_registerClassMethod(f_vm, "setAngularVelocity", CollisionSetAngularVelocity);
+    LuaUtils::lua_registerClassMethod(f_vm, "getAngularVelocity", CollisionGetAngularVelocity);
+    LuaUtils::lua_registerClassMethod(f_vm, "setFriction", CollisionSetFriction);
+    LuaUtils::lua_registerClassMethod(f_vm, "getFriction", CollisionGetFriction);
+    LuaUtils::lua_registerClassMethod(f_vm, "setLinearFactor", CollisionSetLinearFactor);
+    LuaUtils::lua_registerClassMethod(f_vm, "getLinearFactor", CollisionGetLinearFactor);
+    LuaUtils::lua_registerClassMethod(f_vm, "setAngularFactor", CollisionSetAngularFactor);
+    LuaUtils::lua_registerClassMethod(f_vm, "getAngularFactor", CollisionGetAngularFactor);
+    LuaUtils::lua_registerClassMethod(f_vm, "applyForce", CollisionApplyForce);
+    LuaUtils::lua_registerClassMethod(f_vm, "applyImpulse", CollisionApplyImpulse);
+    LuaUtils::lua_registerClassMethod(f_vm, "applyTorque", CollisionApplyTorque);
+    LuaUtils::lua_registerClassMethod(f_vm, "setMotionType", CollisionSetMotionType);
+    LuaUtils::lua_registerClassMethod(f_vm, "getMotionType", CollisionGetMotionType);
+    LuaUtils::lua_registerClassMethod(f_vm, "attach", CollisionAttach);
+    LuaUtils::lua_registerClassMethod(f_vm, "detach", CollisionDetach);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaCollisionDef::CollisionCreate(lua_State *f_vm)
@@ -70,7 +71,7 @@ int ROC::LuaCollisionDef::CollisionCreate(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = Utils::Enum::ReadEnumVector(g_CollisionTypesTable, l_typeString);
+        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_CollisionTypesTable);
         if(l_type != -1)
         {
             Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(l_type, l_size, l_mass);
@@ -422,7 +423,7 @@ int ROC::LuaCollisionDef::CollisionSetMotionType(lua_State *f_vm)
     argStream.ReadText(l_type);
     if(!argStream.HasErrors() && !l_type.empty())
     {
-        int l_idx = Utils::Enum::ReadEnumVector(g_CollisionMotionTypesTable, l_type);
+        int l_idx = EnumUtils::ReadEnumVector(l_type, g_CollisionMotionTypesTable);
         if(l_idx != -1)
         {
             l_collision->SetMotionType(ROC_COLLISION_MOTION_DEFAULT + l_idx);

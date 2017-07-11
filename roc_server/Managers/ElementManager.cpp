@@ -8,7 +8,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
-#include "Utils/Utils.h"
+#include "Utils/PathUtils.h"
 
 ROC::ElementManager::ElementManager(Core *f_core)
 {
@@ -39,7 +39,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(l_file->Create(l_path, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
@@ -56,7 +56,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
-    Utils::Path::EscapePath(l_path);
+    PathUtils::EscapePath(l_path);
     l_path.insert(0U, l_work);
 
     if(l_file->Open(l_path, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);

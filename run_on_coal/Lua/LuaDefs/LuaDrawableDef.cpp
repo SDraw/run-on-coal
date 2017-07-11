@@ -9,7 +9,7 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Drawable.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 namespace ROC
 {
@@ -24,10 +24,10 @@ void ROC::LuaDrawableDef::Init(lua_State *f_vm)
 }
 void ROC::LuaDrawableDef::AddHierarchyMethods(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClassMethod(f_vm, "getSize", DrawableGetSize);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getFiltering", DrawableGetFiltering);
-    Utils::Lua::lua_registerClassMethod(f_vm, "draw", DrawableDraw);
-    Utils::Lua::lua_registerClassMethod(f_vm, "draw3D", DrawableDraw3D);
+    LuaUtils::lua_registerClassMethod(f_vm, "getSize", DrawableGetSize);
+    LuaUtils::lua_registerClassMethod(f_vm, "getFiltering", DrawableGetFiltering);
+    LuaUtils::lua_registerClassMethod(f_vm, "draw", DrawableDraw);
+    LuaUtils::lua_registerClassMethod(f_vm, "draw3D", DrawableDraw3D);
 }
 
 int ROC::LuaDrawableDef::IsDrawable(lua_State *f_vm)

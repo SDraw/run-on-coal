@@ -10,7 +10,8 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/RenderTarget.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
+#include "Utils/LuaUtils.h"
 
 namespace ROC
 {
@@ -25,10 +26,10 @@ extern const std::vector<std::string> g_FilteringTypesTable;
 
 void ROC::LuaRenderTargetDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "RenderTarget", RenderTargetCreate);
+    LuaUtils::lua_registerClass(f_vm, "RenderTarget", RenderTargetCreate);
     LuaDrawableDef::AddHierarchyMethods(f_vm);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaRenderTargetDef::RenderTargetCreate(lua_State *f_vm)
@@ -43,10 +44,10 @@ int ROC::LuaRenderTargetDef::RenderTargetCreate(lua_State *f_vm)
     argStream.ReadNextText(l_filtering);
     if(!argStream.HasErrors() && (l_size.x >= 1) && (l_size.y >= 1) && !l_type.empty())
     {
-        int l_etype = Utils::Enum::ReadEnumVector(g_RenderTargetTypesTable, l_type);
+        int l_etype = EnumUtils::ReadEnumVector(l_type, g_RenderTargetTypesTable);
         if(l_etype != -1)
         {
-            int l_filteringType = Utils::Enum::ReadEnumVector(g_FilteringTypesTable, l_filtering);
+            int l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypesTable);
             if(l_filteringType == -1) l_filteringType = 0;
             RenderTarget *l_rt = LuaManager::GetCore()->GetElementManager()->CreateRenderTarget(l_number, l_size, l_etype, l_filteringType);
             l_rt ? argStream.PushElement(l_rt) : argStream.PushBoolean(false);

@@ -10,7 +10,7 @@
 #include "Managers/SoundManager.h"
 #include "Elements/Sound.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 namespace ROC
 {
@@ -24,27 +24,27 @@ const std::string g_SoundStatesTable[]
 
 void ROC::LuaSoundDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Sound", SoundCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "play", SoundPlay);
-    Utils::Lua::lua_registerClassMethod(f_vm, "pause", SoundPause);
-    Utils::Lua::lua_registerClassMethod(f_vm, "stop", SoundStop);
-    Utils::Lua::lua_registerClassMethod(f_vm, "isLooped", SoundIsLooped);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getState", SoundGetState);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setSpeed", SoundSetSpeed);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getSpeed", SoundGetSpeed);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setVolume", SoundSetVolume);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getVolume", SoundGetVolume);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setTime", SoundSetTime);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getTime", SoundGetTime);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getDuration", SoundGetDuration);
-    Utils::Lua::lua_registerClassMethod(f_vm, "set3DEnabled", SoundSet3DEnabled);
-    Utils::Lua::lua_registerClassMethod(f_vm, "get3DEnabled", SoundGet3DEnabled);
-    Utils::Lua::lua_registerClassMethod(f_vm, "set3DPosition", SoundSet3DPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "get3DPosition", SoundGet3DPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "set3DDistance", SoundSet3DDistance);
-    Utils::Lua::lua_registerClassMethod(f_vm, "get3DDistance", SoundGet3DDistance);
+    LuaUtils::lua_registerClass(f_vm, "Sound", SoundCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "play", SoundPlay);
+    LuaUtils::lua_registerClassMethod(f_vm, "pause", SoundPause);
+    LuaUtils::lua_registerClassMethod(f_vm, "stop", SoundStop);
+    LuaUtils::lua_registerClassMethod(f_vm, "isLooped", SoundIsLooped);
+    LuaUtils::lua_registerClassMethod(f_vm, "getState", SoundGetState);
+    LuaUtils::lua_registerClassMethod(f_vm, "setSpeed", SoundSetSpeed);
+    LuaUtils::lua_registerClassMethod(f_vm, "getSpeed", SoundGetSpeed);
+    LuaUtils::lua_registerClassMethod(f_vm, "setVolume", SoundSetVolume);
+    LuaUtils::lua_registerClassMethod(f_vm, "getVolume", SoundGetVolume);
+    LuaUtils::lua_registerClassMethod(f_vm, "setTime", SoundSetTime);
+    LuaUtils::lua_registerClassMethod(f_vm, "getTime", SoundGetTime);
+    LuaUtils::lua_registerClassMethod(f_vm, "getDuration", SoundGetDuration);
+    LuaUtils::lua_registerClassMethod(f_vm, "set3DEnabled", SoundSet3DEnabled);
+    LuaUtils::lua_registerClassMethod(f_vm, "get3DEnabled", SoundGet3DEnabled);
+    LuaUtils::lua_registerClassMethod(f_vm, "set3DPosition", SoundSet3DPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "get3DPosition", SoundGet3DPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "set3DDistance", SoundSet3DDistance);
+    LuaUtils::lua_registerClassMethod(f_vm, "get3DDistance", SoundGet3DDistance);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 
     lua_register(f_vm, "soundSetListenerOrientation", SoundSetListenerOrientation);
     lua_register(f_vm, "soundGetListenerOrientation", SoundSetListenerOrientation);

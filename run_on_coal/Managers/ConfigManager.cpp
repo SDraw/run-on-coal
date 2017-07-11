@@ -3,7 +3,7 @@
 #include "Managers/ConfigManager.h"
 
 #include "Core/Core.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
 
 #define ROC_CONFIG_ATTRIB_ANTIALIASING 0
 #define ROC_CONFIG_ATTRIB_DIMENSION 1
@@ -46,7 +46,7 @@ ROC::ConfigManager::ConfigManager()
                     l_attrib = l_node.attribute("value");
                     if(l_attrib)
                     {
-                        switch(Utils::Enum::ReadEnumVector(g_configAttributeTable, l_param))
+                        switch(EnumUtils::ReadEnumVector(l_param, g_configAttributeTable))
                         {
                             case ROC_CONFIG_ATTRIB_ANTIALIASING:
                             {

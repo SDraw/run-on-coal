@@ -12,19 +12,19 @@
 #include "Elements/Light.h"
 #include "Elements/Scene.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 void ROC::LuaSceneDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Scene", SceneCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setCamera", SceneSetCamera);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getCamera", SceneGetCamera);
-    Utils::Lua::lua_registerClassMethod(f_vm, "removeCamera", SceneRemoveCamera);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setLight", SceneSetLight);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getLight", SceneGetLight);
-    Utils::Lua::lua_registerClassMethod(f_vm, "removeLight", SceneRemoveLight);
+    LuaUtils::lua_registerClass(f_vm, "Scene", SceneCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "setCamera", SceneSetCamera);
+    LuaUtils::lua_registerClassMethod(f_vm, "getCamera", SceneGetCamera);
+    LuaUtils::lua_registerClassMethod(f_vm, "removeCamera", SceneRemoveCamera);
+    LuaUtils::lua_registerClassMethod(f_vm, "setLight", SceneSetLight);
+    LuaUtils::lua_registerClassMethod(f_vm, "getLight", SceneGetLight);
+    LuaUtils::lua_registerClassMethod(f_vm, "removeLight", SceneRemoveLight);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaSceneDef::SceneCreate(lua_State *f_vm)

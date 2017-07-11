@@ -12,7 +12,8 @@
 #include "Elements/Drawable.h"
 #include "Elements/Shader.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
+#include "Utils/LuaUtils.h"
 
 #define ROC_SHADER_UNIFORM_UINT 0
 #define ROC_SHADER_UNIFORM_UVEC2 1
@@ -50,12 +51,12 @@ const std::vector<std::string> g_UniformTypesTable
 
 void ROC::LuaShaderDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Shader", ShaderCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setUniformValue", ShaderSetUniformValue);
-    Utils::Lua::lua_registerClassMethod(f_vm, "attach", ShaderAttachDrawable);
-    Utils::Lua::lua_registerClassMethod(f_vm, "detach", ShaderDetachDrawable);
+    LuaUtils::lua_registerClass(f_vm, "Shader", ShaderCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "setUniformValue", ShaderSetUniformValue);
+    LuaUtils::lua_registerClassMethod(f_vm, "attach", ShaderAttachDrawable);
+    LuaUtils::lua_registerClassMethod(f_vm, "detach", ShaderDetachDrawable);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaShaderDef::ShaderCreate(lua_State *f_vm)
@@ -85,7 +86,7 @@ int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
     argStream.ReadText(l_type);
     if(!argStream.HasErrors() && !l_uniform.empty() && !l_type.empty())
     {
-        switch(Utils::Enum::ReadEnumVector(g_UniformTypesTable, l_type))
+        switch(EnumUtils::ReadEnumVector(l_type, g_UniformTypesTable))
         {
             case ROC_SHADER_UNIFORM_UINT:
             {

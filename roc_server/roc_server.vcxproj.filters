@@ -33,9 +33,6 @@
     <ClCompile Include="Lua\LuaArguments.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\Utils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
       <Filter>vendor\luautf8</Filter>
     </ClCompile>
@@ -72,6 +69,15 @@
     <ClCompile Include="Utils\GlobalConstants.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\EnumUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\PathUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\LuaUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -106,9 +112,6 @@
     <ClInclude Include="Lua\LuaArguments.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\Utils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Elements\Client.h">
       <Filter>Elements</Filter>
     </ClInclude>
@@ -138,6 +141,15 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaClientDef.h">
       <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\EnumUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PathUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\LuaUtils.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

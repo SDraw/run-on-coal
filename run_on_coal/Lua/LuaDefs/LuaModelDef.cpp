@@ -16,7 +16,8 @@
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Model/Model.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
+#include "Utils/LuaUtils.h"
 
 #define ROC_MODEL_ANIMPROPERTY_SPEED 0
 #define ROC_MODEL_ANIMPROPERTY_PROGRESS 1
@@ -34,30 +35,30 @@ const std::vector<std::string> g_AnimationPropertiesTable
 
 void ROC::LuaModelDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Model", ModelCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getGeometry", ModelGetGeometry);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setPosition", ModelSetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getPosition", ModelGetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setRotation", ModelSetRotation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getRotation", ModelGetRotation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setScale", ModelSetScale);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getScale", ModelGetScale);
-    Utils::Lua::lua_registerClassMethod(f_vm, "draw", ModelDraw);
-    Utils::Lua::lua_registerClassMethod(f_vm, "attach", ModelAttach);
-    Utils::Lua::lua_registerClassMethod(f_vm, "detach", ModelDetach);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getParent", ModelGetParent);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setAnimation", ModelSetAnimation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getAnimation", ModelGetAnimation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "removeAnimation", ModelRemoveAnimation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "playAnimation", ModelPlayAnimation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "pauseAnimation", ModelPauseAnimation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "resetAnimation", ModelResetAnimation);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setAnimationProperty", ModelSetAnimationProperty);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getAnimationProperty", ModelGetAnimationProperty);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getCollision", ModelGetCollision);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setCollidable", ModelSetCollidable);
+    LuaUtils::lua_registerClass(f_vm, "Model", ModelCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "getGeometry", ModelGetGeometry);
+    LuaUtils::lua_registerClassMethod(f_vm, "setPosition", ModelSetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "getPosition", ModelGetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "setRotation", ModelSetRotation);
+    LuaUtils::lua_registerClassMethod(f_vm, "getRotation", ModelGetRotation);
+    LuaUtils::lua_registerClassMethod(f_vm, "setScale", ModelSetScale);
+    LuaUtils::lua_registerClassMethod(f_vm, "getScale", ModelGetScale);
+    LuaUtils::lua_registerClassMethod(f_vm, "draw", ModelDraw);
+    LuaUtils::lua_registerClassMethod(f_vm, "attach", ModelAttach);
+    LuaUtils::lua_registerClassMethod(f_vm, "detach", ModelDetach);
+    LuaUtils::lua_registerClassMethod(f_vm, "getParent", ModelGetParent);
+    LuaUtils::lua_registerClassMethod(f_vm, "setAnimation", ModelSetAnimation);
+    LuaUtils::lua_registerClassMethod(f_vm, "getAnimation", ModelGetAnimation);
+    LuaUtils::lua_registerClassMethod(f_vm, "removeAnimation", ModelRemoveAnimation);
+    LuaUtils::lua_registerClassMethod(f_vm, "playAnimation", ModelPlayAnimation);
+    LuaUtils::lua_registerClassMethod(f_vm, "pauseAnimation", ModelPauseAnimation);
+    LuaUtils::lua_registerClassMethod(f_vm, "resetAnimation", ModelResetAnimation);
+    LuaUtils::lua_registerClassMethod(f_vm, "setAnimationProperty", ModelSetAnimationProperty);
+    LuaUtils::lua_registerClassMethod(f_vm, "getAnimationProperty", ModelGetAnimationProperty);
+    LuaUtils::lua_registerClassMethod(f_vm, "getCollision", ModelGetCollision);
+    LuaUtils::lua_registerClassMethod(f_vm, "setCollidable", ModelSetCollidable);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaModelDef::ModelCreate(lua_State *f_vm)
@@ -357,7 +358,7 @@ int ROC::LuaModelDef::ModelSetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_property.empty())
     {
         bool l_result = false;
-        switch(Utils::Enum::ReadEnumVector(g_AnimationPropertiesTable, l_property))
+        switch(EnumUtils::ReadEnumVector(l_property, g_AnimationPropertiesTable))
         {
             case ROC_MODEL_ANIMPROPERTY_SPEED:
                 l_result = l_model->SetAnimationSpeed(l_value);
@@ -384,7 +385,7 @@ int ROC::LuaModelDef::ModelGetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_property.empty())
     {
         float l_value = -1.f;
-        switch(Utils::Enum::ReadEnumVector(g_AnimationPropertiesTable, l_property))
+        switch(EnumUtils::ReadEnumVector(l_property, g_AnimationPropertiesTable))
         {
             case ROC_MODEL_ANIMPROPERTY_SPEED:
                 l_value = l_model->GetAnimationSpeed();

@@ -10,18 +10,18 @@
 #include "Managers/NetworkManager.h"
 #include "Elements/Client.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 void ROC::LuaClientDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Client", ClientCreateDummy);
-    Utils::Lua::lua_registerClassMethod(f_vm, "disconnect", ClientDisconnect);
-    Utils::Lua::lua_registerClassMethod(f_vm, "sendData", ClientSendData);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getID", ClientGetID);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getAddress", ClientGetAddress);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getPing", ClientGetPing);
+    LuaUtils::lua_registerClass(f_vm, "Client", ClientCreateDummy);
+    LuaUtils::lua_registerClassMethod(f_vm, "disconnect", ClientDisconnect);
+    LuaUtils::lua_registerClassMethod(f_vm, "sendData", ClientSendData);
+    LuaUtils::lua_registerClassMethod(f_vm, "getID", ClientGetID);
+    LuaUtils::lua_registerClassMethod(f_vm, "getAddress", ClientGetAddress);
+    LuaUtils::lua_registerClassMethod(f_vm, "getPing", ClientGetPing);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaClientDef::ClientCreateDummy(lua_State *f_vm)

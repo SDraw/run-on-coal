@@ -9,7 +9,6 @@
 #include "Managers/LogManager.h"
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
 
 void ROC::LuaUtilsDef::Init(lua_State *f_vm)
 {

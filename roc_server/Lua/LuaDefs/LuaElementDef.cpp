@@ -10,7 +10,7 @@
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 namespace ROC
 {
@@ -25,11 +25,11 @@ void ROC::LuaElementDef::Init(lua_State *f_vm)
 }
 void ROC::LuaElementDef::AddHierarchyMethods(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClassMethod(f_vm, "getType", ElementGetType);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setData", ElementSetData);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getData", ElementGetData);
-    Utils::Lua::lua_registerClassMethod(f_vm, "removeData", ElementRemoveData);
-    Utils::Lua::lua_registerClassMethod(f_vm, "destroy", ElementDestroy);
+    LuaUtils::lua_registerClassMethod(f_vm, "getType", ElementGetType);
+    LuaUtils::lua_registerClassMethod(f_vm, "setData", ElementSetData);
+    LuaUtils::lua_registerClassMethod(f_vm, "getData", ElementGetData);
+    LuaUtils::lua_registerClassMethod(f_vm, "removeData", ElementRemoveData);
+    LuaUtils::lua_registerClassMethod(f_vm, "destroy", ElementDestroy);
 }
 
 int ROC::LuaElementDef::IsElement(lua_State *f_vm)

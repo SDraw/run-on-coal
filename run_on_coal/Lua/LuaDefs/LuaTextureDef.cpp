@@ -10,7 +10,8 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/Texture.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
+#include "Utils/EnumUtils.h"
 
 namespace ROC
 {
@@ -25,10 +26,10 @@ extern const std::vector<std::string> g_FilteringTypesTable;
 
 void ROC::LuaTextureDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Texture", TextureCreate);
+    LuaUtils::lua_registerClass(f_vm, "Texture", TextureCreate);
     LuaDrawableDef::AddHierarchyMethods(f_vm);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaTextureDef::TextureCreate(lua_State *f_vm)
@@ -42,8 +43,8 @@ int ROC::LuaTextureDef::TextureCreate(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_type.empty())
     {
         Texture *l_tex = nullptr;
-        int l_textureType = Utils::Enum::ReadEnumVector(g_TextureTypesTable, l_type);
-        int l_filteringType = Utils::Enum::ReadEnumVector(g_FilteringTypesTable, l_filtering);
+        int l_textureType = EnumUtils::ReadEnumVector(l_type, g_TextureTypesTable);
+        int l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypesTable);
         if(l_filteringType == -1) l_filteringType = 0;
         switch(l_textureType)
         {

@@ -10,25 +10,25 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/Movie.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/LuaUtils.h"
 
 void ROC::LuaMovieDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Movie", MovieCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "play", MoviePlay);
-    Utils::Lua::lua_registerClassMethod(f_vm, "pause", MoviePause);
-    Utils::Lua::lua_registerClassMethod(f_vm, "stop", MovieStop);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getSampleRate", MovieGetSampleRate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getChannelCount", MovieGetChannelCount);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getFramerate", MovieGetFramerate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getDuration", MovieGetDuration);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getVolume", MovieGetVolume);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setVolume", MovieSetVolume);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getTime", MovieGetTime);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setTime", MovieSetTime);
+    LuaUtils::lua_registerClass(f_vm, "Movie", MovieCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "play", MoviePlay);
+    LuaUtils::lua_registerClassMethod(f_vm, "pause", MoviePause);
+    LuaUtils::lua_registerClassMethod(f_vm, "stop", MovieStop);
+    LuaUtils::lua_registerClassMethod(f_vm, "getSampleRate", MovieGetSampleRate);
+    LuaUtils::lua_registerClassMethod(f_vm, "getChannelCount", MovieGetChannelCount);
+    LuaUtils::lua_registerClassMethod(f_vm, "getFramerate", MovieGetFramerate);
+    LuaUtils::lua_registerClassMethod(f_vm, "getDuration", MovieGetDuration);
+    LuaUtils::lua_registerClassMethod(f_vm, "getVolume", MovieGetVolume);
+    LuaUtils::lua_registerClassMethod(f_vm, "setVolume", MovieSetVolume);
+    LuaUtils::lua_registerClassMethod(f_vm, "getTime", MovieGetTime);
+    LuaUtils::lua_registerClassMethod(f_vm, "setTime", MovieSetTime);
     LuaDrawableDef::AddHierarchyMethods(f_vm);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaMovieDef::MovieCreate(lua_State *f_vm)

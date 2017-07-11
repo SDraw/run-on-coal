@@ -8,7 +8,7 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Managers/SfmlManager.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
 
 namespace ROC
 {
@@ -113,7 +113,7 @@ int ROC::LuaInputDef::IsKeyPressed(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        int l_numKey = Utils::Enum::ReadEnumVector(g_KeyNamesTable, l_key);
+        int l_numKey = EnumUtils::ReadEnumVector(l_key, g_KeyNamesTable);
         if(l_numKey != -1)
         {
             bool l_result = SfmlManager::IsKeyPressed(l_numKey);
@@ -131,7 +131,7 @@ int ROC::LuaInputDef::IsMouseKeyPressed(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        int l_numKey = Utils::Enum::ReadEnumVector(g_MouseKeyNamesTable, l_key);
+        int l_numKey = EnumUtils::ReadEnumVector(l_key, g_MouseKeyNamesTable);
         if(l_numKey != -1)
         {
             bool l_result = SfmlManager::IsMouseKeyPressed(l_numKey);
@@ -265,7 +265,7 @@ int ROC::LuaInputDef::JoypadHasAxis(lua_State *f_vm)
     argStream.ReadText(l_axis);
     if(!argStream.HasErrors() && !l_axis.empty())
     {
-        int l_axisID = Utils::Enum::ReadEnumVector(g_JoypadAxisNamesTable, l_axis);
+        int l_axisID = EnumUtils::ReadEnumVector(l_axis, g_JoypadAxisNamesTable);
         if(l_axisID != -1)
         {
             bool l_result = SfmlManager::CheckJoypadAxis(l_joypad, static_cast<unsigned int>(l_axisID));
@@ -285,7 +285,7 @@ int ROC::LuaInputDef::JoypadGetAxisValue(lua_State *f_vm)
     argStream.ReadText(l_axis);
     if(!argStream.HasErrors() && !l_axis.empty())
     {
-        int l_axisID = Utils::Enum::ReadEnumVector(g_JoypadAxisNamesTable, l_axis);
+        int l_axisID = EnumUtils::ReadEnumVector(l_axis, g_JoypadAxisNamesTable);
         if(l_axisID != -1)
         {
             float l_val = SfmlManager::GetJoypadAxisValue(l_joypad, static_cast<unsigned int>(l_axisID));

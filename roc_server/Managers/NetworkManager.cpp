@@ -10,7 +10,6 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
-#include "Utils/Utils.h"
 
 ROC::NetworkManager::NetworkManager(Core *f_core)
 {
@@ -59,6 +58,21 @@ ROC::NetworkManager::~NetworkManager()
     delete m_argument;
 }
 
+unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
+{
+    unsigned char l_result = 255U;
+    if(f_packet)
+    {
+        if(f_packet->data[0] == ID_TIMESTAMP)
+        {
+            RakAssert(f_packet->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
+            l_result = f_packet->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
+        }
+        else l_result = f_packet->data[0];
+    }
+    return l_result;
+}
+
 bool ROC::NetworkManager::Disconnect(Client *f_client)
 {
     if(m_networkInterface) m_networkInterface->CloseConnection(f_client->GetAddress(), true);
@@ -88,7 +102,7 @@ void ROC::NetworkManager::DoPulse()
     {
         for(RakNet::Packet *l_packet = m_networkInterface->Receive(); l_packet; m_networkInterface->DeallocatePacket(l_packet), l_packet = m_networkInterface->Receive())
         {
-            switch(Utils::Network::GetPacketIdentifier(l_packet))
+            switch(GetPacketIdentifier(l_packet))
             {
                 case ID_NEW_INCOMING_CONNECTION:
                 {

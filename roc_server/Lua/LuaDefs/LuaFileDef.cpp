@@ -9,7 +9,8 @@
 #include "Managers/MemoryManager.h"
 #include "Elements/File.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
+#include "Utils/LuaUtils.h"
 
 #define ROC_FILE_MANAGE_CREATE 0
 #define ROC_FILE_MANAGE_OPEN 1
@@ -26,17 +27,17 @@ const std::vector<std::string> g_FileManageTypesTable
 
 void ROC::LuaFileDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "File", FileCreateOpen);
-    Utils::Lua::lua_registerClassMethod(f_vm, "read", FileRead);
-    Utils::Lua::lua_registerClassMethod(f_vm, "write", FileWrite);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getSize", FileGetSize);
-    Utils::Lua::lua_registerClassMethod(f_vm, "setPosition", FileSetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getPosition", FileGetPosition);
-    Utils::Lua::lua_registerClassMethod(f_vm, "flush", FileFlush);
-    Utils::Lua::lua_registerClassMethod(f_vm, "getPath", FileGetPath);
-    Utils::Lua::lua_registerClassMethod(f_vm, "isEOF", FileIsEOF);
+    LuaUtils::lua_registerClass(f_vm, "File", FileCreateOpen);
+    LuaUtils::lua_registerClassMethod(f_vm, "read", FileRead);
+    LuaUtils::lua_registerClassMethod(f_vm, "write", FileWrite);
+    LuaUtils::lua_registerClassMethod(f_vm, "getSize", FileGetSize);
+    LuaUtils::lua_registerClassMethod(f_vm, "setPosition", FileSetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "getPosition", FileGetPosition);
+    LuaUtils::lua_registerClassMethod(f_vm, "flush", FileFlush);
+    LuaUtils::lua_registerClassMethod(f_vm, "getPath", FileGetPath);
+    LuaUtils::lua_registerClassMethod(f_vm, "isEOF", FileIsEOF);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 
     lua_register(f_vm, "fileDelete", FileDelete);
     lua_register(f_vm, "fileRename", FileRename);
@@ -55,7 +56,7 @@ int ROC::LuaFileDef::FileCreateOpen(lua_State *f_vm)
     {
 
         File *l_file = nullptr;
-        switch(Utils::Enum::ReadEnumVector(g_FileManageTypesTable, l_manage))
+        switch(EnumUtils::ReadEnumVector(l_manage, g_FileManageTypesTable))
         {
             case ROC_FILE_MANAGE_CREATE:
                 l_file = LuaManager::GetCore()->GetElementManager()->CreateFile_(l_path);

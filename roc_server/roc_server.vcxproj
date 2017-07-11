@@ -108,7 +108,9 @@
     <ClInclude Include="RocInc.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\CustomData.h" />
-    <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="Utils\EnumUtils.h" />
+    <ClInclude Include="Utils\LuaUtils.h" />
+    <ClInclude Include="Utils\PathUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
@@ -143,8 +145,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Utils\CustomData.cpp" />
+    <ClCompile Include="Utils\EnumUtils.cpp" />
     <ClCompile Include="Utils\GlobalConstants.cpp" />
-    <ClCompile Include="Utils\Utils.cpp" />
+    <ClCompile Include="Utils\LuaUtils.cpp" />
+    <ClCompile Include="Utils\PathUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

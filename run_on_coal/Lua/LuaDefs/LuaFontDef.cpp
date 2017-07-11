@@ -10,7 +10,8 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Font.h"
 #include "Lua/ArgReader.h"
-#include "Utils/Utils.h"
+#include "Utils/EnumUtils.h"
+#include "Utils/LuaUtils.h"
 
 namespace ROC
 {
@@ -21,10 +22,10 @@ extern const std::vector<std::string> g_FilteringTypesTable;
 
 void ROC::LuaFontDef::Init(lua_State *f_vm)
 {
-    Utils::Lua::lua_registerClass(f_vm, "Font", FontCreate);
-    Utils::Lua::lua_registerClassMethod(f_vm, "draw", FontDraw);
+    LuaUtils::lua_registerClass(f_vm, "Font", FontCreate);
+    LuaUtils::lua_registerClassMethod(f_vm, "draw", FontDraw);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    Utils::Lua::lua_registerClassFinish(f_vm);
+    LuaUtils::lua_registerClassFinish(f_vm);
 }
 
 int ROC::LuaFontDef::FontCreate(lua_State *f_vm)
@@ -41,7 +42,7 @@ int ROC::LuaFontDef::FontCreate(lua_State *f_vm)
     argStream.ReadNextText(l_filter);
     if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
-        int l_filteringType = Utils::Enum::ReadEnumVector(g_FilteringTypesTable, l_filter);
+        int l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_FilteringTypesTable);
         if(l_filteringType == -1) l_filteringType = 0;
         Font *l_font = LuaManager::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, l_filteringType);
         l_font ? argStream.PushElement(l_font) : argStream.PushBoolean(false);
