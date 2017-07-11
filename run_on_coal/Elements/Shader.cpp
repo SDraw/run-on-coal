@@ -6,6 +6,8 @@
 
 #include "Utils/Utils.h"
 
+#define ROC_SHADER_BONES_BINDPOINT 0
+
 namespace ROC
 {
 

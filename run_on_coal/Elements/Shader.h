@@ -1,7 +1,6 @@
 #pragma once
 #include "Elements/Element.h"
 #define ROC_SHADER_BONES_COUNT 227U
-#define ROC_SHADER_BONES_BINDPOINT 0
 
 namespace ROC
 {

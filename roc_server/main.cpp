@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     l_sbInfo.dwSize.Y = l_sbInfo.srWindow.Bottom + 1;
     SetConsoleWindowInfo(l_handle, TRUE, &l_sbInfo.srWindow);
     SetConsoleScreenBufferSize(l_handle, l_sbInfo.dwSize);
+
+    SetConsoleTitleA("RunOnCoal Server");
 #endif
     ROC::Core *l_core = ROC::Core::Init();
     while(!g_quitSetter) l_core->DoPulse();

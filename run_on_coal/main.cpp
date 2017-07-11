@@ -4,10 +4,12 @@
 
 #ifdef _DEBUG
 int main(int argc, char *argv[])
+{
+    SetConsoleTitleA("RunOnCoal Debug Console");
 #else
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
-#endif
 {
+#endif
     ROC::Core *l_core = ROC::Core::Init();
     while(l_core->DoPulse());
     ROC::Core::Terminate();
