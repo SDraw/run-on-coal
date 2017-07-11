@@ -1,4 +1,7 @@
 #pragma once
+
+#define CHECK_BIT(val,bit) ((val&bit) == bit)
+
 #define ROC_MATERIAL_BIT_SHADING 1U
 #define ROC_MATERIAL_BIT_DEPTH 2U
 #define ROC_MATERIAL_BIT_TRANSPARENCY 4U
@@ -26,11 +29,11 @@ class Material final
 public:
     inline unsigned char GetType() const { return m_type; }
 
-    inline bool IsDoubleSided() const { return CheckBit(m_type, ROC_MATERIAL_BIT_DOUBLESIDE); }
-    inline bool IsTransparent() const { return CheckBit(m_type, ROC_MATERIAL_BIT_TRANSPARENCY); }
-    inline bool IsShady() const { return CheckBit(m_type, ROC_MATERIAL_BIT_SHADING); }
-    inline bool IsDepthable() const { return CheckBit(m_type, ROC_MATERIAL_BIT_DEPTH); }
-    inline bool IsCompressed() const { return CheckBit(m_type, ROC_MATERIAL_BIT_COMPRESSION); }
+    inline bool IsDoubleSided() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_DOUBLESIDE); }
+    inline bool IsTransparent() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_TRANSPARENCY); }
+    inline bool IsShady() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_SHADING); }
+    inline bool HasDepth() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_DEPTH); }
+    inline bool IsCompressed() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_COMPRESSION); }
     inline unsigned char GetFilteringType() const { return ((m_type&ROC_MATERIAL_BIT_FILTER) >> 4); }
 protected:
     Material();
@@ -44,7 +47,7 @@ protected:
     void LoadTexture(const std::string &f_path);
     void GenerateVAO();
 
-    inline void SetType(unsigned int f_type) { m_type = f_type; }
+    inline void SetType(unsigned char f_type) { m_type = f_type; }
 
     inline void SetParams(const glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
     inline glm::vec4& GetParamsRef() { return m_params; }

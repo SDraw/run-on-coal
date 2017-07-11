@@ -59,6 +59,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_depthEnabled = true;
     m_blendEnabled = false;
     m_cullEnabled = true;
+    m_skipNoDepthMaterials = false;
     m_time = 0.0;
     m_locked = true;
     m_textureMatrix = glm::mat4(1.f);
@@ -91,11 +92,13 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
         {
             glBindFramebuffer(GL_FRAMEBUFFER, NULL);
             m_core->GetSfmlManager()->GetWindowSize(m_renderTargetSize);
+            m_skipNoDepthMaterials = false;
         }
         else
         {
             m_activeTarget->Enable();
             m_activeTarget->GetSize(m_renderTargetSize);
+            m_skipNoDepthMaterials = m_activeTarget->IsDepthType();
         }
         m_screenProjection = glm::ortho(0.f, static_cast<float>(m_renderTargetSize.x), 0.f, static_cast<float>(m_renderTargetSize.y));
         glViewport(0, 0, m_renderTargetSize.x, m_renderTargetSize.y);
@@ -190,15 +193,12 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
 
             for(auto iter : f_model->GetGeometry()->GetMaterialVectorRef())
             {
-                if(!iter->IsDepthable())
+                if(iter->HasDepth()) EnableDepth();
+                else
                 {
-                    if(m_activeTarget)
-                    {
-                        if(m_activeTarget->HasDepthBuffer()) continue;
-                    }
-                    DisableDepth();
+                    if(m_skipNoDepthMaterials) continue;
+                    else DisableDepth();
                 }
-                else EnableDepth();
                 iter->IsTransparent() ? EnableBlending() : DisableBlending();
                 iter->IsDoubleSided() ? DisableCulling() : EnableCulling();
 

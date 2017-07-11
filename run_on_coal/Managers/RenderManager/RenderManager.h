@@ -45,6 +45,7 @@ class RenderManager final
     bool m_depthEnabled;
     bool m_blendEnabled;
     bool m_cullEnabled;
+    bool m_skipNoDepthMaterials;
     void DisableDepth();
     void EnableDepth();
     void DisableBlending();

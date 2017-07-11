@@ -172,7 +172,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     std::vector<Material*> l_matVecDef, l_matVecDefDouble, l_matVecDefTransp;
                     for(auto iter : m_materialVector)
                     {
-                        if(iter->IsTransparent() || !iter->IsDepthable()) l_matVecDefTransp.push_back(iter);
+                        if(iter->IsTransparent() || !iter->HasDepth()) l_matVecDefTransp.push_back(iter);
                         else iter->IsDoubleSided() ? l_matVecDefDouble.push_back(iter) : l_matVecDef.push_back(iter);
                     }
                     m_materialVector.clear();

@@ -32,7 +32,7 @@ public:
     inline int GetFiltering() const { return m_filtering; }
 
     inline bool IsTransparent() const { return ((m_type == ROC_RENDERTARGET_TYPE_RGBA) || (m_type == ROC_RENDERTARGET_TYPE_RGBAF)); }
-    inline bool HasDepthBuffer() const { return (m_type == ROC_RENDERTARGET_TYPE_DEPTH); }
+    inline bool IsDepthType() const { return (m_type == ROC_RENDERTARGET_TYPE_DEPTH); }
 protected:
     RenderTarget();
     ~RenderTarget();
