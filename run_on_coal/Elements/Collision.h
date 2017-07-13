@@ -55,7 +55,7 @@ public:
     void ApplyTorque(const glm::vec3 &f_torque, bool f_impulse);
 
     void SetMotionType(int f_state);
-    inline int GetMotionType() { return m_motionType; }
+    inline int GetMotionType() const { return m_motionType; }
 
     void GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat &f_rot);
 protected:

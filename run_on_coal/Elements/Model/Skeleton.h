@@ -68,13 +68,13 @@ protected:
     inline void PreserveMotion() { m_preserveMotion = true; }
 
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
-    inline const std::vector<glm::mat4>& GetBoneMatricesVectorRef() { return m_boneMatrices; }
+    inline const std::vector<glm::mat4>& GetBoneMatricesVectorRef() const { return m_boneMatrices; }
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);
-    inline const std::vector<skCollision*>& GetCollisionVectorRef() { return m_collisionVector; }
+    inline const std::vector<skCollision*>& GetCollisionVectorRef() const { return m_collisionVector; }
 
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
-    inline const std::vector<skJoint*>& GetJointVectorRef() { return m_jointVector; }
+    inline const std::vector<skJoint*>& GetJointVectorRef() const { return m_jointVector; }
 
     void UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled);
     void UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled);

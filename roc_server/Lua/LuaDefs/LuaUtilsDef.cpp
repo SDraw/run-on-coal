@@ -57,8 +57,7 @@ int ROC::LuaUtilsDef::Base64Encode(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_data.empty())
     {
         std::string l_encoded;
-        Base64::Encode(l_data, &l_encoded);
-        argStream.PushText(l_encoded);
+        Base64::Encode(l_data, &l_encoded) ? argStream.PushText(l_encoded) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -71,8 +70,7 @@ int ROC::LuaUtilsDef::Base64Decode(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_data.empty())
     {
         std::string l_decoded;
-        Base64::Decode(l_data, &l_decoded);
-        argStream.PushText(l_decoded);
+        Base64::Decode(l_data, &l_decoded) ? argStream.PushText(l_decoded) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
