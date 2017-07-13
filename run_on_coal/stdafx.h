@@ -52,3 +52,5 @@
 #include "MessageIdentifiers.h"
 #include "BitStream.h"
 #include "RakPeerInterface.h"
+
+#include "base64.h"

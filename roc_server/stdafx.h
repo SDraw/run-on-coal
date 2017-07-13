@@ -27,3 +27,5 @@
 #include "BitStream.h"
 #include "RakSleep.h"
 #include "PacketLogger.h"
+
+#include "base64.h"

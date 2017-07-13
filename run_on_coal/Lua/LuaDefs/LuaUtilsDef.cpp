@@ -18,6 +18,8 @@ void ROC::LuaUtilsDef::Init(lua_State *f_vm)
     lua_register(f_vm, "logPrint", LogPrint);
     lua_register(f_vm, "getTickCount", GetTick);
     lua_register(f_vm, "getTime", GetTime);
+    lua_register(f_vm, "base64Encode", Base64Encode);
+    lua_register(f_vm, "base64Decode", Base64Decode);
 }
 
 int ROC::LuaUtilsDef::DisabledFunction(lua_State *f_vm)
@@ -52,5 +54,34 @@ int ROC::LuaUtilsDef::GetTime(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     argStream.PushNumber(LuaManager::GetCore()->GetSfmlManager()->GetTime());
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaUtilsDef::Base64Encode(lua_State *f_vm)
+{
+    std::string l_data;
+    ArgReader argStream(f_vm);
+    argStream.ReadText(l_data);
+    if(!argStream.HasErrors() && !l_data.empty())
+    {
+        std::string l_encoded;
+        Base64::Encode(l_data, &l_encoded);
+        argStream.PushText(l_encoded);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaUtilsDef::Base64Decode(lua_State *f_vm)
+{
+    std::string l_data;
+    ArgReader argStream(f_vm);
+    argStream.ReadText(l_data);
+    if(!argStream.HasErrors() && !l_data.empty())
+    {
+        std::string l_decoded;
+        Base64::Decode(l_data, &l_decoded);
+        argStream.PushText(l_decoded);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
