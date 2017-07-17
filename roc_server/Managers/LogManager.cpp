@@ -8,13 +8,21 @@
 ROC::LogManager::LogManager(Core *f_core)
 {
     m_enabled = f_core->GetConfigManager()->IsLogEnabled();
-    if(m_enabled) m_log.open("server_log.txt", std::ofstream::out);
-    Log("Server is starting");
+    if(m_enabled)
+    {
+        m_log.open("server_log.txt", std::ofstream::out);
+        if(m_log.fail())
+        {
+            m_log.clear();
+            m_enabled = false;
+        }
+    }
+    Log("Server is starting...");
     if(!f_core->GetConfigManager()->IsConfigParsed()) Log("Unable to parse 'server_settings.xml'. Default configuration is used.");
 }
 ROC::LogManager::~LogManager()
 {
-    Log("Server is shutting down");
+    Log("Server is shutting down...");
     if(m_enabled) m_log.close();
 }
 

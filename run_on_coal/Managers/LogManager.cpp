@@ -8,7 +8,15 @@
 ROC::LogManager::LogManager(Core *f_core)
 {
     m_enabled = f_core->GetConfigManager()->IsLogEnabled();
-    if(m_enabled) m_log.open("log.txt", std::ofstream::out);
+    if(m_enabled)
+    {
+        m_log.open("log.txt", std::ofstream::out);
+        if(m_log.fail())
+        {
+            m_log.clear();
+            m_enabled = false;
+        }
+    }
 }
 ROC::LogManager::~LogManager()
 {
@@ -16,6 +24,7 @@ ROC::LogManager::~LogManager()
     {
         std::string l_log("Application closed");
         Log(l_log);
+        m_log.flush();
         m_log.close();
     }
 }

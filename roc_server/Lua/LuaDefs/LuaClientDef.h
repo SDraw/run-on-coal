@@ -5,7 +5,6 @@ namespace ROC
 
 class LuaClientDef final
 {
-    static int ClientCreateDummy(lua_State *f_vm);
     static int ClientDisconnect(lua_State *f_vm);
     static int ClientSendData(lua_State *f_vm);
     static int ClientGetID(lua_State *f_vm);

@@ -14,7 +14,7 @@
 
 void ROC::LuaClientDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Client", ClientCreateDummy);
+    LuaUtils::lua_registerClass(f_vm, "Client", nullptr);
     LuaUtils::lua_registerClassMethod(f_vm, "disconnect", ClientDisconnect);
     LuaUtils::lua_registerClassMethod(f_vm, "sendData", ClientSendData);
     LuaUtils::lua_registerClassMethod(f_vm, "getID", ClientGetID);
@@ -22,12 +22,6 @@ void ROC::LuaClientDef::Init(lua_State *f_vm)
     LuaUtils::lua_registerClassMethod(f_vm, "getPing", ClientGetPing);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::lua_registerClassFinish(f_vm);
-}
-
-int ROC::LuaClientDef::ClientCreateDummy(lua_State *f_vm)
-{
-    lua_pushboolean(f_vm, 0);
-    return 1;
 }
 
 int ROC::LuaClientDef::ClientDisconnect(lua_State *f_vm)
