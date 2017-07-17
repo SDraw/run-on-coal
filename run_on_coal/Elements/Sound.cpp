@@ -22,7 +22,7 @@ ROC::Sound::Sound(bool f_loop)
 }
 ROC::Sound::~Sound()
 {
-    if(m_handle) delete m_handle;
+    delete m_handle;
 }
 
 bool ROC::Sound::Load(const std::string &f_path)

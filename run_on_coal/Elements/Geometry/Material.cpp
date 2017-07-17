@@ -28,7 +28,7 @@ ROC::Material::~Material()
     if(m_weightVBO != 0U) glDeleteBuffers(1, &m_weightVBO);
     if(m_indexVBO != 0U) glDeleteBuffers(1, &m_indexVBO);
     if(m_VAO != 0U) glDeleteVertexArrays(1, &m_VAO);
-    if(m_texture) delete m_texture;
+    delete m_texture;
 }
 
 void ROC::Material::LoadVertices(const std::vector<glm::vec3> &f_vector)

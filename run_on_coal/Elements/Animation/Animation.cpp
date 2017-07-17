@@ -29,7 +29,7 @@ void ROC::Animation::Clean()
     m_bonesValue = 0U;
     m_fps = 0U;
     m_durationTotal = 0U;
-    if(m_tempFrameData) delete m_tempFrameData;
+    delete m_tempFrameData;
     for(auto iter : m_boneIntervals)
     {
         auto &l_intervals = iter->intervals;

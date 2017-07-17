@@ -198,7 +198,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 skJoint::jtPart *l_jointPart = new skJoint::jtPart();
                 l_jointPart->m_boneID = static_cast<int>(l_partData.m_boneID);
 
-                btTransform l_boneTransform, l_jointPartTransform, l_jointPartResultTransform;
+                btTransform l_jointPartTransform, l_jointPartResultTransform;
 
                 l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_jointPart->m_boneID]->GetMatrixRef()));
                 l_jointPartTransform.setIdentity();

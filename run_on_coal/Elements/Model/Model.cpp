@@ -58,7 +58,7 @@ ROC::Model::Model(Geometry *f_geometry)
 }
 ROC::Model::~Model()
 {
-    if(m_skeleton) delete m_skeleton;
+    delete m_skeleton;
 }
 
 void ROC::Model::SetPosition(const glm::vec3 &f_pos, bool f_preserveMotion)

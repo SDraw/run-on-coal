@@ -10,7 +10,7 @@ ROC::Movie::Movie()
 }
 ROC::Movie::~Movie()
 {
-    if(m_movie) delete m_movie;
+    delete m_movie;
 }
 
 bool ROC::Movie::Load(const std::string &f_path)
