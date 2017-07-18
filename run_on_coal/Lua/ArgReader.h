@@ -116,16 +116,8 @@ template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
                 Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_currentArg));
                 if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element))
                 {
-                    try
-                    {
-                        if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_currentArg++;
-                        else
-                        {
-                            m_error.assign("Invalid element");
-                            m_hasErrors = true;
-                        }
-                    }
-                    catch(const std::exception&)
+                    if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_currentArg++;
+                    else
                     {
                         m_error.assign("Invalid element");
                         m_hasErrors = true;
@@ -174,11 +166,7 @@ template<class T> void ROC::ArgReader::ReadNextElement(T *&f_element)
             Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_currentArg));
             if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element))
             {
-                try
-                {
-                    if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_currentArg++;
-                }
-                catch(const std::exception&) {}
+                if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_currentArg++;
             }
         }
     }
