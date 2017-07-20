@@ -208,22 +208,25 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
                 }
 
                 charData *l_charData = m_charIter->second;
-                int l_charVertexIndex = l_charCount * ROC_FONT_CHAR_VERTICES;
+                if(l_charData->m_size.x > 0 && l_charData->m_size.y > 0)
+                {
+                    int l_charVertexIndex = l_charCount * ROC_FONT_CHAR_VERTICES;
 
-                l_linePos.z = l_linePos.x + l_charData->m_bearing.x;
-                l_linePos.w = l_linePos.y - (l_charData->m_size.y - l_charData->m_bearing.y);
+                    l_linePos.z = l_linePos.x + l_charData->m_bearing.x;
+                    l_linePos.w = l_linePos.y - (l_charData->m_size.y - l_charData->m_bearing.y);
 
-                m_vertices[l_charVertexIndex].x = m_vertices[l_charVertexIndex + 1].x = m_vertices[l_charVertexIndex + 3].x = l_linePos.z;
-                m_vertices[l_charVertexIndex + 1].y = m_vertices[l_charVertexIndex + 2].y = m_vertices[l_charVertexIndex + 4].y = l_linePos.w;
-                m_vertices[l_charVertexIndex + 2].x = m_vertices[l_charVertexIndex + 4].x = m_vertices[l_charVertexIndex + 5].x = l_linePos.z + l_charData->m_size.x;
-                m_vertices[l_charVertexIndex].y = m_vertices[l_charVertexIndex + 3].y = m_vertices[l_charVertexIndex + 5].y = l_linePos.w + l_charData->m_size.y;
+                    m_vertices[l_charVertexIndex].x = m_vertices[l_charVertexIndex + 1].x = m_vertices[l_charVertexIndex + 3].x = l_linePos.z;
+                    m_vertices[l_charVertexIndex + 1].y = m_vertices[l_charVertexIndex + 2].y = m_vertices[l_charVertexIndex + 4].y = l_linePos.w;
+                    m_vertices[l_charVertexIndex + 2].x = m_vertices[l_charVertexIndex + 4].x = m_vertices[l_charVertexIndex + 5].x = l_linePos.z + l_charData->m_size.x;
+                    m_vertices[l_charVertexIndex].y = m_vertices[l_charVertexIndex + 3].y = m_vertices[l_charVertexIndex + 5].y = l_linePos.w + l_charData->m_size.y;
 
-                m_uv[l_charVertexIndex].x = m_uv[l_charVertexIndex + 1].x = m_uv[l_charVertexIndex + 3].x = l_charData->m_atlasPosition.x;
-                m_uv[l_charVertexIndex].y = m_uv[l_charVertexIndex + 3].y = m_uv[l_charVertexIndex + 5].y = l_charData->m_atlasPosition.y;
-                m_uv[l_charVertexIndex + 2].x = m_uv[l_charVertexIndex + 4].x = m_uv[l_charVertexIndex + 5].x = l_charData->m_atlasPosition.z;
-                m_uv[l_charVertexIndex + 1].y = m_uv[l_charVertexIndex + 2].y = m_uv[l_charVertexIndex + 4].y = l_charData->m_atlasPosition.w;
+                    m_uv[l_charVertexIndex].x = m_uv[l_charVertexIndex + 1].x = m_uv[l_charVertexIndex + 3].x = l_charData->m_atlasPosition.x;
+                    m_uv[l_charVertexIndex].y = m_uv[l_charVertexIndex + 3].y = m_uv[l_charVertexIndex + 5].y = l_charData->m_atlasPosition.y;
+                    m_uv[l_charVertexIndex + 2].x = m_uv[l_charVertexIndex + 4].x = m_uv[l_charVertexIndex + 5].x = l_charData->m_atlasPosition.z;
+                    m_uv[l_charVertexIndex + 1].y = m_uv[l_charVertexIndex + 2].y = m_uv[l_charVertexIndex + 4].y = l_charData->m_atlasPosition.w;
 
-                l_charCount++;
+                    l_charCount++;
+                }
                 l_linePos.x += m_charIter->second->m_advance;
             }
 
