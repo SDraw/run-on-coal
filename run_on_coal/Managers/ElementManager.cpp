@@ -208,7 +208,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, g
 
 ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress)
 {
-    Texture *l_tex = new Texture();
+    Texture *l_texture = new Texture();
 
     std::string l_path(f_path), l_work;
     m_core->GetWorkingDirectory(l_work);
@@ -216,17 +216,13 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
     l_path.insert(0U, l_work);
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_tex->Load(l_path, f_type, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_tex);
-    else
-    {
-        delete l_tex;
-        l_tex = nullptr;
-    }
-    return l_tex;
+    l_texture->Load(l_path, f_type, f_filter, f_compress);
+    m_core->GetMemoryManager()->AddMemoryPointer(l_texture);
+    return l_texture;
 }
 ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
 {
-    Texture *l_tex = new Texture();
+    Texture *l_texture = new Texture();
 
     std::vector<std::string> l_path;
     std::string l_work;
@@ -240,13 +236,9 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     }
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_tex->LoadCubemap(l_path, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_tex);
-    else
-    {
-        delete l_tex;
-        l_tex = nullptr;
-    }
-    return l_tex;
+    l_texture->LoadCubemap(l_path, f_filter, f_compress);
+    m_core->GetMemoryManager()->AddMemoryPointer(l_texture);
+    return l_texture;
 }
 
 ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter)

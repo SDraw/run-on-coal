@@ -12,6 +12,7 @@ const float g_DefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE)
 }
 
 #define ROC_FONT_CHAR_VERTICES 6
+#define ROC_FONT_TEXT_BLOCK 256U
 
 FT_Library ROC::Font::s_library = FT_Library();
 
@@ -120,15 +121,15 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
 
             glEnableVertexAttribArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, NULL, GL_DYNAMIC_DRAW);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
-            m_vertices.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, glm::vec3(0.f, 0.f, 1.f));
+            m_vertices.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec3(0.f, 0.f, 1.f));
 
             glEnableVertexAttribArray(1);
             glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, NULL, GL_DYNAMIC_DRAW);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
-            m_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, glm::vec2(0.f));
+            m_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec2(0.f));
 
             glBindVertexArray(0);
 
@@ -189,11 +190,11 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
         while(l_textRange.x < l_stringLength)
         {
             int l_charCount = 0;
-            l_textRange.y = glm::min((l_textRange.z + 1U)*ROC_FONT_TEXT_LENGTH, l_stringLength);
+            l_textRange.y = glm::min((l_textRange.z + 1U)*ROC_FONT_TEXT_BLOCK, l_stringLength);
 
             for(size_t i = l_textRange.x; i < l_textRange.y; i++)
             {
-                int l_character = f_text[i];
+                unsigned int l_character = f_text[i];
                 if(l_character == 0xA) // New line
                 {
                     l_linePos.x = f_pos.x;
@@ -248,7 +249,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
                 glDrawArrays(GL_TRIANGLES, 0, ROC_FONT_CHAR_VERTICES * l_charCount);
                 m_switch = !m_switch;
             }
-            l_textRange.x = ++l_textRange.z * ROC_FONT_TEXT_LENGTH;
+            l_textRange.x = ++l_textRange.z * ROC_FONT_TEXT_BLOCK;
         }
     }
 }
