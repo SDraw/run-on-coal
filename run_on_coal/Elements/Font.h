@@ -4,7 +4,7 @@
 #define ROC_FONT_FILTER_NEAREST 0
 #define ROC_FONT_FILTER_LINEAR 1
 #define ROC_FONT_ATLAS_SIZE 256
-#define ROC_FONT_TEXT_LENGTH 256
+#define ROC_FONT_TEXT_LENGTH 256U
 
 namespace ROC
 {
@@ -13,6 +13,7 @@ class Font final : public Element
 {
     static FT_Library s_library;
     FT_Face m_face;
+    float m_size;
 
     GLuint m_atlasTexture;
     rbp::MaxRectsBinPack *m_atlasPack;

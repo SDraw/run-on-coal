@@ -11,6 +11,8 @@ const float g_DefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE)
 
 }
 
+#define ROC_FONT_CHAR_VERTICES 6
+
 FT_Library ROC::Font::s_library = FT_Library();
 
 ROC::Font::Font()
@@ -19,6 +21,7 @@ ROC::Font::Font()
 
     m_loaded = false;
     m_face = FT_Face();
+    m_size = 0.f;
 
     m_atlasTexture = 0U;
     m_atlasOffset = glm::vec2(0.f);
@@ -70,6 +73,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
         {
             FT_Select_Charmap(m_face, ft_encoding_unicode);
             FT_Set_Pixel_Sizes(m_face, 0, f_size);
+            m_size = static_cast<float>(f_size);
             m_filteringType = f_filter;
             btClamp(m_filteringType, ROC_FONT_FILTER_NEAREST, ROC_FONT_FILTER_LINEAR);
 
@@ -116,15 +120,15 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
 
             glEnableVertexAttribArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 6 * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
-            m_vertices.assign(6 * ROC_FONT_TEXT_LENGTH, glm::vec3(0.f, 0.f, 1.f));
+            m_vertices.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, glm::vec3(0.f, 0.f, 1.f));
 
             glEnableVertexAttribArray(1);
             glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 6 * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, NULL, GL_DYNAMIC_DRAW);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
-            m_uv.assign(6 * ROC_FONT_TEXT_LENGTH, glm::vec2(0.f));
+            m_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_LENGTH, glm::vec2(0.f));
 
             glBindVertexArray(0);
 
@@ -177,57 +181,71 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bi
             glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
             m_switch = true;
         }
-        else m_switch = !m_switch;
 
-        float l_displacement = f_pos.x;
-        glm::vec2 l_result;
-        int l_charIncrement = 0;
-        for(auto iter : f_text)
+        glm::vec4 l_linePos(f_pos, 0.f, 0.f); // [line_x, line_y, char_x, char_y]
+        glm::tvec3<size_t> l_textRange(0U); // [range_min, range_max, subpart]
+        size_t l_stringLength = f_text.getSize();
+
+        while(l_textRange.x < l_stringLength)
         {
-            if(l_charIncrement >= ROC_FONT_TEXT_LENGTH) break;
-            int l_charQueue = l_charIncrement * 6;
+            int l_charCount = 0;
+            l_textRange.y = glm::min((l_textRange.z + 1U)*ROC_FONT_TEXT_LENGTH, l_stringLength);
 
-            m_charIter = m_charMap.find(iter);
-            if(m_charIter == m_charMapEnd)
+            for(size_t i = l_textRange.x; i < l_textRange.y; i++)
             {
-                if(!LoadChar(iter)) continue;
-            }
-            charData *l_charData = m_charIter->second;
+                int l_character = f_text[i];
+                if(l_character == 0xA) // New line
+                {
+                    l_linePos.x = f_pos.x;
+                    l_linePos.y -= m_size;
+                    continue;
+                }
 
-            if(l_charData->m_size.x > 0 && l_charData->m_size.y > 0)
+                m_charIter = m_charMap.find(l_character);
+                if(m_charIter == m_charMapEnd)
+                {
+                    if(!LoadChar(l_character)) continue;
+                }
+
+                charData *l_charData = m_charIter->second;
+                int l_charVertexIndex = l_charCount * ROC_FONT_CHAR_VERTICES;
+
+                l_linePos.z = l_linePos.x + l_charData->m_bearing.x;
+                l_linePos.w = l_linePos.y - (l_charData->m_size.y - l_charData->m_bearing.y);
+
+                m_vertices[l_charVertexIndex].x = m_vertices[l_charVertexIndex + 1].x = m_vertices[l_charVertexIndex + 3].x = l_linePos.z;
+                m_vertices[l_charVertexIndex + 1].y = m_vertices[l_charVertexIndex + 2].y = m_vertices[l_charVertexIndex + 4].y = l_linePos.w;
+                m_vertices[l_charVertexIndex + 2].x = m_vertices[l_charVertexIndex + 4].x = m_vertices[l_charVertexIndex + 5].x = l_linePos.z + l_charData->m_size.x;
+                m_vertices[l_charVertexIndex].y = m_vertices[l_charVertexIndex + 3].y = m_vertices[l_charVertexIndex + 5].y = l_linePos.w + l_charData->m_size.y;
+
+                m_uv[l_charVertexIndex].x = m_uv[l_charVertexIndex + 1].x = m_uv[l_charVertexIndex + 3].x = l_charData->m_atlasPosition.x;
+                m_uv[l_charVertexIndex].y = m_uv[l_charVertexIndex + 3].y = m_uv[l_charVertexIndex + 5].y = l_charData->m_atlasPosition.y;
+                m_uv[l_charVertexIndex + 2].x = m_uv[l_charVertexIndex + 4].x = m_uv[l_charVertexIndex + 5].x = l_charData->m_atlasPosition.z;
+                m_uv[l_charVertexIndex + 1].y = m_uv[l_charVertexIndex + 2].y = m_uv[l_charVertexIndex + 4].y = l_charData->m_atlasPosition.w;
+
+                l_charCount++;
+                l_linePos.x += m_charIter->second->m_advance;
+            }
+
+            if(l_charCount > 0)
             {
-                l_result.x = l_displacement + l_charData->m_bearing.x;
-                l_result.y = f_pos.y - (l_charData->m_size.y - l_charData->m_bearing.y);
-
-                m_vertices[l_charQueue].x = m_vertices[l_charQueue + 1].x = m_vertices[l_charQueue + 3].x = l_result.x;
-                m_vertices[l_charQueue + 1].y = m_vertices[l_charQueue + 2].y = m_vertices[l_charQueue + 4].y = l_result.y;
-                m_vertices[l_charQueue + 2].x = m_vertices[l_charQueue + 4].x = m_vertices[l_charQueue + 5].x = l_result.x + l_charData->m_size.x;
-                m_vertices[l_charQueue].y = m_vertices[l_charQueue + 3].y = m_vertices[l_charQueue + 5].y = l_result.y + l_charData->m_size.y;
-
-                m_uv[l_charQueue].x = m_uv[l_charQueue + 1].x = m_uv[l_charQueue + 3].x = l_charData->m_atlasPosition.x;
-                m_uv[l_charQueue].y = m_uv[l_charQueue + 3].y = m_uv[l_charQueue + 5].y = l_charData->m_atlasPosition.y;
-                m_uv[l_charQueue + 2].x = m_uv[l_charQueue + 4].x = m_uv[l_charQueue + 5].x = l_charData->m_atlasPosition.z;
-                m_uv[l_charQueue + 1].y = m_uv[l_charQueue + 2].y = m_uv[l_charQueue + 4].y = l_charData->m_atlasPosition.w;
-
-                l_charIncrement++;
+                if(m_switch)
+                {
+                    glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, m_vertices.data());
+                    glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, m_uv.data());
+                }
+                else
+                {
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, m_uv.data());
+                    glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, m_vertices.data());
+                }
+                glDrawArrays(GL_TRIANGLES, 0, ROC_FONT_CHAR_VERTICES * l_charCount);
+                m_switch = !m_switch;
             }
-            l_displacement += m_charIter->second->m_advance;
-        }
-        if(l_charIncrement > 0)
-        {
-            if(m_switch)
-            {
-                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * 6 * l_charIncrement, m_vertices.data());
-                glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * 6 * l_charIncrement, m_uv.data());
-            }
-            else
-            {
-                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * 6 * l_charIncrement, m_uv.data());
-                glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * 6 * l_charIncrement, m_vertices.data());
-            }
-            glDrawArrays(GL_TRIANGLES, 0, 6 * l_charIncrement);
+            l_textRange.x = ++l_textRange.z * ROC_FONT_TEXT_LENGTH;
         }
     }
 }
