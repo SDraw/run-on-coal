@@ -23,7 +23,7 @@ typedef void(*OnEngineStopCallback)(void);
 
 class Core final
 {
-    static Core *s_instance;
+    static Core *ms_instance;
 
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
@@ -43,7 +43,7 @@ class Core final
     bool m_state;
     LuaArguments *m_argument;
 
-    static OnEngineStartCallback s_engineStartCallback;
+    static OnEngineStartCallback ms_engineStartCallback;
     OnEngineStopCallback m_engineStopCallback;
 
     Core();
@@ -54,7 +54,7 @@ public:
     static Core* Init();
     static void Terminate();
 
-    static inline void SetEngineStartCallback(OnEngineStartCallback f_callback) { s_engineStartCallback = f_callback; }
+    static inline void SetEngineStartCallback(OnEngineStartCallback f_callback) { ms_engineStartCallback = f_callback; }
     inline void SetEngineStopCallback(OnEngineStopCallback f_callback) { m_engineStopCallback = f_callback; }
 
     bool DoPulse();

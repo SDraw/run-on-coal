@@ -26,6 +26,8 @@ class RenderManager final
     glm::mat4 m_textureMatrix;
     glm::ivec2 m_renderTargetSize;
     glm::mat4 m_screenProjection;
+    glm::bvec2 m_materialBind;
+    glm::bvec2 m_fontBind;
 
     Scene *m_activeScene;
     Shader *m_activeShader;

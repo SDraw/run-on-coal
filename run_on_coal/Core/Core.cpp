@@ -21,8 +21,8 @@
 
 #define CORE_DEFAULT_SCIPTS_PATH "scripts/"
 
-ROC::Core* ROC::Core::s_instance = nullptr;
-ROC::OnEngineStartCallback ROC::Core::s_engineStartCallback = nullptr;
+ROC::Core* ROC::Core::ms_instance = nullptr;
+ROC::OnEngineStartCallback ROC::Core::ms_engineStartCallback = nullptr;
 
 ROC::Core::Core()
 {
@@ -77,9 +77,9 @@ ROC::Core::~Core()
 
 ROC::Core* ROC::Core::Init()
 {
-    if(!s_instance)
+    if(!ms_instance)
     {
-        s_instance = new Core();
+        ms_instance = new Core();
         SystemTick::UpdateTick();
 
         // Load default scripts
@@ -98,27 +98,27 @@ ROC::Core* ROC::Core::Init()
                     {
                         std::string l_path(CORE_DEFAULT_SCIPTS_PATH);
                         l_path.append(l_attrib.as_string());
-                        s_instance->m_luaManager->LoadScript(l_path);
+                        ms_instance->m_luaManager->LoadScript(l_path);
                     }
                 }
             }
         }
         delete l_meta;
 
-        if(s_engineStartCallback) (*s_engineStartCallback)();
-        s_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStart", s_instance->m_argument);
+        if(ms_engineStartCallback) (*ms_engineStartCallback)();
+        ms_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStart", ms_instance->m_argument);
     }
-    return s_instance;
+    return ms_instance;
 }
 void ROC::Core::Terminate()
 {
-    if(s_instance)
+    if(ms_instance)
     {
-        if(s_instance->m_engineStopCallback) (*s_instance->m_engineStopCallback)();
-        s_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStop", s_instance->m_argument);
+        if(ms_instance->m_engineStopCallback) (*ms_instance->m_engineStopCallback)();
+        ms_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStop", ms_instance->m_argument);
 
-        delete s_instance;
-        s_instance = nullptr;
+        delete ms_instance;
+        ms_instance = nullptr;
     }
 }
 

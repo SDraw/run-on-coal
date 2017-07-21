@@ -12,7 +12,7 @@ class LuaArguments;
 class LuaManager final
 {
     Core *m_core;
-    static Core *s_core;
+    static Core *ms_core;
 
     lua_State *m_vm;
     EventManager *m_eventManager;
@@ -20,7 +20,7 @@ class LuaManager final
     LuaManager(const LuaManager& that);
     LuaManager &operator =(const LuaManager &that);
 public:
-    static inline Core* GetCore() { return s_core; }
+    static inline Core* GetCore() { return ms_core; }
     inline EventManager* GetEventManager() { return m_eventManager; }
 
     bool LoadScript(const std::string &f_script, bool f_asFile = true);

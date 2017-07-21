@@ -127,12 +127,12 @@ void ROC::Material::LoadTexture(const std::string &f_path)
     }
 }
 
-void ROC::Material::Draw(bool f_texturize, bool f_binding)
+void ROC::Material::Draw(const glm::bvec2 &f_bind)
 {
     if(m_VAO != 0U)
     {
-        if(f_texturize && m_texture) m_texture->Bind();
-        if(f_binding) glBindVertexArray(m_VAO);
+        if(f_bind.x && m_texture) m_texture->Bind();
+        if(f_bind.y) glBindVertexArray(m_VAO);
         glDrawArrays(GL_TRIANGLES, 0, m_verticesCount);
     }
 }

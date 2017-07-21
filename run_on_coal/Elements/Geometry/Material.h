@@ -55,7 +55,7 @@ protected:
     inline GLuint GetVAO() const { return m_VAO; }
     inline Texture* GetTexture() { return m_texture; }
 
-    void Draw(bool f_texturize, bool f_binding);
+    void Draw(const glm::bvec2 &f_bind);
 
     friend class RenderManager;
     friend class Geometry;

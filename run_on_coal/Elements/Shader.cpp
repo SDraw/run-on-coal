@@ -22,8 +22,8 @@ const std::vector<std::string> g_DefaultUniformsTable = {
 
 }
 
-GLuint ROC::Shader::s_bonesUBO = GL_INVALID_INDEX;
-bool ROC::Shader::s_uboFix = false;
+GLuint ROC::Shader::ms_bonesUBO = GL_INVALID_INDEX;
+bool ROC::Shader::ms_uboFix = false;
 
 ROC::Shader::Shader()
 {
@@ -490,9 +490,9 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
 }
 void ROC::Shader::SetBonesUniformValue(const std::vector<glm::mat4> &f_value)
 {
-    if(s_bonesUBO != GL_INVALID_INDEX)
+    if(ms_bonesUBO != GL_INVALID_INDEX)
     {
-        if(s_uboFix) glFinish();
+        if(ms_uboFix) glFinish();
         glBufferSubData(GL_UNIFORM_BUFFER, 0, f_value.size()*sizeof(glm::mat4), f_value.data());
     }
 }
@@ -571,24 +571,24 @@ bool ROC::Shader::HasAttached(Drawable *f_drawable)
 
 void ROC::Shader::CreateBonesUBO()
 {
-    if(s_bonesUBO == GL_INVALID_INDEX)
+    if(ms_bonesUBO == GL_INVALID_INDEX)
     {
-        glGenBuffers(1, &s_bonesUBO);
-        glBindBufferBase(GL_UNIFORM_BUFFER, ROC_SHADER_BONES_BINDPOINT, s_bonesUBO);
+        glGenBuffers(1, &ms_bonesUBO);
+        glBindBufferBase(GL_UNIFORM_BUFFER, ROC_SHADER_BONES_BINDPOINT, ms_bonesUBO);
         glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * ROC_SHADER_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
     }
 }
 void ROC::Shader::DestroyBonesUBO()
 {
-    if(s_bonesUBO != GL_INVALID_INDEX)
+    if(ms_bonesUBO != GL_INVALID_INDEX)
     {
-        glDeleteBuffers(1, &s_bonesUBO);
-        s_bonesUBO = GL_INVALID_INDEX;
+        glDeleteBuffers(1, &ms_bonesUBO);
+        ms_bonesUBO = GL_INVALID_INDEX;
     }
 }
 void ROC::Shader::EnableUBOFix()
 {
-    s_uboFix = true;
+    ms_uboFix = true;
 }
 
 void ROC::Shader::Enable(bool f_full)

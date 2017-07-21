@@ -18,7 +18,7 @@ typedef void(*OnServerStopCallback)(void);
 
 class Core final
 {
-    static Core *s_instance;
+    static Core *ms_instance;
 
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
@@ -31,7 +31,7 @@ class Core final
     std::chrono::milliseconds m_pulseTick;
     LuaArguments *m_argument;
 
-    static OnServerStartCallback s_serverStartCallback;
+    static OnServerStartCallback ms_serverStartCallback;
     OnServerPulseCallback m_serverPulseCallback;
     OnServerStopCallback m_serverStopCallback;
 
@@ -51,7 +51,7 @@ public:
     inline MemoryManager* GetMemoryManager() { return m_memoryManager; }
     inline NetworkManager* GetNetworkManager() { return m_networkManager; }
 
-    static inline void SetServerStartCallback(OnServerStartCallback f_callback) { s_serverStartCallback = f_callback; }
+    static inline void SetServerStartCallback(OnServerStartCallback f_callback) { ms_serverStartCallback = f_callback; }
     inline void SetServerPulseCallback(OnServerPulseCallback f_callback) { m_serverPulseCallback = f_callback; }
     inline void SetServerStopCallback(OnServerStopCallback f_callback) { m_serverStopCallback = f_callback; }
 

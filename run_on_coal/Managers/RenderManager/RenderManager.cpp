@@ -46,7 +46,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Font::InitLibrary();
+    Font::CreateVAO();
+    Font::CreateLibrary();
     Shader::CreateBonesUBO();
 
     m_activeScene = nullptr;
@@ -63,6 +64,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_time = 0.0;
     m_locked = true;
     m_textureMatrix = glm::mat4(1.f);
+    m_materialBind = glm::bvec2(true);
+    m_fontBind = glm::bvec2(true);
 
     m_movieVectorEnd = m_movieVector.end();
 
@@ -78,7 +81,8 @@ ROC::RenderManager::~RenderManager()
     delete m_quad;
     delete m_quad3D;
     delete m_argument;
-    Font::TerminateLibrary();
+    Font::DestroyVAO();
+    Font::DestroyLibrary();
     Shader::DestroyBonesUBO();
     m_movieVector.clear();
 }
@@ -202,13 +206,14 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
                 iter->IsTransparent() ? EnableBlending() : DisableBlending();
                 iter->IsDoubleSided() ? DisableCulling() : EnableCulling();
 
-                bool l_vaoBind = CompareLastVAO(iter->GetVAO());
-                if(l_vaoBind)
+                m_materialBind.x = CompareLastTexture(iter->GetTexture()->GetTextureID()) && f_texturize;
+                m_materialBind.y = CompareLastVAO(iter->GetVAO());
+                if(m_materialBind.y)
                 {
                     m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(iter->GetType()));
                     m_activeShader->SetMaterialParamUniformValue(iter->GetParamsRef());
                 }
-                iter->Draw(CompareLastTexture(iter->GetTexture()->GetTextureID()) && f_texturize, l_vaoBind);
+                iter->Draw(m_materialBind);
             }
         }
     }
@@ -223,7 +228,9 @@ void ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::
         m_activeShader->SetProjectionUniformValue(m_screenProjection);
         m_activeShader->SetColorUniformValue(f_color);
 
-        f_font->Draw(f_text, f_pos, CompareLastVAO(f_font->GetVAO()));
+        m_fontBind.x = CompareLastVAO(Font::GetVAO());
+        m_fontBind.y = CompareLastTexture(f_font->GetAtlasTexture());
+        f_font->Draw(f_text, f_pos, m_fontBind);
     }
 }
 void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)

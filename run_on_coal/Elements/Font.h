@@ -10,7 +10,7 @@ namespace ROC
 
 class Font final : public Element
 {
-    static FT_Library s_library;
+    static FT_Library ms_library;
     FT_Face m_face;
     float m_size;
 
@@ -30,12 +30,12 @@ class Font final : public Element
     std::unordered_map<unsigned int, charData*>::iterator m_charIter;
     std::unordered_map<unsigned int, charData*>::iterator m_charMapEnd;
 
-    std::vector<glm::vec3> m_vertices;
-    GLuint m_vertexVBO;
-    std::vector<glm::vec2> m_uv;
-    GLuint m_uvVBO;
-    GLuint m_VAO;
-    bool m_switch;
+    static std::vector<glm::vec3> ms_vertices;
+    static GLuint ms_vertexVBO;
+    static std::vector<glm::vec2> ms_uv;
+    static GLuint ms_uvVBO;
+    static GLuint ms_VAO;
+    static bool ms_switch;
 
     int m_filteringType;
 
@@ -47,13 +47,17 @@ public:
 protected:
     Font();
     ~Font();
-    static void InitLibrary();
-    static void TerminateLibrary();
+
+    static void CreateVAO();
+    static void DestroyVAO();
+    static void CreateLibrary();
+    static void DestroyLibrary();
     bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
 
-    inline GLuint GetVAO() const { return m_VAO; }
+    static inline GLuint GetVAO() { return ms_VAO; }
+    inline GLuint GetAtlasTexture() { return m_atlasTexture; }
 
-    void Draw(const sf::String &f_text, const glm::vec2 &f_pos, bool f_bind);
+    void Draw(const sf::String &f_text, const glm::vec2 &f_pos, const glm::bvec2 &f_bind);
 
     friend class ElementManager;
     friend class RenderManager;

@@ -5,9 +5,9 @@ namespace ROC
 
 class SystemTick
 {
-    static unsigned int s_tick;
+    static unsigned int ms_tick;
 public:
-    inline static unsigned int GetTick() { return s_tick; }
+    inline static unsigned int GetTick() { return ms_tick; }
 
     static void UpdateTick();
 };

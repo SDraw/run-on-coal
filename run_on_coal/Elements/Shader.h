@@ -54,8 +54,8 @@ class Shader final : public Element
     std::vector<drawableBindData> m_drawableBind;
     unsigned int m_drawableCount;
 
-    static GLuint s_bonesUBO;
-    static bool s_uboFix;
+    static GLuint ms_bonesUBO;
+    static bool ms_uboFix;
 
     std::string m_error;
 

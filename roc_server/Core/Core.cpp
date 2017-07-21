@@ -10,8 +10,8 @@
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
 
-ROC::Core* ROC::Core::s_instance = nullptr;
-ROC::OnServerStartCallback ROC::Core::s_serverStartCallback = nullptr;
+ROC::Core* ROC::Core::ms_instance = nullptr;
+ROC::OnServerStartCallback ROC::Core::ms_serverStartCallback = nullptr;
 
 ROC::Core::Core()
 {
@@ -51,9 +51,9 @@ ROC::Core::~Core()
 
 ROC::Core* ROC::Core::Init()
 {
-    if(!s_instance)
+    if(!ms_instance)
     {
-        s_instance = new Core();
+        ms_instance = new Core();
 
         // Load default scripts
         std::string l_metaPath(ROC_DEFAULT_SCRIPTS_PATH);
@@ -71,27 +71,27 @@ ROC::Core* ROC::Core::Init()
                     {
                         std::string l_path(ROC_DEFAULT_SCRIPTS_PATH);
                         l_path.append(l_attrib.as_string());
-                        s_instance->m_luaManager->LoadScript(l_path);
+                        ms_instance->m_luaManager->LoadScript(l_path);
                     }
                 }
             }
         }
         delete l_meta;
 
-        if(s_serverStartCallback) (*s_serverStartCallback)();
-        s_instance->m_luaManager->GetEventManager()->CallEvent("onServerStart", s_instance->m_argument);
+        if(ms_serverStartCallback) (*ms_serverStartCallback)();
+        ms_instance->m_luaManager->GetEventManager()->CallEvent("onServerStart", ms_instance->m_argument);
     }
-    return s_instance;
+    return ms_instance;
 }
 void ROC::Core::Terminate()
 {
-    if(s_instance)
+    if(ms_instance)
     {
-        if(s_instance->m_serverStopCallback) (*s_instance->m_serverStopCallback)();
-        s_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", s_instance->m_argument);
+        if(ms_instance->m_serverStopCallback) (*ms_instance->m_serverStopCallback)();
+        ms_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", ms_instance->m_argument);
 
-        delete s_instance;
-        s_instance = nullptr;
+        delete ms_instance;
+        ms_instance = nullptr;
     }
 }
 
