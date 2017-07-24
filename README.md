@@ -1,6 +1,6 @@
 ![](http://i.imgur.com/x3GSfPD.png)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/vtcu06ofwqf4xe2s?svg=true)](https://ci.appveyor.com/project/SDraw/run-on-coal)
+[![Build status](https://ci.appveyor.com/api/projects/status/vtcu06ofwqf4xe2s?svg=true)](https://ci.appveyor.com/project/SDraw/run-on-coal) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 Simple and light-weight 3D game engine.
 
