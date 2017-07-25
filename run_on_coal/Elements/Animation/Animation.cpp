@@ -10,12 +10,12 @@ ROC::Animation::Animation()
 {
     m_elementType = ElementType::AnimationElement;
 
+    m_framesCount = 0U;
     m_duration = 0U;
-    m_durationTotal = 0U;
     m_fps = 0U;
     m_frameDelta = 0U;
     m_tempFrameData = nullptr;
-    m_bonesValue = 0U;
+    m_bonesCount = 0U;
     m_loaded = false;
 }
 ROC::Animation::~Animation()
@@ -25,10 +25,10 @@ ROC::Animation::~Animation()
 
 void ROC::Animation::Clean()
 {
+    m_bonesCount = 0U;
+    m_framesCount = 0U;
     m_duration = 0U;
-    m_bonesValue = 0U;
     m_fps = 0U;
-    m_durationTotal = 0U;
     delete m_tempFrameData;
     for(auto iter : m_boneIntervals)
     {
@@ -54,16 +54,16 @@ bool ROC::Animation::Load(const std::string &f_path)
         {
             l_animFile.open(f_path, std::ios::binary | std::ios::in);
             l_animFile.read(reinterpret_cast<char*>(&m_fps), sizeof(unsigned int));
-            l_animFile.read(reinterpret_cast<char*>(&m_duration), sizeof(unsigned int));
-            l_animFile.read(reinterpret_cast<char*>(&m_bonesValue), sizeof(unsigned int));
+            l_animFile.read(reinterpret_cast<char*>(&m_framesCount), sizeof(unsigned int));
+            l_animFile.read(reinterpret_cast<char*>(&m_bonesCount), sizeof(unsigned int));
 
             m_frameDelta = 1000U / m_fps;
-            m_durationTotal = m_duration * m_frameDelta;
+            m_duration = m_framesCount * m_frameDelta;
 
-            for(unsigned int i = 0; i < m_bonesValue; i++)
+            for(unsigned int i = 0; i < m_bonesCount; i++)
             {
-                std::vector<Interval<animData>> l_intervals;
-                Interval<animData> l_interval(0, 0, animData());
+                std::vector<Interval<keyframeData>> l_intervals;
+                Interval<keyframeData> l_interval(0, 0, keyframeData());
 
                 int l_intervalsCount = 0;
                 l_animFile.read(reinterpret_cast<char*>(&l_intervalsCount), sizeof(int));
@@ -88,16 +88,16 @@ bool ROC::Animation::Load(const std::string &f_path)
                     {
                         l_interval.stop = l_frameIndex;
                         l_interval.value.m_rightData = new BoneFrameData(l_position, l_rotation, l_scale);
-                        l_interval.value.m_duration = l_frameIndex*m_frameDelta - l_interval.value.m_leftTime;
+                        l_interval.value.m_duration = l_frameIndex*m_frameDelta - l_interval.value.m_startTime;
                         l_intervals.push_back(l_interval);
 
                         l_interval.start = l_frameIndex;
                         l_interval.value.m_leftData = l_interval.value.m_rightData;
-                        l_interval.value.m_leftTime = l_frameIndex*m_frameDelta;
+                        l_interval.value.m_startTime = l_frameIndex*m_frameDelta;
                         l_interval.value.m_rightData = nullptr;
                     }
                 }
-                m_boneIntervals.push_back(new IntervalTree<animData>(l_intervals));
+                m_boneIntervals.push_back(new IntervalTree<keyframeData>(l_intervals));
             }
             l_animFile.close();
 
@@ -114,22 +114,22 @@ bool ROC::Animation::Load(const std::string &f_path)
 
 void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
 {
-    unsigned int l_frame = ((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_duration;
-    f_tick = f_tick%m_durationTotal;
+    unsigned int l_frame = ((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_framesCount;
+    f_tick = f_tick%m_duration;
 
-    for(unsigned int i = 0; i < m_bonesValue; i++)
+    for(unsigned int i = 0; i < m_bonesCount; i++)
     {
         m_boneIntervals[i]->findOverlapping(l_frame, l_frame, m_searchResult);
         if(!m_searchResult.empty())
         {
-            animData &l_animData = m_searchResult.back().value;
-            if(!l_animData.m_leftData->IsEqual(l_animData.m_rightData))
+            keyframeData &l_keyframeData = m_searchResult.back().value;
+            if(!l_keyframeData.m_leftData->IsEqual(l_keyframeData.m_rightData))
             {
-                float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_animData.m_leftTime) / static_cast<float>(l_animData.m_duration));
-                m_tempFrameData->SetInterpolated(l_animData.m_leftData, l_animData.m_rightData, l_blend);
+                float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
+                m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
                 f_bones[i]->SetFrameData(m_tempFrameData);
             }
-            else f_bones[i]->SetFrameData(l_animData.m_leftData);
+            else f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
 
             m_searchResult.clear();
         }

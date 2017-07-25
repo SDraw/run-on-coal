@@ -47,6 +47,6 @@ int ROC::LuaAnimationDef::AnimationGetDuration(lua_State *f_vm)
     Animation *l_anim;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_anim);
-    !argStream.HasErrors() ? argStream.PushNumber(l_anim->GetTotalDuration()) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushNumber(l_anim->GetDuration()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

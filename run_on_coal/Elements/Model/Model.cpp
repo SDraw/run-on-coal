@@ -202,7 +202,7 @@ void ROC::Model::UpdateAnimation()
         unsigned int l_difTick = static_cast<unsigned int>(static_cast<float>(l_sysTick - m_animLastTick)*m_animationSpeed);
         m_animLastTick = l_sysTick;
         m_animCurrentTick += l_difTick;
-        m_animCurrentTick %= m_animation->GetTotalDuration();
+        m_animCurrentTick %= m_animation->GetDuration();
         UpdateSkeleton();
     }
 }
@@ -247,13 +247,13 @@ bool ROC::Model::SetAnimationProgress(float f_val)
     if(m_animation)
     {
         btClamp(f_val, 0.f, 1.f);
-        m_animCurrentTick = static_cast<unsigned int>(float(m_animation->GetTotalDuration())*f_val);
+        m_animCurrentTick = static_cast<unsigned int>(float(m_animation->GetDuration())*f_val);
     }
     return (m_animation != nullptr);
 }
 float ROC::Model::GetAnimationProgress() const
 {
-    return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->GetTotalDuration())) : -1.f);
+    return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->GetDuration())) : -1.f);
 }
 bool ROC::Model::SetAnimationBlendFactor(float f_val)
 {
