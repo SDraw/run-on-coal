@@ -1,6 +1,6 @@
 ![](http://i.imgur.com/x3GSfPD.png)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/vtcu06ofwqf4xe2s?svg=true)](https://ci.appveyor.com/project/SDraw/run-on-coal) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+[![Build status](https://ci.appveyor.com/api/projects/status/vtcu06ofwqf4xe2s?svg=true)](https://ci.appveyor.com/project/SDraw/run-on-coal) [![Release](http://img.shields.io/github/release/SDraw/run-on-coal.svg)](../../releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 Simple and light-weight 3D game engine.
 
@@ -11,21 +11,20 @@ Simple and light-weight 3D game engine.
 * Directional lights
 * Frustum culling
 * Keyboard, mouse and joypad input
-* Physics using [Bullet Physics](https://github.com/bulletphysics/bullet3)
+* Physics using [Bullet Physics](../../../../bulletphysics/bullet3)
 * Scripting using [Lua](https://www.lua.org)
 * Audio playback with spatialization (Ogg, WAV, FLAC)
 * Video playback
 * TrueType font rendering with Unicode characters support
-* Networking using [RakNet library](https://github.com/OculusVR/RakNet)
+* Networking using [RakNet library](../../../../OculusVR/RakNet)
 
 [![alt text](http://i.imgur.com/spFAFnr.png "Youtube playlist")](https://www.youtube.com/watch?v=L2UA3kquDpg&list=PLiEPsxTlqsDnI36XCCsG3jw32j2Gb-JGJ)
 
 # Builds
-Builded shared libraries are available in [Dropbox shared folder](https://www.dropbox.com/sh/vowd9qzzy5hosen/AADyDIJJi7bYwbPFZ8rhvolZa?dl=0).  
-Latest release is available in [releases tab](https://github.com/SDraw/run-on-coal/releases).
+Latest release and prebuilt shared libraries are available in [releases tab](../../releases/latest).
 
 # Wiki
-All information about modeling and Lua is avaliable at [wiki](https://github.com/SDraw/run-on-coal/wiki).
+All information about modeling and scripting is avaliable at [wiki](../../wiki).
 
 # Demo scene
-Check [demo scene resource](https://github.com/SDraw/roc-app-demo) to see how it works on Lua scripts level.
+Check [demo scene resource](../../../roc-app-demo) out for example of engine usage.
