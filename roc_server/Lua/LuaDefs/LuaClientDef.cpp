@@ -14,17 +14,17 @@
 
 void ROC::LuaClientDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Client", nullptr);
-    LuaUtils::lua_registerClassMethod(f_vm, "disconnect", ClientDisconnect);
-    LuaUtils::lua_registerClassMethod(f_vm, "sendData", ClientSendData);
-    LuaUtils::lua_registerClassMethod(f_vm, "getID", ClientGetID);
-    LuaUtils::lua_registerClassMethod(f_vm, "getAddress", ClientGetAddress);
-    LuaUtils::lua_registerClassMethod(f_vm, "getPing", ClientGetPing);
+    LuaUtils::AddClass(f_vm, "Client", nullptr);
+    LuaUtils::AddClassMethod(f_vm, "disconnect", Disconnect);
+    LuaUtils::AddClassMethod(f_vm, "sendData", SendData);
+    LuaUtils::AddClassMethod(f_vm, "getID", GetID);
+    LuaUtils::AddClassMethod(f_vm, "getAddress", GetAddress);
+    LuaUtils::AddClassMethod(f_vm, "getPing", GetPing);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaClientDef::ClientDisconnect(lua_State *f_vm)
+int ROC::LuaClientDef::Disconnect(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);
@@ -37,7 +37,7 @@ int ROC::LuaClientDef::ClientDisconnect(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaClientDef::ClientSendData(lua_State *f_vm)
+int ROC::LuaClientDef::SendData(lua_State *f_vm)
 {
     Client *l_client;
     std::string l_data;
@@ -52,7 +52,7 @@ int ROC::LuaClientDef::ClientSendData(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaClientDef::ClientGetID(lua_State *f_vm)
+int ROC::LuaClientDef::GetID(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);
@@ -60,7 +60,7 @@ int ROC::LuaClientDef::ClientGetID(lua_State *f_vm)
     !argStream.HasErrors() ? argStream.PushInteger(l_client->GetID()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaClientDef::ClientGetAddress(lua_State *f_vm)
+int ROC::LuaClientDef::GetAddress(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);
@@ -76,7 +76,7 @@ int ROC::LuaClientDef::ClientGetAddress(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaClientDef::ClientGetPing(lua_State *f_vm)
+int ROC::LuaClientDef::GetPing(lua_State *f_vm)
 {
     Client *l_client;
     ArgReader argStream(f_vm);

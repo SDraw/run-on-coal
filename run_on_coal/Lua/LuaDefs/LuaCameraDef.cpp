@@ -24,28 +24,28 @@ const std::vector<std::string> g_CameraTypesTable
 
 void ROC::LuaCameraDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Camera", CameraCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "setPosition", CameraSetPosition);
-    LuaUtils::lua_registerClassMethod(f_vm, "getPosition", CameraGetPosition);
-    LuaUtils::lua_registerClassMethod(f_vm, "setDirection", CameraSetDirection);
-    LuaUtils::lua_registerClassMethod(f_vm, "getDirection", CameraGetDirection);
-    LuaUtils::lua_registerClassMethod(f_vm, "setProjectionType", CameraSetProjectionType);
-    LuaUtils::lua_registerClassMethod(f_vm, "getProjectionType", CameraGetProjectionType);
-    LuaUtils::lua_registerClassMethod(f_vm, "setFOV", CameraSetFOV);
-    LuaUtils::lua_registerClassMethod(f_vm, "getFOV", CameraGetFOV);
-    LuaUtils::lua_registerClassMethod(f_vm, "setAspectRatio", CameraSetAspectRatio);
-    LuaUtils::lua_registerClassMethod(f_vm, "getAspectRatio", CameraGetAspectRatio);
-    LuaUtils::lua_registerClassMethod(f_vm, "setOrthoParams", CameraSetOrthoParams);
-    LuaUtils::lua_registerClassMethod(f_vm, "getOrthoParams", CameraGetOrthoParams);
-    LuaUtils::lua_registerClassMethod(f_vm, "setDepth", CameraSetDepth);
-    LuaUtils::lua_registerClassMethod(f_vm, "getDepth", CameraGetDepth);
-    LuaUtils::lua_registerClassMethod(f_vm, "getViewMatrix", CameraGetViewMatrix);
-    LuaUtils::lua_registerClassMethod(f_vm, "getProjectionMatrix", CameraGetProjectionMatrix);
+    LuaUtils::AddClass(f_vm, "Camera", Create);
+    LuaUtils::AddClassMethod(f_vm, "setPosition", SetPosition);
+    LuaUtils::AddClassMethod(f_vm, "getPosition", GetPosition);
+    LuaUtils::AddClassMethod(f_vm, "setDirection", SetDirection);
+    LuaUtils::AddClassMethod(f_vm, "getDirection", GetDirection);
+    LuaUtils::AddClassMethod(f_vm, "setProjectionType", SetProjectionType);
+    LuaUtils::AddClassMethod(f_vm, "getProjectionType", GetProjectionType);
+    LuaUtils::AddClassMethod(f_vm, "setFOV", SetFOV);
+    LuaUtils::AddClassMethod(f_vm, "getFOV", GetFOV);
+    LuaUtils::AddClassMethod(f_vm, "setAspectRatio", SetAspectRatio);
+    LuaUtils::AddClassMethod(f_vm, "getAspectRatio", GetAspectRatio);
+    LuaUtils::AddClassMethod(f_vm, "setOrthoParams", SetOrthoParams);
+    LuaUtils::AddClassMethod(f_vm, "getOrthoParams", GetOrthoParams);
+    LuaUtils::AddClassMethod(f_vm, "setDepth", SetDepth);
+    LuaUtils::AddClassMethod(f_vm, "getDepth", GetDepth);
+    LuaUtils::AddClassMethod(f_vm, "getViewMatrix", GetViewMatrix);
+    LuaUtils::AddClassMethod(f_vm, "getProjectionMatrix", GetProjectionMatrix);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaCameraDef::CameraCreate(lua_State *f_vm)
+int ROC::LuaCameraDef::Create(lua_State *f_vm)
 {
     std::string l_text;
     ArgReader argStream(f_vm);
@@ -64,7 +64,7 @@ int ROC::LuaCameraDef::CameraCreate(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetPosition(lua_State *f_vm)
+int ROC::LuaCameraDef::SetPosition(lua_State *f_vm)
 {
     Camera *l_Camera;
     glm::vec3 l_pos;
@@ -79,7 +79,7 @@ int ROC::LuaCameraDef::CameraSetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetPosition(lua_State *f_vm)
+int ROC::LuaCameraDef::GetPosition(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -96,7 +96,7 @@ int ROC::LuaCameraDef::CameraGetPosition(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetDirection(lua_State *f_vm)
+int ROC::LuaCameraDef::SetDirection(lua_State *f_vm)
 {
     Camera *l_Camera;
     glm::vec3 l_dir;
@@ -111,7 +111,7 @@ int ROC::LuaCameraDef::CameraSetDirection(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetDirection(lua_State *f_vm)
+int ROC::LuaCameraDef::GetDirection(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -128,7 +128,7 @@ int ROC::LuaCameraDef::CameraGetDirection(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetProjectionType(lua_State *f_vm)
+int ROC::LuaCameraDef::SetProjectionType(lua_State *f_vm)
 {
     Camera *l_Camera;
     std::string l_text;
@@ -148,7 +148,7 @@ int ROC::LuaCameraDef::CameraSetProjectionType(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetProjectionType(lua_State *f_vm)
+int ROC::LuaCameraDef::GetProjectionType(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -157,7 +157,7 @@ int ROC::LuaCameraDef::CameraGetProjectionType(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetFOV(lua_State *f_vm)
+int ROC::LuaCameraDef::SetFOV(lua_State *f_vm)
 {
     Camera *l_Camera;
     float l_fov;
@@ -172,7 +172,7 @@ int ROC::LuaCameraDef::CameraSetFOV(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetFOV(lua_State *f_vm)
+int ROC::LuaCameraDef::GetFOV(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -181,7 +181,7 @@ int ROC::LuaCameraDef::CameraGetFOV(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetAspectRatio(lua_State *f_vm)
+int ROC::LuaCameraDef::SetAspectRatio(lua_State *f_vm)
 {
     Camera *l_Camera;
     float l_ratio;
@@ -196,7 +196,7 @@ int ROC::LuaCameraDef::CameraSetAspectRatio(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetAspectRatio(lua_State *f_vm)
+int ROC::LuaCameraDef::GetAspectRatio(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -205,7 +205,7 @@ int ROC::LuaCameraDef::CameraGetAspectRatio(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetOrthoParams(lua_State *f_vm)
+int ROC::LuaCameraDef::SetOrthoParams(lua_State *f_vm)
 {
     Camera *l_Camera;
     glm::vec4 l_params;
@@ -220,7 +220,7 @@ int ROC::LuaCameraDef::CameraSetOrthoParams(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetOrthoParams(lua_State *f_vm)
+int ROC::LuaCameraDef::GetOrthoParams(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -238,7 +238,7 @@ int ROC::LuaCameraDef::CameraGetOrthoParams(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraSetDepth(lua_State *f_vm)
+int ROC::LuaCameraDef::SetDepth(lua_State *f_vm)
 {
     Camera *l_Camera;
     glm::vec2 l_depth;
@@ -253,7 +253,7 @@ int ROC::LuaCameraDef::CameraSetDepth(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaCameraDef::CameraGetDepth(lua_State *f_vm)
+int ROC::LuaCameraDef::GetDepth(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -269,7 +269,7 @@ int ROC::LuaCameraDef::CameraGetDepth(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraGetViewMatrix(lua_State *f_vm)
+int ROC::LuaCameraDef::GetViewMatrix(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -278,13 +278,15 @@ int ROC::LuaCameraDef::CameraGetViewMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_Camera->GetViewMatrix(l_mat);
-        argStream.PushVector(glm::value_ptr(l_mat), 16);
+
+        float *l_matPtr = glm::value_ptr(l_mat);
+        for(int i = 0; i < 16; i++) argStream.PushNumber(l_matPtr[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaCameraDef::CameraGetProjectionMatrix(lua_State *f_vm)
+int ROC::LuaCameraDef::GetProjectionMatrix(lua_State *f_vm)
 {
     Camera *l_Camera;
     ArgReader argStream(f_vm);
@@ -293,7 +295,9 @@ int ROC::LuaCameraDef::CameraGetProjectionMatrix(lua_State *f_vm)
     {
         glm::mat4 l_mat;
         l_Camera->GetProjectionMatrix(l_mat);
-        argStream.PushVector(glm::value_ptr(l_mat), 16);
+
+        float *l_matPtr = glm::value_ptr(l_mat);
+        for(int i = 0; i < 16; i++) argStream.PushNumber(l_matPtr[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

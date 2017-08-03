@@ -18,6 +18,7 @@
 #include "Lua/ArgReader.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
+#include "Utils/MathUtils.h"
 
 #define ROC_MODEL_ANIMPROPERTY_SPEED 0
 #define ROC_MODEL_ANIMPROPERTY_PROGRESS 1
@@ -35,33 +36,33 @@ const std::vector<std::string> g_AnimationPropertiesTable
 
 void ROC::LuaModelDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Model", ModelCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "getGeometry", ModelGetGeometry);
-    LuaUtils::lua_registerClassMethod(f_vm, "setPosition", ModelSetPosition);
-    LuaUtils::lua_registerClassMethod(f_vm, "getPosition", ModelGetPosition);
-    LuaUtils::lua_registerClassMethod(f_vm, "setRotation", ModelSetRotation);
-    LuaUtils::lua_registerClassMethod(f_vm, "getRotation", ModelGetRotation);
-    LuaUtils::lua_registerClassMethod(f_vm, "setScale", ModelSetScale);
-    LuaUtils::lua_registerClassMethod(f_vm, "getScale", ModelGetScale);
-    LuaUtils::lua_registerClassMethod(f_vm, "draw", ModelDraw);
-    LuaUtils::lua_registerClassMethod(f_vm, "attach", ModelAttach);
-    LuaUtils::lua_registerClassMethod(f_vm, "detach", ModelDetach);
-    LuaUtils::lua_registerClassMethod(f_vm, "getParent", ModelGetParent);
-    LuaUtils::lua_registerClassMethod(f_vm, "setAnimation", ModelSetAnimation);
-    LuaUtils::lua_registerClassMethod(f_vm, "getAnimation", ModelGetAnimation);
-    LuaUtils::lua_registerClassMethod(f_vm, "removeAnimation", ModelRemoveAnimation);
-    LuaUtils::lua_registerClassMethod(f_vm, "playAnimation", ModelPlayAnimation);
-    LuaUtils::lua_registerClassMethod(f_vm, "pauseAnimation", ModelPauseAnimation);
-    LuaUtils::lua_registerClassMethod(f_vm, "resetAnimation", ModelResetAnimation);
-    LuaUtils::lua_registerClassMethod(f_vm, "setAnimationProperty", ModelSetAnimationProperty);
-    LuaUtils::lua_registerClassMethod(f_vm, "getAnimationProperty", ModelGetAnimationProperty);
-    LuaUtils::lua_registerClassMethod(f_vm, "getCollision", ModelGetCollision);
-    LuaUtils::lua_registerClassMethod(f_vm, "setCollidable", ModelSetCollidable);
+    LuaUtils::AddClass(f_vm, "Model", Create);
+    LuaUtils::AddClassMethod(f_vm, "getGeometry", GetGeometry);
+    LuaUtils::AddClassMethod(f_vm, "setPosition", SetPosition);
+    LuaUtils::AddClassMethod(f_vm, "getPosition", GetPosition);
+    LuaUtils::AddClassMethod(f_vm, "setRotation", SetRotation);
+    LuaUtils::AddClassMethod(f_vm, "getRotation", GetRotation);
+    LuaUtils::AddClassMethod(f_vm, "setScale", SetScale);
+    LuaUtils::AddClassMethod(f_vm, "getScale", GetScale);
+    LuaUtils::AddClassMethod(f_vm, "draw", Draw);
+    LuaUtils::AddClassMethod(f_vm, "attach", Attach);
+    LuaUtils::AddClassMethod(f_vm, "detach", Detach);
+    LuaUtils::AddClassMethod(f_vm, "getParent", GetParent);
+    LuaUtils::AddClassMethod(f_vm, "setAnimation", SetAnimation);
+    LuaUtils::AddClassMethod(f_vm, "getAnimation", GetAnimation);
+    LuaUtils::AddClassMethod(f_vm, "removeAnimation", RemoveAnimation);
+    LuaUtils::AddClassMethod(f_vm, "playAnimation", PlayAnimation);
+    LuaUtils::AddClassMethod(f_vm, "pauseAnimation", PauseAnimation);
+    LuaUtils::AddClassMethod(f_vm, "resetAnimation", ResetAnimation);
+    LuaUtils::AddClassMethod(f_vm, "setAnimationProperty", SetAnimationProperty);
+    LuaUtils::AddClassMethod(f_vm, "getAnimationProperty", GetAnimationProperty);
+    LuaUtils::AddClassMethod(f_vm, "getCollision", GetCollision);
+    LuaUtils::AddClassMethod(f_vm, "setCollidable", SetCollidable);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaModelDef::ModelCreate(lua_State *f_vm)
+int ROC::LuaModelDef::Create(lua_State *f_vm)
 {
     Geometry *l_geometry = nullptr;
     ArgReader argStream(f_vm);
@@ -74,7 +75,7 @@ int ROC::LuaModelDef::ModelCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelGetGeometry(lua_State *f_vm)
+int ROC::LuaModelDef::GetGeometry(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -87,7 +88,7 @@ int ROC::LuaModelDef::ModelGetGeometry(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelSetPosition(lua_State *f_vm)
+int ROC::LuaModelDef::SetPosition(lua_State *f_vm)
 {
     Model *l_model;
     glm::vec3 l_pos;
@@ -104,7 +105,7 @@ int ROC::LuaModelDef::ModelSetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelGetPosition(lua_State *f_vm)
+int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
 {
     Model *l_model;
     bool l_global = false;
@@ -122,57 +123,40 @@ int ROC::LuaModelDef::ModelGetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelSetRotation(lua_State *f_vm)
+int ROC::LuaModelDef::SetRotation(lua_State *f_vm)
 {
     Model *l_model;
-    glm::vec4 l_rot(0.f, 0.f, 0.f, std::nanf("0"));
+    glm::quat l_rot;
     bool l_preserveMotion = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
-    argStream.ReadNextNumber(l_rot.w);
+    for(int i = 0; i < 4; i++) argStream.ReadNumber(l_rot[i]);
     argStream.ReadNextBoolean(l_preserveMotion);
     if(!argStream.HasErrors())
     {
-        glm::quat l_qRot = std::isnan(l_rot.w) ? glm::quat(l_rot) : glm::quat(l_rot.w, l_rot.x, l_rot.y, l_rot.z);
-        l_model->SetRotation(l_qRot, l_preserveMotion);
+        l_model->SetRotation(l_rot, l_preserveMotion);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelGetRotation(lua_State *f_vm)
+int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
 {
     Model *l_model;
     bool l_global = false;
-    bool l_quatReq = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
     argStream.ReadNextBoolean(l_global);
-    argStream.ReadNextBoolean(l_quatReq);
     if(!argStream.HasErrors())
     {
-        glm::quat l_qRot;
-        l_model->GetRotation(l_qRot, l_global);
-        if(l_quatReq)
-        {
-            argStream.PushNumber(l_qRot.x);
-            argStream.PushNumber(l_qRot.y);
-            argStream.PushNumber(l_qRot.z);
-            argStream.PushNumber(l_qRot.w);
-        }
-        else
-        {
-            glm::vec3 l_euler = glm::eulerAngles(l_qRot);
-            argStream.PushNumber(l_euler.x);
-            argStream.PushNumber(l_euler.y);
-            argStream.PushNumber(l_euler.z);
-        }
+        glm::quat l_rot;
+        l_model->GetRotation(l_rot, l_global);
+        for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelSetScale(lua_State *f_vm)
+int ROC::LuaModelDef::SetScale(lua_State *f_vm)
 {
     Model *l_model;
     glm::vec3 l_scale;
@@ -187,7 +171,7 @@ int ROC::LuaModelDef::ModelSetScale(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelGetScale(lua_State *f_vm)
+int ROC::LuaModelDef::GetScale(lua_State *f_vm)
 {
     Model *l_model;
     bool l_global = false;
@@ -198,14 +182,12 @@ int ROC::LuaModelDef::ModelGetScale(lua_State *f_vm)
     {
         glm::vec3 l_scale;
         l_model->GetScale(l_scale, l_global);
-        argStream.PushNumber(l_scale.x);
-        argStream.PushNumber(l_scale.y);
-        argStream.PushNumber(l_scale.z);
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelDraw(lua_State *f_vm)
+int ROC::LuaModelDef::Draw(lua_State *f_vm)
 {
     Model *l_model;
     bool l_texturize = true;
@@ -222,7 +204,7 @@ int ROC::LuaModelDef::ModelDraw(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelAttach(lua_State *f_vm)
+int ROC::LuaModelDef::Attach(lua_State *f_vm)
 {
     Model *l_model, *l_parent;
     int l_bone = -1;
@@ -239,7 +221,7 @@ int ROC::LuaModelDef::ModelAttach(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelDetach(lua_State *f_vm)
+int ROC::LuaModelDef::Detach(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -252,7 +234,7 @@ int ROC::LuaModelDef::ModelDetach(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelGetParent(lua_State *f_vm)
+int ROC::LuaModelDef::GetParent(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -266,7 +248,7 @@ int ROC::LuaModelDef::ModelGetParent(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaModelDef::ModelSetAnimation(lua_State *f_vm)
+int ROC::LuaModelDef::SetAnimation(lua_State *f_vm)
 {
     Model *l_model;
     Animation *l_anim;
@@ -281,7 +263,7 @@ int ROC::LuaModelDef::ModelSetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelGetAnimation(lua_State *f_vm)
+int ROC::LuaModelDef::GetAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -294,7 +276,7 @@ int ROC::LuaModelDef::ModelGetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelRemoveAnimation(lua_State *f_vm)
+int ROC::LuaModelDef::RemoveAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -307,7 +289,7 @@ int ROC::LuaModelDef::ModelRemoveAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelPlayAnimation(lua_State *f_vm)
+int ROC::LuaModelDef::PlayAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -320,7 +302,7 @@ int ROC::LuaModelDef::ModelPlayAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelPauseAnimation(lua_State *f_vm)
+int ROC::LuaModelDef::PauseAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -333,7 +315,7 @@ int ROC::LuaModelDef::ModelPauseAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelResetAnimation(lua_State *f_vm)
+int ROC::LuaModelDef::ResetAnimation(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -346,7 +328,7 @@ int ROC::LuaModelDef::ModelResetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelSetAnimationProperty(lua_State *f_vm)
+int ROC::LuaModelDef::SetAnimationProperty(lua_State *f_vm)
 {
     Model *l_model;
     std::string l_property;
@@ -375,7 +357,7 @@ int ROC::LuaModelDef::ModelSetAnimationProperty(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaModelDef::ModelGetAnimationProperty(lua_State *f_vm)
+int ROC::LuaModelDef::GetAnimationProperty(lua_State *f_vm)
 {
     Model *l_model;
     std::string l_property;
@@ -403,7 +385,7 @@ int ROC::LuaModelDef::ModelGetAnimationProperty(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaModelDef::ModelGetCollision(lua_State *f_vm)
+int ROC::LuaModelDef::GetCollision(lua_State *f_vm)
 {
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -417,7 +399,7 @@ int ROC::LuaModelDef::ModelGetCollision(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaModelDef::ModelSetCollidable(lua_State *f_vm)
+int ROC::LuaModelDef::SetCollidable(lua_State *f_vm)
 {
     Model *l_model1, *l_model2;
     bool l_state;

@@ -5,23 +5,23 @@ namespace ROC
 
 class LuaCameraDef final
 {
-    static int CameraCreate(lua_State *f_vm);
-    static int CameraSetPosition(lua_State *f_vm);
-    static int CameraGetPosition(lua_State *f_vm);
-    static int CameraSetDirection(lua_State *f_vm);
-    static int CameraGetDirection(lua_State *f_vm);
-    static int CameraSetProjectionType(lua_State *f_vm);
-    static int CameraGetProjectionType(lua_State *f_vm);
-    static int CameraSetFOV(lua_State *f_vm);
-    static int CameraGetFOV(lua_State *f_vm);
-    static int CameraSetAspectRatio(lua_State *f_vm);
-    static int CameraGetAspectRatio(lua_State *f_vm);
-    static int CameraSetOrthoParams(lua_State *f_vm);
-    static int CameraGetOrthoParams(lua_State *f_vm);
-    static int CameraSetDepth(lua_State *f_vm);
-    static int CameraGetDepth(lua_State *f_vm);
-    static int CameraGetViewMatrix(lua_State *f_vm);
-    static int CameraGetProjectionMatrix(lua_State *f_vm);
+    static int Create(lua_State *f_vm);
+    static int SetPosition(lua_State *f_vm);
+    static int GetPosition(lua_State *f_vm);
+    static int SetDirection(lua_State *f_vm);
+    static int GetDirection(lua_State *f_vm);
+    static int SetProjectionType(lua_State *f_vm);
+    static int GetProjectionType(lua_State *f_vm);
+    static int SetFOV(lua_State *f_vm);
+    static int GetFOV(lua_State *f_vm);
+    static int SetAspectRatio(lua_State *f_vm);
+    static int GetAspectRatio(lua_State *f_vm);
+    static int SetOrthoParams(lua_State *f_vm);
+    static int GetOrthoParams(lua_State *f_vm);
+    static int SetDepth(lua_State *f_vm);
+    static int GetDepth(lua_State *f_vm);
+    static int GetViewMatrix(lua_State *f_vm);
+    static int GetProjectionMatrix(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

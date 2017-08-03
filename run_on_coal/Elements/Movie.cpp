@@ -5,6 +5,7 @@
 ROC::Movie::Movie()
 {
     m_elementType = ElementType::MovieElement;
+    m_elementTypeName.assign("Movie");
 
     m_movie = nullptr;
 }

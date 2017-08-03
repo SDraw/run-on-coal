@@ -22,6 +22,7 @@ extern const glm::vec3 g_DefaultScale;
 ROC::Model::Model(Geometry *f_geometry)
 {
     m_elementType = ElementType::ModelElement;
+    m_elementTypeName.assign("Model");
 
     m_position = g_DefaultPosition;
     m_rotation = g_DefaultRotation;
@@ -82,14 +83,14 @@ void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
     else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
 }
 
-void ROC::Model::SetRotation(const glm::quat &f_rot, bool f_ignoreMotion)
+void ROC::Model::SetRotation(const glm::quat &f_rot, bool f_preserveMotion)
 {
     if(m_rotation != f_rot)
     {
         std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
         if(m_collision) m_collision->SetRotation(f_rot);
         else m_rebuildMatrix = true;
-        if(m_skeleton && f_ignoreMotion) m_skeleton->PreserveMotion();
+        if(m_skeleton && f_preserveMotion) m_skeleton->PreserveMotion();
     }
 }
 void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)

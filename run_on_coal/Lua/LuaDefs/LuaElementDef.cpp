@@ -12,12 +12,6 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/LuaUtils.h"
 
-namespace ROC
-{
-
-extern const std::vector<std::string> g_ElementTypeNames;
-
-}
 
 void ROC::LuaElementDef::Init(lua_State *f_vm)
 {
@@ -25,11 +19,11 @@ void ROC::LuaElementDef::Init(lua_State *f_vm)
 }
 void ROC::LuaElementDef::AddHierarchyMethods(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClassMethod(f_vm, "getType", ElementGetType);
-    LuaUtils::lua_registerClassMethod(f_vm, "setData", ElementSetData);
-    LuaUtils::lua_registerClassMethod(f_vm, "getData", ElementGetData);
-    LuaUtils::lua_registerClassMethod(f_vm, "removeData", ElementRemoveData);
-    LuaUtils::lua_registerClassMethod(f_vm, "destroy", ElementDestroy);
+    LuaUtils::AddClassMethod(f_vm, "getType", GetType);
+    LuaUtils::AddClassMethod(f_vm, "setData", SetData);
+    LuaUtils::AddClassMethod(f_vm, "getData", GetData);
+    LuaUtils::AddClassMethod(f_vm, "removeData", RemoveData);
+    LuaUtils::AddClassMethod(f_vm, "destroy", Destroy);
 }
 
 int ROC::LuaElementDef::IsElement(lua_State *f_vm)
@@ -41,16 +35,16 @@ int ROC::LuaElementDef::IsElement(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaElementDef::ElementGetType(lua_State *f_vm)
+int ROC::LuaElementDef::GetType(lua_State *f_vm)
 {
     Element *l_element;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_element);
-    !argStream.HasErrors() ? argStream.PushText(g_ElementTypeNames[l_element->GetElementType()]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(l_element->GetElementTypeName()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaElementDef::ElementSetData(lua_State *f_vm)
+int ROC::LuaElementDef::SetData(lua_State *f_vm)
 {
     Element *l_element;
     std::string l_key;
@@ -72,7 +66,7 @@ int ROC::LuaElementDef::ElementSetData(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaElementDef::ElementGetData(lua_State *f_vm)
+int ROC::LuaElementDef::GetData(lua_State *f_vm)
 {
     Element *l_element;
     std::string l_key;
@@ -89,7 +83,7 @@ int ROC::LuaElementDef::ElementGetData(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaElementDef::ElementRemoveData(lua_State *f_vm)
+int ROC::LuaElementDef::RemoveData(lua_State *f_vm)
 {
     Element *l_element;
     std::string l_key;
@@ -105,7 +99,7 @@ int ROC::LuaElementDef::ElementRemoveData(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaElementDef::ElementDestroy(lua_State *f_vm)
+int ROC::LuaElementDef::Destroy(lua_State *f_vm)
 {
     Element *l_element;
     ArgReader argStream(f_vm);

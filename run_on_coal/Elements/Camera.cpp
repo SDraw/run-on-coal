@@ -5,6 +5,7 @@
 ROC::Camera::Camera(int f_type)
 {
     m_elementType = ElementType::CameraElement;
+    m_elementTypeName.assign("Camera");
 
     m_type = f_type;
     btClamp(m_type, ROC_CAMERA_PROJECTION_PERSPECTIVE, ROC_CAMERA_PROJECTION_ORTHOGONAL);
@@ -44,11 +45,11 @@ void ROC::Camera::SetPosition(const glm::vec3& f_pos)
         m_rebuildView = true;
     }
 }
-void ROC::Camera::SetDirection(const glm::vec3& f_pos)
+void ROC::Camera::SetDirection(const glm::vec3& f_dir)
 {
-    if(m_viewDirection != f_pos)
+    if(m_viewDirection != f_dir)
     {
-        std::memcpy(&m_viewDirection, &f_pos, sizeof(glm::vec3));
+        std::memcpy(&m_viewDirection, &f_dir, sizeof(glm::vec3));
         m_rebuildView = true;
     }
 }

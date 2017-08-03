@@ -16,8 +16,10 @@ public:
     bool RemoveCustomData(const std::string &f_key);
 
     inline unsigned char GetElementType() const { return m_elementType; }
+    inline const std::string& GetElementTypeName() const { return m_elementTypeName; }
 protected:
     unsigned char m_elementType;
+    std::string m_elementTypeName;
 
     Element();
     virtual ~Element();

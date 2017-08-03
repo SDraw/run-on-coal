@@ -17,6 +17,8 @@ class LuaManager final
     lua_State *m_vm;
     EventManager *m_eventManager;
 
+    unsigned int m_pulseCycles;
+
     LuaManager(const LuaManager& that);
     LuaManager &operator =(const LuaManager &that);
 public:

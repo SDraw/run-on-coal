@@ -13,14 +13,14 @@
 
 void ROC::LuaAnimationDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Animation", AnimationCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "getBonesCount", AnimationGetBonesCount);
-    LuaUtils::lua_registerClassMethod(f_vm, "getDuration", AnimationGetDuration);
+    LuaUtils::AddClass(f_vm, "Animation", Create);
+    LuaUtils::AddClassMethod(f_vm, "getBonesCount", GetBonesCount);
+    LuaUtils::AddClassMethod(f_vm, "getDuration", GetDuration);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaAnimationDef::AnimationCreate(lua_State *f_vm)
+int ROC::LuaAnimationDef::Create(lua_State *f_vm)
 {
     std::string l_path;
     ArgReader argStream(f_vm);
@@ -34,7 +34,7 @@ int ROC::LuaAnimationDef::AnimationCreate(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaAnimationDef::AnimationGetBonesCount(lua_State *f_vm)
+int ROC::LuaAnimationDef::GetBonesCount(lua_State *f_vm)
 {
     Animation *l_anim;
     ArgReader argStream(f_vm);
@@ -42,7 +42,7 @@ int ROC::LuaAnimationDef::AnimationGetBonesCount(lua_State *f_vm)
     !argStream.HasErrors() ? argStream.PushNumber(l_anim->GetBonesCount()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaAnimationDef::AnimationGetDuration(lua_State *f_vm)
+int ROC::LuaAnimationDef::GetDuration(lua_State *f_vm)
 {
     Animation *l_anim;
     ArgReader argStream(f_vm);

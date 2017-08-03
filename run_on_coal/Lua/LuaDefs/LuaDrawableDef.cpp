@@ -24,10 +24,10 @@ void ROC::LuaDrawableDef::Init(lua_State *f_vm)
 }
 void ROC::LuaDrawableDef::AddHierarchyMethods(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClassMethod(f_vm, "getSize", DrawableGetSize);
-    LuaUtils::lua_registerClassMethod(f_vm, "getFiltering", DrawableGetFiltering);
-    LuaUtils::lua_registerClassMethod(f_vm, "draw", DrawableDraw);
-    LuaUtils::lua_registerClassMethod(f_vm, "draw3D", DrawableDraw3D);
+    LuaUtils::AddClassMethod(f_vm, "getSize", GetSize);
+    LuaUtils::AddClassMethod(f_vm, "getFiltering", GetFiltering);
+    LuaUtils::AddClassMethod(f_vm, "draw", Draw);
+    LuaUtils::AddClassMethod(f_vm, "draw3D", Draw3D);
 }
 
 int ROC::LuaDrawableDef::IsDrawable(lua_State *f_vm)
@@ -38,7 +38,7 @@ int ROC::LuaDrawableDef::IsDrawable(lua_State *f_vm)
     argStream.PushBoolean(l_drawable != nullptr);
     return argStream.GetReturnValue();
 }
-int ROC::LuaDrawableDef::DrawableDraw(lua_State *f_vm)
+int ROC::LuaDrawableDef::Draw(lua_State *f_vm)
 {
     Drawable *l_drawable;
     glm::vec2 l_pos, l_size;
@@ -58,7 +58,7 @@ int ROC::LuaDrawableDef::DrawableDraw(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaDrawableDef::DrawableDraw3D(lua_State *f_vm)
+int ROC::LuaDrawableDef::Draw3D(lua_State *f_vm)
 {
     Drawable *l_drawable;
     glm::vec3 l_pos;
@@ -81,7 +81,7 @@ int ROC::LuaDrawableDef::DrawableDraw3D(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaDrawableDef::DrawableGetSize(lua_State *f_vm)
+int ROC::LuaDrawableDef::GetSize(lua_State *f_vm)
 {
     Drawable *l_drawable;
     ArgReader argStream(f_vm);
@@ -97,7 +97,7 @@ int ROC::LuaDrawableDef::DrawableGetSize(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaDrawableDef::DrawableGetFiltering(lua_State *f_vm)
+int ROC::LuaDrawableDef::GetFiltering(lua_State *f_vm)
 {
     Drawable *l_drawable;
     ArgReader argStream(f_vm);

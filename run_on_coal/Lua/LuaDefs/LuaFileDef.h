@@ -5,17 +5,17 @@ namespace ROC
 
 class LuaFileDef final
 {
-    static int FileCreateOpen(lua_State *f_vm);
-    static int FileRead(lua_State *f_vm);
-    static int FileWrite(lua_State *f_vm);
-    static int FileGetSize(lua_State *f_vm);
-    static int FileSetPosition(lua_State *f_vm);
-    static int FileGetPosition(lua_State *f_vm);
-    static int FileFlush(lua_State *f_vm);
-    static int FileGetPath(lua_State *f_vm);
-    static int FileIsEOF(lua_State *f_vm);
-    static int FileDelete(lua_State *f_vm);
-    static int FileRename(lua_State *f_vm);
+    static int CreateOpen(lua_State *f_vm);
+    static int Read(lua_State *f_vm);
+    static int Write(lua_State *f_vm);
+    static int GetSize(lua_State *f_vm);
+    static int SetPosition(lua_State *f_vm);
+    static int GetPosition(lua_State *f_vm);
+    static int Flush(lua_State *f_vm);
+    static int GetPath(lua_State *f_vm);
+    static int IsEOF(lua_State *f_vm);
+    static int Delete(lua_State *f_vm);
+    static int Rename(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

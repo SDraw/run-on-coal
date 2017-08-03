@@ -5,29 +5,29 @@ namespace ROC
 
 class LuaSoundDef final
 {
-    static int SoundCreate(lua_State *f_vm);
-    static int SoundPlay(lua_State *f_vm);
-    static int SoundPause(lua_State *f_vm);
-    static int SoundStop(lua_State *f_vm);
-    static int SoundIsLooped(lua_State *f_vm);
-    static int SoundGetState(lua_State *f_vm);
-    static int SoundSetSpeed(lua_State *f_vm);
-    static int SoundGetSpeed(lua_State *f_vm);
-    static int SoundSetVolume(lua_State *f_vm);
-    static int SoundGetVolume(lua_State *f_vm);
-    static int SoundSetTime(lua_State *f_vm);
-    static int SoundGetTime(lua_State *f_vm);
-    static int SoundGetDuration(lua_State *f_vm);
-    static int SoundSet3DEnabled(lua_State *f_vm);
-    static int SoundGet3DEnabled(lua_State *f_vm);
-    static int SoundSet3DPosition(lua_State *f_vm);
-    static int SoundGet3DPosition(lua_State *f_vm);
-    static int SoundSet3DDistance(lua_State *f_vm);
-    static int SoundGet3DDistance(lua_State *f_vm);
-    static int SoundSetListenerOrientation(lua_State *f_vm);
-    static int SoundGetListenerOrientation(lua_State *f_vm);
-    static int SoundSetGlobalVolume(lua_State *f_vm);
-    static int SoundGetGlobalVolume(lua_State *f_vm);
+    static int Create(lua_State *f_vm);
+    static int Play(lua_State *f_vm);
+    static int Pause(lua_State *f_vm);
+    static int Stop(lua_State *f_vm);
+    static int IsLooped(lua_State *f_vm);
+    static int GetState(lua_State *f_vm);
+    static int SetSpeed(lua_State *f_vm);
+    static int GetSpeed(lua_State *f_vm);
+    static int SetVolume(lua_State *f_vm);
+    static int GetVolume(lua_State *f_vm);
+    static int SetTime(lua_State *f_vm);
+    static int GetTime(lua_State *f_vm);
+    static int GetDuration(lua_State *f_vm);
+    static int Set3DEnabled(lua_State *f_vm);
+    static int Get3DEnabled(lua_State *f_vm);
+    static int Set3DPosition(lua_State *f_vm);
+    static int Get3DPosition(lua_State *f_vm);
+    static int Set3DDistance(lua_State *f_vm);
+    static int Get3DDistance(lua_State *f_vm);
+    static int SetListenerOrientation(lua_State *f_vm);
+    static int GetListenerOrientation(lua_State *f_vm);
+    static int SetGlobalVolume(lua_State *f_vm);
+    static int GetGlobalVolume(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

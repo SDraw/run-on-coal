@@ -21,6 +21,7 @@
 #include "Lua/LuaDefs/LuaMovieDef.h"
 #include "Lua/LuaDefs/LuaNetworkDef.h"
 #include "Lua/LuaDefs/LuaPhysicsDef.h"
+#include "Lua/LuaDefs/LuaQuatDef.h"
 #include "Lua/LuaDefs/LuaRenderingDef.h"
 #include "Lua/LuaDefs/LuaRenderTargetDef.h"
 #include "Lua/LuaDefs/LuaSceneDef.h"
@@ -30,6 +31,7 @@
 #include "Lua/LuaDefs/LuaUtilsDef.h"
 
 #define ROC_LUA_METATABLE "roc_mt"
+#define ROC_LUA_PULSE_CYCLES 2500U
 
 ROC::Core* ROC::LuaManager::ms_core = nullptr;
 
@@ -69,9 +71,11 @@ ROC::LuaManager::LuaManager(Core *f_core)
     LuaNetworkDef::Init(m_vm);
     LuaPhysicsDef::Init(m_vm);
     LuaRenderingDef::Init(m_vm);
+
+    LuaQuatDef::Init(m_vm);
     LuaUtilsDef::Init(m_vm);
 
-    // Hidden metatable with weak values
+    // Hidden metatable with weak values for elements
     luaL_newmetatable(m_vm, ROC_LUA_METATABLE);
     lua_pushvalue(m_vm, -1);
     lua_setfield(m_vm, -2, "__index");
@@ -158,5 +162,9 @@ void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_ar
     {
         std::string l_log(lua_tostring(m_vm, -1));
         m_core->GetLogManager()->Log(l_log);
+        lua_pop(m_vm, 1);
     }
+
+    // Lua GC can't keep up to clean custom userdata on high FPS by itself, let's help it
+    lua_gc(m_vm, LUA_GCSTEP, 0);
 }

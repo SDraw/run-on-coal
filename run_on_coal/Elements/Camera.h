@@ -26,16 +26,22 @@ class Camera final : public Element
 public:
     void SetProjectionType(int f_type);
     inline int GetProjectionType() const { return m_type; }
+
     void SetFOV(float f_fov);
     inline float GetFOV() const { return m_fov; }
+
     void SetAspectRatio(float f_ratio);
     inline float GetAspectRatio() const { return m_aspectRatio; }
+
     void SetOrthoParams(const glm::vec4 &f_size);
     inline void GetOrthoParams(glm::vec4 &f_size) { std::memcpy(&f_size, &m_orthoParams, sizeof(glm::vec4)); }
+
     void SetDepth(const glm::vec2 &f_depth);
     inline void GetDepth(glm::vec2 &f_depth) { std::memcpy(&f_depth, &m_depth, sizeof(glm::vec2)); }
+
     void SetPosition(const glm::vec3 &f_pos);
     inline void GetPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_viewPosition, sizeof(glm::vec3)); }
+
     void SetDirection(const glm::vec3 &f_dir);
     inline void GetDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir, &m_viewDirection, sizeof(glm::vec3)); }
 

@@ -27,6 +27,7 @@ namespace ROC
 {
 
 extern const glm::vec3 g_DefaultPosition;
+extern const glm::mat4 g_IdentityMatrix;
 const glm::vec4 g_EmptyVec4(0.f);
 const glm::mat4 g_EmptyMat4(0.f);
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
@@ -225,6 +226,7 @@ void ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::
         EnableBlending();
         DisableDepth();
 
+        m_activeShader->SetModelUniformValue(g_IdentityMatrix);
         m_activeShader->SetProjectionUniformValue(m_screenProjection);
         m_activeShader->SetColorUniformValue(f_color);
 
@@ -246,7 +248,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
         m_activeShader->SetColorUniformValue(f_color);
 
         btTransform l_textureTransform;
-        btVector3 l_textureTranslate(f_pos.x + f_size.x / 2.f, f_pos.y + f_size.y / 2.f, 0.f);
+        btVector3 l_textureTranslate(f_pos.x, f_pos.y, 0.f);
         l_textureTransform.setIdentity();
         l_textureTransform.setOrigin(l_textureTranslate);
         if(f_rot != 0.f)

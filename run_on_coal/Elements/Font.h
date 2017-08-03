@@ -55,7 +55,7 @@ protected:
     bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
 
     static inline GLuint GetVAO() { return ms_VAO; }
-    inline GLuint GetAtlasTexture() { return m_atlasTexture; }
+    inline GLuint GetAtlasTexture() const { return m_atlasTexture; }
 
     void Draw(const sf::String &f_text, const glm::vec2 &f_pos, const glm::bvec2 &f_bind);
 

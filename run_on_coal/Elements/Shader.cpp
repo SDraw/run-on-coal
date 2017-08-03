@@ -28,6 +28,7 @@ bool ROC::Shader::ms_uboFix = false;
 ROC::Shader::Shader()
 {
     m_elementType = ElementType::ShaderElement;
+    m_elementTypeName.assign("Shader");
 
     m_program = 0U;
 

@@ -13,14 +13,14 @@
 
 void ROC::LuaGeometryDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Geometry", GeometryCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "getBoundSphereRadius", GeometryGetBoundSphereRadius);
-    LuaUtils::lua_registerClassMethod(f_vm, "isLoaded", GeometryIsLoaded);
+    LuaUtils::AddClass(f_vm, "Geometry", Create);
+    LuaUtils::AddClassMethod(f_vm, "getBoundSphereRadius", GetBoundSphereRadius);
+    LuaUtils::AddClassMethod(f_vm, "isLoaded", IsLoaded);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaGeometryDef::GeometryCreate(lua_State *f_vm)
+int ROC::LuaGeometryDef::Create(lua_State *f_vm)
 {
     std::string l_path;
     bool l_async = false;
@@ -36,16 +36,16 @@ int ROC::LuaGeometryDef::GeometryCreate(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaGeometryDef::GeometryIsLoaded(lua_State *f_vm)
+int ROC::LuaGeometryDef::IsLoaded(lua_State *f_vm)
 {
     Geometry *l_geometry;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_geometry);
-    !argStream.HasErrors() ? argStream.PushNumber(l_geometry->IsLoaded()) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushBoolean(l_geometry->IsLoaded()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaGeometryDef::GeometryGetBoundSphereRadius(lua_State *f_vm)
+int ROC::LuaGeometryDef::GetBoundSphereRadius(lua_State *f_vm)
 {
     Geometry *l_geometry;
     ArgReader argStream(f_vm);

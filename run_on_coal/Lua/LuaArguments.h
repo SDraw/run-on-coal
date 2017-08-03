@@ -19,7 +19,7 @@ public:
     void PushArgument(float f_val);
     void PushArgument(void *f_val, const std::string &f_name);
     void PushArgument(const std::string &f_val);
-    void PushArgument(const char *f_fal, size_t f_size);
+    void PushArgument(const char *f_val, size_t f_size);
 
     inline int GetArgumentsCount() const { return static_cast<int>(m_vArgs.size()); }
     const std::vector<CustomData>& GetArgumentsVectorRef() const { return m_vArgs; }

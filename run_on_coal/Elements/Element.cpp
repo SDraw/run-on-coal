@@ -2,13 +2,6 @@
 
 #include "Elements/Element.h"
 
-namespace ROC
-{
-
-extern const std::vector<std::string> g_ElementTypeNames;
-
-}
-
 ROC::Element::Element()
 {
     m_elementType = 0xFF;

@@ -11,14 +11,14 @@
 
 void ROC::LuaEventsDef::Init(lua_State *f_vm)
 {
-    lua_register(f_vm, "addEvent", AddEvent);
-    lua_register(f_vm, "addEventHandler", AddEventHandler);
-    lua_register(f_vm, "removeEvent", RemoveEvent);
-    lua_register(f_vm, "removeEventHandler", RemoveEventHandler);
-    lua_register(f_vm, "callEvent", CallEvent);
+    lua_register(f_vm, "addEvent", Add);
+    lua_register(f_vm, "addEventHandler", AddHandler);
+    lua_register(f_vm, "removeEvent", Remove);
+    lua_register(f_vm, "removeEventHandler", RemoveHandler);
+    lua_register(f_vm, "callEvent", Call);
 }
 
-int ROC::LuaEventsDef::AddEvent(lua_State *f_vm)
+int ROC::LuaEventsDef::Add(lua_State *f_vm)
 {
     std::string l_event;
     ArgReader argStream(f_vm);
@@ -32,7 +32,7 @@ int ROC::LuaEventsDef::AddEvent(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaEventsDef::AddEventHandler(lua_State *f_vm)
+int ROC::LuaEventsDef::AddHandler(lua_State *f_vm)
 {
     std::string l_event;
     LuaFunction l_func;
@@ -48,7 +48,7 @@ int ROC::LuaEventsDef::AddEventHandler(lua_State *f_vm)
     argStream.RemoveReference(l_func);
     return argStream.GetReturnValue();
 }
-int ROC::LuaEventsDef::RemoveEvent(lua_State *f_vm)
+int ROC::LuaEventsDef::Remove(lua_State *f_vm)
 {
     std::string l_event;
     ArgReader argStream(f_vm);
@@ -61,7 +61,7 @@ int ROC::LuaEventsDef::RemoveEvent(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaEventsDef::RemoveEventHandler(lua_State *f_vm)
+int ROC::LuaEventsDef::RemoveHandler(lua_State *f_vm)
 {
     std::string l_event;
     LuaFunction l_func;
@@ -76,7 +76,7 @@ int ROC::LuaEventsDef::RemoveEventHandler(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaEventsDef::CallEvent(lua_State *f_vm)
+int ROC::LuaEventsDef::Call(lua_State *f_vm)
 {
     std::string l_event;
     ArgReader argStream(f_vm);

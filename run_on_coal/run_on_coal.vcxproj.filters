@@ -228,6 +228,9 @@
     <ClCompile Include="Utils\EnumUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaQuatDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -453,6 +456,9 @@
     </ClInclude>
     <ClInclude Include="Utils\EnumUtils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaQuatDef.h">
+      <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

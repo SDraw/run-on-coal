@@ -18,6 +18,7 @@ const glm::ivec2 g_BrokenTextureSize(2, 2);
 ROC::Texture::Texture()
 {
     m_elementType = ElementType::TextureElement;
+    m_elementTypeName.assign("Texture");
 
     m_type = ROC_TEXTURE_TYPE_NONE;
     m_filtering = ROC_TEXTURE_FILTER_NONE;

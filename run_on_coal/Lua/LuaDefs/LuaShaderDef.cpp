@@ -51,15 +51,15 @@ const std::vector<std::string> g_UniformTypesTable
 
 void ROC::LuaShaderDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Shader", ShaderCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "setUniformValue", ShaderSetUniformValue);
-    LuaUtils::lua_registerClassMethod(f_vm, "attach", ShaderAttachDrawable);
-    LuaUtils::lua_registerClassMethod(f_vm, "detach", ShaderDetachDrawable);
+    LuaUtils::AddClass(f_vm, "Shader", Create);
+    LuaUtils::AddClassMethod(f_vm, "setUniformValue", SetUniformValue);
+    LuaUtils::AddClassMethod(f_vm, "attach", Attach);
+    LuaUtils::AddClassMethod(f_vm, "detach", Detach);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaShaderDef::ShaderCreate(lua_State *f_vm)
+int ROC::LuaShaderDef::Create(lua_State *f_vm)
 {
     std::string l_vsp, l_fsp, l_gsp;
     ArgReader argStream(f_vm);
@@ -75,7 +75,7 @@ int ROC::LuaShaderDef::ShaderCreate(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
+int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
 {
     Shader *l_shader;
     std::string l_uniform;
@@ -267,7 +267,8 @@ int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
             case ROC_SHADER_UNIFORM_MAT2:
             {
                 glm::mat2 l_mat;
-                argStream.ReadVector(glm::value_ptr(l_mat), 4);
+                float *l_matPtr = glm::value_ptr(l_mat);
+                for(int i = 0; i < 4; i++) argStream.ReadNumber(l_matPtr[i]);
                 if(!argStream.HasErrors())
                 {
                     LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
@@ -278,7 +279,8 @@ int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
             case ROC_SHADER_UNIFORM_MAT3:
             {
                 glm::mat3 l_mat;
-                argStream.ReadVector(glm::value_ptr(l_mat), 9);
+                float *l_matPtr = glm::value_ptr(l_mat);
+                for(int i = 0; i < 9; i++) argStream.ReadNumber(l_matPtr[i]);
                 if(!argStream.HasErrors())
                 {
                     LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
@@ -289,7 +291,8 @@ int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
             case ROC_SHADER_UNIFORM_MAT4:
             {
                 glm::mat4 l_mat;
-                argStream.ReadVector(glm::value_ptr(l_mat), 16);
+                float *l_matPtr = glm::value_ptr(l_mat);
+                for(int i = 0; i < 16; i++) argStream.ReadNumber(l_matPtr[i]);
                 if(!argStream.HasErrors())
                 {
                     LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
@@ -304,7 +307,7 @@ int ROC::LuaShaderDef::ShaderSetUniformValue(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaShaderDef::ShaderAttachDrawable(lua_State *f_vm)
+int ROC::LuaShaderDef::Attach(lua_State *f_vm)
 {
     Shader *l_shader;
     Drawable *l_drawable;
@@ -321,7 +324,7 @@ int ROC::LuaShaderDef::ShaderAttachDrawable(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaShaderDef::ShaderDetachDrawable(lua_State *f_vm)
+int ROC::LuaShaderDef::Detach(lua_State *f_vm)
 {
     Shader *l_shader;
     Drawable *l_drawable;

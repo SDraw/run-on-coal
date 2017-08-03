@@ -5,13 +5,13 @@ namespace ROC
 
 class LuaPhysicsDef final
 {
-    static int PhysicsSetEnabled(lua_State *f_vm);
-    static int PhysicsGetEnabled(lua_State *f_vm);
-    static int PhysicsSetFloorEnabled(lua_State *f_vm);
-    static int PhysicsGetFloorEnabled(lua_State *f_vm);
-    static int PhysicsSetGravity(lua_State *f_vm);
-    static int PhysicsGetGravity(lua_State *f_vm);
-    static int PhysicsRayCast(lua_State *f_vm);
+    static int SetEnabled(lua_State *f_vm);
+    static int GetEnabled(lua_State *f_vm);
+    static int SetFloorEnabled(lua_State *f_vm);
+    static int GetFloorEnabled(lua_State *f_vm);
+    static int SetGravity(lua_State *f_vm);
+    static int GetGravity(lua_State *f_vm);
+    static int RayCast(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

@@ -165,6 +165,7 @@
     <ClInclude Include="Lua\LuaDefs\LuaMovieDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaNetworkDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaPhysicsDef.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaQuatDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaRenderingDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaRenderTargetDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaSceneDef.h" />
@@ -252,6 +253,7 @@
     <ClCompile Include="Lua\LuaDefs\LuaMovieDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaNetworkDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaPhysicsDef.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaQuatDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaRenderingDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaRenderTargetDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaSceneDef.cpp" />

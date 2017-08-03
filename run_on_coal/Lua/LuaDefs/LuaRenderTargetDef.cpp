@@ -26,13 +26,13 @@ extern const std::vector<std::string> g_FilteringTypesTable;
 
 void ROC::LuaRenderTargetDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "RenderTarget", RenderTargetCreate);
+    LuaUtils::AddClass(f_vm, "RenderTarget", Create);
     LuaDrawableDef::AddHierarchyMethods(f_vm);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaRenderTargetDef::RenderTargetCreate(lua_State *f_vm)
+int ROC::LuaRenderTargetDef::Create(lua_State *f_vm)
 {
     glm::ivec2 l_size;
     unsigned int l_number;

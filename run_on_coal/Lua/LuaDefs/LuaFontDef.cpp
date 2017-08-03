@@ -22,13 +22,13 @@ extern const std::vector<std::string> g_FilteringTypesTable;
 
 void ROC::LuaFontDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Font", FontCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "draw", FontDraw);
+    LuaUtils::AddClass(f_vm, "Font", Create);
+    LuaUtils::AddClassMethod(f_vm, "draw", Draw);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaFontDef::FontCreate(lua_State *f_vm)
+int ROC::LuaFontDef::Create(lua_State *f_vm)
 {
     std::string l_path;
     int l_size;
@@ -50,7 +50,7 @@ int ROC::LuaFontDef::FontCreate(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaFontDef::FontDraw(lua_State *f_vm)
+int ROC::LuaFontDef::Draw(lua_State *f_vm)
 {
     Font *l_font;
     glm::vec2 l_pos;

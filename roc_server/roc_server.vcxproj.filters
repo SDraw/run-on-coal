@@ -66,9 +66,6 @@
     <ClCompile Include="Lua\LuaDefs\LuaClientDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\GlobalConstants.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\EnumUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>

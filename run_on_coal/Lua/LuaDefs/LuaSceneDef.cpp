@@ -16,25 +16,25 @@
 
 void ROC::LuaSceneDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Scene", SceneCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "setCamera", SceneSetCamera);
-    LuaUtils::lua_registerClassMethod(f_vm, "getCamera", SceneGetCamera);
-    LuaUtils::lua_registerClassMethod(f_vm, "removeCamera", SceneRemoveCamera);
-    LuaUtils::lua_registerClassMethod(f_vm, "setLight", SceneSetLight);
-    LuaUtils::lua_registerClassMethod(f_vm, "getLight", SceneGetLight);
-    LuaUtils::lua_registerClassMethod(f_vm, "removeLight", SceneRemoveLight);
+    LuaUtils::AddClass(f_vm, "Scene", Create);
+    LuaUtils::AddClassMethod(f_vm, "setCamera", SetCamera);
+    LuaUtils::AddClassMethod(f_vm, "getCamera", GetCamera);
+    LuaUtils::AddClassMethod(f_vm, "removeCamera", RemoveCamera);
+    LuaUtils::AddClassMethod(f_vm, "setLight", SetLight);
+    LuaUtils::AddClassMethod(f_vm, "getLight", GetLight);
+    LuaUtils::AddClassMethod(f_vm, "removeLight", RemoveLight);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaSceneDef::SceneCreate(lua_State *f_vm)
+int ROC::LuaSceneDef::Create(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     Scene *l_scene = LuaManager::GetCore()->GetElementManager()->CreateScene();
     l_scene ? argStream.PushElement(l_scene) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSceneDef::SceneSetCamera(lua_State *f_vm)
+int ROC::LuaSceneDef::SetCamera(lua_State *f_vm)
 {
     Scene *l_scene;
     Camera *l_camera;
@@ -49,7 +49,7 @@ int ROC::LuaSceneDef::SceneSetCamera(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSceneDef::SceneGetCamera(lua_State *f_vm)
+int ROC::LuaSceneDef::GetCamera(lua_State *f_vm)
 {
     Scene *l_scene;
     ArgReader argStream(f_vm);
@@ -62,7 +62,7 @@ int ROC::LuaSceneDef::SceneGetCamera(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSceneDef::SceneRemoveCamera(lua_State *f_vm)
+int ROC::LuaSceneDef::RemoveCamera(lua_State *f_vm)
 {
     Scene *l_scene;
     ArgReader argStream(f_vm);
@@ -75,7 +75,7 @@ int ROC::LuaSceneDef::SceneRemoveCamera(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSceneDef::SceneSetLight(lua_State *f_vm)
+int ROC::LuaSceneDef::SetLight(lua_State *f_vm)
 {
     Scene *l_scene;
     Light *l_light;
@@ -90,7 +90,7 @@ int ROC::LuaSceneDef::SceneSetLight(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSceneDef::SceneGetLight(lua_State *f_vm)
+int ROC::LuaSceneDef::GetLight(lua_State *f_vm)
 {
     Scene *l_scene;
     ArgReader argStream(f_vm);
@@ -103,7 +103,7 @@ int ROC::LuaSceneDef::SceneGetLight(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSceneDef::SceneRemoveLight(lua_State *f_vm)
+int ROC::LuaSceneDef::RemoveLight(lua_State *f_vm)
 {
     Scene *l_scene;
     ArgReader argStream(f_vm);

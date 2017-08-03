@@ -5,6 +5,7 @@
 ROC::RenderTarget::RenderTarget()
 {
     m_elementType = ElementType::RenderTargetElement;
+    m_elementTypeName.assign("RenderTarget");
 
     m_type = ROC_RENDERTARGET_TYPE_NONE;
     m_filtering = ROC_RENDERTARGET_FILTER_NONE;

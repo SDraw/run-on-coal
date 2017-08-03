@@ -12,6 +12,7 @@ extern const glm::vec3 g_DefaultPosition;
 ROC::Sound::Sound(bool f_loop)
 {
     m_elementType = ElementType::SoundElement;
+    m_elementTypeName.assign("Sound");
 
     m_handle = nullptr;
     m_relative = false;

@@ -12,16 +12,16 @@
 
 void ROC::LuaPhysicsDef::Init(lua_State *f_vm)
 {
-    lua_register(f_vm, "physicsSetEnabled", PhysicsSetEnabled);
-    lua_register(f_vm, "physicsGetEnabled", PhysicsGetEnabled);
-    lua_register(f_vm, "physicsSetFloorEnabled", PhysicsSetFloorEnabled);
-    lua_register(f_vm, "physicsGetFloorEnabled", PhysicsGetFloorEnabled);
-    lua_register(f_vm, "physicsSetGravity", PhysicsSetGravity);
-    lua_register(f_vm, "physicsGetGravity", PhysicsGetGravity);
-    lua_register(f_vm, "physicsRayCast", PhysicsRayCast);
+    lua_register(f_vm, "physicsSetEnabled", SetEnabled);
+    lua_register(f_vm, "physicsGetEnabled", GetEnabled);
+    lua_register(f_vm, "physicsSetFloorEnabled", SetFloorEnabled);
+    lua_register(f_vm, "physicsGetFloorEnabled", GetFloorEnabled);
+    lua_register(f_vm, "physicsSetGravity", SetGravity);
+    lua_register(f_vm, "physicsGetGravity", GetGravity);
+    lua_register(f_vm, "physicsRayCast", RayCast);
 }
 
-int ROC::LuaPhysicsDef::PhysicsSetEnabled(lua_State *f_vm)
+int ROC::LuaPhysicsDef::SetEnabled(lua_State *f_vm)
 {
     bool l_val;
     ArgReader argStream(f_vm);
@@ -34,14 +34,14 @@ int ROC::LuaPhysicsDef::PhysicsSetEnabled(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaPhysicsDef::PhysicsGetEnabled(lua_State *f_vm)
+int ROC::LuaPhysicsDef::GetEnabled(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetPhysicsEnabled());
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaPhysicsDef::PhysicsSetFloorEnabled(lua_State *f_vm)
+int ROC::LuaPhysicsDef::SetFloorEnabled(lua_State *f_vm)
 {
     bool l_val;
     ArgReader argStream(f_vm);
@@ -54,14 +54,14 @@ int ROC::LuaPhysicsDef::PhysicsSetFloorEnabled(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaPhysicsDef::PhysicsGetFloorEnabled(lua_State *f_vm)
+int ROC::LuaPhysicsDef::GetFloorEnabled(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetFloorEnabled());
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaPhysicsDef::PhysicsSetGravity(lua_State *f_vm)
+int ROC::LuaPhysicsDef::SetGravity(lua_State *f_vm)
 {
     glm::vec3 l_gravity;
     ArgReader argStream(f_vm);
@@ -74,7 +74,7 @@ int ROC::LuaPhysicsDef::PhysicsSetGravity(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaPhysicsDef::PhysicsGetGravity(lua_State *f_vm)
+int ROC::LuaPhysicsDef::GetGravity(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     glm::vec3 l_grav;
@@ -85,7 +85,7 @@ int ROC::LuaPhysicsDef::PhysicsGetGravity(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaPhysicsDef::PhysicsRayCast(lua_State *f_vm)
+int ROC::LuaPhysicsDef::RayCast(lua_State *f_vm)
 {
     glm::vec3 l_start, l_end;
     ArgReader argStream(f_vm);

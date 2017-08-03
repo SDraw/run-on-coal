@@ -146,7 +146,6 @@
     </ClCompile>
     <ClCompile Include="Utils\CustomData.cpp" />
     <ClCompile Include="Utils\EnumUtils.cpp" />
-    <ClCompile Include="Utils\GlobalConstants.cpp" />
     <ClCompile Include="Utils\LuaUtils.cpp" />
     <ClCompile Include="Utils\PathUtils.cpp" />
   </ItemGroup>

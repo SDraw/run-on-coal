@@ -124,5 +124,6 @@ void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_ar
     {
         std::string l_log(lua_tostring(m_vm, -1));
         m_core->GetLogManager()->Log(l_log);
+        lua_pop(m_vm, 1);
     }
 }

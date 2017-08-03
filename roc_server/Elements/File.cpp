@@ -8,6 +8,7 @@
 ROC::File::File()
 {
     m_elementType = ElementType::FileElement;
+    m_elementTypeName.assign("File");
     m_file = nullptr;
 }
 ROC::File::~File()

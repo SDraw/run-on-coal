@@ -8,12 +8,6 @@ extern const glm::vec3 g_DefaultPosition(0.f);
 extern const glm::quat g_DefaultRotation(1.f, 0.f, 0.f, 0.f);
 extern const glm::vec3 g_DefaultScale(1.f, 1.f, 1.f);
 
-extern const std::vector<std::string> g_ElementTypeNames
-{
-    "Geometry", "Model", "Animation", "Scene", "Camera", "Light", "RenderTarget",
-    "Shader", "Sound", "Texture", "Font", "File", "Collision", "Movie"
-};
-
 extern const std::vector<std::string> g_FilteringTypesTable
 { 
     "nearest", "linear" 

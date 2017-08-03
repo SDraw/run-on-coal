@@ -13,25 +13,25 @@
 
 void ROC::LuaLightDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Light", LightCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "setParams", LightSetParams);
-    LuaUtils::lua_registerClassMethod(f_vm, "getParams", LightGetParams);
-    LuaUtils::lua_registerClassMethod(f_vm, "setColor", LightSetColor);
-    LuaUtils::lua_registerClassMethod(f_vm, "getColor", LightGetColor);
-    LuaUtils::lua_registerClassMethod(f_vm, "setDirection", LightSetDirection);
-    LuaUtils::lua_registerClassMethod(f_vm, "getDirection", LightGetDirection);
+    LuaUtils::AddClass(f_vm, "Light", Create);
+    LuaUtils::AddClassMethod(f_vm, "setParams", SetParams);
+    LuaUtils::AddClassMethod(f_vm, "getParams", GetParams);
+    LuaUtils::AddClassMethod(f_vm, "setColor", SetColor);
+    LuaUtils::AddClassMethod(f_vm, "getColor", GetColor);
+    LuaUtils::AddClassMethod(f_vm, "setDirection", SetDirection);
+    LuaUtils::AddClassMethod(f_vm, "getDirection", GetDirection);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 }
 
-int ROC::LuaLightDef::LightCreate(lua_State *f_vm)
+int ROC::LuaLightDef::Create(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     Light *l_light = LuaManager::GetCore()->GetElementManager()->CreateLight();
     l_light ? argStream.PushElement(l_light) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaLightDef::LightSetParams(lua_State *f_vm)
+int ROC::LuaLightDef::SetParams(lua_State *f_vm)
 {
     Light *l_light;
     glm::vec4 l_params;
@@ -46,7 +46,7 @@ int ROC::LuaLightDef::LightSetParams(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaLightDef::LightGetParams(lua_State *f_vm)
+int ROC::LuaLightDef::GetParams(lua_State *f_vm)
 {
     Light *l_light;
     ArgReader argStream(f_vm);
@@ -63,7 +63,7 @@ int ROC::LuaLightDef::LightGetParams(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaLightDef::LightSetColor(lua_State *f_vm)
+int ROC::LuaLightDef::SetColor(lua_State *f_vm)
 {
     Light *l_light;
     glm::vec3 l_color;
@@ -78,7 +78,7 @@ int ROC::LuaLightDef::LightSetColor(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaLightDef::LightGetColor(lua_State *f_vm)
+int ROC::LuaLightDef::GetColor(lua_State *f_vm)
 {
     Light *l_light;
     ArgReader argStream(f_vm);
@@ -94,7 +94,7 @@ int ROC::LuaLightDef::LightGetColor(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaLightDef::LightSetDirection(lua_State *f_vm)
+int ROC::LuaLightDef::SetDirection(lua_State *f_vm)
 {
     Light *l_light;
     glm::vec3 l_dir;
@@ -109,7 +109,7 @@ int ROC::LuaLightDef::LightSetDirection(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaLightDef::LightGetDirection(lua_State *f_vm)
+int ROC::LuaLightDef::GetDirection(lua_State *f_vm)
 {
     Light *l_light;
     ArgReader argStream(f_vm);

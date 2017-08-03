@@ -5,10 +5,10 @@ namespace ROC
 
 class LuaShaderDef final
 {
-    static int ShaderCreate(lua_State *f_vm);
-    static int ShaderSetUniformValue(lua_State *f_vm);
-    static int ShaderAttachDrawable(lua_State *f_vm);
-    static int ShaderDetachDrawable(lua_State *f_vm);
+    static int Create(lua_State *f_vm);
+    static int SetUniformValue(lua_State *f_vm);
+    static int Attach(lua_State *f_vm);
+    static int Detach(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

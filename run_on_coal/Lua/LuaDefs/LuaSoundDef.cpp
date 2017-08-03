@@ -24,35 +24,35 @@ const std::string g_SoundStatesTable[]
 
 void ROC::LuaSoundDef::Init(lua_State *f_vm)
 {
-    LuaUtils::lua_registerClass(f_vm, "Sound", SoundCreate);
-    LuaUtils::lua_registerClassMethod(f_vm, "play", SoundPlay);
-    LuaUtils::lua_registerClassMethod(f_vm, "pause", SoundPause);
-    LuaUtils::lua_registerClassMethod(f_vm, "stop", SoundStop);
-    LuaUtils::lua_registerClassMethod(f_vm, "isLooped", SoundIsLooped);
-    LuaUtils::lua_registerClassMethod(f_vm, "getState", SoundGetState);
-    LuaUtils::lua_registerClassMethod(f_vm, "setSpeed", SoundSetSpeed);
-    LuaUtils::lua_registerClassMethod(f_vm, "getSpeed", SoundGetSpeed);
-    LuaUtils::lua_registerClassMethod(f_vm, "setVolume", SoundSetVolume);
-    LuaUtils::lua_registerClassMethod(f_vm, "getVolume", SoundGetVolume);
-    LuaUtils::lua_registerClassMethod(f_vm, "setTime", SoundSetTime);
-    LuaUtils::lua_registerClassMethod(f_vm, "getTime", SoundGetTime);
-    LuaUtils::lua_registerClassMethod(f_vm, "getDuration", SoundGetDuration);
-    LuaUtils::lua_registerClassMethod(f_vm, "set3DEnabled", SoundSet3DEnabled);
-    LuaUtils::lua_registerClassMethod(f_vm, "get3DEnabled", SoundGet3DEnabled);
-    LuaUtils::lua_registerClassMethod(f_vm, "set3DPosition", SoundSet3DPosition);
-    LuaUtils::lua_registerClassMethod(f_vm, "get3DPosition", SoundGet3DPosition);
-    LuaUtils::lua_registerClassMethod(f_vm, "set3DDistance", SoundSet3DDistance);
-    LuaUtils::lua_registerClassMethod(f_vm, "get3DDistance", SoundGet3DDistance);
+    LuaUtils::AddClass(f_vm, "Sound", Create);
+    LuaUtils::AddClassMethod(f_vm, "play", Play);
+    LuaUtils::AddClassMethod(f_vm, "pause", Pause);
+    LuaUtils::AddClassMethod(f_vm, "stop", Stop);
+    LuaUtils::AddClassMethod(f_vm, "isLooped", IsLooped);
+    LuaUtils::AddClassMethod(f_vm, "getState", GetState);
+    LuaUtils::AddClassMethod(f_vm, "setSpeed", SetSpeed);
+    LuaUtils::AddClassMethod(f_vm, "getSpeed", GetSpeed);
+    LuaUtils::AddClassMethod(f_vm, "setVolume", SetVolume);
+    LuaUtils::AddClassMethod(f_vm, "getVolume", GetVolume);
+    LuaUtils::AddClassMethod(f_vm, "setTime", SetTime);
+    LuaUtils::AddClassMethod(f_vm, "getTime", GetTime);
+    LuaUtils::AddClassMethod(f_vm, "getDuration", GetDuration);
+    LuaUtils::AddClassMethod(f_vm, "set3DEnabled", Set3DEnabled);
+    LuaUtils::AddClassMethod(f_vm, "get3DEnabled", Get3DEnabled);
+    LuaUtils::AddClassMethod(f_vm, "set3DPosition", Set3DPosition);
+    LuaUtils::AddClassMethod(f_vm, "get3DPosition", Get3DPosition);
+    LuaUtils::AddClassMethod(f_vm, "set3DDistance", Set3DDistance);
+    LuaUtils::AddClassMethod(f_vm, "get3DDistance", Get3DDistance);
     LuaElementDef::AddHierarchyMethods(f_vm);
-    LuaUtils::lua_registerClassFinish(f_vm);
+    LuaUtils::AddClassFinish(f_vm);
 
-    lua_register(f_vm, "soundSetListenerOrientation", SoundSetListenerOrientation);
-    lua_register(f_vm, "soundGetListenerOrientation", SoundSetListenerOrientation);
-    lua_register(f_vm, "soundSetGlobalVolume", SoundSetGlobalVolume);
-    lua_register(f_vm, "soundGetGlobalVolume", SoundGetGlobalVolume);
+    lua_register(f_vm, "soundSetListenerOrientation", SetListenerOrientation);
+    lua_register(f_vm, "soundGetListenerOrientation", SetListenerOrientation);
+    lua_register(f_vm, "soundSetGlobalVolume", SetGlobalVolume);
+    lua_register(f_vm, "soundGetGlobalVolume", GetGlobalVolume);
 }
 
-int ROC::LuaSoundDef::SoundCreate(lua_State *f_vm)
+int ROC::LuaSoundDef::Create(lua_State *f_vm)
 {
     std::string l_path;
     bool l_loop = false;
@@ -68,7 +68,7 @@ int ROC::LuaSoundDef::SoundCreate(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundPlay(lua_State *f_vm)
+int ROC::LuaSoundDef::Play(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -81,7 +81,7 @@ int ROC::LuaSoundDef::SoundPlay(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundPause(lua_State *f_vm)
+int ROC::LuaSoundDef::Pause(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -94,7 +94,7 @@ int ROC::LuaSoundDef::SoundPause(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundStop(lua_State *f_vm)
+int ROC::LuaSoundDef::Stop(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -108,7 +108,7 @@ int ROC::LuaSoundDef::SoundStop(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundIsLooped(lua_State *f_vm)
+int ROC::LuaSoundDef::IsLooped(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -117,7 +117,7 @@ int ROC::LuaSoundDef::SoundIsLooped(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundGetState(lua_State *f_vm)
+int ROC::LuaSoundDef::GetState(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -131,7 +131,7 @@ int ROC::LuaSoundDef::SoundGetState(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSetSpeed(lua_State *f_vm)
+int ROC::LuaSoundDef::SetSpeed(lua_State *f_vm)
 {
     Sound *l_sound;
     float l_val;
@@ -146,7 +146,7 @@ int ROC::LuaSoundDef::SoundSetSpeed(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundGetSpeed(lua_State *f_vm)
+int ROC::LuaSoundDef::GetSpeed(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -160,7 +160,7 @@ int ROC::LuaSoundDef::SoundGetSpeed(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSetVolume(lua_State *f_vm)
+int ROC::LuaSoundDef::SetVolume(lua_State *f_vm)
 {
     Sound *l_sound;
     float l_val;
@@ -175,7 +175,7 @@ int ROC::LuaSoundDef::SoundSetVolume(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundGetVolume(lua_State *f_vm)
+int ROC::LuaSoundDef::GetVolume(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -189,7 +189,7 @@ int ROC::LuaSoundDef::SoundGetVolume(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSetTime(lua_State *f_vm)
+int ROC::LuaSoundDef::SetTime(lua_State *f_vm)
 {
     Sound *l_sound;
     float l_val;
@@ -204,7 +204,7 @@ int ROC::LuaSoundDef::SoundSetTime(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundGetTime(lua_State *f_vm)
+int ROC::LuaSoundDef::GetTime(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -217,7 +217,7 @@ int ROC::LuaSoundDef::SoundGetTime(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundGetDuration(lua_State *f_vm)
+int ROC::LuaSoundDef::GetDuration(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -231,7 +231,7 @@ int ROC::LuaSoundDef::SoundGetDuration(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSet3DEnabled(lua_State *f_vm)
+int ROC::LuaSoundDef::Set3DEnabled(lua_State *f_vm)
 {
     Sound *l_sound;
     bool l_state;
@@ -246,7 +246,7 @@ int ROC::LuaSoundDef::SoundSet3DEnabled(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundGet3DEnabled(lua_State *f_vm)
+int ROC::LuaSoundDef::Get3DEnabled(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -255,7 +255,7 @@ int ROC::LuaSoundDef::SoundGet3DEnabled(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSet3DPosition(lua_State *f_vm)
+int ROC::LuaSoundDef::Set3DPosition(lua_State *f_vm)
 {
     Sound *l_sound;
     glm::vec3 l_pos;
@@ -270,7 +270,7 @@ int ROC::LuaSoundDef::SoundSet3DPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundGet3DPosition(lua_State *f_vm)
+int ROC::LuaSoundDef::Get3DPosition(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -287,7 +287,7 @@ int ROC::LuaSoundDef::SoundGet3DPosition(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSet3DDistance(lua_State *f_vm)
+int ROC::LuaSoundDef::Set3DDistance(lua_State *f_vm)
 {
     Sound *l_sound;
     glm::vec2 l_dist;
@@ -302,7 +302,7 @@ int ROC::LuaSoundDef::SoundSet3DDistance(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return 1;
 }
-int ROC::LuaSoundDef::SoundGet3DDistance(lua_State *f_vm)
+int ROC::LuaSoundDef::Get3DDistance(lua_State *f_vm)
 {
     Sound *l_sound;
     ArgReader argStream(f_vm);
@@ -318,7 +318,7 @@ int ROC::LuaSoundDef::SoundGet3DDistance(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSetListenerOrientation(lua_State *f_vm)
+int ROC::LuaSoundDef::SetListenerOrientation(lua_State *f_vm)
 {
     glm::vec3 l_pos, l_dir, l_up;
     ArgReader argStream(f_vm);
@@ -336,7 +336,7 @@ int ROC::LuaSoundDef::SoundSetListenerOrientation(lua_State *f_vm)
     return 1;
 }
 
-int ROC::LuaSoundDef::SoundGetListenerOrientation(lua_State *f_vm)
+int ROC::LuaSoundDef::GetListenerOrientation(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     glm::vec3 l_pos, l_dir, l_up;
@@ -355,7 +355,7 @@ int ROC::LuaSoundDef::SoundGetListenerOrientation(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSoundDef::SoundSetGlobalVolume(lua_State *f_vm)
+int ROC::LuaSoundDef::SetGlobalVolume(lua_State *f_vm)
 {
     float l_volume;
     ArgReader argStream(f_vm);
@@ -368,7 +368,7 @@ int ROC::LuaSoundDef::SoundSetGlobalVolume(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaSoundDef::SoundGetGlobalVolume(lua_State *f_vm)
+int ROC::LuaSoundDef::GetGlobalVolume(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     argStream.PushNumber(LuaManager::GetCore()->GetSoundManager()->GetGlobalVolume());
