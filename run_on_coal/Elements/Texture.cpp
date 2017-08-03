@@ -5,7 +5,7 @@
 namespace ROC
 {
 
-const std::vector<unsigned char> g_BrokenTextureData = {
+const unsigned char g_TextureBrokenPattern[] = {
     0x7FU, 0x7FU, 0x7FU,
     0xF7U, 0x94U, 0x1DU,
     0xF7U, 0x94U, 0x1DU,
@@ -59,7 +59,7 @@ void ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB, g_BrokenTextureSize.x, g_BrokenTextureSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, g_BrokenTextureData.data());
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB, g_BrokenTextureSize.x, g_BrokenTextureSize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, g_TextureBrokenPattern);
         }
     }
 }
@@ -78,7 +78,7 @@ void ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
         m_filtering = f_filter;
         btClamp(m_filtering, ROC_TEXTURE_FILTER_NEAREST, ROC_TEXTURE_FILTER_LINEAR);
 
-        for(size_t i = 0, j = glm::min(6U, f_path.size()); i < j; i++)
+        for(size_t i = 0, j = std::min(6U, f_path.size()); i < j; i++)
         {
             sf::Image l_image;
             if(l_image.loadFromFile(f_path[i]))

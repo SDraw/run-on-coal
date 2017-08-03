@@ -2,6 +2,16 @@
 
 #include "Managers/RenderManager/Quad.h"
 
+namespace ROC
+{
+
+const float g_QuadVertexUV[] = {
+    0.f, 0.f, 0.f, 1.f, 1.f, 1.f,
+    0.f, 0.f, 1.f, 1.f, 1.f, 0.f
+};
+
+}
+
 ROC::Quad::Quad()
 {
     glGenVertexArrays(1, &m_VAO);
@@ -17,14 +27,10 @@ ROC::Quad::Quad()
 
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-    GLfloat l_uvs[ROC_QUAD_VERTEX_COUNT][2] = {
-        { 0.0, 0.0 }, { 0.0, 1.0 }, { 1.0, 1.0 },
-        { 0.0, 0.0 }, { 1.0, 1.0 }, { 1.0, 0.0 }
-    };
-    glBufferData(GL_ARRAY_BUFFER, sizeof(l_uvs), l_uvs, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_QuadVertexUV), g_QuadVertexUV, GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    for(auto &iter : m_vertex) iter = glm::vec3(0.f,0.f,1.0f);
+    for(auto &iter : m_vertex) iter = glm::vec3(0.f, 0.f, 1.0f);
 }
 ROC::Quad::~Quad()
 {

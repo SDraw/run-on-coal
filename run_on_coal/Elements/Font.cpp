@@ -7,7 +7,7 @@
 namespace ROC
 {
 
-const float g_DefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE);
+const float g_FontDefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE);
 const GLint g_FontSwizzleMask[] = { GL_ONE, GL_ONE, GL_ONE, GL_RED };
 
 }
@@ -114,7 +114,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             else
             {
                 m_atlasSize.x = ROC_FONT_ATLAS_SIZE;
-                m_atlasOffset.x = g_DefaultAtlasOffset;
+                m_atlasOffset.x = g_FontDefaultAtlasOffset;
             }
             if(MathUtils::IsPowerOfTwo(f_atlas.y))
             {
@@ -124,7 +124,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             else
             {
                 m_atlasSize.y = ROC_FONT_ATLAS_SIZE;
-                m_atlasOffset.y = g_DefaultAtlasOffset;
+                m_atlasOffset.y = g_FontDefaultAtlasOffset;
             }
 
             // Generate atlas texture
