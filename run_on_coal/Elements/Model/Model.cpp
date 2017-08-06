@@ -39,8 +39,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_parentBone = -1;
 
     m_animation = nullptr;
-    m_animLastTick = 0U;
-    m_animCurrentTick = 0U;
+    m_animationTick = 0U;
     m_animState = AnimationState::None;
     m_animationSpeed = -1.f;
 
@@ -62,50 +61,32 @@ ROC::Model::~Model()
     delete m_skeleton;
 }
 
-void ROC::Model::SetPosition(const glm::vec3 &f_pos, bool f_preserveMotion)
+void ROC::Model::SetPosition(const glm::vec3 &f_pos)
 {
     if(m_position != f_pos)
     {
         std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
         if(m_collision) m_collision->SetPosition(f_pos);
         else m_rebuildMatrix = true;
-        if(m_skeleton && f_preserveMotion) m_skeleton->PreserveMotion();
     }
 }
-void ROC::Model::GetPosition(glm::vec3 &f_pos, bool f_global)
+void ROC::Model::GetPosition(glm::vec3 &f_pos)
 {
-    if(f_global && m_parent)
-    {
-        btTransform l_transform;
-        l_transform.setFromOpenGLMatrix(glm::value_ptr(m_matrix));
-        std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-    }
-    else std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
+    std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
 }
 
-void ROC::Model::SetRotation(const glm::quat &f_rot, bool f_preserveMotion)
+void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
     if(m_rotation != f_rot)
     {
         std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
         if(m_collision) m_collision->SetRotation(f_rot);
         else m_rebuildMatrix = true;
-        if(m_skeleton && f_preserveMotion) m_skeleton->PreserveMotion();
     }
 }
-void ROC::Model::GetRotation(glm::quat &f_rot, bool f_global)
+void ROC::Model::GetRotation(glm::quat &f_rot)
 {
-    if(f_global && m_parent)
-    {
-        btTransform l_transform;
-        l_transform.setFromOpenGLMatrix(glm::value_ptr(m_matrix));
-        btQuaternion l_rot = l_transform.getRotation();
-        f_rot.x = l_rot.x();
-        f_rot.y = l_rot.y();
-        f_rot.z = l_rot.z();
-        f_rot.w = l_rot.w();
-    }
-    else std::memcpy(&f_rot, &m_rotation, sizeof(glm::quat));
+    std::memcpy(&f_rot, &m_rotation, sizeof(glm::quat));
 }
 
 void ROC::Model::SetScale(const glm::vec3 &f_scl)
@@ -117,26 +98,27 @@ void ROC::Model::SetScale(const glm::vec3 &f_scl)
         m_rebuildMatrix = true;
     }
 }
-void ROC::Model::GetScale(glm::vec3 &f_scl, bool f_global)
+void ROC::Model::GetScale(glm::vec3 &f_scl)
 {
-    if(f_global && m_parent)
-    {
-        glm::vec3 l_scale, l_skew, l_translation;
-        glm::quat l_rotation;
-        glm::vec4 perspective;
-        glm::decompose(m_matrix, l_scale, l_rotation, l_translation, l_skew, perspective);
-        std::memcpy(&f_scl, &l_scale, sizeof(glm::vec3));
-    }
-    else std::memcpy(&f_scl, &m_scale, sizeof(glm::vec3));
+    std::memcpy(&f_scl, &m_scale, sizeof(glm::vec3));
 }
 void ROC::Model::UpdateMatrix()
 {
     m_rebuilded = false;
     if(m_rebuildMatrix)
     {
-        if(m_position != g_DefaultPosition) m_localMatrix = glm::translate(g_IdentityMatrix, m_position);
-        else std::memcpy(&m_localMatrix, &g_IdentityMatrix, sizeof(glm::mat4));
-        if(m_rotation != g_DefaultRotation) m_localMatrix *= glm::mat4_cast(m_rotation);
+        btTransform l_transform = btTransform::getIdentity();
+        if(m_position != g_DefaultPosition)
+        {
+            btVector3 l_position(m_position.x, m_position.y, m_position.z);
+            l_transform.setOrigin(l_position);
+        }
+        if(m_rotation != g_DefaultRotation)
+        {
+            btQuaternion l_rotation(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w);
+            l_transform.setRotation(l_rotation);
+        }
+        l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
         if(m_scale != g_DefaultScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
         m_rebuildMatrix = false;
         m_rebuilded = true;
@@ -184,7 +166,7 @@ void ROC::Model::SetAnimation(Animation *f_anim)
     if(m_animation)
     {
         m_animState = AnimationState::Paused;
-        m_animCurrentTick = 0U;
+        m_animationTick = 0U;
         m_animationSpeed = 1.f;
         m_skeleton->EnableBoneBlending();
         UpdateSkeleton();
@@ -199,11 +181,8 @@ void ROC::Model::UpdateAnimation()
 {
     if(m_skeleton && m_animation && (m_animState != AnimationState::Paused))
     {
-        unsigned int l_sysTick = SystemTick::GetTick();
-        unsigned int l_difTick = static_cast<unsigned int>(static_cast<float>(l_sysTick - m_animLastTick)*m_animationSpeed);
-        m_animLastTick = l_sysTick;
-        m_animCurrentTick += l_difTick;
-        m_animCurrentTick %= m_animation->GetDuration();
+        m_animationTick += static_cast<unsigned int>(static_cast<float>(SystemTick::GetDelta())*m_animationSpeed);
+        m_animationTick %= m_animation->GetDuration();
         UpdateSkeleton();
     }
 }
@@ -211,11 +190,7 @@ bool ROC::Model::PlayAnimation()
 {
     if(m_animation)
     {
-        if(m_animState != AnimationState::Playing)
-        {
-            if(m_animState == AnimationState::Paused || m_animLastTick == 0) m_animLastTick = SystemTick::GetTick();
-            m_animState = AnimationState::Playing;
-        }
+        if(m_animState != AnimationState::Playing) m_animState = AnimationState::Playing;
     }
     return (m_animation != nullptr);
 }
@@ -228,8 +203,7 @@ bool ROC::Model::ResetAnimation()
 {
     if(m_animation)
     {
-        m_animCurrentTick = 0U;
-        m_animLastTick = SystemTick::GetTick();
+        m_animationTick = 0U;
         UpdateSkeleton();
     }
     return (m_animation != nullptr);
@@ -248,13 +222,13 @@ bool ROC::Model::SetAnimationProgress(float f_val)
     if(m_animation)
     {
         btClamp(f_val, 0.f, 1.f);
-        m_animCurrentTick = static_cast<unsigned int>(float(m_animation->GetDuration())*f_val);
+        m_animationTick = static_cast<unsigned int>(float(m_animation->GetDuration())*f_val);
     }
     return (m_animation != nullptr);
 }
 float ROC::Model::GetAnimationProgress() const
 {
-    return (m_animation ? (static_cast<float>(m_animCurrentTick) / static_cast<float>(m_animation->GetDuration())) : -1.f);
+    return (m_animation ? (static_cast<float>(m_animationTick) / static_cast<float>(m_animation->GetDuration())) : -1.f);
 }
 bool ROC::Model::SetAnimationBlendFactor(float f_val)
 {
@@ -268,7 +242,7 @@ float ROC::Model::GetAnimationBlendFactor() const
 
 void ROC::Model::UpdateSkeleton()
 {
-    if(m_animation) m_animation->GetData(m_animCurrentTick, m_skeleton->GetBonesVectorRef());
+    if(m_animation) m_animation->GetData(m_animationTick, m_skeleton->GetBonesVectorRef());
     m_skeleton->Update();
 }
 

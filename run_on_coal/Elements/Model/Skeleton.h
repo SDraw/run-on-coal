@@ -48,8 +48,6 @@ class Skeleton final
     bool m_hasDynamicBoneCollision;
 
     float m_blendFactor;
-    bool m_preserveMotion;
-    glm::mat4 m_prevModelMatrix;
 public:
     inline unsigned int GetBonesCount() const { return m_bonesCount; }
 
@@ -64,8 +62,6 @@ protected:
     void EnableBoneBlending();
     void SetBoneBlendFactor(float f_blend);
     inline float GetBoneBlendFactor() const { return m_blendFactor; }
-
-    inline void PreserveMotion() { m_preserveMotion = true; }
 
     inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
     inline const std::vector<glm::mat4>& GetBoneMatricesVectorRef() const { return m_boneMatrices; }

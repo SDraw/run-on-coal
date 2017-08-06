@@ -25,6 +25,7 @@
 #include "SFML/Window.hpp"
 #include "sfeMovie/Movie.hpp"
 
+#define GLM_FORCE_MESSAGES
 #define GLM_FORCE_INLINE
 #ifndef _DEBUG
 #define GLM_FORCE_SSE2
@@ -36,7 +37,6 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtx/compatibility.hpp"
 #include "glm/gtx/component_wise.hpp"
-#include "glm/gtx/matrix_decompose.hpp"
 #include "glm/gtx/quaternion.hpp"
 
 #include "btBulletDynamicsCommon.h"

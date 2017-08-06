@@ -23,7 +23,7 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
     if(m_type == ROC_RENDERTARGET_TYPE_NONE)
     {
         m_type = f_type;
-        btClamp(m_type,ROC_RENDERTARGET_TYPE_DEPTH, ROC_RENDERTARGET_TYPE_RGBAF);
+        btClamp(m_type,ROC_RENDERTARGET_TYPE_SHADOW, ROC_RENDERTARGET_TYPE_RGBAF);
         m_filtering = f_filter;
         btClamp(m_filtering, ROC_RENDERTARGET_FILTER_NEAREST, ROC_RENDERTARGET_FILTER_LINEAR);
 
@@ -34,7 +34,7 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
         glBindTexture(GL_TEXTURE_2D, m_texture);
         switch(m_type)
         {
-            case ROC_RENDERTARGET_TYPE_DEPTH:
+            case ROC_RENDERTARGET_TYPE_SHADOW:
             {
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
@@ -56,7 +56,7 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST+m_filtering);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST+m_filtering);
 
-        if(m_type > ROC_RENDERTARGET_TYPE_DEPTH)
+        if(m_type > ROC_RENDERTARGET_TYPE_SHADOW)
         {
             glGenRenderbuffers(1, &m_renderBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);

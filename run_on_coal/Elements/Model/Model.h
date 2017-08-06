@@ -27,8 +27,7 @@ class Model final : public Element
     int m_parentBone;
 
     Animation *m_animation;
-    unsigned int m_animLastTick;
-    unsigned int m_animCurrentTick;
+    unsigned int m_animationTick;
     enum AnimationState { None = 0U, Paused, Playing } m_animState;
     float m_animationSpeed;
 
@@ -44,12 +43,12 @@ public:
     inline bool HasGeometry() const { return (m_geometry != nullptr); }
     inline Geometry* GetGeometry() { return m_geometry; }
 
-    void SetPosition(const glm::vec3 &f_pos, bool f_preserveMotion = false);
-    void GetPosition(glm::vec3 &f_pos, bool f_global = false);
-    void SetRotation(const glm::quat &f_rot, bool f_preserveMotion = false);
-    void GetRotation(glm::quat &f_rot, bool f_global = false);
+    void SetPosition(const glm::vec3 &f_pos);
+    void GetPosition(glm::vec3 &f_pos);
+    void SetRotation(const glm::quat &f_rot);
+    void GetRotation(glm::quat &f_rot);
     void SetScale(const glm::vec3 &f_scl);
-    void GetScale(glm::vec3 &f_scl, bool f_global = false);
+    void GetScale(glm::vec3 &f_scl);
 
     inline Model* GetParent() { return m_parent; }
 

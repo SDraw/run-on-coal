@@ -103,7 +103,7 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
         {
             m_activeTarget->Enable();
             m_activeTarget->GetSize(m_renderTargetSize);
-            m_skipNoDepthMaterials = m_activeTarget->IsDepthType();
+            m_skipNoDepthMaterials = m_activeTarget->IsShadowType();
         }
         m_screenProjection = glm::ortho(0.f, static_cast<float>(m_renderTargetSize.x), 0.f, static_cast<float>(m_renderTargetSize.y));
         glViewport(0, 0, m_renderTargetSize.x, m_renderTargetSize.y);
@@ -181,7 +181,13 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
             Camera *l_camera = m_activeScene->GetCamera();
             if(l_camera)
             {
-                f_model->GetPosition(m_modelPosition, true);
+                if(f_model->GetParent() != nullptr)
+                {
+                    btTransform l_transform;
+                    l_transform.setFromOpenGLMatrix(glm::value_ptr(f_model->GetMatrixRef()));
+                    std::memcpy(&m_modelPosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+                }
+                else f_model->GetPosition(m_modelPosition);
                 if(!l_camera->IsInFrustum(m_modelPosition, f_model->GetBoundSphereRadius())) l_result = false;
             }
         }

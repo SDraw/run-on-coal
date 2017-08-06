@@ -4,10 +4,11 @@ namespace ROC
 
 class BoneFrameData
 {
+public:
     glm::vec3 m_position;
     glm::quat m_rotation;
     glm::vec3 m_scale;
-public:
+
     BoneFrameData();
     BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec3 &f_scl);
     ~BoneFrameData();
@@ -21,12 +22,6 @@ public:
     void SetInterpolated(BoneFrameData *f_leftData, BoneFrameData *f_rightData, float f_blend);
 
     static void Copy(BoneFrameData *f_src, BoneFrameData *f_dst);
-protected:
-    inline glm::vec3& GetPositionRef() { return m_position; }
-    inline glm::quat& GetRotationRef() { return m_rotation; }
-    inline glm::vec3& GetScaleRef() { return m_scale; }
-
-    friend class Bone;
 };
 
 }

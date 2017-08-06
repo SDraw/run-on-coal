@@ -73,7 +73,7 @@ void ROC::Collision::SetParentModel(Model *f_model)
         {
             glm::vec3 l_pos;
             glm::quat l_rot;
-            f_model->GetPosition(l_pos, true);
+            f_model->GetPosition(l_pos);
             f_model->GetRotation(l_rot);
             SetPosition(l_pos);
             SetRotation(l_rot);

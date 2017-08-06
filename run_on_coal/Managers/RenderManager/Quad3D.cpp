@@ -67,8 +67,12 @@ void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_r
         std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
         std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
 
-        m_matrix = glm::translate(g_IdentityMatrix, m_position);
-        m_matrix *= glm::mat4_cast(m_rotation);
+        btTransform l_transform = btTransform::getIdentity();
+        btVector3 l_position(m_position.x, m_position.y, m_position.z);
+        btQuaternion l_rotation(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w);
+        l_transform.setOrigin(l_position);
+        l_transform.setRotation(l_rotation);
+        l_transform.getOpenGLMatrix(glm::value_ptr(m_matrix));
     }
     if(f_size != m_size)
     {

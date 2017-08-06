@@ -1,7 +1,7 @@
 #pragma once
 #include "Elements/Drawable.h"
 #define ROC_RENDERTARGET_TYPE_NONE -1
-#define ROC_RENDERTARGET_TYPE_DEPTH 0
+#define ROC_RENDERTARGET_TYPE_SHADOW 0
 #define ROC_RENDERTARGET_TYPE_RGB 1
 #define ROC_RENDERTARGET_TYPE_RGBA 2
 #define ROC_RENDERTARGET_TYPE_RGBF 3
@@ -32,7 +32,7 @@ public:
     inline int GetFiltering() const { return m_filtering; }
 
     inline bool IsTransparent() const { return ((m_type == ROC_RENDERTARGET_TYPE_RGBA) || (m_type == ROC_RENDERTARGET_TYPE_RGBAF)); }
-    inline bool IsDepthType() const { return (m_type == ROC_RENDERTARGET_TYPE_DEPTH); }
+    inline bool IsShadowType() const { return (m_type == ROC_RENDERTARGET_TYPE_SHADOW); }
 protected:
     RenderTarget();
     ~RenderTarget();

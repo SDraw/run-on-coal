@@ -159,15 +159,21 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
 {
     if(f_model->HasSkeleton())
     {
-        for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef()) m_dynamicWorld->addRigidBody(iter->m_rigidBody);
-
-        for(auto iter : f_model->GetSkeleton()->GetJointVectorRef())
+        Skeleton *l_skeleton = f_model->GetSkeleton();
+        if(l_skeleton->HasStaticBoneCollision())
         {
-            m_dynamicWorld->addRigidBody(iter->m_emptyBody);
-            for(auto iter1 : iter->m_partsVector)
+            for(auto iter : l_skeleton->GetCollisionVectorRef()) m_dynamicWorld->addRigidBody(iter->m_rigidBody);
+        }
+        if(l_skeleton->HasDynamicBoneCollision())
+        {
+            for(auto iter : l_skeleton->GetJointVectorRef())
             {
-                m_dynamicWorld->addRigidBody(iter1->m_rigidBody);
-                m_dynamicWorld->addConstraint(iter1->m_constraint, true);
+                m_dynamicWorld->addRigidBody(iter->m_emptyBody);
+                for(auto iter1 : iter->m_partsVector)
+                {
+                    m_dynamicWorld->addRigidBody(iter1->m_rigidBody);
+                    m_dynamicWorld->addConstraint(iter1->m_constraint, true);
+                }
             }
         }
     }
@@ -176,15 +182,21 @@ void ROC::PhysicsManager::RemoveModel(Model *f_model)
 {
     if(f_model->HasSkeleton())
     {
-        for(auto iter : f_model->GetSkeleton()->GetCollisionVectorRef()) m_dynamicWorld->removeRigidBody(iter->m_rigidBody);
-
-        for(auto iter : f_model->GetSkeleton()->GetJointVectorRef())
+        Skeleton *l_skeleton = f_model->GetSkeleton();
+        if(l_skeleton->HasStaticBoneCollision())
         {
-            m_dynamicWorld->removeRigidBody(iter->m_emptyBody);
-            for(auto iter1 : iter->m_partsVector)
+            for(auto iter : l_skeleton->GetCollisionVectorRef()) m_dynamicWorld->removeRigidBody(iter->m_rigidBody);
+        }
+        if(l_skeleton->HasDynamicBoneCollision())
+        {
+            for(auto iter : l_skeleton->GetJointVectorRef())
             {
-                m_dynamicWorld->removeRigidBody(iter1->m_rigidBody);
-                m_dynamicWorld->removeConstraint(iter1->m_constraint);
+                m_dynamicWorld->removeRigidBody(iter->m_emptyBody);
+                for(auto iter1 : iter->m_partsVector)
+                {
+                    m_dynamicWorld->removeRigidBody(iter1->m_rigidBody);
+                    m_dynamicWorld->removeConstraint(iter1->m_constraint);
+                }
             }
         }
     }
