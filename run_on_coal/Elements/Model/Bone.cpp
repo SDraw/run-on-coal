@@ -12,6 +12,7 @@ extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
 extern const glm::vec3 g_DefaultScale;
+extern const float g_Epsilon;
 
 }
 
@@ -64,18 +65,22 @@ void ROC::Bone::EnableBlending(float f_blend)
 void ROC::Bone::GenerateBindPose()
 {
     btTransform l_transform = btTransform::getIdentity();
-    if(m_data->m_position != g_DefaultPosition)
-    {
-        btVector3 l_position(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z);
-        l_transform.setOrigin(l_position);
-    }
-    if(m_data->m_rotation != g_DefaultRotation)
-    {
-        btQuaternion l_rotation(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w);
-        l_transform.setRotation(l_rotation);
-    }
+    btVector3 l_position(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z);
+    l_transform.setOrigin(l_position);
+    btQuaternion l_rotation(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w);
+    l_transform.setRotation(l_rotation);
     l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
-    if(m_data->m_scale != g_DefaultScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
+
+    bool l_useScale = false;
+    for(int i = 0; i < 3; i++)
+    {
+        if(glm::epsilonNotEqual(m_data->m_scale[i], g_DefaultScale[i], g_Epsilon))
+        {
+            l_useScale = true;
+            break;
+        }
+    }
+    if(l_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
 
     if(m_parent == nullptr) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
     else
@@ -93,18 +98,23 @@ void ROC::Bone::UpdateMatrix()
     if(m_rebuildMatrix)
     {
         btTransform l_transform = btTransform::getIdentity();
-        if(m_data->m_position != g_DefaultPosition)
-        {
-            btVector3 l_position(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z);
-            l_transform.setOrigin(l_position);
-        }
-        if(m_data->m_rotation != g_DefaultRotation)
-        {
-            btQuaternion l_rotation(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w);
-            l_transform.setRotation(l_rotation);
-        }
+        btVector3 l_position(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z);
+        l_transform.setOrigin(l_position);
+        btQuaternion l_rotation(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w);
+        l_transform.setRotation(l_rotation);
         l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
-        if(m_data->m_scale != g_DefaultScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
+
+        bool l_useScale = false;
+        for(int i = 0; i < 3; i++)
+        {
+            if(glm::epsilonNotEqual(m_data->m_scale[i], g_DefaultScale[i], g_Epsilon))
+            {
+                l_useScale = true;
+                break;
+            }
+        }
+        if(l_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
+
 
         if(!m_parent) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         else

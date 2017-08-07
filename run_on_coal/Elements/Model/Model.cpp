@@ -16,6 +16,7 @@ extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
 extern const glm::vec3 g_DefaultScale;
+extern const float g_Epsilon;
 
 }
 
@@ -63,12 +64,9 @@ ROC::Model::~Model()
 
 void ROC::Model::SetPosition(const glm::vec3 &f_pos)
 {
-    if(m_position != f_pos)
-    {
-        std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
-        if(m_collision) m_collision->SetPosition(f_pos);
-        else m_rebuildMatrix = true;
-    }
+    std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
+    if(m_collision) m_collision->SetPosition(f_pos);
+    else m_rebuildMatrix = true;
 }
 void ROC::Model::GetPosition(glm::vec3 &f_pos)
 {
@@ -77,12 +75,9 @@ void ROC::Model::GetPosition(glm::vec3 &f_pos)
 
 void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
-    if(m_rotation != f_rot)
-    {
-        std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
-        if(m_collision) m_collision->SetRotation(f_rot);
-        else m_rebuildMatrix = true;
-    }
+    std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
+    if(m_collision) m_collision->SetRotation(f_rot);
+    else m_rebuildMatrix = true;
 }
 void ROC::Model::GetRotation(glm::quat &f_rot)
 {
@@ -91,12 +86,9 @@ void ROC::Model::GetRotation(glm::quat &f_rot)
 
 void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
-    if(m_scale != f_scl)
-    {
-        std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
-        m_boundSphereRaduis = (m_geometry ? m_geometry->GetBoundSphereRadius()*glm::compMax(m_scale) : glm::length(m_scale));
-        m_rebuildMatrix = true;
-    }
+    std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
+    m_boundSphereRaduis = (m_geometry ? m_geometry->GetBoundSphereRadius()*glm::compMax(m_scale) : glm::length(m_scale));
+    m_rebuildMatrix = true;
 }
 void ROC::Model::GetScale(glm::vec3 &f_scl)
 {
@@ -108,18 +100,23 @@ void ROC::Model::UpdateMatrix()
     if(m_rebuildMatrix)
     {
         btTransform l_transform = btTransform::getIdentity();
-        if(m_position != g_DefaultPosition)
-        {
-            btVector3 l_position(m_position.x, m_position.y, m_position.z);
-            l_transform.setOrigin(l_position);
-        }
-        if(m_rotation != g_DefaultRotation)
-        {
-            btQuaternion l_rotation(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w);
-            l_transform.setRotation(l_rotation);
-        }
+        btVector3 l_position(m_position.x, m_position.y, m_position.z);
+        l_transform.setOrigin(l_position);
+        btQuaternion l_rotation(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w);
+        l_transform.setRotation(l_rotation);
         l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
-        if(m_scale != g_DefaultScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
+
+        bool l_useScale = false;
+        for(int i = 0; i < 3; i++)
+        {
+            if(glm::epsilonNotEqual(m_scale[i], g_DefaultScale[i], g_Epsilon))
+            {
+                l_useScale = true;
+                break;
+            }
+        }
+        if(l_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
+
         m_rebuildMatrix = false;
         m_rebuilded = true;
     }

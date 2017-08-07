@@ -26,18 +26,14 @@
 #include "sfeMovie/Movie.hpp"
 
 #define GLM_FORCE_MESSAGES
-#define GLM_FORCE_INLINE
-#ifndef _DEBUG
-#define GLM_FORCE_SSE2
-#endif
 #include "glm/glm.hpp"
+#include "glm/gtc/epsilon.hpp"
 #include "glm/gtc/matrix_access.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtx/compatibility.hpp"
 #include "glm/gtx/component_wise.hpp"
-#include "glm/gtx/quaternion.hpp"
 
 #include "btBulletDynamicsCommon.h"
 
