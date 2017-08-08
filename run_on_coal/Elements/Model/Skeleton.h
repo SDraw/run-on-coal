@@ -63,14 +63,14 @@ protected:
     void SetBoneBlendFactor(float f_blend);
     inline float GetBoneBlendFactor() const { return m_blendFactor; }
 
-    inline std::vector<Bone*>& GetBonesVectorRef() { return m_boneVector; }
-    inline const std::vector<glm::mat4>& GetBoneMatricesVectorRef() const { return m_boneMatrices; }
+    inline std::vector<Bone*>& GetBonesVector() { return m_boneVector; }
+    inline const std::vector<glm::mat4>& GetBoneMatricesVector() const { return m_boneMatrices; }
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);
-    inline const std::vector<skCollision*>& GetCollisionVectorRef() const { return m_collisionVector; }
+    inline const std::vector<skCollision*>& GetCollisionVector() const { return m_collisionVector; }
 
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
-    inline const std::vector<skJoint*>& GetJointVectorRef() const { return m_jointVector; }
+    inline const std::vector<skJoint*>& GetJointVector() const { return m_jointVector; }
 
     void UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled);
     void UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled);

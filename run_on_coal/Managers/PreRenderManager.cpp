@@ -124,7 +124,7 @@ void ROC::PreRenderManager::DoPulse_S1()
         if(l_model->HasSkeleton())
         {
             if(l_model->HasAnimation()) l_model->UpdateAnimation();
-            l_model->GetSkeleton()->UpdateCollision_S1(l_model->GetMatrixRef(), l_physicsState);
+            l_model->GetSkeleton()->UpdateCollision_S1(l_model->GetMatrix(), l_physicsState);
         }
     }
 }
@@ -144,6 +144,6 @@ void ROC::PreRenderManager::DoPulse_S2()
 
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
         l_model->HasCollision() ? l_model->UpdateCollision() : l_model->UpdateMatrix();
-        if(l_model->HasSkeleton()) l_model->GetSkeleton()->UpdateCollision_S2(l_model->GetMatrixRef(), l_physicsState);
+        if(l_model->HasSkeleton()) l_model->GetSkeleton()->UpdateCollision_S2(l_model->GetMatrix(), l_physicsState);
     }
 }

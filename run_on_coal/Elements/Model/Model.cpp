@@ -50,9 +50,9 @@ ROC::Model::Model(Geometry *f_geometry)
         m_boundSphereRaduis = m_geometry->GetBoundSphereRadius();
         if(m_geometry->HasBonesData())
         {
-            m_skeleton = new Skeleton(m_geometry->GetBonesDataRef());
-            if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionDataRef(), this);
-            if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsDataRef(), this);
+            m_skeleton = new Skeleton(m_geometry->GetBonesData());
+            if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionData(), this);
+            if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsData(), this);
         }
     }
     m_collision = nullptr;
@@ -68,32 +68,19 @@ void ROC::Model::SetPosition(const glm::vec3 &f_pos)
     if(m_collision) m_collision->SetPosition(f_pos);
     else m_rebuildMatrix = true;
 }
-void ROC::Model::GetPosition(glm::vec3 &f_pos)
-{
-    std::memcpy(&f_pos, &m_position, sizeof(glm::vec3));
-}
-
 void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
     std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
     if(m_collision) m_collision->SetRotation(f_rot);
     else m_rebuildMatrix = true;
 }
-void ROC::Model::GetRotation(glm::quat &f_rot)
-{
-    std::memcpy(&f_rot, &m_rotation, sizeof(glm::quat));
-}
-
 void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
     std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
     m_boundSphereRaduis = (m_geometry ? m_geometry->GetBoundSphereRadius()*glm::compMax(m_scale) : glm::length(m_scale));
     m_rebuildMatrix = true;
 }
-void ROC::Model::GetScale(glm::vec3 &f_scl)
-{
-    std::memcpy(&f_scl, &m_scale, sizeof(glm::vec3));
-}
+
 void ROC::Model::UpdateMatrix()
 {
     m_rebuilded = false;
@@ -124,10 +111,9 @@ void ROC::Model::UpdateMatrix()
     {
         if(m_parentBone != -1)
         {
-            if(m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
+            if(m_parent->m_skeleton->GetBonesVector()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
             {
-                glm::mat4 l_boneMatrix;
-                m_parent->m_skeleton->GetBonesVectorRef()[m_parentBone]->GetMatrix(l_boneMatrix);
+                const glm::mat4 &l_boneMatrix = m_parent->m_skeleton->GetBonesVector()[m_parentBone]->GetMatrix();
                 std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
                 m_matrix *= l_boneMatrix;
                 m_matrix *= m_localMatrix;
@@ -239,7 +225,7 @@ float ROC::Model::GetAnimationBlendFactor() const
 
 void ROC::Model::UpdateSkeleton()
 {
-    if(m_animation) m_animation->GetData(m_animationTick, m_skeleton->GetBonesVectorRef());
+    if(m_animation) m_animation->GetData(m_animationTick, m_skeleton->GetBonesVector());
     m_skeleton->Update();
 }
 
@@ -251,7 +237,7 @@ void ROC::Model::SetCollision(Collision *f_col)
         bool l_collisionIgnoring = (f_col != nullptr);
         if(m_skeleton->HasStaticBoneCollision())
         {
-            for(auto iter : m_skeleton->GetCollisionVectorRef())
+            for(auto iter : m_skeleton->GetCollisionVector())
             {
                 l_body->setIgnoreCollisionCheck(iter->m_rigidBody, l_collisionIgnoring);
                 iter->m_rigidBody->setIgnoreCollisionCheck(l_body, l_collisionIgnoring);
@@ -259,7 +245,7 @@ void ROC::Model::SetCollision(Collision *f_col)
         }
         if(m_skeleton->HasDynamicBoneCollision())
         {
-            for(auto iter : m_skeleton->GetJointVectorRef())
+            for(auto iter : m_skeleton->GetJointVector())
             {
                 for(auto iter1 : iter->m_partsVector)
                 {

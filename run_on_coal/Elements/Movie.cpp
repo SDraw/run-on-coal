@@ -8,6 +8,7 @@ ROC::Movie::Movie()
     m_elementTypeName.assign("Movie");
 
     m_movie = nullptr;
+    m_size = glm::ivec2(0);
 }
 ROC::Movie::~Movie()
 {
@@ -25,6 +26,13 @@ bool ROC::Movie::Load(const std::string &f_path)
         {
             delete m_movie;
             m_movie = nullptr;
+        }
+        else
+        {
+            auto &l_texture = m_movie->getCurrentImage();
+            auto l_size = l_texture.getSize();
+            m_size.x = l_size.x;
+            m_size.y = l_size.y;
         }
     }
     return l_result;
@@ -59,17 +67,6 @@ void ROC::Movie::SetTime(float f_val)
         btClamp(f_val, 0.f, std::numeric_limits<float>::max());
         sf::Time l_time = sf::seconds(f_val);
         m_movie->setPlayingOffset(l_time);
-    }
-}
-
-void ROC::Movie::GetSize(glm::ivec2 &f_size) const
-{
-    if(m_movie)
-    {
-        auto &l_texture = m_movie->getCurrentImage();
-        auto l_size = l_texture.getSize();
-        f_size.x = static_cast<int>(l_size.x);
-        f_size.y = static_cast<int>(l_size.y);
     }
 }
 

@@ -35,10 +35,10 @@ public:
     inline bool Get3DPositionEnabled() const { return m_relative; }
 
     bool Set3DPosition(const glm::vec3 &f_pos);
-    inline void Get3DPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_v3DPosition, sizeof(glm::vec3)); }
+    inline const glm::vec3& Get3DPosition(glm::vec3 &f_pos) const { return m_v3DPosition; }
 
     bool Set3DDistance(const glm::vec2 &f_dist);
-    inline void Get3DDistance(glm::vec2 &f_dist) { std::memcpy(&f_dist, &m_v3DDistance, sizeof(glm::vec2)); }
+    inline const glm::vec2& Get3DDistance(glm::vec2 &f_dist) const { return m_v3DDistance; }
 
     inline int GetState() const { return (m_handle ? m_handle->getStatus() : -1); }
 protected:

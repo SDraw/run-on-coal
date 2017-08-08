@@ -44,11 +44,14 @@ public:
     inline Geometry* GetGeometry() { return m_geometry; }
 
     void SetPosition(const glm::vec3 &f_pos);
-    void GetPosition(glm::vec3 &f_pos);
+    inline const glm::vec3& GetPosition() const { return m_position; }
     void SetRotation(const glm::quat &f_rot);
-    void GetRotation(glm::quat &f_rot);
+    inline const glm::quat& GetRotation() const { return m_rotation; }
     void SetScale(const glm::vec3 &f_scl);
-    void GetScale(glm::vec3 &f_scl);
+    inline const glm::vec3& GetScale() const { return m_scale; }
+    inline const glm::mat4& GetMatrix() const { return m_matrix; }
+
+    float inline GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
     inline Model* GetParent() { return m_parent; }
 
@@ -74,10 +77,7 @@ protected:
 
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
 
-    inline glm::mat4& GetMatrixRef() { return m_matrix; }
     void UpdateMatrix();
-
-    float inline GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
     void SetParent(Model *f_model, int f_bone = -1);
 

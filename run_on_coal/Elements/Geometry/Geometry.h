@@ -41,10 +41,10 @@ protected:
     inline bool IsAsyncLoad() const { return m_async; }
     inline bool IsReleased() const { return m_released; }
 
-    inline const std::vector<Material*>& GetMaterialVectorRef() const { return m_materialVector; }
-    inline const std::vector<BoneData*>& GetBonesDataRef() const { return m_bonesData; };
-    inline const std::vector<BoneCollisionData*>& GetBonesCollisionDataRef() const { return m_collisionData; }
-    inline const std::vector<BoneJointData*>& GetJointsDataRef() const { return m_jointData; };
+    inline const std::vector<Material*>& GetMaterialVector() const { return m_materialVector; }
+    inline const std::vector<BoneData*>& GetBonesData() const { return m_bonesData; };
+    inline const std::vector<BoneCollisionData*>& GetBonesCollisionData() const { return m_collisionData; }
+    inline const std::vector<BoneJointData*>& GetJointsData() const { return m_jointData; };
 
     friend class AsyncManager;
     friend class ElementManager;

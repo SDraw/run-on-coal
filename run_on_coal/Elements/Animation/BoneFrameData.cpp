@@ -8,6 +8,7 @@ namespace ROC
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
 extern const glm::vec3 g_DefaultScale;
+extern const float g_Epsilon;
 
 }
 
@@ -25,6 +26,14 @@ ROC::BoneFrameData::BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot
 }
 ROC::BoneFrameData::~BoneFrameData()
 {
+}
+
+bool ROC::BoneFrameData::IsEqual(BoneFrameData *f_data) const
+{
+    bool l_positionResult = glm::all(glm::epsilonEqual(m_position, f_data->m_position, g_Epsilon));
+    bool l_rotationResult = glm::all(glm::epsilonEqual(m_rotation, f_data->m_rotation, g_Epsilon));
+    bool l_scaleResult = glm::all(glm::epsilonEqual(m_scale, f_data->m_scale, g_Epsilon));
+    return (l_positionResult && l_rotationResult && l_scaleResult);
 }
 
 void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_data, float f_blend)

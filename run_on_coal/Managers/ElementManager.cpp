@@ -151,8 +151,7 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
     }
     else
     {
-        std::string l_shaderError;
-        l_shader->GetError(l_shaderError);
+        const std::string &l_shaderError = l_shader->GetError();
         if(!l_shaderError.empty())
         {
             std::string l_error("[");

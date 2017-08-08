@@ -87,16 +87,6 @@ void ROC::Camera::SetDepth(const glm::vec2 &f_depth)
         m_rebuildProjection = true;
     }
 }
-void ROC::Camera::GetViewMatrix(glm::mat4 &f_mat)
-{
-    UpdateMatrices();
-    std::memcpy(&f_mat, &m_viewMatrix, sizeof(glm::mat4));
-}
-void ROC::Camera::GetProjectionMatrix(glm::mat4 &f_mat)
-{
-    UpdateMatrices();
-    std::memcpy(&f_mat, &m_projectionMatrix, sizeof(glm::mat4));
-}
 
 void ROC::Camera::UpdateMatrices()
 {

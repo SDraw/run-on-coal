@@ -102,7 +102,7 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
         else
         {
             m_activeTarget->Enable();
-            m_activeTarget->GetSize(m_renderTargetSize);
+            m_renderTargetSize = m_activeTarget->GetSize();
             m_skipNoDepthMaterials = m_activeTarget->IsShadowType();
         }
         m_screenProjection = glm::ortho(0.f, static_cast<float>(m_renderTargetSize.x), 0.f, static_cast<float>(m_renderTargetSize.y));
@@ -136,10 +136,10 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             {
                 Camera *l_camera = m_activeScene->GetCamera();
                 if(l_camera) l_camera->UpdateMatrices();
-                m_activeShader->SetProjectionUniformValue(l_camera ? l_camera->GetProjectionMatrixRef() : g_EmptyMat4);
-                m_activeShader->SetViewUniformValue(l_camera ? l_camera->GetViewMatrixRef() : g_EmptyMat4);
-                m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPositionRef() : g_DefaultPosition);
-                m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirectionRef() : g_DefaultPosition);
+                m_activeShader->SetProjectionUniformValue(l_camera ? l_camera->GetProjectionMatrix() : g_EmptyMat4);
+                m_activeShader->SetViewUniformValue(l_camera ? l_camera->GetViewMatrix() : g_EmptyMat4);
+                m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPosition() : g_DefaultPosition);
+                m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirection() : g_DefaultPosition);
 
                 Light *l_light = m_activeScene->GetLight();
                 m_activeShader->SetLightColorUniformValue(l_light ? l_light->GetColorRef() : g_EmptyVec4);
@@ -184,25 +184,25 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
                 if(f_model->GetParent() != nullptr)
                 {
                     btTransform l_transform;
-                    l_transform.setFromOpenGLMatrix(glm::value_ptr(f_model->GetMatrixRef()));
+                    l_transform.setFromOpenGLMatrix(glm::value_ptr(f_model->GetMatrix()));
                     std::memcpy(&m_modelPosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
                 }
-                else f_model->GetPosition(m_modelPosition);
+                else m_modelPosition = f_model->GetPosition();
                 if(!l_camera->IsInFrustum(m_modelPosition, f_model->GetBoundSphereRadius())) l_result = false;
             }
         }
         if(l_result)
         {
-            m_activeShader->SetModelUniformValue(f_model->GetMatrixRef());
+            m_activeShader->SetModelUniformValue(f_model->GetMatrix());
 
             if(f_model->HasSkeleton())
             {
-                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatricesVectorRef());
+                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatricesVector());
                 m_activeShader->SetAnimatedUniformValue(1U);
             }
             else m_activeShader->SetAnimatedUniformValue(0U);
 
-            for(auto iter : f_model->GetGeometry()->GetMaterialVectorRef())
+            for(auto iter : f_model->GetGeometry()->GetMaterialVector())
             {
                 if(iter->HasDepth()) EnableDepth();
                 else
@@ -218,7 +218,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
                 if(m_materialBind.y)
                 {
                     m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(iter->GetType()));
-                    m_activeShader->SetMaterialParamUniformValue(iter->GetParamsRef());
+                    m_activeShader->SetMaterialParamUniformValue(iter->GetParams());
                 }
                 iter->Draw(m_materialBind);
             }

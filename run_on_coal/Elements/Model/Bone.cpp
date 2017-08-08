@@ -89,8 +89,7 @@ void ROC::Bone::GenerateBindPose()
         m_matrix *= m_localMatrix;
     }
     m_bindMatrix = glm::inverse(m_matrix);
-    std::memcpy(&m_offsetMatrix, &m_matrix, sizeof(glm::mat4));
-    m_offsetMatrix *= m_bindMatrix;
+    m_offsetMatrix = g_IdentityMatrix;
 }
 void ROC::Bone::UpdateMatrix()
 {

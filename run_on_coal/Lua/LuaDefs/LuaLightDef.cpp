@@ -53,12 +53,8 @@ int ROC::LuaLightDef::GetParams(lua_State *f_vm)
     argStream.ReadElement(l_light);
     if(!argStream.HasErrors())
     {
-        glm::vec4 l_params;
-        l_light->GetParams(l_params);
-        argStream.PushNumber(l_params.x);
-        argStream.PushNumber(l_params.y);
-        argStream.PushNumber(l_params.z);
-        argStream.PushNumber(l_params.w);
+        const glm::vec4 &l_params = l_light->GetParams();
+        for(int i = 0; i < 4; i++) argStream.PushNumber(l_params[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -85,11 +81,8 @@ int ROC::LuaLightDef::GetColor(lua_State *f_vm)
     argStream.ReadElement(l_light);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_color;
-        l_light->GetColor(l_color);
-        argStream.PushNumber(l_color.x);
-        argStream.PushNumber(l_color.y);
-        argStream.PushNumber(l_color.z);
+        const glm::vec3& l_color = l_light->GetColor();
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_color[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -116,11 +109,8 @@ int ROC::LuaLightDef::GetDirection(lua_State *f_vm)
     argStream.ReadElement(l_light);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_dir;
-        l_light->GetDirection(l_dir);
-        argStream.PushNumber(l_dir.x);
-        argStream.PushNumber(l_dir.y);
-        argStream.PushNumber(l_dir.z);
+        const glm::vec3 &l_dir = l_light->GetDirection();
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_dir[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

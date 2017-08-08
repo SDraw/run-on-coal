@@ -88,10 +88,8 @@ int ROC::LuaDrawableDef::GetSize(lua_State *f_vm)
     argStream.ReadElement(l_drawable);
     if(!argStream.HasErrors())
     {
-        glm::ivec2 l_size;
-        l_drawable->GetSize(l_size);
-        argStream.PushInteger(l_size.x);
-        argStream.PushInteger(l_size.y);
+        const glm::ivec2 &l_size = l_drawable->GetSize();
+        for(int i = 0; i < 2; i++) argStream.PushInteger(l_size[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

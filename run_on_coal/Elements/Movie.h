@@ -7,6 +7,7 @@ namespace ROC
 class Movie final : public Drawable
 {
     sfe::Movie *m_movie;
+    glm::ivec2 m_size;
 public:
     inline unsigned int GetSampleRate() { return (m_movie ? m_movie->getSampleRate() : 0U); }
     inline unsigned int GetChannelCount() { return (m_movie ? m_movie->getChannelCount() : 0U); }
@@ -24,7 +25,7 @@ public:
     void SetTime(float f_val);
 
     inline bool IsTransparent() const { return true; }
-    void GetSize(glm::ivec2 &f_size) const;
+    inline const glm::ivec2& GetSize() const { return m_size; }
     inline int GetFiltering() const { return 0; }
 protected:
     Movie();

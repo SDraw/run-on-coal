@@ -69,10 +69,8 @@ void ROC::Collision::SetParentModel(Model *f_model)
 {
     if(f_model)
     {
-        glm::vec3 l_pos;
-        glm::quat l_rot;
-        f_model->GetPosition(l_pos);
-        f_model->GetRotation(l_rot);
+        const glm::vec3 &l_pos = f_model->GetPosition();
+        const glm::quat &l_rot = f_model->GetRotation();
         SetPosition(l_pos);
         SetRotation(l_rot);
         m_rigidBody->setUserPointer(f_model);
@@ -214,9 +212,8 @@ void ROC::Collision::GetAngularFactor(glm::vec3 &f_val)
 
 float ROC::Collision::GetMass()
 {
-    float l_mass = -1.f;
     float l_invMass = m_rigidBody->getInvMass();
-    l_mass = ((l_invMass == 0.f) ? 0.f : (1.f / l_invMass));
+    float l_mass = ((l_invMass == 0.f) ? 0.f : (1.f / l_invMass));
     return l_mass;
 }
 

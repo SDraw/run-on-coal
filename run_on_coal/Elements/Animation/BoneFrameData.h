@@ -13,10 +13,7 @@ public:
     BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec3 &f_scl);
     ~BoneFrameData();
 
-    inline bool IsEqual(BoneFrameData *f_data) const
-    {
-        return ((m_position == f_data->m_position) && (m_rotation == f_data->m_rotation) && (m_scale == f_data->m_scale));
-    }
+    bool IsEqual(BoneFrameData *f_data) const;
 
     void SetInterpolated(BoneFrameData *f_data, float f_blend);
     void SetInterpolated(BoneFrameData *f_leftData, BoneFrameData *f_rightData, float f_blend);

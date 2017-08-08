@@ -34,31 +34,26 @@ public:
     inline float GetAspectRatio() const { return m_aspectRatio; }
 
     void SetOrthoParams(const glm::vec4 &f_size);
-    inline void GetOrthoParams(glm::vec4 &f_size) { std::memcpy(&f_size, &m_orthoParams, sizeof(glm::vec4)); }
+    inline const glm::vec4& GetOrthoParams() const { return m_orthoParams; }
 
     void SetDepth(const glm::vec2 &f_depth);
-    inline void GetDepth(glm::vec2 &f_depth) { std::memcpy(&f_depth, &m_depth, sizeof(glm::vec2)); }
+    inline const glm::vec2& GetDepth() const { return m_depth; }
 
     void SetPosition(const glm::vec3 &f_pos);
-    inline void GetPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_viewPosition, sizeof(glm::vec3)); }
+    inline const glm::vec3& GetPosition() const { return m_viewPosition; }
 
     void SetDirection(const glm::vec3 &f_dir);
-    inline void GetDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir, &m_viewDirection, sizeof(glm::vec3)); }
+    inline const glm::vec3& GetDirection() const { return m_viewDirection; }
 
-    void GetViewMatrix(glm::mat4 &f_mat);
-    void GetProjectionMatrix(glm::mat4 &f_mat);
+    inline const glm::mat4& GetViewMatrix() const { return m_viewMatrix; }
+    inline const glm::mat4& GetProjectionMatrix() const { return m_projectionMatrix; }
 
     bool IsInFrustum(const glm::vec3 &f_pos, float f_radius);
 protected:
     explicit Camera(int f_type);
     ~Camera();
 
-    inline glm::vec3& GetPositionRef() { return m_viewPosition; }
-    inline glm::vec3& GetDirectionRef() { return m_viewDirection; }
-
     void UpdateMatrices();
-    inline glm::mat4& GetProjectionMatrixRef() { return m_projectionMatrix; }
-    inline glm::mat4& GetViewMatrixRef() { return m_viewMatrix; }
 
     friend class ElementManager;
     friend class RenderManager;

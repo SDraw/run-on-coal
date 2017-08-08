@@ -90,6 +90,7 @@ bool ROC::Animation::Load(const std::string &f_path)
                         l_interval.stop = l_frameIndex;
                         l_interval.value.m_rightData = new BoneFrameData(l_position, l_rotation, l_scale);
                         l_interval.value.m_duration = l_frameIndex*m_frameDelta - l_interval.value.m_startTime;
+                        l_interval.value.m_static = l_interval.value.m_leftData->IsEqual(l_interval.value.m_rightData);
                         l_intervals.push_back(l_interval);
 
                         l_interval.start = l_frameIndex;
@@ -124,13 +125,13 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
         if(!m_searchResult.empty())
         {
             keyframeData &l_keyframeData = m_searchResult.back().value;
-            if(!l_keyframeData.m_leftData->IsEqual(l_keyframeData.m_rightData))
+            if(l_keyframeData.m_static) f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
+            else
             {
                 float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
                 m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
                 f_bones[i]->SetFrameData(m_tempFrameData);
             }
-            else f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
 
             m_searchResult.clear();
         }

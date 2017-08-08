@@ -11,11 +11,11 @@ class Light final : public Element
     glm::vec4 m_params;
 public:
     inline void SetParams(const glm::vec4 &f_val) { std::memcpy(&m_params, &f_val, sizeof(glm::vec4)); }
-    inline void GetParams(glm::vec4 &f_val) { std::memcpy(&f_val, &m_params, sizeof(glm::vec4)); }
+    inline const glm::vec4& GetParams() const { return m_params; }
     inline void SetColor(const glm::vec3 &f_vec) { std::memcpy(&m_color, &f_vec, sizeof(glm::vec3)); }
-    inline void GetColor(glm::vec3 &f_vec) { std::memcpy(&f_vec, &m_color, sizeof(glm::vec3)); }
+    inline const glm::vec4& GetColor() const { return m_color; }
     inline void SetDirection(const glm::vec3 &f_vec) { std::memcpy(&m_direction, &f_vec, sizeof(glm::vec3)); }
-    inline void GetDirection(glm::vec3 &f_vec) { std::memcpy(&f_vec, &m_direction, sizeof(glm::vec3)); }
+    inline const glm::vec3& GetDirection() const { return m_direction; }
 protected:
     Light();
     ~Light();

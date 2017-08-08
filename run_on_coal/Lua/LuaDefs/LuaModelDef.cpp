@@ -110,8 +110,7 @@ int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_pos;
-        l_model->GetPosition(l_pos);
+        const glm::vec3& l_pos = l_model->GetPosition();
         for(int i=0; i < 3; i++) argStream.PushNumber(l_pos[i]);
     }
     else argStream.PushBoolean(false);
@@ -139,8 +138,7 @@ int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        glm::quat l_rot;
-        l_model->GetRotation(l_rot);
+        const glm::quat &l_rot = l_model->GetRotation();
         for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
     }
     else argStream.PushBoolean(false);
@@ -168,8 +166,7 @@ int ROC::LuaModelDef::GetScale(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_scale;
-        l_model->GetScale(l_scale);
+        const glm::vec3 &l_scale = l_model->GetScale();
         for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
     }
     else argStream.PushBoolean(false);

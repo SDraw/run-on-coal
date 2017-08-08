@@ -28,6 +28,7 @@ class Material final
     Texture *m_texture;
 public:
     inline unsigned char GetType() const { return m_type; }
+    inline const glm::vec4& GetParams() const { return m_params; }
 
     inline bool IsDoubleSided() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_DOUBLESIDE); }
     inline bool IsTransparent() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_TRANSPARENCY); }
@@ -50,7 +51,6 @@ protected:
     inline void SetType(unsigned char f_type) { m_type = f_type; }
 
     inline void SetParams(const glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
-    inline glm::vec4& GetParamsRef() { return m_params; }
 
     inline GLuint GetVAO() const { return m_VAO; }
     inline Texture* GetTexture() { return m_texture; }

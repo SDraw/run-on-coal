@@ -20,6 +20,7 @@ class Animation final : public Element
         BoneFrameData *m_rightData = nullptr;
         unsigned int m_startTime = 0U;
         unsigned int m_duration = 0U; // Duration between left and right keyframes in milliseconds
+        bool m_static = false;
     };
     std::vector<IntervalTree<keyframeData>*> m_boneIntervals;
     BoneFrameData *m_tempFrameData;

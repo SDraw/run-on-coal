@@ -55,8 +55,8 @@ int ROC::LuaCameraDef::Create(lua_State *f_vm)
         int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypesTable);
         if(l_type != -1)
         {
-            Camera *l_Camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(l_type);
-            l_Camera ? argStream.PushElement(l_Camera) : argStream.PushBoolean(false);
+            Camera *l_camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(l_type);
+            l_camera ? argStream.PushElement(l_camera) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
     }
@@ -66,14 +66,14 @@ int ROC::LuaCameraDef::Create(lua_State *f_vm)
 
 int ROC::LuaCameraDef::SetPosition(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
     {
-        l_Camera->SetPosition(l_pos);
+        l_camera->SetPosition(l_pos);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -81,16 +81,13 @@ int ROC::LuaCameraDef::SetPosition(lua_State *f_vm)
 }
 int ROC::LuaCameraDef::GetPosition(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_pos;
-        l_Camera->GetPosition(l_pos);
-        argStream.PushNumber(l_pos.x);
-        argStream.PushNumber(l_pos.y);
-        argStream.PushNumber(l_pos.z);
+        const glm::vec3 &l_pos = l_camera->GetPosition();
+        for(int i =0; i < 3; i++) argStream.PushNumber(l_pos[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -98,14 +95,14 @@ int ROC::LuaCameraDef::GetPosition(lua_State *f_vm)
 
 int ROC::LuaCameraDef::SetDirection(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     glm::vec3 l_dir;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
     if(!argStream.HasErrors())
     {
-        l_Camera->SetDirection(l_dir);
+        l_camera->SetDirection(l_dir);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -113,16 +110,13 @@ int ROC::LuaCameraDef::SetDirection(lua_State *f_vm)
 }
 int ROC::LuaCameraDef::GetDirection(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        glm::vec3 l_dir;
-        l_Camera->GetDirection(l_dir);
-        argStream.PushNumber(l_dir.x);
-        argStream.PushNumber(l_dir.y);
-        argStream.PushNumber(l_dir.z);
+        const glm::vec3 &l_dir = l_camera->GetDirection();
+        for(int i=0; i < 3;i++) argStream.PushNumber(l_dir[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -130,17 +124,17 @@ int ROC::LuaCameraDef::GetDirection(lua_State *f_vm)
 
 int ROC::LuaCameraDef::SetProjectionType(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     std::string l_text;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
         int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypesTable);
         if(l_type != -1)
         {
-            l_Camera->SetProjectionType(l_type);
+            l_camera->SetProjectionType(l_type);
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);
@@ -150,23 +144,23 @@ int ROC::LuaCameraDef::SetProjectionType(lua_State *f_vm)
 }
 int ROC::LuaCameraDef::GetProjectionType(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
-    !argStream.HasErrors() ? argStream.PushText(g_CameraTypesTable[l_Camera->GetProjectionType()]) : argStream.PushBoolean(false);
+    argStream.ReadElement(l_camera);
+    !argStream.HasErrors() ? argStream.PushText(g_CameraTypesTable[l_camera->GetProjectionType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
 int ROC::LuaCameraDef::SetFOV(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     float l_fov;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     argStream.ReadNumber(l_fov);
     if(!argStream.HasErrors())
     {
-        l_Camera->SetFOV(l_fov);
+        l_camera->SetFOV(l_fov);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -174,23 +168,23 @@ int ROC::LuaCameraDef::SetFOV(lua_State *f_vm)
 }
 int ROC::LuaCameraDef::GetFOV(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
-    !argStream.HasErrors() ? argStream.PushNumber(l_Camera->GetFOV()) : argStream.PushBoolean(false);
+    argStream.ReadElement(l_camera);
+    !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetFOV()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
 int ROC::LuaCameraDef::SetAspectRatio(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     float l_ratio;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     argStream.ReadNumber(l_ratio);
     if(!argStream.HasErrors())
     {
-        l_Camera->SetAspectRatio(l_ratio);
+        l_camera->SetAspectRatio(l_ratio);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -198,23 +192,23 @@ int ROC::LuaCameraDef::SetAspectRatio(lua_State *f_vm)
 }
 int ROC::LuaCameraDef::GetAspectRatio(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
-    !argStream.HasErrors() ? argStream.PushNumber(l_Camera->GetAspectRatio()) : argStream.PushBoolean(false);
+    argStream.ReadElement(l_camera);
+    !argStream.HasErrors() ? argStream.PushNumber(l_camera->GetAspectRatio()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
 int ROC::LuaCameraDef::SetOrthoParams(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     glm::vec4 l_params;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_params[i]);
     if(!argStream.HasErrors())
     {
-        l_Camera->SetOrthoParams(l_params);
+        l_camera->SetOrthoParams(l_params);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -222,17 +216,13 @@ int ROC::LuaCameraDef::SetOrthoParams(lua_State *f_vm)
 }
 int ROC::LuaCameraDef::GetOrthoParams(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        glm::vec4 l_size;
-        l_Camera->GetOrthoParams(l_size);
-        argStream.PushNumber(l_size.x);
-        argStream.PushNumber(l_size.y);
-        argStream.PushNumber(l_size.z);
-        argStream.PushNumber(l_size.w);
+        const glm::vec4 &l_size = l_camera->GetOrthoParams();
+        for(int i = 0; i < 4; i++) argStream.PushNumber(l_size[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -240,14 +230,14 @@ int ROC::LuaCameraDef::GetOrthoParams(lua_State *f_vm)
 
 int ROC::LuaCameraDef::SetDepth(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     glm::vec2 l_depth;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_depth[i]);
     if(!argStream.HasErrors())
     {
-        l_Camera->SetDepth(l_depth);
+        l_camera->SetDepth(l_depth);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -255,15 +245,13 @@ int ROC::LuaCameraDef::SetDepth(lua_State *f_vm)
 }
 int ROC::LuaCameraDef::GetDepth(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        glm::vec2 l_depth;
-        l_Camera->GetDepth(l_depth);
-        argStream.PushNumber(l_depth.x);
-        argStream.PushNumber(l_depth.y);
+        const glm::vec2 &l_depth = l_camera->GetDepth();
+        for(int i=0; i < 2;i++) argStream.PushNumber(l_depth[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -271,15 +259,13 @@ int ROC::LuaCameraDef::GetDepth(lua_State *f_vm)
 
 int ROC::LuaCameraDef::GetViewMatrix(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        glm::mat4 l_mat;
-        l_Camera->GetViewMatrix(l_mat);
-
-        float *l_matPtr = glm::value_ptr(l_mat);
+        const glm::mat4 &l_mat = l_camera->GetViewMatrix();
+        const float *l_matPtr = glm::value_ptr(l_mat);
         for(int i = 0; i < 16; i++) argStream.PushNumber(l_matPtr[i]);
     }
     else argStream.PushBoolean(false);
@@ -288,15 +274,13 @@ int ROC::LuaCameraDef::GetViewMatrix(lua_State *f_vm)
 
 int ROC::LuaCameraDef::GetProjectionMatrix(lua_State *f_vm)
 {
-    Camera *l_Camera;
+    Camera *l_camera;
     ArgReader argStream(f_vm);
-    argStream.ReadElement(l_Camera);
+    argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        glm::mat4 l_mat;
-        l_Camera->GetProjectionMatrix(l_mat);
-
-        float *l_matPtr = glm::value_ptr(l_mat);
+        const glm::mat4 &l_mat = l_camera->GetProjectionMatrix();
+        const float *l_matPtr = glm::value_ptr(l_mat);
         for(int i = 0; i < 16; i++) argStream.PushNumber(l_matPtr[i]);
     }
     else argStream.PushBoolean(false);

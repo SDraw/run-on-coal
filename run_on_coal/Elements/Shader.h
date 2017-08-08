@@ -67,7 +67,7 @@ protected:
     Shader();
     ~Shader();
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
-    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
+    inline const std::string& GetError() const { return m_error; }
 
     void SetUniformValue(const std::string &f_uniform, unsigned int f_value);
     void SetUniformValue(const std::string &f_uniform, const glm::uvec2 &f_value);
