@@ -85,6 +85,7 @@ ROC::RenderManager::~RenderManager()
 {
     delete m_quad;
     delete m_quad3D;
+    delete m_dummyTexture;
     delete m_argument;
     Font::DestroyVAO();
     Font::DestroyLibrary();
