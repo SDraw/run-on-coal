@@ -12,6 +12,7 @@ class Quad3D;
 class Drawable;
 class Movie;
 class RenderTarget;
+class Texture;
 class Font;
 class LuaArguments;
 typedef void(*OnRenderCallback)(void);
@@ -34,6 +35,7 @@ class RenderManager final
     RenderTarget *m_activeTarget;
     Quad *m_quad;
     Quad3D *m_quad3D;
+    Texture *m_dummyTexture;
 
     std::vector<Movie*> m_movieVector;
     std::vector<Movie*>::iterator m_movieVectorEnd;

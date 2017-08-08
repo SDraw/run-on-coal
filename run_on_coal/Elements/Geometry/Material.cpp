@@ -123,16 +123,19 @@ void ROC::Material::LoadTexture(const std::string &f_path)
     if(!m_texture)
     {
         m_texture = new Texture();
-        m_texture->Load(f_path, IsTransparent() ? ROC_TEXTURE_TYPE_RGBA : ROC_TEXTURE_TYPE_RGB, GetFilteringType(), IsCompressed());
+        if(!m_texture->Load(f_path, IsTransparent() ? ROC_TEXTURE_TYPE_RGBA : ROC_TEXTURE_TYPE_RGB, GetFilteringType(), IsCompressed()))
+        {
+            delete m_texture;
+            m_texture = nullptr;
+        }
     }
 }
 
-void ROC::Material::Draw(const glm::bvec2 &f_bind)
+void ROC::Material::Draw(bool f_bind)
 {
     if(m_VAO != 0U)
     {
-        if(f_bind.x && m_texture) m_texture->Bind();
-        if(f_bind.y) glBindVertexArray(m_VAO);
+        if(f_bind) glBindVertexArray(m_VAO);
         glDrawArrays(GL_TRIANGLES, 0, m_verticesCount);
     }
 }

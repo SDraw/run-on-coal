@@ -13,6 +13,7 @@
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader.h"
+#include "Elements/Texture.h"
 #include "Lua/LuaArguments.h"
 #include "Utils/Pool.h"
 
@@ -21,7 +22,6 @@
 #include "Managers/SfmlManager.h"
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
-#include "Elements/Texture.h"
 
 namespace ROC
 {
@@ -56,6 +56,10 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_activeTarget = nullptr;
     m_quad = new Quad();
     m_quad3D = new Quad3D();
+
+    m_dummyTexture = new Texture();
+    m_dummyTexture->LoadDummy();
+
     m_lastVAO = 0U;
     m_lastTexture = 0U;
     m_depthEnabled = true;
@@ -213,14 +217,17 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
                 iter->IsTransparent() ? EnableBlending() : DisableBlending();
                 iter->IsDoubleSided() ? DisableCulling() : EnableCulling();
 
-                m_materialBind.x = CompareLastTexture(iter->GetTexture()->GetTextureID()) && f_texturize;
+                Texture *l_texture = iter->HasTexture() ? iter->GetTexture() : m_dummyTexture;
+
+                m_materialBind.x = CompareLastTexture(l_texture->GetTextureID()) && f_texturize;
+                if(m_materialBind.x) l_texture->Bind();
                 m_materialBind.y = CompareLastVAO(iter->GetVAO());
                 if(m_materialBind.y)
                 {
                     m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(iter->GetType()));
                     m_activeShader->SetMaterialParamUniformValue(iter->GetParams());
                 }
-                iter->Draw(m_materialBind);
+                iter->Draw(m_materialBind.y);
             }
         }
     }

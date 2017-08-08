@@ -24,8 +24,9 @@ public:
 protected:
     Texture();
     ~Texture();
-    void Load(const std::string &f_path, int f_type, int f_filter, bool f_compress);
-    void LoadCubemap(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
+    bool Load(const std::string &f_path, int f_type, int f_filter, bool f_compress);
+    bool LoadCubemap(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
+    bool LoadDummy();
 
     inline GLuint GetTextureID() const { return m_texture; }
 

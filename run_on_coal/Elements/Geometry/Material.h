@@ -36,6 +36,7 @@ public:
     inline bool HasDepth() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_DEPTH); }
     inline bool IsCompressed() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_COMPRESSION); }
     inline unsigned char GetFilteringType() const { return ((m_type&ROC_MATERIAL_BIT_FILTER) >> 4); }
+    inline bool HasTexture() const { return (m_texture != nullptr); }
 protected:
     Material();
     ~Material();
@@ -55,7 +56,7 @@ protected:
     inline GLuint GetVAO() const { return m_VAO; }
     inline Texture* GetTexture() { return m_texture; }
 
-    void Draw(const glm::bvec2 &f_bind);
+    void Draw(bool f_bind);
 
     friend class RenderManager;
     friend class Geometry;
