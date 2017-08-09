@@ -140,14 +140,18 @@ void ROC::NetworkManager::DoPulse()
                     unsigned int l_textSize;
                     std::string l_stringData;
                     l_dataIn.IgnoreBytes(sizeof(unsigned char));
-                    l_dataIn.Read(l_textSize);
-                    l_stringData.resize(l_textSize);
-                    l_dataIn.Read(const_cast<char*>(l_stringData.data()), l_textSize);
-                    if(m_dataCallback) (*m_dataCallback)(l_stringData);
+                    if(l_dataIn.Read(l_textSize))
+                    {
+                        l_stringData.resize(l_textSize);
+                        if(l_dataIn.Read(&l_stringData[0], l_textSize))
+                        {
+                            if(m_dataCallback) (*m_dataCallback)(l_stringData);
 
-                    m_argument->PushArgument(l_stringData);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
-                    m_argument->Clear();
+                            m_argument->PushArgument(l_stringData);
+                            m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
+                            m_argument->Clear();
+                        }
+                    }
                 } break;
             }
         }

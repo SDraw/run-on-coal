@@ -36,6 +36,8 @@ protected:
 
     void GenerateBindPose();
     void SetFrameData(BoneFrameData *f_data);
+    inline void SetMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_matrix)); }
+    inline void SetOffsetMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_offsetMatrix)); }
     inline void ForceRebuildState(bool f_state) { m_rebuilded = f_state; }
     void EnableBlending(float f_blend);
     void UpdateMatrix();

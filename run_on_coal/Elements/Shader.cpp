@@ -101,7 +101,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     GLint l_logSize = 0;
                     glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
                     m_error.resize(l_logSize);
-                    glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
+                    glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, &m_error[0]);
                     m_error.insert(0U, "Vertex shader error: ");
                     glDeleteShader(l_vertexShader);
                     l_vertexShader = 0U;
@@ -132,7 +132,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     GLint l_logSize = 0;
                     glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
                     m_error.resize(l_logSize);
-                    glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
+                    glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, &m_error[0]);
                     m_error.insert(0U, "Fragment shader error: ");
                     glDeleteShader(l_fragmentShader);
                     l_fragmentShader = 0U;
@@ -165,7 +165,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                         GLint l_logSize = 0;
                         glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
                         m_error.resize(l_logSize);
-                        glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, const_cast<GLchar*>(m_error.data()));
+                        glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, &m_error[0]);
                         m_error.insert(0U, "Geometry shader error: ");
                         glDeleteShader(l_geometryShader);
                         l_geometryShader = 0U;
@@ -192,7 +192,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     GLint l_logLength = 0;
                     glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &l_logLength);
                     m_error.resize(l_logLength);
-                    glGetProgramInfoLog(m_program, l_logLength, &l_logLength, const_cast<GLchar*>(m_error.data()));
+                    glGetProgramInfoLog(m_program, l_logLength, &l_logLength, &m_error[0]);
                     glDeleteProgram(m_program);
                     m_program = 0U;
                 }

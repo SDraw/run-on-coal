@@ -16,7 +16,7 @@ ROC::OnServerStartCallback ROC::Core::ms_serverStartCallback = nullptr;
 ROC::Core::Core()
 {
     std::string l_appPath(_MAX_PATH, '\0');
-    _getcwd(const_cast<char*>(l_appPath.data()), _MAX_PATH);
+    _getcwd(&l_appPath[0], _MAX_PATH);
     l_appPath.erase(std::remove(l_appPath.begin(), l_appPath.end(), '\0'), l_appPath.end());
 
     std::regex l_regex("\\\\");

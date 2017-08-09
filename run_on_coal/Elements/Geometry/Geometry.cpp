@@ -43,7 +43,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
         {
             l_file.open(f_path, std::ios::binary);
             std::string l_header(3, '\0');
-            l_file.read(const_cast<char*>(l_header.data()), 3);
+            l_file.read(&l_header[0], 3);
             if(!l_header.compare("ROC"))
             {
                 l_file.read(reinterpret_cast<char*>(&l_type), sizeof(unsigned char));
@@ -116,7 +116,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     if(l_difTextureLength)
                     {
                         l_difTexture.resize(l_difTextureLength);
-                        l_file.read(const_cast<char*>(l_difTexture.data()), l_difTextureLength);
+                        l_file.read(&l_difTexture[0], l_difTextureLength);
                     }
 
                     std::vector<int> l_faceIndex;
@@ -203,7 +203,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         if(l_boneNameLength)
                         {
                             l_boneData->m_name.resize(l_boneNameLength);
-                            l_file.read(const_cast<char*>(l_boneData->m_name.data()), l_boneNameLength);
+                            l_file.read(&l_boneData->m_name[0], l_boneNameLength);
                         }
                         l_file.read(reinterpret_cast<char*>(&l_boneData->m_parent), sizeof(int));
                         l_file.read(reinterpret_cast<char*>(&l_boneData->m_position), sizeof(glm::vec3));

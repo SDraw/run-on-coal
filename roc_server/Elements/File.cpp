@@ -64,7 +64,7 @@ size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
     {
         std::string l_data;
         l_data.resize(f_lenght);
-        l_read = static_cast<size_t>(m_file->read(const_cast<char*>(l_data.data()), f_lenght).gcount());
+        l_read = static_cast<size_t>(m_file->read(&l_data[0], f_lenght).gcount());
         if(l_read > 0U) f_data.assign(l_data.begin(), l_data.begin() + l_read);
     }
     return l_read;

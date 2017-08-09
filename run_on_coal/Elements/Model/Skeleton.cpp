@@ -356,10 +356,10 @@ void ROC::Skeleton::UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled)
                     Bone *l_bone = m_boneVector[iter1->m_boneID];
                     l_transform1.mult(iter1->m_rigidBody->getCenterOfMassTransform(), iter1->m_offset[ROC_SKELETON_TRANSFORMATION_INVERSE]);
                     l_transform2.mult(l_modelInv, l_transform1);
-                    l_transform2.getOpenGLMatrix(const_cast<float*>(glm::value_ptr(l_bone->GetMatrix())));
+                    l_bone->SetMatrix(l_transform2);
                     l_bone->ForceRebuildState(true);
                     l_transform1.mult(l_transform2, iter1->m_offset[ROC_SKELETON_TRANSFORMATION_BIND]);
-                    l_transform1.getOpenGLMatrix(const_cast<float*>(glm::value_ptr(l_bone->GetOffsetMatrix())));
+                    l_bone->SetOffsetMatrix(l_transform1);
                     std::memcpy(&m_boneMatrices[iter1->m_boneID], &l_bone->GetOffsetMatrix(), sizeof(glm::mat4));
                 }
             }
