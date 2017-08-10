@@ -295,7 +295,7 @@ int ROC::LuaCameraDef::GetViewProjectionMatrix(lua_State *f_vm)
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        const glm::mat4 &l_mat = l_camera->GeViewProjectionMatrix();
+        const glm::mat4 &l_mat = l_camera->GetViewProjectionMatrix();
         const float *l_matPtr = glm::value_ptr(l_mat);
         for(int i = 0; i < 16; i++) argStream.PushNumber(l_matPtr[i]);
     }

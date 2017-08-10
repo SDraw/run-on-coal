@@ -20,10 +20,6 @@ protected:
     Light();
     ~Light();
 
-    inline glm::vec4& GetParamsRef() { return m_params; }
-    inline glm::vec4& GetColorRef() { return m_color; }
-    inline glm::vec3& GetDirectionRef() { return m_direction; }
-
     friend class ElementManager;
     friend class RenderManager;
 };

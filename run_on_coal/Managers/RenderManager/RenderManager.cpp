@@ -140,17 +140,17 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             if(m_activeShader)
             {
                 Camera *l_camera = m_activeScene->GetCamera();
-                if(l_camera) l_camera->UpdateMatrices();
+                if(l_camera) l_camera->Update();
                 m_activeShader->SetProjectionUniformValue(l_camera ? l_camera->GetProjectionMatrix() : g_EmptyMat4);
                 m_activeShader->SetViewUniformValue(l_camera ? l_camera->GetViewMatrix() : g_EmptyMat4);
-                m_activeShader->SetViewProjectionUniformValue(l_camera ? l_camera->GeViewProjectionMatrix() : g_EmptyMat4);
+                m_activeShader->SetViewProjectionUniformValue(l_camera ? l_camera->GetViewProjectionMatrix() : g_EmptyMat4);
                 m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPosition() : g_DefaultPosition);
                 m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirection() : g_DefaultPosition);
 
                 Light *l_light = m_activeScene->GetLight();
-                m_activeShader->SetLightColorUniformValue(l_light ? l_light->GetColorRef() : g_EmptyVec4);
-                m_activeShader->SetLightDirectionUniformValue(l_light ? l_light->GetDirectionRef() : g_DefaultPosition);
-                m_activeShader->SetLightParamUniformValue(l_light ? l_light->GetParamsRef() : g_EmptyVec4);
+                m_activeShader->SetLightColorUniformValue(l_light ? l_light->GetColor() : g_EmptyVec4);
+                m_activeShader->SetLightDirectionUniformValue(l_light ? l_light->GetDirection() : g_DefaultPosition);
+                m_activeShader->SetLightParamUniformValue(l_light ? l_light->GetParams() : g_EmptyVec4);
             }
         }
     }

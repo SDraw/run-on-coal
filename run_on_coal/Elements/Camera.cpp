@@ -89,7 +89,7 @@ void ROC::Camera::SetDepth(const glm::vec2 &f_depth)
     }
 }
 
-void ROC::Camera::UpdateMatrices()
+void ROC::Camera::Update()
 {
     if(m_rebuildView) m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, glm::vec3(0.f, 1.f, 0.f));
     if(m_rebuildProjection)
@@ -113,7 +113,7 @@ void ROC::Camera::UpdateMatrices()
         m_planes[3] = glm::row(m_viewProjectionMatrix, 3) - glm::row(m_viewProjectionMatrix, 1);
         m_planes[4] = glm::row(m_viewProjectionMatrix, 3) + glm::row(m_viewProjectionMatrix, 2);
         m_planes[5] = glm::row(m_viewProjectionMatrix, 3) - glm::row(m_viewProjectionMatrix, 2);
-        for(auto &iter : m_planes) iter /= glm::sqrt(iter.x*iter.x + iter.y*iter.y + iter.z*iter.z);
+        for(auto &iter : m_planes) iter /= sqrtf(iter.x*iter.x + iter.y*iter.y + iter.z*iter.z);
 
         m_rebuildView = false;
         m_rebuildProjection = false;

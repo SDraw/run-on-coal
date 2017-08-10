@@ -48,14 +48,14 @@ public:
 
     inline const glm::mat4& GetViewMatrix() const { return m_viewMatrix; }
     inline const glm::mat4& GetProjectionMatrix() const { return m_projectionMatrix; }
-    inline const glm::mat4& GeViewProjectionMatrix() const { return m_viewProjectionMatrix; }
+    inline const glm::mat4& GetViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
     bool IsInFrustum(const glm::vec3 &f_pos, float f_radius);
 protected:
     explicit Camera(int f_type);
     ~Camera();
 
-    void UpdateMatrices();
+    void Update();
 
     friend class ElementManager;
     friend class RenderManager;
