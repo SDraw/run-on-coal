@@ -13,6 +13,7 @@ class Shader final : public Element
 
     GLint m_projectionUniform;
     GLint m_viewUniform;
+    GLint m_viewProjectionUniform;
     GLint m_modelUniform;
     GLint m_cameraPositionUniform;
     GLint m_cameraDirectionUniform;
@@ -28,6 +29,7 @@ class Shader final : public Element
 
     glm::mat4 m_projectionUniformValue;
     glm::mat4 m_viewUniformValue;
+    glm::mat4 m_viewProjectionUniformValue;
     glm::mat4 m_modelUniformValue;
     glm::vec3 m_cameraPositionUniformValue;
     glm::vec3 m_cameraDirectionUniformValue;
@@ -95,6 +97,7 @@ protected:
 
     void SetProjectionUniformValue(const glm::mat4 &f_value);
     void SetViewUniformValue(const glm::mat4 &f_value);
+    void SetViewProjectionUniformValue(const glm::mat4 &f_value);
     void SetModelUniformValue(const glm::mat4 &f_value);
     void SetCameraPositionUniformValue(const glm::vec3 &f_value);
     void SetCameraDirectionUniformValue(const glm::vec3 &f_value);

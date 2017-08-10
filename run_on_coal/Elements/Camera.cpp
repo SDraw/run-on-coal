@@ -19,6 +19,7 @@ ROC::Camera::Camera(int f_type)
     m_orthoParams = glm::vec4(-1.f, 1.f, -1.f, 1.f);
     m_depth = glm::vec2(1.f, 10.f);
     m_projectionMatrix = glm::perspective(m_fov, m_aspectRatio, m_depth.x, m_depth.y);
+    m_viewProjectionMatrix = m_viewMatrix*m_projectionMatrix;
 
     m_rebuildView = false;
     m_rebuildProjection = false;
@@ -105,15 +106,15 @@ void ROC::Camera::UpdateMatrices()
     }
     if(m_rebuildView || m_rebuildProjection)
     {
-        glm::mat4 l_mat = m_projectionMatrix*m_viewMatrix;
-        m_planes[0] = glm::row(l_mat, 3) + glm::row(l_mat, 0);
-        m_planes[1] = glm::row(l_mat, 3) - glm::row(l_mat, 0);
-        m_planes[2] = glm::row(l_mat, 3) + glm::row(l_mat, 1);
-        m_planes[3] = glm::row(l_mat, 3) - glm::row(l_mat, 1);
-        m_planes[4] = glm::row(l_mat, 3) + glm::row(l_mat, 2);
-        m_planes[5] = glm::row(l_mat, 3) - glm::row(l_mat, 2);
-
+        m_viewProjectionMatrix = m_projectionMatrix*m_viewMatrix;
+        m_planes[0] = glm::row(m_viewProjectionMatrix, 3) + glm::row(m_viewProjectionMatrix, 0);
+        m_planes[1] = glm::row(m_viewProjectionMatrix, 3) - glm::row(m_viewProjectionMatrix, 0);
+        m_planes[2] = glm::row(m_viewProjectionMatrix, 3) + glm::row(m_viewProjectionMatrix, 1);
+        m_planes[3] = glm::row(m_viewProjectionMatrix, 3) - glm::row(m_viewProjectionMatrix, 1);
+        m_planes[4] = glm::row(m_viewProjectionMatrix, 3) + glm::row(m_viewProjectionMatrix, 2);
+        m_planes[5] = glm::row(m_viewProjectionMatrix, 3) - glm::row(m_viewProjectionMatrix, 2);
         for(auto &iter : m_planes) iter /= glm::sqrt(iter.x*iter.x + iter.y*iter.y + iter.z*iter.z);
+
         m_rebuildView = false;
         m_rebuildProjection = false;
     }

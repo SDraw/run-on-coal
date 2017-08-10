@@ -378,7 +378,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
 
             case Element::ElementType::GeometryElement:
             {
-                Geometry *l_geometry = dynamic_cast<Geometry*>(f_element);
+                Geometry *l_geometry = reinterpret_cast<Geometry*>(f_element);
                 if(!l_geometry->IsAsyncLoad() || l_geometry->IsReleased())
                 {
                     m_core->GetInheritManager()->RemoveParentRelations(f_element);

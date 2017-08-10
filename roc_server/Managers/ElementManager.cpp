@@ -86,8 +86,8 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
     return l_result;
 }
 
-void ROC::ElementManager::DestroyElementByPointer(void *f_element)
+void ROC::ElementManager::DestroyElementByPointer(void *f_ptr)
 {
     //Called only at the end of work
-    delete reinterpret_cast<Element*>(f_element);
+    delete reinterpret_cast<Element*>(f_ptr);
 }

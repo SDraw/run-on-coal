@@ -28,8 +28,8 @@ namespace ROC
 
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::mat4 g_IdentityMatrix;
-const glm::vec4 g_EmptyVec4(0.f);
-const glm::mat4 g_EmptyMat4(0.f);
+extern const glm::vec4 g_EmptyVec4;
+extern const glm::mat4 g_EmptyMat4;
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
 
 }
@@ -143,6 +143,7 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
                 if(l_camera) l_camera->UpdateMatrices();
                 m_activeShader->SetProjectionUniformValue(l_camera ? l_camera->GetProjectionMatrix() : g_EmptyMat4);
                 m_activeShader->SetViewUniformValue(l_camera ? l_camera->GetViewMatrix() : g_EmptyMat4);
+                m_activeShader->SetViewProjectionUniformValue(l_camera ? l_camera->GeViewProjectionMatrix() : g_EmptyMat4);
                 m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPosition() : g_DefaultPosition);
                 m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirection() : g_DefaultPosition);
 

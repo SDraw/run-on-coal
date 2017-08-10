@@ -22,6 +22,7 @@ class LuaCameraDef final
     static int GetDepth(lua_State *f_vm);
     static int GetViewMatrix(lua_State *f_vm);
     static int GetProjectionMatrix(lua_State *f_vm);
+    static int GetViewProjectionMatrix(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

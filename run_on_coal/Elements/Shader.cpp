@@ -12,13 +12,16 @@ namespace ROC
 {
 
 const std::vector<std::string> g_DefaultUniformsTable = {
-    "gProjectionMatrix", "gViewMatrix", "gModelMatrix", "gAnimated", "gBonesUniform", "gBoneMatrix",
+    "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBonesUniform", "gBoneMatrix",
     "gLightColor", "gLightDirection", "gLightParam",
     "gCameraPosition", "gCameraDirection",
     "gMaterialType", "gMaterialParam",
     "gTexture0", "gColor",
     "gTime"
 };
+extern const glm::vec3 g_EmptyVec3;
+extern const glm::vec4 g_EmptyVec4;
+extern const glm::mat4 g_EmptyMat4;
 
 }
 
@@ -34,6 +37,7 @@ ROC::Shader::Shader()
 
     m_projectionUniform = -1;
     m_viewUniform = -1;
+    m_viewProjectionUniform = -1;
     m_modelUniform = -1;
     m_cameraPositionUniform = -1;
     m_cameraDirectionUniform = -1;
@@ -47,20 +51,21 @@ ROC::Shader::Shader()
     m_timeUniform = -1;
     m_colorUniform = -1;
 
-    m_projectionUniformValue = glm::mat4(0.f);
-    m_viewUniformValue = glm::mat4(0.f);
-    m_modelUniformValue = glm::mat4(0.f);
-    m_cameraPositionUniformValue = glm::vec3(0.f);
-    m_cameraDirectionUniformValue = glm::vec3(0.f);
+    m_projectionUniformValue = g_EmptyMat4;
+    m_viewUniformValue = g_EmptyMat4;
+    m_viewProjectionUniformValue = g_EmptyMat4;
+    m_modelUniformValue = g_EmptyMat4;
+    m_cameraPositionUniformValue = g_EmptyVec3;
+    m_cameraDirectionUniformValue = g_EmptyVec3;
     m_lightingUniformValue = 0U;
-    m_lightColorUniformValue = glm::vec4(0.f);
-    m_lightDirectionUniformValue = glm::vec3(0.f);
-    m_lightParamUniformValue = glm::vec4(0.f);
-    m_materialParamUniformValue = glm::vec4(0.f);
+    m_lightColorUniformValue = g_EmptyVec4;
+    m_lightDirectionUniformValue = g_EmptyVec3;
+    m_lightParamUniformValue = g_EmptyVec4;
+    m_materialParamUniformValue = g_EmptyVec4;
     m_materialTypeUniformValue = 0;
     m_animatedUniformValue = 0U;
     m_timeUniformValue = 0.f;
-    m_colorUniformValue = glm::vec4(0.f);
+    m_colorUniformValue = g_EmptyVec4;
 
     m_uniformMapEnd = m_uniformMap.end();
 
@@ -225,6 +230,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     //Matrices
     m_projectionUniform = glGetUniformLocation(m_program, "gProjectionMatrix");
     m_viewUniform = glGetUniformLocation(m_program, "gViewMatrix");
+    m_viewProjectionUniform = glGetUniformLocation(m_program, "gViewProjectionMatrix");
     m_modelUniform = glGetUniformLocation(m_program, "gModelMatrix");
     //Vectors
     m_cameraPositionUniform = glGetUniformLocation(m_program, "gCameraPosition");
@@ -387,6 +393,17 @@ void ROC::Shader::SetViewUniformValue(const glm::mat4 &f_value)
         {
             std::memcpy(&m_viewUniformValue, &f_value, sizeof(glm::mat4));
             glUniformMatrix4fv(m_viewUniform, 1, GL_FALSE, glm::value_ptr(m_viewUniformValue));
+        }
+    }
+}
+void ROC::Shader::SetViewProjectionUniformValue(const glm::mat4 &f_value)
+{
+    if(m_viewProjectionUniform != -1)
+    {
+        if(std::memcmp(&m_viewProjectionUniformValue, &f_value, sizeof(glm::mat4)) != 0)
+        {
+            std::memcpy(&m_viewProjectionUniformValue, &f_value, sizeof(glm::mat4));
+            glUniformMatrix4fv(m_viewProjectionUniform, 1, GL_FALSE, glm::value_ptr(m_viewProjectionUniformValue));
         }
     }
 }

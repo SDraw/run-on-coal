@@ -76,13 +76,13 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::ModelElement:
-                    dynamic_cast<Model*>(f_child)->SetParent(nullptr);
+                    reinterpret_cast<Model*>(f_child)->SetParent(nullptr);
                     break;
                 case Element::ElementType::GeometryElement:
-                    dynamic_cast<Model*>(f_child)->SetGeometry(nullptr);
+                    reinterpret_cast<Model*>(f_child)->SetGeometry(nullptr);
                     break;
                 case Element::ElementType::AnimationElement:
-                    dynamic_cast<Model*>(f_child)->SetAnimation(nullptr);
+                    reinterpret_cast<Model*>(f_child)->SetAnimation(nullptr);
                     break;
             }
         } break;
@@ -92,8 +92,8 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             {
                 case Element::ElementType::ModelElement:
                 {
-                    dynamic_cast<Collision*>(f_child)->SetParentModel(nullptr);
-                    dynamic_cast<Model*>(f_parent)->SetCollision(nullptr);
+                    reinterpret_cast<Collision*>(f_child)->SetParentModel(nullptr);
+                    reinterpret_cast<Model*>(f_parent)->SetCollision(nullptr);
                 } break;
             }
         } break;
@@ -102,7 +102,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::SceneElement:
-                    dynamic_cast<Scene*>(f_parent)->SetCamera(nullptr);
+                    reinterpret_cast<Scene*>(f_parent)->SetCamera(nullptr);
                     break;
             }
         } break;
@@ -111,7 +111,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::SceneElement:
-                    dynamic_cast<Scene*>(f_parent)->SetLight(nullptr);
+                    reinterpret_cast<Scene*>(f_parent)->SetLight(nullptr);
                     break;
             }
         } break;
@@ -120,7 +120,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DetachFromShader(dynamic_cast<Shader*>(f_parent), dynamic_cast<Drawable*>(f_child));
+                    m_core->GetRenderManager()->DetachFromShader(reinterpret_cast<Shader*>(f_parent), reinterpret_cast<Drawable*>(f_child));
                     break;
             }
         } break;

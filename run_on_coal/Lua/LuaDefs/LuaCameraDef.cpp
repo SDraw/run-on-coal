@@ -41,6 +41,7 @@ void ROC::LuaCameraDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "getDepth", GetDepth);
     LuaUtils::AddClassMethod(f_vm, "getViewMatrix", GetViewMatrix);
     LuaUtils::AddClassMethod(f_vm, "getProjectionMatrix", GetProjectionMatrix);
+    LuaUtils::AddClassMethod(f_vm, "getViewProjectionMatrix", GetViewProjectionMatrix);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
@@ -280,6 +281,21 @@ int ROC::LuaCameraDef::GetProjectionMatrix(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         const glm::mat4 &l_mat = l_camera->GetProjectionMatrix();
+        const float *l_matPtr = glm::value_ptr(l_mat);
+        for(int i = 0; i < 16; i++) argStream.PushNumber(l_matPtr[i]);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaCameraDef::GetViewProjectionMatrix(lua_State *f_vm)
+{
+    Camera *l_camera;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_camera);
+    if(!argStream.HasErrors())
+    {
+        const glm::mat4 &l_mat = l_camera->GeViewProjectionMatrix();
         const float *l_matPtr = glm::value_ptr(l_mat);
         for(int i = 0; i < 16; i++) argStream.PushNumber(l_matPtr[i]);
     }

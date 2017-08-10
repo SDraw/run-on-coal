@@ -14,6 +14,7 @@ class Camera final : public Element
     glm::vec3 m_viewDirection;
     glm::mat4 m_viewMatrix;
     glm::mat4 m_projectionMatrix;
+    glm::mat4 m_viewProjectionMatrix;
     bool m_rebuildView;
     bool m_rebuildProjection;
 
@@ -47,6 +48,7 @@ public:
 
     inline const glm::mat4& GetViewMatrix() const { return m_viewMatrix; }
     inline const glm::mat4& GetProjectionMatrix() const { return m_projectionMatrix; }
+    inline const glm::mat4& GeViewProjectionMatrix() const { return m_viewProjectionMatrix; }
 
     bool IsInFrustum(const glm::vec3 &f_pos, float f_radius);
 protected:
