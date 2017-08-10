@@ -65,10 +65,8 @@ void ROC::Bone::EnableBlending(float f_blend)
 void ROC::Bone::GenerateBindPose()
 {
     btTransform l_transform = btTransform::getIdentity();
-    btVector3 l_position(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z);
-    l_transform.setOrigin(l_position);
-    btQuaternion l_rotation(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w);
-    l_transform.setRotation(l_rotation);
+    l_transform.setOrigin(btVector3(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z));
+    l_transform.setRotation(btQuaternion(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w));
     l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
 
     bool l_useScale = false;
@@ -97,10 +95,8 @@ void ROC::Bone::UpdateMatrix()
     if(m_rebuildMatrix)
     {
         btTransform l_transform = btTransform::getIdentity();
-        btVector3 l_position(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z);
-        l_transform.setOrigin(l_position);
-        btQuaternion l_rotation(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w);
-        l_transform.setRotation(l_rotation);
+        l_transform.setOrigin(btVector3(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z));
+        l_transform.setRotation(btQuaternion(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w));
         l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
 
         bool l_useScale = false;

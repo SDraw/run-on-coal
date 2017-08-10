@@ -20,6 +20,7 @@ class Model final : public Element
     glm::mat4 m_localMatrix;
     glm::mat4 m_matrix;
     float m_boundSphereRaduis;
+    bool m_useScale;
     bool m_rebuildMatrix;
     bool m_rebuilded;
 
