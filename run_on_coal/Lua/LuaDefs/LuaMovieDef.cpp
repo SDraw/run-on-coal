@@ -88,12 +88,7 @@ int ROC::LuaMovieDef::GetSampleRate(lua_State *f_vm)
     Movie *l_movie;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_movie);
-    if(!argStream.HasErrors())
-    {
-        unsigned int l_rate = l_movie->GetSampleRate();
-        (l_rate != 0U) ? argStream.PushInteger(l_rate) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushInteger(l_movie->GetSampleRate()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaMovieDef::GetChannelCount(lua_State *f_vm)
@@ -101,12 +96,7 @@ int ROC::LuaMovieDef::GetChannelCount(lua_State *f_vm)
     Movie *l_movie;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_movie);
-    if(!argStream.HasErrors())
-    {
-        unsigned int l_channels = l_movie->GetChannelCount();
-        (l_channels != 0U) ? argStream.PushInteger(l_channels) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushInteger(l_movie->GetChannelCount()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaMovieDef::GetFramerate(lua_State *f_vm)
@@ -114,12 +104,7 @@ int ROC::LuaMovieDef::GetFramerate(lua_State *f_vm)
     Movie *l_movie;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_movie);
-    if(!argStream.HasErrors())
-    {
-        float l_framerate = l_movie->GetFramerate();
-        (l_framerate != -1.f) ? argStream.PushNumber(l_framerate) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushNumber(l_movie->GetFramerate()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaMovieDef::GetDuration(lua_State *f_vm)
@@ -127,12 +112,7 @@ int ROC::LuaMovieDef::GetDuration(lua_State *f_vm)
     Movie *l_movie;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_movie);
-    if(!argStream.HasErrors())
-    {
-        float l_duration = l_movie->GetDuration();
-        (l_duration != -1.f) ? argStream.PushNumber(l_duration) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushNumber(l_movie->GetDuration()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaMovieDef::GetVolume(lua_State *f_vm)
@@ -140,12 +120,7 @@ int ROC::LuaMovieDef::GetVolume(lua_State *f_vm)
     Movie *l_movie;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_movie);
-    if(!argStream.HasErrors())
-    {
-        float l_volume = l_movie->GetVolume();
-        (l_volume != -1.f) ? argStream.PushNumber(l_volume) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushNumber(l_movie->GetVolume()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaMovieDef::SetVolume(lua_State *f_vm)
@@ -168,12 +143,7 @@ int ROC::LuaMovieDef::GetTime(lua_State *f_vm)
     Movie *l_movie;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_movie);
-    if(!argStream.HasErrors())
-    {
-        float l_time = l_movie->GetTime();
-        (l_time != -1.f) ? argStream.PushNumber(l_time) : argStream.PushBoolean(false);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushNumber(l_movie->GetTime()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaMovieDef::SetTime(lua_State *f_vm)

@@ -23,7 +23,7 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
     if(m_type == ROC_RENDERTARGET_TYPE_NONE)
     {
         m_type = f_type;
-        btClamp(m_type,ROC_RENDERTARGET_TYPE_SHADOW, ROC_RENDERTARGET_TYPE_RGBAF);
+        btClamp(m_type, ROC_RENDERTARGET_TYPE_SHADOW, ROC_RENDERTARGET_TYPE_RGBAF);
         m_filtering = f_filter;
         btClamp(m_filtering, ROC_RENDERTARGET_FILTER_NEAREST, ROC_RENDERTARGET_FILTER_LINEAR);
 
@@ -38,6 +38,8 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
             {
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, f_size.x, f_size.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
             } break;
             case ROC_RENDERTARGET_TYPE_RGB:
@@ -53,8 +55,8 @@ bool ROC::RenderTarget::Create(unsigned int f_num, const glm::ivec2 &f_size, int
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, f_size.x, f_size.y, 0, GL_RGBA, GL_FLOAT, NULL);
                 break;
         }
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST+m_filtering);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST+m_filtering);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
 
         if(m_type > ROC_RENDERTARGET_TYPE_SHADOW)
         {

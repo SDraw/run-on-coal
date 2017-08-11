@@ -187,23 +187,16 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
             Camera *l_camera = m_activeScene->GetCamera();
             if(l_camera)
             {
-                if(f_model->GetParent() != nullptr)
-                {
-                    btTransform l_transform;
-                    l_transform.setFromOpenGLMatrix(glm::value_ptr(f_model->GetMatrix()));
-                    std::memcpy(&m_modelPosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-                }
-                else m_modelPosition = f_model->GetPosition();
-                if(!l_camera->IsInFrustum(m_modelPosition, f_model->GetBoundSphereRadius())) l_result = false;
+                if(!l_camera->IsInFrustum(f_model->GetGlobalPosition(), f_model->GetBoundSphereRadius())) l_result = false;
             }
         }
         if(l_result)
         {
-            m_activeShader->SetModelUniformValue(f_model->GetMatrix());
+            m_activeShader->SetModelUniformValue(f_model->GetGlobalMatrix());
 
             if(f_model->HasSkeleton())
             {
-                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatricesVector());
+                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatrices());
                 m_activeShader->SetAnimatedUniformValue(1U);
             }
             else m_activeShader->SetAnimatedUniformValue(0U);

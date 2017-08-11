@@ -69,10 +69,8 @@ void ROC::Collision::SetParentModel(Model *f_model)
 {
     if(f_model)
     {
-        const glm::vec3 &l_pos = f_model->GetPosition();
-        const glm::quat &l_rot = f_model->GetRotation();
-        SetPosition(l_pos);
-        SetRotation(l_rot);
+        SetPosition(f_model->GetGlobalPosition());
+        SetRotation(f_model->GetGlobalRotation());
         m_rigidBody->setUserPointer(f_model);
     }
     else m_rigidBody->setUserPointer(this);

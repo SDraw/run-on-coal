@@ -9,19 +9,19 @@ class Movie final : public Drawable
     sfe::Movie *m_movie;
     glm::ivec2 m_size;
 public:
-    inline unsigned int GetSampleRate() { return (m_movie ? m_movie->getSampleRate() : 0U); }
-    inline unsigned int GetChannelCount() { return (m_movie ? m_movie->getChannelCount() : 0U); }
-    inline float GetFramerate() { return (m_movie ? m_movie->getFramerate() : -1.f); }
-    inline float GetDuration() { return (m_movie ? m_movie->getDuration().asSeconds() : -1.f); }
+    inline unsigned int GetSampleRate() { return m_movie->getSampleRate(); }
+    inline unsigned int GetChannelCount() { return m_movie->getChannelCount(); }
+    inline float GetFramerate() { return m_movie->getFramerate(); }
+    inline float GetDuration() { return m_movie->getDuration().asSeconds(); }
 
-    void Play();
-    void Pause();
-    void Stop();
+    inline void Play() { m_movie->play(); }
+    inline void Pause() { m_movie->pause(); }
+    inline void Stop() { m_movie->stop(); }
 
-    inline float GetVolume() { return (m_movie ? m_movie->getVolume() : -1.f); }
+    inline float GetVolume() { return m_movie->getVolume(); }
     void SetVolume(float f_val);
 
-    inline float GetTime() { return (m_movie ? m_movie->getPlayingOffset().asSeconds() : -1.f); }
+    inline float GetTime() { return m_movie->getPlayingOffset().asSeconds(); }
     void SetTime(float f_val);
 
     inline bool IsTransparent() const { return true; }
@@ -32,10 +32,10 @@ protected:
     ~Movie();
     bool Load(const std::string &f_path);
 
-    inline GLuint GetTextureID() const { return (m_movie ? m_movie->getCurrentImage().getNativeHandle() : 0U); }
+    inline GLuint GetTextureID() const { return m_movie->getCurrentImage().getNativeHandle(); }
 
-    void Update();
-    void Bind();
+    inline void Update() { m_movie->update(); }
+    inline void Bind() { glBindTexture(GL_TEXTURE_2D, m_movie->getCurrentImage().getNativeHandle()); }
 
     friend class ElementManager;
     friend class RenderManager;

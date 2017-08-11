@@ -17,7 +17,7 @@ public:
     void AddChild(TreeNode *f_node);
     void RemoveChild(TreeNode *f_node);
     bool HasChild(TreeNode *f_node);
-    inline const std::vector<TreeNode*>& GetChildrenVectorRef() const { return m_children; }
+    inline const std::vector<TreeNode*>& GetChildren() const { return m_children; }
 
     inline void SetParent(TreeNode *f_node) { m_parent = f_node; }
     inline TreeNode* GetParent() { return m_parent; }

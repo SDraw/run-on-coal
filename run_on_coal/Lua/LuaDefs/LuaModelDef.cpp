@@ -44,6 +44,7 @@ void ROC::LuaModelDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "getRotation", GetRotation);
     LuaUtils::AddClassMethod(f_vm, "setScale", SetScale);
     LuaUtils::AddClassMethod(f_vm, "getScale", GetScale);
+    LuaUtils::AddClassMethod(f_vm, "getMatrix", GetMatrix);
     LuaUtils::AddClassMethod(f_vm, "draw", Draw);
     LuaUtils::AddClassMethod(f_vm, "attach", Attach);
     LuaUtils::AddClassMethod(f_vm, "detach", Detach);
@@ -97,7 +98,7 @@ int ROC::LuaModelDef::SetPosition(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
     {
-        l_model->SetPosition(l_pos);
+        l_model->SetLocalPosition(l_pos);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -106,12 +107,14 @@ int ROC::LuaModelDef::SetPosition(lua_State *f_vm)
 int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
 {
     Model *l_model;
+    bool l_global = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
+    argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        const glm::vec3& l_pos = l_model->GetPosition();
-        for(int i=0; i < 3; i++) argStream.PushNumber(l_pos[i]);
+        const glm::vec3& l_pos = l_global ? l_model->GetGlobalPosition() : l_model->GetLocalPosition();
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -125,7 +128,7 @@ int ROC::LuaModelDef::SetRotation(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_rot[i]);
     if(!argStream.HasErrors())
     {
-        l_model->SetRotation(l_rot);
+        l_model->SetLocalRotation(l_rot);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -134,11 +137,13 @@ int ROC::LuaModelDef::SetRotation(lua_State *f_vm)
 int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
 {
     Model *l_model;
+    bool l_global = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
+    argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        const glm::quat &l_rot = l_model->GetRotation();
+        const glm::quat &l_rot = l_global ? l_model->GetGlobalRotation() : l_model->GetLocalRotation();
         for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
     }
     else argStream.PushBoolean(false);
@@ -153,7 +158,7 @@ int ROC::LuaModelDef::SetScale(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_scale[i]);
     if(!argStream.HasErrors())
     {
-        l_model->SetScale(l_scale);
+        l_model->SetLocalScale(l_scale);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -162,12 +167,30 @@ int ROC::LuaModelDef::SetScale(lua_State *f_vm)
 int ROC::LuaModelDef::GetScale(lua_State *f_vm)
 {
     Model *l_model;
+    bool l_global = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
+    argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        const glm::vec3 &l_scale = l_model->GetScale();
+        const glm::vec3 &l_scale = l_global ? l_model->GetGlobalScale() : l_model->GetLocalScale();
         for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaModelDef::GetMatrix(lua_State *f_vm)
+{
+    Model *l_model;
+    bool l_global = false;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_model);
+    argStream.ReadNextBoolean(l_global);
+    if(!argStream.HasErrors())
+    {
+        const glm::mat4 &l_matrix = l_global ? l_model->GetGlobalMatrix() : l_model->GetLocalMatrix();
+        const float *l_matrixPtr = glm::value_ptr(l_matrix);
+        for(int i = 0; i < 16; i++) argStream.PushNumber(l_matrixPtr[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -199,7 +222,7 @@ int ROC::LuaModelDef::Attach(lua_State *f_vm)
     argStream.ReadNextInteger(l_bone);
     if(!argStream.HasErrors())
     {
-        btClamp(l_bone, -1, INT_MAX);
+        btClamp(l_bone, -1, std::numeric_limits<int>::max());
         bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachModelToModel(l_model, l_parent, l_bone);
         argStream.PushBoolean(l_result);
     }

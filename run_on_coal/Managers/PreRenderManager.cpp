@@ -21,14 +21,14 @@ ROC::PreRenderManager::PreRenderManager(Core *f_core)
 }
 ROC::PreRenderManager::~PreRenderManager()
 {
-    auto &l_rootNodes = m_modelTreeRoot->GetChildrenVectorRef();
+    auto &l_rootNodes = m_modelTreeRoot->GetChildren();
     m_nodeStack.insert(m_nodeStack.end(), l_rootNodes.rbegin(), l_rootNodes.rend());
     while(!m_nodeStack.empty())
     {
         TreeNode *l_node = m_nodeStack.back();
         m_nodeStack.pop_back();
 
-        auto &l_childrenVector = l_node->GetChildrenVectorRef();
+        auto &l_childrenVector = l_node->GetChildren();
         m_nodeStack.insert(m_nodeStack.end(), l_childrenVector.rbegin(), l_childrenVector.rend());
         delete l_node;
     }
@@ -53,7 +53,7 @@ void ROC::PreRenderManager::RemoveModel(Model *f_model)
         if(l_parentNode) l_parentNode->RemoveChild(l_node);
         else m_modelTreeRoot->RemoveChild(l_node);
 
-        for(auto iter : l_node->GetChildrenVectorRef())
+        for(auto iter : l_node->GetChildren())
         {
             iter->SetParent(nullptr);
             m_modelTreeRoot->AddChild(iter);
@@ -109,14 +109,14 @@ void ROC::PreRenderManager::DoPulse_S1()
     m_core->GetLuaManager()->GetEventManager()->CallEvent("onPreRender", m_argument);
     bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
 
-    auto &l_rootNodes = m_modelTreeRoot->GetChildrenVectorRef();
+    auto &l_rootNodes = m_modelTreeRoot->GetChildren();
     m_nodeStack.insert(m_nodeStack.end(), l_rootNodes.rbegin(), l_rootNodes.rend());
     while(!m_nodeStack.empty())
     {
         TreeNode *l_current = m_nodeStack.back();
         m_nodeStack.pop_back();
 
-        auto &l_nodeChildren = l_current->GetChildrenVectorRef();
+        auto &l_nodeChildren = l_current->GetChildren();
         m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
 
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
@@ -124,7 +124,7 @@ void ROC::PreRenderManager::DoPulse_S1()
         if(l_model->HasSkeleton())
         {
             if(l_model->HasAnimation()) l_model->UpdateAnimation();
-            l_model->GetSkeleton()->UpdateCollision_S1(l_model->GetMatrix(), l_physicsState);
+            l_model->GetSkeleton()->UpdateCollision_S1(l_model->GetGlobalMatrix(), l_physicsState);
         }
     }
 }
@@ -132,18 +132,18 @@ void ROC::PreRenderManager::DoPulse_S2()
 {
     bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
 
-    auto &l_rootNodes = m_modelTreeRoot->GetChildrenVectorRef();
+    auto &l_rootNodes = m_modelTreeRoot->GetChildren();
     m_nodeStack.insert(m_nodeStack.end(), l_rootNodes.rbegin(), l_rootNodes.rend());
     while(!m_nodeStack.empty())
     {
         TreeNode *l_current = m_nodeStack.back();
         m_nodeStack.pop_back();
 
-        auto &l_nodeChildren = l_current->GetChildrenVectorRef();
+        auto &l_nodeChildren = l_current->GetChildren();
         m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
 
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
         l_model->HasCollision() ? l_model->UpdateCollision() : l_model->UpdateMatrix();
-        if(l_model->HasSkeleton()) l_model->GetSkeleton()->UpdateCollision_S2(l_model->GetMatrix(), l_physicsState);
+        if(l_model->HasSkeleton()) l_model->GetSkeleton()->UpdateCollision_S2(l_model->GetGlobalMatrix(), l_physicsState);
     }
 }
