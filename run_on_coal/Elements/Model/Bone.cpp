@@ -47,14 +47,7 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data)
         m_data->SetInterpolated(f_data, m_blendValue);
         m_rebuildMatrix = true;
     }
-    else
-    {
-        if(!m_data->IsEqual(f_data))
-        {
-            BoneFrameData::Copy(f_data, m_data);
-            m_rebuildMatrix = true;
-        }
-    }
+    else m_rebuildMatrix = BoneFrameData::Copy(f_data, m_data);
 }
 void ROC::Bone::EnableBlending(float f_blend)
 {
@@ -68,17 +61,7 @@ void ROC::Bone::GenerateBindPose()
     l_transform.setOrigin(btVector3(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z));
     l_transform.setRotation(btQuaternion(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w));
     l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
-
-    bool l_useScale = false;
-    for(int i = 0; i < 3; i++)
-    {
-        if(glm::epsilonNotEqual(m_data->m_scale[i], g_DefaultScale[i], g_Epsilon))
-        {
-            l_useScale = true;
-            break;
-        }
-    }
-    if(l_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
+    if(m_data->m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
 
     if(m_parent == nullptr) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
     else
@@ -98,17 +81,7 @@ void ROC::Bone::UpdateMatrix()
         l_transform.setOrigin(btVector3(m_data->m_position.x, m_data->m_position.y, m_data->m_position.z));
         l_transform.setRotation(btQuaternion(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w));
         l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
-
-        bool l_useScale = false;
-        for(int i = 0; i < 3; i++)
-        {
-            if(glm::epsilonNotEqual(m_data->m_scale[i], g_DefaultScale[i], g_Epsilon))
-            {
-                l_useScale = true;
-                break;
-            }
-        }
-        if(l_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
+        if(m_data->m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
 
 
         if(!m_parent) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));

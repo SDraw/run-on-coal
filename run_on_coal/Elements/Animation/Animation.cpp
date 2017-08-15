@@ -88,15 +88,17 @@ bool ROC::Animation::Load(const std::string &f_path)
                     else
                     {
                         l_interval.stop = l_frameIndex;
-                        l_interval.value.m_rightData = new BoneFrameData(l_position, l_rotation, l_scale);
-                        l_interval.value.m_duration = l_frameIndex*m_frameDelta - l_interval.value.m_startTime;
-                        l_interval.value.m_static = l_interval.value.m_leftData->IsEqual(l_interval.value.m_rightData);
+
+                        auto &l_value = l_interval.value;
+                        l_value.m_rightData = new BoneFrameData(l_position, l_rotation, l_scale);
+                        l_value.m_duration = l_frameIndex*m_frameDelta - l_value.m_startTime;
+                        l_value.m_static = l_value.m_leftData->IsEqual(l_value.m_rightData);
                         l_intervals.push_back(l_interval);
 
                         l_interval.start = l_frameIndex;
-                        l_interval.value.m_leftData = l_interval.value.m_rightData;
-                        l_interval.value.m_startTime = l_frameIndex*m_frameDelta;
-                        l_interval.value.m_rightData = nullptr;
+                        l_value.m_leftData = l_value.m_rightData;
+                        l_value.m_startTime = l_frameIndex*m_frameDelta;
+                        l_value.m_rightData = nullptr;
                     }
                 }
                 m_boneIntervals.push_back(new IntervalTree<keyframeData>(l_intervals));

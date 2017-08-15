@@ -53,7 +53,7 @@ public:
     void PushText(const std::string &f_val);
     void PushElement(Element *f_element);
     void PushElement(void *f_ptr, const std::string &f_name);
-    void PushCustomData(CustomData &f_data);
+    void PushCustomData(const CustomData &f_data);
     void PushQuat(const Quat &f_quat);
 
     void RemoveReference(const LuaFunction &f_func);

@@ -244,7 +244,7 @@ void ROC::ArgReader::PushText(const std::string &f_val)
     lua_pushlstring(m_vm, f_val.data(), f_val.size());
     m_returnCount++;
 }
-void ROC::ArgReader::PushCustomData(CustomData &f_data)
+void ROC::ArgReader::PushCustomData(const CustomData &f_data)
 {
     switch(f_data.GetType())
     {
