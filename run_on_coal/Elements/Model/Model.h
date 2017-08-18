@@ -3,6 +3,10 @@
 #define ROC_MODEL_TYPE_NONE 0
 #define ROC_MODEL_TYPE_STATIC 1
 #define ROC_MODEL_TYPE_ANIMATED 2
+#define ROC_MODEL_UPDATE_MATRIX 0
+#define ROC_MODEL_UPDATE_COLLISION 1
+#define ROC_MODEL_UPDATE_SKELETON1 2
+#define ROC_MODEL_UPDATE_SKELETON2 3
 
 namespace ROC
 {
@@ -10,7 +14,7 @@ namespace ROC
 class Collision;
 class Geometry;
 class Skeleton;
-class Animation;
+class AnimationController;
 class Model final : public Element
 {
     Geometry *m_geometry;
@@ -31,13 +35,8 @@ class Model final : public Element
     Model *m_parent;
     int m_parentBone;
 
-    Animation *m_animation;
-    unsigned int m_animationTick;
-    enum AnimationState { None = 0U, Paused, Playing } m_animState;
-    float m_animationSpeed;
-
+    AnimationController *m_animController;
     Skeleton *m_skeleton;
-
     Collision *m_collision;
 
     void UpdateGlobalTransform();
@@ -67,18 +66,7 @@ public:
 
     inline Model* GetParent() { return m_parent; }
 
-    inline bool HasAnimation() const { return (m_animation != nullptr); }
-    inline Animation* GetAnimation() { return m_animation; }
-    bool PlayAnimation();
-    bool PauseAnimation();
-    bool ResetAnimation();
-    bool SetAnimationSpeed(float f_val);
-    inline float GetAnimationSpeed() const { return (m_animation ? m_animationSpeed : -1.f); }
-    bool SetAnimationProgress(float f_val);
-    float GetAnimationProgress() const;
-    bool SetAnimationBlendFactor(float f_val);
-    float GetAnimationBlendFactor() const;
-
+    inline AnimationController* GetAnimationController() { return m_animController; }
     inline bool HasSkeleton() const { return (m_skeleton != nullptr); }
 
     inline bool HasCollision() const { return (m_collision != nullptr); }
@@ -89,17 +77,13 @@ protected:
 
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
 
-    void UpdateMatrix();
+    void Update(int f_state, bool f_arg1 = false);
 
     void SetParent(Model *f_model, int f_bone = -1);
-
-    void SetAnimation(Animation *f_anim);
-    void UpdateAnimation();
 
     inline Skeleton* GetSkeleton() { return m_skeleton; }
 
     void SetCollision(Collision *f_col);
-    void UpdateCollision();
 
     friend class ElementManager;
     friend class InheritanceManager;

@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
 #include "Elements/Model/Model.h"
-#include "Elements/Animation/Animation.h"
-#include "Elements/Model/Bone.h"
+
 #include "Elements/Collision.h"
 #include "Elements/Geometry/Geometry.h"
+#include "Elements/Model/AnimationController.h"
+#include "Elements/Model/Bone.h"
 #include "Elements/Model/Skeleton.h"
-
-#include "Utils/SystemTick.h"
 
 namespace ROC
 {
@@ -43,11 +42,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_parent = nullptr;
     m_parentBone = -1;
 
-    m_animation = nullptr;
-    m_animationTick = 0U;
-    m_animState = AnimationState::None;
-    m_animationSpeed = -1.f;
-
+    m_animController = new AnimationController();
     m_skeleton = nullptr;
     if(m_geometry)
     {
@@ -63,6 +58,7 @@ ROC::Model::Model(Geometry *f_geometry)
 }
 ROC::Model::~Model()
 {
+    delete m_animController;
     delete m_skeleton;
 }
 
@@ -124,136 +120,11 @@ void ROC::Model::UpdateGlobalTransform()
     }
 }
 
-void ROC::Model::UpdateMatrix()
-{
-    m_rebuilded = false;
-    if(m_rebuildMatrix)
-    {
-        btTransform l_transform = btTransform::getIdentity();
-        l_transform.setOrigin(btVector3(m_localPosition.x, m_localPosition.y, m_localPosition.z));
-        l_transform.setRotation(btQuaternion(m_localRotation.x, m_localRotation.y, m_localRotation.z, m_localRotation.w));
-        l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
-        if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_localScale);
-
-        m_rebuildMatrix = false;
-        m_rebuilded = true;
-    }
-    if(m_parent)
-    {
-        if(m_parentBone != -1)
-        {
-            if(m_parent->m_skeleton->GetBones()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
-            {
-                const glm::mat4 &l_boneMatrix = m_parent->m_skeleton->GetBones()[m_parentBone]->GetMatrix();
-                std::memcpy(&m_globalMatrix, &m_parent->m_globalMatrix, sizeof(glm::mat4));
-                m_globalMatrix *= l_boneMatrix;
-                m_globalMatrix *= m_localMatrix;
-                UpdateGlobalTransform();
-                m_rebuilded = true;
-            }
-        }
-        else
-        {
-            if(m_parent->m_rebuilded)
-            {
-                std::memcpy(&m_globalMatrix, &m_parent->m_globalMatrix, sizeof(glm::mat4));
-                m_globalMatrix *= m_localMatrix;
-                UpdateGlobalTransform();
-                m_rebuilded = true;
-            }
-        }
-    }
-    else
-    {
-        if(m_rebuilded) std::memcpy(&m_globalMatrix, &m_localMatrix, sizeof(glm::mat4));
-    }
-}
-
 void ROC::Model::SetParent(Model *f_model, int f_bone)
 {
     m_parent = f_model;
     m_parentBone = f_bone;
     m_rebuildMatrix = true;
-}
-
-void ROC::Model::SetAnimation(Animation *f_anim)
-{
-    m_animation = f_anim;
-    if(m_animation)
-    {
-        m_animState = AnimationState::Paused;
-        m_animationTick = 0U;
-        m_animationSpeed = 1.f;
-        m_skeleton->EnableBoneBlending();
-    }
-    else
-    {
-        m_animationSpeed = -1.f;
-        m_animState = AnimationState::None;
-    }
-}
-bool ROC::Model::PlayAnimation()
-{
-    if(m_animation)
-    {
-        if(m_animState != AnimationState::Playing) m_animState = AnimationState::Playing;
-    }
-    return (m_animation != nullptr);
-}
-bool ROC::Model::PauseAnimation()
-{
-    if(m_animation) m_animState = AnimationState::Paused;
-    return (m_animation != nullptr);
-}
-bool ROC::Model::ResetAnimation()
-{
-    if(m_animation)
-    {
-        m_animationTick = 0U;
-        UpdateAnimation();
-    }
-    return (m_animation != nullptr);
-}
-bool ROC::Model::SetAnimationSpeed(float f_val)
-{
-    if(m_animation)
-    {
-        m_animationSpeed = f_val;
-        if(m_animationSpeed < 0.f) m_animationSpeed = 0.f;
-    }
-    return (m_animation != nullptr);
-}
-bool ROC::Model::SetAnimationProgress(float f_val)
-{
-    if(m_animation)
-    {
-        btClamp(f_val, 0.f, 1.f);
-        m_animationTick = static_cast<unsigned int>(float(m_animation->GetDuration())*f_val);
-    }
-    return (m_animation != nullptr);
-}
-float ROC::Model::GetAnimationProgress() const
-{
-    return (m_animation ? (static_cast<float>(m_animationTick) / static_cast<float>(m_animation->GetDuration())) : -1.f);
-}
-bool ROC::Model::SetAnimationBlendFactor(float f_val)
-{
-    if(m_skeleton) m_skeleton->SetBoneBlendFactor(f_val);
-    return (m_skeleton != nullptr);
-}
-float ROC::Model::GetAnimationBlendFactor() const
-{
-    return (m_skeleton ? m_skeleton->GetBoneBlendFactor() : -1.f);
-}
-void ROC::Model::UpdateAnimation()
-{
-    if(m_skeleton && m_animation && (m_animState != AnimationState::Paused))
-    {
-        m_animationTick += static_cast<unsigned int>(static_cast<float>(SystemTick::GetDelta())*m_animationSpeed);
-        m_animationTick %= m_animation->GetDuration();
-        m_animation->GetData(m_animationTick, m_skeleton->GetBones());
-        m_skeleton->Update();
-    }
 }
 
 void ROC::Model::SetCollision(Collision *f_col)
@@ -284,18 +155,85 @@ void ROC::Model::SetCollision(Collision *f_col)
     }
     m_collision = f_col;
 }
-void ROC::Model::UpdateCollision()
+
+void ROC::Model::Update(int f_state, bool f_arg1)
 {
-    if(m_collision)
+    switch(f_state)
     {
-        m_rebuilded = m_collision->IsActive();
-        if(m_rebuilded)
+        case ROC_MODEL_UPDATE_MATRIX:
         {
-            m_collision->GetTransform(m_localMatrix, m_localPosition, m_localRotation);
-            if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_localScale);
-            std::memcpy(&m_globalPosition, &m_localPosition, sizeof(glm::vec3));
-            std::memcpy(&m_globalRotation, &m_localRotation, sizeof(glm::quat));
-            std::memcpy(&m_globalMatrix, &m_localMatrix, sizeof(glm::mat4));
-        }
+            m_rebuilded = false;
+            if(m_rebuildMatrix)
+            {
+                btTransform l_transform = btTransform::getIdentity();
+                l_transform.setOrigin(btVector3(m_localPosition.x, m_localPosition.y, m_localPosition.z));
+                l_transform.setRotation(btQuaternion(m_localRotation.x, m_localRotation.y, m_localRotation.z, m_localRotation.w));
+                l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
+                if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_localScale);
+
+                m_rebuildMatrix = false;
+                m_rebuilded = true;
+            }
+            if(m_parent)
+            {
+                if(m_parentBone != -1)
+                {
+                    if(m_parent->m_skeleton->GetBones()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
+                    {
+                        const glm::mat4 &l_boneMatrix = m_parent->m_skeleton->GetBones()[m_parentBone]->GetMatrix();
+                        std::memcpy(&m_globalMatrix, &m_parent->m_globalMatrix, sizeof(glm::mat4));
+                        m_globalMatrix *= l_boneMatrix;
+                        m_globalMatrix *= m_localMatrix;
+                        UpdateGlobalTransform();
+                        m_rebuilded = true;
+                    }
+                }
+                else
+                {
+                    if(m_parent->m_rebuilded)
+                    {
+                        std::memcpy(&m_globalMatrix, &m_parent->m_globalMatrix, sizeof(glm::mat4));
+                        m_globalMatrix *= m_localMatrix;
+                        UpdateGlobalTransform();
+                        m_rebuilded = true;
+                    }
+                }
+            }
+            else
+            {
+                if(m_rebuilded) std::memcpy(&m_globalMatrix, &m_localMatrix, sizeof(glm::mat4));
+            }
+        } break;
+
+        case ROC_MODEL_UPDATE_COLLISION:
+        {
+            if(m_collision)
+            {
+                m_rebuilded = m_collision->IsActive();
+                if(m_rebuilded)
+                {
+                    m_collision->GetTransform(m_localMatrix, m_localPosition, m_localRotation);
+                    if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_localScale);
+                    std::memcpy(&m_globalPosition, &m_localPosition, sizeof(glm::vec3));
+                    std::memcpy(&m_globalRotation, &m_localRotation, sizeof(glm::quat));
+                    std::memcpy(&m_globalMatrix, &m_localMatrix, sizeof(glm::mat4));
+                }
+            }
+        } break;
+
+        case ROC_MODEL_UPDATE_SKELETON1:
+        {
+            if(m_skeleton)
+            {
+                m_animController->Update(m_skeleton->GetBones());
+                m_skeleton->UpdateCollision(ROC_SKELETON_UPDATE_COLLISION1, m_globalMatrix, f_arg1);
+                m_skeleton->Update();
+            }
+        } break;
+
+        case ROC_MODEL_UPDATE_SKELETON2:
+        {
+            if(m_skeleton) m_skeleton->UpdateCollision(ROC_SKELETON_UPDATE_COLLISION2, m_globalMatrix, f_arg1);
+        } break;
     }
 }

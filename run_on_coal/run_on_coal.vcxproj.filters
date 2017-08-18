@@ -231,6 +231,9 @@
     <ClCompile Include="Lua\LuaDefs\LuaQuatDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Model\AnimationController.cpp">
+      <Filter>Elements\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -459,6 +462,9 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaQuatDef.h">
       <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Model\AnimationController.h">
+      <Filter>Elements\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

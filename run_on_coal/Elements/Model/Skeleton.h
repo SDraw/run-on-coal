@@ -8,6 +8,8 @@
 #define ROC_BONECOL_TYPE_CYLINDER 2U
 #define ROC_BONECOL_TYPE_CAPSULE 3U
 #define ROC_BONECOL_TYPE_CONE 4U
+#define ROC_SKELETON_UPDATE_COLLISION1 0
+#define ROC_SKELETON_UPDATE_COLLISION2 1
 
 namespace ROC
 {
@@ -46,8 +48,6 @@ class Skeleton final
     };
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
-
-    float m_blendFactor;
 public:
     inline unsigned int GetBonesCount() const { return m_bonesCount; }
 
@@ -59,10 +59,6 @@ protected:
 
     void Update();
 
-    void EnableBoneBlending();
-    void SetBoneBlendFactor(float f_blend);
-    inline float GetBoneBlendFactor() const { return m_blendFactor; }
-
     inline std::vector<Bone*>& GetBones() { return m_boneVector; }
     inline const std::vector<glm::mat4>& GetBoneMatrices() const { return m_boneMatrices; }
 
@@ -72,11 +68,9 @@ protected:
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
     inline const std::vector<skJoint*>& GetJoints() const { return m_jointVector; }
 
-    void UpdateCollision_S1(const glm::mat4 &f_model, bool f_enabled);
-    void UpdateCollision_S2(const glm::mat4 &f_model, bool f_enabled);
+    void UpdateCollision(int f_state, const glm::mat4 &f_model, bool f_enabled);
 
     friend class Model;
-    friend class PreRenderManager;
     friend class RenderManager;
     friend class PhysicsManager;
 };

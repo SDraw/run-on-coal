@@ -8,6 +8,7 @@
 #include "Elements/Drawable.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Light.h"
+#include "Elements/Model/AnimationController.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
 #include "Elements/Scene.h"
@@ -82,7 +83,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
                     reinterpret_cast<Model*>(f_child)->SetGeometry(nullptr);
                     break;
                 case Element::ElementType::AnimationElement:
-                    reinterpret_cast<Model*>(f_child)->SetAnimation(nullptr);
+                    reinterpret_cast<Model*>(f_child)->GetAnimationController()->SetAnimation(nullptr);
                     break;
             }
         } break;
@@ -136,15 +137,15 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
     bool l_result = false;
     if(f_model->HasSkeleton())
     {
-        Animation *l_modelAnim = f_model->GetAnimation();
+        Animation *l_modelAnim = f_model->GetAnimationController()->GetAnimation();
         if(l_modelAnim == f_anim) l_result = true;
-        if(!l_result)
+        else
         {
             if(f_model->GetSkeleton()->GetBonesCount() == f_anim->GetBonesCount())
             {
                 if(l_modelAnim) RemoveInheritance(f_model, l_modelAnim);
                 AddInheritance(f_model, f_anim);
-                f_model->SetAnimation(f_anim);
+                f_model->GetAnimationController()->SetAnimation(f_anim);
                 l_result = true;
             }
         }
@@ -154,9 +155,10 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
 bool ROC::InheritanceManager::RemoveModelAnimation(Model *f_model)
 {
     bool l_result = false;
-    if(f_model->HasAnimation())
+    Animation *l_anim = f_model->GetAnimationController()->GetAnimation();
+    if(l_anim)
     {
-        RemoveInheritance(f_model, f_model->GetAnimation());
+        RemoveInheritance(f_model, l_anim);
         l_result = true;
     }
     return l_result;
@@ -220,7 +222,7 @@ bool ROC::InheritanceManager::DetachCollision(Collision *f_col)
     bool l_result = false;
     if(f_col->GetParentModel())
     {
-        RemoveInheritance(f_col,f_col->GetParentModel());
+        RemoveInheritance(f_col, f_col->GetParentModel());
         l_result = true;
     }
     return l_result;

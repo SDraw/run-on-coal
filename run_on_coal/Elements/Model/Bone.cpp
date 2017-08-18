@@ -3,8 +3,6 @@
 #include "Elements/Model/Bone.h"
 #include "Elements/Animation/BoneFrameData.h"
 
-#define ROC_BONE_BLEND_FACTOR 0.1f
-
 namespace ROC
 {
 
@@ -23,8 +21,7 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_data = new BoneFrameData(f_pos, f_rot, f_scl);
     m_rebuildMatrix = false;
     m_rebuilded = false;
-    m_interpolation = true;
-    m_blendFactor = ROC_BONE_BLEND_FACTOR;
+    m_blend = false;
     m_blendValue = 0.f;
 }
 ROC::Bone::~Bone()
@@ -34,27 +31,6 @@ ROC::Bone::~Bone()
     m_parent = nullptr;
 }
 
-void ROC::Bone::SetFrameData(BoneFrameData *f_data)
-{
-    if(m_interpolation)
-    {
-        m_blendValue += m_blendFactor;
-        if(m_blendValue >= 1.f)
-        {
-            m_interpolation = false;
-            m_blendValue = 1.f;
-        }
-        m_data->SetInterpolated(f_data, m_blendValue);
-        m_rebuildMatrix = true;
-    }
-    else m_rebuildMatrix = BoneFrameData::Copy(f_data, m_data);
-}
-void ROC::Bone::EnableBlending(float f_blend)
-{
-    m_interpolation = true;
-    m_blendFactor = f_blend;
-    m_blendValue = 0.f;
-}
 void ROC::Bone::GenerateBindPose()
 {
     btTransform l_transform = btTransform::getIdentity();
@@ -72,7 +48,25 @@ void ROC::Bone::GenerateBindPose()
     m_bindMatrix = glm::inverse(m_matrix);
     m_offsetMatrix = g_IdentityMatrix;
 }
-void ROC::Bone::UpdateMatrix()
+
+void ROC::Bone::SetFrameData(BoneFrameData *f_data)
+{
+    if(m_blend)
+    {
+        m_data->SetInterpolated(f_data, m_blendValue);
+        m_blend = false;
+        m_rebuildMatrix = true;
+    }
+    else m_rebuildMatrix = BoneFrameData::Copy(f_data, m_data);
+}
+
+void ROC::Bone::SetBlending(float f_blend)
+{
+    m_blend = true;
+    m_blendValue = f_blend;
+}
+
+void ROC::Bone::Update()
 {
     m_rebuilded = false;
     if(m_rebuildMatrix)
@@ -82,7 +76,6 @@ void ROC::Bone::UpdateMatrix()
         l_transform.setRotation(btQuaternion(m_data->m_rotation.x, m_data->m_rotation.y, m_data->m_rotation.z, m_data->m_rotation.w));
         l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
         if(m_data->m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_data->m_scale);
-
 
         if(!m_parent) std::memcpy(&m_matrix, &m_localMatrix, sizeof(glm::mat4));
         else

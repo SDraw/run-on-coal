@@ -14,8 +14,7 @@ class Bone final
     bool m_rebuildMatrix;
     bool m_rebuilded;
 
-    bool m_interpolation;
-    float m_blendFactor;
+    bool m_blend;
     float m_blendValue;
 
     Bone *m_parent;
@@ -25,6 +24,8 @@ class Bone final
     Bone &operator =(const Bone &that);
 public:
     inline bool IsRebuilded() const { return m_rebuilded; }
+
+    void SetBlending(float f_blend);
 
     inline const glm::mat4& GetLocalMatrix() const { return m_localMatrix; }
     inline const glm::mat4& GetMatrix() const { return m_matrix; }
@@ -39,8 +40,7 @@ protected:
     inline void SetMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_matrix)); }
     inline void SetOffsetMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_offsetMatrix)); }
     inline void ForceRebuildState(bool f_state) { m_rebuilded = f_state; }
-    void EnableBlending(float f_blend);
-    void UpdateMatrix();
+    void Update();
 
     inline void SetParent( Bone *f_bone) { m_parent = f_bone; }
     inline bool HasParent() const { return (m_parent != nullptr); }

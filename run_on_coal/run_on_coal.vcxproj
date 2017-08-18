@@ -141,6 +141,7 @@
     <ClInclude Include="Elements\Geometry\Geometry.h" />
     <ClInclude Include="Elements\Geometry\Material.h" />
     <ClInclude Include="Elements\Light.h" />
+    <ClInclude Include="Elements\Model\AnimationController.h" />
     <ClInclude Include="Elements\Model\Bone.h" />
     <ClInclude Include="Elements\Model\Model.h" />
     <ClInclude Include="Elements\Model\Skeleton.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Elements\Geometry\Geometry.cpp" />
     <ClCompile Include="Elements\Geometry\Material.cpp" />
     <ClCompile Include="Elements\Light.cpp" />
+    <ClCompile Include="Elements\Model\AnimationController.cpp" />
     <ClCompile Include="Elements\Model\Bone.cpp" />
     <ClCompile Include="Elements\Model\Model.cpp" />
     <ClCompile Include="Elements\Model\Skeleton.cpp" />
