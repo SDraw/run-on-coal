@@ -23,7 +23,7 @@
 
 #define ROC_MODEL_ANIMPROPERTY_SPEED 0
 #define ROC_MODEL_ANIMPROPERTY_PROGRESS 1
-#define ROC_MODEL_ANIMPROPERTY_BLENDFACTOR 2
+#define ROC_MODEL_ANIMPROPERTY_BLENDTIME 2
 
 namespace ROC
 {
@@ -357,7 +357,7 @@ int ROC::LuaModelDef::SetAnimationProperty(lua_State *f_vm)
             case ROC_MODEL_ANIMPROPERTY_PROGRESS:
                 l_result = l_model->GetAnimationController()->SetProgress(l_value);
                 break;
-            case ROC_MODEL_ANIMPROPERTY_BLENDFACTOR:
+            case ROC_MODEL_ANIMPROPERTY_BLENDTIME:
                 l_model->GetAnimationController()->SetBlendTime(static_cast<unsigned int>(l_value));
                 break;
         }
@@ -384,7 +384,7 @@ int ROC::LuaModelDef::GetAnimationProperty(lua_State *f_vm)
             case ROC_MODEL_ANIMPROPERTY_PROGRESS:
                 l_value = l_model->GetAnimationController()->GetProgress();
                 break;
-            case ROC_MODEL_ANIMPROPERTY_BLENDFACTOR:
+            case ROC_MODEL_ANIMPROPERTY_BLENDTIME:
                 l_value = static_cast<float>(l_model->GetAnimationController()->GetBlendTime());
                 break;
         }

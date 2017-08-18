@@ -5,7 +5,7 @@ namespace ROC
 
 class Animation;
 class Bone;
-class AnimationController
+class AnimationController final
 {
     Animation *m_animation;
     unsigned int m_tick;
