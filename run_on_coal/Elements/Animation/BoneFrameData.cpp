@@ -32,9 +32,9 @@ ROC::BoneFrameData::~BoneFrameData()
 
 bool ROC::BoneFrameData::IsEqual(BoneFrameData *f_data) const
 {
-    bool l_positionResult = glm::all(glm::epsilonEqual(m_position, f_data->m_position, g_Epsilon));
-    bool l_rotationResult = glm::all(glm::epsilonEqual(m_rotation, f_data->m_rotation, g_Epsilon));
-    bool l_scaleResult = glm::all(glm::epsilonEqual(m_scale, f_data->m_scale, g_Epsilon));
+    bool l_positionResult = (m_position == f_data->m_position);
+    bool l_rotationResult = (m_rotation == f_data->m_rotation);
+    bool l_scaleResult = (m_scale == f_data->m_scale);
     return (l_positionResult && l_rotationResult && l_scaleResult);
 }
 
@@ -55,13 +55,13 @@ void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_leftData, BoneFrameDat
 
 bool ROC::BoneFrameData::Copy(BoneFrameData *f_src, BoneFrameData *f_dst)
 {
-    bool l_positionResult = glm::all(glm::epsilonNotEqual(f_src->m_position, f_dst->m_position, g_Epsilon));
+    bool l_positionResult = (f_src->m_position != f_dst->m_position);
     if(l_positionResult) std::memcpy(&f_dst->m_position, &f_src->m_position, sizeof(glm::vec3));
 
-    bool l_rotationResult = glm::all(glm::epsilonNotEqual(f_src->m_rotation, f_dst->m_rotation, g_Epsilon));
+    bool l_rotationResult = (f_src->m_rotation != f_dst->m_rotation);
     if(l_rotationResult) std::memcpy(&f_dst->m_rotation, &f_src->m_rotation, sizeof(glm::quat));
 
-    bool l_scaleResult = glm::all(glm::epsilonNotEqual(f_src->m_scale, f_dst->m_scale, g_Epsilon));
+    bool l_scaleResult = (f_src->m_scale != f_dst->m_scale);
     if(l_scaleResult)
     {
         std::memcpy(&f_dst->m_scale, &f_src->m_scale, sizeof(glm::vec3));
