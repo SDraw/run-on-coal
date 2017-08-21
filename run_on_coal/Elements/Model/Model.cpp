@@ -109,10 +109,7 @@ void ROC::Model::UpdateGlobalTransform()
         std::memcpy(&m_globalPosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
 
         btQuaternion l_globalRotation = l_transform.getRotation();
-        m_globalRotation.x = l_globalRotation.x();
-        m_globalRotation.y = l_globalRotation.y();
-        m_globalRotation.x = l_globalRotation.z();
-        m_globalRotation.w = l_globalRotation.w();
+        for(int i = 0; i < 4; i++) m_globalRotation[i] = l_globalRotation[i];
 
         std::memcpy(&m_parent->m_globalScale, &m_globalScale, sizeof(glm::vec3));
         m_globalScale *= m_localScale;

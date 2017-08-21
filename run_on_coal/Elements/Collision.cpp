@@ -129,10 +129,7 @@ void ROC::Collision::GetRotation(glm::quat &f_rot)
             break;
     }
     btQuaternion l_rotation = l_transform.getRotation();
-    f_rot.x = l_rotation.x();
-    f_rot.y = l_rotation.y();
-    f_rot.z = l_rotation.z();
-    f_rot.w = l_rotation.w();
+    for(int i = 0; i < 4; i++) f_rot[i] = l_rotation[i];
 }
 void ROC::Collision::SetRotation(const glm::quat &f_rot)
 {
@@ -286,11 +283,8 @@ void ROC::Collision::GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat 
             m_rigidBody->getMotionState()->getWorldTransform(l_transform);
             break;
     }
-    btQuaternion l_rotation = l_transform.getRotation();
     std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-    f_rot.x = l_rotation.x();
-    f_rot.y = l_rotation.y();
-    f_rot.z = l_rotation.z();
-    f_rot.w = l_rotation.w();
+    btQuaternion l_rotation = l_transform.getRotation();
+    for(int i = 0; i < 4; i++) f_rot[i] = l_rotation[i];
     l_transform.getOpenGLMatrix(glm::value_ptr(f_mat));
 }
