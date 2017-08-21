@@ -172,7 +172,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     if(!m_async) l_material->GenerateVAO();
                     l_material->LoadTexture(l_difTexture);
                 }
-                m_materialCount = static_cast<unsigned int>(m_materialVector.size());
+                m_materialCount = static_cast<unsigned int>(l_materialCount);
                 if(m_materialCount > 0U)
                 {
                     std::vector<Material*> l_matVecDef, l_matVecDefDouble, l_matVecDefTransp;
@@ -185,6 +185,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     m_materialVector.insert(m_materialVector.end(), l_matVecDefDouble.begin(), l_matVecDefDouble.end());
                     m_materialVector.insert(m_materialVector.end(), l_matVecDef.begin(), l_matVecDef.end());
                     m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
+                    m_materialVector.shrink_to_fit();
                 }
                 m_boundSphereRaduis = glm::length(l_farthestPoint);
 
@@ -210,6 +211,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         l_file.read(reinterpret_cast<char*>(&l_boneData->m_rotation), sizeof(glm::quat));
                         l_file.read(reinterpret_cast<char*>(&l_boneData->m_scale), sizeof(glm::vec3));
                     }
+                    m_bonesData.shrink_to_fit();
                 }
                 l_result = true;
             }
@@ -240,6 +242,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         l_file.read(reinterpret_cast<char*>(&l_colData->m_offsetRotation), sizeof(glm::quat));
                         l_file.read(reinterpret_cast<char*>(&l_colData->m_boneID), sizeof(unsigned int));
                     }
+                    m_collisionData.shrink_to_fit();
 
                     unsigned int l_jointsCount = 0U;
                     l_file.read(reinterpret_cast<char*>(&l_jointsCount), sizeof(unsigned int));
@@ -278,8 +281,10 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
                                 l_joint->m_jointPartVector.push_back(l_jointPart);
                             }
+                            l_joint->m_jointPartVector.shrink_to_fit();
                         }
                     }
+                    m_jointData.shrink_to_fit();
                 }
             }
             catch(const std::exception&)

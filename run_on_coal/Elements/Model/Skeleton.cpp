@@ -22,6 +22,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
         Bone *l_bone = new Bone(iter->m_name, iter->m_rotation, iter->m_position, iter->m_scale);
         m_boneVector.push_back(l_bone);
     }
+    m_boneVector.shrink_to_fit();
     m_bonesCount = static_cast<unsigned int>(m_boneVector.size());
     for(unsigned int i = 0; i < m_bonesCount; i++)
     {
@@ -33,7 +34,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
     }
     if(!m_boneVector.empty())
     {
-        std::list<Bone*> l_bonesStack;
+        std::vector<Bone*> l_bonesStack;
         l_bonesStack.push_back(m_boneVector.front());
         while(!l_bonesStack.empty())
         {
@@ -45,6 +46,8 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
         }
     }
     m_boneMatrices.resize(m_bonesCount);
+    m_boneMatrices.shrink_to_fit();
+
     m_hasStaticBoneCollision = false;
     m_hasDynamicBoneCollision = false;
 }
@@ -147,7 +150,11 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
 
             m_collisionVector.push_back(l_colData);
         }
-        if(!m_collisionVector.empty()) m_hasStaticBoneCollision = true;
+        if(!m_collisionVector.empty())
+        {
+            m_hasStaticBoneCollision = true;
+            m_collisionVector.shrink_to_fit();
+        }
     }
 }
 
@@ -243,45 +250,32 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 
                 l_jointPart->m_constraint->setLinearLowerLimit(btVector3(l_partData.m_lowerLinearLimit.x, l_partData.m_lowerLinearLimit.y, l_partData.m_lowerLinearLimit.z));
                 l_jointPart->m_constraint->setLinearUpperLimit(btVector3(l_partData.m_upperLinearLimit.x, l_partData.m_upperLinearLimit.y, l_partData.m_upperLinearLimit.z));
-                if(l_partData.m_linearStiffness.x > 0.f)
-                {
-                    l_jointPart->m_constraint->enableSpring(0, true);
-                    l_jointPart->m_constraint->setStiffness(0, l_partData.m_linearStiffness.x);
-                }
-                if(l_partData.m_linearStiffness.y > 0.f)
-                {
-                    l_jointPart->m_constraint->enableSpring(1, true);
-                    l_jointPart->m_constraint->setStiffness(1, l_partData.m_linearStiffness.y);
-                }
-                if(l_partData.m_linearStiffness.z > 0.f)
-                {
-                    l_jointPart->m_constraint->enableSpring(2, true);
-                    l_jointPart->m_constraint->setStiffness(2, l_partData.m_linearStiffness.z);
-                }
-
                 l_jointPart->m_constraint->setAngularLowerLimit(btVector3(l_partData.m_lowerAngularLimit.x, l_partData.m_lowerAngularLimit.y, l_partData.m_lowerAngularLimit.z));
                 l_jointPart->m_constraint->setAngularUpperLimit(btVector3(l_partData.m_upperAngularLimit.x, l_partData.m_upperAngularLimit.y, l_partData.m_upperAngularLimit.z));
-                if(l_partData.m_angularStiffness.x > 0.f)
+                for(int k = 0; k < 3; k++)
                 {
-                    l_jointPart->m_constraint->enableSpring(3, true);
-                    l_jointPart->m_constraint->setStiffness(3, l_partData.m_angularStiffness.x);
-                }
-                if(l_partData.m_angularStiffness.y > 0.f)
-                {
-                    l_jointPart->m_constraint->enableSpring(4, true);
-                    l_jointPart->m_constraint->setStiffness(4, l_partData.m_angularStiffness.y);
-                }
-                if(l_partData.m_angularStiffness.z > 0.f)
-                {
-                    l_jointPart->m_constraint->enableSpring(5, true);
-                    l_jointPart->m_constraint->setStiffness(5, l_partData.m_angularStiffness.z);
+                    if(l_partData.m_linearStiffness[k] > 0.f)
+                    {
+                        l_jointPart->m_constraint->enableSpring(k, true);
+                        l_jointPart->m_constraint->setStiffness(k, l_partData.m_linearStiffness[k]);
+                    }
+                    if(l_partData.m_angularStiffness[k] > 0.f)
+                    {
+                        l_jointPart->m_constraint->enableSpring(k + 3, true);
+                        l_jointPart->m_constraint->setStiffness(k + 3, l_partData.m_angularStiffness[k]);
+                    }
                 }
 
                 l_joint->m_partsVector.push_back(l_jointPart);
             }
+            l_joint->m_partsVector.shrink_to_fit();
         }
 
-        if(!m_jointVector.empty()) m_hasDynamicBoneCollision = true;
+        if(!m_jointVector.empty())
+        {
+            m_jointVector.shrink_to_fit();
+            m_hasDynamicBoneCollision = true;
+        }
     }
 }
 
@@ -327,7 +321,7 @@ void ROC::Skeleton::UpdateCollision(int f_state, const glm::mat4 &f_model, bool 
                     }
                 }
             }
-        }
+        } break;
 
         case ROC_SKELETON_UPDATE_COLLISION2:
         {
@@ -347,7 +341,6 @@ void ROC::Skeleton::UpdateCollision(int f_state, const glm::mat4 &f_model, bool 
                             l_transform1.mult(iter1->m_rigidBody->getCenterOfMassTransform(), iter1->m_offset[ROC_SKELETON_TRANSFORMATION_INVERSE]);
                             l_transform2.mult(l_modelInv, l_transform1);
                             l_bone->SetMatrix(l_transform2);
-                            l_bone->ForceRebuildState(true);
                             l_transform1.mult(l_transform2, iter1->m_offset[ROC_SKELETON_TRANSFORMATION_BIND]);
                             l_bone->SetOffsetMatrix(l_transform1);
                             std::memcpy(&m_boneMatrices[iter1->m_boneID], &l_bone->GetOffsetMatrix(), sizeof(glm::mat4));

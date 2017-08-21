@@ -101,8 +101,10 @@ bool ROC::Animation::Load(const std::string &f_path)
                         l_value.m_rightData = nullptr;
                     }
                 }
+                l_intervals.shrink_to_fit();
                 m_boneIntervals.push_back(new IntervalTree<keyframeData>(l_intervals));
             }
+            m_boneIntervals.shrink_to_fit();
             l_animFile.close();
 
             m_tempFrameData = new BoneFrameData();
