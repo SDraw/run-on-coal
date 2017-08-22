@@ -149,10 +149,9 @@ bool ROC::SfmlManager::SetIcon(const std::string &f_path)
 {
     bool l_result = false;
 
-    std::string l_work, l_path(f_path);
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     sf::Image l_image;
     if(l_image.loadFromFile(l_path))

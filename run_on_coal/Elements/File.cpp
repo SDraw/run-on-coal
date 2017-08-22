@@ -131,21 +131,19 @@ void ROC::File::Flush()
 
 bool ROC::File::Delete(Core *f_core, const std::string &f_path)
 {
-    std::string l_work, l_path(f_path);
-    f_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
-    return !std::remove(l_work.c_str());
+    l_path.insert(0U, f_core->GetWorkingDirectory());
+    return !std::remove(l_path.c_str());
 }
 bool ROC::File::Rename(Core *f_core, const std::string &f_old, const std::string &f_new)
 {
-    std::string l_work, l_pathOld(f_old), l_pathNew(f_new);
+    std::string l_pathOld(f_old), l_pathNew(f_new);
 
-    f_core->GetWorkingDirectory(l_work);
     PathUtils::EscapePath(l_pathOld);
-    l_pathOld.insert(0U, l_work);
+    l_pathOld.insert(0U, f_core->GetWorkingDirectory());
     PathUtils::EscapePath(l_pathNew);
-    l_pathNew.insert(0U, l_work);
+    l_pathNew.insert(0U, f_core->GetWorkingDirectory());
 
     return !std::rename(l_pathOld.c_str(), l_pathNew.c_str());
 }

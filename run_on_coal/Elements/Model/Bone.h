@@ -10,7 +10,7 @@ class Bone final
     glm::mat4 m_matrix;
     glm::mat4 m_localMatrix;
     glm::mat4 m_bindMatrix;
-    glm::mat4 m_offsetMatrix;
+    glm::mat4 m_poseMatrix;
     bool m_rebuildMatrix;
     bool m_rebuilded;
 
@@ -30,7 +30,7 @@ public:
     inline const glm::mat4& GetLocalMatrix() const { return m_localMatrix; }
     inline const glm::mat4& GetMatrix() const { return m_matrix; }
     inline const glm::mat4& GetBindMatrix() const { return m_bindMatrix; }
-    inline const glm::mat4& GetOffsetMatrix() const { return m_offsetMatrix; }
+    inline const glm::mat4& GetPoseMatrix() const { return m_poseMatrix; }
 protected:
     Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scl);
     ~Bone();
@@ -38,7 +38,7 @@ protected:
     void GenerateBindPose();
     void SetFrameData(BoneFrameData *f_data);
     inline void SetMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_matrix)); }
-    inline void SetOffsetMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_offsetMatrix)); }
+    inline void SetPoseMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_poseMatrix)); }
     void Update();
 
     inline void SetParent( Bone *f_bone) { m_parent = f_bone; }

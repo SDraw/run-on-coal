@@ -66,9 +66,9 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_blendEnabled = false;
     m_cullEnabled = true;
     m_skipNoDepthMaterials = false;
-    m_time = 0.0;
+    m_time = 0.f;
     m_locked = true;
-    m_textureMatrix = glm::mat4(1.f);
+    m_textureMatrix = g_IdentityMatrix;
     m_materialBind = glm::bvec2(true);
     m_fontBind = glm::bvec2(true);
 
@@ -83,6 +83,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 }
 ROC::RenderManager::~RenderManager()
 {
+    m_movieVector.clear();
     delete m_quad;
     delete m_quad3D;
     delete m_dummyTexture;
@@ -90,7 +91,6 @@ ROC::RenderManager::~RenderManager()
     Font::DestroyVAO();
     Font::DestroyLibrary();
     Shader::DestroyBonesUBO();
-    m_movieVector.clear();
 }
 
 void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
@@ -196,7 +196,7 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
 
             if(f_model->HasSkeleton())
             {
-                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetBoneMatrices());
+                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetPoseMatrices());
                 m_activeShader->SetAnimatedUniformValue(1U);
             }
             else m_activeShader->SetAnimatedUniformValue(0U);

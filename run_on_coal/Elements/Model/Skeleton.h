@@ -21,7 +21,7 @@ class Skeleton final
     unsigned int m_bonesCount;
     std::vector<Bone*> m_boneVector;
     std::vector<Bone*> m_fastBoneVector;
-    std::vector<glm::mat4> m_boneMatrices;
+    std::vector<glm::mat4> m_poseMatrices;
 
     struct skCollision
     {
@@ -34,12 +34,12 @@ class Skeleton final
 
     struct skJoint
     {
-        btAlignedObjectArray<btTransform> m_localMatrix; // [0] - normal
+        btAlignedObjectArray<btTransform> m_offsetMatrix; // [0] - main
         btRigidBody *m_emptyBody;
         int m_boneID;
         struct jtPart
         {
-            btAlignedObjectArray<btTransform> m_offset; // [0] - normal, [1] - inverse, [2] - bone bind
+            btAlignedObjectArray<btTransform> m_offset; // [0] - main, [1] - inverse, [2] - bone bind
             btRigidBody *m_rigidBody;
             btGeneric6DofSpringConstraint *m_constraint;
             int m_boneID;
@@ -60,7 +60,7 @@ protected:
     void Update();
 
     inline std::vector<Bone*>& GetBones() { return m_boneVector; }
-    inline const std::vector<glm::mat4>& GetBoneMatrices() const { return m_boneMatrices; }
+    inline const std::vector<glm::mat4>& GetPoseMatrices() const { return m_poseMatrices; }
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);
     inline const std::vector<skCollision*>& GetCollision() const { return m_collisionVector; }

@@ -46,7 +46,7 @@ void ROC::Bone::GenerateBindPose()
         m_matrix *= m_localMatrix;
     }
     m_bindMatrix = glm::inverse(m_matrix);
-    m_offsetMatrix = g_IdentityMatrix;
+    m_poseMatrix = g_IdentityMatrix;
 }
 
 void ROC::Bone::SetFrameData(BoneFrameData *f_data)
@@ -83,8 +83,8 @@ void ROC::Bone::Update()
             std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
             m_matrix *= m_localMatrix;
         }
-        std::memcpy(&m_offsetMatrix, &m_matrix, sizeof(glm::mat4));
-        m_offsetMatrix *= m_bindMatrix;
+        std::memcpy(&m_poseMatrix, &m_matrix, sizeof(glm::mat4));
+        m_poseMatrix *= m_bindMatrix;
         m_rebuilded = true;
         m_rebuildMatrix = false;
     }
@@ -96,8 +96,8 @@ void ROC::Bone::Update()
             {
                 std::memcpy(&m_matrix, &m_parent->m_matrix, sizeof(glm::mat4));
                 m_matrix *= m_localMatrix;
-                std::memcpy(&m_offsetMatrix, &m_matrix, sizeof(glm::mat4));
-                m_offsetMatrix *= m_bindMatrix;
+                std::memcpy(&m_poseMatrix, &m_matrix, sizeof(glm::mat4));
+                m_poseMatrix *= m_bindMatrix;
                 m_rebuilded = true;
                 m_rebuildMatrix = false;
             }

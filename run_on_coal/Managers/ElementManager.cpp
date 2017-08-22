@@ -60,10 +60,9 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
 {
     Animation *l_anim = new Animation();
 
-    std::string l_work, l_path(f_path);
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(l_anim->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_anim);
     else
@@ -78,10 +77,9 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
 {
     Geometry *l_geometry = new Geometry(f_async);
 
-    std::string l_work, l_path(f_path);
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(!f_async && m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(f_async)
@@ -126,23 +124,22 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
 {
     Shader *l_shader = new Shader();
 
-    std::string l_path[3] = { f_vpath, f_fpath, f_gpath }, l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path[3] = { f_vpath, f_fpath, f_gpath };
 
     if(!f_vpath.empty())
     {
         PathUtils::EscapePath(l_path[0]);
-        l_path[0].insert(0U, l_work);
+        l_path[0].insert(0U, m_core->GetWorkingDirectory());
     }
     if(!f_fpath.empty())
     {
         PathUtils::EscapePath(l_path[1]);
-        l_path[1].insert(0U, l_work);
+        l_path[1].insert(0U, m_core->GetWorkingDirectory());
     }
     if(!f_gpath.empty())
     {
         PathUtils::EscapePath(l_path[2]);
-        l_path[2].insert(0U, l_work);
+        l_path[2].insert(0U, m_core->GetWorkingDirectory());
     }
     if(l_shader->Load(l_path[0], l_path[1], l_path[2]))
     {
@@ -174,10 +171,9 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path, bool f_l
 {
     Sound *l_sound = new Sound(f_loop);
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(l_sound->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_sound);
     else
@@ -209,10 +205,9 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
 {
     Texture *l_texture = new Texture();
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(l_texture->Load(l_path, f_type, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_texture);
@@ -228,13 +223,11 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     Texture *l_texture = new Texture();
 
     std::vector<std::string> l_path;
-    std::string l_work;
-    m_core->GetWorkingDirectory(l_work);
     for(auto iter : f_path)
     {
         std::string l_iterPath(iter);
         PathUtils::EscapePath(iter);
-        l_iterPath.insert(0U, l_work);
+        l_iterPath.insert(0U, m_core->GetWorkingDirectory());
         l_path.push_back(l_iterPath);
     }
 
@@ -252,10 +245,9 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
 {
     Font *l_font = new Font();
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(l_font->Load(l_path, f_size, f_atlas, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font);
@@ -271,10 +263,9 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(l_file->Create(l_path, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
@@ -288,10 +279,9 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(l_file->Open(l_path, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
@@ -323,10 +313,9 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
 {
     Movie *l_movie = new Movie();
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(l_movie->Load(l_path))
     {

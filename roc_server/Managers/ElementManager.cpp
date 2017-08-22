@@ -37,10 +37,9 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(l_file->Create(l_path, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
@@ -54,10 +53,9 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path), l_work;
-    m_core->GetWorkingDirectory(l_work);
+    std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
-    l_path.insert(0U, l_work);
+    l_path.insert(0U, m_core->GetWorkingDirectory());
 
     if(l_file->Open(l_path, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
     else
