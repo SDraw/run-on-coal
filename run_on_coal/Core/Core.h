@@ -58,7 +58,7 @@ public:
     inline void SetEngineStopCallback(OnEngineStopCallback f_callback) { m_engineStopCallback = f_callback; }
 
     bool DoPulse();
-    inline const std::string& GetWorkingDirectory() { return m_workingDir; }
+    inline const std::string& GetWorkingDirectory() const { return m_workingDir; }
 
     inline ConfigManager* GetConfigManager() { return m_configManager; }
     inline ElementManager* GetElementManager() { return m_elementManager; }

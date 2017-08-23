@@ -32,6 +32,7 @@ public:
     inline int GetFiltering() const { return m_filtering; }
 
     inline bool IsTransparent() const { return ((m_type == ROC_RENDERTARGET_TYPE_RGBA) || (m_type == ROC_RENDERTARGET_TYPE_RGBAF)); }
+    inline bool IsCubic() const { return false; }
     inline bool IsShadowType() const { return (m_type == ROC_RENDERTARGET_TYPE_SHADOW); }
 protected:
     RenderTarget();

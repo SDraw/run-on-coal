@@ -9,7 +9,7 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
-#include "Elements/Shader.h"
+#include "Elements/Shader/Shader.h"
 #include "Lua/ArgReader.h"
 #include "Utils/EnumUtils.h"
 

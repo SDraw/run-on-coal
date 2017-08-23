@@ -7,6 +7,8 @@ namespace ROC
 
 class Drawable;
 class Pool;
+class ShaderUniform;
+
 class Shader final : public Element
 {
     GLuint m_program;
@@ -43,15 +45,15 @@ class Shader final : public Element
     float m_timeUniformValue;
     glm::vec4 m_colorUniformValue;
 
-    std::unordered_map<std::string, GLint> m_uniformMap;
-    std::unordered_map<std::string, GLint>::iterator m_uniformMapEnd;
+    std::unordered_map<std::string, ShaderUniform*> m_uniformMap;
+    std::unordered_map<std::string, ShaderUniform*>::iterator m_uniformMapEnd;
 
     Pool *m_bindPool;
     struct drawableBindData
     {
         Drawable *m_element;
         int m_slot;
-        int m_uniform;
+        ShaderUniform *m_uniform;
     };
     std::vector<drawableBindData> m_drawableBind;
     unsigned int m_drawableCount;
@@ -65,35 +67,13 @@ class Shader final : public Element
     Shader &operator =(const Shader &that);
 
     void SetupDefaultUniformsAndLocations();
+public:
+    ShaderUniform* GetUniform(const std::string &f_uniform);
 protected:
     Shader();
     ~Shader();
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     inline const std::string& GetError() const { return m_error; }
-
-    void SetUniformValue(const std::string &f_uniform, unsigned int f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::uvec2 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::uvec3 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::uvec4 &f_value);
-
-    void SetUniformValue(const std::string &f_uniform, int f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::ivec2 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::ivec3 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::ivec4 &f_value);
-
-    void SetUniformValue(const std::string &f_uniform, float f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::vec2 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::vec3 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::vec4 &f_value);
-
-    void SetUniformValue(const std::string &f_uniform, double f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::dvec2 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::dvec3 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::dvec4 &f_value);
-
-    void SetUniformValue(const std::string &f_uniform, const glm::mat2 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::mat3 &f_value);
-    void SetUniformValue(const std::string &f_uniform, const glm::mat4 &f_value);
 
     void SetProjectionUniformValue(const glm::mat4 &f_value);
     void SetViewUniformValue(const glm::mat4 &f_value);
@@ -119,7 +99,8 @@ protected:
     static void DestroyBonesUBO();
     static void EnableUBOFix();
 
-    void Enable(bool f_full = true);
+    void Enable();
+    void Disable();
 
     friend class ElementManager;
     friend class InheritanceManager;

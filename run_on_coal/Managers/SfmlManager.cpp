@@ -9,7 +9,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/PhysicsManager.h"
-#include "Elements/Shader.h"
+#include "Elements/Shader/Shader.h"
 #include "Utils/PathUtils.h"
 
 #define ROC_OPENGL_MIN_VERSION 31U

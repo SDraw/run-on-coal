@@ -78,9 +78,6 @@
     <ClCompile Include="Elements\Scene.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\Shader.cpp">
-      <Filter>Elements</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\Sound.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
@@ -234,6 +231,12 @@
     <ClCompile Include="Elements\Model\AnimationController.cpp">
       <Filter>Elements\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Shader\Shader.cpp">
+      <Filter>Elements\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Shader\ShaderUniform.cpp">
+      <Filter>Elements\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -305,9 +308,6 @@
       <Filter>Elements</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Scene.h">
-      <Filter>Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="Elements\Shader.h">
       <Filter>Elements</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Sound.h">
@@ -466,6 +466,13 @@
     <ClInclude Include="Elements\Model\AnimationController.h">
       <Filter>Elements\Model</Filter>
     </ClInclude>
+    <ClInclude Include="Elements\Shader\Shader.h">
+      <Filter>Elements\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Shader\ShaderUniform.h">
+      <Filter>Elements\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\GLUtils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">
@@ -509,6 +516,9 @@
     </Filter>
     <Filter Include="Lua\LuaDefs">
       <UniqueIdentifier>{d49e28e1-7ff0-4271-b886-f458090d571a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Shader">
+      <UniqueIdentifier>{ff2440a4-1008-4d94-ad83-6e149765d7d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

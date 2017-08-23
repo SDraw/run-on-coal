@@ -19,6 +19,8 @@ class Texture final : public Drawable
     GLuint m_texture;
 public:
     inline bool IsTransparent() const { return (m_type == ROC_TEXTURE_TYPE_RGBA); }
+    inline bool IsCubic() const { return (m_type == ROC_TEXTURE_TYPE_CUBEMAP); }
+
     inline const glm::ivec2& GetSize() const { return m_size; }
     inline int GetFiltering() const { return m_filtering; }
 protected:

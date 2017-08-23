@@ -25,6 +25,7 @@ public:
     void SetTime(float f_val);
 
     inline bool IsTransparent() const { return true; }
+    inline bool IsCubic() const { return false; }
     inline const glm::ivec2& GetSize() const { return m_size; }
     inline int GetFiltering() const { return 0; }
 protected:

@@ -43,7 +43,7 @@ public:
     static Core* Init();
     static void Terminate();
 
-    inline const std::string& GetWorkingDirectory() { return m_workingDir; }
+    inline const std::string& GetWorkingDirectory() const { return m_workingDir; }
     inline ConfigManager* GetConfigManager() { return m_configManager; }
     inline ElementManager* GetElementManager() { return m_elementManager; }
     inline LogManager* GetLogManager() { return m_logManager; }

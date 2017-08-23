@@ -25,7 +25,7 @@
 #include "Elements/Light.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
-#include "Elements/Shader.h"
+#include "Elements/Shader/Shader.h"
 #include "Elements/Sound.h"
 #include "Elements/Texture.h"
 

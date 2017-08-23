@@ -13,7 +13,7 @@
 #include "Elements/Movie.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
-#include "Elements/Shader.h"
+#include "Elements/Shader/Shader.h"
 #include "Elements/Sound.h"
 #include "Elements/Texture.h"
 
@@ -141,11 +141,8 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
         PathUtils::EscapePath(l_path[2]);
         l_path[2].insert(0U, m_core->GetWorkingDirectory());
     }
-    if(l_shader->Load(l_path[0], l_path[1], l_path[2]))
-    {
-        m_core->GetMemoryManager()->AddMemoryPointer(l_shader);
-        if(m_locked) m_core->GetRenderManager()->RestoreActiveShader(l_shader);
-    }
+    if(m_locked)  m_core->GetRenderManager()->DisableActiveShader();
+    if(l_shader->Load(l_path[0], l_path[1], l_path[2])) m_core->GetMemoryManager()->AddMemoryPointer(l_shader);
     else
     {
         const std::string &l_shaderError = l_shader->GetError();
@@ -164,6 +161,7 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
         delete l_shader;
         l_shader = nullptr;
     }
+    if(m_locked) m_core->GetRenderManager()->EnableActiveShader();
     return l_shader;
 }
 

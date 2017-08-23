@@ -10,44 +10,11 @@
 #include "Managers/MemoryManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Drawable.h"
-#include "Elements/Shader.h"
+#include "Elements/Shader/Shader.h"
+#include "Elements/Shader/ShaderUniform.h"
 #include "Lua/ArgReader.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
-
-#define ROC_SHADER_UNIFORM_UINT 0
-#define ROC_SHADER_UNIFORM_UVEC2 1
-#define ROC_SHADER_UNIFORM_UVEC3 2
-#define ROC_SHADER_UNIFORM_UVEC4 3
-#define ROC_SHADER_UNIFORM_INT 4
-#define ROC_SHADER_UNIFORM_IVEC2 5
-#define ROC_SHADER_UNIFORM_IVEC3 6
-#define ROC_SHADER_UNIFORM_IVEC4 7
-#define ROC_SHADER_UNIFORM_FLOAT 8
-#define ROC_SHADER_UNIFORM_VEC2 9
-#define ROC_SHADER_UNIFORM_VEC3 10
-#define ROC_SHADER_UNIFORM_VEC4 11
-#define ROC_SHADER_UNIFORM_DOUBLE 12
-#define ROC_SHADER_UNIFORM_DVEC2 13
-#define ROC_SHADER_UNIFORM_DVEC3 14
-#define ROC_SHADER_UNIFORM_DVEC4 15
-#define ROC_SHADER_UNIFORM_MAT2 16
-#define ROC_SHADER_UNIFORM_MAT3 17
-#define ROC_SHADER_UNIFORM_MAT4 18
-
-namespace ROC
-{
-
-const std::vector<std::string> g_UniformTypesTable
-{
-    "uint", "uvec2", "uvec3", "uvec4",
-    "int", "ivec2", "ivec3", "ivec4",
-    "float", "vec2", "vec3", "vec4",
-    "double", "dvec2", "dvec3", "dvec4",
-    "mat2", "mat3", "mat4"
-};
-
-}
 
 void ROC::LuaShaderDef::Init(lua_State *f_vm)
 {
@@ -79,229 +46,190 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
 {
     Shader *l_shader;
     std::string l_uniform;
-    std::string l_type;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_shader);
     argStream.ReadText(l_uniform);
-    argStream.ReadText(l_type);
-    if(!argStream.HasErrors() && !l_uniform.empty() && !l_type.empty())
+    if(!argStream.HasErrors() && !l_uniform.empty())
     {
-        switch(EnumUtils::ReadEnumVector(l_type, g_UniformTypesTable))
+        ShaderUniform *l_shaderUniform = l_shader->GetUniform(l_uniform);
+        if(l_shaderUniform)
         {
-            case ROC_SHADER_UNIFORM_UINT:
+            switch(l_shaderUniform->GetType())
             {
-                unsigned int l_val;
-                argStream.ReadInteger(l_val);
-                if(!argStream.HasErrors())
+                case GL_BOOL:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValue(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_UVEC2:
-            {
-                glm::uvec2 l_val;
-                for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
-                if(!argStream.HasErrors())
+                    bool l_val;
+                    argStream.ReadBoolean(l_val);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_BOOL_VEC2:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_UVEC3:
-            {
-                glm::uvec3 l_val;
-                for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::bvec2 l_val;
+                    for(int i = 0; i < 2; i++) argStream.ReadBoolean(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_BOOL_VEC3:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_UVEC4:
-            {
-                glm::uvec4 l_val;
-                for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::bvec3 l_val;
+                    for(int i = 0; i < 3; i++) argStream.ReadBoolean(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_BOOL_VEC4:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_INT:
-            {
-                int l_val;
-                argStream.ReadInteger(l_val);
-                if(!argStream.HasErrors())
+                    glm::bvec4 l_val;
+                    for(int i = 0; i < 4; i++) argStream.ReadBoolean(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+
+                case GL_INT:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValue(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_IVEC2:
-            {
-                glm::ivec2 l_val;
-                for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
-                if(!argStream.HasErrors())
+                    int l_val;
+                    argStream.ReadInteger(l_val);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_INT_VEC2:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_IVEC3:
-            {
-                glm::ivec3 l_val;
-                for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::ivec2 l_val;
+                    for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_INT_VEC3:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_IVEC4:
-            {
-                glm::ivec4 l_val;
-                for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::ivec3 l_val;
+                    for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_INT_VEC4:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_FLOAT:
-            {
-                float l_val;
-                argStream.ReadNumber(l_val);
-                if(!argStream.HasErrors())
+                    glm::ivec4 l_val;
+                    for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+
+                case GL_FLOAT:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValue(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_VEC2:
-            {
-                glm::vec2 l_val;
-                for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
-                if(!argStream.HasErrors())
+                    float l_val;
+                    argStream.ReadNumber(l_val);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_FLOAT_VEC2:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_VEC3:
-            {
-                glm::vec3 l_val;
-                for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::vec2 l_val;
+                    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_FLOAT_VEC3:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_VEC4:
-            {
-                glm::vec4 l_val;
-                for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::vec3 l_val;
+                    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_FLOAT_VEC4:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_DOUBLE:
-            {
-                double l_val;
-                argStream.ReadNumber(l_val);
-                if(!argStream.HasErrors())
+                    glm::vec4 l_val;
+                    for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_val);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+
+                case GL_FLOAT_MAT2:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValue(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_DVEC2:
-            {
-                glm::dvec2 l_val;
-                for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::mat2 l_mat;
+                    float *l_matPtr = glm::value_ptr(l_mat);
+                    for(int i = 0; i < 4; i++) argStream.ReadNumber(l_matPtr[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_mat);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_FLOAT_MAT3:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_DVEC3:
-            {
-                glm::dvec3 l_val;
-                for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
-                if(!argStream.HasErrors())
+                    glm::mat3 l_mat;
+                    float *l_matPtr = glm::value_ptr(l_mat);
+                    for(int i = 0; i < 9; i++) argStream.ReadNumber(l_matPtr[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_mat);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                case GL_FLOAT_MAT4:
                 {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_DVEC4:
-            {
-                glm::dvec4 l_val;
-                for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
-                if(!argStream.HasErrors())
-                {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_val);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_MAT2:
-            {
-                glm::mat2 l_mat;
-                float *l_matPtr = glm::value_ptr(l_mat);
-                for(int i = 0; i < 4; i++) argStream.ReadNumber(l_matPtr[i]);
-                if(!argStream.HasErrors())
-                {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_MAT3:
-            {
-                glm::mat3 l_mat;
-                float *l_matPtr = glm::value_ptr(l_mat);
-                for(int i = 0; i < 9; i++) argStream.ReadNumber(l_matPtr[i]);
-                if(!argStream.HasErrors())
-                {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            case ROC_SHADER_UNIFORM_MAT4:
-            {
-                glm::mat4 l_mat;
-                float *l_matPtr = glm::value_ptr(l_mat);
-                for(int i = 0; i < 16; i++) argStream.ReadNumber(l_matPtr[i]);
-                if(!argStream.HasErrors())
-                {
-                    LuaManager::GetCore()->GetRenderManager()->SetShaderUniformValueRef(l_shader, l_uniform, l_mat);
-                    argStream.PushBoolean(true);
-                }
-                else argStream.PushBoolean(false);
-            } break;
-            default:
-                argStream.PushBoolean(false);
+                    glm::mat4 l_mat;
+                    float *l_matPtr = glm::value_ptr(l_mat);
+                    for(int i = 0; i < 16; i++) argStream.ReadNumber(l_matPtr[i]);
+                    if(!argStream.HasErrors())
+                    {
+                        bool l_result = l_shaderUniform->SetValue(l_mat);
+                        argStream.PushBoolean(l_result);
+                    }
+                    else argStream.PushBoolean(false);
+                } break;
+                default:
+                    argStream.PushBoolean(false);
+            }
         }
     }
     else argStream.PushBoolean(false);

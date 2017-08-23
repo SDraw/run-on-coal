@@ -12,7 +12,7 @@
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
 #include "Elements/Scene.h"
-#include "Elements/Shader.h"
+#include "Elements/Shader/Shader.h"
 
 #include "Managers/ElementManager.h"
 #include "Managers/MemoryManager.h"
@@ -121,7 +121,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ElementType::ShaderElement:
-                    m_core->GetRenderManager()->DetachFromShader(reinterpret_cast<Shader*>(f_parent), reinterpret_cast<Drawable*>(f_child));
+                    reinterpret_cast<Shader*>(f_parent)->Detach(reinterpret_cast<Drawable*>(f_child));
                     break;
             }
         } break;
@@ -282,7 +282,7 @@ bool ROC::InheritanceManager::AttachDrawableToShader(Shader *f_shader, Drawable 
     bool l_result = false;
     if(!f_shader->HasAttached(f_drawable))
     {
-        l_result = m_core->GetRenderManager()->AttachToShader(f_shader, f_drawable, f_uniform);
+        l_result = f_shader->Attach(f_drawable, f_uniform);
         if(l_result) AddInheritance(f_drawable, f_shader);
     }
     return l_result;

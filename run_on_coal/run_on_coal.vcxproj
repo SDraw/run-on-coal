@@ -148,7 +148,8 @@
     <ClInclude Include="Elements\Movie.h" />
     <ClInclude Include="Elements\RenderTarget.h" />
     <ClInclude Include="Elements\Scene.h" />
-    <ClInclude Include="Elements\Shader.h" />
+    <ClInclude Include="Elements\Shader\Shader.h" />
+    <ClInclude Include="Elements\Shader\ShaderUniform.h" />
     <ClInclude Include="Elements\Sound.h" />
     <ClInclude Include="Elements\Texture.h" />
     <ClInclude Include="Lua\LuaDefs\LuaAnimationDef.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\CustomData.h" />
     <ClInclude Include="Utils\EnumUtils.h" />
+    <ClInclude Include="Utils\GLUtils.hpp" />
     <ClInclude Include="Utils\LuaUtils.h" />
     <ClInclude Include="Utils\MathUtils.h" />
     <ClInclude Include="Utils\PathUtils.h" />
@@ -237,7 +239,8 @@
     <ClCompile Include="Elements\Movie.cpp" />
     <ClCompile Include="Elements\RenderTarget.cpp" />
     <ClCompile Include="Elements\Scene.cpp" />
-    <ClCompile Include="Elements\Shader.cpp" />
+    <ClCompile Include="Elements\Shader\Shader.cpp" />
+    <ClCompile Include="Elements\Shader\ShaderUniform.cpp" />
     <ClCompile Include="Elements\Sound.cpp" />
     <ClCompile Include="Elements\Texture.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaAnimationDef.cpp" />

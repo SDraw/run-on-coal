@@ -76,8 +76,6 @@ public:
     void RemoveAsActiveScene(Scene *f_scene);
 
     void SetActiveShader(Shader *f_shader);
-    template<typename T> void SetShaderUniformValue(Shader *f_shader, const std::string &f_uniform, T f_value);
-    template<typename T> void SetShaderUniformValueRef(Shader *f_shader, const std::string &f_uniform, T &f_value);
     void RemoveAsActiveShader(Shader *f_shader);
 
     void Render(Model *f_model, bool f_frustum = true, bool f_texturize = true);
@@ -90,9 +88,8 @@ protected:
     explicit RenderManager(Core *f_core);
     ~RenderManager();
 
-    void RestoreActiveShader(Shader *f_shader);
-    bool AttachToShader(Shader *f_shader, Drawable *f_element, const std::string &f_uniform);
-    void DetachFromShader(Shader *f_shader, Drawable *f_element);
+    void EnableActiveShader();
+    void DisableActiveShader();
 
     void AddMovie(Movie *f_movie);
     void RemoveMovie(Movie *f_movie);
@@ -107,16 +104,3 @@ protected:
 };
 
 }
-
-template<typename T> void ROC::RenderManager::SetShaderUniformValue(Shader *f_shader, const std::string &f_uniform, T f_value)
-{
-    EnableNonActiveShader(f_shader);
-    f_shader->SetUniformValue(f_uniform, f_value);
-    RestoreActiveShader(f_shader);
-};
-template<typename T> void ROC::RenderManager::SetShaderUniformValueRef(Shader *f_shader, const std::string &f_uniform, T &f_value)
-{
-    EnableNonActiveShader(f_shader);
-    f_shader->SetUniformValue(f_uniform, f_value);
-    RestoreActiveShader(f_shader);
-};

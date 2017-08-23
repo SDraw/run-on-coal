@@ -23,7 +23,7 @@ class InheritanceManager final
     void AddInheritance(Element *f_child, Element *f_parent);
     void RemoveInheritance(Element *f_child, Element *f_parent);
 
-    void InheritanceBreakProcessing(Element *f_child, Element *f_parent);
+    static void InheritanceBreakProcessing(Element *f_child, Element *f_parent);
 public:
     bool AttachModelToModel(Model *f_model, Model *f_parent, int f_bone = -1);
     bool DetachModel(Model *f_model);

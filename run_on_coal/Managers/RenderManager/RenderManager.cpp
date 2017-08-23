@@ -12,7 +12,7 @@
 #include "Elements/Movie.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
-#include "Elements/Shader.h"
+#include "Elements/Shader/Shader.h"
 #include "Elements/Texture.h"
 #include "Lua/LuaArguments.h"
 #include "Utils/Pool.h"
@@ -164,6 +164,7 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
 {
     if(!m_locked)
     {
+        if(m_activeShader) m_activeShader->Disable();
         m_activeShader = f_shader;
         if(m_activeShader)
         {
@@ -310,20 +311,6 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
     }
 }
 
-bool ROC::RenderManager::AttachToShader(Shader *f_shader, Drawable *f_element, const std::string &f_uniform)
-{
-    EnableNonActiveShader(f_shader);
-    bool l_result = f_shader->Attach(f_element, f_uniform);
-    RestoreActiveShader(f_shader);
-    return l_result;
-}
-void ROC::RenderManager::DetachFromShader(Shader *f_shader, Drawable *f_element)
-{
-    EnableNonActiveShader(f_shader);
-    f_shader->Detach(f_element);
-    RestoreActiveShader(f_shader);
-}
-
 void ROC::RenderManager::AddMovie(Movie *f_movie)
 {
     if(std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie) == m_movieVectorEnd)
@@ -357,13 +344,13 @@ void ROC::RenderManager::DoPulse()
     m_core->GetSfmlManager()->SwapBuffers();
 }
 
-void ROC::RenderManager::EnableNonActiveShader(Shader *f_shader) const
+void ROC::RenderManager::EnableActiveShader()
 {
-    if(m_activeShader != f_shader) f_shader->Enable(false);
+    if(m_activeShader) m_activeShader->Enable();
 }
-void ROC::RenderManager::RestoreActiveShader(Shader *f_shader)
+void ROC::RenderManager::DisableActiveShader()
 {
-    if(m_activeShader != f_shader && m_activeShader) m_activeShader->Enable(false);
+    if(m_activeShader) m_activeShader->Disable();
 }
 
 void ROC::RenderManager::DisableDepth()
