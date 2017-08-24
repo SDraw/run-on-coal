@@ -26,6 +26,7 @@
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader/Shader.h"
+#include "Elements/Shader/ShaderUniform.h"
 #include "Elements/Sound.h"
 #include "Elements/Texture.h"
 

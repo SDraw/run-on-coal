@@ -337,7 +337,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
         {
             case Element::ElementType::SceneElement:
             {
-                m_core->GetRenderManager()->RemoveAsActiveScene(dynamic_cast<Scene*>(f_element));
+                m_core->GetRenderManager()->RemoveAsActiveScene(reinterpret_cast<Scene*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
@@ -346,9 +346,17 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
 
             case Element::ElementType::CameraElement:
             case Element::ElementType::LightElement:
-            case Element::ElementType::RenderTargetElement:
             case Element::ElementType::TextureElement:
             {
+                m_core->GetInheritManager()->RemoveChildRelations(f_element);
+                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                delete f_element;
+                l_result = true;
+            } break;
+
+            case Element::ElementType::RenderTargetElement:
+            {
+                m_core->GetRenderManager()->RemoveAsActiveTarget(reinterpret_cast<RenderTarget*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;

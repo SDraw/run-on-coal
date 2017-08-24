@@ -47,8 +47,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Font::CreateVAO();
     Font::CreateLibrary();
+    Font::CreateVAO();
     Shader::CreateBonesUBO();
 
     m_activeScene = nullptr;
@@ -93,7 +93,7 @@ ROC::RenderManager::~RenderManager()
     Shader::DestroyBonesUBO();
 }
 
-void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
+void ROC::RenderManager::SetActiveTarget(RenderTarget *f_rt)
 {
     if(!m_locked && (m_activeTarget != f_rt))
     {
@@ -114,19 +114,16 @@ void ROC::RenderManager::SetRenderTarget(RenderTarget *f_rt)
         glViewport(0, 0, m_renderTargetSize.x, m_renderTargetSize.y);
     }
 }
-
-void ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
+void ROC::RenderManager::RemoveAsActiveTarget(RenderTarget *f_target)
 {
-    if(!m_locked)
+    if(m_activeTarget == f_target)
     {
-        int l_params = 0;
-        if(f_depth)
-        {
-            l_params |= GL_DEPTH_BUFFER_BIT;
-            EnableDepth();
-        }
-        if(f_color) l_params |= GL_COLOR_BUFFER_BIT;
-        glClear(l_params);
+        m_activeTarget = nullptr;
+        glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+        m_core->GetSfmlManager()->GetWindowSize(m_renderTargetSize);
+        m_skipNoDepthMaterials = false;
+        m_screenProjection = glm::ortho(0.f, static_cast<float>(m_renderTargetSize.x), 0.f, static_cast<float>(m_renderTargetSize.y));
+        glViewport(0, 0, m_renderTargetSize.x, m_renderTargetSize.y);
     }
 }
 
@@ -141,16 +138,16 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             {
                 Camera *l_camera = m_activeScene->GetCamera();
                 if(l_camera) l_camera->Update();
-                m_activeShader->SetProjectionUniformValue(l_camera ? l_camera->GetProjectionMatrix() : g_EmptyMat4);
-                m_activeShader->SetViewUniformValue(l_camera ? l_camera->GetViewMatrix() : g_EmptyMat4);
-                m_activeShader->SetViewProjectionUniformValue(l_camera ? l_camera->GetViewProjectionMatrix() : g_EmptyMat4);
-                m_activeShader->SetCameraPositionUniformValue(l_camera ? l_camera->GetPosition() : g_DefaultPosition);
-                m_activeShader->SetCameraDirectionUniformValue(l_camera ? l_camera->GetDirection() : g_DefaultPosition);
+                m_activeShader->SetProjectionMatrix(l_camera ? l_camera->GetProjectionMatrix() : g_EmptyMat4);
+                m_activeShader->SetViewMatrix(l_camera ? l_camera->GetViewMatrix() : g_EmptyMat4);
+                m_activeShader->SetViewProjectionMatrix(l_camera ? l_camera->GetViewProjectionMatrix() : g_EmptyMat4);
+                m_activeShader->SetCameraPosition(l_camera ? l_camera->GetPosition() : g_DefaultPosition);
+                m_activeShader->SetCameraDirection(l_camera ? l_camera->GetDirection() : g_DefaultPosition);
 
                 Light *l_light = m_activeScene->GetLight();
-                m_activeShader->SetLightColorUniformValue(l_light ? l_light->GetColor() : g_EmptyVec4);
-                m_activeShader->SetLightDirectionUniformValue(l_light ? l_light->GetDirection() : g_DefaultPosition);
-                m_activeShader->SetLightParamUniformValue(l_light ? l_light->GetParams() : g_EmptyVec4);
+                m_activeShader->SetLightColor(l_light ? l_light->GetColor() : g_EmptyVec4);
+                m_activeShader->SetLightDirection(l_light ? l_light->GetDirection() : g_DefaultPosition);
+                m_activeShader->SetLightParam(l_light ? l_light->GetParams() : g_EmptyVec4);
             }
         }
     }
@@ -169,13 +166,40 @@ void ROC::RenderManager::SetActiveShader(Shader *f_shader)
         if(m_activeShader)
         {
             m_activeShader->Enable();
-            m_activeShader->SetTimeUniformValue(m_time);
+            m_activeShader->SetTime(m_time);
         }
     }
 }
 void ROC::RenderManager::RemoveAsActiveShader(Shader *f_shader)
 {
     if(m_activeShader == f_shader) m_activeShader = nullptr;
+}
+
+void ROC::RenderManager::EnableActiveShader()
+{
+    if(m_activeShader) m_activeShader->Enable();
+}
+void ROC::RenderManager::DisableActiveShader()
+{
+    if(m_activeShader) m_activeShader->Disable();
+}
+
+void ROC::RenderManager::AddMovie(Movie *f_movie)
+{
+    if(std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie) == m_movieVectorEnd)
+    {
+        m_movieVector.push_back(f_movie);
+        m_movieVectorEnd = m_movieVector.end();
+    }
+}
+void ROC::RenderManager::RemoveMovie(Movie *f_movie)
+{
+    auto iter = std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie);
+    if(iter != m_movieVectorEnd)
+    {
+        m_movieVector.erase(iter);
+        m_movieVectorEnd = m_movieVector.end();
+    }
 }
 
 void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize)
@@ -193,14 +217,14 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
         }
         if(l_result)
         {
-            m_activeShader->SetModelUniformValue(f_model->GetGlobalMatrix());
+            m_activeShader->SetModelMatrix(f_model->GetGlobalMatrix());
 
             if(f_model->HasSkeleton())
             {
-                Shader::SetBonesUniformValue(f_model->GetSkeleton()->GetPoseMatrices());
-                m_activeShader->SetAnimatedUniformValue(1U);
+                Shader::SetBoneMatrices(f_model->GetSkeleton()->GetPoseMatrices());
+                m_activeShader->SetAnimated(1U);
             }
-            else m_activeShader->SetAnimatedUniformValue(0U);
+            else m_activeShader->SetAnimated(0U);
 
             for(auto iter : f_model->GetGeometry()->GetMaterialVector())
             {
@@ -220,8 +244,8 @@ void ROC::RenderManager::Render(Model *f_model, bool f_frustum, bool f_texturize
                 m_materialBind.y = CompareLastVAO(iter->GetVAO());
                 if(m_materialBind.y)
                 {
-                    m_activeShader->SetMaterialTypeUniformValue(static_cast<int>(iter->GetType()));
-                    m_activeShader->SetMaterialParamUniformValue(iter->GetParams());
+                    m_activeShader->SetMaterialType(static_cast<int>(iter->GetType()));
+                    m_activeShader->SetMaterialParam(iter->GetParams());
                 }
                 iter->Draw(m_materialBind.y);
             }
@@ -235,9 +259,9 @@ void ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::
         EnableBlending();
         DisableDepth();
 
-        m_activeShader->SetModelUniformValue(g_IdentityMatrix);
-        m_activeShader->SetProjectionUniformValue(m_screenProjection);
-        m_activeShader->SetColorUniformValue(f_color);
+        m_activeShader->SetModelMatrix(g_IdentityMatrix);
+        m_activeShader->SetProjectionMatrix(m_screenProjection);
+        m_activeShader->SetColor(f_color);
 
         m_fontBind.x = CompareLastVAO(Font::GetVAO());
         m_fontBind.y = CompareLastTexture(f_font->GetAtlasTexture());
@@ -253,8 +277,8 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
 
         m_quad->SetTransformation(f_size);
 
-        m_activeShader->SetProjectionUniformValue(m_screenProjection);
-        m_activeShader->SetColorUniformValue(f_color);
+        m_activeShader->SetProjectionMatrix(m_screenProjection);
+        m_activeShader->SetColor(f_color);
 
         btTransform l_textureTransform;
         btVector3 l_textureTranslate(f_pos.x, f_pos.y, 0.f);
@@ -267,7 +291,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
             l_textureTransform.setRotation(l_textureRotation);
         }
         l_textureTransform.getOpenGLMatrix(glm::value_ptr(m_textureMatrix));
-        m_activeShader->SetModelUniformValue(m_textureMatrix);
+        m_activeShader->SetModelMatrix(m_textureMatrix);
 
         DisableCulling();
         DisableDepth();
@@ -291,16 +315,16 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
 
                 m_quad3D->SetTransformation(f_pos, f_rot, f_size);
 
-                m_activeShader->SetAnimatedUniformValue(0U);
-                m_activeShader->SetModelUniformValue(m_quad3D->GetMatrixRef());
-                m_activeShader->SetMaterialParamUniformValue(g_EmptyVec4);
+                m_activeShader->SetAnimated(0U);
+                m_activeShader->SetModelMatrix(m_quad3D->GetMatrixRef());
+                m_activeShader->SetMaterialParam(g_EmptyVec4);
 
                 int l_materialType = 0;
                 if(f_params.x) l_materialType |= ROC_MATERIAL_BIT_SHADING;
                 if(f_params.y) l_materialType |= ROC_MATERIAL_BIT_DEPTH;
                 if(f_params.z) l_materialType |= ROC_MATERIAL_BIT_TRANSPARENCY;
                 if(f_params.w) l_materialType |= ROC_MATERIAL_BIT_DOUBLESIDE;
-                m_activeShader->SetMaterialTypeUniformValue(l_materialType);
+                m_activeShader->SetMaterialType(l_materialType);
 
                 f_params.w ? DisableCulling() : EnableCulling();
                 f_params.y ? EnableDepth() : DisableDepth();
@@ -311,46 +335,19 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
     }
 }
 
-void ROC::RenderManager::AddMovie(Movie *f_movie)
+void ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
 {
-    if(std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie) == m_movieVectorEnd)
+    if(!m_locked)
     {
-        m_movieVector.push_back(f_movie);
-        m_movieVectorEnd = m_movieVector.end();
+        int l_params = 0;
+        if(f_depth)
+        {
+            l_params |= GL_DEPTH_BUFFER_BIT;
+            EnableDepth();
+        }
+        if(f_color) l_params |= GL_COLOR_BUFFER_BIT;
+        glClear(l_params);
     }
-}
-void ROC::RenderManager::RemoveMovie(Movie *f_movie)
-{
-    auto iter = std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie);
-    if(iter != m_movieVectorEnd)
-    {
-        m_movieVector.erase(iter);
-        m_movieVectorEnd = m_movieVector.end();
-    }
-}
-
-void ROC::RenderManager::DoPulse()
-{
-    m_time = m_core->GetSfmlManager()->GetTime();
-
-    ResetCallsReducing();
-    for(auto iter : m_movieVector) iter->Update();
-
-    m_locked = false;
-    if(m_callback) (*m_callback)();
-
-    m_core->GetLuaManager()->GetEventManager()->CallEvent("onRender", m_argument);
-    m_locked = true;
-    m_core->GetSfmlManager()->SwapBuffers();
-}
-
-void ROC::RenderManager::EnableActiveShader()
-{
-    if(m_activeShader) m_activeShader->Enable();
-}
-void ROC::RenderManager::DisableActiveShader()
-{
-    if(m_activeShader) m_activeShader->Disable();
 }
 
 void ROC::RenderManager::DisableDepth()
@@ -413,4 +410,19 @@ void ROC::RenderManager::ResetCallsReducing()
 {
     m_lastTexture = 0U;
     m_lastVAO = 0U;
+}
+
+void ROC::RenderManager::DoPulse()
+{
+    m_time = m_core->GetSfmlManager()->GetTime();
+
+    ResetCallsReducing();
+    for(auto iter : m_movieVector) iter->Update();
+
+    m_locked = false;
+    if(m_callback) (*m_callback)();
+
+    m_core->GetLuaManager()->GetEventManager()->CallEvent("onRender", m_argument);
+    m_locked = true;
+    m_core->GetSfmlManager()->SwapBuffers();
 }

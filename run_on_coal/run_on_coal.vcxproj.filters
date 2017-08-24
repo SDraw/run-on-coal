@@ -472,7 +472,9 @@
     <ClInclude Include="Elements\Shader\ShaderUniform.h">
       <Filter>Elements\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\GLUtils.hpp" />
+    <ClInclude Include="Utils\GLUtils.hpp">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">

@@ -27,7 +27,7 @@ void ROC::LuaRenderingDef::Init(lua_State *f_vm)
 {
     lua_register(f_vm, "setActiveScene", SetActiveScene);
     lua_register(f_vm, "setActiveShader", SetActiveShader);
-    lua_register(f_vm, "setRenderTarget", SetRenderTarget);
+    lua_register(f_vm, "setActiveTarget", SetActiveTarget);
     lua_register(f_vm, "clearRenderArea", ClearRenderArea);
     lua_register(f_vm, "setClearColor", SetClearColor);
     lua_register(f_vm, "setRenderArea", SetRenderArea);
@@ -60,12 +60,12 @@ int ROC::LuaRenderingDef::SetActiveShader(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int ROC::LuaRenderingDef::SetRenderTarget(lua_State *f_vm)
+int ROC::LuaRenderingDef::SetActiveTarget(lua_State *f_vm)
 {
     RenderTarget *l_rt = nullptr;
     ArgReader argStream(f_vm);
     argStream.ReadNextElement(l_rt);
-    LuaManager::GetCore()->GetRenderManager()->SetRenderTarget(l_rt);
+    LuaManager::GetCore()->GetRenderManager()->SetActiveTarget(l_rt);
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }

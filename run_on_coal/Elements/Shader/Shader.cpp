@@ -235,7 +235,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     m_viewUniform = glGetUniformLocation(m_program, "gViewMatrix");
     m_viewProjectionUniform = glGetUniformLocation(m_program, "gViewProjectionMatrix");
     m_modelUniform = glGetUniformLocation(m_program, "gModelMatrix");
-    //Vectors
+    //Camera
     m_cameraPositionUniform = glGetUniformLocation(m_program, "gCameraPosition");
     m_cameraDirectionUniform = glGetUniformLocation(m_program, "gCameraDirection");
     //Light
@@ -254,7 +254,7 @@ void ROC::Shader::SetupDefaultUniformsAndLocations()
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform, 0);
     //Time
     m_timeUniform = glGetUniformLocation(m_program, "gTime");
-    //Color (RenderTarget, Texture, Font)
+    //Color (RenderTarget, Texture, Font, Movie)
     m_colorUniform = glGetUniformLocation(m_program, "gColor");
 
     //Get list of custom uniforms
@@ -286,7 +286,7 @@ ROC::ShaderUniform* ROC::Shader::GetUniform(const std::string &f_uniform)
     return l_shaderUniform;
 }
 
-void ROC::Shader::SetProjectionUniformValue(const glm::mat4 &f_value)
+void ROC::Shader::SetProjectionMatrix(const glm::mat4 &f_value)
 {
     if(m_projectionUniform != -1)
     {
@@ -297,7 +297,7 @@ void ROC::Shader::SetProjectionUniformValue(const glm::mat4 &f_value)
         }
     }
 }
-void ROC::Shader::SetViewUniformValue(const glm::mat4 &f_value)
+void ROC::Shader::SetViewMatrix(const glm::mat4 &f_value)
 {
     if(m_viewUniform != -1)
     {
@@ -308,7 +308,7 @@ void ROC::Shader::SetViewUniformValue(const glm::mat4 &f_value)
         }
     }
 }
-void ROC::Shader::SetViewProjectionUniformValue(const glm::mat4 &f_value)
+void ROC::Shader::SetViewProjectionMatrix(const glm::mat4 &f_value)
 {
     if(m_viewProjectionUniform != -1)
     {
@@ -319,7 +319,7 @@ void ROC::Shader::SetViewProjectionUniformValue(const glm::mat4 &f_value)
         }
     }
 }
-void ROC::Shader::SetModelUniformValue(const glm::mat4 &f_value)
+void ROC::Shader::SetModelMatrix(const glm::mat4 &f_value)
 {
     if(m_modelUniform != -1)
     {
@@ -330,7 +330,7 @@ void ROC::Shader::SetModelUniformValue(const glm::mat4 &f_value)
         }
     }
 }
-void ROC::Shader::SetCameraPositionUniformValue(const glm::vec3 &f_value)
+void ROC::Shader::SetCameraPosition(const glm::vec3 &f_value)
 {
     if(m_cameraPositionUniform != -1)
     {
@@ -341,7 +341,7 @@ void ROC::Shader::SetCameraPositionUniformValue(const glm::vec3 &f_value)
         }
     }
 }
-void ROC::Shader::SetCameraDirectionUniformValue(const glm::vec3 &f_value)
+void ROC::Shader::SetCameraDirection(const glm::vec3 &f_value)
 {
     if(m_cameraDirectionUniform != -1)
     {
@@ -352,7 +352,7 @@ void ROC::Shader::SetCameraDirectionUniformValue(const glm::vec3 &f_value)
         }
     }
 }
-void ROC::Shader::SetLightColorUniformValue(const glm::vec4 &f_value)
+void ROC::Shader::SetLightColor(const glm::vec4 &f_value)
 {
     if(m_lightColorUniform != -1)
     {
@@ -363,7 +363,7 @@ void ROC::Shader::SetLightColorUniformValue(const glm::vec4 &f_value)
         }
     }
 }
-void ROC::Shader::SetLightDirectionUniformValue(const glm::vec3 &f_value)
+void ROC::Shader::SetLightDirection(const glm::vec3 &f_value)
 {
     if(m_lightDirectionUniform != -1)
     {
@@ -374,7 +374,7 @@ void ROC::Shader::SetLightDirectionUniformValue(const glm::vec3 &f_value)
         }
     }
 }
-void ROC::Shader::SetLightParamUniformValue(const glm::vec4 &f_value)
+void ROC::Shader::SetLightParam(const glm::vec4 &f_value)
 {
     if(m_lightParamUniform != -1)
     {
@@ -385,7 +385,7 @@ void ROC::Shader::SetLightParamUniformValue(const glm::vec4 &f_value)
         }
     }
 }
-void ROC::Shader::SetMaterialParamUniformValue(const glm::vec4 &f_value)
+void ROC::Shader::SetMaterialParam(const glm::vec4 &f_value)
 {
     if(m_materialParamUniform != -1)
     {
@@ -396,7 +396,7 @@ void ROC::Shader::SetMaterialParamUniformValue(const glm::vec4 &f_value)
         }
     }
 }
-void ROC::Shader::SetMaterialTypeUniformValue(int f_value)
+void ROC::Shader::SetMaterialType(int f_value)
 {
     if(m_materialTypeUniform != -1)
     {
@@ -407,7 +407,7 @@ void ROC::Shader::SetMaterialTypeUniformValue(int f_value)
         }
     }
 }
-void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
+void ROC::Shader::SetAnimated(unsigned int f_value)
 {
     if(m_animatedUniform != -1)
     {
@@ -418,15 +418,16 @@ void ROC::Shader::SetAnimatedUniformValue(unsigned int f_value)
         }
     }
 }
-void ROC::Shader::SetBonesUniformValue(const std::vector<glm::mat4> &f_value)
+void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
 {
     if(ms_bonesUBO != GL_INVALID_INDEX)
     {
         if(ms_uboFix) glFinish();
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, f_value.size()*sizeof(glm::mat4), f_value.data());
+        unsigned int l_matrixCount = std::min(f_value.size(), ROC_SHADER_BONES_COUNT);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, l_matrixCount*sizeof(glm::mat4), f_value.data());
     }
 }
-void ROC::Shader::SetTimeUniformValue(float f_value)
+void ROC::Shader::SetTime(float f_value)
 {
     if(m_timeUniform != -1)
     {
@@ -437,7 +438,7 @@ void ROC::Shader::SetTimeUniformValue(float f_value)
         }
     }
 }
-void ROC::Shader::SetColorUniformValue(const glm::vec4 &f_value)
+void ROC::Shader::SetColor(const glm::vec4 &f_value)
 {
     if(m_colorUniform != -1)
     {
@@ -456,16 +457,28 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
     if(l_mapResult != m_uniformMapEnd)
     {
         ShaderUniform *l_shaderUniform = l_mapResult->second;
-        if((GLUtils::Is2DSampler(l_shaderUniform->GetType()) && !f_drawable->IsCubic()) || (GLUtils::IsCubicSampler(l_shaderUniform->GetType()) && f_drawable->IsCubic()))
+        bool l_isUsed = false;
+        for(const auto &iter : m_drawableBind)
         {
-            int l_slot = m_bindPool->Allocate();
-            if(l_slot != -1)
+            if(iter.m_uniform == l_shaderUniform)
             {
-                drawableBindData l_bind{ f_drawable, l_slot + 1, l_shaderUniform };
-                m_drawableBind.push_back(l_bind);
-                m_drawableCount++;
-                l_shaderUniform->SetSampler(l_slot + 1);
-                l_result = true;
+                l_isUsed = true;
+                break;
+            }
+        }
+        if(!l_isUsed)
+        {
+            if((GLUtils::Is2DSampler(l_shaderUniform->GetType()) && !f_drawable->IsCubic()) || (GLUtils::IsCubicSampler(l_shaderUniform->GetType()) && f_drawable->IsCubic()))
+            {
+                int l_slot = m_bindPool->Allocate();
+                if(l_slot != -1)
+                {
+                    drawableBindData l_bind{ f_drawable, l_slot + 1, l_shaderUniform };
+                    m_drawableBind.push_back(l_bind);
+                    m_drawableCount++;
+                    l_shaderUniform->SetSampler(l_slot + 1);
+                    l_result = true;
+                }
             }
         }
     }
@@ -492,7 +505,7 @@ bool ROC::Shader::Detach(Drawable *f_drawable)
 bool ROC::Shader::HasAttached(Drawable *f_drawable)
 {
     bool l_result = false;
-    for(auto &iter : m_drawableBind)
+    for(const auto &iter : m_drawableBind)
     {
         if(iter.m_element == f_drawable)
         {

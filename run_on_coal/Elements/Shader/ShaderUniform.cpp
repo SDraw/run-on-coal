@@ -2,6 +2,8 @@
 
 #include "Elements/Shader/ShaderUniform.h"
 
+#include "Utils/GLUtils.hpp"
+
 ROC::ShaderUniform::ShaderUniform(unsigned int f_type, int f_uniform)
 {
     m_type = f_type;
@@ -169,14 +171,14 @@ bool ROC::ShaderUniform::SetValue(const glm::mat4 &f_val)
 
 bool ROC::ShaderUniform::SetSampler(int f_sampler)
 {
-    bool l_typeCheck = (m_type == GL_SAMPLER_2D || m_type == GL_SAMPLER_CUBE || m_type == GL_SAMPLER_2D_SHADOW);
-    if(l_typeCheck)
+    bool l_isSampler = GLUtils::IsSampler(m_type);
+    if(l_isSampler)
     {
         m_int[0] = f_sampler;
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return l_typeCheck;
+    return l_isSampler;
 }
 
 void ROC::ShaderUniform::Update()

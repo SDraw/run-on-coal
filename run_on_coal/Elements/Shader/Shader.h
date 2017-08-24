@@ -75,21 +75,21 @@ protected:
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     inline const std::string& GetError() const { return m_error; }
 
-    void SetProjectionUniformValue(const glm::mat4 &f_value);
-    void SetViewUniformValue(const glm::mat4 &f_value);
-    void SetViewProjectionUniformValue(const glm::mat4 &f_value);
-    void SetModelUniformValue(const glm::mat4 &f_value);
-    void SetCameraPositionUniformValue(const glm::vec3 &f_value);
-    void SetCameraDirectionUniformValue(const glm::vec3 &f_value);
-    void SetLightColorUniformValue(const glm::vec4 &f_value);
-    void SetLightDirectionUniformValue(const glm::vec3 &f_value);
-    void SetLightParamUniformValue(const glm::vec4 &f_value);
-    void SetMaterialParamUniformValue(const glm::vec4 &f_value);
-    void SetMaterialTypeUniformValue(int f_value);
-    void SetAnimatedUniformValue(unsigned int f_value);
-    static void SetBonesUniformValue(const std::vector<glm::mat4> &f_value);
-    void SetTimeUniformValue(float f_value);
-    void SetColorUniformValue(const glm::vec4 &f_value);
+    void SetProjectionMatrix(const glm::mat4 &f_value);
+    void SetViewMatrix(const glm::mat4 &f_value);
+    void SetViewProjectionMatrix(const glm::mat4 &f_value);
+    void SetModelMatrix(const glm::mat4 &f_value);
+    void SetCameraPosition(const glm::vec3 &f_value);
+    void SetCameraDirection(const glm::vec3 &f_value);
+    void SetLightColor(const glm::vec4 &f_value);
+    void SetLightDirection(const glm::vec3 &f_value);
+    void SetLightParam(const glm::vec4 &f_value);
+    void SetMaterialParam(const glm::vec4 &f_value);
+    void SetMaterialType(int f_value);
+    void SetAnimated(unsigned int f_value);
+    static void SetBoneMatrices(const std::vector<glm::mat4> &f_value);
+    void SetTime(float f_value);
+    void SetColor(const glm::vec4 &f_value);
 
     bool Attach(Drawable *f_drawable, const std::string &f_uniform);
     bool Detach(Drawable *f_drawable);
