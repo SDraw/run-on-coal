@@ -30,6 +30,7 @@ void ROC::LuaFontDef::Init(lua_State *f_vm)
 
 int ROC::LuaFontDef::Create(lua_State *f_vm)
 {
+    // element Font(str path, int size [, int atlasX = 256, int atlasY = 256])
     std::string l_path;
     int l_size;
     glm::ivec2 l_atlasSize(ROC_FONT_ATLAS_SIZE);
@@ -52,6 +53,7 @@ int ROC::LuaFontDef::Create(lua_State *f_vm)
 }
 int ROC::LuaFontDef::Draw(lua_State *f_vm)
 {
+    // bool Font:draw(float x, float y, str text [, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1])
     Font *l_font;
     glm::vec2 l_pos;
     std::string l_text;

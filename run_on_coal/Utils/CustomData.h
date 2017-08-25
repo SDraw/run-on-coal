@@ -45,7 +45,7 @@ public:
     void SetString(const char *f_val, size_t f_size);
     inline void ClearString() { m_string.clear(); }
 
-    CustomData& operator=(CustomData &f_data);
+    CustomData& operator=(const CustomData &f_data);
 private:
     DataType m_type;
 };

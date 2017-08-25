@@ -54,6 +54,7 @@ void ROC::LuaSoundDef::Init(lua_State *f_vm)
 
 int ROC::LuaSoundDef::Create(lua_State *f_vm)
 {
+    // element Sound(str path [, bool loop = false])
     std::string l_path;
     bool l_loop = false;
     ArgReader argStream(f_vm);
@@ -70,6 +71,7 @@ int ROC::LuaSoundDef::Create(lua_State *f_vm)
 
 int ROC::LuaSoundDef::Play(lua_State *f_vm)
 {
+    // bool Sound:play()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -83,6 +85,7 @@ int ROC::LuaSoundDef::Play(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::Pause(lua_State *f_vm)
 {
+    // bool Sound:pause()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -96,6 +99,7 @@ int ROC::LuaSoundDef::Pause(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::Stop(lua_State *f_vm)
 {
+    // bool Sound:stop()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -110,6 +114,7 @@ int ROC::LuaSoundDef::Stop(lua_State *f_vm)
 
 int ROC::LuaSoundDef::IsLooped(lua_State *f_vm)
 {
+    // bool Sound:isLooped()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -119,6 +124,7 @@ int ROC::LuaSoundDef::IsLooped(lua_State *f_vm)
 
 int ROC::LuaSoundDef::GetState(lua_State *f_vm)
 {
+    // str Sound:getState()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -133,6 +139,7 @@ int ROC::LuaSoundDef::GetState(lua_State *f_vm)
 
 int ROC::LuaSoundDef::SetSpeed(lua_State *f_vm)
 {
+    // bool Sound:setSpeed(float speed)
     Sound *l_sound;
     float l_val;
     ArgReader argStream(f_vm);
@@ -148,6 +155,7 @@ int ROC::LuaSoundDef::SetSpeed(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::GetSpeed(lua_State *f_vm)
 {
+    // float Sound:getSpeed()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -162,6 +170,7 @@ int ROC::LuaSoundDef::GetSpeed(lua_State *f_vm)
 
 int ROC::LuaSoundDef::SetVolume(lua_State *f_vm)
 {
+    // bool Sound:setVolume(float volume)
     Sound *l_sound;
     float l_val;
     ArgReader argStream(f_vm);
@@ -177,6 +186,7 @@ int ROC::LuaSoundDef::SetVolume(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::GetVolume(lua_State *f_vm)
 {
+    // float Sound:getVolume()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -191,6 +201,7 @@ int ROC::LuaSoundDef::GetVolume(lua_State *f_vm)
 
 int ROC::LuaSoundDef::SetTime(lua_State *f_vm)
 {
+    // bool Sound:setTime(float time)
     Sound *l_sound;
     float l_val;
     ArgReader argStream(f_vm);
@@ -206,6 +217,7 @@ int ROC::LuaSoundDef::SetTime(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::GetTime(lua_State *f_vm)
 {
+    // float Sound:getTime()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -219,6 +231,7 @@ int ROC::LuaSoundDef::GetTime(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::GetDuration(lua_State *f_vm)
 {
+    // float Sound:getDuration()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -233,6 +246,7 @@ int ROC::LuaSoundDef::GetDuration(lua_State *f_vm)
 
 int ROC::LuaSoundDef::Set3DEnabled(lua_State *f_vm)
 {
+    // bool Sound:set3DEnabled(bool state)
     Sound *l_sound;
     bool l_state;
     ArgReader argStream(f_vm);
@@ -248,6 +262,7 @@ int ROC::LuaSoundDef::Set3DEnabled(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::Get3DEnabled(lua_State *f_vm)
 {
+    // bool Sound:get3DEnabled()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -257,6 +272,7 @@ int ROC::LuaSoundDef::Get3DEnabled(lua_State *f_vm)
 
 int ROC::LuaSoundDef::Set3DPosition(lua_State *f_vm)
 {
+    // bool Sound:set3DPosition(float x, float y, float z)
     Sound *l_sound;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
@@ -272,6 +288,7 @@ int ROC::LuaSoundDef::Set3DPosition(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::Get3DPosition(lua_State *f_vm)
 {
+    // float float float Sound:get3DPosition()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -289,6 +306,7 @@ int ROC::LuaSoundDef::Get3DPosition(lua_State *f_vm)
 
 int ROC::LuaSoundDef::Set3DDistance(lua_State *f_vm)
 {
+    // bool Sound:set3DDistance(float distance, float attenuation)
     Sound *l_sound;
     glm::vec2 l_dist;
     ArgReader argStream(f_vm);
@@ -304,6 +322,7 @@ int ROC::LuaSoundDef::Set3DDistance(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::Get3DDistance(lua_State *f_vm)
 {
+    // float float Sound:get3DDistance()
     Sound *l_sound;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
@@ -320,6 +339,7 @@ int ROC::LuaSoundDef::Get3DDistance(lua_State *f_vm)
 
 int ROC::LuaSoundDef::SetListenerOrientation(lua_State *f_vm)
 {
+    // bool soundSetListenerOrientation(float x, float y, float z, float dirX, float dirY, float dirZ, float upX, float upY, float upZ)
     glm::vec3 l_pos, l_dir, l_up;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
@@ -338,6 +358,7 @@ int ROC::LuaSoundDef::SetListenerOrientation(lua_State *f_vm)
 
 int ROC::LuaSoundDef::GetListenerOrientation(lua_State *f_vm)
 {
+    // float float float float float float float float float soundGetListenerOrientation()
     ArgReader argStream(f_vm);
     glm::vec3 l_pos, l_dir, l_up;
     LuaManager::GetCore()->GetSoundManager()->GetListenerPosition(l_pos);
@@ -357,6 +378,7 @@ int ROC::LuaSoundDef::GetListenerOrientation(lua_State *f_vm)
 
 int ROC::LuaSoundDef::SetGlobalVolume(lua_State *f_vm)
 {
+    // bool soundSetGlobalVolume(float volume)
     float l_volume;
     ArgReader argStream(f_vm);
     argStream.ReadNumber(l_volume);
@@ -370,6 +392,7 @@ int ROC::LuaSoundDef::SetGlobalVolume(lua_State *f_vm)
 }
 int ROC::LuaSoundDef::GetGlobalVolume(lua_State *f_vm)
 {
+    // float soundGetGlobalVolume()
     ArgReader argStream(f_vm);
     argStream.PushNumber(LuaManager::GetCore()->GetSoundManager()->GetGlobalVolume());
     return argStream.GetReturnValue();

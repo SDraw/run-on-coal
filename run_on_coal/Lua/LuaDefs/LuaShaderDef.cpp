@@ -28,6 +28,7 @@ void ROC::LuaShaderDef::Init(lua_State *f_vm)
 
 int ROC::LuaShaderDef::Create(lua_State *f_vm)
 {
+    // element Shader(str vertexPath, str fragmentPath [, str geometryPath = ""])
     std::string l_vsp, l_fsp, l_gsp;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_vsp);
@@ -44,6 +45,7 @@ int ROC::LuaShaderDef::Create(lua_State *f_vm)
 
 int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
 {
+    // bool Shader:setUniformValue(str uniform, var value1 [, ...])
     Shader *l_shader;
     std::string l_uniform;
     ArgReader argStream(f_vm);
@@ -237,6 +239,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
 }
 int ROC::LuaShaderDef::Attach(lua_State *f_vm)
 {
+    // bool Shader:attach(element drawable, str uniform)
     Shader *l_shader;
     Drawable *l_drawable;
     std::string l_uniform;
@@ -254,6 +257,7 @@ int ROC::LuaShaderDef::Attach(lua_State *f_vm)
 }
 int ROC::LuaShaderDef::Detach(lua_State *f_vm)
 {
+    // bool Shader:detach(element drawable)
     Shader *l_shader;
     Drawable *l_drawable;
     ArgReader argStream(f_vm);

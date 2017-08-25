@@ -62,6 +62,7 @@ void ROC::LuaCollisionDef::Init(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::Create(lua_State *f_vm)
 {
+    // element Collision(str type [, float mass = 1.0, float sx = 1.0, float sy = 1.0, float sz = 1.0])
     std::string l_typeString;
     float l_mass = 1.f;
     glm::vec3 l_size(1.f);
@@ -85,6 +86,7 @@ int ROC::LuaCollisionDef::Create(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::SetPosition(lua_State *f_vm)
 {
+    // bool Collision:setPosition(float x, float y, float z)
     Collision *l_col;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
@@ -100,6 +102,7 @@ int ROC::LuaCollisionDef::SetPosition(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetPosition(lua_State *f_vm)
 {
+    // float float float Collision:getPosition()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -115,6 +118,7 @@ int ROC::LuaCollisionDef::GetPosition(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::SetRotation(lua_State *f_vm)
 {
+    // bool Collision:setRotation(float x, float y, float z, float w)
     Collision *l_col;
     glm::quat l_rot;
     ArgReader argStream(f_vm);
@@ -130,6 +134,7 @@ int ROC::LuaCollisionDef::SetRotation(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetRotation(lua_State *f_vm)
 {
+    // float float float float Collision:getRotation()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -145,6 +150,7 @@ int ROC::LuaCollisionDef::GetRotation(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::SetScale(lua_State *f_vm)
 {
+    // bool CollisionSetScale(float x, float y, float z)
     Collision *l_col;
     glm::vec3 l_scale;
     ArgReader argStream(f_vm);
@@ -160,6 +166,7 @@ int ROC::LuaCollisionDef::SetScale(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetScale(lua_State *f_vm)
 {
+    // float float float Collision:getScale()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -175,6 +182,7 @@ int ROC::LuaCollisionDef::GetScale(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::GetMass(lua_State *f_vm)
 {
+    // float Collision:getMass()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -189,6 +197,7 @@ int ROC::LuaCollisionDef::GetMass(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::SetVelocity(lua_State *f_vm)
 {
+    // bool Collision:setVelocity(float x, float y, float z)
     Collision *l_col;
     glm::vec3 l_velocity;
     ArgReader argStream(f_vm);
@@ -204,6 +213,7 @@ int ROC::LuaCollisionDef::SetVelocity(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetVelocity(lua_State *f_vm)
 {
+    // float float float Collision:getVelocity()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -219,6 +229,7 @@ int ROC::LuaCollisionDef::GetVelocity(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::SetAngularVelocity(lua_State *f_vm)
 {
+    // bool Collision:setAngularVelocity(float x, float y, float z)
     Collision *l_col;
     glm::vec3 l_angularVelocity;
     ArgReader argStream(f_vm);
@@ -234,6 +245,7 @@ int ROC::LuaCollisionDef::SetAngularVelocity(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetAngularVelocity(lua_State *f_vm)
 {
+    // float float float Collision:getAngularVelocity()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -248,6 +260,7 @@ int ROC::LuaCollisionDef::GetAngularVelocity(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::SetFriction(lua_State *f_vm)
 {
+    // bool Collision:setFriction(float friction)
     Collision *l_col;
     float l_friction;
     ArgReader argStream(f_vm);
@@ -263,6 +276,7 @@ int ROC::LuaCollisionDef::SetFriction(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetFriction(lua_State *f_vm)
 {
+    // float Collision:getFriction()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -276,6 +290,7 @@ int ROC::LuaCollisionDef::GetFriction(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::SetLinearFactor(lua_State *f_vm)
 {
+    // bool Collision:setLinearFactor(float x, float y, float z)
     Collision *l_col;
     glm::vec3 l_linearFactor;
     ArgReader argStream(f_vm);
@@ -291,6 +306,7 @@ int ROC::LuaCollisionDef::SetLinearFactor(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetLinearFactor(lua_State *f_vm)
 {
+    // float float float Collision:getLinearFactor()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -305,6 +321,7 @@ int ROC::LuaCollisionDef::GetLinearFactor(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::SetAngularFactor(lua_State *f_vm)
 {
+    // bool Collision:setAngularFactor(float x, float y, float z)
     Collision *l_col;
     glm::vec3 l_angularFactor;
     ArgReader argStream(f_vm);
@@ -320,6 +337,7 @@ int ROC::LuaCollisionDef::SetAngularFactor(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetAngularFactor(lua_State *f_vm)
 {
+    // float float float Collision:getAngularFactor()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);
@@ -335,6 +353,7 @@ int ROC::LuaCollisionDef::GetAngularFactor(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::ApplyForce(lua_State *f_vm)
 {
+    // bool Collision:applyForce(float forceX, float forceY, float forceZ [, float relX = 0, float relY = 0, float relZ = 0])
     Collision *l_collision;
     glm::vec3 l_force;
     glm::vec3 l_relPos(0.f);
@@ -352,6 +371,7 @@ int ROC::LuaCollisionDef::ApplyForce(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::ApplyImpulse(lua_State *f_vm)
 {
+    // bool Collision:applyImpulse(float impX, float impY, float impZ [, float relX = 0, float relY = 0, float relZ = 0])
     Collision *l_collision;
     glm::vec3 l_impulse;
     glm::vec3 l_relPos(0.f);
@@ -369,6 +389,7 @@ int ROC::LuaCollisionDef::ApplyImpulse(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::ApplyTorque(lua_State *f_vm)
 {
+    // bool Collision:applyTorque(float x, float y, float z)
     Collision *l_collision;
     glm::vec3 l_torque;
     bool l_impulse = false;
@@ -387,6 +408,7 @@ int ROC::LuaCollisionDef::ApplyTorque(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::SetMotionType(lua_State *f_vm)
 {
+    // bool Collision:setMotionType(str type)
     Collision *l_collision;
     std::string l_type;
     ArgReader argStream(f_vm);
@@ -407,6 +429,7 @@ int ROC::LuaCollisionDef::SetMotionType(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::GetMotionType(lua_State *f_vm)
 {
+    // str Collision:getMotionType()
     Collision *l_collision;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_collision);
@@ -416,6 +439,7 @@ int ROC::LuaCollisionDef::GetMotionType(lua_State *f_vm)
 
 int ROC::LuaCollisionDef::Attach(lua_State *f_vm)
 {
+    // bool Collision:attach(element model)
     Collision *l_col;
     Model *l_model;
     ArgReader argStream(f_vm);
@@ -431,6 +455,7 @@ int ROC::LuaCollisionDef::Attach(lua_State *f_vm)
 }
 int ROC::LuaCollisionDef::Detach(lua_State *f_vm)
 {
+    // bool Collision:detach()
     Collision *l_col;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_col);

@@ -34,6 +34,7 @@ void ROC::LuaRenderTargetDef::Init(lua_State *f_vm)
 
 int ROC::LuaRenderTargetDef::Create(lua_State *f_vm)
 {
+    // element RenderTarget(int width, int height, colorBind, str type [, str filtering = "nearest"])
     glm::ivec2 l_size;
     unsigned int l_number;
     std::string l_type, l_filtering;

@@ -30,6 +30,7 @@ int ROC::LuaUtilsDef::DisabledFunction(lua_State *f_vm)
 
 int ROC::LuaUtilsDef::LogPrint(lua_State *f_vm)
 {
+    // bool logPrint(str text)
     std::string l_text;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_text);
@@ -44,6 +45,7 @@ int ROC::LuaUtilsDef::LogPrint(lua_State *f_vm)
 
 int ROC::LuaUtilsDef::GetTick(lua_State *f_vm)
 {
+    // int getTickCount()
     ArgReader argStream(f_vm);
     lua_Integer l_tick = 0;
     l_tick = static_cast<lua_Integer>(GetTickCount64());
@@ -52,6 +54,7 @@ int ROC::LuaUtilsDef::GetTick(lua_State *f_vm)
 }
 int ROC::LuaUtilsDef::GetTime(lua_State *f_vm)
 {
+    // float getTime()
     ArgReader argStream(f_vm);
     argStream.PushNumber(LuaManager::GetCore()->GetSfmlManager()->GetTime());
     return argStream.GetReturnValue();
@@ -59,6 +62,7 @@ int ROC::LuaUtilsDef::GetTime(lua_State *f_vm)
 
 int ROC::LuaUtilsDef::Base64Encode(lua_State *f_vm)
 {
+    // str base64Encode(str data)
     std::string l_data;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_data);
@@ -72,6 +76,7 @@ int ROC::LuaUtilsDef::Base64Encode(lua_State *f_vm)
 }
 int ROC::LuaUtilsDef::Base64Decode(lua_State *f_vm)
 {
+    // str base64Decode(str data)
     std::string l_data;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_data);

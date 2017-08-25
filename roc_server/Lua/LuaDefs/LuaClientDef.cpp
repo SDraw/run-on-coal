@@ -26,6 +26,7 @@ void ROC::LuaClientDef::Init(lua_State *f_vm)
 
 int ROC::LuaClientDef::Disconnect(lua_State *f_vm)
 {
+    // bool Client:disconnect()
     Client *l_client;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_client);
@@ -39,6 +40,7 @@ int ROC::LuaClientDef::Disconnect(lua_State *f_vm)
 }
 int ROC::LuaClientDef::SendData(lua_State *f_vm)
 {
+    // bool Client:sendData(str data)
     Client *l_client;
     std::string l_data;
     ArgReader argStream(f_vm);
@@ -54,6 +56,7 @@ int ROC::LuaClientDef::SendData(lua_State *f_vm)
 }
 int ROC::LuaClientDef::GetID(lua_State *f_vm)
 {
+    // int Client:getID()
     Client *l_client;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_client);
@@ -62,6 +65,7 @@ int ROC::LuaClientDef::GetID(lua_State *f_vm)
 }
 int ROC::LuaClientDef::GetAddress(lua_State *f_vm)
 {
+    // str int Client:getAddress()
     Client *l_client;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_client);
@@ -78,6 +82,7 @@ int ROC::LuaClientDef::GetAddress(lua_State *f_vm)
 }
 int ROC::LuaClientDef::GetPing(lua_State *f_vm)
 {
+    // int Client:getPing()
     Client *l_client;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_client);

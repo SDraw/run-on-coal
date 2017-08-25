@@ -32,6 +32,7 @@ void ROC::LuaDrawableDef::AddHierarchyMethods(lua_State *f_vm)
 
 int ROC::LuaDrawableDef::IsDrawable(lua_State *f_vm)
 {
+    // bool isDrawable(element drawable)
     Drawable *l_drawable = nullptr;
     ArgReader argStream(f_vm);
     argStream.ReadNextElement(l_drawable);
@@ -40,6 +41,7 @@ int ROC::LuaDrawableDef::IsDrawable(lua_State *f_vm)
 }
 int ROC::LuaDrawableDef::Draw(lua_State *f_vm)
 {
+    // bool Drawable:draw(float x, float y, float sizeX, float sizeY [, float rotation = 0, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1])
     Drawable *l_drawable;
     glm::vec2 l_pos, l_size;
     float l_rot = 0.f;
@@ -60,6 +62,7 @@ int ROC::LuaDrawableDef::Draw(lua_State *f_vm)
 }
 int ROC::LuaDrawableDef::Draw3D(lua_State *f_vm)
 {
+    // bool Drawable:draw3D(float x, float y, float z, float rotX, float rotY, float rotZ, float width, float height [, bool shading = true, bool depth = true, bool transparency = false, bool doubleSided = false])
     Drawable *l_drawable;
     glm::vec3 l_pos;
     glm::vec3 l_rot;
@@ -83,6 +86,7 @@ int ROC::LuaDrawableDef::Draw3D(lua_State *f_vm)
 
 int ROC::LuaDrawableDef::GetSize(lua_State *f_vm)
 {
+    // int int Drawable:getSize()
     Drawable *l_drawable;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_drawable);
@@ -97,6 +101,7 @@ int ROC::LuaDrawableDef::GetSize(lua_State *f_vm)
 
 int ROC::LuaDrawableDef::GetFiltering(lua_State *f_vm)
 {
+    // str Drawable:getFiltering()
     Drawable *l_drawable;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_drawable);

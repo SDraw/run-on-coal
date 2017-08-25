@@ -22,6 +22,7 @@ void ROC::LuaAnimationDef::Init(lua_State *f_vm)
 
 int ROC::LuaAnimationDef::Create(lua_State *f_vm)
 {
+    // element Animation(str path)
     std::string l_path;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
@@ -36,6 +37,7 @@ int ROC::LuaAnimationDef::Create(lua_State *f_vm)
 
 int ROC::LuaAnimationDef::GetBonesCount(lua_State *f_vm)
 {
+    // int Animation:getBonesCount()
     Animation *l_anim;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_anim);
@@ -44,6 +46,7 @@ int ROC::LuaAnimationDef::GetBonesCount(lua_State *f_vm)
 }
 int ROC::LuaAnimationDef::GetDuration(lua_State *f_vm)
 {
+    // int Animation:getDuration()
     Animation *l_anim;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_anim);

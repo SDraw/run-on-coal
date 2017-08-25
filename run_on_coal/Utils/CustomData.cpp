@@ -79,7 +79,7 @@ void ROC::CustomData::SetString(const char *f_val, size_t f_size)
     m_type = DataType::String;
 }
 
-ROC::CustomData& ROC::CustomData::operator=(CustomData &f_data)
+ROC::CustomData& ROC::CustomData::operator=(const CustomData &f_data)
 {
     m_type = f_data.m_type;
     switch(m_type)

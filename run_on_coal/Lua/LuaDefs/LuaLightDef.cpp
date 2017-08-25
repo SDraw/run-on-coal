@@ -26,6 +26,7 @@ void ROC::LuaLightDef::Init(lua_State *f_vm)
 
 int ROC::LuaLightDef::Create(lua_State *f_vm)
 {
+    // element Light()
     ArgReader argStream(f_vm);
     Light *l_light = LuaManager::GetCore()->GetElementManager()->CreateLight();
     l_light ? argStream.PushElement(l_light) : argStream.PushBoolean(false);
@@ -33,6 +34,7 @@ int ROC::LuaLightDef::Create(lua_State *f_vm)
 }
 int ROC::LuaLightDef::SetParams(lua_State *f_vm)
 {
+    // bool Light:setParams(float param1, float param2, float param3, float param4)
     Light *l_light;
     glm::vec4 l_params;
     ArgReader argStream(f_vm);
@@ -48,6 +50,7 @@ int ROC::LuaLightDef::SetParams(lua_State *f_vm)
 }
 int ROC::LuaLightDef::GetParams(lua_State *f_vm)
 {
+    // float float float float Light:getParams()
     Light *l_light;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_light);
@@ -61,6 +64,7 @@ int ROC::LuaLightDef::GetParams(lua_State *f_vm)
 }
 int ROC::LuaLightDef::SetColor(lua_State *f_vm)
 {
+    // bool Light:setColor(float colorR, float colorG, float colorB)
     Light *l_light;
     glm::vec3 l_color;
     ArgReader argStream(f_vm);
@@ -76,6 +80,7 @@ int ROC::LuaLightDef::SetColor(lua_State *f_vm)
 }
 int ROC::LuaLightDef::GetColor(lua_State *f_vm)
 {
+    // float float float Light:getColor()
     Light *l_light;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_light);
@@ -89,6 +94,7 @@ int ROC::LuaLightDef::GetColor(lua_State *f_vm)
 }
 int ROC::LuaLightDef::SetDirection(lua_State *f_vm)
 {
+    // bool Light:setDirection(float x, float y, float z)
     Light *l_light;
     glm::vec3 l_dir;
     ArgReader argStream(f_vm);
@@ -104,6 +110,7 @@ int ROC::LuaLightDef::SetDirection(lua_State *f_vm)
 }
 int ROC::LuaLightDef::GetDirection(lua_State *f_vm)
 {
+    // float float float Light:getDirection()
     Light *l_light;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_light);

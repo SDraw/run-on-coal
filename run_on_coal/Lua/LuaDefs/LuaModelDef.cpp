@@ -66,6 +66,8 @@ void ROC::LuaModelDef::Init(lua_State *f_vm)
 
 int ROC::LuaModelDef::Create(lua_State *f_vm)
 {
+    // element Model()
+    // element Model(element geometry)
     Geometry *l_geometry = nullptr;
     ArgReader argStream(f_vm);
     argStream.ReadNextElement(l_geometry);
@@ -79,6 +81,7 @@ int ROC::LuaModelDef::Create(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetGeometry(lua_State *f_vm)
 {
+    // element Model:getGeometry()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -92,6 +95,7 @@ int ROC::LuaModelDef::GetGeometry(lua_State *f_vm)
 }
 int ROC::LuaModelDef::SetPosition(lua_State *f_vm)
 {
+    // bool Model:setPosition(float x, float y, float z)
     Model *l_model;
     glm::vec3 l_pos;
     ArgReader argStream(f_vm);
@@ -107,6 +111,7 @@ int ROC::LuaModelDef::SetPosition(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
 {
+    // float float float Model:getPosition()
     Model *l_model;
     bool l_global = false;
     ArgReader argStream(f_vm);
@@ -122,6 +127,7 @@ int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
 }
 int ROC::LuaModelDef::SetRotation(lua_State *f_vm)
 {
+    // bool Model:setRotation(float x, float y, float z, float w)
     Model *l_model;
     glm::quat l_rot;
     ArgReader argStream(f_vm);
@@ -137,6 +143,7 @@ int ROC::LuaModelDef::SetRotation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
 {
+    // float float float float Model:getRotation()
     Model *l_model;
     bool l_global = false;
     ArgReader argStream(f_vm);
@@ -152,6 +159,7 @@ int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::SetScale(lua_State *f_vm)
 {
+    // bool Model:setScale(float x, float y, float z)
     Model *l_model;
     glm::vec3 l_scale;
     ArgReader argStream(f_vm);
@@ -167,6 +175,7 @@ int ROC::LuaModelDef::SetScale(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetScale(lua_State *f_vm)
 {
+    // float float float Model:getScale()
     Model *l_model;
     bool l_global = false;
     ArgReader argStream(f_vm);
@@ -182,6 +191,7 @@ int ROC::LuaModelDef::GetScale(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetMatrix(lua_State *f_vm)
 {
+    // float float float float float float float float float float float float float float float float Model:getMatrix([bool global = false])
     Model *l_model;
     bool l_global = false;
     ArgReader argStream(f_vm);
@@ -198,6 +208,7 @@ int ROC::LuaModelDef::GetMatrix(lua_State *f_vm)
 }
 int ROC::LuaModelDef::Draw(lua_State *f_vm)
 {
+    // bool Model:draw([bool texturize = true, bool frustumCheck = true])
     Model *l_model;
     bool l_texturize = true;
     bool l_frustum = true;
@@ -215,6 +226,7 @@ int ROC::LuaModelDef::Draw(lua_State *f_vm)
 }
 int ROC::LuaModelDef::Attach(lua_State *f_vm)
 {
+    // bool Model:attach(element parentModel [, int boneIndex = -1 ])
     Model *l_model, *l_parent;
     int l_bone = -1;
     ArgReader argStream(f_vm);
@@ -232,6 +244,7 @@ int ROC::LuaModelDef::Attach(lua_State *f_vm)
 }
 int ROC::LuaModelDef::Detach(lua_State *f_vm)
 {
+    // bool Model:detach()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -245,6 +258,7 @@ int ROC::LuaModelDef::Detach(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetParent(lua_State *f_vm)
 {
+    // element Model:getParent()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -259,6 +273,7 @@ int ROC::LuaModelDef::GetParent(lua_State *f_vm)
 
 int ROC::LuaModelDef::SetAnimation(lua_State *f_vm)
 {
+    // bool Model:setAnimation(element animation)
     Model *l_model;
     Animation *l_anim;
     ArgReader argStream(f_vm);
@@ -274,6 +289,7 @@ int ROC::LuaModelDef::SetAnimation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetAnimation(lua_State *f_vm)
 {
+    // element Model:getAnimation()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -287,6 +303,7 @@ int ROC::LuaModelDef::GetAnimation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::RemoveAnimation(lua_State *f_vm)
 {
+    // bool Model:removeAnimation()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -300,6 +317,7 @@ int ROC::LuaModelDef::RemoveAnimation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::PlayAnimation(lua_State *f_vm)
 {
+    // bool Model:playAnimation()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -313,6 +331,7 @@ int ROC::LuaModelDef::PlayAnimation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::PauseAnimation(lua_State *f_vm)
 {
+    // bool Model:pauseAnimation()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -326,6 +345,7 @@ int ROC::LuaModelDef::PauseAnimation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::ResetAnimation(lua_State *f_vm)
 {
+    // bool Model:resetAnimation()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -339,6 +359,7 @@ int ROC::LuaModelDef::ResetAnimation(lua_State *f_vm)
 }
 int ROC::LuaModelDef::SetAnimationProperty(lua_State *f_vm)
 {
+    // bool Model:setAnimationProperty(str property, float value)
     Model *l_model;
     std::string l_property;
     float l_value;
@@ -368,6 +389,7 @@ int ROC::LuaModelDef::SetAnimationProperty(lua_State *f_vm)
 }
 int ROC::LuaModelDef::GetAnimationProperty(lua_State *f_vm)
 {
+    // float Model:getAnimationProperty(str property)
     Model *l_model;
     std::string l_property;
     ArgReader argStream(f_vm);
@@ -396,6 +418,7 @@ int ROC::LuaModelDef::GetAnimationProperty(lua_State *f_vm)
 
 int ROC::LuaModelDef::GetCollision(lua_State *f_vm)
 {
+    // element Model:getCollision()
     Model *l_model;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
@@ -410,6 +433,7 @@ int ROC::LuaModelDef::GetCollision(lua_State *f_vm)
 
 int ROC::LuaModelDef::SetCollidable(lua_State *f_vm)
 {
+    // bool Model:setCollidable(element model, bool state)
     Model *l_model1, *l_model2;
     bool l_state;
     ArgReader argStream(f_vm);

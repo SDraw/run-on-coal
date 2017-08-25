@@ -33,6 +33,8 @@ void ROC::LuaQuatDef::Init(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Create(lua_State *f_vm)
 {
+    // userdata Quat(float x, float y, float z)
+    // userdata Quat(float x, float y, float z, float w)
     glm::vec3 l_vec;
     float l_quatW = std::nanf("0");
     ArgReader argStream(f_vm);
@@ -49,6 +51,7 @@ int ROC::LuaQuatDef::Create(lua_State *f_vm)
 }
 int ROC::LuaQuatDef::Destroy(lua_State *f_vm)
 {
+    // GC only
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -63,6 +66,7 @@ int ROC::LuaQuatDef::Destroy(lua_State *f_vm)
 
 int ROC::LuaQuatDef::GetXYZW(lua_State *f_vm)
 {
+    // float float float float Quat:getXYZW()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -76,6 +80,7 @@ int ROC::LuaQuatDef::GetXYZW(lua_State *f_vm)
 }
 int ROC::LuaQuatDef::SetXYZW(lua_State *f_vm)
 {
+    // bool Quat:setXYZW(float x, float y, float z, float w)
     Quat *l_quat;
     Quat l_val;
     ArgReader argStream(f_vm);
@@ -91,6 +96,7 @@ int ROC::LuaQuatDef::SetXYZW(lua_State *f_vm)
 }
 int ROC::LuaQuatDef::SetEuler(lua_State *f_vm)
 {
+    // bool Quat:setEuler(float x, float y, float z)
     Quat *l_quat;
     glm::vec3 l_euler;
     ArgReader argStream(f_vm);
@@ -108,6 +114,7 @@ int ROC::LuaQuatDef::SetEuler(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Add(lua_State *f_vm)
 {
+    // bool Quat:add(userdata quat)
     Quat *l_quatA, *l_quatB;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quatA);
@@ -124,6 +131,7 @@ int ROC::LuaQuatDef::Add(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Multiply(lua_State *f_vm)
 {
+    // bool Quat:multiply(userdata quat)
     Quat *l_quatA, *l_quatB;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quatA);
@@ -140,6 +148,7 @@ int ROC::LuaQuatDef::Multiply(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Inverse(lua_State *f_vm)
 {
+    // bool Quat:inverse()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -155,6 +164,7 @@ int ROC::LuaQuatDef::Inverse(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Conjugate(lua_State *f_vm)
 {
+    // bool Quat:conjugate()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -170,6 +180,7 @@ int ROC::LuaQuatDef::Conjugate(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Normalize(lua_State *f_vm)
 {
+    // bool Quat:normalize()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -185,6 +196,7 @@ int ROC::LuaQuatDef::Normalize(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Length(lua_State *f_vm)
 {
+    // float Quat:length()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -199,6 +211,7 @@ int ROC::LuaQuatDef::Length(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Dot(lua_State *f_vm)
 {
+    // float Quat:dot()
     Quat *l_quatA, *l_quatB;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quatA);
@@ -214,6 +227,7 @@ int ROC::LuaQuatDef::Dot(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Rotate(lua_State *f_vm)
 {
+    // bool Quat:rotate(float angle, float axisX, float axisY, float axisZ)
     Quat *l_quat;
     float l_angle;
     glm::vec3 l_axis;
@@ -233,6 +247,7 @@ int ROC::LuaQuatDef::Rotate(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Lerp(lua_State *f_vm)
 {
+    // bool Quat:lerp(userdata quat, float lerp)
     Quat *l_quatA, *l_quatB;
     float l_blend;
     ArgReader argStream(f_vm);
@@ -250,6 +265,7 @@ int ROC::LuaQuatDef::Lerp(lua_State *f_vm)
 }
 int ROC::LuaQuatDef::Slerp(lua_State *f_vm)
 {
+    // bool Quat:slerp(userdata quat, float slerp)
     Quat *l_quatA, *l_quatB;
     float l_blend;
     ArgReader argStream(f_vm);

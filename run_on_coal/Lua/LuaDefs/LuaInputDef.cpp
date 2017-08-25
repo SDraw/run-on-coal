@@ -45,6 +45,7 @@ void ROC::LuaInputDef::Init(lua_State *f_vm)
 
 int ROC::LuaInputDef::SetCursorMode(lua_State *f_vm)
 {
+    // bool setCursorMode(bool visible, bool locked)
     bool l_visible, l_locked;
     ArgReader argStream(f_vm);
     argStream.ReadBoolean(l_visible);
@@ -59,6 +60,7 @@ int ROC::LuaInputDef::SetCursorMode(lua_State *f_vm)
 }
 int ROC::LuaInputDef::GetCursorPosition(lua_State *f_vm)
 {
+    // int int getCursorPosition()
     ArgReader argStream(f_vm);
     glm::ivec2 l_pos;
     LuaManager::GetCore()->GetSfmlManager()->GetCursorPosition(l_pos);
@@ -68,6 +70,7 @@ int ROC::LuaInputDef::GetCursorPosition(lua_State *f_vm)
 }
 int ROC::LuaInputDef::SetCursorPosition(lua_State *f_vm)
 {
+    // bool setCursorPosition(int x, int y)
     glm::ivec2 l_pos;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 2; i++) argStream.ReadInteger(l_pos[i]);
@@ -82,6 +85,7 @@ int ROC::LuaInputDef::SetCursorPosition(lua_State *f_vm)
 
 int ROC::LuaInputDef::GetWindowPosition(lua_State *f_vm)
 {
+    // int int getWindowPosition()
     ArgReader argStream(f_vm);
     glm::ivec2 l_pos;
     LuaManager::GetCore()->GetSfmlManager()->GetWindowPosition(l_pos);
@@ -91,6 +95,7 @@ int ROC::LuaInputDef::GetWindowPosition(lua_State *f_vm)
 }
 int ROC::LuaInputDef::GetWindowSize(lua_State *f_vm)
 {
+    // int getWindowSize()
     ArgReader argStream(f_vm);
     glm::ivec2 l_size;
     LuaManager::GetCore()->GetSfmlManager()->GetWindowSize(l_size);
@@ -100,6 +105,7 @@ int ROC::LuaInputDef::GetWindowSize(lua_State *f_vm)
 }
 int ROC::LuaInputDef::CloseWindow(lua_State *f_vm)
 {
+    // bool closeWindow()
     ArgReader argStream(f_vm);
     LuaManager::GetCore()->GetSfmlManager()->CloseWindow();
     argStream.PushBoolean(true);
@@ -108,6 +114,7 @@ int ROC::LuaInputDef::CloseWindow(lua_State *f_vm)
 
 int ROC::LuaInputDef::IsKeyPressed(lua_State *f_vm)
 {
+    // bool isKeyPressed(str keyName)
     std::string l_key;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_key);
@@ -126,6 +133,7 @@ int ROC::LuaInputDef::IsKeyPressed(lua_State *f_vm)
 }
 int ROC::LuaInputDef::IsMouseKeyPressed(lua_State *f_vm)
 {
+    // bool isMouseKeyPressed(str keyName)
     std::string l_key;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_key);
@@ -145,6 +153,7 @@ int ROC::LuaInputDef::IsMouseKeyPressed(lua_State *f_vm)
 
 int ROC::LuaInputDef::SetWindowVSync(lua_State *f_vm)
 {
+    // bool setWindowVSync(bool sync)
     bool l_sync;
     ArgReader argStream(f_vm);
     argStream.ReadBoolean(l_sync);
@@ -158,6 +167,7 @@ int ROC::LuaInputDef::SetWindowVSync(lua_State *f_vm)
 }
 int ROC::LuaInputDef::SetWindowFramelimit(lua_State *f_vm)
 {
+    // bool setWindowFramelimit(int limit)
     unsigned int l_fps;
     ArgReader argStream(f_vm);
     argStream.ReadInteger(l_fps);
@@ -171,12 +181,14 @@ int ROC::LuaInputDef::SetWindowFramelimit(lua_State *f_vm)
 }
 int ROC::LuaInputDef::GetWindowFramelimit(lua_State *f_vm)
 {
+    // int getWindowFramelimit()
     ArgReader argStream(f_vm);
     argStream.PushInteger(LuaManager::GetCore()->GetSfmlManager()->GetFramelimit());
     return argStream.GetReturnValue();
 }
 int ROC::LuaInputDef::SetWindowTitle(lua_State *f_vm)
 {
+    // bool setWindowTitle(str title)
     std::string l_title;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_title);
@@ -191,6 +203,7 @@ int ROC::LuaInputDef::SetWindowTitle(lua_State *f_vm)
 }
 int ROC::LuaInputDef::SetWindowIcon(lua_State *f_vm)
 {
+    // bool setWindowIcon(str path)
     std::string l_path;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
@@ -204,6 +217,7 @@ int ROC::LuaInputDef::SetWindowIcon(lua_State *f_vm)
 }
 int ROC::LuaInputDef::RequestWindowFocus(lua_State *f_vm)
 {
+    // bool requestWindowFocus()
     ArgReader argStream(f_vm);
     LuaManager::GetCore()->GetSfmlManager()->RequestFocus();
     argStream.PushBoolean(true);
@@ -211,6 +225,7 @@ int ROC::LuaInputDef::RequestWindowFocus(lua_State *f_vm)
 }
 int ROC::LuaInputDef::GetWindowFocus(lua_State *f_vm)
 {
+    // bool getWindowFocus()
     ArgReader argStream(f_vm);
     argStream.PushBoolean(LuaManager::GetCore()->GetSfmlManager()->GetFocusState());
     return argStream.GetReturnValue();
@@ -218,6 +233,7 @@ int ROC::LuaInputDef::GetWindowFocus(lua_State *f_vm)
 
 int ROC::LuaInputDef::IsJoypadConnected(lua_State *f_vm)
 {
+    // bool isJoypadConnected(int index)
     unsigned int l_joypad;
     ArgReader argStream(f_vm);
     argStream.ReadInteger(l_joypad);
@@ -231,6 +247,7 @@ int ROC::LuaInputDef::IsJoypadConnected(lua_State *f_vm)
 }
 int ROC::LuaInputDef::JoypadGetButtonCount(lua_State *f_vm)
 {
+    // int joypadGetButtonCount(int index)
     unsigned int l_joypad;
     ArgReader argStream(f_vm);
     argStream.ReadInteger(l_joypad);
@@ -244,6 +261,7 @@ int ROC::LuaInputDef::JoypadGetButtonCount(lua_State *f_vm)
 }
 int ROC::LuaInputDef::JoypadGetButtonState(lua_State *f_vm)
 {
+    // bool joypadGetButtonState(int index, int buttonIndex)
     unsigned int l_joypad, l_button;
     ArgReader argStream(f_vm);
     argStream.ReadInteger(l_joypad);
@@ -258,6 +276,7 @@ int ROC::LuaInputDef::JoypadGetButtonState(lua_State *f_vm)
 }
 int ROC::LuaInputDef::JoypadHasAxis(lua_State *f_vm)
 {
+    // bool joypadHasAxis(int index, int axisIndex)
     unsigned int l_joypad;
     std::string l_axis;
     ArgReader argStream(f_vm);
@@ -278,6 +297,7 @@ int ROC::LuaInputDef::JoypadHasAxis(lua_State *f_vm)
 }
 int ROC::LuaInputDef::JoypadGetAxisValue(lua_State *f_vm)
 {
+    // float joypadGetAxisValue(int index, int axisIndex)
     unsigned int l_joypad;
     std::string l_axis;
     ArgReader argStream(f_vm);

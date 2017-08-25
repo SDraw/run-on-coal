@@ -45,6 +45,7 @@ void ROC::LuaFileDef::Init(lua_State *f_vm)
 
 int ROC::LuaFileDef::CreateOpen(lua_State *f_vm)
 {
+    // element File(str path, str mode)
     std::string l_path;
     std::string l_manage;
     bool l_readOnly = true;
@@ -72,6 +73,7 @@ int ROC::LuaFileDef::CreateOpen(lua_State *f_vm)
 }
 int ROC::LuaFileDef::Read(lua_State *f_vm)
 {
+    // str int File:read(int length)
     File *l_file;
     lua_Integer l_length = 0;
     ArgReader argStream(f_vm);
@@ -93,6 +95,7 @@ int ROC::LuaFileDef::Read(lua_State *f_vm)
 }
 int ROC::LuaFileDef::Write(lua_State *f_vm)
 {
+    // int File:write(str data)
     File *l_file;
     std::string l_data;
     ArgReader argStream(f_vm);
@@ -108,6 +111,7 @@ int ROC::LuaFileDef::Write(lua_State *f_vm)
 }
 int ROC::LuaFileDef::GetSize(lua_State *f_vm)
 {
+    // int File:getSize()
     File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
@@ -121,6 +125,7 @@ int ROC::LuaFileDef::GetSize(lua_State *f_vm)
 }
 int ROC::LuaFileDef::SetPosition(lua_State *f_vm)
 {
+    // bool File:setPosition(int position)
     File *l_file;
     lua_Integer l_pos;
     ArgReader argStream(f_vm);
@@ -136,6 +141,7 @@ int ROC::LuaFileDef::SetPosition(lua_State *f_vm)
 }
 int ROC::LuaFileDef::GetPosition(lua_State *f_vm)
 {
+    // int File:getPosition()
     File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
@@ -144,6 +150,7 @@ int ROC::LuaFileDef::GetPosition(lua_State *f_vm)
 }
 int ROC::LuaFileDef::Flush(lua_State *f_vm)
 {
+    // bool File:flush()
     File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
@@ -157,6 +164,7 @@ int ROC::LuaFileDef::Flush(lua_State *f_vm)
 }
 int ROC::LuaFileDef::GetPath(lua_State *f_vm)
 {
+    // str File:getPath()
     File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
@@ -171,6 +179,7 @@ int ROC::LuaFileDef::GetPath(lua_State *f_vm)
 }
 int ROC::LuaFileDef::IsEOF(lua_State *f_vm)
 {
+    // bool File:isEOF()
     File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
@@ -179,6 +188,7 @@ int ROC::LuaFileDef::IsEOF(lua_State *f_vm)
 }
 int ROC::LuaFileDef::Delete(lua_State *f_vm)
 {
+    // bool fileDelete(str path)
     std::string l_path;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
@@ -192,6 +202,7 @@ int ROC::LuaFileDef::Delete(lua_State *f_vm)
 }
 int ROC::LuaFileDef::Rename(lua_State *f_vm)
 {
+    // bool fileRename(str oldName, str newName)
     std::string l_old, l_new;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_old);

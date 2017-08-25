@@ -30,8 +30,4 @@
 #include "Elements/Sound.h"
 #include "Elements/Texture.h"
 
-#include "Lua/ArgReader.h"
-#include "Lua/LuaArguments.h"
-#include "Lua/LuaFunction.hpp"
-
 #include "Utils/CustomData.h"

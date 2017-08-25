@@ -11,7 +11,4 @@
 #include "Elements/Client.h"
 #include "Elements/File.h"
 
-#include "Lua/ArgReader.h"
-#include "Lua/LuaArguments.h"
-
 #include "Utils/CustomData.h"

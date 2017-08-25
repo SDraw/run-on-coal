@@ -23,6 +23,7 @@ void ROC::LuaPhysicsDef::Init(lua_State *f_vm)
 
 int ROC::LuaPhysicsDef::SetEnabled(lua_State *f_vm)
 {
+    // bool physicsSetEnabled(bool state)
     bool l_val;
     ArgReader argStream(f_vm);
     argStream.ReadBoolean(l_val);
@@ -36,6 +37,7 @@ int ROC::LuaPhysicsDef::SetEnabled(lua_State *f_vm)
 }
 int ROC::LuaPhysicsDef::GetEnabled(lua_State *f_vm)
 {
+    // bool physicsGetEnabled()
     ArgReader argStream(f_vm);
     argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetPhysicsEnabled());
     return argStream.GetReturnValue();
@@ -43,6 +45,7 @@ int ROC::LuaPhysicsDef::GetEnabled(lua_State *f_vm)
 
 int ROC::LuaPhysicsDef::SetFloorEnabled(lua_State *f_vm)
 {
+    // bool physicsSetFloorEnabled(bool state)
     bool l_val;
     ArgReader argStream(f_vm);
     argStream.ReadBoolean(l_val);
@@ -56,6 +59,7 @@ int ROC::LuaPhysicsDef::SetFloorEnabled(lua_State *f_vm)
 }
 int ROC::LuaPhysicsDef::GetFloorEnabled(lua_State *f_vm)
 {
+    // bool physicsGetFloorEnabled()
     ArgReader argStream(f_vm);
     argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetFloorEnabled());
     return argStream.GetReturnValue();
@@ -63,6 +67,7 @@ int ROC::LuaPhysicsDef::GetFloorEnabled(lua_State *f_vm)
 
 int ROC::LuaPhysicsDef::SetGravity(lua_State *f_vm)
 {
+    // bool physicsSetGravity(float x, float y, float z)
     glm::vec3 l_gravity;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gravity[i]);
@@ -76,6 +81,7 @@ int ROC::LuaPhysicsDef::SetGravity(lua_State *f_vm)
 }
 int ROC::LuaPhysicsDef::GetGravity(lua_State *f_vm)
 {
+    // float float float physicsGetGravity()
     ArgReader argStream(f_vm);
     glm::vec3 l_grav;
     LuaManager::GetCore()->GetPhysicsManager()->GetGravity(l_grav);
@@ -87,6 +93,7 @@ int ROC::LuaPhysicsDef::GetGravity(lua_State *f_vm)
 
 int ROC::LuaPhysicsDef::RayCast(lua_State *f_vm)
 {
+    // float float float float float float element physicsRayCast(float startX, float startY, float startZ, float endX, float endY, float endZ)
     glm::vec3 l_start, l_end;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_start[i]);
@@ -103,7 +110,7 @@ int ROC::LuaPhysicsDef::RayCast(lua_State *f_vm)
             argStream.PushNumber(l_hitNormal.x);
             argStream.PushNumber(l_hitNormal.y);
             argStream.PushNumber(l_hitNormal.z);
-            l_hitElement ? argStream.PushElement(reinterpret_cast<Element*>(l_hitElement)) : argStream.PushBoolean(false);
+            l_hitElement ? argStream.PushElement(l_hitElement) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
     }

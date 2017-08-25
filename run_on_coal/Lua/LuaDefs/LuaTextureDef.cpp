@@ -34,6 +34,8 @@ void ROC::LuaTextureDef::Init(lua_State *f_vm)
 
 int ROC::LuaTextureDef::Create(lua_State *f_vm)
 {
+    // element Texture(str type, str path, str filtering)
+    // element Texture(str type = "cube", str path1, ... , str path6, str filtering)
     std::string l_type;
     bool l_compress = false;
     ArgReader argStream(f_vm);

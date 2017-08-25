@@ -36,6 +36,7 @@ void ROC::LuaRenderingDef::Init(lua_State *f_vm)
 
 int ROC::LuaRenderingDef::SetActiveScene(lua_State *f_vm)
 {
+    // bool setActiveScene(element scene)
     Scene *l_scene;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_scene);
@@ -49,6 +50,7 @@ int ROC::LuaRenderingDef::SetActiveScene(lua_State *f_vm)
 }
 int ROC::LuaRenderingDef::SetActiveShader(lua_State *f_vm)
 {
+    // bool setActiveShader(element shader)
     Shader *l_shader;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_shader);
@@ -62,6 +64,8 @@ int ROC::LuaRenderingDef::SetActiveShader(lua_State *f_vm)
 }
 int ROC::LuaRenderingDef::SetActiveTarget(lua_State *f_vm)
 {
+    // setActiveTarget()
+    // setActiveTarget(element renderTarget)
     RenderTarget *l_rt = nullptr;
     ArgReader argStream(f_vm);
     argStream.ReadNextElement(l_rt);
@@ -72,6 +76,7 @@ int ROC::LuaRenderingDef::SetActiveTarget(lua_State *f_vm)
 
 int ROC::LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
 {
+    // clearRenderArea( [bool depth = true, bool color = true] )
     bool l_depth = true;
     bool l_color = true;
     ArgReader argStream(f_vm);
@@ -87,6 +92,7 @@ int ROC::LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
 }
 int ROC::LuaRenderingDef::SetClearColor(lua_State *f_vm)
 {
+    // bool setClearColor(float colorR, float colorG, float colorB, float colorA)
     glm::vec4 l_color;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
@@ -100,6 +106,7 @@ int ROC::LuaRenderingDef::SetClearColor(lua_State *f_vm)
 }
 int ROC::LuaRenderingDef::SetRenderArea(lua_State *f_vm)
 {
+    // bool setRenderArea(int x, int y, int width, int height)
     glm::ivec4 l_area;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 4; i++) argStream.ReadInteger(l_area[i]);
@@ -113,6 +120,7 @@ int ROC::LuaRenderingDef::SetRenderArea(lua_State *f_vm)
 }
 int ROC::LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
 {
+    // bool setPolygonMode(str mode)
     std::string l_mode;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_mode);

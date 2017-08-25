@@ -20,6 +20,7 @@ void ROC::LuaEventsDef::Init(lua_State *f_vm)
 
 int ROC::LuaEventsDef::Add(lua_State *f_vm)
 {
+    // bool addEvent(str eventName)
     std::string l_event;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
@@ -34,6 +35,7 @@ int ROC::LuaEventsDef::Add(lua_State *f_vm)
 
 int ROC::LuaEventsDef::AddHandler(lua_State *f_vm)
 {
+    // bool addEventHandler(str eventName, func callback)
     std::string l_event;
     LuaFunction l_func;
     ArgReader argStream(f_vm);
@@ -50,6 +52,7 @@ int ROC::LuaEventsDef::AddHandler(lua_State *f_vm)
 }
 int ROC::LuaEventsDef::Remove(lua_State *f_vm)
 {
+    // bool removeEvent(str eventName)
     std::string l_event;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
@@ -63,6 +66,7 @@ int ROC::LuaEventsDef::Remove(lua_State *f_vm)
 }
 int ROC::LuaEventsDef::RemoveHandler(lua_State *f_vm)
 {
+    // bool removeEventHandler(str eventName, func callback)
     std::string l_event;
     LuaFunction l_func;
     ArgReader argStream(f_vm);
@@ -78,6 +82,7 @@ int ROC::LuaEventsDef::RemoveHandler(lua_State *f_vm)
 }
 int ROC::LuaEventsDef::Call(lua_State *f_vm)
 {
+    // bool callEvent(str eventName, var value1, ...)
     std::string l_event;
     ArgReader argStream(f_vm);
     LuaArguments l_arguments;
