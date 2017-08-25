@@ -1,5 +1,4 @@
 #pragma once
-#define ROC_CUSTOM_DATA_LENGTH 128U
 
 namespace ROC
 {
@@ -39,7 +38,6 @@ public:
     void GetElement(void *&f_ptr, std::string &f_name) const;
     void SetElement(void *f_ptr, const std::string &f_name);
 
-    inline void GetString(std::string &f_val) { f_val.assign(m_string); }
     inline const std::string& GetString() const { return m_string; }
     void SetString(const std::string &f_val);
     void SetString(const char *f_val, size_t f_size);
