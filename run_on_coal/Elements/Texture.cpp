@@ -17,7 +17,7 @@ const glm::ivec2 g_TextureDummySize(2, 2);
 
 ROC::Texture::Texture()
 {
-    m_elementType = ElementType::TextureElement;
+    m_elementType = ET_Texture;
     m_elementTypeName.assign("Texture");
 
     m_type = ROC_TEXTURE_TYPE_NONE;

@@ -26,7 +26,7 @@ bool ROC::Font::ms_switch = false;
 
 ROC::Font::Font()
 {
-    m_elementType = ElementType::FontElement;
+    m_elementType = ET_Font;
     m_elementTypeName.assign("Font");
 
     m_loaded = false;

@@ -73,7 +73,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
     {
         switch(f_element->GetElementType())
         {
-            case ElementType::FileElement:
+            case Element::ET_File:
             {
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;

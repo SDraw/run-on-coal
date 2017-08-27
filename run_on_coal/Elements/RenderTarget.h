@@ -38,7 +38,7 @@ protected:
     RenderTarget();
     ~RenderTarget();
     bool Create(unsigned int f_num, const glm::ivec2 &f_size, int f_type, int f_filter);
-    inline void GetError(std::string &f_str) { f_str.assign(m_error); }
+    inline const std::string& GetError() const { return m_error; }
 
     inline GLuint GetTextureID() const { return m_texture; }
 

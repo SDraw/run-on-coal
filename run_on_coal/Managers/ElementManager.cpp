@@ -190,9 +190,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, g
     if(l_rt->Create(f_num, f_size, f_type, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt);
     else
     {
-        std::string l_error;
-        l_rt->GetError(l_error);
-        m_core->GetLogManager()->Log(l_error);
+        m_core->GetLogManager()->Log(l_rt->GetError());
         delete l_rt;
         l_rt = nullptr;
     }
@@ -335,7 +333,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
     {
         switch(f_element->GetElementType())
         {
-            case Element::ElementType::SceneElement:
+            case Element::ET_Scene:
             {
                 m_core->GetRenderManager()->RemoveAsActiveScene(reinterpret_cast<Scene*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
@@ -344,9 +342,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 l_result = true;
             } break;
 
-            case Element::ElementType::CameraElement:
-            case Element::ElementType::LightElement:
-            case Element::ElementType::TextureElement:
+            case Element::ET_Camera: case Element::ET_Light: case Element::ET_Texture:
             {
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
@@ -354,7 +350,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 l_result = true;
             } break;
 
-            case Element::ElementType::RenderTargetElement:
+            case Element::ET_RenderTarget:
             {
                 m_core->GetRenderManager()->RemoveAsActiveTarget(reinterpret_cast<RenderTarget*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
@@ -363,7 +359,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 l_result = true;
             } break;
 
-            case Element::ElementType::AnimationElement:
+            case Element::ET_Animation:
             {
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
@@ -371,7 +367,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 l_result = true;
             } break;
 
-            case Element::ElementType::GeometryElement:
+            case Element::ET_Geometry:
             {
                 Geometry *l_geometry = reinterpret_cast<Geometry*>(f_element);
                 if(!l_geometry->IsAsyncLoad() || l_geometry->IsReleased())
@@ -383,38 +379,38 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 }
             } break;
 
-            case Element::ElementType::ModelElement:
+            case Element::ET_Model:
             {
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                m_core->GetPreRenderManager()->RemoveModel(dynamic_cast<Model*>(f_element));
-                m_core->GetPhysicsManager()->RemoveModel(dynamic_cast<Model*>(f_element));
+                m_core->GetPreRenderManager()->RemoveModel(reinterpret_cast<Model*>(f_element));
+                m_core->GetPhysicsManager()->RemoveModel(reinterpret_cast<Model*>(f_element));
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
                 l_result = true;
             } break;
 
-            case Element::ElementType::ShaderElement:
+            case Element::ET_Shader:
             {
-                m_core->GetRenderManager()->RemoveAsActiveShader(dynamic_cast<Shader*>(f_element));
+                m_core->GetRenderManager()->RemoveAsActiveShader(reinterpret_cast<Shader*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
                 l_result = true;
             } break;
 
-            case Element::ElementType::CollisionElement:
+            case Element::ET_Collision:
             {
-                m_core->GetPhysicsManager()->RemoveCollision(dynamic_cast<Collision*>(f_element));
+                m_core->GetPhysicsManager()->RemoveCollision(reinterpret_cast<Collision*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
                 l_result = true;
             } break;
 
-            case Element::ElementType::MovieElement:
+            case Element::ET_Movie:
             {
-                m_core->GetRenderManager()->RemoveMovie(dynamic_cast<Movie*>(f_element));
+                m_core->GetRenderManager()->RemoveMovie(reinterpret_cast<Movie*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;

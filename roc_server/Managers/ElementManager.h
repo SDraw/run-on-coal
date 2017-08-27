@@ -3,8 +3,6 @@
 namespace ROC
 {
 
-enum ElementType : unsigned char { ClientElement = 0U, FileElement };
-
 class Core;
 class Client;
 class Element;

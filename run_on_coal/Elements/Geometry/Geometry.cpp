@@ -14,7 +14,7 @@
 
 ROC::Geometry::Geometry(bool f_async)
 {
-    m_elementType = ElementType::GeometryElement;
+    m_elementType = ET_Geometry;
     m_elementTypeName.assign("Geometry");
 
     m_loadState = gmLoadState::NotLoaded;

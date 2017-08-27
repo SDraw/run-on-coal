@@ -4,7 +4,7 @@
 
 ROC::Client::Client(const RakNet::SystemAddress &f_address)
 {
-    m_elementType = ElementType::ClientElement;
+    m_elementType = ET_Client;
     m_elementTypeName.assign("Client");
 
     m_address = f_address;

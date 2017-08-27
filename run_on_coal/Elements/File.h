@@ -21,7 +21,7 @@ public:
     inline bool IsEOF() { return (m_file ? m_file->eof() : false); }
     void Flush();
 
-    inline void GetPath(std::string &f_string) { f_string.assign(m_path); }
+    inline const std::string& GetPath() const { return m_path; }
 
     static bool Delete(Core *f_core, const std::string &f_path);
     static bool Rename(Core *f_core, const std::string &f_old, const std::string &f_new);

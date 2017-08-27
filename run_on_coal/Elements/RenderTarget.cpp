@@ -4,7 +4,7 @@
 
 ROC::RenderTarget::RenderTarget()
 {
-    m_elementType = ElementType::RenderTargetElement;
+    m_elementType = ET_RenderTarget;
     m_elementTypeName.assign("RenderTarget");
 
     m_type = ROC_RENDERTARGET_TYPE_NONE;

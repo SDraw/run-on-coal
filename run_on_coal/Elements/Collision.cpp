@@ -12,7 +12,7 @@ extern const glm::vec3 g_DefaultScale;
 
 ROC::Collision::Collision()
 {
-    m_elementType = ElementType::CollisionElement;
+    m_elementType = ET_Collision;
     m_elementTypeName.assign("Collision");
 
     m_rigidBody = nullptr;

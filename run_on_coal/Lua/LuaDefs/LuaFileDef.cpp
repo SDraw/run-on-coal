@@ -168,13 +168,7 @@ int ROC::LuaFileDef::GetPath(lua_State *f_vm)
     File *l_file;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_file);
-    if(!argStream.HasErrors())
-    {
-        std::string l_path;
-        l_file->GetPath(l_path);
-        argStream.PushText(l_path);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(l_file->GetPath()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaFileDef::IsEOF(lua_State *f_vm)

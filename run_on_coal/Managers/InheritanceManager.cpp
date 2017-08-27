@@ -72,55 +72,55 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
 {
     switch(f_child->GetElementType())
     {
-        case Element::ElementType::ModelElement:
+        case Element::ET_Model:
         {
             switch(f_parent->GetElementType())
             {
-                case Element::ElementType::ModelElement:
+                case Element::ET_Model:
                     reinterpret_cast<Model*>(f_child)->SetParent(nullptr);
                     break;
-                case Element::ElementType::GeometryElement:
+                case Element::ET_Geometry:
                     reinterpret_cast<Model*>(f_child)->SetGeometry(nullptr);
                     break;
-                case Element::ElementType::AnimationElement:
+                case Element::ET_Animation:
                     reinterpret_cast<Model*>(f_child)->GetAnimationController()->SetAnimation(nullptr);
                     break;
             }
         } break;
-        case Element::ElementType::CollisionElement:
+        case Element::ET_Collision:
         {
             switch(f_parent->GetElementType())
             {
-                case Element::ElementType::ModelElement:
+                case Element::ET_Model:
                 {
                     reinterpret_cast<Collision*>(f_child)->SetParentModel(nullptr);
                     reinterpret_cast<Model*>(f_parent)->SetCollision(nullptr);
                 } break;
             }
         } break;
-        case Element::ElementType::CameraElement:
+        case Element::ET_Camera:
         {
             switch(f_parent->GetElementType())
             {
-                case Element::ElementType::SceneElement:
+                case Element::ET_Scene:
                     reinterpret_cast<Scene*>(f_parent)->SetCamera(nullptr);
                     break;
             }
         } break;
-        case Element::ElementType::LightElement:
+        case Element::ET_Light:
         {
             switch(f_parent->GetElementType())
             {
-                case Element::ElementType::SceneElement:
+                case Element::ET_Scene:
                     reinterpret_cast<Scene*>(f_parent)->SetLight(nullptr);
                     break;
             }
         } break;
-        case Element::ElementType::TextureElement: case Element::ElementType::RenderTargetElement: case Element::ElementType::MovieElement:
+        case Element::ET_Texture: case Element::ET_RenderTarget: case Element::ET_Movie:
         {
             switch(f_parent->GetElementType())
             {
-                case Element::ElementType::ShaderElement:
+                case Element::ET_Shader:
                     reinterpret_cast<Shader*>(f_parent)->Detach(reinterpret_cast<Drawable*>(f_child));
                     break;
             }

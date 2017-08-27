@@ -6,7 +6,7 @@
 
 ROC::Scene::Scene()
 {
-    m_elementType = ElementType::SceneElement;
+    m_elementType = ET_Scene;
     m_elementTypeName.assign("Scene");
 
     m_mainCamera = nullptr;

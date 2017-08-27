@@ -9,7 +9,11 @@ class Element
     std::unordered_map<std::string, CustomData> m_customDataMap;
     std::unordered_map<std::string, CustomData>::iterator m_customDataMapEnd;
 public:
-    enum ElementType : unsigned char { ClientElement = 0U, FileElement };
+    enum ElementType : unsigned char
+    { 
+        ET_Client = 0U, 
+        ET_File
+    };
 
     bool SetCustomData(const std::string &f_key, CustomData &f_val);
     void GetCustomData(const std::string &f_key, CustomData &f_val);

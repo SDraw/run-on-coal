@@ -21,7 +21,7 @@ extern const float g_Epsilon;
 
 ROC::Model::Model(Geometry *f_geometry)
 {
-    m_elementType = ElementType::ModelElement;
+    m_elementType = ET_Model;
     m_elementTypeName.assign("Model");
 
     m_localPosition = g_DefaultPosition;

@@ -4,7 +4,7 @@
 
 ROC::Camera::Camera(int f_type)
 {
-    m_elementType = ElementType::CameraElement;
+    m_elementType = ET_Camera;
     m_elementTypeName.assign("Camera");
 
     m_type = f_type;

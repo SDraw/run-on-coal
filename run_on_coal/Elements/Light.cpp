@@ -4,7 +4,7 @@
 
 ROC::Light::Light()
 {
-    m_elementType = ElementType::LightElement;
+    m_elementType = ET_Light;
     m_elementTypeName.assign("Light");
 
     m_direction = glm::vec3(0.f, -1.f, 0.f);

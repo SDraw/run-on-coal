@@ -58,7 +58,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
         {
             switch(l_shaderUniform->GetType())
             {
-                case GL_BOOL:
+                case ShaderUniform::SUT_Bool:
                 {
                     bool l_val;
                     argStream.ReadBoolean(l_val);
@@ -69,7 +69,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_BOOL_VEC2:
+                case ShaderUniform::SUT_Bool2:
                 {
                     glm::bvec2 l_val;
                     for(int i = 0; i < 2; i++) argStream.ReadBoolean(l_val[i]);
@@ -80,7 +80,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_BOOL_VEC3:
+                case ShaderUniform::SUT_Bool3:
                 {
                     glm::bvec3 l_val;
                     for(int i = 0; i < 3; i++) argStream.ReadBoolean(l_val[i]);
@@ -91,7 +91,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_BOOL_VEC4:
+                case ShaderUniform::SUT_Bool4:
                 {
                     glm::bvec4 l_val;
                     for(int i = 0; i < 4; i++) argStream.ReadBoolean(l_val[i]);
@@ -103,7 +103,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     else argStream.PushBoolean(false);
                 } break;
 
-                case GL_INT:
+                case ShaderUniform::SUT_Int:
                 {
                     int l_val;
                     argStream.ReadInteger(l_val);
@@ -114,7 +114,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_INT_VEC2:
+                case ShaderUniform::SUT_Int2:
                 {
                     glm::ivec2 l_val;
                     for(int i = 0; i < 2; i++) argStream.ReadInteger(l_val[i]);
@@ -125,7 +125,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_INT_VEC3:
+                case ShaderUniform::SUT_Int3:
                 {
                     glm::ivec3 l_val;
                     for(int i = 0; i < 3; i++) argStream.ReadInteger(l_val[i]);
@@ -136,7 +136,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_INT_VEC4:
+                case ShaderUniform::SUT_Int4:
                 {
                     glm::ivec4 l_val;
                     for(int i = 0; i < 4; i++) argStream.ReadInteger(l_val[i]);
@@ -148,7 +148,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     else argStream.PushBoolean(false);
                 } break;
 
-                case GL_FLOAT:
+                case ShaderUniform::SUT_Float:
                 {
                     float l_val;
                     argStream.ReadNumber(l_val);
@@ -159,7 +159,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_FLOAT_VEC2:
+                case ShaderUniform::SUT_Float2:
                 {
                     glm::vec2 l_val;
                     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_val[i]);
@@ -170,7 +170,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_FLOAT_VEC3:
+                case ShaderUniform::SUT_Float3:
                 {
                     glm::vec3 l_val;
                     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_val[i]);
@@ -181,7 +181,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_FLOAT_VEC4:
+                case ShaderUniform::SUT_Float4:
                 {
                     glm::vec4 l_val;
                     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_val[i]);
@@ -193,7 +193,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     else argStream.PushBoolean(false);
                 } break;
 
-                case GL_FLOAT_MAT2:
+                case ShaderUniform::SUT_Mat2:
                 {
                     glm::mat2 l_mat;
                     float *l_matPtr = glm::value_ptr(l_mat);
@@ -205,7 +205,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_FLOAT_MAT3:
+                case ShaderUniform::SUT_Mat3:
                 {
                     glm::mat3 l_mat;
                     float *l_matPtr = glm::value_ptr(l_mat);
@@ -217,7 +217,7 @@ int ROC::LuaShaderDef::SetUniformValue(lua_State *f_vm)
                     }
                     else argStream.PushBoolean(false);
                 } break;
-                case GL_FLOAT_MAT4:
+                case ShaderUniform::SUT_Mat4:
                 {
                     glm::mat4 l_mat;
                     float *l_matPtr = glm::value_ptr(l_mat);

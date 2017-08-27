@@ -17,156 +17,156 @@ ROC::ShaderUniform::~ShaderUniform()
 
 bool ROC::ShaderUniform::SetValue(float f_val)
 {
-    if(m_type == GL_FLOAT)
+    if(m_type == SUT_Float)
     {
         m_float[0] = f_val;
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_FLOAT);
+    return (m_type == SUT_Float);
 }
 bool ROC::ShaderUniform::SetValue(const glm::vec2 &f_val)
 {
-    if(m_type == GL_FLOAT_VEC2)
+    if(m_type == SUT_Float2)
     {
         std::memcpy(m_float, &f_val, sizeof(glm::vec2));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_FLOAT_VEC2);
+    return (m_type == SUT_Float2);
 }
 bool ROC::ShaderUniform::SetValue(const glm::vec3 &f_val)
 {
-    if(m_type == GL_FLOAT_VEC3)
+    if(m_type == SUT_Float3)
     {
         std::memcpy(m_float, &f_val, sizeof(glm::vec3));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_FLOAT_VEC3);
+    return (m_type == SUT_Float3);
 }
 bool ROC::ShaderUniform::SetValue(const glm::vec4 &f_val)
 {
-    if(m_type == GL_FLOAT_VEC4)
+    if(m_type == SUT_Float4)
     {
         std::memcpy(m_float, &f_val, sizeof(glm::vec2));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_FLOAT_VEC4);
+    return (m_type == SUT_Float4);
 }
 
 bool ROC::ShaderUniform::SetValue(int f_val)
 {
-    if(m_type == GL_INT)
+    if(m_type == SUT_Int)
     {
         m_int[0] = f_val;
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_INT);
+    return (m_type == SUT_Int);
 }
 bool ROC::ShaderUniform::SetValue(const glm::ivec2 &f_val)
 {
-    if(m_type == GL_INT_VEC2)
+    if(m_type == SUT_Int2)
     {
         std::memcpy(m_int, &f_val, sizeof(glm::ivec2));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_INT_VEC2);
+    return (m_type == SUT_Int2);
 }
 bool ROC::ShaderUniform::SetValue(const glm::ivec3 &f_val)
 {
-    if(m_type == GL_INT_VEC3)
+    if(m_type == SUT_Int3)
     {
         std::memcpy(m_int, &f_val, sizeof(glm::ivec3));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_INT_VEC3);
+    return (m_type == SUT_Int3);
 }
 bool ROC::ShaderUniform::SetValue(const glm::ivec4 &f_val)
 {
-    if(m_type == GL_INT_VEC4)
+    if(m_type == SUT_Int4)
     {
         std::memcpy(m_int, &f_val, sizeof(glm::ivec4));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_INT_VEC4);
+    return (m_type == SUT_Int4);
 }
 
 bool ROC::ShaderUniform::SetValue(bool f_val)
 {
-    if(m_type == GL_BOOL)
+    if(m_type == SUT_Bool)
     {
         m_bool[0] = f_val;
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_BOOL);
+    return (m_type == SUT_Bool);
 }
 bool ROC::ShaderUniform::SetValue(const glm::bvec2 &f_val)
 {
-    if(m_type == GL_BOOL_VEC2)
+    if(m_type == SUT_Bool2)
     {
         for(int i = 0; i < 2; i++) m_bool[i] = f_val[i];
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_BOOL_VEC2);
+    return (m_type == SUT_Bool2);
 }
 bool ROC::ShaderUniform::SetValue(const glm::bvec3 &f_val)
 {
-    if(m_type == GL_BOOL_VEC3)
+    if(m_type == SUT_Bool3)
     {
         for(int i = 0; i < 3; i++) m_bool[i] = f_val[i];
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_BOOL_VEC3);
+    return (m_type == SUT_Bool3);
 }
 bool ROC::ShaderUniform::SetValue(const glm::bvec4 &f_val)
 {
-    if(m_type == GL_BOOL_VEC4)
+    if(m_type == SUT_Bool4)
     {
         for(int i = 0; i < 4; i++) m_bool[i] = f_val[i];
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_BOOL_VEC4);
+    return (m_type == SUT_Bool4);
 }
 
 bool ROC::ShaderUniform::SetValue(const glm::mat2 &f_val)
 {
-    if(m_type == GL_FLOAT_MAT2)
+    if(m_type == SUT_Mat2)
     {
         std::memcpy(m_float, &f_val, sizeof(glm::mat2));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_FLOAT_MAT2);
+    return (m_type == SUT_Mat2);
 }
 bool ROC::ShaderUniform::SetValue(const glm::mat3 &f_val)
 {
-    if(m_type == GL_FLOAT_MAT3)
+    if(m_type == SUT_Mat3)
     {
         std::memcpy(m_float, &f_val, sizeof(glm::mat3));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_FLOAT_MAT3);
+    return (m_type == SUT_Mat3);
 }
 bool ROC::ShaderUniform::SetValue(const glm::mat4 &f_val)
 {
-    if(m_type == GL_FLOAT_MAT4)
+    if(m_type == SUT_Mat4)
     {
         std::memcpy(m_float, &f_val, sizeof(glm::mat4));
         m_needUpdate = true;
         if(m_isActive) Update();
     }
-    return (m_type == GL_FLOAT_MAT4);
+    return (m_type == SUT_Mat4);
 }
 
 bool ROC::ShaderUniform::SetSampler(int f_sampler)
@@ -187,52 +187,52 @@ void ROC::ShaderUniform::Update()
     {
         switch(m_type)
         {
-            case GL_FLOAT:
+            case SUT_Float:
                 glUniform1f(m_uniform, m_float[0]);
                 break;
-            case GL_FLOAT_VEC2:
+            case SUT_Float2:
                 glUniform2f(m_uniform, m_float[0], m_float[1]);
                 break;
-            case GL_FLOAT_VEC3:
+            case SUT_Float3:
                 glUniform3f(m_uniform, m_float[0], m_float[1], m_float[2]);
                 break;
-            case GL_FLOAT_VEC4:
+            case SUT_Float4:
                 glUniform4f(m_uniform, m_float[0], m_float[1], m_float[2], m_float[3]);
                 break;
 
-            case GL_INT: case GL_SAMPLER_2D: case GL_SAMPLER_2D_SHADOW: case GL_SAMPLER_CUBE:
+            case SUT_Int: case SUT_Sampler: case SUT_ShadowSampler: case SUT_CubeSampler:
                 glUniform1i(m_uniform, m_int[0]);
                 break;
-            case GL_INT_VEC2:
+            case SUT_Int2:
                 glUniform2i(m_uniform, m_int[0], m_int[1]);
                 break;
-            case GL_INT_VEC3:
+            case SUT_Int3:
                 glUniform3i(m_uniform, m_int[0], m_int[1], m_int[2]);
                 break;
-            case GL_INT_VEC4:
+            case SUT_Int4:
                 glUniform4i(m_uniform, m_int[0], m_int[1], m_int[2], m_int[3]);
                 break;
 
-            case GL_BOOL:
+            case SUT_Bool:
                 glUniform1ui(m_uniform, m_bool[0]);
                 break;
-            case GL_BOOL_VEC2:
+            case SUT_Bool2:
                 glUniform2ui(m_uniform, m_bool[0], m_bool[1]);
                 break;
-            case GL_BOOL_VEC3:
+            case SUT_Bool3:
                 glUniform3ui(m_uniform, m_bool[0], m_bool[1], m_bool[2]);
                 break;
-            case GL_BOOL_VEC4:
+            case SUT_Bool4:
                 glUniform4ui(m_uniform, m_bool[0], m_bool[1], m_bool[2], m_bool[3]);
                 break;
 
-            case GL_FLOAT_MAT2:
+            case SUT_Mat2:
                 glUniformMatrix2fv(m_uniform, 1, GL_FALSE, m_float);
                 break;
-            case GL_FLOAT_MAT3:
+            case SUT_Mat3:
                 glUniformMatrix3fv(m_uniform, 1, GL_FALSE, m_float);
                 break;
-            case GL_FLOAT_MAT4:
+            case SUT_Mat4:
                 glUniformMatrix4fv(m_uniform, 1, GL_FALSE, m_float);
                 break;
         }

@@ -16,6 +16,28 @@ class ShaderUniform final
     bool m_isActive;
     bool m_needUpdate;
 public:
+    enum ShaderUniformType
+    {
+        SUT_Float = GL_FLOAT,
+        SUT_Float2 = GL_FLOAT_VEC2,
+        SUT_Float3 = GL_FLOAT_VEC3,
+        SUT_Float4 = GL_FLOAT_VEC4,
+        SUT_Int = GL_INT,
+        SUT_Int2 = GL_INT_VEC2,
+        SUT_Int3 = GL_INT_VEC3,
+        SUT_Int4 = GL_INT_VEC4,
+        SUT_Bool = GL_BOOL,
+        SUT_Bool2 = GL_BOOL_VEC2,
+        SUT_Bool3 = GL_BOOL_VEC3,
+        SUT_Bool4 = GL_BOOL_VEC4,
+        SUT_Mat2 = GL_FLOAT_MAT2,
+        SUT_Mat3 = GL_FLOAT_MAT3,
+        SUT_Mat4 = GL_FLOAT_MAT4,
+        SUT_Sampler = GL_SAMPLER_2D,
+        SUT_ShadowSampler = GL_SAMPLER_2D_SHADOW,
+        SUT_CubeSampler = GL_SAMPLER_CUBE
+    };
+
     inline unsigned int GetType() const { return m_type; }
 
     bool SetValue(float f_val);
