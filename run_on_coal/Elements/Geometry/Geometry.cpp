@@ -8,16 +8,15 @@
 
 #include "Utils/zlibUtils.h"
 
-#define ROC_GEOMETRY_TYPE_STATIC 1U
-#define ROC_GEOMETRY_TYPE_ANIMATED 2U
-#define ROC_GEOMETRY_COLLISION_SETTER 0xCBU
+#define ROC_GEOMETRY_SETTER_ANIMATED 0x2U
+#define ROC_GEOMETRY_SETTER_COLLISION 0xCBU
 
 ROC::Geometry::Geometry(bool f_async)
 {
     m_elementType = ET_Geometry;
     m_elementTypeName.assign("Geometry");
 
-    m_loadState = gmLoadState::NotLoaded;
+    m_loadState = GLS_NotLoaded;
     m_async = f_async;
     m_released = !m_async;
     m_materialCount = 0U;
@@ -31,9 +30,9 @@ ROC::Geometry::~Geometry()
 bool ROC::Geometry::Load(const std::string &f_path)
 {
     bool l_result = false;
-    if(m_loadState == gmLoadState::NotLoaded)
+    if(m_loadState == GLS_NotLoaded)
     {
-        m_loadState = gmLoadState::Loading;
+        m_loadState = GLS_Loading;
 
         unsigned char l_type;
         std::ifstream l_file;
@@ -80,7 +79,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
                 std::vector<glm::vec4> l_weightData;
                 std::vector<glm::ivec4> l_indexData;
-                if(l_type == ROC_GEOMETRY_TYPE_ANIMATED)
+                if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
                 {
                     // Weights
                     l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -146,7 +145,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         l_tempNormal.push_back(l_normalData[l_faceIndex[j + 6]]);
                         l_tempNormal.push_back(l_normalData[l_faceIndex[j + 7]]);
                         l_tempNormal.push_back(l_normalData[l_faceIndex[j + 8]]);
-                        if(l_type == ROC_GEOMETRY_TYPE_ANIMATED)
+                        if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
                         {
                             l_tempWeight.push_back(l_weightData[l_faceIndex[j]]);
                             l_tempWeight.push_back(l_weightData[l_faceIndex[j + 1]]);
@@ -164,7 +163,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_material->LoadVertices(l_tempVertex);
                     l_material->LoadUVs(l_tempUV);
                     l_material->LoadNormals(l_tempNormal);
-                    if(l_type == ROC_GEOMETRY_TYPE_ANIMATED)
+                    if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
                     {
                         l_material->LoadWeights(l_tempWeight);
                         l_material->LoadIndices(l_tempIndex);
@@ -189,7 +188,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 }
                 m_boundSphereRaduis = glm::length(l_farthestPoint);
 
-                if(l_type == ROC_GEOMETRY_TYPE_ANIMATED)
+                if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
                 {
                     int l_bonesSize;
                     l_file.read(reinterpret_cast<char*>(&l_bonesSize), sizeof(int));
@@ -220,15 +219,15 @@ bool ROC::Geometry::Load(const std::string &f_path)
         {
             Clear();
         }
-        if(l_result && !m_async) m_loadState = gmLoadState::Loaded;
+        if(l_result && !m_async) m_loadState = GLS_Loaded;
 
-        if(l_result && (l_type == ROC_GEOMETRY_TYPE_ANIMATED))
+        if(l_result && (l_type == ROC_GEOMETRY_SETTER_ANIMATED))
         {
             try
             {
                 unsigned char l_physicBlock = 0U;
                 l_file.read(reinterpret_cast<char*>(&l_physicBlock), sizeof(unsigned char));
-                if(l_physicBlock == ROC_GEOMETRY_COLLISION_SETTER)
+                if(l_physicBlock == ROC_GEOMETRY_SETTER_COLLISION)
                 {
                     unsigned int l_scbCount = 0U;
                     l_file.read(reinterpret_cast<char*>(&l_scbCount), sizeof(unsigned int));
@@ -317,16 +316,16 @@ void ROC::Geometry::Clear()
     for(auto iter : m_jointData) delete iter;
     m_jointData.clear();
 
-    m_loadState = gmLoadState::NotLoaded;
+    m_loadState = GLS_NotLoaded;
 
     if(m_async) m_released = true;
 }
 
 void ROC::Geometry::GenerateVAOs()
 {
-    if(m_async && (m_loadState == gmLoadState::Loading))
+    if(m_async && (m_loadState == GLS_Loading))
     {
         for(auto iter : m_materialVector) iter->GenerateVAO();
-        m_loadState = gmLoadState::Loaded;
+        m_loadState = GLS_Loaded;
     }
 }

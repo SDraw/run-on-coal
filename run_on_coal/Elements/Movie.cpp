@@ -7,6 +7,7 @@ ROC::Movie::Movie()
     m_elementType = ET_Movie;
     m_elementTypeName.assign("Movie");
 
+    m_filtering = DFT_None;
     m_movie = nullptr;
     m_size = glm::ivec2(0);
 }
@@ -26,6 +27,7 @@ bool ROC::Movie::Load(const std::string &f_path)
             auto l_size = l_texture.getSize();
             m_size.x = l_size.x;
             m_size.y = l_size.y;
+            m_filtering = (l_texture.isSmooth() ? DFT_Linear : DFT_Nearest);
         }
         else
         {

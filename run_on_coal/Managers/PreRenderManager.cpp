@@ -120,8 +120,8 @@ void ROC::PreRenderManager::DoPulse_S1()
         m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
 
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
-        if(!l_model->HasCollision()) l_model->Update(ROC_MODEL_UPDATE_MATRIX);
-        l_model->Update(ROC_MODEL_UPDATE_SKELETON1, l_physicsState);
+        if(!l_model->HasCollision()) l_model->Update(Model::MUS_Matrix);
+        l_model->Update(Model::MUS_SkeletonStatic, l_physicsState);
     }
 }
 void ROC::PreRenderManager::DoPulse_S2()
@@ -139,7 +139,7 @@ void ROC::PreRenderManager::DoPulse_S2()
         m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
 
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
-        l_model->Update(l_model->HasCollision() ? ROC_MODEL_UPDATE_COLLISION : ROC_MODEL_UPDATE_MATRIX);
-        l_model->Update(ROC_MODEL_UPDATE_SKELETON2, l_physicsState);
+        l_model->Update(l_model->HasCollision() ? Model::MUS_Collision : Model::MUS_Matrix);
+        l_model->Update(Model::MUS_SkeletonDynamic, l_physicsState);
     }
 }

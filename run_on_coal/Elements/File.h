@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Elements/Element.h"
 
 namespace ROC
@@ -7,8 +8,13 @@ namespace ROC
 class Core;
 class File final : public Element
 {
-    enum FileMode { NoneMode = -1, ReadMode, WriteMode };
-    FileMode m_type = FileMode::NoneMode;
+    enum FileMode
+    {
+        FM_None = -1,
+        FM_Read,
+        FM_Write
+    };
+    FileMode m_type = FM_None;
     std::fstream *m_file;
     std::string m_path;
 public:

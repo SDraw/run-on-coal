@@ -1,21 +1,14 @@
 #pragma once
-#include "Elements/Geometry/BoneCollisionData.hpp"
-#include "Elements/Geometry/BoneData.hpp"
-#include "Elements/Geometry/BoneJointData.hpp"
-
-#define ROC_BONECOL_TYPE_SPHERE 0U
-#define ROC_BONECOL_TYPE_BOX 1U
-#define ROC_BONECOL_TYPE_CYLINDER 2U
-#define ROC_BONECOL_TYPE_CAPSULE 3U
-#define ROC_BONECOL_TYPE_CONE 4U
-#define ROC_SKELETON_UPDATE_COLLISION1 0
-#define ROC_SKELETON_UPDATE_COLLISION2 1
 
 namespace ROC
 {
 
 class Bone;
+struct BoneCollisionData;
+struct BoneData;
 class BoneFrameData;
+struct BoneJointData;
+
 class Skeleton final
 {
     unsigned int m_bonesCount;
@@ -54,6 +47,12 @@ public:
     inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }
     inline bool HasDynamicBoneCollision() const { return m_hasDynamicBoneCollision; }
 protected:
+    enum SkeletonUpdateStage : unsigned char
+    {
+        SUS_Static,
+        SUS_Dynamic
+    };
+
     explicit Skeleton(const std::vector<BoneData*> &f_data);
     ~Skeleton();
 
@@ -68,7 +67,7 @@ protected:
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
     inline const std::vector<skJoint*>& GetJoints() const { return m_jointVector; }
 
-    void UpdateCollision(int f_state, const glm::mat4 &f_model, bool f_enabled);
+    void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model, bool f_enabled);
 
     friend class Model;
     friend class RenderManager;

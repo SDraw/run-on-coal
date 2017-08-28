@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Elements/File.h"
-
 #include "Core/Core.h"
+
 #include "Utils/PathUtils.h"
 
 ROC::File::File()
@@ -32,7 +32,7 @@ bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
         }
         else
         {
-            m_type = FileMode::WriteMode;
+            m_type = FM_Write;
             m_path.assign(f_rPath);
         }
     }
@@ -50,7 +50,7 @@ bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool
         }
         else
         {
-            m_type = f_ro ? FileMode::ReadMode : FileMode::WriteMode;
+            m_type = f_ro ? FM_Read : FM_Write;
             m_path.assign(f_rPath);
         }
     }
@@ -74,7 +74,7 @@ size_t ROC::File::Write(const std::string &f_data)
     size_t l_written = 0U;
     if(m_file)
     {
-        if(m_type == FileMode::WriteMode)
+        if(m_type == FM_Write)
         {
             std::streampos l_start = m_file->tellg();
             m_file->write(&f_data[0], f_data.size());
@@ -89,7 +89,7 @@ size_t ROC::File::GetSize()
     size_t l_size = 0U;
     if(m_file)
     {
-        if(m_type == FileMode::ReadMode)
+        if(m_type == FM_Read)
         {
             std::streampos l_last = m_file->tellg();
             m_file->seekg(SEEK_SET, std::ios::end);
@@ -109,7 +109,7 @@ size_t ROC::File::GetSize()
 size_t ROC::File::GetPosition()
 {
     size_t l_pos = 0U;
-    if(m_file) l_pos = static_cast<size_t>((m_type == FileMode::ReadMode) ? m_file->tellg() : m_file->tellp());
+    if(m_file) l_pos = static_cast<size_t>((m_type == FM_Read) ? m_file->tellg() : m_file->tellp());
     return l_pos;
 }
 bool ROC::File::SetPosition(size_t f_pos)
@@ -117,7 +117,7 @@ bool ROC::File::SetPosition(size_t f_pos)
     bool l_result = false;
     if(m_file)
     {
-        if(m_type == FileMode::ReadMode) m_file->seekg(f_pos);
+        if(m_type == FM_Read) m_file->seekg(f_pos);
         else m_file->seekp(f_pos);
         l_result = !m_file->fail();
     }

@@ -1,6 +1,5 @@
 #pragma once
 #include "Elements/Element.h"
-#define ROC_SHADER_BONES_COUNT 227U
 
 namespace ROC
 {
@@ -93,7 +92,7 @@ protected:
 
     bool Attach(Drawable *f_drawable, const std::string &f_uniform);
     bool Detach(Drawable *f_drawable);
-    bool HasAttached(Drawable *f_drawable);
+    bool HasAttached(Drawable *f_drawable) const;
 
     static void CreateBonesUBO();
     static void DestroyBonesUBO();

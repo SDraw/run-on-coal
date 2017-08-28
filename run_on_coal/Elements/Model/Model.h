@@ -1,8 +1,7 @@
 #pragma once
+
 #include "Elements/Element.h"
-#define ROC_MODEL_TYPE_NONE 0
-#define ROC_MODEL_TYPE_STATIC 1
-#define ROC_MODEL_TYPE_ANIMATED 2
+
 #define ROC_MODEL_UPDATE_MATRIX 0
 #define ROC_MODEL_UPDATE_COLLISION 1
 #define ROC_MODEL_UPDATE_SKELETON1 2
@@ -72,12 +71,20 @@ public:
     inline bool HasCollision() const { return (m_collision != nullptr); }
     inline Collision* GetCollision() { return m_collision; }
 protected:
+    enum ModelUpdateStage : unsigned char
+    {
+        MUS_Matrix,
+        MUS_Collision,
+        MUS_SkeletonStatic,
+        MUS_SkeletonDynamic
+    };
+
     explicit Model(Geometry *f_geometry);
     ~Model();
 
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
 
-    void Update(int f_state, bool f_arg1 = false);
+    void Update(ModelUpdateStage f_stage, bool f_arg1 = false);
 
     void SetParent(Model *f_model, int f_bone = -1);
 

@@ -30,7 +30,7 @@ void ROC::LuaFontDef::Init(lua_State *f_vm)
 
 int ROC::LuaFontDef::Create(lua_State *f_vm)
 {
-    // element Font(str path, int size [, int atlasX = 256, int atlasY = 256])
+    // element Font(str path, int size [, int atlasX = 256, int atlasY = 256, str filtering = "nearest"])
     std::string l_path;
     int l_size;
     glm::ivec2 l_atlasSize(ROC_FONT_ATLAS_SIZE);
@@ -44,7 +44,6 @@ int ROC::LuaFontDef::Create(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
         int l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_FilteringTypesTable);
-        if(l_filteringType == -1) l_filteringType = 0;
         Font *l_font = LuaManager::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, l_filteringType);
         l_font ? argStream.PushElement(l_font) : argStream.PushBoolean(false);
     }

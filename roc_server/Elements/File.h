@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Elements/Element.h"
 
 namespace ROC
@@ -7,8 +8,13 @@ namespace ROC
 class Core;
 class File final : public Element
 {
-    enum FileMode { NoneMode = -1, ReadMode, WriteMode };
-    FileMode m_type = FileMode::NoneMode;
+    enum FileMode
+    {
+        FM_None = -1,
+        FM_Read,
+        FM_Write
+    };
+    FileMode m_type = FM_None;
     std::fstream *m_file;
     std::string m_path;
 public:
@@ -21,7 +27,7 @@ public:
     inline bool IsEOF() { return (m_file ? m_file->eof() : false); }
     void Flush();
 
-    inline void GetPath(std::string &f_string) { f_string.assign(m_path); }
+    inline const std::string& GetPath() const { return m_path; }
 
     static bool Delete(Core *f_core, const std::string &f_path);
     static bool Rename(Core *f_core, const std::string &f_old, const std::string &f_new);

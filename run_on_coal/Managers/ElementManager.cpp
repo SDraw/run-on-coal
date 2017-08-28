@@ -182,12 +182,12 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path, bool f_l
     return l_sound;
 }
 
-ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter)
+ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(int f_type, const glm::ivec2 &f_size, int f_filter)
 {
     RenderTarget *l_rt = new RenderTarget();
 
     if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
-    if(l_rt->Create(f_num, f_size, f_type, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt);
+    if(l_rt->Create(f_type, f_size, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt);
     else
     {
         m_core->GetLogManager()->Log(l_rt->GetError());

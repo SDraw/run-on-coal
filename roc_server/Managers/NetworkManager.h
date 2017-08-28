@@ -1,6 +1,4 @@
 #pragma once
-#define ROC_NETWORK_MAX_CONNECTIONS 8
-#define ROC_NETWORK_DISCONNECT_DURATION 300U
 
 namespace ROC
 {

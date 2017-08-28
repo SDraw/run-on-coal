@@ -419,7 +419,7 @@ int ROC::LuaCollisionDef::SetMotionType(lua_State *f_vm)
         int l_idx = EnumUtils::ReadEnumVector(l_type, g_CollisionMotionTypesTable);
         if(l_idx != -1)
         {
-            l_collision->SetMotionType(ROC_COLLISION_MOTION_DEFAULT + l_idx);
+            l_collision->SetMotionType(l_idx);
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);

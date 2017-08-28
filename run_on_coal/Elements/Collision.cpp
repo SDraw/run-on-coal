@@ -16,7 +16,7 @@ ROC::Collision::Collision()
     m_elementTypeName.assign("Collision");
 
     m_rigidBody = nullptr;
-    m_motionType = ROC_COLLISION_MOTION_DEFAULT;
+    m_motionType = CMT_Default;
     m_scale = g_DefaultScale;
     m_parentModel = nullptr;
 }
@@ -33,24 +33,24 @@ bool ROC::Collision::Create(int f_type, const glm::vec3 &f_size, float f_mass)
 {
     if(!m_rigidBody)
     {
-        btClamp(f_type, ROC_COLLISION_TYPE_SPHERE, ROC_COLLISION_TYPE_CONE);
+        btClamp(f_type, static_cast<int>(CT_Sphere), static_cast<int>(CT_Cone));
         btVector3 l_inertia;
         btCollisionShape *l_shape = nullptr;
         switch(f_type)
         {
-            case ROC_COLLISION_TYPE_SPHERE:
+            case CT_Sphere:
                 l_shape = new btSphereShape(f_size.x);
                 break;
-            case ROC_COLLISION_TYPE_BOX:
+            case CT_Box:
                 l_shape = new btBoxShape(btVector3(f_size.x, f_size.y, f_size.z));
                 break;
-            case ROC_COLLISION_TYPE_CYLINDER:
+            case CT_Cylinder:
                 l_shape = new btCylinderShape(btVector3(f_size.x, f_size.y, f_size.z));
                 break;
-            case ROC_COLLISION_TYPE_CAPSULE:
+            case CT_Capsule:
                 l_shape = new btCapsuleShape(f_size.x, f_size.y);
                 break;
-            case ROC_COLLISION_TYPE_CONE:
+            case CT_Cone:
                 l_shape = new btConeShape(f_size.x, f_size.y);
                 break;
         }
@@ -82,10 +82,10 @@ void ROC::Collision::GetPosition(glm::vec3 &f_pos)
     btTransform l_transform;
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Default: case CMT_Static:
             l_transform = m_rigidBody->getCenterOfMassTransform();
             break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
             m_rigidBody->getMotionState()->getWorldTransform(l_transform);
             break;
     }
@@ -96,10 +96,10 @@ void ROC::Collision::SetPosition(const glm::vec3 &f_pos)
     btTransform l_transform;
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Default: case CMT_Static:
             l_transform = m_rigidBody->getCenterOfMassTransform();
             break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
             m_rigidBody->getMotionState()->getWorldTransform(l_transform);
             break;
     }
@@ -107,10 +107,10 @@ void ROC::Collision::SetPosition(const glm::vec3 &f_pos)
     l_transform.setOrigin(l_pos);
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Default: case CMT_Static:
             m_rigidBody->setCenterOfMassTransform(l_transform);
             break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
             m_rigidBody->getMotionState()->setWorldTransform(l_transform);
             break;
     }
@@ -121,10 +121,10 @@ void ROC::Collision::GetRotation(glm::quat &f_rot)
     btTransform l_transform;
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Default: case CMT_Static:
             l_transform = m_rigidBody->getCenterOfMassTransform();
             break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
             m_rigidBody->getMotionState()->getWorldTransform(l_transform);
             break;
     }
@@ -136,10 +136,10 @@ void ROC::Collision::SetRotation(const glm::quat &f_rot)
     btTransform l_transform;
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Default: case CMT_Static:
             l_transform = m_rigidBody->getCenterOfMassTransform();
             break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
             m_rigidBody->getMotionState()->getWorldTransform(l_transform);
             break;
     }
@@ -147,10 +147,10 @@ void ROC::Collision::SetRotation(const glm::quat &f_rot)
     l_transform.setRotation(l_rotation);
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Default: case CMT_Static:
             m_rigidBody->setCenterOfMassTransform(l_transform);
             break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
             m_rigidBody->getMotionState()->setWorldTransform(l_transform);
             break;
     }
@@ -250,20 +250,20 @@ void ROC::Collision::ApplyTorque(const glm::vec3 &f_torque, bool f_impulse)
 void ROC::Collision::SetMotionType(int f_type)
 {
     m_motionType = f_type;
-    btClamp(m_motionType, ROC_COLLISION_MOTION_DEFAULT, ROC_COLLISION_MOTION_KINEMATIC);
+    btClamp(m_motionType, static_cast<int>(CMT_Default), static_cast<int>(CMT_Kinematic));
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT:
+        case CMT_Default:
         {
             m_rigidBody->setCollisionFlags(0);
             m_rigidBody->setActivationState(ACTIVE_TAG);
         } break;
-        case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Static:
         {
             m_rigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
             m_rigidBody->setActivationState(ACTIVE_TAG);
         } break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
         {
             m_rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
             m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
@@ -276,10 +276,10 @@ void ROC::Collision::GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat 
     btTransform l_transform;
     switch(m_motionType)
     {
-        case ROC_COLLISION_MOTION_DEFAULT: case ROC_COLLISION_MOTION_STATIC:
+        case CMT_Default: case CMT_Static:
             l_transform = m_rigidBody->getCenterOfMassTransform();
             break;
-        case ROC_COLLISION_MOTION_KINEMATIC:
+        case CMT_Kinematic:
             m_rigidBody->getMotionState()->getWorldTransform(l_transform);
             break;
     }

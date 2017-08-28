@@ -320,10 +320,10 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
                 m_activeShader->SetMaterialParam(g_EmptyVec4);
 
                 int l_materialType = 0;
-                if(f_params.x) l_materialType |= ROC_MATERIAL_BIT_SHADING;
-                if(f_params.y) l_materialType |= ROC_MATERIAL_BIT_DEPTH;
-                if(f_params.z) l_materialType |= ROC_MATERIAL_BIT_TRANSPARENCY;
-                if(f_params.w) l_materialType |= ROC_MATERIAL_BIT_DOUBLESIDE;
+                if(f_params.x) l_materialType |= Material::MPB_Shading;
+                if(f_params.y) l_materialType |= Material::MPB_Depth;
+                if(f_params.z) l_materialType |= Material::MPB_Transparency;
+                if(f_params.w) l_materialType |= Material::MPB_Doubleside;
                 m_activeShader->SetMaterialType(l_materialType);
 
                 f_params.w ? DisableCulling() : EnableCulling();

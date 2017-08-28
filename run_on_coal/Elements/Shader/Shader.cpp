@@ -9,6 +9,7 @@
 #include "Utils/GLUtils.hpp"
 
 #define ROC_SHADER_BONES_BINDPOINT 0
+#define ROC_SHADER_BONES_COUNT 227U
 
 namespace ROC
 {
@@ -77,7 +78,8 @@ ROC::Shader::Shader()
 ROC::Shader::~Shader()
 {
     if(m_program) glDeleteProgram(m_program);
-    for(auto iter : m_uniformMap) delete iter.second;
+    for(auto &iter : m_uniformMap) delete iter.second;
+    m_uniformMap.clear();
     delete m_bindPool;
     m_drawableBind.clear();
 }
@@ -502,7 +504,7 @@ bool ROC::Shader::Detach(Drawable *f_drawable)
     }
     return l_result;
 }
-bool ROC::Shader::HasAttached(Drawable *f_drawable)
+bool ROC::Shader::HasAttached(Drawable *f_drawable) const
 {
     bool l_result = false;
     for(const auto &iter : m_drawableBind)
@@ -541,7 +543,7 @@ void ROC::Shader::EnableUBOFix()
 void ROC::Shader::Enable()
 {
     glUseProgram(m_program);
-    for(auto iter : m_uniformMap)
+    for(auto &iter : m_uniformMap)
     {
         ShaderUniform *l_shaderUniform = iter.second;
         l_shaderUniform->SetActive(true);
@@ -557,5 +559,5 @@ void ROC::Shader::Enable()
 
 void ROC::Shader::Disable()
 {
-    for(auto iter : m_uniformMap) iter.second->SetActive(false);
+    for(auto &iter : m_uniformMap) iter.second->SetActive(false);
 }

@@ -123,7 +123,7 @@ void ROC::Material::LoadTexture(const std::string &f_path)
     if(!m_texture)
     {
         m_texture = new Texture();
-        if(!m_texture->Load(f_path, IsTransparent() ? ROC_TEXTURE_TYPE_RGBA : ROC_TEXTURE_TYPE_RGB, GetFilteringType(), IsCompressed()))
+        if(!m_texture->Load(f_path, IsTransparent() ? Texture::TT_RGBA : Texture::TT_RGB, GetFilteringType(), IsCompressed()))
         {
             delete m_texture;
             m_texture = nullptr;

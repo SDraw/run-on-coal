@@ -10,6 +10,8 @@
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
 
+#define ROC_DEFAULT_SCRIPTS_PATH "server_scripts/"
+
 ROC::Core* ROC::Core::ms_instance = nullptr;
 ROC::OnServerStartCallback ROC::Core::ms_serverStartCallback = nullptr;
 

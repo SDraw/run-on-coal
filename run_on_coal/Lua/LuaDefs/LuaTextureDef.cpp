@@ -46,13 +46,13 @@ int ROC::LuaTextureDef::Create(lua_State *f_vm)
         int l_textureType = EnumUtils::ReadEnumVector(l_type, g_TextureTypesTable);
         switch(l_textureType)
         {
-            case ROC_TEXTURE_TYPE_RGB: case ROC_TEXTURE_TYPE_RGBA:
+            case Texture::TT_RGB: case Texture::TT_RGBA:
             {
                 l_path.resize(1U);
                 argStream.ReadText(l_path[0]);
                 if(argStream.HasErrors()) l_path.clear();
             } break;
-            case ROC_TEXTURE_TYPE_CUBEMAP:
+            case Texture::TT_Cubemap:
             {
                 l_path.resize(6U);
                 for(int i = 0; i < 6; i++) argStream.ReadText(l_path[6]);

@@ -1,8 +1,4 @@
 #pragma once
-#define ROC_NETWORK_CONNECTION_TRIES 5
-#define ROC_NETWORK_CONNECTION_TRYTIME 500
-#define ROC_NETWORK_MAX_CONNECTIONS 8
-#define ROC_NETWORK_SHUTDOWN_DURATION 300U
 
 namespace ROC
 {
@@ -21,7 +17,13 @@ class NetworkManager final
     RakNet::SystemAddress m_serverAddress;
     enum NetworkIdentifier : unsigned char { ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1 };
 
-    enum NetworkState : unsigned char { Disconnected = 0U, Connecting, Connected, Disconnecting };
+    enum NetworkState : unsigned char 
+    { 
+        NS_Disconnected = 0U, 
+        NS_Connecting, 
+        NS_Connected, 
+        NS_Disconnecting 
+    };
     NetworkState m_networkState;
 
     LuaArguments *m_argument;

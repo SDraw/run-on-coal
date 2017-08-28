@@ -1,8 +1,6 @@
 #pragma once
 #include "Elements/Element.h"
-#define ROC_FONT_FILTER_NONE -1
-#define ROC_FONT_FILTER_NEAREST 0
-#define ROC_FONT_FILTER_LINEAR 1
+
 #define ROC_FONT_ATLAS_SIZE 256
 
 namespace ROC
@@ -43,6 +41,13 @@ class Font final : public Element
 
     bool LoadChar(unsigned int f_char);
 public:
+    enum FontFilteringType
+    {
+        FFT_None = -1,
+        FFT_Nearest,
+        FFT_Linear
+    };
+
     inline int GetFiltering() const { return m_filteringType; }
 protected:
     Font();
@@ -52,7 +57,7 @@ protected:
     static void DestroyVAO();
     static void CreateLibrary();
     static void DestroyLibrary();
-    bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
+    bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter = FFT_Nearest);
 
     static inline GLuint GetVAO() { return ms_VAO; }
     inline GLuint GetAtlasTexture() const { return m_atlasTexture; }

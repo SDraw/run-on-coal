@@ -11,6 +11,9 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 
+#define ROC_NETWORK_MAX_CONNECTIONS 8
+#define ROC_NETWORK_DISCONNECT_DURATION 300U
+
 ROC::NetworkManager::NetworkManager(Core *f_core)
 {
     m_core = f_core;

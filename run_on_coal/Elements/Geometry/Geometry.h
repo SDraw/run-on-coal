@@ -19,14 +19,19 @@ class Geometry final : public Element
     std::vector<BoneCollisionData*> m_collisionData;
     std::vector<BoneJointData*> m_jointData;
 
-    enum gmLoadState : unsigned char { NotLoaded, Loading, Loaded };
-    std::atomic<gmLoadState> m_loadState;
+    enum GeometryLoadState : unsigned char 
+    { 
+        GLS_NotLoaded, 
+        GLS_Loading, 
+        GLS_Loaded 
+    };
+    std::atomic<GeometryLoadState> m_loadState;
     bool m_async;
     bool m_released;
 
     void Clear();
 public:
-    inline bool IsLoaded() const { return (m_loadState == gmLoadState::Loaded); }
+    inline bool IsLoaded() const { return (m_loadState == GLS_Loaded); }
     inline float GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
     inline bool HasBonesData() const { return !m_bonesData.empty(); }

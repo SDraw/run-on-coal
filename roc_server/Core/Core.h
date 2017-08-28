@@ -1,5 +1,4 @@
 #pragma once
-#define ROC_DEFAULT_SCRIPTS_PATH "server_scripts/"
 
 namespace ROC
 {

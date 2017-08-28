@@ -2,13 +2,6 @@
 
 #define CHECK_BIT(val,bit) ((val&bit) == bit)
 
-#define ROC_MATERIAL_BIT_SHADING 1U
-#define ROC_MATERIAL_BIT_DEPTH 2U
-#define ROC_MATERIAL_BIT_TRANSPARENCY 4U
-#define ROC_MATERIAL_BIT_DOUBLESIDE 8U
-#define ROC_MATERIAL_BIT_FILTER 16U
-#define ROC_MATERIAL_BIT_COMPRESSION 32U
-
 namespace ROC
 {
 
@@ -27,15 +20,25 @@ class Material final
     glm::vec4 m_params;
     Texture *m_texture;
 public:
+    enum MaterialPropertyBit : unsigned char
+    {
+        MPB_Shading = (1U << 0),
+        MPB_Depth = (1U << 1),
+        MPB_Transparency = (1U << 2),
+        MPB_Doubleside = (1U << 3),
+        MPB_Filtering = (1U << 4),
+        MPB_Compression = (1U << 5)
+    };
+
     inline unsigned char GetType() const { return m_type; }
     inline const glm::vec4& GetParams() const { return m_params; }
 
-    inline bool IsDoubleSided() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_DOUBLESIDE); }
-    inline bool IsTransparent() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_TRANSPARENCY); }
-    inline bool IsShady() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_SHADING); }
-    inline bool HasDepth() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_DEPTH); }
-    inline bool IsCompressed() const { return CHECK_BIT(m_type, ROC_MATERIAL_BIT_COMPRESSION); }
-    inline unsigned char GetFilteringType() const { return ((m_type&ROC_MATERIAL_BIT_FILTER) >> 4); }
+    inline bool IsDoubleSided() const { return CHECK_BIT(m_type, MPB_Doubleside); }
+    inline bool IsTransparent() const { return CHECK_BIT(m_type, MPB_Transparency); }
+    inline bool IsShady() const { return CHECK_BIT(m_type, MPB_Shading); }
+    inline bool HasDepth() const { return CHECK_BIT(m_type, MPB_Depth); }
+    inline bool IsCompressed() const { return CHECK_BIT(m_type, MPB_Compression); }
+    inline unsigned char GetFilteringType() const { return ((m_type&MPB_Filtering) >> 4); }
     inline bool HasTexture() const { return (m_texture != nullptr); }
 protected:
     Material();

@@ -32,7 +32,7 @@ public:
     Shader* CreateShader(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     Animation* CreateAnimation(const std::string &f_path);
     Sound* CreateSound(const std::string &f_path, bool f_loop);
-    RenderTarget* CreateRenderTarget(unsigned int f_num, glm::ivec2 &f_size, int f_type, int f_filter);
+    RenderTarget* CreateRenderTarget(int f_type, const glm::ivec2 &f_size, int f_filter);
     Texture* CreateTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress);
     Texture* CreateTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
     Font* CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);

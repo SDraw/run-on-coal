@@ -20,8 +20,8 @@ ROC::Texture::Texture()
     m_elementType = ET_Texture;
     m_elementTypeName.assign("Texture");
 
-    m_type = ROC_TEXTURE_TYPE_NONE;
-    m_filtering = ROC_TEXTURE_FILTER_NONE;
+    m_type = TT_None;
+    m_filtering = DFT_None;
     m_texture = 0U;
 }
 ROC::Texture::~Texture()
@@ -41,9 +41,9 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
             m_size.y = static_cast<int>(l_imageSize.y);
 
             m_type = f_type;
-            btClamp(m_type, ROC_TEXTURE_TYPE_RGB, ROC_TEXTURE_TYPE_CUBEMAP);
+            btClamp(m_type, static_cast<int>(TT_RGB), static_cast<int>(TT_RGBA));
             m_filtering = f_filter;
-            btClamp(m_filtering, ROC_TEXTURE_FILTER_NEAREST, ROC_TEXTURE_FILTER_LINEAR);
+            btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
 
             glGenTextures(1, &m_texture);
             glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -51,7 +51,7 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
-            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == ROC_TEXTURE_TYPE_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TT_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
         }
     }
     return (m_texture != 0U);
@@ -60,9 +60,8 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
 {
     if(m_texture == 0U)
     {
-        m_type = ROC_TEXTURE_TYPE_CUBEMAP;
-        m_filtering = f_filter;
-        btClamp(m_filtering, ROC_TEXTURE_FILTER_NEAREST, ROC_TEXTURE_FILTER_LINEAR);
+        m_type = TT_Cubemap;
+        btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
 
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
@@ -82,8 +81,8 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
             else
             {
                 glDeleteTextures(1, &m_texture);
-                m_type = ROC_TEXTURE_TYPE_NONE;
-                m_filtering = ROC_TEXTURE_FILTER_NONE;
+                m_type = TT_None;
+                m_filtering = DFT_None;
                 m_texture = 0U;
                 break;
             }
@@ -96,8 +95,8 @@ bool ROC::Texture::LoadDummy()
     if(m_texture == 0U)
     {
         std::memcpy(&m_size, &g_TextureDummySize, sizeof(glm::ivec2));
-        m_filtering = ROC_TEXTURE_FILTER_NEAREST;
-        m_type = ROC_TEXTURE_TYPE_RGB;
+        m_filtering = DFT_Nearest;
+        m_type = TT_RGB;
 
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -116,10 +115,10 @@ void ROC::Texture::Bind()
     {
         switch(m_type)
         {
-            case ROC_TEXTURE_TYPE_RGB: case ROC_TEXTURE_TYPE_RGBA:
+            case TT_RGB: case TT_RGBA:
                 glBindTexture(GL_TEXTURE_2D, m_texture);
                 break;
-            case ROC_TEXTURE_TYPE_CUBEMAP:
+            case TT_Cubemap:
                 glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
                 break;
         }

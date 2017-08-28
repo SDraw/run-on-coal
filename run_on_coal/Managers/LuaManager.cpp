@@ -31,7 +31,6 @@
 #include "Lua/LuaDefs/LuaUtilsDef.h"
 
 #define ROC_LUA_METATABLE "roc_mt"
-#define ROC_LUA_PULSE_CYCLES 2500U
 
 ROC::Core* ROC::LuaManager::ms_core = nullptr;
 

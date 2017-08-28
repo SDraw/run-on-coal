@@ -153,11 +153,11 @@ void ROC::Model::SetCollision(Collision *f_col)
     m_collision = f_col;
 }
 
-void ROC::Model::Update(int f_state, bool f_arg1)
+void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
 {
-    switch(f_state)
+    switch(f_stage)
     {
-        case ROC_MODEL_UPDATE_MATRIX:
+        case MUS_Matrix:
         {
             m_rebuilded = false;
             if(m_rebuildMatrix)
@@ -202,7 +202,7 @@ void ROC::Model::Update(int f_state, bool f_arg1)
             }
         } break;
 
-        case ROC_MODEL_UPDATE_COLLISION:
+        case MUS_Collision:
         {
             if(m_collision)
             {
@@ -218,19 +218,19 @@ void ROC::Model::Update(int f_state, bool f_arg1)
             }
         } break;
 
-        case ROC_MODEL_UPDATE_SKELETON1:
+        case MUS_SkeletonStatic:
         {
             if(m_skeleton)
             {
                 m_animController->Update(m_skeleton->GetBones());
-                m_skeleton->UpdateCollision(ROC_SKELETON_UPDATE_COLLISION1, m_globalMatrix, f_arg1);
+                m_skeleton->UpdateCollision(Skeleton::SUS_Static, m_globalMatrix, f_arg1);
                 m_skeleton->Update();
             }
         } break;
 
-        case ROC_MODEL_UPDATE_SKELETON2:
+        case MUS_SkeletonDynamic:
         {
-            if(m_skeleton) m_skeleton->UpdateCollision(ROC_SKELETON_UPDATE_COLLISION2, m_globalMatrix, f_arg1);
+            if(m_skeleton) m_skeleton->UpdateCollision(Skeleton::SUS_Dynamic, m_globalMatrix, f_arg1);
         } break;
     }
 }

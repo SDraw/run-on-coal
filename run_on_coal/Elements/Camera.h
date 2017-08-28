@@ -1,7 +1,5 @@
 #pragma once
 #include "Elements/Element.h"
-#define ROC_CAMERA_PROJECTION_PERSPECTIVE 0
-#define ROC_CAMERA_PROJECTION_ORTHOGONAL 1
 
 namespace ROC
 {
@@ -25,6 +23,12 @@ class Camera final : public Element
 
     glm::vec4 m_planes[6];
 public:
+    enum CameraProjectionType
+    {
+        CPT_Perspective,
+        CPT_Orthogonal
+    };
+
     void SetProjectionType(int f_type);
     inline int GetProjectionType() const { return m_type; }
 

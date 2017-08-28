@@ -104,7 +104,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             FT_Set_Pixel_Sizes(m_face, 0, f_size);
             m_size = static_cast<float>(f_size);
             m_filteringType = f_filter;
-            btClamp(m_filteringType, ROC_FONT_FILTER_NEAREST, ROC_FONT_FILTER_LINEAR);
+            btClamp(m_filteringType, static_cast<int>(FFT_Nearest), static_cast<int>(FFT_Linear));
 
             if(MathUtils::IsPowerOfTwo(f_atlas.x))
             {

@@ -1,9 +1,18 @@
 #include "stdafx.h"
 
 #include "Elements/Model/Skeleton.h"
+
 #include "Elements/Animation/BoneFrameData.h"
+#include "Elements/Geometry/BoneCollisionData.hpp"
+#include "Elements/Geometry/BoneData.hpp"
+#include "Elements/Geometry/BoneJointData.hpp"
 #include "Elements/Model/Bone.h"
 
+#define ROC_BONECOL_TYPE_SPHERE 0U
+#define ROC_BONECOL_TYPE_BOX 1U
+#define ROC_BONECOL_TYPE_CYLINDER 2U
+#define ROC_BONECOL_TYPE_CAPSULE 3U
+#define ROC_BONECOL_TYPE_CONE 4U
 #define ROC_SKELETON_TRANSFORMATION_MAIN 0
 #define ROC_SKELETON_TRANSFORMATION_INVERSE 1
 #define ROC_SKELETON_TRANSFORMATION_BIND 2
@@ -280,11 +289,11 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
     }
 }
 
-void ROC::Skeleton::UpdateCollision(int f_state, const glm::mat4 &f_model, bool f_enabled)
+void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model, bool f_enabled)
 {
-    switch(f_state)
+    switch(f_stage)
     {
-        case ROC_SKELETON_UPDATE_COLLISION1:
+        case SUS_Static:
         {
             if(m_hasStaticBoneCollision || m_hasDynamicBoneCollision)
             {
@@ -329,7 +338,7 @@ void ROC::Skeleton::UpdateCollision(int f_state, const glm::mat4 &f_model, bool 
             }
         } break;
 
-        case ROC_SKELETON_UPDATE_COLLISION2:
+        case SUS_Dynamic:
         {
             if(m_hasDynamicBoneCollision)
             {

@@ -1,4 +1,5 @@
 #pragma once
+
 #define ROC_QUAD3D_VERTEX_COUNT 6U
 
 namespace ROC
