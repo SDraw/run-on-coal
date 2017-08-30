@@ -8,6 +8,7 @@ class LuaInputDef final
     static int SetCursorMode(lua_State *f_vm);
     static int GetCursorPosition(lua_State *f_vm);
     static int SetCursorPosition(lua_State *f_vm);
+    static int SetWindowPosition(lua_State *f_vm);
     static int GetWindowPosition(lua_State *f_vm);
     static int GetWindowSize(lua_State *f_vm);
     static int SetWindowVSync(lua_State *f_vm);

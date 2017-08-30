@@ -62,9 +62,6 @@ class Shader final : public Element
 
     std::string m_error;
 
-    Shader(const Shader& that);
-    Shader &operator =(const Shader &that);
-
     void SetupDefaultUniformsAndLocations();
 public:
     ShaderUniform* GetUniform(const std::string &f_uniform);

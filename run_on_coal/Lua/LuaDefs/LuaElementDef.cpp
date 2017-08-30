@@ -58,7 +58,7 @@ int ROC::LuaElementDef::SetData(lua_State *f_vm)
     {
         CustomData l_data;
         argStream.ReadCustomData(l_data);
-        if(!argStream.HasErrors() && l_data.GetType() != CustomData::DataType::None)
+        if(!argStream.HasErrors() && l_data.GetType() != CustomData::CDT_None)
         {
             bool l_result = l_element->SetCustomData(l_key, l_data);
             argStream.PushBoolean(l_result);
@@ -81,7 +81,7 @@ int ROC::LuaElementDef::GetData(lua_State *f_vm)
     {
         CustomData l_data;
         l_element->GetCustomData(l_key, l_data);
-        (l_data.GetType() != CustomData::DataType::None) ? argStream.PushCustomData(l_data) : argStream.PushBoolean(false);
+        (l_data.GetType() != CustomData::CDT_None) ? argStream.PushCustomData(l_data) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

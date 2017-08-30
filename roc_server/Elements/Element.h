@@ -8,6 +8,9 @@ class Element
 {
     std::unordered_map<std::string, CustomData> m_customDataMap;
     std::unordered_map<std::string, CustomData>::iterator m_customDataMapEnd;
+
+    Element(const Element& that);
+    Element &operator =(const Element &that);
 public:
     enum ElementType : unsigned char
     { 

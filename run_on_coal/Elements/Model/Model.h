@@ -39,9 +39,6 @@ class Model final : public Element
     Collision *m_collision;
 
     void UpdateGlobalTransform();
-
-    Model(const Model& that);
-    Model &operator =(const Model &that);
 public:
     inline bool HasGeometry() const { return (m_geometry != nullptr); }
     inline Geometry* GetGeometry() { return m_geometry; }

@@ -58,11 +58,8 @@ void ROC::AsyncManager::LoadThread()
         }
         if(!l_tempQueue.empty())
         {
-            for(auto &iter : l_tempQueue)
-            {
-                iter.m_result = iter.m_geometry->Load(iter.m_path);
-                glFinish();
-            }
+            for(auto &iter : l_tempQueue) iter.m_result = iter.m_geometry->Load(iter.m_path);
+            glFinish();
 
             m_loadedMutex.lock();
             l_tempQueue.swap(m_loadedQueue);

@@ -81,19 +81,19 @@ void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_ar
     {
         switch(iter.GetType())
         {
-            case CustomData::DataType::Boolean:
+            case CustomData::CDT_Boolean:
                 lua_pushboolean(m_vm, iter.GetBoolean());
                 break;
-            case CustomData::DataType::Integer:
+            case CustomData::CDT_Integer:
                 lua_pushinteger(m_vm, iter.GetInteger());
                 break;
-            case CustomData::DataType::Double:
+            case CustomData::CDT_Double:
                 lua_pushnumber(m_vm, iter.GetDouble());
                 break;
-            case CustomData::DataType::Float:
+            case CustomData::CDT_Float:
                 lua_pushnumber(m_vm, iter.GetFloat());
                 break;
-            case CustomData::DataType::Element:
+            case CustomData::CDT_Element:
             {
                 void *l_ptr;
                 std::string l_className;
@@ -113,7 +113,7 @@ void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_ar
                 }
                 lua_remove(m_vm, -2);
             } break;
-            case CustomData::DataType::String:
+            case CustomData::CDT_String:
             {
                 const std::string &l_string = iter.GetString();
                 lua_pushlstring(m_vm, l_string.data(), l_string.size());

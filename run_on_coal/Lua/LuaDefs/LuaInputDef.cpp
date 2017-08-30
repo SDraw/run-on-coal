@@ -24,6 +24,7 @@ void ROC::LuaInputDef::Init(lua_State *f_vm)
     lua_register(f_vm, "setCursorMode", SetCursorMode);
     lua_register(f_vm, "setCursorPosition", SetCursorPosition);
     lua_register(f_vm, "getCursorPosition", GetCursorPosition);
+    lua_register(f_vm, "setWindowPosition", SetWindowPosition);
     lua_register(f_vm, "getWindowPosition", GetWindowPosition);
     lua_register(f_vm, "getWindowSize", GetWindowSize);
     lua_register(f_vm, "setWindowVSync", SetWindowVSync);
@@ -83,6 +84,20 @@ int ROC::LuaInputDef::SetCursorPosition(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
+int ROC::LuaInputDef::SetWindowPosition(lua_State *f_vm)
+{
+    // bool setWindowPosition(int x, float y)
+    glm::ivec2 l_pos;
+    ArgReader argStream(f_vm);
+    for(int i = 0; i < 2; i++) argStream.ReadInteger(l_pos[i]);
+    if(!argStream.HasErrors())
+    {
+        LuaManager::GetCore()->GetSfmlManager()->SetWindowPosition(l_pos);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
 int ROC::LuaInputDef::GetWindowPosition(lua_State *f_vm)
 {
     // int int getWindowPosition()

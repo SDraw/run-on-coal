@@ -130,6 +130,11 @@ void ROC::SfmlManager::GetWindowPosition(glm::ivec2 &f_pos)
     f_pos.x = l_position.x;
     f_pos.y = l_position.y;
 }
+void ROC::SfmlManager::SetWindowPosition(const glm::ivec2 &f_pos)
+{
+    sf::Vector2i l_position(f_pos.x, f_pos.y);
+    m_window->setPosition(l_position);
+}
 void ROC::SfmlManager::GetWindowSize(glm::ivec2 &f_size)
 {
     sf::Vector2u l_size = m_window->getSize();

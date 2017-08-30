@@ -13,9 +13,19 @@ class CustomData
         float m_float;
         void *m_ptr;
     };
+    unsigned char m_type;
     std::string m_string;
 public:
-    enum DataType : unsigned char { None = 0U, Boolean, Integer, Double, Float, String, Element };
+    enum CustomDataType : unsigned char
+    {
+        CDT_None = 0U,
+        CDT_Boolean,
+        CDT_Integer,
+        CDT_Double,
+        CDT_Float,
+        CDT_String,
+        CDT_Element
+    };
 
     CustomData();
     CustomData(const CustomData& f_data);
@@ -44,8 +54,6 @@ public:
     inline void ClearString() { m_string.clear(); }
 
     CustomData& operator=(const CustomData &f_data);
-private:
-    DataType m_type;
 };
 
 }

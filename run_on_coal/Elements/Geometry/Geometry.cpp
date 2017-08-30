@@ -327,5 +327,6 @@ void ROC::Geometry::GenerateVAOs()
     {
         for(auto iter : m_materialVector) iter->GenerateVAO();
         m_loadState = GLS_Loaded;
+        m_released = true;
     }
 }

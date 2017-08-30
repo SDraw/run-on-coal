@@ -248,22 +248,22 @@ void ROC::ArgReader::PushCustomData(const CustomData &f_data)
 {
     switch(f_data.GetType())
     {
-        case CustomData::DataType::Boolean:
+        case CustomData::CDT_Boolean:
             PushBoolean(f_data.GetBoolean());
             break;
-        case CustomData::DataType::Integer:
+        case CustomData::CDT_Integer:
             PushInteger(f_data.GetInteger());
             break;
-        case CustomData::DataType::Double:
+        case CustomData::CDT_Double:
             PushNumber(f_data.GetDouble());
             break;
-        case CustomData::DataType::Float:
+        case CustomData::CDT_Float:
             PushNumber(f_data.GetFloat());
             break;
-        case CustomData::DataType::String:
+        case CustomData::CDT_String:
             PushText(f_data.GetString());
             break;
-        case CustomData::DataType::Element:
+        case CustomData::CDT_Element:
         {
             void *l_ptr;
             std::string l_className;

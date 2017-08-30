@@ -50,6 +50,7 @@ class SfmlManager final
     SfmlManager &operator =(const SfmlManager &that);
 public:
     void GetWindowPosition(glm::ivec2 &f_pos);
+    void SetWindowPosition(const glm::ivec2 &f_pos);
     void GetWindowSize(glm::ivec2 &f_size);
     inline void CloseWindow() { m_active = false; }
     inline void SetVSync(bool f_sync) { m_window->setVerticalSyncEnabled(f_sync); }
