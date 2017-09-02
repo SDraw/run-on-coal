@@ -118,6 +118,9 @@ void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_ar
     {
         switch(iter.GetType())
         {
+            case CustomData::CDT_Nil:
+                lua_pushnil(m_vm);
+                break;
             case CustomData::CDT_Boolean:
                 lua_pushboolean(m_vm, iter.GetBoolean());
                 break;

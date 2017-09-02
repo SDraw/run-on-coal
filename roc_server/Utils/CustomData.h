@@ -19,6 +19,7 @@ public:
     enum CustomDataType : unsigned char
     {
         CDT_None = 0U,
+        CDT_Nil,
         CDT_Boolean,
         CDT_Integer,
         CDT_Double,
@@ -32,6 +33,8 @@ public:
     ~CustomData();
 
     inline unsigned char GetType() const { return m_type; }
+
+    inline void SetNil() { m_type = CDT_Nil; }
 
     inline bool GetBoolean() const { return m_bool; }
     void SetBoolean(bool f_val);

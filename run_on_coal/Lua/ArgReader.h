@@ -47,6 +47,7 @@ public:
     void ReadNextText(std::string &f_val);
     template<class T> void ReadNextElement(T *&f_element);
 
+    void PushNil();
     void PushBoolean(bool f_val);
     void PushNumber(lua_Number f_val);
     void PushInteger(lua_Integer f_val);

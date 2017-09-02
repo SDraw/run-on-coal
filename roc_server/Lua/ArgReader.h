@@ -45,13 +45,14 @@ public:
     void ReadNextText(std::string &f_val);
     template<class T> void ReadNextElement(T *&f_element);
 
+    void PushNil();
     void PushBoolean(bool f_val);
     void PushNumber(lua_Number f_val);
     void PushInteger(lua_Integer f_val);
     void PushText(const std::string &f_val);
     void PushElement(Element *f_element);
     void PushElement(void *f_ptr, const std::string &f_name);
-    void PushCustomData(CustomData &f_data);
+    void PushCustomData(const CustomData &f_data);
 
     void RemoveReference(const LuaFunction &f_func);
 

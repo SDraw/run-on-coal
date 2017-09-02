@@ -107,6 +107,9 @@ void ROC::ArgReader::ReadCustomData(CustomData &f_data)
         {
             switch(lua_type(m_vm, m_argCurrent))
             {
+                case LUA_TNIL:
+                    f_data.SetNil();
+                    break;
                 case LUA_TBOOLEAN:
                     f_data.SetBoolean(lua_toboolean(m_vm, m_argCurrent) == 1);
                     break;
@@ -197,6 +200,11 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
     }
 }
 
+void ROC::ArgReader::PushNil()
+{
+    lua_pushnil(m_vm);
+    m_returnCount++;
+}
 void ROC::ArgReader::PushBoolean(bool f_val)
 {
     lua_pushboolean(m_vm, f_val);
@@ -217,10 +225,13 @@ void ROC::ArgReader::PushText(const std::string &f_val)
     lua_pushlstring(m_vm, f_val.data(), f_val.size());
     m_returnCount++;
 }
-void ROC::ArgReader::PushCustomData(CustomData &f_data)
+void ROC::ArgReader::PushCustomData(const CustomData &f_data)
 {
     switch(f_data.GetType())
     {
+        case CustomData::CDT_Nil:
+            PushNil();
+            break;
         case CustomData::CDT_Boolean:
             PushBoolean(f_data.GetBoolean());
             break;
