@@ -98,10 +98,11 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             l_file.close();
 
             l_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-            if(l_vertexShader)
+            if(l_vertexShader && !l_shaderData.empty())
             {
                 const char *l_source = l_shaderData.c_str();
-                glShaderSource(l_vertexShader, 1, &l_source, NULL);
+                int l_sourceLength = l_shaderData.length();
+                glShaderSource(l_vertexShader, 1, &l_source, &l_sourceLength);
                 glCompileShader(l_vertexShader);
 
                 GLint l_state;
@@ -129,10 +130,11 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             l_file.close();
 
             l_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-            if(l_fragmentShader)
+            if(l_fragmentShader && !l_shaderData.empty())
             {
                 const char *l_source = l_shaderData.c_str();
-                glShaderSource(l_fragmentShader, 1, &l_source, NULL);
+                int l_sourceLength = l_shaderData.length();
+                glShaderSource(l_fragmentShader, 1, &l_source, &l_sourceLength);
                 glCompileShader(l_fragmentShader);
 
                 GLint l_state;
@@ -162,10 +164,11 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 l_file.close();
 
                 l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-                if(l_geometryShader)
+                if(l_geometryShader && !l_shaderData.empty())
                 {
                     const char *l_source = l_shaderData.c_str();
-                    glShaderSource(l_geometryShader, 1, &l_source, NULL);
+                    int l_sourceLength = l_shaderData.length();
+                    glShaderSource(l_geometryShader, 1, &l_source, &l_sourceLength);
                     glCompileShader(l_geometryShader);
 
                     GLint l_state;
