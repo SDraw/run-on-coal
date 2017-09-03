@@ -31,13 +31,17 @@ ROC::LogManager::~LogManager()
 
 void ROC::LogManager::Log(const std::string &f_text)
 {
+#ifdef _DEBUG
+    std::time_t l_time = std::time(nullptr);
+    tm *l_tmTime = std::localtime(&l_time);
+    std::cout << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text << std::endl;
+    if(m_enabled) m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text << std::endl;
+#else
     if(m_enabled)
     {
         std::time_t l_time = std::time(nullptr);
         tm *l_tmTime = std::localtime(&l_time);
         m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text << std::endl;
-#ifdef _DEBUG
-        std::cout << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text << std::endl;
-#endif
     }
+#endif
 }

@@ -86,7 +86,7 @@ ROC::Shader::~Shader()
 
 bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath)
 {
-    if(!m_program && !f_vpath.empty() && !f_fpath.empty())
+    if(!m_program)
     {
         std::ifstream l_file;
 
@@ -97,25 +97,28 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-            if(l_vertexShader && !l_shaderData.empty())
+            if(!l_shaderData.empty())
             {
-                const char *l_source = l_shaderData.c_str();
-                int l_sourceLength = l_shaderData.length();
-                glShaderSource(l_vertexShader, 1, &l_source, &l_sourceLength);
-                glCompileShader(l_vertexShader);
-
-                GLint l_state;
-                glGetShaderiv(l_vertexShader, GL_COMPILE_STATUS, &l_state);
-                if(!l_state)
+                l_vertexShader = glCreateShader(GL_VERTEX_SHADER);
+                if(l_vertexShader)
                 {
-                    GLint l_logSize = 0;
-                    glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
-                    m_error.resize(l_logSize);
-                    glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, &m_error[0]);
-                    m_error.insert(0U, "Vertex shader error: ");
-                    glDeleteShader(l_vertexShader);
-                    l_vertexShader = 0U;
+                    const char *l_source = l_shaderData.data();
+                    int l_sourceLength = l_shaderData.length();
+                    glShaderSource(l_vertexShader, 1, &l_source, &l_sourceLength);
+                    glCompileShader(l_vertexShader);
+
+                    GLint l_state;
+                    glGetShaderiv(l_vertexShader, GL_COMPILE_STATUS, &l_state);
+                    if(!l_state)
+                    {
+                        GLint l_logSize = 0;
+                        glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
+                        m_error.resize(l_logSize);
+                        glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, &m_error[0]);
+                        m_error.insert(0U, "Vertex shader error: ");
+                        glDeleteShader(l_vertexShader);
+                        l_vertexShader = 0U;
+                    }
                 }
             }
         }
@@ -129,25 +132,28 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-            if(l_fragmentShader && !l_shaderData.empty())
+            if(!l_shaderData.empty())
             {
-                const char *l_source = l_shaderData.c_str();
-                int l_sourceLength = l_shaderData.length();
-                glShaderSource(l_fragmentShader, 1, &l_source, &l_sourceLength);
-                glCompileShader(l_fragmentShader);
-
-                GLint l_state;
-                glGetShaderiv(l_fragmentShader, GL_COMPILE_STATUS, &l_state);
-                if(!l_state)
+                l_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+                if(l_fragmentShader)
                 {
-                    GLint l_logSize = 0;
-                    glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
-                    m_error.resize(l_logSize);
-                    glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, &m_error[0]);
-                    m_error.insert(0U, "Fragment shader error: ");
-                    glDeleteShader(l_fragmentShader);
-                    l_fragmentShader = 0U;
+                    const char *l_source = l_shaderData.data();
+                    int l_sourceLength = l_shaderData.length();
+                    glShaderSource(l_fragmentShader, 1, &l_source, &l_sourceLength);
+                    glCompileShader(l_fragmentShader);
+
+                    GLint l_state;
+                    glGetShaderiv(l_fragmentShader, GL_COMPILE_STATUS, &l_state);
+                    if(!l_state)
+                    {
+                        GLint l_logSize = 0;
+                        glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
+                        m_error.resize(l_logSize);
+                        glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, &m_error[0]);
+                        m_error.insert(0U, "Fragment shader error: ");
+                        glDeleteShader(l_fragmentShader);
+                        l_fragmentShader = 0U;
+                    }
                 }
             }
         }
@@ -163,25 +169,28 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
                 l_file.close();
 
-                l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
-                if(l_geometryShader && !l_shaderData.empty())
+                if(!l_shaderData.empty())
                 {
-                    const char *l_source = l_shaderData.c_str();
-                    int l_sourceLength = l_shaderData.length();
-                    glShaderSource(l_geometryShader, 1, &l_source, &l_sourceLength);
-                    glCompileShader(l_geometryShader);
-
-                    GLint l_state;
-                    glGetShaderiv(l_geometryShader, GL_COMPILE_STATUS, &l_state);
-                    if(!l_state)
+                    l_geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+                    if(l_geometryShader)
                     {
-                        GLint l_logSize = 0;
-                        glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
-                        m_error.resize(l_logSize);
-                        glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, &m_error[0]);
-                        m_error.insert(0U, "Geometry shader error: ");
-                        glDeleteShader(l_geometryShader);
-                        l_geometryShader = 0U;
+                        const char *l_source = l_shaderData.data();
+                        int l_sourceLength = l_shaderData.length();
+                        glShaderSource(l_geometryShader, 1, &l_source, &l_sourceLength);
+                        glCompileShader(l_geometryShader);
+
+                        GLint l_state;
+                        glGetShaderiv(l_geometryShader, GL_COMPILE_STATUS, &l_state);
+                        if(!l_state)
+                        {
+                            GLint l_logSize = 0;
+                            glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
+                            m_error.resize(l_logSize);
+                            glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, &m_error[0]);
+                            m_error.insert(0U, "Geometry shader error: ");
+                            glDeleteShader(l_geometryShader);
+                            l_geometryShader = 0U;
+                        }
                     }
                 }
             }
