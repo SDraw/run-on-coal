@@ -10,6 +10,8 @@ class LuaCameraDef final
     static int GetPosition(lua_State *f_vm);
     static int SetDirection(lua_State *f_vm);
     static int GetDirection(lua_State *f_vm);
+    static int SetUpDirection(lua_State *f_vm);
+    static int GetUpDirection(lua_State *f_vm);
     static int SetProjectionType(lua_State *f_vm);
     static int GetProjectionType(lua_State *f_vm);
     static int SetFOV(lua_State *f_vm);

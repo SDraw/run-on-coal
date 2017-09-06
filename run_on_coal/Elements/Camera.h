@@ -10,6 +10,7 @@ class Camera final : public Element
 
     glm::vec3 m_viewPosition;
     glm::vec3 m_viewDirection;
+    glm::vec3 m_upDirection;
     glm::mat4 m_viewMatrix;
     glm::mat4 m_projectionMatrix;
     glm::mat4 m_viewProjectionMatrix;
@@ -49,6 +50,9 @@ public:
 
     void SetDirection(const glm::vec3 &f_dir);
     inline const glm::vec3& GetDirection() const { return m_viewDirection; }
+
+    void SetUpDirection(const glm::vec3 &f_dir);
+    inline const glm::vec3& GetUpDirection() const { return m_upDirection; }
 
     inline const glm::mat4& GetViewMatrix() const { return m_viewMatrix; }
     inline const glm::mat4& GetProjectionMatrix() const { return m_projectionMatrix; }

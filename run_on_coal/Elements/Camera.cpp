@@ -12,6 +12,7 @@ ROC::Camera::Camera(int f_type)
 
     m_viewPosition = glm::vec3(0.f);
     m_viewDirection = glm::vec3(0.f, 0.f, 1.f);
+    m_upDirection = glm::vec3(0.f, 1.f, 0.f);
     m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, glm::vec3(0.0f, 1.0f, 0.0f));
 
     m_fov = glm::pi<float>() / 4.0f;
@@ -54,6 +55,14 @@ void ROC::Camera::SetDirection(const glm::vec3& f_dir)
         m_rebuildView = true;
     }
 }
+void ROC::Camera::SetUpDirection(const glm::vec3 &f_dir)
+{
+    if(m_upDirection != f_dir)
+    {
+        std::memcpy(&m_upDirection, &f_dir, sizeof(glm::vec3));
+        m_rebuildView = true;
+    }
+}
 
 void ROC::Camera::SetFOV(float f_fov)
 {
@@ -91,7 +100,11 @@ void ROC::Camera::SetDepth(const glm::vec2 &f_depth)
 
 void ROC::Camera::Update()
 {
-    if(m_rebuildView) m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, glm::vec3(0.f, 1.f, 0.f));
+    if(m_rebuildView)
+    {
+        glm::vec3 l_viewPoint = m_viewPosition + m_viewDirection;
+        m_viewMatrix = glm::lookAtRH(m_viewPosition, l_viewPoint, m_upDirection);
+    }
     if(m_rebuildProjection)
     {
         switch(m_type)

@@ -29,6 +29,8 @@ void ROC::LuaCameraDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "getPosition", GetPosition);
     LuaUtils::AddClassMethod(f_vm, "setDirection", SetDirection);
     LuaUtils::AddClassMethod(f_vm, "getDirection", GetDirection);
+    LuaUtils::AddClassMethod(f_vm, "setUpDirection", SetUpDirection);
+    LuaUtils::AddClassMethod(f_vm, "getUpDirection", GetUpDirection);
     LuaUtils::AddClassMethod(f_vm, "setProjectionType", SetProjectionType);
     LuaUtils::AddClassMethod(f_vm, "getProjectionType", GetProjectionType);
     LuaUtils::AddClassMethod(f_vm, "setFOV", SetFOV);
@@ -91,7 +93,7 @@ int ROC::LuaCameraDef::GetPosition(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         const glm::vec3 &l_pos = l_camera->GetPosition();
-        for(int i =0; i < 3; i++) argStream.PushNumber(l_pos[i]);
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -122,7 +124,38 @@ int ROC::LuaCameraDef::GetDirection(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         const glm::vec3 &l_dir = l_camera->GetDirection();
-        for(int i=0; i < 3;i++) argStream.PushNumber(l_dir[i]);
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_dir[i]);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaCameraDef::SetUpDirection(lua_State *f_vm)
+{
+    // bool Camera:setUpDirection(float x, float y, float z)
+    Camera *l_camera;
+    glm::vec3 l_dir;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_camera);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
+    if(!argStream.HasErrors())
+    {
+        l_camera->SetUpDirection(l_dir);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaCameraDef::GetUpDirection(lua_State *f_vm)
+{
+    // float float float Camera:getUpDirection()
+    Camera *l_camera;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_camera);
+    if(!argStream.HasErrors())
+    {
+        const glm::vec3 &l_dir = l_camera->GetUpDirection();
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_dir[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -267,7 +300,7 @@ int ROC::LuaCameraDef::GetDepth(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         const glm::vec2 &l_depth = l_camera->GetDepth();
-        for(int i=0; i < 2;i++) argStream.PushNumber(l_depth[i]);
+        for(int i = 0; i < 2; i++) argStream.PushNumber(l_depth[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
