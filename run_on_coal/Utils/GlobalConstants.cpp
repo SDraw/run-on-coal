@@ -13,8 +13,8 @@ extern const glm::quat g_DefaultRotation(1.f, 0.f, 0.f, 0.f);
 extern const float g_Epsilon = glm::epsilon<float>();
 
 extern const std::vector<std::string> g_FilteringTypesTable
-{ 
-    "nearest", "linear" 
+{
+    "nearest", "linear"
 };
 
 extern const std::vector<std::string> g_KeyNamesTable
@@ -40,6 +40,11 @@ extern const std::vector<std::string> g_JoypadAxisNamesTable
     "X", "Y", "Z",
     "R", "U", "V",
     "PovX", "PovY"
+};
+
+extern const float g_QuadVertexUV[] = {
+    0.f, 0.f, 0.f, 1.f, 1.f, 1.f,
+    0.f, 0.f, 1.f, 1.f, 1.f, 0.f
 };
 
 }

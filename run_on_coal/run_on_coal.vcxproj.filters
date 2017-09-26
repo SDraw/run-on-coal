@@ -108,9 +108,6 @@
     <ClCompile Include="Managers\RenderManager\RenderManager.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\RenderManager\Quad.cpp">
-      <Filter>Managers\RenderManager</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\NetworkManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -237,6 +234,9 @@
     <ClCompile Include="Elements\Shader\ShaderUniform.cpp">
       <Filter>Elements\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\RenderManager\Quad2D.cpp">
+      <Filter>Managers\RenderManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -336,9 +336,6 @@
     </ClInclude>
     <ClInclude Include="Elements\Animation\BoneFrameData.h">
       <Filter>Elements\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\RenderManager\Quad.h">
-      <Filter>Managers\RenderManager</Filter>
     </ClInclude>
     <ClInclude Include="Managers\RenderManager\RenderManager.h">
       <Filter>Managers\RenderManager</Filter>
@@ -474,6 +471,9 @@
     </ClInclude>
     <ClInclude Include="Utils\GLUtils.hpp">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\RenderManager\Quad2D.h">
+      <Filter>Managers\RenderManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,8 @@ extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_DefaultPosition;
 extern const glm::quat g_DefaultRotation;
 
+extern const float g_QuadVertexUV[];
+
 }
 
 ROC::Quad3D::Quad3D()
@@ -30,13 +32,9 @@ ROC::Quad3D::Quad3D()
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_QUAD3D_VERTEX_COUNT, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    GLfloat l_uvs[ROC_QUAD3D_VERTEX_COUNT][2] = {
-        { 0.0, 0.0 }, { 0.0, 1.0 }, { 1.0, 1.0 },
-        { 0.0, 0.0 }, { 1.0, 1.0 }, { 1.0, 0.0 }
-    };
     glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(l_uvs), l_uvs, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2U * ROC_QUAD3D_VERTEX_COUNT, g_QuadVertexUV, GL_STATIC_DRAW);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
     std::vector<glm::vec3> l_normals(ROC_QUAD3D_VERTEX_COUNT, glm::vec3(0.f, 0.f, 1.f));

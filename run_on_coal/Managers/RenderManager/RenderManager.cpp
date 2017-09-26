@@ -2,7 +2,7 @@
 
 #include "Managers/RenderManager/RenderManager.h"
 #include "Core/Core.h"
-#include "Managers/RenderManager/Quad.h"
+#include "Managers/RenderManager/Quad2D.h"
 #include "Managers/RenderManager/Quad3D.h"
 #include "Elements/Font.h"
 #include "Elements/Geometry/Geometry.h"
@@ -54,7 +54,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_activeScene = nullptr;
     m_activeShader = nullptr;
     m_activeTarget = nullptr;
-    m_quad = new Quad();
+    m_quad2D = new Quad2D();
     m_quad3D = new Quad3D();
 
     m_dummyTexture = new Texture();
@@ -84,7 +84,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 ROC::RenderManager::~RenderManager()
 {
     m_movieVector.clear();
-    delete m_quad;
+    delete m_quad2D;
     delete m_quad3D;
     delete m_dummyTexture;
     delete m_argument;
@@ -272,10 +272,10 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
 {
     if(!m_locked && m_activeShader)
     {
-        if(CompareLastVAO(m_quad->GetVAO())) m_quad->Bind();
+        if(CompareLastVAO(m_quad2D->GetVAO())) m_quad2D->Bind();
         if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
 
-        m_quad->SetTransformation(f_size);
+        m_quad2D->SetTransformation(f_size);
 
         m_activeShader->SetProjectionMatrix(m_screenProjection);
         m_activeShader->SetColor(f_color);
@@ -296,7 +296,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
         DisableCulling();
         DisableDepth();
         f_drawable->IsTransparent() ? EnableBlending() : DisableBlending();
-        Quad::Draw();
+        Quad2D::Draw();
     }
 }
 void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)

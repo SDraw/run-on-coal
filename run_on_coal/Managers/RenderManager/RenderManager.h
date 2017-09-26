@@ -7,7 +7,7 @@ class Core;
 class Model;
 class Scene;
 class Shader;
-class Quad;
+class Quad2D;
 class Quad3D;
 class Drawable;
 class Movie;
@@ -33,7 +33,7 @@ class RenderManager final
     Scene *m_activeScene;
     Shader *m_activeShader;
     RenderTarget *m_activeTarget;
-    Quad *m_quad;
+    Quad2D *m_quad2D;
     Quad3D *m_quad3D;
     Texture *m_dummyTexture;
 
