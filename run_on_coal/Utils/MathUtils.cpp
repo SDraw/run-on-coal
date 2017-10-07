@@ -11,7 +11,7 @@ bool IsPowerOfTwo(int f_value)
 }
 float EaseInOut(float f_value)
 {
-    return -0.5f*(cos(3.141592f*f_value) - 1.f);
+    return -0.5f*(cos(glm::pi<float>()*f_value) - 1.f);
 }
 
 }

@@ -54,13 +54,16 @@ bool ROC::Collision::Create(int f_type, const glm::vec3 &f_size, float f_mass)
                 l_shape = new btConeShape(f_size.x, f_size.y);
                 break;
         }
-        l_shape->calculateLocalInertia(f_mass, l_inertia);
-        btTransform l_transform;
-        l_transform.setIdentity();
-        btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
-        btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(f_mass, l_fallMotionState, l_shape, l_inertia);
-        m_rigidBody = new btRigidBody(fallRigidBodyCI);
-        m_rigidBody->setUserPointer(this);
+        if(l_shape)
+        {
+            l_shape->calculateLocalInertia(f_mass, l_inertia);
+            btTransform l_transform;
+            l_transform.setIdentity();
+            btDefaultMotionState *l_fallMotionState = new btDefaultMotionState(l_transform);
+            btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(f_mass, l_fallMotionState, l_shape, l_inertia);
+            m_rigidBody = new btRigidBody(fallRigidBodyCI);
+            m_rigidBody->setUserPointer(this);
+        }
     }
     return (m_rigidBody != nullptr);
 }
