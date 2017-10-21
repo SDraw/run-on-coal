@@ -1,7 +1,5 @@
 #pragma once
 
-#define CHECK_BIT(val,bit) ((val&bit) == bit)
-
 namespace ROC
 {
 
@@ -33,11 +31,11 @@ public:
     inline unsigned char GetType() const { return m_type; }
     inline const glm::vec4& GetParams() const { return m_params; }
 
-    inline bool IsDoubleSided() const { return CHECK_BIT(m_type, MPB_Doubleside); }
-    inline bool IsTransparent() const { return CHECK_BIT(m_type, MPB_Transparency); }
-    inline bool IsShady() const { return CHECK_BIT(m_type, MPB_Shading); }
-    inline bool HasDepth() const { return CHECK_BIT(m_type, MPB_Depth); }
-    inline bool IsCompressed() const { return CHECK_BIT(m_type, MPB_Compression); }
+    inline bool IsDoubleSided() const { return ((m_type&MPB_Doubleside) != 0U); }
+    inline bool IsTransparent() const { return ((m_type&MPB_Transparency) != 0U); }
+    inline bool IsShady() const { return ((m_type&MPB_Shading) != 0U); }
+    inline bool HasDepth() const { return ((m_type&MPB_Depth) != 0U); }
+    inline bool IsCompressed() const { return ((m_type&MPB_Compression) != 0U); }
     inline unsigned char GetFilteringType() const { return ((m_type&MPB_Filtering) >> 4); }
     inline bool HasTexture() const { return (m_texture != nullptr); }
 protected:
