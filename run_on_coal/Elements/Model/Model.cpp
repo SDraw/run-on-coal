@@ -82,7 +82,7 @@ void ROC::Model::SetLocalScale(const glm::vec3 &f_scl)
     if(!m_parent)
     {
         std::memcpy(&m_globalScale, &m_localScale, sizeof(glm::vec3));
-        if(m_geometry) m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::compMax(m_localScale);
+        if(m_geometry) m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::length(m_localScale);
     }
 
     bool l_useScale = false;
@@ -111,9 +111,9 @@ void ROC::Model::UpdateGlobalTransform()
         btQuaternion l_globalRotation = l_transform.getRotation();
         for(int i = 0; i < 4; i++) m_globalRotation[i] = l_globalRotation[i];
 
-        std::memcpy(&m_parent->m_globalScale, &m_globalScale, sizeof(glm::vec3));
+        std::memcpy(&m_globalScale, &m_parent->m_globalScale, sizeof(glm::vec3));
         m_globalScale *= m_localScale;
-        if(m_geometry) m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::compMax(m_globalScale);
+        if(m_geometry) m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::length(m_globalScale);
     }
 }
 
