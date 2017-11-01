@@ -103,7 +103,7 @@ int ROC::LuaModelDef::SetPosition(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     if(!argStream.HasErrors())
     {
-        l_model->SetLocalPosition(l_pos);
+        l_model->SetPosition(l_pos);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -119,8 +119,18 @@ int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
     argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        const glm::vec3& l_pos = l_global ? l_model->GetGlobalPosition() : l_model->GetLocalPosition();
-        for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
+        if(l_global && l_model->HasParent())
+        {
+            btTransform l_transform = btTransform::getIdentity();
+            l_transform.setFromOpenGLMatrix(glm::value_ptr(l_model->GetGlobalMatrix()));
+            const btVector3 &l_position = l_transform.getOrigin();
+            for(int i = 0; i < 3; i++) argStream.PushNumber(l_position[i]);
+        }
+        else
+        {
+            const glm::vec3& l_pos = l_model->GetPosition();
+            for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
+        }
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -135,7 +145,7 @@ int ROC::LuaModelDef::SetRotation(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_rot[i]);
     if(!argStream.HasErrors())
     {
-        l_model->SetLocalRotation(l_rot);
+        l_model->SetRotation(l_rot);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -151,8 +161,18 @@ int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
     argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        const glm::quat &l_rot = l_global ? l_model->GetGlobalRotation() : l_model->GetLocalRotation();
-        for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
+        if(l_global && l_model->HasParent())
+        {
+            btTransform l_transform = btTransform::getIdentity();
+            l_transform.setFromOpenGLMatrix(glm::value_ptr(l_model->GetGlobalMatrix()));
+            const btQuaternion &l_rotation = l_transform.getRotation();
+            for(int i = 0; i < 4; i++) argStream.PushNumber(l_rotation[i]);
+        }
+        else
+        {
+            const glm::quat& l_rotation = l_model->GetRotation();
+            for(int i = 0; i < 4; i++) argStream.PushNumber(l_rotation[i]);
+        }
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -167,7 +187,7 @@ int ROC::LuaModelDef::SetScale(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_scale[i]);
     if(!argStream.HasErrors())
     {
-        l_model->SetLocalScale(l_scale);
+        l_model->SetScale(l_scale);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -183,8 +203,19 @@ int ROC::LuaModelDef::GetScale(lua_State *f_vm)
     argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        const glm::vec3 &l_scale = l_global ? l_model->GetGlobalScale() : l_model->GetLocalScale();
-        for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
+        if(l_global && l_model->HasParent())
+        {
+            glm::vec3 l_scale, l_position, l_skew;
+            glm::vec4 l_projection;
+            glm::quat l_rotation;
+            glm::decompose(l_model->GetGlobalMatrix(), l_scale, l_rotation, l_position, l_skew, l_projection);
+            for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
+        }
+        else
+        {
+            const glm::vec3& l_scale = l_model->GetScale();
+            for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
+        }
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

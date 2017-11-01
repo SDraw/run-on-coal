@@ -146,3 +146,19 @@ bool ROC::Camera::IsInFrustum(const glm::vec3 &f_pos, float f_radius)
     }
     return l_result;
 }
+bool ROC::Camera::IsInFrustum(const glm::mat4 &f_mat, float f_radius)
+{
+    bool l_result = true;
+    btTransform l_transform = btTransform::getIdentity();
+    l_transform.setFromOpenGLMatrix(glm::value_ptr(f_mat));
+    const btVector3 &l_position = l_transform.getOrigin();
+    for(auto &iter : m_planes)
+    {
+        if(iter.x*l_position.x() + iter.y*l_position.y() + iter.z*l_position.z() + iter.w < -f_radius)
+        {
+            l_result = false;
+            break;
+        }
+    }
+    return l_result;
+}

@@ -21,7 +21,7 @@ class Bone final
     std::vector<Bone*> m_childBoneVector;
 
     Bone(const Bone& that);
-    Bone &operator =(const Bone &that);
+    Bone& operator=(const Bone &that);
 public:
     inline bool IsRebuilded() const { return m_rebuilded; }
 
@@ -41,9 +41,9 @@ protected:
     inline void SetPoseMatrix(const btTransform &f_transform) { f_transform.getOpenGLMatrix(glm::value_ptr(m_poseMatrix)); }
     void Update();
 
-    inline void SetParent( Bone *f_bone) { m_parent = f_bone; }
+    inline void SetParent(Bone *f_bone) { m_parent = f_bone; }
     inline bool HasParent() const { return (m_parent != nullptr); }
-    inline Bone* GetParent() { return m_parent;  }
+    inline Bone* GetParent() { return m_parent; }
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
 
     friend class Skeleton;

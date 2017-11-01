@@ -24,18 +24,15 @@ ROC::Model::Model(Geometry *f_geometry)
     m_elementType = ET_Model;
     m_elementTypeName.assign("Model");
 
-    m_localPosition = g_DefaultPosition;
-    m_localRotation = g_DefaultRotation;
-    m_localScale = g_DefaultScale;
+    m_position = g_DefaultPosition;
+    m_rotation = g_DefaultRotation;
+    m_scale = g_DefaultScale;
     m_localMatrix = g_IdentityMatrix;
     m_globalMatrix = g_IdentityMatrix;
     m_boundSphereRaduis = 0.f;
     m_useScale = false;
     m_rebuildMatrix = false;
     m_rebuilded = false;
-    m_globalPosition = g_DefaultPosition;
-    m_globalRotation = g_DefaultRotation;
-    m_globalScale = g_DefaultScale;
 
     m_geometry = f_geometry;
 
@@ -62,59 +59,37 @@ ROC::Model::~Model()
     delete m_skeleton;
 }
 
-void ROC::Model::SetLocalPosition(const glm::vec3 &f_pos)
+void ROC::Model::SetPosition(const glm::vec3 &f_pos)
 {
-    std::memcpy(&m_localPosition, &f_pos, sizeof(glm::vec3));
-    if(!m_parent) std::memcpy(&m_globalPosition, &m_localPosition, sizeof(glm::vec3));
+    std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
     if(m_collision) m_collision->SetPosition(f_pos);
     else m_rebuildMatrix = true;
 }
-void ROC::Model::SetLocalRotation(const glm::quat &f_rot)
+void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
-    std::memcpy(&m_localRotation, &f_rot, sizeof(glm::quat));
-    if(!m_parent) std::memcpy(&m_globalRotation, &m_localRotation, sizeof(glm::quat));
+    std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
     if(m_collision) m_collision->SetRotation(f_rot);
     else m_rebuildMatrix = true;
 }
-void ROC::Model::SetLocalScale(const glm::vec3 &f_scl)
+void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
-    std::memcpy(&m_localScale, &f_scl, sizeof(glm::vec3));
-    if(!m_parent)
-    {
-        std::memcpy(&m_globalScale, &m_localScale, sizeof(glm::vec3));
-        if(m_geometry) m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::length(m_localScale);
-    }
+    std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
 
-    bool l_useScale = false;
     for(int i = 0; i < 3; i++)
     {
-        if(glm::epsilonNotEqual(m_localScale[i], g_DefaultScale[i], g_Epsilon))
+        if(glm::epsilonNotEqual(m_scale[i], g_DefaultScale[i], g_Epsilon))
         {
-            l_useScale = true;
+            m_useScale = true;
             break;
         }
     }
-    m_useScale = l_useScale;
+    if(m_geometry)
+    {
+        m_boundSphereRaduis = m_geometry->GetBoundSphereRadius();
+        if(m_useScale) m_boundSphereRaduis *= glm::length(m_scale);
+    }
 
     m_rebuildMatrix = true;
-}
-
-void ROC::Model::UpdateGlobalTransform()
-{
-    if(m_parent)
-    {
-        btTransform l_transform;
-        l_transform.setFromOpenGLMatrix(glm::value_ptr(m_globalMatrix));
-
-        std::memcpy(&m_globalPosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-
-        btQuaternion l_globalRotation = l_transform.getRotation();
-        for(int i = 0; i < 4; i++) m_globalRotation[i] = l_globalRotation[i];
-
-        std::memcpy(&m_globalScale, &m_parent->m_globalScale, sizeof(glm::vec3));
-        m_globalScale *= m_localScale;
-        if(m_geometry) m_boundSphereRaduis = m_geometry->GetBoundSphereRadius()*glm::length(m_globalScale);
-    }
 }
 
 void ROC::Model::SetParent(Model *f_model, int f_bone)
@@ -163,10 +138,10 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
             if(m_rebuildMatrix)
             {
                 btTransform l_transform = btTransform::getIdentity();
-                l_transform.setOrigin(btVector3(m_localPosition.x, m_localPosition.y, m_localPosition.z));
-                l_transform.setRotation(btQuaternion(m_localRotation.x, m_localRotation.y, m_localRotation.z, m_localRotation.w));
+                l_transform.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
+                l_transform.setRotation(btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w));
                 l_transform.getOpenGLMatrix(glm::value_ptr(m_localMatrix));
-                if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_localScale);
+                if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
 
                 m_rebuildMatrix = false;
                 m_rebuilded = true;
@@ -181,7 +156,6 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
                         std::memcpy(&m_globalMatrix, &m_parent->m_globalMatrix, sizeof(glm::mat4));
                         m_globalMatrix *= l_boneMatrix;
                         m_globalMatrix *= m_localMatrix;
-                        UpdateGlobalTransform();
                         m_rebuilded = true;
                     }
                 }
@@ -191,7 +165,6 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
                     {
                         std::memcpy(&m_globalMatrix, &m_parent->m_globalMatrix, sizeof(glm::mat4));
                         m_globalMatrix *= m_localMatrix;
-                        UpdateGlobalTransform();
                         m_rebuilded = true;
                     }
                 }
@@ -209,10 +182,8 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
                 m_rebuilded = m_collision->IsActive();
                 if(m_rebuilded)
                 {
-                    m_collision->GetTransform(m_localMatrix, m_localPosition, m_localRotation);
-                    if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_localScale);
-                    std::memcpy(&m_globalPosition, &m_localPosition, sizeof(glm::vec3));
-                    std::memcpy(&m_globalRotation, &m_localRotation, sizeof(glm::quat));
+                    m_collision->GetTransform(m_localMatrix, m_position, m_rotation);
+                    if(m_useScale) m_localMatrix *= glm::scale(g_IdentityMatrix, m_scale);
                     std::memcpy(&m_globalMatrix, &m_localMatrix, sizeof(glm::mat4));
                 }
             }
