@@ -60,6 +60,7 @@ class Shader final : public Element
     static GLuint ms_bonesUBO;
     static bool ms_uboFix;
 
+    bool m_active;
     std::string m_error;
 
     void SetupDefaultUniformsAndLocations();
@@ -102,6 +103,7 @@ protected:
     friend class InheritanceManager;
     friend class RenderManager;
     friend class SfmlManager;
+    friend class Scene;
 };
 
 }

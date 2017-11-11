@@ -17,7 +17,7 @@ namespace ROC
 
 const std::vector<std::string> g_CameraTypesTable
 {
-    "perspective", "orthogonal"
+    "perspective", "orthogonal", "screen"
 };
 
 }

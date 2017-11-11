@@ -19,11 +19,11 @@ class Geometry final : public Element
     std::vector<BoneCollisionData*> m_collisionData;
     std::vector<BoneJointData*> m_jointData;
 
-    enum GeometryLoadState : unsigned char 
-    { 
-        GLS_NotLoaded, 
-        GLS_Loading, 
-        GLS_Loaded 
+    enum GeometryLoadState : unsigned char
+    {
+        GLS_NotLoaded,
+        GLS_Loading,
+        GLS_Loaded
     };
     std::atomic<GeometryLoadState> m_loadState;
     bool m_async;
@@ -49,7 +49,7 @@ protected:
     inline const std::vector<Material*>& GetMaterialVector() const { return m_materialVector; }
     inline const std::vector<BoneData*>& GetBonesData() const { return m_bonesData; };
     inline const std::vector<BoneCollisionData*>& GetBonesCollisionData() const { return m_collisionData; }
-    inline const std::vector<BoneJointData*>& GetJointsData() const { return m_jointData; };
+    inline const std::vector<BoneJointData*>& GetJointsData() const { return m_jointData; }
 
     friend class AsyncManager;
     friend class ElementManager;

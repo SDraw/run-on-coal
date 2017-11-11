@@ -74,6 +74,8 @@ ROC::Shader::Shader()
 
     m_bindPool = new Pool(31U);
     m_drawableCount = 0U;
+
+    m_active = false;
 }
 ROC::Shader::~Shader()
 {
@@ -554,22 +556,30 @@ void ROC::Shader::EnableUBOFix()
 
 void ROC::Shader::Enable()
 {
-    glUseProgram(m_program);
-    for(auto &iter : m_uniformMap)
+    if(!m_active)
     {
-        ShaderUniform *l_shaderUniform = iter.second;
-        l_shaderUniform->SetActive(true);
-        l_shaderUniform->Update();
+        glUseProgram(m_program);
+        for(auto &iter : m_uniformMap)
+        {
+            ShaderUniform *l_shaderUniform = iter.second;
+            l_shaderUniform->SetActive(true);
+            l_shaderUniform->Update();
+        }
+        for(unsigned int i = 0; i < m_drawableCount; i++)
+        {
+            glActiveTexture(GL_TEXTURE1 + i);
+            m_drawableBind[i].m_element->Bind();
+        }
+        if(m_drawableCount > 0U) glActiveTexture(GL_TEXTURE0);
+        m_active = true;
     }
-    for(unsigned int i = 0; i < m_drawableCount; i++)
-    {
-        glActiveTexture(GL_TEXTURE1 + i);
-        m_drawableBind[i].m_element->Bind();
-    }
-    if(m_drawableCount > 0U) glActiveTexture(GL_TEXTURE0);
 }
 
 void ROC::Shader::Disable()
 {
-    for(auto &iter : m_uniformMap) iter.second->SetActive(false);
+    if(m_active)
+    {
+        for(auto &iter : m_uniformMap) iter.second->SetActive(false);
+        m_active = false;
+    }
 }

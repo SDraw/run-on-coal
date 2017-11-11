@@ -27,7 +27,8 @@ public:
     enum CameraProjectionType
     {
         CPT_Perspective,
-        CPT_Orthogonal
+        CPT_Orthogonal,
+        CPT_Screen
     };
 
     void SetProjectionType(int f_type);
@@ -67,7 +68,7 @@ protected:
     void Update();
 
     friend class ElementManager;
-    friend class RenderManager;
+    friend class Scene;
 };
 
 }

@@ -13,6 +13,7 @@ class Material final
     GLuint m_weightVBO;
     GLuint m_indexVBO;
     GLuint m_VAO;
+    bool m_vaoBind;
 
     unsigned char m_type;
     glm::vec4 m_params;

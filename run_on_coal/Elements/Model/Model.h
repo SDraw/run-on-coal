@@ -52,7 +52,7 @@ public:
 
     float inline GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
-    inline bool HasParent() { return (m_parent != nullptr); }
+    inline bool HasParent() const { return (m_parent != nullptr); }
     inline Model* GetParent() { return m_parent; }
 
     inline AnimationController* GetAnimationController() { return m_animController; }

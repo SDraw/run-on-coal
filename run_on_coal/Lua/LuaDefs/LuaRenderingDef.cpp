@@ -25,53 +25,10 @@ const std::vector<std::string> g_PolygonFillTable
 
 void ROC::LuaRenderingDef::Init(lua_State *f_vm)
 {
-    lua_register(f_vm, "setActiveScene", SetActiveScene);
-    lua_register(f_vm, "setActiveShader", SetActiveShader);
-    lua_register(f_vm, "setActiveTarget", SetActiveTarget);
     lua_register(f_vm, "clearRenderArea", ClearRenderArea);
     lua_register(f_vm, "setClearColor", SetClearColor);
     lua_register(f_vm, "setRenderArea", SetRenderArea);
     lua_register(f_vm, "setPolygonMode", SetPolygonMode);
-}
-
-int ROC::LuaRenderingDef::SetActiveScene(lua_State *f_vm)
-{
-    // bool setActiveScene(element scene)
-    Scene *l_scene;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_scene);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetRenderManager()->SetActiveScene(l_scene);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int ROC::LuaRenderingDef::SetActiveShader(lua_State *f_vm)
-{
-    // bool setActiveShader(element shader)
-    Shader *l_shader;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_shader);
-    if(!argStream.HasErrors())
-    {
-        LuaManager::GetCore()->GetRenderManager()->SetActiveShader(l_shader);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int ROC::LuaRenderingDef::SetActiveTarget(lua_State *f_vm)
-{
-    // setActiveTarget()
-    // setActiveTarget(element renderTarget)
-    RenderTarget *l_rt = nullptr;
-    ArgReader argStream(f_vm);
-    argStream.ReadNextElement(l_rt);
-    LuaManager::GetCore()->GetRenderManager()->SetActiveTarget(l_rt);
-    argStream.PushBoolean(true);
-    return argStream.GetReturnValue();
 }
 
 int ROC::LuaRenderingDef::ClearRenderArea(lua_State *f_vm)

@@ -309,6 +309,7 @@ void ROC::ArgReader::PushElement(void *f_ptr, const std::string &f_name)
     {
         lua_pop(m_vm, 1);
         *reinterpret_cast<void**>(lua_newuserdata(m_vm, sizeof(void*))) = f_ptr;
+
         luaL_setmetatable(m_vm, f_name.c_str());
         lua_pushlightuserdata(m_vm, f_ptr);
         lua_pushvalue(m_vm, -2);

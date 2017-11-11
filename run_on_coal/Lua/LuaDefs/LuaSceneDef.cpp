@@ -8,9 +8,12 @@
 #include "Managers/InheritanceManager.h"
 #include "Managers/MemoryManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
+#include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
+#include "Elements/Shader/Shader.h"
 #include "Lua/ArgReader.h"
 #include "Utils/LuaUtils.h"
 
@@ -23,6 +26,13 @@ void ROC::LuaSceneDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setLight", SetLight);
     LuaUtils::AddClassMethod(f_vm, "getLight", GetLight);
     LuaUtils::AddClassMethod(f_vm, "removeLight", RemoveLight);
+    LuaUtils::AddClassMethod(f_vm, "setRenderTarget", SetRenderTarget);
+    LuaUtils::AddClassMethod(f_vm, "getRenderTarget", GetRenderTarget);
+    LuaUtils::AddClassMethod(f_vm, "removeRenderTarget", RemoveRenderTarget);
+    LuaUtils::AddClassMethod(f_vm, "setShader", SetShader);
+    LuaUtils::AddClassMethod(f_vm, "getShader", GetShader);
+    LuaUtils::AddClassMethod(f_vm, "removeShader", RemoveShader);
+    LuaUtils::AddClassMethod(f_vm, "setActive", SetActive);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
@@ -35,6 +45,7 @@ int ROC::LuaSceneDef::Create(lua_State *f_vm)
     l_scene ? argStream.PushElement(l_scene) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int ROC::LuaSceneDef::SetCamera(lua_State *f_vm)
 {
     // bool Scene:setCamera(element camera)
@@ -79,6 +90,7 @@ int ROC::LuaSceneDef::RemoveCamera(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int ROC::LuaSceneDef::SetLight(lua_State *f_vm)
 {
     // bool Scene:setLight(element light)
@@ -119,6 +131,103 @@ int ROC::LuaSceneDef::RemoveLight(lua_State *f_vm)
     {
         bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneLight(l_scene);
         argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaSceneDef::SetRenderTarget(lua_State *f_vm)
+{
+    // bool Scene:setRenderTarget(element rt)
+    Scene *l_scene;
+    RenderTarget *l_rt;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    argStream.ReadElement(l_rt);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneRenderTarget(l_scene, l_rt);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaSceneDef::GetRenderTarget(lua_State *f_vm)
+{
+    // element Scene:getRenderTarget()
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors()) l_scene->HasRenderTarget() ? argStream.PushElement(l_scene->GetRenderTarget()) : argStream.PushBoolean(false);
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaSceneDef::RemoveRenderTarget(lua_State *f_vm)
+{
+    // bool Scene:removeRenderTarget()
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneRenderTarget(l_scene);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaSceneDef::SetShader(lua_State *f_vm)
+{
+    // bool Scene:setShader(element shader)
+    Scene *l_scene;
+    Shader *l_shader;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    argStream.ReadElement(l_shader);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneShader(l_scene, l_shader);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaSceneDef::GetShader(lua_State *f_vm)
+{
+    // element Scene:getShader()
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors()) l_scene->HasShader() ? argStream.PushElement(l_scene->GetShader()) : argStream.PushBoolean(false);
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaSceneDef::RemoveShader(lua_State *f_vm)
+{
+    // bool Scene:removeShader()
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneShader(l_scene);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaSceneDef::SetActive(lua_State *f_vm)
+{
+    // bool Scene:setActive()
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors())
+    {
+        LuaManager::GetCore()->GetRenderManager()->SetActiveScene(l_scene);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

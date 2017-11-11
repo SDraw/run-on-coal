@@ -12,6 +12,7 @@ ROC::RenderTarget::RenderTarget()
     m_frameBuffer = 0U;
     m_renderBuffer = 0U;
     m_texture = 0U;
+    m_active = false;
 }
 ROC::RenderTarget::~RenderTarget()
 {
@@ -98,7 +99,19 @@ void ROC::RenderTarget::Bind()
 }
 void ROC::RenderTarget::Enable()
 {
-    if(m_type != RTT_None) glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+    if(m_type != RTT_None && !m_active)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+        m_active = true;
+    }
+}
+void ROC::RenderTarget::Disable()
+{
+    if(m_type != RTT_None && m_active)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+        m_active = false;
+    }
 }
 
 void ROC::RenderTarget::Clear()

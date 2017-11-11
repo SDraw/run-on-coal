@@ -14,6 +14,7 @@ class RenderTarget final : public Drawable
 
     glm::ivec2 m_size;
 
+    bool m_active;
     std::string m_error;
 
     void Clear();
@@ -43,9 +44,11 @@ protected:
 
     void Bind();
     void Enable();
+    void Disable();
 
     friend class ElementManager;
     friend class RenderManager;
+    friend class Scene;
     friend class Shader;
 };
 

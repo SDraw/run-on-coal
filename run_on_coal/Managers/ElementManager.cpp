@@ -141,7 +141,6 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
         PathUtils::EscapePath(l_path[2]);
         l_path[2].insert(0U, m_core->GetWorkingDirectory());
     }
-    if(m_locked)  m_core->GetRenderManager()->DisableActiveShader();
     if(l_shader->Load(l_path[0], l_path[1], l_path[2])) m_core->GetMemoryManager()->AddMemoryPointer(l_shader);
     else
     {
@@ -161,7 +160,6 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
         delete l_shader;
         l_shader = nullptr;
     }
-    if(m_locked) m_core->GetRenderManager()->EnableActiveShader();
     return l_shader;
 }
 
@@ -342,17 +340,8 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 l_result = true;
             } break;
 
-            case Element::ET_Camera: case Element::ET_Light: case Element::ET_Texture:
+            case Element::ET_Camera: case Element::ET_Light: case Element::ET_Texture: case Element::ET_RenderTarget:
             {
-                m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-
-            case Element::ET_RenderTarget:
-            {
-                m_core->GetRenderManager()->RemoveAsActiveTarget(reinterpret_cast<RenderTarget*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
@@ -392,8 +381,8 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
 
             case Element::ET_Shader:
             {
-                m_core->GetRenderManager()->RemoveAsActiveShader(reinterpret_cast<Shader*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
+                m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
                 delete f_element;
                 l_result = true;

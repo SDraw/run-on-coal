@@ -13,6 +13,7 @@ ROC::Material::Material()
     m_weightVBO = 0U;
     m_indexVBO = 0U;
     m_VAO = 0U;
+    m_vaoBind = false;
 
     m_params = glm::vec4(1.f);
     m_type = 0;

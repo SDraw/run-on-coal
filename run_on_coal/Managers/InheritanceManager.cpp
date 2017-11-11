@@ -11,6 +11,7 @@
 #include "Elements/Model/AnimationController.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
+#include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader/Shader.h"
 
@@ -116,12 +117,33 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
                     break;
             }
         } break;
-        case Element::ET_Texture: case Element::ET_RenderTarget: case Element::ET_Movie:
+        case Element::ET_Texture: case Element::ET_Movie:
         {
             switch(f_parent->GetElementType())
             {
                 case Element::ET_Shader:
                     reinterpret_cast<Shader*>(f_parent)->Detach(reinterpret_cast<Drawable*>(f_child));
+                    break;
+            }
+        } break;
+        case Element::ET_RenderTarget:
+        {
+            switch(f_parent->GetElementType())
+            {
+                case Element::ET_Scene:
+                    reinterpret_cast<Scene*>(f_parent)->SetRenderTarget(nullptr);
+                    break;
+                case Element::ET_Shader:
+                    reinterpret_cast<Shader*>(f_parent)->Detach(reinterpret_cast<Drawable*>(f_child));
+                    break;
+            }
+        } break;
+        case Element::ET_Shader:
+        {
+            switch(f_parent->GetElementType())
+            {
+                case Element::ET_Scene:
+                    reinterpret_cast<Scene*>(f_parent)->SetShader(nullptr);
                     break;
             }
         } break;
@@ -272,6 +294,54 @@ bool ROC::InheritanceManager::RemoveSceneLight(Scene *f_scene)
     if(l_light)
     {
         RemoveInheritance(l_light, f_scene);
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::SetSceneRenderTarget(Scene *f_scene, RenderTarget *f_rt)
+{
+    bool l_result = false;
+    RenderTarget *l_rt = f_scene->GetRenderTarget();
+    if(l_rt != f_rt)
+    {
+        if(l_rt) RemoveInheritance(l_rt, f_scene);
+        AddInheritance(f_rt, f_scene);
+        f_scene->SetRenderTarget(f_rt);
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::RemoveSceneRenderTarget(Scene *f_scene)
+{
+    bool l_result = false;
+    RenderTarget *l_rt = f_scene->GetRenderTarget();
+    if(l_rt)
+    {
+        RemoveInheritance(l_rt, f_scene);
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::SetSceneShader(Scene *f_scene, Shader *f_shader)
+{
+    bool l_result = false;
+    Shader *l_shader = f_scene->GetShader();
+    if(l_shader != f_shader)
+    {
+        if(l_shader) RemoveInheritance(l_shader, f_scene);
+        AddInheritance(f_shader, f_scene);
+        f_scene->SetShader(f_shader);
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::RemoveSceneShader(Scene *f_scene)
+{
+    bool l_result = false;
+    Shader *l_shader = f_scene->GetShader();
+    if(l_shader)
+    {
+        RemoveInheritance(l_shader, f_scene);
         l_result = true;
     }
     return l_result;

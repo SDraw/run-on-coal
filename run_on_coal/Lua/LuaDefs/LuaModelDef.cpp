@@ -239,17 +239,13 @@ int ROC::LuaModelDef::GetMatrix(lua_State *f_vm)
 }
 int ROC::LuaModelDef::Draw(lua_State *f_vm)
 {
-    // bool Model:draw([bool texturize = true, bool frustumCheck = true])
+    // bool Model:draw()
     Model *l_model;
-    bool l_texturize = true;
-    bool l_frustum = true;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
-    argStream.ReadNextBoolean(l_texturize);
-    argStream.ReadNextBoolean(l_frustum);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetRenderManager()->Render(l_model, l_frustum, l_texturize);
+        LuaManager::GetCore()->GetRenderManager()->Render(l_model);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

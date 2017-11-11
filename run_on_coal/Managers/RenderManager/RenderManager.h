@@ -25,14 +25,11 @@ class RenderManager final
 
     glm::vec3 m_modelPosition;
     glm::mat4 m_textureMatrix;
-    glm::ivec2 m_renderTargetSize;
-    glm::mat4 m_screenProjection;
+    glm::ivec2 m_windowSize;
     glm::bvec2 m_materialBind;
     glm::bvec2 m_fontBind;
 
     Scene *m_activeScene;
-    Shader *m_activeShader;
-    RenderTarget *m_activeTarget;
     Quad2D *m_quad2D;
     Quad3D *m_quad3D;
     Texture *m_dummyTexture;
@@ -65,11 +62,9 @@ class RenderManager final
     RenderManager(const RenderManager& that);
     RenderManager &operator =(const RenderManager &that);
 public:
-    void SetActiveTarget(RenderTarget *f_rt);
     void SetActiveScene(Scene *f_scene);
-    void SetActiveShader(Shader *f_shader);
 
-    void Render(Model *f_model, bool f_frustum = true, bool f_texturize = true);
+    void Render(Model *f_model);
     void Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color);
     void Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
     void Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
@@ -84,12 +79,7 @@ protected:
     explicit RenderManager(Core *f_core);
     ~RenderManager();
 
-    void RemoveAsActiveTarget(RenderTarget *f_target);
     void RemoveAsActiveScene(Scene *f_scene);
-    void RemoveAsActiveShader(Shader *f_shader);
-
-    void EnableActiveShader();
-    void DisableActiveShader();
 
     void AddMovie(Movie *f_movie);
     void RemoveMovie(Movie *f_movie);
