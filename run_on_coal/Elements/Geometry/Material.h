@@ -13,7 +13,6 @@ class Material final
     GLuint m_weightVBO;
     GLuint m_indexVBO;
     GLuint m_VAO;
-    bool m_vaoBind;
 
     unsigned char m_type;
     glm::vec4 m_params;
@@ -58,7 +57,7 @@ protected:
     inline GLuint GetVAO() const { return m_VAO; }
     inline Texture* GetTexture() { return m_texture; }
 
-    void Draw(bool f_bind);
+    void Draw();
 
     friend class RenderManager;
     friend class Geometry;

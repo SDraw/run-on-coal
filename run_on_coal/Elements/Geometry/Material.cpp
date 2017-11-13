@@ -3,6 +3,8 @@
 #include "Elements/Geometry/Material.h"
 #include "Elements/Texture.h"
 
+#include "Utils/GLBinder.h"
+
 ROC::Material::Material()
 {
     m_verticesCount = 0;
@@ -13,7 +15,6 @@ ROC::Material::Material()
     m_weightVBO = 0U;
     m_indexVBO = 0U;
     m_VAO = 0U;
-    m_vaoBind = false;
 
     m_params = glm::vec4(1.f);
     m_type = 0;
@@ -116,7 +117,6 @@ void ROC::Material::GenerateVAO()
             glBindBuffer(GL_ARRAY_BUFFER, m_indexVBO);
             glVertexAttribIPointer(4, 4, GL_INT, 0, NULL);
         }
-        glBindVertexArray(NULL);
     }
 }
 void ROC::Material::LoadTexture(const std::string &f_path)
@@ -132,11 +132,11 @@ void ROC::Material::LoadTexture(const std::string &f_path)
     }
 }
 
-void ROC::Material::Draw(bool f_bind)
+void ROC::Material::Draw()
 {
     if(m_VAO != 0U)
     {
-        if(f_bind) glBindVertexArray(m_VAO);
+        GLBinder::BindVertexArray(m_VAO);
         glDrawArrays(GL_TRIANGLES, 0, m_verticesCount);
     }
 }

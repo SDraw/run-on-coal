@@ -225,7 +225,11 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     if(l_vertexShader) glDetachShader(m_program, l_vertexShader);
                     if(l_fragmentShader) glDetachShader(m_program, l_fragmentShader);
                     if(l_geometryShader) glDetachShader(m_program, l_geometryShader);
+
+                    GLint l_lastProgram = 0;
+                    glGetIntegerv(GL_CURRENT_PROGRAM, &l_lastProgram);
                     SetupDefaultUniformsAndLocations();
+                    glUseProgram(l_lastProgram);
                 }
             }
         }

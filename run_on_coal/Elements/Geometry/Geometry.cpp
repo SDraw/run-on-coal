@@ -34,6 +34,14 @@ bool ROC::Geometry::Load(const std::string &f_path)
     {
         m_loadState = GLS_Loading;
 
+        GLint l_lastArrayBuffer = 0;
+        GLint l_lastVertexArray = 0;
+        if(!m_async)
+        {
+            glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &l_lastArrayBuffer);
+            glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &l_lastVertexArray);
+        }
+
         unsigned char l_type;
         std::ifstream l_file;
         l_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -294,6 +302,12 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 for(auto iter : m_jointData) delete iter;
                 m_jointData.clear();
             }
+        }
+
+        if(!m_async)
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, l_lastArrayBuffer);
+            glBindVertexArray(l_lastVertexArray);
         }
     }
     return l_result;

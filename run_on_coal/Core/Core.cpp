@@ -131,8 +131,6 @@ bool ROC::Core::DoPulse()
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();
     m_preRenderManager->DoPulse_S2();
-    m_elementManager->SetLock(true);
     m_renderManager->DoPulse();
-    m_elementManager->SetLock(false);
     return m_state;
 }

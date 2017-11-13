@@ -22,7 +22,6 @@ class Movie;
 class ElementManager final
 {
     Core *m_core;
-    bool m_locked;
 public:
     Scene* CreateScene();
     Camera* CreateCamera(int f_type);
@@ -45,8 +44,6 @@ public:
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
-
-    inline void SetLock(bool f_lock) { m_locked = f_lock; }
 
     static void DestroyElementByPointer(void* f_ptr);
 

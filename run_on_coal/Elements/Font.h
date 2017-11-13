@@ -33,7 +33,6 @@ class Font final : public Element
     static std::vector<glm::vec2> ms_uv;
     static GLuint ms_uvVBO;
     static GLuint ms_VAO;
-    static bool ms_switch;
 
     int m_filteringType;
 
@@ -62,7 +61,7 @@ protected:
     static inline GLuint GetVAO() { return ms_VAO; }
     inline GLuint GetAtlasTexture() const { return m_atlasTexture; }
 
-    void Draw(const sf::String &f_text, const glm::vec2 &f_pos, const glm::bvec2 &f_bind);
+    void Draw(const sf::String &f_text, const glm::vec2 &f_pos);
 
     friend class ElementManager;
     friend class RenderManager;

@@ -3,6 +3,7 @@
 #include "Elements/Font.h"
 
 #include "Utils/MathUtils.h"
+#include "Utils/GLBinder.h"
 
 namespace ROC
 {
@@ -22,7 +23,6 @@ GLuint ROC::Font::ms_vertexVBO = 0U;
 std::vector<glm::vec2> ROC::Font::ms_uv;
 GLuint ROC::Font::ms_uvVBO = 0U;
 GLuint ROC::Font::ms_VAO = 0U;
-bool ROC::Font::ms_switch = false;
 
 ROC::Font::Font()
 {
@@ -128,6 +128,9 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             }
 
             // Generate atlas texture
+            GLint l_lastTexture = 0;
+            glGetIntegerv(GL_TEXTURE_BINDING_2D,&l_lastTexture);
+
             glGenTextures(1, &m_atlasTexture);
             glBindTexture(GL_TEXTURE_2D, m_atlasTexture);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -136,6 +139,8 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filteringType);
             glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, g_FontSwizzleMask);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_atlasSize.x, m_atlasSize.y, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+
+            if(l_lastTexture) glBindTexture(GL_TEXTURE_2D,l_lastTexture);
 
             // Generate atlas
             m_atlasPack = new rbp::MaxRectsBinPack();
@@ -179,17 +184,12 @@ bool ROC::Font::LoadChar(unsigned int f_char)
     return l_result;
 }
 
-void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, const glm::bvec2 &f_bind)
+void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
 {
     if(m_loaded)
     {
-        if(f_bind.x)
-        {
-            glBindVertexArray(ms_VAO);
-            glBindBuffer(GL_ARRAY_BUFFER, ms_vertexVBO);
-            ms_switch = true;
-        }
-        if(f_bind.y) glBindTexture(GL_TEXTURE_2D, m_atlasTexture);
+        GLBinder::BindVertexArray(ms_VAO);
+        GLBinder::BindTexture2D(m_atlasTexture);
 
         glm::vec4 l_linePos(f_pos, 0.f, 0.f); // [line_x, line_y, char_x, char_y]
         glm::tvec3<size_t> l_textRange(0U); // [range_min, range_max, subpart]
@@ -241,21 +241,29 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos, const glm
 
             if(l_charCount > 0)
             {
-                if(ms_switch)
+                if(GLBinder::IsArrayBufferBinded(ms_vertexVBO))
                 {
-                    glBindBuffer(GL_ARRAY_BUFFER, ms_vertexVBO);
                     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
-                    glBindBuffer(GL_ARRAY_BUFFER, ms_uvVBO);
+                    GLBinder::BindArrayBuffer(ms_uvVBO);
                     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
                 }
                 else
                 {
-                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
-                    glBindBuffer(GL_ARRAY_BUFFER, ms_vertexVBO);
-                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
+                    if(GLBinder::IsArrayBufferBinded(ms_uvVBO))
+                    {
+                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
+                        GLBinder::BindArrayBuffer(ms_vertexVBO);
+                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
+                    }
+                    else
+                    {
+                        GLBinder::BindArrayBuffer(ms_uvVBO);
+                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
+                        GLBinder::BindArrayBuffer(ms_vertexVBO);
+                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());;
+                    }
                 }
                 glDrawArrays(GL_TRIANGLES, 0, ROC_FONT_CHAR_VERTICES * l_charCount);
-                ms_switch = !ms_switch;
             }
             l_textRange.x = ++l_textRange.z * ROC_FONT_TEXT_BLOCK;
         }

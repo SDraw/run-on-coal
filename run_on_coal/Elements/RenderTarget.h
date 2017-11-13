@@ -11,10 +11,8 @@ class RenderTarget final : public Drawable
     GLuint m_frameBuffer;
     GLuint m_renderBuffer;
     GLuint m_texture;
-
     glm::ivec2 m_size;
 
-    bool m_active;
     std::string m_error;
 
     void Clear();
@@ -39,8 +37,6 @@ protected:
     ~RenderTarget();
     bool Create(int f_type, const glm::ivec2 &f_size, int f_filter = DFT_Nearest);
     inline const std::string& GetError() const { return m_error; }
-
-    inline GLuint GetTextureID() const { return m_texture; }
 
     void Bind();
     void Enable();

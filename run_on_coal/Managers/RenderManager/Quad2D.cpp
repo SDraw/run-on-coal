@@ -2,6 +2,8 @@
 
 #include "Managers/RenderManager/Quad2D.h"
 
+#include "Utils/GLBinder.h"
+
 namespace ROC
 {
 
@@ -38,8 +40,8 @@ ROC::Quad2D::~Quad2D()
 
 void ROC::Quad2D::Bind()
 {
-    glBindVertexArray(m_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+    GLBinder::BindVertexArray(m_VAO);
+    GLBinder::BindArrayBuffer(m_vertexVBO);
 }
 void ROC::Quad2D::SetTransformation(const glm::vec2 &f_size)
 {

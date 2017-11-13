@@ -29,7 +29,6 @@
 ROC::ElementManager::ElementManager(Core *f_core)
 {
     m_core = f_core;
-    m_locked = false;
 }
 ROC::ElementManager::~ElementManager()
 {}
@@ -81,7 +80,6 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(!f_async && m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(f_async)
     {
         m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
@@ -184,7 +182,6 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(int f_type, const glm
 {
     RenderTarget *l_rt = new RenderTarget();
 
-    if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(l_rt->Create(f_type, f_size, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt);
     else
     {
@@ -203,7 +200,6 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(l_texture->Load(l_path, f_type, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_texture);
     else
     {
@@ -225,7 +221,6 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
         l_path.push_back(l_iterPath);
     }
 
-    if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(l_texture->LoadCubemap(l_path, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_texture);
     else
     {
@@ -243,7 +238,6 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(m_locked) m_core->GetRenderManager()->ResetCallsReducing();
     if(l_font->Load(l_path, f_size, f_atlas, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font);
     else
     {

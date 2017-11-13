@@ -29,6 +29,7 @@ namespace ROC
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec4 g_EmptyVec4;
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
+const glm::vec4 g_DefaultClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
 
 }
 
@@ -41,7 +42,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 
     glEnable(GL_CULL_FACE); // default culling
 
-    glClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
+    glClearColor(g_DefaultClearColor.r,g_DefaultClearColor.g,g_DefaultClearColor.b,g_DefaultClearColor.a);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -56,8 +57,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_dummyTexture = new Texture();
     m_dummyTexture->LoadDummy();
 
-    m_lastVAO = 0U;
-    m_lastTexture = 0U;
     m_depthEnabled = true;
     m_blendEnabled = false;
     m_cullEnabled = true;
@@ -65,13 +64,11 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_time = 0.f;
     m_locked = true;
     m_textureMatrix = g_IdentityMatrix;
-    m_materialBind = glm::bvec2(true);
-    m_fontBind = glm::bvec2(true);
 
     m_movieVectorEnd = m_movieVector.end();
 
-    glm::ivec2 l_size;
-    m_core->GetSfmlManager()->GetWindowSize(l_size);
+    m_clearColor = g_DefaultClearColor;
+    m_core->GetSfmlManager()->GetWindowSize(m_viewportSize);
 
     m_argument = new LuaArguments();
     m_callback = nullptr;
@@ -100,15 +97,24 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             if(m_activeScene->HasRenderTarget())
             {
                 RenderTarget *l_rt = m_activeScene->GetRenderTarget();
-                const glm::ivec2 &l_renderSize = l_rt->GetSize();
                 m_skipNoDepthMaterials = l_rt->IsShadowType();
-                glViewport(0, 0, l_renderSize.x, l_renderSize.y);
+                const glm::ivec2 &l_targetSize = l_rt->GetSize();
+                if(m_viewportSize != l_targetSize)
+                {
+                    std::memcpy(&m_viewportSize, &l_targetSize, sizeof(glm::ivec2));
+                    glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+                }
             }
             else
             {
                 m_skipNoDepthMaterials = false;
-                m_core->GetSfmlManager()->GetWindowSize(m_windowSize);
-                glViewport(0, 0, m_windowSize.x, m_windowSize.y);
+                glm::ivec2 l_windowSize;
+                m_core->GetSfmlManager()->GetWindowSize(l_windowSize);
+                if(m_viewportSize != l_windowSize)
+                {
+                    std::memcpy(&m_viewportSize, &l_windowSize, sizeof(glm::ivec2));
+                    glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+                }
             }
         }
     }
@@ -146,7 +152,7 @@ void ROC::RenderManager::Render(Model *f_model)
     {
         if(m_activeScene->IsValidForRender())
         {
-            if( m_activeScene->GetCamera()->IsInFrustum(f_model->GetGlobalMatrix(), f_model->GetBoundSphereRadius()))
+            if(m_activeScene->GetCamera()->IsInFrustum(f_model->GetGlobalMatrix(), f_model->GetBoundSphereRadius()))
             {
                 Shader *l_shader = m_activeScene->GetShader();
                 l_shader->SetModelMatrix(f_model->GetGlobalMatrix());
@@ -170,16 +176,10 @@ void ROC::RenderManager::Render(Model *f_model)
                     iter->IsDoubleSided() ? DisableCulling() : EnableCulling();
 
                     Texture *l_texture = iter->HasTexture() ? iter->GetTexture() : m_dummyTexture;
-
-                    m_materialBind.x = CompareLastTexture(l_texture->GetTextureID()) && !m_skipNoDepthMaterials;
-                    if(m_materialBind.x) l_texture->Bind();
-                    m_materialBind.y = CompareLastVAO(iter->GetVAO());
-                    if(m_materialBind.y)
-                    {
-                        l_shader->SetMaterialType(static_cast<int>(iter->GetType()));
-                        l_shader->SetMaterialParam(iter->GetParams());
-                    }
-                    iter->Draw(m_materialBind.y);
+                    l_texture->Bind();
+                    l_shader->SetMaterialType(static_cast<int>(iter->GetType()));
+                    l_shader->SetMaterialParam(iter->GetParams());
+                    iter->Draw();
                 }
             }
         }
@@ -197,10 +197,7 @@ void ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::
             Shader *l_shader = m_activeScene->GetShader();
             l_shader->SetModelMatrix(g_IdentityMatrix);
             l_shader->SetColor(f_color);
-
-            m_fontBind.x = CompareLastVAO(Font::GetVAO());
-            m_fontBind.y = CompareLastTexture(f_font->GetAtlasTexture());
-            f_font->Draw(f_text, f_pos, m_fontBind);
+            f_font->Draw(f_text, f_pos);
         }
     }
 }
@@ -210,8 +207,8 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
     {
         if(m_activeScene->IsValidForRender())
         {
-            if(CompareLastVAO(m_quad2D->GetVAO())) m_quad2D->Bind();
-            if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
+            m_quad2D->Bind();
+            f_drawable->Bind();
 
             m_quad2D->SetTransformation(f_size);
 
@@ -248,8 +245,8 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
             float l_radius = glm::length(l_halfSize);
             if(m_activeScene->GetCamera()->IsInFrustum(f_pos, l_radius))
             {
-                if(CompareLastVAO(m_quad3D->GetVAO())) m_quad3D->Bind();
-                if(CompareLastTexture(f_drawable->GetTextureID())) f_drawable->Bind();
+                m_quad3D->Bind();
+                f_drawable->Bind();
 
                 m_quad3D->SetTransformation(f_pos, f_rot, f_size);
 
@@ -288,6 +285,14 @@ void ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
         glClear(l_params);
     }
 }
+void ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
+{
+    if(m_clearColor != f_color)
+    {
+        std::memcpy(&m_clearColor, &f_color, sizeof(glm::vec4));
+        glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+    }
+}
 
 void ROC::RenderManager::DisableDepth()
 {
@@ -321,14 +326,6 @@ void ROC::RenderManager::EnableBlending()
         m_blendEnabled = true;
     }
 }
-bool ROC::RenderManager::CompareLastVAO(GLuint f_vao)
-{
-    return ((f_vao == m_lastVAO) ? false : ((m_lastVAO = f_vao) == f_vao));
-}
-bool ROC::RenderManager::CompareLastTexture(GLuint f_texture)
-{
-    return ((f_texture == m_lastTexture) ? false : ((m_lastTexture = f_texture) == f_texture));
-}
 void ROC::RenderManager::DisableCulling()
 {
     if(m_cullEnabled)
@@ -345,17 +342,11 @@ void ROC::RenderManager::EnableCulling()
         m_cullEnabled = true;
     }
 }
-void ROC::RenderManager::ResetCallsReducing()
-{
-    m_lastTexture = 0U;
-    m_lastVAO = 0U;
-}
 
 void ROC::RenderManager::DoPulse()
 {
     m_time = m_core->GetSfmlManager()->GetTime();
 
-    ResetCallsReducing();
     for(auto iter : m_movieVector) iter->Update();
 
     m_locked = false;

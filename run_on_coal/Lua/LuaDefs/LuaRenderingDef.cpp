@@ -55,7 +55,7 @@ int ROC::LuaRenderingDef::SetClearColor(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
-        RenderManager::SetClearColour(l_color);
+        LuaManager::GetCore()->GetRenderManager()->SetClearColour(l_color);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

@@ -2,6 +2,8 @@
 
 #include "Managers/RenderManager/Quad3D.h"
 
+#include "Utils/GLBinder.h"
+
 namespace ROC
 {
 
@@ -55,8 +57,8 @@ ROC::Quad3D::~Quad3D()
 
 void ROC::Quad3D::Bind()
 {
-    glBindVertexArray(m_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+    GLBinder::BindVertexArray(m_VAO);
+    GLBinder::BindArrayBuffer(m_vertexVBO);
 }
 void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size)
 {

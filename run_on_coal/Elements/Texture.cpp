@@ -2,6 +2,8 @@
 
 #include "Elements/Texture.h"
 
+#include "Utils/GLBinder.h"
+
 namespace ROC
 {
 
@@ -45,6 +47,9 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
             m_filtering = f_filter;
             btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
 
+            GLint l_lastTexture = 0;
+            glGetIntegerv(GL_TEXTURE_BINDING_2D,&l_lastTexture);
+
             glGenTextures(1, &m_texture);
             glBindTexture(GL_TEXTURE_2D, m_texture);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -52,6 +57,8 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
             glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TT_RGB) ? (f_compress ? GL_COMPRESSED_RGB : GL_RGB) : (f_compress ? GL_COMPRESSED_RGBA : GL_RGBA), m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+
+            if(l_lastTexture) glBindTexture(GL_TEXTURE_2D,l_lastTexture);
         }
     }
     return (m_texture != 0U);
@@ -62,6 +69,9 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
     {
         m_type = TT_Cubemap;
         btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
+
+        GLint l_lastTexture = 0;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D,&l_lastTexture);
 
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
@@ -87,6 +97,8 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
                 break;
             }
         }
+
+        if(l_lastTexture) glBindTexture(GL_TEXTURE_2D,l_lastTexture);
     }
     return (m_texture != 0U);
 }
@@ -98,6 +110,9 @@ bool ROC::Texture::LoadDummy()
         m_filtering = DFT_Nearest;
         m_type = TT_RGB;
 
+        GLint l_lastTexture = 0;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D,&l_lastTexture);
+
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -105,6 +120,8 @@ bool ROC::Texture::LoadDummy()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB, g_TextureDummySize.x, g_TextureDummySize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, g_TextureDummyPattern);
+
+        if(l_lastTexture) glBindTexture(GL_TEXTURE_2D,l_lastTexture);
     }
     return (m_texture != 0U);
 }
@@ -116,10 +133,10 @@ void ROC::Texture::Bind()
         switch(m_type)
         {
             case TT_RGB: case TT_RGBA:
-                glBindTexture(GL_TEXTURE_2D, m_texture);
+                GLBinder::BindTexture2D(m_texture);
                 break;
             case TT_Cubemap:
-                glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
+                GLBinder::BindTextureCube(m_texture);
                 break;
         }
     }

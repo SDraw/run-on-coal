@@ -2,6 +2,8 @@
 
 #include "Elements/Movie.h"
 
+#include "Utils/GLBinder.h"
+
 ROC::Movie::Movie()
 {
     m_elementType = ET_Movie;
@@ -49,4 +51,10 @@ void ROC::Movie::SetTime(float f_val)
     btClamp(f_val, 0.f, std::numeric_limits<float>::max());
     sf::Time l_time = sf::seconds(f_val);
     m_movie->setPlayingOffset(l_time);
+}
+
+void ROC::Movie::Bind()
+{
+    GLuint l_texture = m_movie->getCurrentImage().getNativeHandle();
+    GLBinder::BindTexture2D(l_texture);
 }

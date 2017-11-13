@@ -2,6 +2,8 @@
 
 #include "Elements/RenderTarget.h"
 
+#include "Utils/GLBinder.h"
+
 ROC::RenderTarget::RenderTarget()
 {
     m_elementType = ET_RenderTarget;
@@ -12,7 +14,6 @@ ROC::RenderTarget::RenderTarget()
     m_frameBuffer = 0U;
     m_renderBuffer = 0U;
     m_texture = 0U;
-    m_active = false;
 }
 ROC::RenderTarget::~RenderTarget()
 {
@@ -28,8 +29,14 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
         m_filtering = f_filter;
         btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
 
+        GLint l_lastFramebuffer = 0;
+        glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &l_lastFramebuffer);
+
         glGenFramebuffers(1, &m_frameBuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+
+        GLint l_lastTexture = 0;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, &l_lastTexture);
 
         glGenTextures(1, &m_texture);
         glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -84,34 +91,27 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
         }
         else
         {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
             std::memcpy(&m_size, &f_size, sizeof(glm::ivec2));
         }
+
+        glBindFramebuffer(GL_FRAMEBUFFER, l_lastFramebuffer);
+        if(l_lastTexture) glBindTexture(GL_TEXTURE_2D, l_lastTexture);
     }
     return (m_type != RTT_None);
 }
 
 void ROC::RenderTarget::Bind()
 {
-    if(m_type != RTT_None) glBindTexture(GL_TEXTURE_2D, m_texture);
+    if(m_type != RTT_None) GLBinder::BindTexture2D(m_texture);
 }
 void ROC::RenderTarget::Enable()
 {
-    if(m_type != RTT_None && !m_active)
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
-        m_active = true;
-    }
+    if(m_type != RTT_None) GLBinder::BindFramebuffer(m_frameBuffer);
 }
 void ROC::RenderTarget::Disable()
 {
-    if(m_type != RTT_None && m_active)
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, NULL);
-        m_active = false;
-    }
+    if(m_type != RTT_None) GLBinder::BindFramebuffer(NULL);
 }
 
 void ROC::RenderTarget::Clear()

@@ -237,6 +237,9 @@
     <ClCompile Include="Managers\RenderManager\Quad2D.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\GLBinder.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -474,6 +477,9 @@
     </ClInclude>
     <ClInclude Include="Managers\RenderManager\Quad2D.h">
       <Filter>Managers\RenderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\GLBinder.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

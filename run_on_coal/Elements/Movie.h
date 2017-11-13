@@ -32,10 +32,8 @@ protected:
     ~Movie();
     bool Load(const std::string &f_path);
 
-    inline GLuint GetTextureID() const { return m_movie->getCurrentImage().getNativeHandle(); }
-
     inline void Update() { m_movie->update(); }
-    inline void Bind() { glBindTexture(GL_TEXTURE_2D, m_movie->getCurrentImage().getNativeHandle()); }
+    void Bind();
 
     friend class ElementManager;
     friend class RenderManager;

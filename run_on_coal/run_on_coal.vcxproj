@@ -198,6 +198,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\CustomData.h" />
     <ClInclude Include="Utils\EnumUtils.h" />
+    <ClInclude Include="Utils\GLBinder.h" />
     <ClInclude Include="Utils\GLUtils.hpp" />
     <ClInclude Include="Utils\LuaUtils.h" />
     <ClInclude Include="Utils\MathUtils.h" />
@@ -295,6 +296,7 @@
     </ClCompile>
     <ClCompile Include="Utils\CustomData.cpp" />
     <ClCompile Include="Utils\EnumUtils.cpp" />
+    <ClCompile Include="Utils\GLBinder.cpp" />
     <ClCompile Include="Utils\GlobalConstants.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
     </ClCompile>
