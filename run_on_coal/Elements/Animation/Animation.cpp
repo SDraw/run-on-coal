@@ -120,24 +120,27 @@ bool ROC::Animation::Load(const std::string &f_path)
 
 void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
 {
-    unsigned int l_frame = ((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_framesCount;
-    f_tick = f_tick%m_duration;
-
-    for(unsigned int i = 0; i < m_bonesCount; i++)
+    if(m_loaded)
     {
-        m_boneIntervals[i]->findOverlapping(l_frame, l_frame, m_searchResult);
-        if(!m_searchResult.empty())
-        {
-            keyframeData &l_keyframeData = m_searchResult.back().value;
-            if(l_keyframeData.m_static) f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
-            else
-            {
-                float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
-                m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
-                f_bones[i]->SetFrameData(m_tempFrameData);
-            }
+        unsigned int l_frame = ((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_framesCount;
+        f_tick = f_tick%m_duration;
 
-            m_searchResult.clear();
+        for(unsigned int i = 0; i < m_bonesCount; i++)
+        {
+            m_boneIntervals[i]->findOverlapping(l_frame, l_frame, m_searchResult);
+            if(!m_searchResult.empty())
+            {
+                keyframeData &l_keyframeData = m_searchResult.back().value;
+                if(l_keyframeData.m_static) f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
+                else
+                {
+                    float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
+                    m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
+                    f_bones[i]->SetFrameData(m_tempFrameData);
+                }
+
+                m_searchResult.clear();
+            }
         }
     }
 }

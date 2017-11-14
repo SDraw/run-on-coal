@@ -8,3 +8,4 @@ inline bool Is2DSampler(GLenum f_type) { return ((f_type == GL_SAMPLER_2D || (f_
 inline bool IsCubicSampler(GLenum f_type) { return (f_type == GL_SAMPLER_CUBE); }
 
 }
+

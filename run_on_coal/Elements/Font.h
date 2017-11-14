@@ -58,9 +58,6 @@ protected:
     static void DestroyLibrary();
     bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter = FFT_Nearest);
 
-    static inline GLuint GetVAO() { return ms_VAO; }
-    inline GLuint GetAtlasTexture() const { return m_atlasTexture; }
-
     void Draw(const sf::String &f_text, const glm::vec2 &f_pos);
 
     friend class ElementManager;

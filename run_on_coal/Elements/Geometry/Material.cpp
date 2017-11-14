@@ -29,7 +29,11 @@ ROC::Material::~Material()
     if(m_normalVBO != 0U) glDeleteBuffers(1, &m_normalVBO);
     if(m_weightVBO != 0U) glDeleteBuffers(1, &m_weightVBO);
     if(m_indexVBO != 0U) glDeleteBuffers(1, &m_indexVBO);
-    if(m_VAO != 0U) glDeleteVertexArrays(1, &m_VAO);
+    if(m_VAO != 0U)
+    {
+        if(GLBinder::IsVertexArrayBinded(m_VAO)) GLBinder::ResetVertexArray();
+        glDeleteVertexArrays(1, &m_VAO);
+    }
     delete m_texture;
 }
 

@@ -45,56 +45,93 @@ bool ROC::Sound::Load(const std::string &f_path)
     return (m_handle != nullptr);
 }
 
+float ROC::Sound::GetDuration()
+{
+    float l_duration = -1.f;
+    if(m_handle) l_duration = m_handle->getDuration().asSeconds();
+    return l_duration;
+}
+
 void ROC::Sound::Play()
 {
-    m_handle->play();
+    if(m_handle) m_handle->play();
 }
 void ROC::Sound::Pause()
 {
-    m_handle->pause();
+    if(m_handle) m_handle->pause();
 }
 void ROC::Sound::Stop()
 {
-    m_handle->stop();
+    if(m_handle) m_handle->stop();
 }
 
 void ROC::Sound::SetSpeed(float f_speed)
 {
-    btClamp(f_speed, 0.f, std::numeric_limits<float>::max());
-    m_handle->setPitch(f_speed);
+    if(m_handle)
+    {
+        btClamp(f_speed, 0.f, std::numeric_limits<float>::max());
+        m_handle->setPitch(f_speed);
+    }
+}
+float ROC::Sound::GetSpeed()
+{
+    float l_speed = -1.f;
+    if(m_handle) l_speed = m_handle->getPitch();
+    return l_speed;
 }
 
 void ROC::Sound::SetVolume(float f_volume)
 {
-    btClamp(f_volume, 0.f, 100.f);
-    m_handle->setVolume(f_volume);
+    if(m_handle)
+    {
+        btClamp(f_volume, 0.f, 100.f);
+        m_handle->setVolume(f_volume);
+    }
+}
+float ROC::Sound::GetVolume()
+{
+    float l_volume = -1.f;
+    if(m_handle) l_volume = m_handle->getVolume();
+    return l_volume;
 }
 
 void ROC::Sound::SetTime(float f_time)
 {
-    btClamp(f_time, 0.f, std::numeric_limits<float>::max());
-    sf::Time l_time = sf::seconds(f_time);
-    m_handle->setPlayingOffset(l_time);
+    if(m_handle)
+    {
+        btClamp(f_time, 0.f, std::numeric_limits<float>::max());
+        sf::Time l_time = sf::seconds(f_time);
+        m_handle->setPlayingOffset(l_time);
+    }
+}
+float ROC::Sound::GetTime()
+{
+    float l_time = -1.f;
+    if(m_handle) l_time = m_handle->getPlayingOffset().asSeconds();
+    return l_time;
 }
 
 bool ROC::Sound::Set3DPositionEnabled(bool f_state)
 {
-    if(m_mono)
+    if(m_handle)
     {
-        if(m_relative != f_state)
+        if(m_mono)
         {
-            m_relative = f_state;
-            m_handle->setRelativeToListener(!m_relative);
-            if(m_relative)
+            if(m_relative != f_state)
             {
-                m_handle->setPosition(m_v3DPosition.x, m_v3DPosition.y, m_v3DPosition.z);
-                m_handle->setMinDistance(m_v3DDistance.x);
-                m_handle->setAttenuation(m_v3DDistance.y);
-            }
-            else
-            {
-                std::memcpy(&m_v3DPosition, &g_DefaultPosition, sizeof(glm::vec3));
-                m_v3DDistance.x = m_v3DDistance.y = 0.f;
+                m_relative = f_state;
+                m_handle->setRelativeToListener(!m_relative);
+                if(m_relative)
+                {
+                    m_handle->setPosition(m_v3DPosition.x, m_v3DPosition.y, m_v3DPosition.z);
+                    m_handle->setMinDistance(m_v3DDistance.x);
+                    m_handle->setAttenuation(m_v3DDistance.y);
+                }
+                else
+                {
+                    std::memcpy(&m_v3DPosition, &g_DefaultPosition, sizeof(glm::vec3));
+                    m_v3DDistance.x = m_v3DDistance.y = 0.f;
+                }
             }
         }
     }
@@ -103,21 +140,34 @@ bool ROC::Sound::Set3DPositionEnabled(bool f_state)
 
 bool ROC::Sound::Set3DPosition(const glm::vec3 &f_pos)
 {
-    if(m_relative)
+    if(m_handle)
     {
-        std::memcpy(&m_v3DPosition, &f_pos, sizeof(glm::vec3));
-        m_handle->setPosition(m_v3DPosition.x, m_v3DPosition.y, m_v3DPosition.z);
+        if(m_relative)
+        {
+            std::memcpy(&m_v3DPosition, &f_pos, sizeof(glm::vec3));
+            m_handle->setPosition(m_v3DPosition.x, m_v3DPosition.y, m_v3DPosition.z);
+        }
     }
     return m_relative;
 }
 
 bool ROC::Sound::Set3DDistance(const glm::vec2 &f_dist)
 {
-    if(m_relative)
+    if(m_handle)
     {
-        std::memcpy(&m_v3DDistance, &f_dist, sizeof(glm::vec2));
-        m_handle->setMinDistance(m_v3DDistance.x);
-        m_handle->setAttenuation(m_v3DDistance.y);
+        if(m_relative)
+        {
+            std::memcpy(&m_v3DDistance, &f_dist, sizeof(glm::vec2));
+            m_handle->setMinDistance(m_v3DDistance.x);
+            m_handle->setAttenuation(m_v3DDistance.y);
+        }
     }
     return m_relative;
+}
+
+int ROC::Sound::GetState()
+{
+    int l_state = -1;
+    if(m_handle) l_state = m_handle->getStatus();
+    return l_state;
 }

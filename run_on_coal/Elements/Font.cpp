@@ -47,6 +47,7 @@ ROC::Font::~Font()
 {
     if(m_loaded)
     {
+        if(GLBinder::IsTextureBinded(m_atlasTexture)) GLBinder::ResetTexture();
         glDeleteTextures(1, &m_atlasTexture);
         delete m_atlasPack;
         FT_Done_Face(m_face);
@@ -82,7 +83,7 @@ void ROC::Font::CreateVAO()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
     ms_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec2(0.f));
 
-    glBindVertexArray(0);
+    glBindVertexArray(NULL);
 }
 void ROC::Font::DestroyVAO()
 {
@@ -129,7 +130,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
 
             // Generate atlas texture
             GLint l_lastTexture = 0;
-            glGetIntegerv(GL_TEXTURE_BINDING_2D,&l_lastTexture);
+            glGetIntegerv(GL_TEXTURE_BINDING_2D, &l_lastTexture);
 
             glGenTextures(1, &m_atlasTexture);
             glBindTexture(GL_TEXTURE_2D, m_atlasTexture);
@@ -140,7 +141,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, g_FontSwizzleMask);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_atlasSize.x, m_atlasSize.y, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 
-            if(l_lastTexture) glBindTexture(GL_TEXTURE_2D,l_lastTexture);
+            if(l_lastTexture) glBindTexture(GL_TEXTURE_2D, l_lastTexture);
 
             // Generate atlas
             m_atlasPack = new rbp::MaxRectsBinPack();
@@ -249,19 +250,10 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
                 }
                 else
                 {
-                    if(GLBinder::IsArrayBufferBinded(ms_uvVBO))
-                    {
-                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
-                        GLBinder::BindArrayBuffer(ms_vertexVBO);
-                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
-                    }
-                    else
-                    {
-                        GLBinder::BindArrayBuffer(ms_uvVBO);
-                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
-                        GLBinder::BindArrayBuffer(ms_vertexVBO);
-                        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());;
-                    }
+                    if(!GLBinder::IsArrayBufferBinded(ms_uvVBO)) GLBinder::BindArrayBuffer(ms_uvVBO);
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
+                    GLBinder::BindArrayBuffer(ms_vertexVBO);
+                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
                 }
                 glDrawArrays(GL_TRIANGLES, 0, ROC_FONT_CHAR_VERTICES * l_charCount);
             }

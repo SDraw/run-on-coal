@@ -9,19 +9,19 @@ class Movie final : public Drawable
     sfe::Movie *m_movie;
     glm::ivec2 m_size;
 public:
-    inline unsigned int GetSampleRate() { return m_movie->getSampleRate(); }
-    inline unsigned int GetChannelCount() { return m_movie->getChannelCount(); }
-    inline float GetFramerate() { return m_movie->getFramerate(); }
-    inline float GetDuration() { return m_movie->getDuration().asSeconds(); }
+    unsigned int GetSampleRate();
+    unsigned int GetChannelCount();
+    float GetFramerate();
+    float GetDuration();
 
-    inline void Play() { m_movie->play(); }
-    inline void Pause() { m_movie->pause(); }
-    inline void Stop() { m_movie->stop(); }
+    void Play();
+    void Pause();
+    void Stop();
 
-    inline float GetVolume() { return m_movie->getVolume(); }
+    float GetVolume();
     void SetVolume(float f_val);
 
-    inline float GetTime() { return m_movie->getPlayingOffset().asSeconds(); }
+    float GetTime();
     void SetTime(float f_val);
 
     inline bool IsTransparent() const { return true; }
@@ -32,7 +32,7 @@ protected:
     ~Movie();
     bool Load(const std::string &f_path);
 
-    inline void Update() { m_movie->update(); }
+    void Update();
     void Bind();
 
     friend class ElementManager;

@@ -28,7 +28,11 @@ ROC::Texture::Texture()
 }
 ROC::Texture::~Texture()
 {
-    if(m_texture) glDeleteTextures(1, &m_texture);
+    if(m_texture)
+    {
+        if(GLBinder::IsTextureBinded(m_texture)) GLBinder::ResetTexture();
+        glDeleteTextures(1, &m_texture);
+    }
 }
 
 bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, bool f_compress)

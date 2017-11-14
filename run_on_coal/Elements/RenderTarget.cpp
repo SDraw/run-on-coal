@@ -120,6 +120,7 @@ void ROC::RenderTarget::Clear()
     m_filtering = DFT_None;
     if(m_texture != 0U)
     {
+        if(GLBinder::IsTextureBinded(m_texture)) GLBinder::ResetTexture();
         glDeleteTextures(1, &m_texture);
         m_texture = 0U;
     }
@@ -130,6 +131,7 @@ void ROC::RenderTarget::Clear()
     }
     if(m_frameBuffer != 0U)
     {
+        if(GLBinder::IsFramebufferBinded(m_frameBuffer)) GLBinder::ResetFramebuffer();
         glDeleteFramebuffers(1, &m_frameBuffer);
         m_frameBuffer = 0U;
     }
