@@ -15,12 +15,14 @@ class Sound final : public Element
     glm::vec3 m_v3DPosition;
     glm::vec2 m_v3DDistance;
 public:
-    inline bool IsLooped() const { return m_looped; }
-    float GetDuration();
-
     void Play();
     void Pause();
     void Stop();
+
+    inline bool IsLooped() const { return m_looped; }
+    bool SetLoop(bool f_loop);
+
+    float GetDuration();
 
     void SetSpeed(float f_speed);
     float GetSpeed();
@@ -42,7 +44,7 @@ public:
 
     int GetState();
 protected:
-    explicit Sound(bool f_loop);
+    explicit Sound();
     ~Sound();
     bool Load(const std::string &f_path);
 

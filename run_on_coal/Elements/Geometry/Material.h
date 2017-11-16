@@ -7,11 +7,7 @@ class Texture;
 class Material final
 {
     unsigned int m_verticesCount;
-    GLuint m_vertexVBO;
-    GLuint m_uvVBO;
-    GLuint m_normalVBO;
-    GLuint m_weightVBO;
-    GLuint m_indexVBO;
+    GLuint m_VBO[5];
     GLuint m_VAO;
 
     unsigned char m_type;
@@ -54,7 +50,6 @@ protected:
 
     inline void SetParams(const glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
 
-    inline GLuint GetVAO() const { return m_VAO; }
     inline Texture* GetTexture() { return m_texture; }
 
     void Draw();

@@ -15,6 +15,13 @@ extern const float g_QuadVertexUV[];
 
 }
 
+#define ROC_QUAD3D_BUFFER_COUNT 3U
+#define ROC_QUAD3D_VERTEX_COUNT 6U
+
+#define ROC_QUAD3D_VERTEX_BUFFER 0U
+#define ROC_QUAD3D_UV_BUFFER 1U
+#define ROC_QUA3D_NORMAL_BUFFER 2U
+
 ROC::Quad3D::Quad3D()
 {
     m_position = g_DefaultPosition;
@@ -23,43 +30,34 @@ ROC::Quad3D::Quad3D()
     m_matrix = g_IdentityMatrix;
 
     glGenVertexArrays(1, &m_VAO);
-    glGenBuffers(1, &m_vertexVBO);
-    glGenBuffers(1, &m_uvVBO);
-    glGenBuffers(1, &m_normalVBO);
+    glGenBuffers(ROC_QUAD3D_BUFFER_COUNT, m_VBO);
 
     glBindVertexArray(m_VAO);
 
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+    glEnableVertexAttribArray(ROC_QUAD3D_VERTEX_BUFFER);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[ROC_QUAD3D_VERTEX_BUFFER]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_QUAD3D_VERTEX_COUNT, NULL, GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(ROC_QUAD3D_VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, m_uvVBO);
+    glEnableVertexAttribArray(ROC_QUAD3D_UV_BUFFER);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[ROC_QUAD3D_UV_BUFFER]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2U * ROC_QUAD3D_VERTEX_COUNT, g_QuadVertexUV, GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(ROC_QUAD3D_UV_BUFFER, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
     std::vector<glm::vec3> l_normals(ROC_QUAD3D_VERTEX_COUNT, glm::vec3(0.f, 0.f, 1.f));
-    glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, m_normalVBO);
+    glEnableVertexAttribArray(ROC_QUA3D_NORMAL_BUFFER);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[ROC_QUA3D_NORMAL_BUFFER]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ROC_QUAD3D_VERTEX_COUNT, l_normals.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(ROC_QUA3D_NORMAL_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     for(auto &iter : m_vertex) iter.z = 0.f;
 }
 ROC::Quad3D::~Quad3D()
 {
-    glDeleteBuffers(1, &m_vertexVBO);
-    glDeleteBuffers(1, &m_uvVBO);
-    glDeleteBuffers(1, &m_normalVBO);
+    glDeleteBuffers(ROC_QUAD3D_BUFFER_COUNT, m_VBO);
     glDeleteVertexArrays(1, &m_VAO);
 }
 
-void ROC::Quad3D::Bind()
-{
-    GLBinder::BindVertexArray(m_VAO);
-    GLBinder::BindArrayBuffer(m_vertexVBO);
-}
 void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size)
 {
     if(f_pos != m_position || f_rot != m_rotation)
@@ -81,6 +79,14 @@ void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_r
         m_vertex[0].y = m_vertex[3].y = m_vertex[5].y = m_size.y / 2.f;
         m_vertex[2].x = m_vertex[4].x = m_vertex[5].x = m_size.x / 2.f;
         m_vertex[1].y = m_vertex[2].y = m_vertex[4].y = -m_size.y / 2.f;
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO[ROC_QUAD3D_VERTEX_BUFFER]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3)*ROC_QUAD3D_VERTEX_COUNT, m_vertex);
     }
+}
+
+void ROC::Quad3D::Draw()
+{
+    GLBinder::BindVertexArray(m_VAO);
+    glDrawArrays(GL_TRIANGLES, 0, ROC_QUAD3D_VERTEX_COUNT);
 }

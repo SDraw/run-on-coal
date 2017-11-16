@@ -10,6 +10,7 @@ class LuaSoundDef final
     static int Pause(lua_State *f_vm);
     static int Stop(lua_State *f_vm);
     static int IsLooped(lua_State *f_vm);
+    static int SetLoop(lua_State *f_vm);
     static int GetState(lua_State *f_vm);
     static int SetSpeed(lua_State *f_vm);
     static int GetSpeed(lua_State *f_vm);

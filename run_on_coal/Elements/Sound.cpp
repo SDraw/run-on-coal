@@ -9,14 +9,14 @@ extern const glm::vec3 g_DefaultPosition;
 
 }
 
-ROC::Sound::Sound(bool f_loop)
+ROC::Sound::Sound()
 {
     m_elementType = ET_Sound;
     m_elementTypeName.assign("Sound");
 
     m_handle = nullptr;
     m_relative = false;
-    m_looped = f_loop;
+    m_looped = false;
     m_mono = false;
     m_v3DPosition = glm::vec3(0.f);
     m_v3DDistance = glm::vec2(0.f);
@@ -31,11 +31,7 @@ bool ROC::Sound::Load(const std::string &f_path)
     if(!m_handle)
     {
         m_handle = new sf::Music;
-        if(m_handle->openFromFile(f_path))
-        {
-            if(m_looped) m_handle->setLoop(true);
-            m_mono = (m_handle->getChannelCount() == 1);
-        }
+        if(m_handle->openFromFile(f_path)) m_mono = (m_handle->getChannelCount() == 1);
         else
         {
             delete m_handle;
@@ -43,13 +39,6 @@ bool ROC::Sound::Load(const std::string &f_path)
         }
     }
     return (m_handle != nullptr);
-}
-
-float ROC::Sound::GetDuration()
-{
-    float l_duration = -1.f;
-    if(m_handle) l_duration = m_handle->getDuration().asSeconds();
-    return l_duration;
 }
 
 void ROC::Sound::Play()
@@ -63,6 +52,26 @@ void ROC::Sound::Pause()
 void ROC::Sound::Stop()
 {
     if(m_handle) m_handle->stop();
+}
+
+bool ROC::Sound::SetLoop(bool f_loop)
+{
+    if(m_handle)
+    {
+        if(m_looped != f_loop)
+        {
+            m_looped = f_loop;
+            m_handle->setLoop(m_looped);
+        }
+    }
+    return ((m_handle != nullptr) && (m_looped == f_loop));
+}
+
+float ROC::Sound::GetDuration()
+{
+    float l_duration = -1.f;
+    if(m_handle) l_duration = m_handle->getDuration().asSeconds();
+    return l_duration;
 }
 
 void ROC::Sound::SetSpeed(float f_speed)

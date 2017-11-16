@@ -207,9 +207,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
     {
         if(m_activeScene->IsValidForRender())
         {
-            m_quad2D->Bind();
             f_drawable->Bind();
-
             m_quad2D->SetTransformation(f_size);
 
             btTransform l_textureTransform;
@@ -231,7 +229,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
             DisableCulling();
             DisableDepth();
             f_drawable->IsTransparent() ? EnableBlending() : DisableBlending();
-            Quad2D::Draw();
+            m_quad2D->Draw();
         }
     }
 }
@@ -245,9 +243,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
             float l_radius = glm::length(l_halfSize);
             if(m_activeScene->GetCamera()->IsInFrustum(f_pos, l_radius))
             {
-                m_quad3D->Bind();
                 f_drawable->Bind();
-
                 m_quad3D->SetTransformation(f_pos, f_rot, f_size);
 
                 Shader *l_shader = m_activeScene->GetShader();
@@ -265,7 +261,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
                 f_params.w ? DisableCulling() : EnableCulling();
                 f_params.y ? EnableDepth() : DisableDepth();
                 (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
-                Quad3D::Draw();
+                m_quad3D->Draw();
             }
         }
     }

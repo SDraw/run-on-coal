@@ -29,6 +29,7 @@ void ROC::LuaSoundDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "pause", Pause);
     LuaUtils::AddClassMethod(f_vm, "stop", Stop);
     LuaUtils::AddClassMethod(f_vm, "isLooped", IsLooped);
+    LuaUtils::AddClassMethod(f_vm, "setLoop", SetLoop);
     LuaUtils::AddClassMethod(f_vm, "getState", GetState);
     LuaUtils::AddClassMethod(f_vm, "setSpeed", SetSpeed);
     LuaUtils::AddClassMethod(f_vm, "getSpeed", GetSpeed);
@@ -56,13 +57,11 @@ int ROC::LuaSoundDef::Create(lua_State *f_vm)
 {
     // element Sound(str path [, bool loop = false])
     std::string l_path;
-    bool l_loop = false;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
-    argStream.ReadNextBoolean(l_loop);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        Sound *l_sound = LuaManager::GetCore()->GetElementManager()->CreateSound(l_path, l_loop);
+        Sound *l_sound = LuaManager::GetCore()->GetElementManager()->CreateSound(l_path);
         l_sound ? argStream.PushElement(l_sound) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -119,6 +118,22 @@ int ROC::LuaSoundDef::IsLooped(lua_State *f_vm)
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_sound);
     argStream.PushBoolean(!argStream.HasErrors() ? l_sound->IsLooped() : false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaSoundDef::SetLoop(lua_State *f_vm)
+{
+    // bool Sound:setLoop(bool loop)
+    Sound *l_sound;
+    bool l_loop;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_sound);
+    argStream.ReadBoolean(l_loop);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = l_sound->SetLoop(l_loop);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

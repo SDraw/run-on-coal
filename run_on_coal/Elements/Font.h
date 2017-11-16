@@ -28,10 +28,9 @@ class Font final : public Element
     std::unordered_map<unsigned int, charData*>::iterator m_charIter;
     std::unordered_map<unsigned int, charData*>::iterator m_charMapEnd;
 
+    static GLuint ms_VBO[2];
     static std::vector<glm::vec3> ms_vertices;
-    static GLuint ms_vertexVBO;
     static std::vector<glm::vec2> ms_uv;
-    static GLuint ms_uvVBO;
     static GLuint ms_VAO;
 
     int m_filteringType;

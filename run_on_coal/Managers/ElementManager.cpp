@@ -161,9 +161,9 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
     return l_shader;
 }
 
-ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path, bool f_loop)
+ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path)
 {
-    Sound *l_sound = new Sound(f_loop);
+    Sound *l_sound = new Sound();
 
     std::string l_path(f_path);
     PathUtils::EscapePath(l_path);
