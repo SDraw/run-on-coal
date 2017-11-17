@@ -199,7 +199,6 @@
     <ClInclude Include="Utils\CustomData.h" />
     <ClInclude Include="Utils\EnumUtils.h" />
     <ClInclude Include="Utils\GLBinder.h" />
-    <ClInclude Include="Utils\GLUtils.hpp" />
     <ClInclude Include="Utils\LuaUtils.h" />
     <ClInclude Include="Utils\MathUtils.h" />
     <ClInclude Include="Utils\PathUtils.h" />
@@ -318,6 +317,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

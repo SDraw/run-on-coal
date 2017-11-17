@@ -55,7 +55,7 @@ class Shader final : public Element
         ShaderUniform *m_uniform;
     };
     std::vector<drawableBindData> m_drawableBind;
-    unsigned int m_drawableCount;
+    static int ms_drawableMaxCount;
 
     static GLuint ms_bonesUBO;
     static bool ms_uboFix;
@@ -63,7 +63,7 @@ class Shader final : public Element
     bool m_active;
     std::string m_error;
 
-    void SetupDefaultUniformsAndLocations();
+    void SetupUniformsAndLocations();
 public:
     ShaderUniform* GetUniform(const std::string &f_uniform);
 protected:
@@ -92,6 +92,7 @@ protected:
     bool Detach(Drawable *f_drawable);
     bool HasAttached(Drawable *f_drawable) const;
 
+    static void UpdateDrawableMaxCount();
     static void CreateBonesUBO();
     static void DestroyBonesUBO();
     static void EnableUBOFix();

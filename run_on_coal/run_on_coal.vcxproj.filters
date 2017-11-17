@@ -472,9 +472,6 @@
     <ClInclude Include="Elements\Shader\ShaderUniform.h">
       <Filter>Elements\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\GLUtils.hpp">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\RenderManager\Quad2D.h">
       <Filter>Managers\RenderManager</Filter>
     </ClInclude>
@@ -534,5 +531,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

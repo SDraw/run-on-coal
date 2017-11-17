@@ -48,6 +48,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 
     Font::CreateLibrary();
     Font::CreateVAO();
+    Shader::UpdateDrawableMaxCount();
     Shader::CreateBonesUBO();
 
     m_activeScene = nullptr;
