@@ -39,6 +39,8 @@ public:
     };
 
     inline unsigned int GetType() const { return m_type; }
+    inline bool IsSampler2D() const { return ((m_type == SUT_Sampler) || (m_type == SUT_ShadowSampler)); }
+    inline bool IsSamplerCube() const { return (m_type == SUT_CubeSampler); }
 
     bool SetValue(float f_val);
     bool SetValue(const glm::vec2 &f_val);

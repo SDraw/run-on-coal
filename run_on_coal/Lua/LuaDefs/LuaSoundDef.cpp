@@ -333,7 +333,7 @@ int ROC::LuaSoundDef::Set3DDistance(lua_State *f_vm)
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
-    return 1;
+    return argStream.GetReturnValue();
 }
 int ROC::LuaSoundDef::Get3DDistance(lua_State *f_vm)
 {
@@ -362,32 +362,37 @@ int ROC::LuaSoundDef::SetListenerOrientation(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_up[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSoundManager()->SetListenerPosition(l_pos);
-        LuaManager::GetCore()->GetSoundManager()->SetListenerDirection(l_dir);
-        LuaManager::GetCore()->GetSoundManager()->SetListenerUp(l_up);
+        SoundManager *l_soundManager = LuaManager::GetCore()->GetSoundManager();
+        l_soundManager->SetListenerPosition(l_pos);
+        l_soundManager->SetListenerDirection(l_dir);
+        l_soundManager->SetListenerUp(l_up);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
-    return 1;
+    return argStream.GetReturnValue();
 }
 
 int ROC::LuaSoundDef::GetListenerOrientation(lua_State *f_vm)
 {
     // float float float float float float float float float soundGetListenerOrientation()
     ArgReader argStream(f_vm);
-    glm::vec3 l_pos, l_dir, l_up;
-    LuaManager::GetCore()->GetSoundManager()->GetListenerPosition(l_pos);
+    SoundManager *l_soundManager = LuaManager::GetCore()->GetSoundManager();
+
+    const glm::vec3 &l_pos = l_soundManager->GetListenerPosition();
     argStream.PushNumber(l_pos.x);
     argStream.PushNumber(l_pos.y);
     argStream.PushNumber(l_pos.z);
-    LuaManager::GetCore()->GetSoundManager()->GetListenerDirection(l_dir);
+
+    const glm::vec3 &l_dir = l_soundManager->GetListenerDirection();
     argStream.PushNumber(l_dir.x);
     argStream.PushNumber(l_dir.y);
     argStream.PushNumber(l_dir.z);
-    LuaManager::GetCore()->GetSoundManager()->GetListenerUp(l_up);
+
+    const glm::vec3 &l_up = l_soundManager->GetListenerUp();
     argStream.PushNumber(l_up.x);
     argStream.PushNumber(l_up.y);
     argStream.PushNumber(l_up.z);
+
     return argStream.GetReturnValue();
 }
 

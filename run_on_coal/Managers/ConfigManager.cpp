@@ -73,6 +73,7 @@ ROC::ConfigManager::ConfigManager()
                             } break;
                             case ROC_CONFIG_ATTRIB_VSYNC:
                                 m_vsync = l_attrib.as_bool(false);
+                                break;
                         }
                     }
                 }

@@ -11,11 +11,13 @@ class SoundManager final
     float m_globalVolume;
 public:
     void SetListenerPosition(const glm::vec3 &f_pos);
-    inline void GetListenerPosition(glm::vec3 &f_pos) { std::memcpy(&f_pos, &m_listenerPosition, sizeof(glm::vec3)); }
+    inline const glm::vec3& GetListenerPosition() const { return m_listenerPosition; }
+
     void SetListenerDirection(const glm::vec3 &f_dir);
-    inline void GetListenerDirection(glm::vec3 &f_dir) { std::memcpy(&f_dir, &m_listenerDirection, sizeof(glm::vec3)); }
+    inline const glm::vec3& GetListenerDirection() const { return m_listenerDirection; }
+
     void SetListenerUp(const glm::vec3 &f_up);
-    inline void GetListenerUp(glm::vec3 &f_up) { std::memcpy(&f_up, &m_listenerUp, sizeof(glm::vec3)); }
+    inline const glm::vec3& GetListenerUp() const { return m_listenerUp; }
 
     void SetGlobalVolume(float f_val);
     inline float GetGlobalVolume() const { return m_globalVolume; }

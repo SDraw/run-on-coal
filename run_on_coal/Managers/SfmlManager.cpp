@@ -113,8 +113,18 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_joypadButtonCallback = nullptr;
     m_joypadAxisCallback = nullptr;
 
-    // Detect current GPU in list of bugged Sandy Bridge GPUs. Need to add more.
-    if(l_log.find("HD Graphics 3000") != std::string::npos)  Shader::EnableUBOFix();
+    // Detect current GPU in list of bugged Sandy Bridge GPUs
+    const std::string l_sbList[] = {
+        "HD Graphics 2000", "HD Graphics 3000"
+    };
+    for(auto &iter : l_sbList)
+    {
+        if(l_log.find(iter) != std::string::npos)
+        {
+            Shader::EnableUBOFix();
+            break;
+        }
+    }
 }
 ROC::SfmlManager::~SfmlManager()
 {

@@ -16,7 +16,7 @@ ROC::Material::Material()
 {
     m_verticesCount = 0;
 
-    for(auto &iter : m_VBO) iter = 0U;
+    for(size_t i = 0U; i < ROC_MATERIAL_BUFFER_COUNT; i++) m_VBO[i] = 0U;
     m_VAO = 0U;
 
     m_params = glm::vec4(1.f);

@@ -487,8 +487,7 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
         }
         if(!l_isUsed)
         {
-            unsigned int l_uniformType = l_shaderUniform->GetType();
-            if((((l_uniformType == ShaderUniform::SUT_Sampler) || (l_uniformType == ShaderUniform::SUT_ShadowSampler)) && !f_drawable->IsCubic()) || (l_uniformType == ShaderUniform::SUT_CubeSampler) && f_drawable->IsCubic())
+            if((l_shaderUniform->IsSampler2D() && !f_drawable->IsCubic()) || (l_shaderUniform->IsSamplerCube() && f_drawable->IsCubic()))
             {
                 int l_slot = m_bindPool->Allocate();
                 if(l_slot != -1)

@@ -169,7 +169,7 @@ bool ROC::ShaderUniform::SetValue(const glm::mat4 &f_val)
 
 bool ROC::ShaderUniform::SetSampler(int f_sampler)
 {
-    bool l_isSampler = ((m_type == SUT_Sampler || (m_type == SUT_ShadowSampler)) || (m_type == SUT_CubeSampler));
+    bool l_isSampler = ((m_type == SUT_Sampler) || (m_type == SUT_ShadowSampler) || (m_type == SUT_CubeSampler));
     if(l_isSampler)
     {
         m_int[0] = f_sampler;
