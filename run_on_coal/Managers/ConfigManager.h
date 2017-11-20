@@ -15,7 +15,7 @@ public:
     inline bool IsLogEnabled() const { return m_logging; }
     inline bool IsFullscreenEnabled() const { return m_fullscreen; }
     inline int GetAntialiasing() const { return m_antialiasing; }
-    inline void GetWindowSize(glm::ivec2 &f_vec) { std::memcpy(&f_vec, &m_windowSize, sizeof(glm::ivec2)); }
+    inline const glm::ivec2& GetWindowSize() const { return m_windowSize; }
     inline unsigned int GetFPSLimit() const { return m_fpsLimit; }
     inline bool GetVSync() const { return m_vsync; }
 protected:

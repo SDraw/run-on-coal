@@ -33,8 +33,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     std::string l_log;
 
     ConfigManager *l_configManager = m_core->GetConfigManager();
-    glm::ivec2 l_windowSize;
-    l_configManager->GetWindowSize(l_windowSize);
+    const glm::ivec2 &l_windowSize = l_configManager->GetWindowSize();
     m_windowVideoMode = sf::VideoMode(l_windowSize.x, l_windowSize.y);
 
     m_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
