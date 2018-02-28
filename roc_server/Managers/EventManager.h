@@ -1,5 +1,5 @@
 #pragma once
-#include "Lua/LuaFunction.hpp"
+#include "Lua/LuaFunction.h"
 
 namespace ROC
 {

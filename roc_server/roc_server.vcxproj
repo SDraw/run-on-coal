@@ -97,7 +97,7 @@
     <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaFileDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h" />
-    <ClInclude Include="Lua\LuaFunction.hpp" />
+    <ClInclude Include="Lua\LuaFunction.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
     <ClInclude Include="Managers\EventManager.h" />
@@ -132,6 +132,7 @@
     <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp" />
+    <ClCompile Include="Lua\LuaFunction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Managers\ConfigManager.cpp" />
     <ClCompile Include="Managers\ElementManager.cpp" />

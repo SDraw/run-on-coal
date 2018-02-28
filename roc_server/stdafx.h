@@ -8,6 +8,7 @@
 #include <regex>
 #include <vector>
 #include <set>
+#include <map>
 #include <unordered_map>
 #include <thread>
 #include <atomic>

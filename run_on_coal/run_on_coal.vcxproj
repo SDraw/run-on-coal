@@ -175,7 +175,7 @@
     <ClInclude Include="Lua\LuaDefs\LuaSoundDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaTextureDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h" />
-    <ClInclude Include="Lua\LuaFunction.hpp" />
+    <ClInclude Include="Lua\LuaFunction.h" />
     <ClInclude Include="Managers\AsyncManager.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
@@ -266,6 +266,7 @@
     <ClCompile Include="Lua\LuaDefs\LuaSoundDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaTextureDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp" />
+    <ClCompile Include="Lua\LuaFunction.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>

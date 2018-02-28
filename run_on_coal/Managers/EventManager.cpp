@@ -76,7 +76,7 @@ bool ROC::EventManager::AddEventHandler(const std::string &f_event, LuaFunction 
             unsigned char l_check = ROC_EVENT_MISSING;
             for(auto &l_event : l_eventVector)
             {
-                if(l_event.m_function.m_ptr == f_func.m_ptr)
+                if(l_event.m_function == f_func)
                 {
                     if(!l_event.m_deleted) l_check = ROC_EVENT_EXISTS;
                     else
@@ -84,7 +84,6 @@ bool ROC::EventManager::AddEventHandler(const std::string &f_event, LuaFunction 
                         l_event.m_deleted = false;
                         l_check = ROC_EVENT_DELETED;
                     }
-                    f_func.m_removeRef = true;
                     break;
                 }
             }
@@ -130,7 +129,7 @@ bool ROC::EventManager::RemoveEvent(const std::string &f_event)
     }
     return l_result;
 }
-bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, const LuaFunction &f_func)
+bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, LuaFunction &f_func)
 {
     bool l_result = false;
     auto iter = m_eventMap.find(f_event);
@@ -142,7 +141,7 @@ bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, const Lua
             auto &l_eventVector = l_heap->m_eventVector;
             for(auto &l_event : l_eventVector)
             {
-                if(l_event.m_function.m_ptr == f_func.m_ptr && !l_event.m_deleted)
+                if((l_event.m_function == f_func) && !l_event.m_deleted)
                 {
                     l_event.m_deleted = true;
                     l_result = true;
@@ -172,7 +171,6 @@ void ROC::EventManager::CallEvent(const std::string &f_event, LuaArguments *f_ar
                     if(!l_heapIter->m_deleted) m_luaManager->CallFunction(l_heapIter->m_function, f_args);
                     if(l_heapIter->m_deleted)
                     {
-                        m_luaManager->RemoveReference(l_heapIter->m_function);
                         l_heapIter = l_eventVector.erase(l_heapIter);
                         if(l_heapIter == l_eventVector.end()) break;
                     }

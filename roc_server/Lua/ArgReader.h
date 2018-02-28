@@ -6,7 +6,7 @@ namespace ROC
 class Element;
 class CustomData;
 class LuaArguments;
-struct LuaFunction;
+class LuaFunction;
 
 class ArgReader final
 {
@@ -53,8 +53,6 @@ public:
     void PushElement(Element *f_element);
     void PushElement(void *f_ptr, const std::string &f_name);
     void PushCustomData(const CustomData &f_data);
-
-    void RemoveReference(const LuaFunction &f_func);
 
     bool HasErrors();
     inline int GetReturnValue() const { return m_returnCount; }

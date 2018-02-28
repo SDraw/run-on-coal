@@ -1,5 +1,5 @@
 #pragma once
-#include "Lua/LuaFunction.hpp"
+#include "Lua/LuaFunction.h"
 
 namespace ROC
 {
@@ -29,7 +29,7 @@ public:
     bool AddEventHandler(const std::string &f_event, LuaFunction &f_func);
 
     bool RemoveEvent(const std::string &f_event);
-    bool RemoveEventHandler(const std::string &f_event, const LuaFunction &f_func);
+    bool RemoveEventHandler(const std::string &f_event, LuaFunction &f_func);
 
     void CallEvent(const std::string &f_event, LuaArguments *f_args);
 protected:

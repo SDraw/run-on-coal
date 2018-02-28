@@ -75,6 +75,9 @@
     <ClCompile Include="Utils\LuaUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Lua\LuaFunction.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -121,9 +124,6 @@
     <ClInclude Include="Utils\CustomData.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaFunction.hpp">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaElementDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
@@ -147,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="Utils\LuaUtils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaFunction.h">
+      <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

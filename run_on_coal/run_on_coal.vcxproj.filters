@@ -240,6 +240,9 @@
     <ClCompile Include="Utils\GLBinder.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Lua\LuaFunction.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -376,9 +379,6 @@
     <ClInclude Include="Managers\AsyncManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaFunction.hpp">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaAnimationDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
@@ -477,6 +477,9 @@
     </ClInclude>
     <ClInclude Include="Utils\GLBinder.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaFunction.h">
+      <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

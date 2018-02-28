@@ -4,6 +4,7 @@
 #include "Core/Core.h"
 #include "Managers/EventManager.h"
 #include "Lua/LuaArguments.h"
+#include "Lua/LuaFunction.h"
 
 #include "Managers/LogManager.h"
 #include "Lua/LuaDefs/LuaAnimationDef.h"
@@ -112,7 +113,7 @@ bool ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)
 
 void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_args)
 {
-    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.m_ref);
+    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.GetReference());
 
     for(auto &iter : f_args->GetArgumentsVectorRef())
     {

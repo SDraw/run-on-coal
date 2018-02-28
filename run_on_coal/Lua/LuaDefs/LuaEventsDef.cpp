@@ -7,7 +7,7 @@
 #include "Managers/LuaManager.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
-#include "Lua/LuaFunction.hpp"
+#include "Lua/LuaFunction.h"
 
 void ROC::LuaEventsDef::Init(lua_State *f_vm)
 {
@@ -40,14 +40,13 @@ int ROC::LuaEventsDef::AddHandler(lua_State *f_vm)
     LuaFunction l_func;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_func,true);
+    argStream.ReadFunction(l_func);
     if(!argStream.HasErrors() && !l_event.empty())
     {
         bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->AddEventHandler(l_event, l_func);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
-    argStream.RemoveReference(l_func);
     return argStream.GetReturnValue();
 }
 int ROC::LuaEventsDef::Remove(lua_State *f_vm)
