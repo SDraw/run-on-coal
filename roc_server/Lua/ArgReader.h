@@ -27,7 +27,7 @@ public:
     template<typename T> void ReadNumber(T &f_val);
     template<typename T> void ReadInteger(T &f_val);
     void ReadText(std::string &f_val);
-    void ReadFunction(LuaFunction &f_func, bool f_ref = false);
+    void ReadFunction(LuaFunction &f_func);
     void ReadArguments(LuaArguments &f_args);
     template<class T> void ReadElement(T *&f_element);
     void ReadCustomData(CustomData &f_data);
@@ -51,7 +51,6 @@ public:
     void PushInteger(lua_Integer f_val);
     void PushText(const std::string &f_val);
     void PushElement(Element *f_element);
-    void PushElement(void *f_ptr, const std::string &f_name);
     void PushCustomData(const CustomData &f_data);
 
     bool HasErrors();

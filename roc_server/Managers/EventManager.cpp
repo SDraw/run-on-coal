@@ -147,7 +147,7 @@ bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, const Lua
     return l_result;
 }
 
-void ROC::EventManager::CallEvent(const std::string &f_event, LuaArguments *f_args)
+void ROC::EventManager::CallEvent(const std::string &f_event, const LuaArguments *f_args)
 {
     auto iter = m_eventMap.find(f_event);
     if(iter != m_eventMapEnd)

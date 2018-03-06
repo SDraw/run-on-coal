@@ -40,7 +40,7 @@ int ROC::LuaEventsDef::AddHandler(lua_State *f_vm)
     LuaFunction l_func;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_event);
-    argStream.ReadFunction(l_func,true);
+    argStream.ReadFunction(l_func);
     if(!argStream.HasErrors() && !l_event.empty())
     {
         bool l_result = LuaManager::GetCore()->GetLuaManager()->GetEventManager()->AddEventHandler(l_event, l_func);

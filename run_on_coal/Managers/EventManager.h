@@ -31,7 +31,7 @@ public:
     bool RemoveEvent(const std::string &f_event);
     bool RemoveEventHandler(const std::string &f_event, LuaFunction &f_func);
 
-    void CallEvent(const std::string &f_event, LuaArguments *f_args);
+    void CallEvent(const std::string &f_event, const LuaArguments *f_args);
 protected:
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();

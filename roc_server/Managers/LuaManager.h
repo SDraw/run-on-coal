@@ -30,7 +30,7 @@ protected:
 
     static void SetCore(Core *f_core);
 
-    void CallFunction(const LuaFunction &f_func, LuaArguments *f_args);
+    void CallFunction(const LuaFunction &f_func, const LuaArguments *f_args);
 
     friend class Core;
     friend class EventManager;

@@ -73,7 +73,7 @@ bool ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)
     return (l_error == 0);
 }
 
-void ROC::LuaManager::CallFunction(const LuaFunction &f_func, LuaArguments *f_args)
+void ROC::LuaManager::CallFunction(const LuaFunction &f_func, const LuaArguments *f_args)
 {
     lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.m_ref);
 

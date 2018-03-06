@@ -10,6 +10,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/MemoryManager.h"
+#include "Utils/LuaUtils.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
 {
@@ -276,43 +277,14 @@ void ROC::ArgReader::PushCustomData(const CustomData &f_data)
             void *l_ptr;
             std::string l_className;
             f_data.GetElement(l_ptr, l_className);
-            PushElement(l_ptr, l_className);
+            LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_ptr, l_className.c_str());
         } break;
     }
+    if(f_data.GetType() != CustomData::CDT_None) m_returnCount++;
 }
 void ROC::ArgReader::PushElement(Element *f_element)
 {
-    luaL_getmetatable(m_vm, ROC_LUA_METATABLE_USERDATA);
-    lua_pushlightuserdata(m_vm, f_element);
-    lua_rawget(m_vm, -2);
-    if(lua_isnil(m_vm, -1))
-    {
-        lua_pop(m_vm, 1);
-        *reinterpret_cast<Element**>(lua_newuserdata(m_vm, sizeof(Element*))) = f_element;
-        luaL_setmetatable(m_vm, f_element->GetElementTypeName().c_str());
-        lua_pushlightuserdata(m_vm, f_element);
-        lua_pushvalue(m_vm, -2);
-        lua_rawset(m_vm, -4);
-    }
-    lua_remove(m_vm, -2);
-    m_returnCount++;
-}
-void ROC::ArgReader::PushElement(void *f_ptr, const std::string &f_name)
-{
-    luaL_getmetatable(m_vm, ROC_LUA_METATABLE_USERDATA);
-    lua_pushlightuserdata(m_vm, f_ptr);
-    lua_rawget(m_vm, -2);
-    if(lua_isnil(m_vm, -1))
-    {
-        lua_pop(m_vm, 1);
-        *reinterpret_cast<void**>(lua_newuserdata(m_vm, sizeof(void*))) = f_ptr;
-
-        luaL_setmetatable(m_vm, f_name.c_str());
-        lua_pushlightuserdata(m_vm, f_ptr);
-        lua_pushvalue(m_vm, -2);
-        lua_rawset(m_vm, -4);
-    }
-    lua_remove(m_vm, -2);
+    LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, f_element, f_element->GetElementTypeName().c_str());
     m_returnCount++;
 }
 void ROC::ArgReader::PushQuat(const Quat &f_quat)
