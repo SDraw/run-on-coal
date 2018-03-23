@@ -5,7 +5,6 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/SfmlManager.h"
 #include "Elements/Element.h"

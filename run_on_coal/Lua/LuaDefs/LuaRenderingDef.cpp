@@ -5,7 +5,6 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"

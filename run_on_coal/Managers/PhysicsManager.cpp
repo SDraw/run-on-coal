@@ -7,7 +7,7 @@
 #include "Elements/Model/Skeleton.h"
 
 #include "Managers/ConfigManager.h"
-#include "Managers/MemoryManager.h"
+#include "Managers/ElementManager.h"
 #include "Utils/SystemTick.h"
 
 #define ROC_PHYSICS_DEFAULT_TIMESTEP 1.f/60.f
@@ -224,7 +224,7 @@ bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, gl
             void *l_colObject = l_rayResult.m_collisionObject->getUserPointer();
             if(l_colObject)
             {
-                if(m_core->GetMemoryManager()->IsValidMemoryPointer(l_colObject)) f_element = reinterpret_cast<Element*>(l_colObject);
+                if(m_core->GetElementManager()->IsValidElement(l_colObject)) f_element = reinterpret_cast<Element*>(l_colObject);
             }
             std::memcpy(&f_end, l_rayResult.m_hitPointWorld.m_floats, sizeof(glm::vec3));
             std::memcpy(&f_normal, l_rayResult.m_hitNormalWorld.m_floats, sizeof(glm::vec3));

@@ -7,7 +7,6 @@
 #include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"

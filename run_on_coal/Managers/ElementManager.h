@@ -22,6 +22,12 @@ class Movie;
 class ElementManager final
 {
     Core *m_core;
+
+    std::unordered_set<void*> m_elementSet;
+    std::unordered_set<void*>::iterator m_elementSetEnd;
+
+    void AddElementToSet(void *f_ptr);
+    void RemoveElementFromSet(void *f_ptr);
 public:
     Scene* CreateScene();
     Camera* CreateCamera(int f_type);
@@ -40,16 +46,14 @@ public:
     Collision* CreateCollision(int f_type, glm::vec3 &f_size, float f_mass);
     Movie* CreateMovie(const std::string &f_path);
 
+    bool IsValidElement(void *f_ptr);
     bool DestroyElement(Element *f_element);
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
 
-    static void DestroyElementByPointer(void* f_ptr);
-
     friend class Core;
     friend class AsyncManager;
-    friend class MemoryManager;
 };
 
 }

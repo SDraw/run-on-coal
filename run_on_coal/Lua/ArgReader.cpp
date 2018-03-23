@@ -7,9 +7,9 @@
 #include "Utils/CustomData.h"
 
 #include "Core/Core.h"
+#include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/MemoryManager.h"
 #include "Utils/LuaUtils.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
@@ -117,7 +117,7 @@ void ROC::ArgReader::ReadCustomData(CustomData &f_data)
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element)) f_data.SetElement(l_element, l_element->GetElementTypeName());
+                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_data.SetElement(l_element, l_element->GetElementTypeName());
                 } break;
                 case LUA_TSTRING:
                 {
@@ -311,7 +311,7 @@ void ROC::ArgReader::ReadArguments(LuaArguments &f_args)
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element)) f_args.PushArgument(l_element, l_element->GetElementTypeName());
+                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_args.PushArgument(l_element, l_element->GetElementTypeName());
                 } break;
                 case LUA_TSTRING:
                 {

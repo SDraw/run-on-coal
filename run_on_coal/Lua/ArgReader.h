@@ -120,7 +120,7 @@ template<class T> void ROC::ArgReader::ReadElement(T *&f_element)
             if(lua_isuserdata(m_vm, m_argCurrent))
             {
                 Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element))
+                if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element))
                 {
                     if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_argCurrent++;
                     else
@@ -170,7 +170,7 @@ template<class T> void ROC::ArgReader::ReadNextElement(T *&f_element)
         if(lua_isuserdata(m_vm, m_argCurrent))
         {
             Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-            if(LuaManager::GetCore()->GetMemoryManager()->IsValidMemoryPointer(l_element))
+            if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element))
             {
                 if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_argCurrent++;
             }

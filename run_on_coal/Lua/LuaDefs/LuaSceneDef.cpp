@@ -6,7 +6,6 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Camera.h"

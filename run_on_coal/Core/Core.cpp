@@ -8,7 +8,6 @@
 #include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
@@ -36,7 +35,6 @@ ROC::Core::Core()
 
     m_configManager = new ConfigManager();
     m_logManager = new LogManager(this);
-    m_memoryManager = new MemoryManager();
     m_inheritManager = new InheritanceManager(this);
     m_elementManager = new ElementManager(this);
     m_soundManager = new SoundManager();
@@ -63,7 +61,6 @@ ROC::Core::~Core()
     delete m_physicsManager;
     delete m_inheritManager;
     delete m_asyncManager;
-    delete m_memoryManager;
     delete m_elementManager;
     delete m_luaManager;
     delete m_renderManager;

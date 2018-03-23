@@ -13,9 +13,6 @@
     <ClCompile Include="Managers\LuaManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\MemoryManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\SoundManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -256,9 +253,6 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\LuaManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\MemoryManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\SoundManager.h">

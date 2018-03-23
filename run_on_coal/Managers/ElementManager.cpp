@@ -20,7 +20,6 @@
 #include "Managers/AsyncManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager/RenderManager.h"
@@ -29,14 +28,32 @@
 ROC::ElementManager::ElementManager(Core *f_core)
 {
     m_core = f_core;
+    m_elementSetEnd = m_elementSet.end();
 }
 ROC::ElementManager::~ElementManager()
-{}
+{
+    for(auto iter : m_elementSet) delete reinterpret_cast<Element*>(iter);
+}
+
+void ROC::ElementManager::AddElementToSet(void *f_ptr)
+{
+    m_elementSet.insert(f_ptr);
+    m_elementSetEnd = m_elementSet.end();
+}
+void ROC::ElementManager::RemoveElementFromSet(void *f_ptr)
+{
+    auto l_checkIterator = m_elementSet.find(f_ptr);
+    if(l_checkIterator != m_elementSetEnd)
+    {
+        m_elementSet.erase(l_checkIterator);
+        m_elementSetEnd = m_elementSet.end();
+    }
+}
 
 ROC::Scene* ROC::ElementManager::CreateScene()
 {
     ROC::Scene *l_scene = new Scene();
-    m_core->GetMemoryManager()->AddMemoryPointer(l_scene);
+    AddElementToSet(l_scene);
     return l_scene;
 }
 
@@ -44,14 +61,14 @@ ROC::Camera* ROC::ElementManager::CreateCamera(int f_type)
 {
     Camera *l_camera = new Camera(f_type);
 
-    m_core->GetMemoryManager()->AddMemoryPointer(l_camera);
+    AddElementToSet(l_camera);
     return l_camera;
 }
 
 ROC::Light* ROC::ElementManager::CreateLight()
 {
     Light *l_light = new Light();
-    m_core->GetMemoryManager()->AddMemoryPointer(l_light);
+    AddElementToSet(l_light);
     return l_light;
 }
 
@@ -63,7 +80,7 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(l_anim->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_anim);
+    if(l_anim->Load(l_path)) AddElementToSet(l_anim);
     else
     {
         delete l_anim;
@@ -82,12 +99,12 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
 
     if(f_async)
     {
-        m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
+        AddElementToSet(l_geometry);
         m_core->GetAsyncManager()->AddGeometryToQueue(l_geometry, l_path);
     }
     else
     {
-        if(l_geometry->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_geometry);
+        if(l_geometry->Load(l_path)) AddElementToSet(l_geometry);
         else
         {
             delete l_geometry;
@@ -111,7 +128,7 @@ ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
     else l_model = new Model(nullptr);
     if(l_model)
     {
-        m_core->GetMemoryManager()->AddMemoryPointer(l_model);
+        AddElementToSet(l_model);
         m_core->GetPreRenderManager()->AddModel(l_model);
         m_core->GetPhysicsManager()->AddModel(l_model);
     }
@@ -139,7 +156,7 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
         PathUtils::EscapePath(l_path[2]);
         l_path[2].insert(0U, m_core->GetWorkingDirectory());
     }
-    if(l_shader->Load(l_path[0], l_path[1], l_path[2])) m_core->GetMemoryManager()->AddMemoryPointer(l_shader);
+    if(l_shader->Load(l_path[0], l_path[1], l_path[2])) AddElementToSet(l_shader);
     else
     {
         const std::string &l_shaderError = l_shader->GetError();
@@ -169,7 +186,7 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path)
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(l_sound->Load(l_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_sound);
+    if(l_sound->Load(l_path)) AddElementToSet(l_sound);
     else
     {
         delete l_sound;
@@ -182,7 +199,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(int f_type, const glm
 {
     RenderTarget *l_rt = new RenderTarget();
 
-    if(l_rt->Create(f_type, f_size, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_rt);
+    if(l_rt->Create(f_type, f_size, f_filter)) AddElementToSet(l_rt);
     else
     {
         m_core->GetLogManager()->Log(l_rt->GetError());
@@ -200,7 +217,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(l_texture->Load(l_path, f_type, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_texture);
+    if(l_texture->Load(l_path, f_type, f_filter, f_compress)) AddElementToSet(l_texture);
     else
     {
         delete l_texture;
@@ -221,7 +238,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
         l_path.push_back(l_iterPath);
     }
 
-    if(l_texture->LoadCubemap(l_path, f_filter, f_compress)) m_core->GetMemoryManager()->AddMemoryPointer(l_texture);
+    if(l_texture->LoadCubemap(l_path, f_filter, f_compress)) AddElementToSet(l_texture);
     else
     {
         delete l_texture;
@@ -238,7 +255,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(l_font->Load(l_path, f_size, f_atlas, f_filter)) m_core->GetMemoryManager()->AddMemoryPointer(l_font);
+    if(l_font->Load(l_path, f_size, f_atlas, f_filter)) AddElementToSet(l_font);
     else
     {
         delete l_font;
@@ -255,7 +272,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(l_file->Create(l_path, f_path)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
+    if(l_file->Create(l_path, f_path)) AddElementToSet(l_file);
     else
     {
         delete l_file;
@@ -271,7 +288,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     PathUtils::EscapePath(l_path);
     l_path.insert(0U, m_core->GetWorkingDirectory());
 
-    if(l_file->Open(l_path, f_path, f_ro)) m_core->GetMemoryManager()->AddMemoryPointer(l_file);
+    if(l_file->Open(l_path, f_path, f_ro)) AddElementToSet(l_file);
     else
     {
         delete l_file;
@@ -286,7 +303,7 @@ ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_si
 
     if(l_col->Create(f_type, f_size, f_mass))
     {
-        m_core->GetMemoryManager()->AddMemoryPointer(l_col);
+        AddElementToSet(l_col);
         m_core->GetPhysicsManager()->AddCollision(l_col);
     }
     else
@@ -307,7 +324,7 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
 
     if(l_movie->Load(l_path))
     {
-        m_core->GetMemoryManager()->AddMemoryPointer(l_movie);
+        AddElementToSet(l_movie);
         m_core->GetRenderManager()->AddMovie(l_movie);
     }
     else
@@ -318,10 +335,15 @@ ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
     return l_movie;
 }
 
+bool ROC::ElementManager::IsValidElement(void *f_ptr)
+{
+    auto iter = m_elementSet.find(f_ptr);
+    return (iter != m_elementSetEnd);
+}
 bool ROC::ElementManager::DestroyElement(Element *f_element)
 {
     bool l_result = false;
-    if(m_core->GetMemoryManager()->IsValidMemoryPointer(f_element))
+    if(IsValidElement(f_element))
     {
         switch(f_element->GetElementType())
         {
@@ -329,7 +351,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             {
                 m_core->GetRenderManager()->RemoveAsActiveScene(reinterpret_cast<Scene*>(f_element));
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                RemoveElementFromSet(f_element);
                 delete f_element;
                 l_result = true;
             } break;
@@ -337,7 +359,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             case Element::ET_Camera: case Element::ET_Light: case Element::ET_Texture: case Element::ET_RenderTarget:
             {
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                RemoveElementFromSet(f_element);
                 delete f_element;
                 l_result = true;
             } break;
@@ -345,7 +367,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             case Element::ET_Animation:
             {
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                RemoveElementFromSet(f_element);
                 delete f_element;
                 l_result = true;
             } break;
@@ -356,7 +378,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 if(!l_geometry->IsAsyncLoad() || l_geometry->IsReleased())
                 {
                     m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                    m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                    RemoveElementFromSet(f_element);
                     delete l_geometry;
                     l_result = true;
                 }
@@ -368,7 +390,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetPreRenderManager()->RemoveModel(reinterpret_cast<Model*>(f_element));
                 m_core->GetPhysicsManager()->RemoveModel(reinterpret_cast<Model*>(f_element));
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                RemoveElementFromSet(f_element);
                 delete f_element;
                 l_result = true;
             } break;
@@ -377,7 +399,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             {
                 m_core->GetInheritManager()->RemoveParentRelations(f_element);
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                RemoveElementFromSet(f_element);
                 delete f_element;
                 l_result = true;
             } break;
@@ -386,7 +408,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             {
                 m_core->GetPhysicsManager()->RemoveCollision(reinterpret_cast<Collision*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                RemoveElementFromSet(f_element);
                 delete f_element;
                 l_result = true;
             } break;
@@ -395,15 +417,11 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             {
                 m_core->GetRenderManager()->RemoveMovie(reinterpret_cast<Movie*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                m_core->GetMemoryManager()->RemoveMemoryPointer(f_element);
+                RemoveElementFromSet(f_element);
                 delete f_element;
                 l_result = true;
             } break;
         }
     }
     return l_result;
-}
-void ROC::ElementManager::DestroyElementByPointer(void *f_ptr)
-{
-    delete reinterpret_cast<Element*>(f_ptr);
 }

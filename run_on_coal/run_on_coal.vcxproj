@@ -190,7 +190,6 @@
     <ClInclude Include="Managers\SfmlManager.h" />
     <ClInclude Include="Managers\InheritanceManager.h" />
     <ClInclude Include="Managers\LuaManager.h" />
-    <ClInclude Include="Managers\MemoryManager.h" />
     <ClInclude Include="Managers\PhysicsManager.h" />
     <ClInclude Include="Managers\PreRenderManager.h" />
     <ClInclude Include="RocInc.h" />
@@ -286,7 +285,6 @@
     <ClCompile Include="Managers\SfmlManager.cpp" />
     <ClCompile Include="Managers\InheritanceManager.cpp" />
     <ClCompile Include="Managers\LuaManager.cpp" />
-    <ClCompile Include="Managers\MemoryManager.cpp" />
     <ClCompile Include="Managers\PhysicsManager.cpp" />
     <ClCompile Include="Managers\PreRenderManager.cpp" />
     <ClCompile Include="Managers\SoundManager.cpp" />

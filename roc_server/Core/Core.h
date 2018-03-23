@@ -7,7 +7,6 @@ class ConfigManager;
 class ElementManager;
 class LogManager;
 class LuaManager;
-class MemoryManager;
 class NetworkManager;
 class LuaArguments;
 
@@ -23,7 +22,6 @@ class Core final
     ElementManager *m_elementManager;
     LogManager *m_logManager;
     LuaManager *m_luaManager;
-    MemoryManager *m_memoryManager;
     NetworkManager *m_networkManager;
 
     std::string m_workingDir;
@@ -47,7 +45,6 @@ public:
     inline ElementManager* GetElementManager() { return m_elementManager; }
     inline LogManager* GetLogManager() { return m_logManager; }
     inline LuaManager* GetLuaManager() { return m_luaManager; }
-    inline MemoryManager* GetMemoryManager() { return m_memoryManager; }
     inline NetworkManager* GetNetworkManager() { return m_networkManager; }
 
     static inline void SetServerStartCallback(OnServerStartCallback f_callback) { ms_serverStartCallback = f_callback; }

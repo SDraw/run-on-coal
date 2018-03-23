@@ -6,7 +6,6 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
 
@@ -27,7 +26,6 @@ ROC::Core::Core()
 
     m_configManager = new ConfigManager();
     m_logManager = new LogManager(this);
-    m_memoryManager = new MemoryManager();
     m_elementManager = new ElementManager(this);
 
     m_luaManager = new LuaManager(this);
@@ -43,7 +41,6 @@ ROC::Core::Core()
 ROC::Core::~Core()
 {
     delete m_networkManager;
-    delete m_memoryManager;
     delete m_elementManager;
     delete m_luaManager;
     delete m_logManager;

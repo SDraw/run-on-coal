@@ -6,7 +6,6 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/MemoryManager.h"
 #include "Managers/NetworkManager.h"
 #include "Elements/Client.h"
 #include "Lua/ArgReader.h"
