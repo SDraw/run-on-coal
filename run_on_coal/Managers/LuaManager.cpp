@@ -91,8 +91,8 @@ ROC::LuaManager::LuaManager(Core *f_core)
 }
 ROC::LuaManager::~LuaManager()
 {
-    lua_close(m_vm);
     delete m_eventManager;
+    lua_close(m_vm);
 }
 
 void ROC::LuaManager::SetCore(Core *f_core)
