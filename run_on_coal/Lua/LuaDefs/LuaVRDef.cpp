@@ -36,7 +36,7 @@ int ROC::LuaVRDef::VRGetHeadRotation(lua_State *f_vm)
     if(l_vrManager)
     {
         const glm::quat &l_rot = l_vrManager->GetHeadRotation();
-        argStream.PushQuat(l_rot);
+        for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
