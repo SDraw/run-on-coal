@@ -11,6 +11,7 @@ class ConfigManager final
     glm::ivec2 m_windowSize;
     unsigned int m_fpsLimit;
     bool m_vsync;
+    bool m_vrMode;
 public:
     inline bool IsLogEnabled() const { return m_logging; }
     inline bool IsFullscreenEnabled() const { return m_fullscreen; }
@@ -18,6 +19,7 @@ public:
     inline const glm::ivec2& GetWindowSize() const { return m_windowSize; }
     inline unsigned int GetFPSLimit() const { return m_fpsLimit; }
     inline bool GetVSync() const { return m_vsync; }
+    inline bool IsVRModeEnabled() const { return m_vrMode; }
 protected:
     ConfigManager();
     ~ConfigManager();

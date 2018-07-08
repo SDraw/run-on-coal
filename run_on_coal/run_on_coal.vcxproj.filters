@@ -240,6 +240,12 @@
     <ClCompile Include="Lua\LuaFunction.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\VRManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaVRDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -474,6 +480,12 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaFunction.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\VRManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaVRDef.h">
+      <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

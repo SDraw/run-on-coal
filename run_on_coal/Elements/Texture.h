@@ -29,6 +29,8 @@ protected:
     bool LoadCubemap(const std::vector<std::string> &f_path, int f_filter = DFT_Nearest, bool f_compress = false);
     bool LoadDummy();
 
+    inline GLuint GetTextureID() const { return m_texture; };
+
     void Bind();
 
     friend class ElementManager;

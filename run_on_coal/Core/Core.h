@@ -15,6 +15,7 @@ class PhysicsManager;
 class PreRenderManager;
 class RenderManager;
 class SoundManager;
+class VRManager;
 class LuaArguments;
 
 typedef void(*OnEngineStartCallback)(void);
@@ -36,6 +37,7 @@ class Core final
     RenderManager *m_renderManager;
     PreRenderManager *m_preRenderManager;
     SoundManager *m_soundManager;
+    VRManager *m_vrManager;
 
     std::string m_workingDir;
     bool m_state;
@@ -70,6 +72,7 @@ public:
     inline RenderManager* GetRenderManager() { return m_renderManager; }
     inline PreRenderManager* GetPreRenderManager() { return m_preRenderManager; }
     inline SoundManager* GetSoundManager() { return m_soundManager; }
+    inline VRManager* GetVRManager() { return m_vrManager; }
 };
 
 }

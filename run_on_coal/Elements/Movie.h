@@ -32,6 +32,8 @@ protected:
     ~Movie();
     bool Load(const std::string &f_path);
 
+    GLuint GetTextureID() const;
+
     void Update();
     void Bind();
 

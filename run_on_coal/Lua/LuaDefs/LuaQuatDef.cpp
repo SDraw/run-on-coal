@@ -21,6 +21,7 @@ void ROC::LuaQuatDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "normalize", Normalize);
     LuaUtils::AddClassMethod(f_vm, "length", Length);
     LuaUtils::AddClassMethod(f_vm, "rotate", Rotate);
+    LuaUtils::AddClassMethod(f_vm, "rotateVector", RotateVector);
 
     LuaUtils::AddClassMethod(f_vm, "lerp", Lerp);
     LuaUtils::AddClassMethod(f_vm, "slerp", Slerp);
@@ -240,6 +241,23 @@ int ROC::LuaQuatDef::Rotate(lua_State *f_vm)
         Quat l_quatRot = glm::rotate(*l_quat, l_angle, l_axis);
         std::memcpy(l_quat, &l_quatRot, sizeof(Quat));
         argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaQuatDef::RotateVector(lua_State *f_vm)
+{
+    // bool Quat:rotateVector(float vecX, float vecY, float vecZ)
+    Quat *l_quat;
+    glm::vec3 l_vec;
+    ArgReader argStream(f_vm);
+    argStream.ReadQuat(l_quat);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_vec[i]);
+    if(!argStream.HasErrors())
+    {
+        glm::vec3 l_result = (*l_quat) * l_vec;
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_result[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

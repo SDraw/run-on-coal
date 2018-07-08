@@ -14,6 +14,7 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
+#include "Managers/VRManager.h"
 #include "Lua/LuaArguments.h"
 
 #include "Utils/SystemTick.h"
@@ -46,6 +47,7 @@ ROC::Core::Core()
     m_sfmlManager = new SfmlManager(this);
     m_asyncManager = new AsyncManager(this);
     m_preRenderManager = new PreRenderManager(this);
+    m_vrManager = (m_configManager->IsVRModeEnabled() ? new VRManager(this) : nullptr);
     m_renderManager = new RenderManager(this);
     m_networkManager = new NetworkManager(this);
 
@@ -65,6 +67,7 @@ ROC::Core::~Core()
     delete m_luaManager;
     delete m_renderManager;
     delete m_preRenderManager;
+    delete m_vrManager;
     delete m_sfmlManager;
     delete m_logManager;
     delete m_configManager;
@@ -124,6 +127,7 @@ bool ROC::Core::DoPulse()
     SystemTick::UpdateTick();
     m_networkManager->DoPulse();
     m_asyncManager->DoPulse();
+    if(m_vrManager) m_vrManager->DoPulse();
     m_state = m_sfmlManager->DoPulse();
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();

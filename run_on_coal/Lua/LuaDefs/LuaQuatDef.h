@@ -16,6 +16,7 @@ class LuaQuatDef final
     static int Length(lua_State *f_vm);
     static int Dot(lua_State *f_vm);
     static int Rotate(lua_State *f_vm);
+    static int RotateVector(lua_State *f_vm);
     static int Lerp(lua_State *f_vm);
     static int Slerp(lua_State *f_vm);
     static int Add(lua_State *f_vm);

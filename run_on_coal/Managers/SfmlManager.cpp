@@ -57,7 +57,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         l_log.append(" context. Check supported version for your videocard");
         m_core->GetLogManager()->Log(l_log);
 
-        MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONSTOP);
+        MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
         exit(EXIT_FAILURE);
     }
     else
@@ -69,7 +69,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
             l_log.append(ROC_OPENGL_MIN_VERSION_STRING);
             m_core->GetLogManager()->Log(l_log);
 
-            MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONSTOP);
+            MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
         }
     }
@@ -85,7 +85,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         l_log.append(reinterpret_cast<const char*>(glewGetErrorString(l_error)));
         m_core->GetLogManager()->Log(l_log);
 
-        MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONSTOP);
+        MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
         exit(EXIT_FAILURE);
     }
 

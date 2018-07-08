@@ -38,12 +38,15 @@ protected:
     bool Create(int f_type, const glm::ivec2 &f_size, int f_filter = DFT_Nearest);
     inline const std::string& GetError() const { return m_error; }
 
+    inline GLuint GetTextureID() const { return m_texture; };
+
     void Bind();
     void Enable();
     void Disable();
 
     friend class ElementManager;
     friend class RenderManager;
+    friend class VRManager;
     friend class Scene;
     friend class Shader;
 };

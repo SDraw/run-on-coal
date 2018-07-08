@@ -25,6 +25,8 @@
 #include "SFML/Window.hpp"
 #include "sfeMovie/Movie.hpp"
 
+#include "openvr.h"
+
 #define GLM_FORCE_MESSAGES
 #include "glm/glm.hpp"
 #include "glm/gtc/epsilon.hpp"

@@ -16,7 +16,7 @@ namespace ROC
 
 const std::vector<std::string> g_CameraTypesTable
 {
-    "perspective", "orthogonal", "screen"
+    "perspective", "orthogonal", "screen", "vr_left", "vr_right"
 };
 
 }
@@ -100,15 +100,22 @@ int ROC::LuaCameraDef::GetPosition(lua_State *f_vm)
 
 int ROC::LuaCameraDef::SetDirection(lua_State *f_vm)
 {
-    // bool Camera:setDirection(float x, float y, float z)
+    // bool Camera:setDirection(float x, float y, float z [, float w = nil ])
     Camera *l_camera;
     glm::vec3 l_dir;
+    float l_quatW = std::nanf("0");
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_dir[i]);
+    argStream.ReadNextNumber(l_quatW);
     if(!argStream.HasErrors())
     {
-        l_camera->SetDirection(l_dir);
+        if(std::isnan(l_quatW)) l_camera->SetDirection(l_dir);
+        else
+        {
+            glm::quat l_dirRot(l_quatW, l_dir.x, l_dir.y, l_dir.z);
+            l_camera->SetDirection(l_dirRot);
+        }
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

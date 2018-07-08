@@ -11,13 +11,14 @@
 #define ROC_CONFIG_ATTRIB_LOGGING 3
 #define ROC_CONFIG_ATTRIB_FPSLIMIT 4
 #define ROC_CONFIG_ATTRIB_VSYNC 5
+#define ROC_CONFIG_ATTRIB_VR 6
 
 namespace ROC
 {
 
 const std::vector<std::string> g_configAttributeTable
 {
-    "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync"
+    "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync", "vr"
 };
 
 }
@@ -30,6 +31,7 @@ ROC::ConfigManager::ConfigManager()
     m_windowSize = glm::ivec2(854, 480);
     m_fpsLimit = 60U;
     m_vsync = false;
+    m_vrMode = false;
 
     pugi::xml_document *l_settings = new pugi::xml_document();
     if(l_settings->load_file("settings.xml"))
@@ -73,6 +75,9 @@ ROC::ConfigManager::ConfigManager()
                             } break;
                             case ROC_CONFIG_ATTRIB_VSYNC:
                                 m_vsync = l_attrib.as_bool(false);
+                                break;
+                            case ROC_CONFIG_ATTRIB_VR:
+                                m_vrMode = l_attrib.as_bool(false);
                                 break;
                         }
                     }

@@ -16,7 +16,7 @@ namespace ROC
 const std::vector<std::string> g_DefaultEventsNames
 {
     "onEngineStart", "onEngineStop",
-    "onRender", "onPreRender",
+    "onRender", "onVRRender", "onPreRender",
     "onWindowClose", "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
     "onJoypadStateChange", "onJoypadButton", "onJoypadAxis",

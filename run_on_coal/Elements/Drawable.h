@@ -25,9 +25,12 @@ protected:
     Drawable();
     virtual ~Drawable();
 
+    virtual GLuint GetTextureID() const = 0;
+
     virtual void Bind() = 0;
 
     friend class RenderManager;
+    friend class VRManager;
     friend class Shader;
 };
 

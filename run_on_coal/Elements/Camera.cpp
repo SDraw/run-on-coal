@@ -2,18 +2,31 @@
 
 #include "Elements/Camera.h"
 
+#include "Utils/MathUtils.h"
+
+vr::IVRSystem *ROC::Camera::ms_vrSystem = nullptr;
+
+namespace ROC
+{
+
+extern const glm::vec3 g_DefaultPosition;
+const glm::vec3 g_CameraDefaultViewDirection(0.f, 0.f, -1.f);
+const glm::vec3 g_CameraDefaultUpDirection(0.f, 1.f, 0.f);
+
+}
+
 ROC::Camera::Camera(int f_type)
 {
     m_elementType = ET_Camera;
     m_elementTypeName.assign("Camera");
 
     m_type = f_type;
-    btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_Screen));
+    btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_VRRight));
 
-    m_viewPosition = glm::vec3(0.f);
-    m_viewDirection = glm::vec3(0.f, 0.f, 1.f);
-    m_upDirection = glm::vec3(0.f, 1.f, 0.f);
-    m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, glm::vec3(0.0f, 1.0f, 0.0f));
+    m_viewPosition = g_DefaultPosition;
+    m_viewDirection = g_CameraDefaultViewDirection;
+    m_upDirection = g_CameraDefaultUpDirection;
+    m_viewMatrix = glm::lookAtRH(m_viewPosition, m_viewPosition + m_viewDirection, g_CameraDefaultUpDirection);
 
     m_fov = glm::pi<float>() / 4.0f;
     m_aspectRatio = 640.f / 480.f;
@@ -34,7 +47,7 @@ void ROC::Camera::SetProjectionType(int f_type)
     if(m_type != f_type)
     {
         m_type = f_type;
-        btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_Screen));
+        btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_VRRight));
         m_rebuildProjection = true;
     }
 }
@@ -52,6 +65,22 @@ void ROC::Camera::SetDirection(const glm::vec3& f_dir)
     if(m_viewDirection != f_dir)
     {
         std::memcpy(&m_viewDirection, &f_dir, sizeof(glm::vec3));
+        m_rebuildView = true;
+    }
+}
+void ROC::Camera::SetDirection(const glm::quat &f_dir)
+{
+    glm::vec3 l_dir = f_dir*g_CameraDefaultViewDirection;
+    if(m_viewDirection != l_dir)
+    {
+        std::memcpy(&m_viewDirection, &l_dir, sizeof(glm::vec3));
+        m_rebuildView = true;
+    }
+
+    glm::vec3 l_upDir = f_dir*g_CameraDefaultUpDirection;
+    if(m_upDirection != l_upDir)
+    {
+        std::memcpy(&m_upDirection, &l_upDir, sizeof(glm::vec3));
         m_rebuildView = true;
     }
 }
@@ -118,6 +147,16 @@ void ROC::Camera::Update()
             case CPT_Screen:
                 m_projectionMatrix = glm::ortho(m_orthoParams.x, m_orthoParams.y, m_orthoParams.z, m_orthoParams.w);
                 break;
+            case CPT_VRLeft:
+            {
+                vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Left, m_depth.x, m_depth.y);
+                MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
+            } break;
+            case CPT_VRRight:
+            {
+                vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Right, m_depth.x, m_depth.y);
+                MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
+            } break;
         }
     }
     if(m_rebuildView || m_rebuildProjection)
@@ -164,4 +203,9 @@ bool ROC::Camera::IsInFrustum(const glm::mat4 &f_mat, float f_radius)
         }
     }
     return l_result;
+}
+
+void ROC::Camera::SetVRSystem(vr::IVRSystem *f_system)
+{
+    ms_vrSystem = f_system;
 }

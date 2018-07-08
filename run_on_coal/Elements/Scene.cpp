@@ -102,6 +102,7 @@ void ROC::Scene::Enable()
         m_active = true;
     }
 }
+
 void ROC::Scene::Disable()
 {
     if(m_active)

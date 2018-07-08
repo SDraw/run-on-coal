@@ -17,6 +17,7 @@ Simple and light-weight 3D game engine.
 * Video playback
 * TrueType font rendering with Unicode characters support
 * Networking using [RakNet library](../../../../OculusVR/RakNet)
+* VR support
 
 [![alt text](http://i.imgur.com/spFAFnr.png "Youtube playlist")](https://www.youtube.com/watch?v=L2UA3kquDpg&list=PLiEPsxTlqsDnI36XCCsG3jw32j2Gb-JGJ)
 

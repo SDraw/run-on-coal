@@ -114,6 +114,13 @@ void ROC::Movie::SetTime(float f_val)
     }
 }
 
+GLuint ROC::Movie::GetTextureID() const
+{
+    GLuint l_result = 0U;
+    if(m_movie) l_result = m_movie->getCurrentImage().getNativeHandle();
+    return l_result;
+}
+
 void ROC::Movie::Update()
 {
     if(m_movie) m_movie->update();

@@ -17,9 +17,11 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/Pool.h"
 
+#include "Managers/ConfigManager.h"
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/SfmlManager.h"
+#include "Managers/VRManager.h"
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
 
@@ -30,19 +32,21 @@ extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec4 g_EmptyVec4;
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
 const glm::vec4 g_DefaultClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
-
+const std::string g_VRArgLeftEye("left");
+const std::string g_VRArgRightEye("right");
 }
 
 ROC::RenderManager::RenderManager(Core *f_core)
 {
     m_core = f_core;
+    m_vrManager = m_core->GetVRManager();
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     glEnable(GL_CULL_FACE); // default culling
 
-    glClearColor(g_DefaultClearColor.r,g_DefaultClearColor.g,g_DefaultClearColor.b,g_DefaultClearColor.a);
+    glClearColor(g_DefaultClearColor.r, g_DefaultClearColor.g, g_DefaultClearColor.b, g_DefaultClearColor.a);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -92,6 +96,7 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
     {
         if(m_activeScene) m_activeScene->Disable();
         m_activeScene = f_scene;
+
         if(m_activeScene)
         {
             m_activeScene->Enable();
@@ -109,12 +114,22 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             else
             {
                 m_skipNoDepthMaterials = false;
-                glm::ivec2 l_windowSize;
-                m_core->GetSfmlManager()->GetWindowSize(l_windowSize);
-                if(m_viewportSize != l_windowSize)
+
+                if(m_vrManager && m_vrLock)
                 {
-                    std::memcpy(&m_viewportSize, &l_windowSize, sizeof(glm::ivec2));
-                    glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+                    m_vrManager->EnableRenderTarget();
+                    const glm::uvec2 &l_rtSize = m_vrManager->GetTargetsSize();
+                    glViewport(0, 0, l_rtSize.x, l_rtSize.y);
+                }
+                else
+                {
+                    glm::ivec2 l_windowSize;
+                    m_core->GetSfmlManager()->GetWindowSize(l_windowSize);
+                    if(m_viewportSize != l_windowSize)
+                    {
+                        std::memcpy(&m_viewportSize, &l_windowSize, sizeof(glm::ivec2));
+                        glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+                    }
                 }
             }
         }
@@ -347,9 +362,35 @@ void ROC::RenderManager::DoPulse()
     for(auto iter : m_movieVector) iter->Update();
 
     m_locked = false;
-    if(m_callback) (*m_callback)();
 
+    if(m_callback) (*m_callback)();
     m_core->GetLuaManager()->GetEventManager()->CallEvent("onRender", m_argument);
+
+    if(m_vrManager)
+    {
+        m_vrLock = true;
+
+        const glm::uvec2 &l_rtSize = m_vrManager->GetTargetsSize();
+
+        m_vrManager->SetVRStage(VRManager::VRS_Left);
+        m_vrManager->EnableRenderTarget();
+        glViewport(0, 0, l_rtSize.x, l_rtSize.y);
+        m_argument->PushArgument(g_VRArgLeftEye);
+        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_argument);
+        m_argument->Clear();
+
+        m_vrManager->SetVRStage(VRManager::VRS_Right);
+        m_vrManager->EnableRenderTarget();
+        glViewport(0, 0, l_rtSize.x, l_rtSize.y);
+        m_argument->PushArgument(g_VRArgRightEye);
+        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_argument);
+        m_argument->Clear();
+
+        m_vrManager->SubmitRender();
+        m_vrManager->SetVRStage(VRManager::VRS_None);
+        m_vrLock = false;
+    }
+
     m_locked = true;
     m_core->GetSfmlManager()->SwapBuffers();
 }

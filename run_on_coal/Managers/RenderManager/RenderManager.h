@@ -4,6 +4,7 @@ namespace ROC
 {
 
 class Core;
+class VRManager;
 class Model;
 class Scene;
 class Shader;
@@ -20,8 +21,10 @@ typedef void(*OnRenderCallback)(void);
 class RenderManager final
 {
     Core *m_core;
+    VRManager *m_vrManager;
 
     bool m_locked;
+    bool m_vrLock;
 
     glm::vec3 m_modelPosition;
     glm::mat4 m_textureMatrix;
@@ -34,7 +37,6 @@ class RenderManager final
     Quad3D *m_quad3D;
     Texture *m_dummyTexture;
     Texture *m_lastTexture;
-
 
     std::vector<Movie*> m_movieVector;
     std::vector<Movie*>::iterator m_movieVectorEnd;
@@ -58,6 +60,7 @@ class RenderManager final
 
     RenderManager(const RenderManager& that);
     RenderManager &operator =(const RenderManager &that);
+
 public:
     void SetActiveScene(Scene *f_scene);
 

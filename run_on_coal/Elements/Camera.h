@@ -23,12 +23,16 @@ class Camera final : public Element
     glm::vec2 m_depth;
 
     glm::vec4 m_planes[6];
+
+    static vr::IVRSystem *ms_vrSystem;
 public:
     enum CameraProjectionType
     {
         CPT_Perspective,
         CPT_Orthogonal,
-        CPT_Screen
+        CPT_Screen,
+        CPT_VRLeft,
+        CPT_VRRight
     };
 
     void SetProjectionType(int f_type);
@@ -50,6 +54,7 @@ public:
     inline const glm::vec3& GetPosition() const { return m_viewPosition; }
 
     void SetDirection(const glm::vec3 &f_dir);
+    void SetDirection(const glm::quat &f_dir);
     inline const glm::vec3& GetDirection() const { return m_viewDirection; }
 
     void SetUpDirection(const glm::vec3 &f_dir);
@@ -62,12 +67,16 @@ public:
     bool IsInFrustum(const glm::vec3 &f_pos, float f_radius);
     bool IsInFrustum(const glm::mat4 &f_mat, float f_radius);
 protected:
+
     explicit Camera(int f_type);
     ~Camera();
+
+    static void SetVRSystem(vr::IVRSystem *f_system);
 
     void Update();
 
     friend class ElementManager;
+    friend class VRManager;
     friend class Scene;
 };
 

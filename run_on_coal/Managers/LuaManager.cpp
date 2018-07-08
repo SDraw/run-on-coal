@@ -30,6 +30,7 @@
 #include "Lua/LuaDefs/LuaSoundDef.h"
 #include "Lua/LuaDefs/LuaTextureDef.h"
 #include "Lua/LuaDefs/LuaUtilsDef.h"
+#include "Lua/LuaDefs/LuaVRDef.h"
 #include "Utils/LuaUtils.h"
 
 #define ROC_LUA_METATABLE "roc_mt"
@@ -72,6 +73,7 @@ ROC::LuaManager::LuaManager(Core *f_core)
     LuaNetworkDef::Init(m_vm);
     LuaPhysicsDef::Init(m_vm);
     LuaRenderingDef::Init(m_vm);
+    LuaVRDef::Init(m_vm);
 
     LuaQuatDef::Init(m_vm);
     LuaUtilsDef::Init(m_vm);
