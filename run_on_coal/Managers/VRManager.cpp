@@ -14,7 +14,6 @@ namespace ROC
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_EmptyVec3;
 extern const glm::quat g_DefaultRotation;
-const vr::VRTextureBounds_t g_VRTextureBounds = { 0.f, 1.f, 1.f, 0.f };
 
 }
 
@@ -53,8 +52,9 @@ ROC::VRManager::VRManager(Core *f_core)
     m_vrTexture[0] = { reinterpret_cast<void*>(m_leftEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
     m_vrTexture[1] = { reinterpret_cast<void*>(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
-    auto help = glm::quat(1, 0, 0, 0)*glm::vec3(0, 0, -1);
     m_vrStage = VRS_None;
+    m_leftController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, false };
+    m_rightController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, false };
 }
 ROC::VRManager::~VRManager()
 {
@@ -112,6 +112,60 @@ void ROC::VRManager::DoPulse()
         MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
         l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
         std::memcpy(&m_rightEyePosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+    }
+
+    // Update controllers
+    m_leftController.m_updated = false;
+    m_rightController.m_updated = false;
+    for(vr::TrackedDeviceIndex_t i = vr::k_unTrackedDeviceIndex_Hmd + 1; (i < vr::k_unMaxTrackedDeviceCount); i++)
+    {
+        if(m_vrSystem->IsTrackedDeviceConnected(i))
+        {
+            if((m_vrSystem->GetTrackedDeviceClass(i) == vr::TrackedDeviceClass_Controller) && m_trackedPoses[i].bPoseIsValid)
+            {
+                switch(m_vrSystem->GetControllerRoleForTrackedDeviceIndex(i))
+                {
+                    case vr::TrackedControllerRole_LeftHand:
+                    {
+                        if(!m_leftController.m_updated)
+                        {
+                            btTransform l_transform;
+                            MathUtils::ExtractMatrix(m_trackedPoses[i].mDeviceToAbsoluteTracking, m_transform);
+                            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+
+                            std::memcpy(&m_leftController.m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+
+                            btQuaternion l_rotation = l_transform.getRotation();
+                            for(int j = 0; j < 4; j++) m_leftController.m_rotation[j] = l_rotation[j];
+
+                            std::memcpy(&m_leftController.m_velocity, m_trackedPoses[i].vVelocity.v, sizeof(glm::vec3));
+                            std::memcpy(&m_leftController.m_angularVelocity, m_trackedPoses[i].vAngularVelocity.v, sizeof(glm::vec3));
+
+                            m_leftController.m_updated = true;
+                        }
+                    } break;
+                    case vr::TrackedControllerRole_RightHand:
+                    {
+                        if(!m_rightController.m_updated)
+                        {
+                            btTransform l_transform;
+                            MathUtils::ExtractMatrix(m_trackedPoses[i].mDeviceToAbsoluteTracking, m_transform);
+                            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+
+                            std::memcpy(&m_rightController.m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+
+                            btQuaternion l_rotation = l_transform.getRotation();
+                            for(int j = 0; j < 4; j++) m_rightController.m_rotation[j] = l_rotation[j];
+
+                            std::memcpy(&m_rightController.m_velocity, m_trackedPoses[i].vVelocity.v, sizeof(glm::vec3));
+                            std::memcpy(&m_rightController.m_angularVelocity, m_trackedPoses[i].vAngularVelocity.v, sizeof(glm::vec3));
+
+                            m_rightController.m_updated = true;
+                        }
+                    } break;
+                }
+            }
+        }
     }
 }
 

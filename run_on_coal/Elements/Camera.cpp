@@ -149,13 +149,19 @@ void ROC::Camera::Update()
                 break;
             case CPT_VRLeft:
             {
-                vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Left, m_depth.x, m_depth.y);
-                MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
+                if(ms_vrSystem)
+                {
+                    vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Left, m_depth.x, m_depth.y);
+                    MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
+                }
             } break;
             case CPT_VRRight:
             {
-                vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Right, m_depth.x, m_depth.y);
-                MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
+                if(ms_vrSystem)
+                {
+                    vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Right, m_depth.x, m_depth.y);
+                    MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
+                }
             } break;
         }
     }

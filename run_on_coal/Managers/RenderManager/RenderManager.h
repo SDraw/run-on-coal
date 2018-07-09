@@ -17,6 +17,7 @@ class Texture;
 class Font;
 class LuaArguments;
 typedef void(*OnRenderCallback)(void);
+typedef void(*OnVRRenderCallback)(const std::string &f_side);
 
 class RenderManager final
 {
@@ -57,10 +58,10 @@ class RenderManager final
     void EnableCulling();
 
     OnRenderCallback m_callback;
+    OnVRRenderCallback m_vrCallback;
 
     RenderManager(const RenderManager& that);
     RenderManager &operator =(const RenderManager &that);
-
 public:
     void SetActiveScene(Scene *f_scene);
 
@@ -75,6 +76,7 @@ public:
     static inline void SetPolygonMode(int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode); }
 
     inline void SetRenderCallback(OnRenderCallback f_callback) { m_callback = f_callback; }
+    inline void SetVRRenderCallback(OnVRRenderCallback f_callback) { m_vrCallback = f_callback; }
 protected:
     explicit RenderManager(Core *f_core);
     ~RenderManager();

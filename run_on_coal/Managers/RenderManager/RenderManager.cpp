@@ -25,15 +25,22 @@
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
 
+#define ROC_VRRENDER_SIDE_LEFT 0U
+#define ROC_VRRENDER_SIDE_RIGHT 1U
+
 namespace ROC
 {
 
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec4 g_EmptyVec4;
+
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
 const glm::vec4 g_DefaultClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
-const std::string g_VRArgLeftEye("left");
-const std::string g_VRArgRightEye("right");
+const std::vector<std::string> g_VRRenderSide
+{ 
+    "left", "right" 
+};
+
 }
 
 ROC::RenderManager::RenderManager(Core *f_core)
@@ -77,6 +84,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
 
     m_argument = new LuaArguments();
     m_callback = nullptr;
+    m_vrCallback = nullptr;
 }
 ROC::RenderManager::~RenderManager()
 {
@@ -375,14 +383,16 @@ void ROC::RenderManager::DoPulse()
         m_vrManager->SetVRStage(VRManager::VRS_Left);
         m_vrManager->EnableRenderTarget();
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
-        m_argument->PushArgument(g_VRArgLeftEye);
+        if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
+        m_argument->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_argument);
         m_argument->Clear();
 
         m_vrManager->SetVRStage(VRManager::VRS_Right);
         m_vrManager->EnableRenderTarget();
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
-        m_argument->PushArgument(g_VRArgRightEye);
+        if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
+        m_argument->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_argument);
         m_argument->Clear();
 
