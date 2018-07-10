@@ -32,7 +32,7 @@ class SfmlManager final
     sf::Clock m_clock;
     float m_time;
 
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
 
     OnWindowResizeCallback m_windowResizeCallback;
     OnWindowFocusCallback m_windowFocusCallback;

@@ -41,7 +41,7 @@ class Core final
 
     std::string m_workingDir;
     bool m_state;
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
 
     static OnEngineStartCallback ms_engineStartCallback;
     OnEngineStopCallback m_engineStopCallback;

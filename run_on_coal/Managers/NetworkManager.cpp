@@ -27,7 +27,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     m_core = f_core;
     m_networkInterface = nullptr;
     m_networkState = NS_Disconnected;
-    m_argument = new LuaArguments();
+    m_luaArguments = new LuaArguments();
     m_stateCallback = nullptr;
     m_dataCallback = nullptr;
 }
@@ -38,7 +38,7 @@ ROC::NetworkManager::~NetworkManager()
         m_networkInterface->Shutdown(ROC_NETWORK_SHUTDOWN_DURATION);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
-    delete m_argument;
+    delete m_luaArguments;
 }
 
 unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
@@ -124,9 +124,9 @@ void ROC::NetworkManager::DoPulse()
                     m_networkState = NS_Disconnected;
                     if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[1]);
 
-                    m_argument->PushArgument(g_networkStateTable[1]);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
-                    m_argument->Clear();
+                    m_luaArguments->PushArgument(g_networkStateTable[1]);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_luaArguments);
+                    m_luaArguments->Clear();
                 } break;
                 case ID_CONNECTION_REQUEST_ACCEPTED:
                 {
@@ -135,9 +135,9 @@ void ROC::NetworkManager::DoPulse()
                     m_networkInterface->SetOccasionalPing(true);
                     if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[0]);
 
-                    m_argument->PushArgument(g_networkStateTable[0]);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_argument);
-                    m_argument->Clear();
+                    m_luaArguments->PushArgument(g_networkStateTable[0]);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_luaArguments);
+                    m_luaArguments->Clear();
                 } break;
                 case ID_ROC_DATA_PACKET:
                 {
@@ -152,9 +152,9 @@ void ROC::NetworkManager::DoPulse()
                         {
                             if(m_dataCallback) (*m_dataCallback)(l_stringData);
 
-                            m_argument->PushArgument(l_stringData);
-                            m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
-                            m_argument->Clear();
+                            m_luaArguments->PushArgument(l_stringData);
+                            m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_luaArguments);
+                            m_luaArguments->Clear();
                         }
                     }
                 } break;

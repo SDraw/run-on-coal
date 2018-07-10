@@ -82,7 +82,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_clearColor = g_DefaultClearColor;
     m_core->GetSfmlManager()->GetWindowSize(m_viewportSize);
 
-    m_argument = new LuaArguments();
+    m_luaArguments = new LuaArguments();
     m_callback = nullptr;
     m_vrCallback = nullptr;
 }
@@ -92,7 +92,7 @@ ROC::RenderManager::~RenderManager()
     delete m_quad2D;
     delete m_quad3D;
     delete m_dummyTexture;
-    delete m_argument;
+    delete m_luaArguments;
     Font::DestroyVAO();
     Font::DestroyLibrary();
     Shader::DestroyBonesUBO();
@@ -372,7 +372,7 @@ void ROC::RenderManager::DoPulse()
     m_locked = false;
 
     if(m_callback) (*m_callback)();
-    m_core->GetLuaManager()->GetEventManager()->CallEvent("onRender", m_argument);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent("onRender", m_luaArguments);
 
     if(m_vrManager)
     {
@@ -384,17 +384,17 @@ void ROC::RenderManager::DoPulse()
         m_vrManager->EnableRenderTarget();
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
-        m_argument->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
-        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_argument);
-        m_argument->Clear();
+        m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
+        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_luaArguments);
+        m_luaArguments->Clear();
 
         m_vrManager->SetVRStage(VRManager::VRS_Right);
         m_vrManager->EnableRenderTarget();
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
-        m_argument->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
-        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_argument);
-        m_argument->Clear();
+        m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
+        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_luaArguments);
+        m_luaArguments->Clear();
 
         m_vrManager->SubmitRender();
         m_vrManager->SetVRStage(VRManager::VRS_None);

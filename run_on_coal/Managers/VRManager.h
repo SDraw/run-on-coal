@@ -5,6 +5,7 @@ namespace ROC
 
 class Core;
 class RenderTarget;
+class LuaArguments;
 
 class VRManager final
 {
@@ -32,6 +33,8 @@ class VRManager final
         glm::quat m_rotation;
         glm::vec3 m_velocity;
         glm::vec3 m_angularVelocity;
+        vr::VRControllerState_t m_oldState;
+        vr::VRControllerState_t m_newState;
         bool m_updated;
     };
     VRController m_leftController;
@@ -43,8 +46,13 @@ class VRManager final
     glm::vec3 m_leftEyePosition;
     glm::vec3 m_rightEyePosition;
 
+    LuaArguments *m_luaArguments;
+
     VRManager(const VRManager& that);
     VRManager &operator =(const VRManager &that);
+
+    void UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose);
+    void UpdateControllerInput(VRController &f_controller, const std::string &f_hand);
 public:
     inline const glm::uvec2& GetTargetsSize() const { return m_targetSize; }
 

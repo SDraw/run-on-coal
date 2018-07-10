@@ -19,7 +19,7 @@ class PreRenderManager final
 
     std::vector<TreeNode*> m_nodeStack;
 
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
     OnPreRender m_callback;
 
     PreRenderManager(const PreRenderManager& that);

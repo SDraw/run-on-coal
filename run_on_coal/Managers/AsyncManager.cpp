@@ -16,7 +16,7 @@ ROC::AsyncManager::AsyncManager(Core *f_core)
     m_threadSwitch = true;
     m_loadThread = new std::thread(&ROC::AsyncManager::LoadThread, this);
 
-    m_argument = new LuaArguments();
+    m_luaArguments = new LuaArguments();
     m_callback = nullptr;
 }
 ROC::AsyncManager::~AsyncManager()
@@ -26,7 +26,7 @@ ROC::AsyncManager::~AsyncManager()
 
     m_loadedQueue.clear();
 
-    delete m_argument;
+    delete m_luaArguments;
 }
 
 void ROC::AsyncManager::AddGeometryToQueue(Geometry *f_geometry, const std::string &f_path)
@@ -80,10 +80,10 @@ void ROC::AsyncManager::DoPulse()
 
                 if(m_callback) (*m_callback)(iter.m_geometry, iter.m_result);
 
-                m_argument->PushArgument(iter.m_geometry, "Geometry");
-                m_argument->PushArgument(iter.m_result);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onGeometryLoad", m_argument);
-                m_argument->Clear();
+                m_luaArguments->PushArgument(iter.m_geometry, "Geometry");
+                m_luaArguments->PushArgument(iter.m_result);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onGeometryLoad", m_luaArguments);
+                m_luaArguments->Clear();
 
                 if(!iter.m_result) m_core->GetElementManager()->DestroyElement(iter.m_geometry);
             }

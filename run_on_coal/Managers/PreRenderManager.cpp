@@ -14,7 +14,7 @@
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
-    m_argument = new LuaArguments();
+    m_luaArguments = new LuaArguments();
     m_callback = nullptr;
     m_modelTreeRoot = new TreeNode(nullptr);
     m_modelToNodeMapEnd = m_modelToNodeMap.end();
@@ -33,7 +33,7 @@ ROC::PreRenderManager::~PreRenderManager()
         delete l_node;
     }
     delete m_modelTreeRoot;
-    delete m_argument;
+    delete m_luaArguments;
 }
 
 void ROC::PreRenderManager::AddModel(Model *f_model)
@@ -106,7 +106,7 @@ void ROC::PreRenderManager::RemoveLink(Model *f_model)
 void ROC::PreRenderManager::DoPulse_S1()
 {
     if(m_callback) (*m_callback)();
-    m_core->GetLuaManager()->GetEventManager()->CallEvent("onPreRender", m_argument);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent("onPreRender", m_luaArguments);
     bool l_physicsState = m_core->GetPhysicsManager()->GetPhysicsEnabled();
 
     auto &l_rootNodes = m_modelTreeRoot->GetChildren();

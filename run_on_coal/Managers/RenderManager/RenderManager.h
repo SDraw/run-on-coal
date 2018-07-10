@@ -42,7 +42,7 @@ class RenderManager final
     std::vector<Movie*> m_movieVector;
     std::vector<Movie*>::iterator m_movieVectorEnd;
 
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
 
     float m_time;
 

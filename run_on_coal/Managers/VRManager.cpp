@@ -4,7 +4,10 @@
 
 #include "Core/Core.h"
 #include "Elements/RenderTarget.h"
+#include "Lua/LuaArguments.h"
 
+#include "Managers/LuaManager.h"
+#include "Managers/EventManager.h"
 #include "Elements/Camera.h"
 #include "Utils/MathUtils.h"
 
@@ -14,6 +17,15 @@ namespace ROC
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_EmptyVec3;
 extern const glm::quat g_DefaultRotation;
+
+const std::vector<std::pair<uint64_t, std::string>> g_VRControllerButtons
+{
+    { vr::ButtonMaskFromId(vr::k_EButton_System), "system" },
+    { vr::ButtonMaskFromId(vr::k_EButton_ApplicationMenu), "appMenu" },
+    { vr::ButtonMaskFromId(vr::k_EButton_Grip), "grip" },
+    { vr::ButtonMaskFromId(vr::k_EButton_SteamVR_Touchpad), "touchpad" },
+    { vr::ButtonMaskFromId(vr::k_EButton_SteamVR_Trigger), "trigger" }
+};
 
 }
 
@@ -53,14 +65,17 @@ ROC::VRManager::VRManager(Core *f_core)
     m_vrTexture[1] = { reinterpret_cast<void*>(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
     m_vrStage = VRS_None;
-    m_leftController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, false };
-    m_rightController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, false };
+    m_leftController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, { 0U }, { 0U }, false };
+    m_rightController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, { 0U }, { 0U }, false };
+
+    m_luaArguments = new LuaArguments();
 }
 ROC::VRManager::~VRManager()
 {
     vr::VR_Shutdown();
     delete m_leftEyeRT;
     delete m_rightEyeRT;
+    delete m_luaArguments;
 }
 
 void ROC::VRManager::EnableRenderTarget()
@@ -127,45 +142,93 @@ void ROC::VRManager::DoPulse()
                 {
                     case vr::TrackedControllerRole_LeftHand:
                     {
-                        if(!m_leftController.m_updated)
-                        {
-                            btTransform l_transform;
-                            MathUtils::ExtractMatrix(m_trackedPoses[i].mDeviceToAbsoluteTracking, m_transform);
-                            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-
-                            std::memcpy(&m_leftController.m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-
-                            btQuaternion l_rotation = l_transform.getRotation();
-                            for(int j = 0; j < 4; j++) m_leftController.m_rotation[j] = l_rotation[j];
-
-                            std::memcpy(&m_leftController.m_velocity, m_trackedPoses[i].vVelocity.v, sizeof(glm::vec3));
-                            std::memcpy(&m_leftController.m_angularVelocity, m_trackedPoses[i].vAngularVelocity.v, sizeof(glm::vec3));
-
-                            m_leftController.m_updated = true;
-                        }
+                        UpdateControllerPose(m_leftController, m_trackedPoses[i]);
+                        m_vrSystem->GetControllerState(i, &m_leftController.m_newState, sizeof(vr::VRControllerState_t));
+                        UpdateControllerInput(m_leftController, "left");
                     } break;
                     case vr::TrackedControllerRole_RightHand:
                     {
-                        if(!m_rightController.m_updated)
-                        {
-                            btTransform l_transform;
-                            MathUtils::ExtractMatrix(m_trackedPoses[i].mDeviceToAbsoluteTracking, m_transform);
-                            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-
-                            std::memcpy(&m_rightController.m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-
-                            btQuaternion l_rotation = l_transform.getRotation();
-                            for(int j = 0; j < 4; j++) m_rightController.m_rotation[j] = l_rotation[j];
-
-                            std::memcpy(&m_rightController.m_velocity, m_trackedPoses[i].vVelocity.v, sizeof(glm::vec3));
-                            std::memcpy(&m_rightController.m_angularVelocity, m_trackedPoses[i].vAngularVelocity.v, sizeof(glm::vec3));
-
-                            m_rightController.m_updated = true;
-                        }
+                        UpdateControllerPose(m_rightController, m_trackedPoses[i]);
+                        m_vrSystem->GetControllerState(i, &m_rightController.m_newState, sizeof(vr::VRControllerState_t));
+                        UpdateControllerInput(m_rightController, "right");
                     } break;
                 }
             }
         }
+    }
+}
+
+void ROC::VRManager::UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose)
+{
+    if(!f_controller.m_updated)
+    {
+        btTransform l_transform;
+        MathUtils::ExtractMatrix(f_pose.mDeviceToAbsoluteTracking, m_transform);
+        l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+
+        std::memcpy(&f_controller.m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+
+        btQuaternion l_rotation = l_transform.getRotation();
+        for(int i = 0; i < 4; i++) f_controller.m_rotation[i] = l_rotation[i];
+
+        std::memcpy(&f_controller.m_velocity, f_pose.vVelocity.v, sizeof(glm::vec3));
+        std::memcpy(&f_controller.m_angularVelocity, f_pose.vAngularVelocity.v, sizeof(glm::vec3));
+
+        f_controller.m_updated = true;
+    }
+}
+void ROC::VRManager::UpdateControllerInput(VRController &f_controller, const std::string &f_hand)
+{
+    if(f_controller.m_updated)
+    {
+        vr::VRControllerState_t &l_oldState = f_controller.m_oldState;
+        vr::VRControllerState_t &l_newState = f_controller.m_newState;
+
+        // Update buttons press
+        for(const auto iter : g_VRControllerButtons)
+        {
+            if((iter.first & l_newState.ulButtonPressed) != (iter.first & l_oldState.ulButtonPressed))
+            {
+                bool l_pressState = ((iter.first & l_newState.ulButtonPressed) != 0U);
+                m_luaArguments->PushArgument(f_hand);
+                m_luaArguments->PushArgument(iter.second);
+                m_luaArguments->PushArgument(l_pressState ? 1 : 0);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRControllerKeyPress", m_luaArguments);
+                m_luaArguments->Clear();
+            }
+        }
+
+        // Update buttons touch
+        for(const auto &iter : g_VRControllerButtons)
+        {
+            if((iter.first & l_newState.ulButtonTouched) != (iter.first & l_oldState.ulButtonTouched))
+            {
+                bool l_touchState = ((iter.first & l_newState.ulButtonTouched) != 0U);
+                m_luaArguments->PushArgument(f_hand);
+                m_luaArguments->PushArgument(iter.second);
+                m_luaArguments->PushArgument(l_touchState ? 1 : 0);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRControllerKeyTouch", m_luaArguments);
+                m_luaArguments->Clear();
+            }
+        }
+
+        // Update axes
+        for(uint32_t i = 0; i < vr::k_unControllerStateAxisCount; i++)
+        {
+            const vr::VRControllerAxis_t &l_newAxis = l_newState.rAxis[i];
+            const vr::VRControllerAxis_t &l_oldAxis = l_oldState.rAxis[i];
+            if((l_newAxis.x != l_oldAxis.x) || (l_newAxis.y != l_oldAxis.y))
+            {
+                m_luaArguments->PushArgument(f_hand);
+                m_luaArguments->PushArgument(static_cast<int>(i));
+                m_luaArguments->PushArgument(l_newAxis.x);
+                m_luaArguments->PushArgument(l_newAxis.y);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRControllerAxis", m_luaArguments);
+                m_luaArguments->Clear();
+            }
+        }
+
+        std::memcpy(&l_oldState, &l_newState, sizeof(vr::VRControllerState_t));
     }
 }
 

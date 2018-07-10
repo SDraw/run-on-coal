@@ -26,7 +26,7 @@ class NetworkManager final
     };
     NetworkState m_networkState;
 
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
     OnNetworkStateChangeCallback m_stateCallback;
     OnNetworkDataRecieveCallback m_dataCallback;
 

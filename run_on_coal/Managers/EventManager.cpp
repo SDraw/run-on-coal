@@ -20,6 +20,7 @@ const std::vector<std::string> g_DefaultEventsNames
     "onWindowClose", "onWindowResize", "onWindowFocus",
     "onKeyPress", "onMouseKeyPress", "onMouseScroll", "onCursorMove", "onCursorEnter",
     "onJoypadStateChange", "onJoypadButton", "onJoypadAxis",
+    "onVRControllerKeyPress", "onVRControllerKeyTouch", "onVRControllerAxis",
     "onTextInput",
     "onNetworkStateChange", "onNetworkDataRecieve",
     "onGeometryLoad"

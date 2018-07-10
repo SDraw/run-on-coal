@@ -54,7 +54,7 @@ ROC::Core::Core()
     m_engineStopCallback = nullptr;
 
     m_state = true;
-    m_argument = new LuaArguments();
+    m_luaArguments = new LuaArguments();
 }
 ROC::Core::~Core()
 {
@@ -72,7 +72,7 @@ ROC::Core::~Core()
     delete m_logManager;
     delete m_configManager;
 
-    delete m_argument;
+    delete m_luaArguments;
 }
 
 ROC::Core* ROC::Core::Init()
@@ -106,7 +106,7 @@ ROC::Core* ROC::Core::Init()
         delete l_meta;
 
         if(ms_engineStartCallback) (*ms_engineStartCallback)();
-        ms_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStart", ms_instance->m_argument);
+        ms_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStart", ms_instance->m_luaArguments);
     }
     return ms_instance;
 }
@@ -115,7 +115,7 @@ void ROC::Core::Terminate()
     if(ms_instance)
     {
         if(ms_instance->m_engineStopCallback) (*ms_instance->m_engineStopCallback)();
-        ms_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStop", ms_instance->m_argument);
+        ms_instance->m_luaManager->GetEventManager()->CallEvent("onEngineStop", ms_instance->m_luaArguments);
 
         delete ms_instance;
         ms_instance = nullptr;

@@ -28,7 +28,7 @@ class AsyncManager final
     std::vector<amLoadQuery> m_loadedQueue;
     std::mutex m_loadedMutex;
 
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
 
     OnGeometryLoadCallback m_callback;
 
