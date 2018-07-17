@@ -14,7 +14,6 @@ Simple and light-weight 3D game engine.
 * Physics using [Bullet Physics](../../../../bulletphysics/bullet3)
 * Scripting using [Lua](https://www.lua.org)
 * Audio playback with spatialization (Ogg, WAV, FLAC)
-* Video playback
 * TrueType font rendering with Unicode characters support
 * Networking using [RakNet library](../../../../OculusVR/RakNet)
 * VR support

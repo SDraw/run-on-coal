@@ -107,6 +107,8 @@ void ROC::VRManager::DoPulse()
 {
     // Update HMD data
     m_vrCompositor->WaitGetPoses(m_trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+    m_vrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, 0.f, m_trackedPoses, vr::k_unMaxTrackedDeviceCount);
+
     const vr::TrackedDevicePose_t &l_hmdPose = m_trackedPoses[vr::k_unTrackedDeviceIndex_Hmd];
     if(l_hmdPose.bPoseIsValid)
     {
