@@ -432,7 +432,7 @@ int ROC::LuaCollisionDef::GetMotionType(lua_State *f_vm)
     Collision *l_collision;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_collision);
-    !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypesTable[l_collision->GetMotionType()]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypesTable[static_cast<size_t>(l_collision->GetMotionType())]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

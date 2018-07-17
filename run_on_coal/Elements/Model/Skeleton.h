@@ -11,7 +11,7 @@ struct BoneJointData;
 
 class Skeleton final
 {
-    unsigned int m_bonesCount;
+    size_t m_bonesCount;
     std::vector<Bone*> m_boneVector;
     std::vector<Bone*> m_fastBoneVector;
     std::vector<glm::mat4> m_poseMatrices;
@@ -29,20 +29,20 @@ class Skeleton final
     {
         btAlignedObjectArray<btTransform> m_offsetMatrix; // [0] - main
         btRigidBody *m_emptyBody;
-        int m_boneID;
+        size_t m_boneID;
         struct jtPart
         {
             btAlignedObjectArray<btTransform> m_offset; // [0] - main, [1] - inverse, [2] - bone bind
             btRigidBody *m_rigidBody;
             btGeneric6DofSpringConstraint *m_constraint;
-            int m_boneID;
+            size_t m_boneID;
         };
         std::vector<jtPart*> m_partsVector;
     };
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
 public:
-    inline unsigned int GetBonesCount() const { return m_bonesCount; }
+    inline size_t GetBonesCount() const { return m_bonesCount; }
 
     inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }
     inline bool HasDynamicBoneCollision() const { return m_hasDynamicBoneCollision; }

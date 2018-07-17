@@ -104,6 +104,6 @@ int ROC::LuaDrawableDef::GetFiltering(lua_State *f_vm)
     Drawable *l_drawable;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_drawable);
-    !argStream.HasErrors() ? argStream.PushText(g_FilteringTypesTable[l_drawable->GetFiltering()]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_FilteringTypesTable[static_cast<size_t>(l_drawable->GetFiltering())]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

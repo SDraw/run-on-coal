@@ -26,8 +26,7 @@ public:
         ET_Texture, 
         ET_Font, 
         ET_File, 
-        ET_Collision,
-        ET_Movie
+        ET_Collision
     };
 
     bool SetCustomData(const std::string &f_key, CustomData &f_val);

@@ -16,7 +16,7 @@ const GLint g_FontSwizzleMask[] = { GL_ONE, GL_ONE, GL_ONE, GL_RED };
 #define ROC_FONT_VERTEX_BUFFER 0U
 #define ROC_FONT_UV_BUFFER 1U
 
-#define ROC_FONT_CHAR_VERTICES 6
+#define ROC_FONT_CHAR_VERTICES 6U
 #define ROC_FONT_TEXT_BLOCK 512U
 
 FT_Library ROC::Font::ms_library = FT_Library();
@@ -198,7 +198,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
 
         while(l_textRange.x < l_stringLength)
         {
-            int l_charCount = 0;
+            size_t l_charCount = 0;
             l_textRange.y = glm::min((l_textRange.z + 1U)*ROC_FONT_TEXT_BLOCK, l_stringLength);
 
             for(size_t i = l_textRange.x; i < l_textRange.y; i++)
@@ -220,7 +220,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
                 charData *l_charData = m_charIter->second;
                 if(l_charData->m_size.x > 0 && l_charData->m_size.y > 0)
                 {
-                    int l_charVertexIndex = l_charCount * ROC_FONT_CHAR_VERTICES;
+                    size_t l_charVertexIndex = static_cast<size_t>(l_charCount * ROC_FONT_CHAR_VERTICES);
 
                     l_linePos.z = l_linePos.x + l_charData->m_bearing.x;
                     l_linePos.w = l_linePos.y - (l_charData->m_size.y - l_charData->m_bearing.y);
@@ -255,7 +255,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
                     GLBinder::BindArrayBuffer(ms_VBO[ROC_FONT_VERTEX_BUFFER]);
                     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
                 }
-                glDrawArrays(GL_TRIANGLES, 0, ROC_FONT_CHAR_VERTICES * l_charCount);
+                glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(ROC_FONT_CHAR_VERTICES * l_charCount));
             }
             l_textRange.x = ++l_textRange.z * ROC_FONT_TEXT_BLOCK;
         }

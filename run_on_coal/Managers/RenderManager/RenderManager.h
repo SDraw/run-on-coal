@@ -11,7 +11,6 @@ class Shader;
 class Quad2D;
 class Quad3D;
 class Drawable;
-class Movie;
 class RenderTarget;
 class Texture;
 class Font;
@@ -38,9 +37,6 @@ class RenderManager final
     Quad3D *m_quad3D;
     Texture *m_dummyTexture;
     Texture *m_lastTexture;
-
-    std::vector<Movie*> m_movieVector;
-    std::vector<Movie*>::iterator m_movieVectorEnd;
 
     LuaArguments *m_luaArguments;
 
@@ -82,9 +78,6 @@ protected:
     ~RenderManager();
 
     void RemoveAsActiveScene(Scene *f_scene);
-
-    void AddMovie(Movie *f_movie);
-    void RemoveMovie(Movie *f_movie);
 
     void DoPulse();
 

@@ -62,27 +62,27 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 std::vector<glm::vec3> l_vertexData;
                 l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
                 l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                l_tempData.resize(l_compressedSize);
+                l_tempData.resize(static_cast<size_t>(l_compressedSize));
                 l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                l_vertexData.resize(l_uncompressedSize / sizeof(glm::vec3));
+                l_vertexData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec3));
                 zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_vertexData.data(), l_uncompressedSize);
 
                 //UVs
                 std::vector<glm::vec2> l_uvData;
                 l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
                 l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                l_tempData.resize(l_compressedSize);
+                l_tempData.resize(static_cast<size_t>(l_compressedSize));
                 l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                l_uvData.resize(l_uncompressedSize / sizeof(glm::vec2));
+                l_uvData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec2));
                 zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_uvData.data(), l_uncompressedSize);
 
                 //Normals
                 std::vector<glm::vec3> l_normalData;
                 l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
                 l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                l_tempData.resize(l_compressedSize);
+                l_tempData.resize(static_cast<size_t>(l_compressedSize));
                 l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                l_normalData.resize(l_uncompressedSize / sizeof(glm::vec3));
+                l_normalData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec3));
                 zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_normalData.data(), l_uncompressedSize);
 
                 std::vector<glm::vec4> l_weightData;
@@ -92,17 +92,17 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     // Weights
                     l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
                     l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                    l_tempData.resize(l_compressedSize);
+                    l_tempData.resize(static_cast<size_t>(l_compressedSize));
                     l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                    l_weightData.resize(l_uncompressedSize / sizeof(glm::vec4));
+                    l_weightData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec4));
                     zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_weightData.data(), l_uncompressedSize);
 
                     //Indices
                     l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
                     l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                    l_tempData.resize(l_compressedSize);
+                    l_tempData.resize(static_cast<size_t>(l_compressedSize));
                     l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                    l_indexData.resize(l_uncompressedSize / sizeof(glm::vec4));
+                    l_indexData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec4));
                     zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_indexData.data(), l_uncompressedSize);
                 }
 
@@ -129,9 +129,9 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     std::vector<int> l_faceIndex;
                     l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
                     l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                    l_tempData.resize(l_compressedSize);
+                    l_tempData.resize(static_cast<size_t>(l_compressedSize));
                     l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                    l_faceIndex.resize(l_uncompressedSize / sizeof(int));
+                    l_faceIndex.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(int));
                     zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_faceIndex.data(), l_uncompressedSize);
 
                     std::vector<glm::vec3> l_tempVertex;
@@ -139,28 +139,28 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     std::vector<glm::vec3> l_tempNormal;
                     std::vector<glm::vec4> l_tempWeight;
                     std::vector<glm::ivec4> l_tempIndex;
-                    for(int j = 0, k = static_cast<int>(l_faceIndex.size()); j < k; j += 9)
+                    for(size_t j = 0, k = l_faceIndex.size(); j < k; j += 9U)
                     {
-                        l_tempVertex.push_back(l_vertexData[l_faceIndex[j]]);
+                        l_tempVertex.push_back(l_vertexData[static_cast<size_t>(l_faceIndex[j])]);
                         l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
-                        l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 1]]);
+                        l_tempVertex.push_back(l_vertexData[static_cast<size_t>(l_faceIndex[j + 1])]);
                         l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
-                        l_tempVertex.push_back(l_vertexData[l_faceIndex[j + 2]]);
+                        l_tempVertex.push_back(l_vertexData[static_cast<size_t>(l_faceIndex[j + 2])]);
                         l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
-                        l_tempUV.push_back(l_uvData[l_faceIndex[j + 3]]);
-                        l_tempUV.push_back(l_uvData[l_faceIndex[j + 4]]);
-                        l_tempUV.push_back(l_uvData[l_faceIndex[j + 5]]);
-                        l_tempNormal.push_back(l_normalData[l_faceIndex[j + 6]]);
-                        l_tempNormal.push_back(l_normalData[l_faceIndex[j + 7]]);
-                        l_tempNormal.push_back(l_normalData[l_faceIndex[j + 8]]);
+                        l_tempUV.push_back(l_uvData[static_cast<size_t>(l_faceIndex[j + 3])]);
+                        l_tempUV.push_back(l_uvData[static_cast<size_t>(l_faceIndex[j + 4])]);
+                        l_tempUV.push_back(l_uvData[static_cast<size_t>(l_faceIndex[j + 5])]);
+                        l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 6])]);
+                        l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 7])]);
+                        l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 8])]);
                         if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
                         {
-                            l_tempWeight.push_back(l_weightData[l_faceIndex[j]]);
-                            l_tempWeight.push_back(l_weightData[l_faceIndex[j + 1]]);
-                            l_tempWeight.push_back(l_weightData[l_faceIndex[j + 2]]);
-                            l_tempIndex.push_back(l_indexData[l_faceIndex[j]]);
-                            l_tempIndex.push_back(l_indexData[l_faceIndex[j + 1]]);
-                            l_tempIndex.push_back(l_indexData[l_faceIndex[j + 2]]);
+                            l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j])]);
+                            l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j + 1])]);
+                            l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j + 2])]);
+                            l_tempIndex.push_back(l_indexData[static_cast<size_t>(l_faceIndex[j])]);
+                            l_tempIndex.push_back(l_indexData[static_cast<size_t>(l_faceIndex[j + 1])]);
+                            l_tempIndex.push_back(l_indexData[static_cast<size_t>(l_faceIndex[j + 2])]);
                         }
                     }
 

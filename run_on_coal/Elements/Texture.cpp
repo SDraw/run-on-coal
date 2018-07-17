@@ -15,6 +15,14 @@ const unsigned char g_TextureDummyPattern[] = {
 };
 const glm::ivec2 g_TextureDummySize(2, 2);
 
+#if defined _WIN64
+    #define ROC_TEXTURE_CUBESIDES_COUNT 6ULL
+#elif defined _WIN32
+    #define ROC_TEXTURE_CUBESIDES_COUNT 6U
+#else
+    #define ROC_TEXTURE_CUBESIDES_COUNT 6
+#endif
+
 }
 
 ROC::Texture::Texture()
@@ -84,13 +92,13 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
 
-        for(size_t i = 0, j = std::min(6U, f_path.size()); i < j; i++)
+        for(size_t i = 0U, j = std::min(ROC_TEXTURE_CUBESIDES_COUNT, f_path.size()); i < j; i++)
         {
             sf::Image l_image;
             if(l_image.loadFromFile(f_path[i]))
             {
                 sf::Vector2u l_imageSize = l_image.getSize();
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<int>(i), 0, f_compress ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
             }
             else
             {

@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <vector>
+#define GLM_ENABLE_EXPERIMENTAL
 #include "glm/glm.hpp"
 #include "glm/gtx/compatibility.hpp"
 

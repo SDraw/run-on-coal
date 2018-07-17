@@ -11,8 +11,8 @@ class CustomData
         int m_int;
         double m_double;
         float m_float;
-        void *m_ptr;
     };
+    void *m_ptr;
     unsigned char m_type;
     std::string m_string;
 public:

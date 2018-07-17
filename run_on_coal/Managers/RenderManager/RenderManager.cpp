@@ -9,7 +9,6 @@
 #include "Elements/Geometry/Material.h"
 #include "Elements/Model/Model.h"
 #include "Elements/Model/Skeleton.h"
-#include "Elements/Movie.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader/Shader.h"
@@ -77,8 +76,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_locked = true;
     m_textureMatrix = g_IdentityMatrix;
 
-    m_movieVectorEnd = m_movieVector.end();
-
     m_clearColor = g_DefaultClearColor;
     m_core->GetSfmlManager()->GetWindowSize(m_viewportSize);
 
@@ -88,7 +85,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
 }
 ROC::RenderManager::~RenderManager()
 {
-    m_movieVector.clear();
     delete m_quad2D;
     delete m_quad3D;
     delete m_dummyTexture;
@@ -149,24 +145,6 @@ void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
     {
         m_activeScene->Disable();
         m_activeScene = nullptr;
-    }
-}
-
-void ROC::RenderManager::AddMovie(Movie *f_movie)
-{
-    if(std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie) == m_movieVectorEnd)
-    {
-        m_movieVector.push_back(f_movie);
-        m_movieVectorEnd = m_movieVector.end();
-    }
-}
-void ROC::RenderManager::RemoveMovie(Movie *f_movie)
-{
-    auto iter = std::find(m_movieVector.begin(), m_movieVectorEnd, f_movie);
-    if(iter != m_movieVectorEnd)
-    {
-        m_movieVector.erase(iter);
-        m_movieVectorEnd = m_movieVector.end();
     }
 }
 
@@ -366,13 +344,11 @@ void ROC::RenderManager::EnableCulling()
 void ROC::RenderManager::DoPulse()
 {
     m_time = m_core->GetSfmlManager()->GetTime();
-
-    for(auto iter : m_movieVector) iter->Update();
-
     m_locked = false;
 
     if(m_callback) (*m_callback)();
-    m_core->GetLuaManager()->GetEventManager()->CallEvent("onRender", m_luaArguments);
+    EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
+    l_eventManager->CallEvent("onRender", m_luaArguments);
 
     if(m_vrManager)
     {
@@ -385,7 +361,7 @@ void ROC::RenderManager::DoPulse()
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
-        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_luaArguments);
+        l_eventManager->CallEvent("onVRRender", m_luaArguments);
         m_luaArguments->Clear();
 
         m_vrManager->SetVRStage(VRManager::VRS_Right);
@@ -393,7 +369,7 @@ void ROC::RenderManager::DoPulse()
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
-        m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRRender", m_luaArguments);
+        l_eventManager->CallEvent("onVRRender", m_luaArguments);
         m_luaArguments->Clear();
 
         m_vrManager->SubmitRender();

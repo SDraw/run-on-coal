@@ -116,7 +116,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
                     break;
             }
         } break;
-        case Element::ET_Texture: case Element::ET_Movie:
+        case Element::ET_Texture:
         {
             switch(f_parent->GetElementType())
             {

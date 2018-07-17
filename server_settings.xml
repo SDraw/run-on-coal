@@ -1,0 +1,7 @@
+<settings>
+    <param name="logging" value="true"/>
+    <param name="ip" value="0.0.0.0"/>
+    <param name="port" value="42000"/>
+    <param name="max_clients" value="10"/>
+    <param name="pulse_tick" value="10"/>
+</settings>

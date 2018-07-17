@@ -32,13 +32,14 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
         m_boneVector.push_back(l_bone);
     }
     m_boneVector.shrink_to_fit();
-    m_bonesCount = static_cast<unsigned int>(m_boneVector.size());
-    for(unsigned int i = 0; i < m_bonesCount; i++)
+    m_bonesCount = m_boneVector.size();
+    for(size_t i = 0; i < m_bonesCount; i++)
     {
         if(f_data[i]->m_parent != -1)
         {
-            m_boneVector[i]->SetParent(m_boneVector[f_data[i]->m_parent]);
-            m_boneVector[f_data[i]->m_parent]->AddChild(m_boneVector[i]);
+            size_t l_parent = static_cast<size_t>(f_data[i]->m_parent);
+            m_boneVector[i]->SetParent(m_boneVector[l_parent]);
+            m_boneVector[l_parent]->AddChild(m_boneVector[i]);
         }
     }
     if(!m_boneVector.empty())
@@ -107,7 +108,7 @@ ROC::Skeleton::~Skeleton()
 void ROC::Skeleton::Update()
 {
     for(auto iter : m_fastBoneVector) iter->Update();
-    for(unsigned int i = 0; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_boneVector[i]->GetPoseMatrix(), sizeof(glm::mat4));
+    for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_boneVector[i]->GetPoseMatrix(), sizeof(glm::mat4));
 }
 
 void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model)
@@ -174,7 +175,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
         for(auto iter : f_vec)
         {
             skJoint *l_joint = new skJoint();
-            l_joint->m_boneID = static_cast<int>(iter->m_boneID);
+            l_joint->m_boneID = static_cast<size_t>(iter->m_boneID);
             l_joint->m_offsetMatrix.push_back(btTransform());
             l_joint->m_offsetMatrix[ROC_SKELETON_TRANSFORMATION_MAIN].setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_joint->m_boneID]->GetLocalMatrix()));
 
@@ -190,11 +191,11 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
             l_joint->m_emptyBody->setUserPointer(f_model);
             m_jointVector.push_back(l_joint);
 
-            for(int i = 0, j = static_cast<int>(iter->m_jointPartVector.size()); i < j; i++)
+            for(size_t i = 0, j = iter->m_jointPartVector.size(); i < j; i++)
             {
                 BoneJointPartData &l_partData = iter->m_jointPartVector[i];
                 skJoint::jtPart *l_jointPart = new skJoint::jtPart();
-                l_jointPart->m_boneID = static_cast<int>(l_partData.m_boneID);
+                l_jointPart->m_boneID = static_cast<size_t>(l_partData.m_boneID);
 
                 btTransform l_jointPartTransform = btTransform::getIdentity(), l_jointPartResultTransform;
 

@@ -26,7 +26,7 @@ ROC::Camera::Camera(int f_type)
     m_viewPosition = g_DefaultPosition;
     m_viewDirection = g_CameraDefaultViewDirection;
     m_upDirection = g_CameraDefaultUpDirection;
-    m_viewMatrix = glm::lookAtRH(m_viewPosition, m_viewPosition + m_viewDirection, g_CameraDefaultUpDirection);
+    m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, g_CameraDefaultUpDirection);
 
     m_fov = glm::pi<float>() / 4.0f;
     m_aspectRatio = 640.f / 480.f;
@@ -145,8 +145,10 @@ void ROC::Camera::Update()
                 m_projectionMatrix = glm::ortho(m_orthoParams.x, m_orthoParams.y, m_orthoParams.z, m_orthoParams.w, m_depth.x, m_depth.y);
                 break;
             case CPT_Screen:
+            {
                 m_projectionMatrix = glm::ortho(m_orthoParams.x, m_orthoParams.y, m_orthoParams.z, m_orthoParams.w);
-                break;
+                m_projectionMatrix[2][2] = -1.f; // Is this bug of GLM 0.9.9.0 or feature?
+            } break;
             case CPT_VRLeft:
             {
                 if(ms_vrSystem)

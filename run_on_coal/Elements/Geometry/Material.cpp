@@ -43,10 +43,10 @@ void ROC::Material::LoadVertices(const std::vector<glm::vec3> &f_vector)
 {
     if(m_VBO[ROC_MATERIAL_VERTEX_BUFFER] == 0U)
     {
-        m_verticesCount = f_vector.size();
+        m_verticesCount = static_cast<int>(f_vector.size());
         glGenBuffers(1, &m_VBO[ROC_MATERIAL_VERTEX_BUFFER]);
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO[ROC_MATERIAL_VERTEX_BUFFER]);
-        glBufferData(GL_ARRAY_BUFFER, m_verticesCount*sizeof(glm::vec3), f_vector.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec3), f_vector.data(), GL_STATIC_DRAW);
     }
 }
 void ROC::Material::LoadUVs(const std::vector<glm::vec2> &f_vector)

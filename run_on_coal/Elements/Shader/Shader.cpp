@@ -8,7 +8,14 @@
 #include "Utils/EnumUtils.h"
 
 #define ROC_SHADER_BONES_BINDPOINT 0
-#define ROC_SHADER_BONES_COUNT 227U
+
+#if defined _WIN64
+    #define ROC_SHADER_BONES_COUNT 227ULL
+#elif defined _WIN32
+    #define ROC_SHADER_BONES_COUNT 227U
+#else
+    #define ROC_SHADER_BONES_COUNT 227
+#endif
 
 namespace ROC
 {
@@ -72,7 +79,7 @@ ROC::Shader::Shader()
 
     m_uniformMapEnd = m_uniformMap.end();
 
-    m_bindPool = new Pool(ms_drawableMaxCount);
+    m_bindPool = new Pool(static_cast<size_t>(ms_drawableMaxCount));
 
     m_active = false;
 }
@@ -104,7 +111,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 if(l_vertexShader)
                 {
                     const char *l_source = l_shaderData.data();
-                    int l_sourceLength = l_shaderData.length();
+                    int l_sourceLength = static_cast<int>(l_shaderData.length());
                     glShaderSource(l_vertexShader, 1, &l_source, &l_sourceLength);
                     glCompileShader(l_vertexShader);
 
@@ -114,7 +121,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     {
                         GLint l_logSize = 0;
                         glGetShaderiv(l_vertexShader, GL_INFO_LOG_LENGTH, &l_logSize);
-                        m_error.resize(l_logSize);
+                        m_error.resize(static_cast<size_t>(l_logSize));
                         glGetShaderInfoLog(l_vertexShader, l_logSize, &l_logSize, &m_error[0]);
                         m_error.insert(0U, "Vertex shader error: ");
                         glDeleteShader(l_vertexShader);
@@ -139,7 +146,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 if(l_fragmentShader)
                 {
                     const char *l_source = l_shaderData.data();
-                    int l_sourceLength = l_shaderData.length();
+                    int l_sourceLength = static_cast<int>(l_shaderData.length());
                     glShaderSource(l_fragmentShader, 1, &l_source, &l_sourceLength);
                     glCompileShader(l_fragmentShader);
 
@@ -149,7 +156,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     {
                         GLint l_logSize = 0;
                         glGetShaderiv(l_fragmentShader, GL_INFO_LOG_LENGTH, &l_logSize);
-                        m_error.resize(l_logSize);
+                        m_error.resize(static_cast<size_t>(l_logSize));
                         glGetShaderInfoLog(l_fragmentShader, l_logSize, &l_logSize, &m_error[0]);
                         m_error.insert(0U, "Fragment shader error: ");
                         glDeleteShader(l_fragmentShader);
@@ -176,7 +183,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     if(l_geometryShader)
                     {
                         const char *l_source = l_shaderData.data();
-                        int l_sourceLength = l_shaderData.length();
+                        int l_sourceLength = static_cast<int>(l_shaderData.length());
                         glShaderSource(l_geometryShader, 1, &l_source, &l_sourceLength);
                         glCompileShader(l_geometryShader);
 
@@ -186,7 +193,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                         {
                             GLint l_logSize = 0;
                             glGetShaderiv(l_geometryShader, GL_INFO_LOG_LENGTH, &l_logSize);
-                            m_error.resize(l_logSize);
+                            m_error.resize(static_cast<size_t>(l_logSize));
                             glGetShaderInfoLog(l_geometryShader, l_logSize, &l_logSize, &m_error[0]);
                             m_error.insert(0U, "Geometry shader error: ");
                             glDeleteShader(l_geometryShader);
@@ -214,7 +221,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 {
                     GLint l_logLength = 0;
                     glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &l_logLength);
-                    m_error.resize(l_logLength);
+                    m_error.resize(static_cast<size_t>(l_logLength));
                     glGetProgramInfoLog(m_program, l_logLength, &l_logLength, &m_error[0]);
                     glDeleteProgram(m_program);
                     m_program = 0U;
@@ -273,7 +280,7 @@ void ROC::Shader::SetupUniformsAndLocations()
     if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform, 0);
     //Time
     m_timeUniform = glGetUniformLocation(m_program, "gTime");
-    //Color (RenderTarget, Texture, Font, Movie)
+    //Color (RenderTarget, Texture, Font)
     m_colorUniform = glGetUniformLocation(m_program, "gColor");
 
     //Get list of custom uniforms
@@ -442,7 +449,7 @@ void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
     if(ms_bonesUBO != 0U)
     {
         if(ms_uboFix) glFinish();
-        unsigned int l_matrixCount = std::min(f_value.size(), ROC_SHADER_BONES_COUNT);
+        GLsizeiptr l_matrixCount = std::min(f_value.size(), ROC_SHADER_BONES_COUNT);
         glBufferSubData(GL_UNIFORM_BUFFER, 0, l_matrixCount*sizeof(glm::mat4), f_value.data());
     }
 }
@@ -509,7 +516,7 @@ bool ROC::Shader::Detach(Drawable *f_drawable)
     {
         if(iter->m_element == f_drawable)
         {
-            m_bindPool->Reset(static_cast<unsigned int>(iter->m_slot - 1));
+            m_bindPool->Reset(static_cast<size_t>(iter->m_slot - 1));
             iter->m_uniform->SetSampler(0);
             m_drawableBind.erase(iter);
             l_result = true;

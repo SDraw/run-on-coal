@@ -40,16 +40,16 @@ bool ROC::BoneFrameData::IsEqual(BoneFrameData *f_data) const
 
 void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_data, float f_blend)
 {
-    m_position = glm::lerp(m_position, f_data->m_position, f_blend);
+    m_position = glm::mix(m_position, f_data->m_position, f_blend);
     m_rotation = glm::slerp(m_rotation, f_data->m_rotation, f_blend);
-    m_scale = glm::lerp(m_scale, f_data->m_scale, f_blend);
+    m_scale = glm::mix(m_scale, f_data->m_scale, f_blend);
     m_useScale = (m_useScale || f_data->m_useScale);
 }
 void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_leftData, BoneFrameData *f_rightData, float f_blend)
 {
-    m_position = glm::lerp(f_leftData->m_position, f_rightData->m_position, f_blend);
+    m_position = glm::mix(f_leftData->m_position, f_rightData->m_position, f_blend);
     m_rotation = glm::slerp(f_leftData->m_rotation, f_rightData->m_rotation, f_blend);
-    m_scale = glm::lerp(f_leftData->m_scale, f_rightData->m_scale, f_blend);
+    m_scale = glm::mix(f_leftData->m_scale, f_rightData->m_scale, f_blend);
     m_useScale = (f_leftData->m_useScale || f_rightData->m_useScale);
 }
 

@@ -20,9 +20,10 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
 
     m_networkInterface = RakNet::RakPeerInterface::GetInstance();
     std::string l_string;
-    m_core->GetConfigManager()->GetBindIP(l_string);
-    RakNet::SocketDescriptor l_socketDescriptor(m_core->GetConfigManager()->GetBindPort(), l_string.c_str());
-    if(m_networkInterface->Startup(m_core->GetConfigManager()->GetMaxClients(), &l_socketDescriptor, 1) == RakNet::StartupResult::RAKNET_STARTED)
+    ConfigManager *l_configManager = m_core->GetConfigManager();
+    l_configManager->GetBindIP(l_string);
+    RakNet::SocketDescriptor l_socketDescriptor(l_configManager->GetBindPort(), l_string.c_str());
+    if(m_networkInterface->Startup(l_configManager->GetMaxClients(), &l_socketDescriptor, 1) == RakNet::StartupResult::RAKNET_STARTED)
     {
         std::string l_log("Network interface started at ");
         l_log.append(l_socketDescriptor.hostAddress);
@@ -31,10 +32,10 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
         m_core->GetLogManager()->Log(l_log);
         l_log.clear();
         l_log.append("Maximum clients - ");
-        l_log.append(std::to_string(m_core->GetConfigManager()->GetMaxClients()));
+        l_log.append(std::to_string(l_configManager->GetMaxClients()));
         m_core->GetLogManager()->Log(l_log);
 
-        m_networkInterface->SetMaximumIncomingConnections(m_core->GetConfigManager()->GetMaxClients());
+        m_networkInterface->SetMaximumIncomingConnections(l_configManager->GetMaxClients());
         m_networkInterface->SetOccasionalPing(true);
     }
     else
@@ -44,7 +45,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
         m_networkInterface = nullptr;
     }
 
-    m_clientVector.assign(m_core->GetConfigManager()->GetMaxClients(), nullptr);
+    m_clientVector.assign(l_configManager->GetMaxClients(), nullptr);
     m_argument = new LuaArguments();
 
     m_networkClientConnectCallback = nullptr;
@@ -103,6 +104,7 @@ void ROC::NetworkManager::DoPulse()
 {
     if(m_networkInterface)
     {
+        EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
         for(RakNet::Packet *l_packet = m_networkInterface->Receive(); l_packet; m_networkInterface->DeallocatePacket(l_packet), l_packet = m_networkInterface->Receive())
         {
             switch(GetPacketIdentifier(l_packet))
@@ -120,7 +122,7 @@ void ROC::NetworkManager::DoPulse()
                     if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);
 
                     m_argument->PushArgument(l_client, "Client");
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientConnect", m_argument);
+                    l_eventManager->CallEvent("onNetworkClientConnect", m_argument);
                     m_argument->Clear();
                     m_core->GetLogManager()->Log(l_log);
                 } break;
@@ -137,7 +139,7 @@ void ROC::NetworkManager::DoPulse()
                     if(m_networkClientDisconnectCallback) (*m_networkClientDisconnectCallback)(l_client);
 
                     m_argument->PushArgument(l_client, "Client");
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkClientDisconnect", m_argument);
+                    l_eventManager->CallEvent("onNetworkClientDisconnect", m_argument);
                     m_argument->Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
@@ -152,7 +154,7 @@ void ROC::NetworkManager::DoPulse()
                     l_dataIn.IgnoreBytes(sizeof(unsigned char));
                     if(l_dataIn.Read(l_textSize))
                     {
-                        l_stringData.resize(l_textSize);
+                        l_stringData.resize(static_cast<size_t>(l_textSize));
                         if(l_dataIn.Read(&l_stringData[0], l_textSize))
                         {
                             Client *l_client = m_clientVector[l_packet->guid.systemIndex];
@@ -161,7 +163,7 @@ void ROC::NetworkManager::DoPulse()
 
                             m_argument->PushArgument(l_client, "Client");
                             m_argument->PushArgument(l_stringData);
-                            m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_argument);
+                            l_eventManager->CallEvent("onNetworkDataRecieve", m_argument);
                             m_argument->Clear();
                         }
                     }

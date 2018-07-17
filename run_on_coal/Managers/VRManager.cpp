@@ -61,8 +61,8 @@ ROC::VRManager::VRManager(Core *f_core)
     m_rightEyeRT = new RenderTarget();
     m_rightEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear);
 
-    m_vrTexture[0] = { reinterpret_cast<void*>(m_leftEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
-    m_vrTexture[1] = { reinterpret_cast<void*>(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+    m_vrTexture[0] = { UIntToPtr(m_leftEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+    m_vrTexture[1] = { UIntToPtr(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
     m_vrStage = VRS_None;
     m_leftController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, { 0U }, { 0U }, false };
@@ -114,19 +114,20 @@ void ROC::VRManager::DoPulse()
         btTransform l_transform;
         l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
 
-        std::memcpy(&m_headPosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+        btVector3 &l_origin = l_transform.getOrigin();
+        std::memcpy(&m_headPosition, l_origin.m_floats, sizeof(glm::vec3));
         btQuaternion l_rotation = l_transform.getRotation();
         for(int i = 0; i < 4; i++) m_headRotation[i] = l_rotation[i];
 
         vr::HmdMatrix34_t l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Left);
         MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
         l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-        std::memcpy(&m_leftEyePosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+        std::memcpy(&m_leftEyePosition, l_origin.m_floats, sizeof(glm::vec3));
 
         l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Right);
         MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
         l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-        std::memcpy(&m_rightEyePosition, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
+        std::memcpy(&m_rightEyePosition, l_origin.m_floats, sizeof(glm::vec3));
     }
 
     // Update controllers

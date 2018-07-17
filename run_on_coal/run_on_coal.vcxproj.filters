@@ -123,9 +123,6 @@
     <ClCompile Include="Utils\CustomData.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\Movie.cpp">
-      <Filter>Elements</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\RenderManager\Quad3D.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
@@ -169,9 +166,6 @@
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefs\LuaModelDef.cpp">
-      <Filter>Lua\LuaDefs</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefs\LuaMovieDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefs\LuaNetworkDef.cpp">
@@ -367,9 +361,6 @@
     <ClInclude Include="Elements\Geometry\BoneCollisionData.hpp">
       <Filter>Elements\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Elements\Movie.h">
-      <Filter>Elements</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\RenderManager\Quad3D.h">
       <Filter>Managers\RenderManager</Filter>
     </ClInclude>
@@ -413,9 +404,6 @@
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaModelDef.h">
-      <Filter>Lua\LuaDefs</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefs\LuaMovieDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaNetworkDef.h">

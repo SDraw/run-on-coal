@@ -10,7 +10,6 @@
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Light.h"
 #include "Elements/Model/Model.h"
-#include "Elements/Movie.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader/Shader.h"
@@ -297,7 +296,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     return l_file;
 }
 
-ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_size, float f_mass)
+ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, const glm::vec3 &f_size, float f_mass)
 {
     Collision *l_col = new Collision();
 
@@ -312,27 +311,6 @@ ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, glm::vec3 &f_si
         l_col = nullptr;
     }
     return l_col;
-}
-
-ROC::Movie* ROC::ElementManager::CreateMovie(const std::string &f_path)
-{
-    Movie *l_movie = new Movie();
-
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_movie->Load(l_path))
-    {
-        AddElementToSet(l_movie);
-        m_core->GetRenderManager()->AddMovie(l_movie);
-    }
-    else
-    {
-        delete l_movie;
-        l_movie = nullptr;
-    }
-    return l_movie;
 }
 
 bool ROC::ElementManager::IsValidElement(void *f_ptr)
@@ -407,15 +385,6 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             case Element::ET_Collision:
             {
                 m_core->GetPhysicsManager()->RemoveCollision(reinterpret_cast<Collision*>(f_element));
-                m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-
-            case Element::ET_Movie:
-            {
-                m_core->GetRenderManager()->RemoveMovie(reinterpret_cast<Movie*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 RemoveElementFromSet(f_element);
                 delete f_element;

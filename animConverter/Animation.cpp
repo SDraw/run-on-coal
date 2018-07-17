@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#define GLM_ENABLE_EXPERIMENTAL
 #include "glm/glm.hpp"
 #include "glm/gtx/compatibility.hpp"
 #include "sajson.h"
@@ -32,7 +33,7 @@ void Animation::Clean()
 
 #define ReportError(T) { std::cout << ">>> " << T << std::endl; return false; }
 #define ReportErrorAndClean(T) { std::cout << ">>> " T << std::endl; Clean(); return false; }
-#define Info(T) std::cout << "> " << T << std::endl
+#define Info(T) { std::cout << "> " << T << std::endl; }
 
 bool Animation::Load(const std::string &f_path)
 {
@@ -117,12 +118,12 @@ bool Animation::Load(const std::string &f_path)
     if(l_nodeIndex == l_animNode.get_length()) ReportError("No hierarchy node");
     sajson::value l_hierarchyNode = l_animNode.get_object_value(l_nodeIndex);
     if(l_hierarchyNode.get_type() != sajson::TYPE_ARRAY) ReportError("Hierarchy node isn't an array");
-    m_bonesCount = l_hierarchyNode.get_length();
+    m_bonesCount = static_cast<unsigned int>(l_hierarchyNode.get_length());
     Info("Bones count is " << m_bonesCount);
     if(m_bonesCount == 0U) ReportError("Bones array is empty");
-    m_bones.resize(m_bonesCount);
+    m_bones.resize(static_cast<size_t>(m_bonesCount));
 
-    for(unsigned int i = 0U; i < m_bonesCount; i++)
+    for(size_t i = 0U; i < static_cast<size_t>(m_bonesCount); i++)
     {
         sajson::value l_boneNode = l_hierarchyNode.get_array_element(i);
         if(l_boneNode.get_type() != sajson::TYPE_OBJECT) ReportErrorAndClean("Bone " << i << " node isn't an object");
@@ -232,7 +233,7 @@ bool Animation::Generate(const std::string &f_path)
             l_file.write(reinterpret_cast<char*>(&m_bonesCount), sizeof(unsigned int));
             for(auto &iter : m_bones)
             {
-                int l_keyframesCount = iter.m_keyframes.size();
+                int l_keyframesCount = static_cast<int>(iter.m_keyframes.size());
                 l_file.write(reinterpret_cast<char*>(&l_keyframesCount), sizeof(int));
                 for(auto &iter1 : iter.m_keyframes)
                 {

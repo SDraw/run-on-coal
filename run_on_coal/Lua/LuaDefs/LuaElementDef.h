@@ -24,7 +24,6 @@ protected:
     friend class LuaGeometryDef;
     friend class LuaLightDef;
     friend class LuaModelDef;
-    friend class LuaMovieDef;
     friend class LuaRenderTargetDef;
     friend class LuaSceneDef;
     friend class LuaShaderDef;

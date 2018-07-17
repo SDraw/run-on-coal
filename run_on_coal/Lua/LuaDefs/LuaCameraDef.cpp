@@ -194,7 +194,7 @@ int ROC::LuaCameraDef::GetProjectionType(lua_State *f_vm)
     Camera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
-    !argStream.HasErrors() ? argStream.PushText(g_CameraTypesTable[l_camera->GetProjectionType()]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_CameraTypesTable[static_cast<size_t>(l_camera->GetProjectionType())]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

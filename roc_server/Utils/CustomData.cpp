@@ -5,10 +5,12 @@
 ROC::CustomData::CustomData()
 {
     m_type = CDT_None;
+    m_ptr = nullptr;
 }
 ROC::CustomData::CustomData(const CustomData& f_data)
 {
     m_type = f_data.m_type;
+    m_ptr = nullptr;
     switch(m_type)
     {
         case CDT_Boolean:

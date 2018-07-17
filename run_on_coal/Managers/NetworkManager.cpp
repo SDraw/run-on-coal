@@ -147,7 +147,7 @@ void ROC::NetworkManager::DoPulse()
                     l_dataIn.IgnoreBytes(sizeof(unsigned char));
                     if(l_dataIn.Read(l_textSize))
                     {
-                        l_stringData.resize(l_textSize);
+                        l_stringData.resize(static_cast<size_t>(l_textSize));
                         if(l_dataIn.Read(&l_stringData[0], l_textSize))
                         {
                             if(m_dataCallback) (*m_dataCallback)(l_stringData);

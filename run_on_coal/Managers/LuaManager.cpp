@@ -19,7 +19,6 @@
 #include "Lua/LuaDefs/LuaInputDef.h"
 #include "Lua/LuaDefs/LuaLightDef.h"
 #include "Lua/LuaDefs/LuaModelDef.h"
-#include "Lua/LuaDefs/LuaMovieDef.h"
 #include "Lua/LuaDefs/LuaNetworkDef.h"
 #include "Lua/LuaDefs/LuaPhysicsDef.h"
 #include "Lua/LuaDefs/LuaQuatDef.h"
@@ -61,7 +60,6 @@ ROC::LuaManager::LuaManager(Core *f_core)
     LuaGeometryDef::Init(m_vm);
     LuaLightDef::Init(m_vm);
     LuaModelDef::Init(m_vm);
-    LuaMovieDef::Init(m_vm);
     LuaRenderTargetDef::Init(m_vm);
     LuaSceneDef::Init(m_vm);
     LuaShaderDef::Init(m_vm);

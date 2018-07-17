@@ -2,12 +2,10 @@
 
 #include "Elements/Client.h"
 
-ROC::Client::Client(const RakNet::SystemAddress &f_address)
+ROC::Client::Client(const RakNet::SystemAddress &f_address) : m_address(f_address)
 {
     m_elementType = ET_Client;
     m_elementTypeName.assign("Client");
-
-    m_address = f_address;
 }
 ROC::Client::~Client()
 {

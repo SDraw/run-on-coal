@@ -6,7 +6,7 @@ namespace ROC
 class Texture;
 class Material final
 {
-    unsigned int m_verticesCount;
+    int m_verticesCount;
     GLuint m_VBO[5];
     GLuint m_VAO;
 

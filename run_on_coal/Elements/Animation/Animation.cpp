@@ -82,12 +82,12 @@ bool ROC::Animation::Load(const std::string &f_path)
 
                     if(j == 0)
                     {
-                        l_interval.start = l_frameIndex;
+                        l_interval.start = static_cast<size_t>(l_frameIndex);
                         l_interval.value.m_leftData = new BoneFrameData(l_position, l_rotation, l_scale);
                     }
                     else
                     {
-                        l_interval.stop = l_frameIndex;
+                        l_interval.stop = static_cast<size_t>(l_frameIndex);
 
                         auto &l_value = l_interval.value;
                         l_value.m_rightData = new BoneFrameData(l_position, l_rotation, l_scale);
@@ -95,7 +95,7 @@ bool ROC::Animation::Load(const std::string &f_path)
                         l_value.m_static = l_value.m_leftData->IsEqual(l_value.m_rightData);
                         l_intervals.push_back(l_interval);
 
-                        l_interval.start = l_frameIndex;
+                        l_interval.start = static_cast<size_t>(l_frameIndex);
                         l_value.m_leftData = l_value.m_rightData;
                         l_value.m_startTime = l_frameIndex*m_frameDelta;
                         l_value.m_rightData = nullptr;
@@ -122,10 +122,10 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
 {
     if(m_loaded)
     {
-        unsigned int l_frame = ((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_framesCount;
+        size_t l_frame = static_cast<size_t>(((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_framesCount);
         f_tick = f_tick%m_duration;
 
-        for(unsigned int i = 0; i < m_bonesCount; i++)
+        for(size_t i = 0; i < static_cast<size_t>(m_bonesCount); i++)
         {
             m_boneIntervals[i]->findOverlapping(l_frame, l_frame, m_searchResult);
             if(!m_searchResult.empty())

@@ -12,7 +12,7 @@ int ReadEnumVector(const std::string &f_val, const std::vector<std::string> &f_v
     {
         if(!iter->compare(f_val))
         {
-            l_result = std::distance(f_vec.begin(),iter);
+            l_result = static_cast<int>(std::distance(f_vec.begin(),iter));
             break;
         }
     }

@@ -150,9 +150,10 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
             {
                 if(m_parentBone != -1)
                 {
-                    if(m_parent->m_skeleton->GetBones()[m_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
+                    size_t l_parentBone = static_cast<size_t>(m_parentBone);
+                    if(m_parent->m_skeleton->GetBones()[l_parentBone]->IsRebuilded() || m_parent->m_rebuilded)
                     {
-                        const glm::mat4 &l_boneMatrix = m_parent->m_skeleton->GetBones()[m_parentBone]->GetMatrix();
+                        const glm::mat4 &l_boneMatrix = m_parent->m_skeleton->GetBones()[l_parentBone]->GetMatrix();
                         std::memcpy(&m_globalMatrix, &m_parent->m_globalMatrix, sizeof(glm::mat4));
                         m_globalMatrix *= l_boneMatrix;
                         m_globalMatrix *= m_localMatrix;

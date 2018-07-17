@@ -5,15 +5,15 @@ namespace ROC
 
 class Pool
 {
-    unsigned int m_size;
+    size_t m_size;
     std::vector<unsigned char> m_poolData;
-    unsigned int m_minimal;
+    size_t m_minimal;
 public:
-    explicit Pool(unsigned int f_size);
+    explicit Pool(size_t f_size);
     ~Pool();
 
     int Allocate();
-    void Reset(unsigned int f_id);
+    void Reset(size_t f_id);
 };
 
 }

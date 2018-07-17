@@ -58,7 +58,7 @@ int GetMaxCompressedLen(int nLenSrc)
 }
 
 #define Error(T) { std::cout << "Error: " << T << std::endl; return; }
-#define Info(T) std::cout << "Info: " << T << std::endl
+#define Info(T) { std::cout << "Info: " << T << std::endl; }
 
 void ConvertJSON(std::string &f_path, std::string &f_out)
 {
@@ -105,9 +105,9 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         }
         l_vertexVector.push_back(l_vertexPos);
     }
-    l_origSize = l_vertexVector.size()*sizeof(glm::vec3);
+    l_origSize = static_cast<int>(l_vertexVector.size()*sizeof(glm::vec3));
     l_maxSize = GetMaxCompressedLen(l_origSize);
-    l_compressedData.resize(l_maxSize);
+    l_compressedData.resize(static_cast<size_t>(l_maxSize));
     l_compressedSized = CompressData(l_vertexVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
     if(l_compressedSized == -1) Error("Unable to compress vertices");
     l_file.write(reinterpret_cast<char*>(&l_compressedSized), sizeof(int));
@@ -138,9 +138,9 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         }
         l_uvVector.push_back(l_uvPos);
     }
-    l_origSize = l_uvVector.size()*sizeof(glm::vec2);
+    l_origSize = static_cast<int>(l_uvVector.size()*sizeof(glm::vec2));
     l_maxSize = GetMaxCompressedLen(l_origSize);
-    l_compressedData.resize(l_maxSize);
+    l_compressedData.resize(static_cast<size_t>(l_maxSize));
     l_compressedSized = CompressData(l_uvVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
     if(l_compressedSized == -1) Error("Unable to compress UVs");
     l_file.write(reinterpret_cast<char*>(&l_compressedSized), sizeof(int));
@@ -168,9 +168,9 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         }
         l_normalVector.push_back(l_normalDir);
     }
-    l_origSize = l_normalVector.size()*sizeof(glm::vec3);
+    l_origSize = static_cast<int>(l_normalVector.size()*sizeof(glm::vec3));
     l_maxSize = GetMaxCompressedLen(l_origSize);
-    l_compressedData.resize(l_maxSize);
+    l_compressedData.resize(static_cast<size_t>(l_maxSize));
     l_compressedSized = CompressData(l_normalVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
     if(l_compressedSized == -1) Error("Unable to compress normals");
     l_file.write(reinterpret_cast<char*>(&l_compressedSized), sizeof(int));
@@ -198,9 +198,9 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         }
         l_weightVector.push_back(l_weightVal);
     }
-    l_origSize = l_weightVector.size()*sizeof(glm::vec4);
+    l_origSize = static_cast<int>(l_weightVector.size()*sizeof(glm::vec4));
     l_maxSize = GetMaxCompressedLen(l_origSize);
-    l_compressedData.resize(l_maxSize);
+    l_compressedData.resize(static_cast<size_t>(l_maxSize));
     l_compressedSized = CompressData(l_weightVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
     if(l_compressedSized == -1) Error("Unable to compress weights");
     l_file.write(reinterpret_cast<char*>(&l_compressedSized), sizeof(int));
@@ -227,9 +227,9 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         }
         l_indexVector.push_back(l_indexVal);
     }
-    l_origSize = l_indexVector.size()*sizeof(glm::ivec4);
+    l_origSize = static_cast<int>(l_indexVector.size()*sizeof(glm::ivec4));
     l_maxSize = GetMaxCompressedLen(l_origSize);
-    l_compressedData.resize(l_maxSize);
+    l_compressedData.resize(static_cast<size_t>(l_maxSize));
     l_compressedSized = CompressData(l_indexVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
     if(l_compressedSized == -1) Error("Unable to compress indices");
     l_file.write(reinterpret_cast<char*>(&l_compressedSized), sizeof(int));
@@ -334,13 +334,13 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
         l_file.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
         glm::vec4 l_params(1.f);
         l_file.write(reinterpret_cast<char*>(&l_params), sizeof(glm::vec4));
-        l_setter = l_difMap.length();
+        l_setter = static_cast<unsigned char>(l_difMap.length());
         l_file.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
         if(l_setter) l_file.write(l_difMap.data(), l_setter);
 
-        l_origSize = l_facesVector.size()*sizeof(Face);
+        l_origSize = static_cast<int>(l_facesVector.size()*sizeof(Face));
         l_maxSize = GetMaxCompressedLen(l_origSize);
-        l_compressedData.resize(l_maxSize);
+        l_compressedData.resize(static_cast<size_t>(l_maxSize));
         l_compressedSized = CompressData(l_facesVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
         if(l_compressedSized == -1) Error("Unable to compress material " << i << " faces");
         l_file.write(reinterpret_cast<char*>(&l_compressedSized), sizeof(int));
@@ -376,7 +376,7 @@ void ConvertJSON(std::string &f_path, std::string &f_out)
             else l_name += l_boneNameData.as_string();
         }
 
-        l_setter = l_name.length();
+        l_setter = static_cast<unsigned char>(l_name.length());
         l_file.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
         if(l_setter) l_file.write(l_name.data(), l_setter);
 
@@ -564,9 +564,9 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
         {
             l_dataParsed = true;
 
-            int l_origSize = temp_vertex.size()*sizeof(glm::vec3);
+            int l_origSize = static_cast<int>(temp_vertex.size()*sizeof(glm::vec3));
             int l_maxSize = GetMaxCompressedLen(l_origSize);
-            l_compressedData.resize(l_maxSize);
+            l_compressedData.resize(static_cast<size_t>(l_maxSize));
             int l_compressedSize = CompressData(temp_vertex.data(), l_origSize, l_compressedData.data(), l_maxSize);
             if(l_compressedSize == -1) Error("Unable to compress vertices");
             l_outputFile.write(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -574,9 +574,9 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             l_outputFile.write(reinterpret_cast<char*>(l_compressedData.data()), l_compressedSize);
             Info(temp_vertex.size() << " vertices");
 
-            l_origSize = temp_uv.size()*sizeof(glm::vec2);
+            l_origSize = static_cast<int>(temp_uv.size()*sizeof(glm::vec2));
             l_maxSize = GetMaxCompressedLen(l_origSize);
-            l_compressedData.resize(l_maxSize);
+            l_compressedData.resize(static_cast<size_t>(l_maxSize));
             l_compressedSize = CompressData(temp_uv.data(), l_origSize, l_compressedData.data(), l_maxSize);
             if(l_compressedSize == -1) Error("Unable to compress UVs");
             l_outputFile.write(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -584,9 +584,9 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             l_outputFile.write(reinterpret_cast<char*>(l_compressedData.data()), l_compressedSize);
             Info(temp_vertex.size() << " UVs");
 
-            l_origSize = temp_normal.size()*sizeof(glm::vec3);
+            l_origSize = static_cast<int>(temp_normal.size()*sizeof(glm::vec3));
             l_maxSize = GetMaxCompressedLen(l_origSize);
-            l_compressedData.resize(l_maxSize);
+            l_compressedData.resize(static_cast<size_t>(l_maxSize));
             l_compressedSize = CompressData(temp_normal.data(), l_origSize, l_compressedData.data(), l_maxSize);
             if(l_compressedSize == -1) Error("Unable to compress normals");
             l_outputFile.write(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -598,7 +598,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
         {
             if(!l_materialsSizeParsed)
             {
-                int l_materialsSizeI = l_materialNames.size();
+                int l_materialsSizeI = static_cast<int>(l_materialNames.size());
                 l_outputFile.write(reinterpret_cast<char*>(&l_materialsSizeI), sizeof(int));
                 l_materialsSizeParsed = true;
                 Info(l_materialsSizeI << " material(s)");
@@ -606,17 +606,17 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
             if(l_defaultMaterial) continue;
             if(l_currentMaterial != -1)
             {
-                l_setter = static_cast<unsigned char>(l_materialTypes[l_currentMaterial]);
+                l_setter = static_cast<unsigned char>(l_materialTypes[static_cast<size_t>(l_currentMaterial)]);
                 l_outputFile.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
                 glm::vec4 l_params(1.f);
                 l_outputFile.write(reinterpret_cast<char*>(&l_params), sizeof(glm::vec4));
-                l_setter = l_materialTextureNames[l_currentMaterial].size();
+                l_setter = static_cast<unsigned char>(l_materialTextureNames[static_cast<size_t>(l_currentMaterial)].size());
                 l_outputFile.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
-                if(l_setter) l_outputFile.write(l_materialTextureNames[l_currentMaterial].data(), l_setter);
+                if(l_setter) l_outputFile.write(l_materialTextureNames[static_cast<size_t>(l_currentMaterial)].data(), l_setter);
 
-                int l_origSize = l_faceVector.size()*sizeof(Face);
+                int l_origSize = static_cast<int>(l_faceVector.size()*sizeof(Face));
                 int l_maxSize = GetMaxCompressedLen(l_origSize);
-                l_compressedData.resize(l_maxSize);
+                l_compressedData.resize(static_cast<size_t>(l_maxSize));
                 int l_compressedSize = CompressData(l_faceVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
                 if(l_compressedSize == -1) Error("Unable to compress faces for material " << l_currentMaterial);
                 l_outputFile.write(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -626,7 +626,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
                 l_faceVector.clear();
             }
             std::string l_textureName = l_buffer.substr(7U);
-            l_currentMaterial = std::distance(l_materialNames.begin(), std::find(l_materialNames.begin(), l_materialNames.end(), l_textureName));
+            l_currentMaterial = static_cast<int>(std::distance(l_materialNames.begin(), std::find(l_materialNames.begin(), l_materialNames.end(), l_textureName)));
             if(l_currentMaterial >= int(l_materialNames.size()) || l_currentMaterial < 0) Error("Unable to parse materials");
             continue;
         }
@@ -634,7 +634,7 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
         {
             if(!l_materialsSizeParsed)
             {
-                int l_materialsSizeI = l_materialNames.size();
+                int l_materialsSizeI = static_cast<int>(l_materialNames.size());
                 l_outputFile.write(reinterpret_cast<char*>(&l_materialsSizeI), sizeof(int));
                 l_materialsSizeParsed = true;
                 Info(l_materialsSizeI << " material(s)");
@@ -655,17 +655,17 @@ void ConvertOBJ(std::string &f_path, std::string &f_out)
     }
     if(l_currentMaterial != -1)
     {
-        l_setter = static_cast<unsigned char>(l_materialTypes[l_currentMaterial]);
+        l_setter = static_cast<unsigned char>(l_materialTypes[static_cast<size_t>(l_currentMaterial)]);
         l_outputFile.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
         glm::vec4 l_params(1.f);
         l_outputFile.write(reinterpret_cast<char*>(&l_params), sizeof(glm::vec4));
-        l_setter = l_materialTextureNames[l_currentMaterial].size();
+        l_setter = static_cast<unsigned char>(l_materialTextureNames[static_cast<size_t>(l_currentMaterial)].size());
         l_outputFile.write(reinterpret_cast<char*>(&l_setter), sizeof(unsigned char));
-        if(l_setter) l_outputFile.write(l_materialTextureNames[l_currentMaterial].data(), l_setter);
+        if(l_setter) l_outputFile.write(l_materialTextureNames[static_cast<size_t>(l_currentMaterial)].data(), l_setter);
 
-        int l_origSize = l_faceVector.size()*sizeof(Face);
+        int l_origSize = static_cast<int>(l_faceVector.size()*sizeof(Face));
         int l_maxSize = GetMaxCompressedLen(l_origSize);
-        l_compressedData.resize(l_maxSize);
+        l_compressedData.resize(static_cast<size_t>(l_maxSize));
         int l_compressedSize = CompressData(l_faceVector.data(), l_origSize, l_compressedData.data(), l_maxSize);
         if(l_compressedSize == -1) Error("Unable to compress faces for material " << l_currentMaterial);
         l_outputFile.write(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
