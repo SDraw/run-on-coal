@@ -17,8 +17,10 @@ void ROC::LuaQuatDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setEuler", SetEuler);
 
     LuaUtils::AddClassMethod(f_vm, "conjugate", Conjugate);
+    LuaUtils::AddClassMethod(f_vm, "__unm", Inverse);
     LuaUtils::AddClassMethod(f_vm, "inverse", Inverse);
     LuaUtils::AddClassMethod(f_vm, "normalize", Normalize);
+    LuaUtils::AddClassMethod(f_vm, "__len", Length);
     LuaUtils::AddClassMethod(f_vm, "length", Length);
     LuaUtils::AddClassMethod(f_vm, "rotate", Rotate);
     LuaUtils::AddClassMethod(f_vm, "rotateVector", RotateVector);
@@ -26,8 +28,14 @@ void ROC::LuaQuatDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "lerp", Lerp);
     LuaUtils::AddClassMethod(f_vm, "slerp", Slerp);
     LuaUtils::AddClassMethod(f_vm, "dot", Dot);
+    LuaUtils::AddClassMethod(f_vm, "__add", Add);
     LuaUtils::AddClassMethod(f_vm, "add", Add);
+    LuaUtils::AddClassMethod(f_vm, "__sub", Subtract);
+    LuaUtils::AddClassMethod(f_vm, "subtract", Subtract);
+    LuaUtils::AddClassMethod(f_vm, "__mul", Multiply);
     LuaUtils::AddClassMethod(f_vm, "multiply", Multiply);
+    LuaUtils::AddClassMethod(f_vm, "__eq", Equal);
+    LuaUtils::AddClassMethod(f_vm, "equal", Equal);
 
     LuaUtils::AddClassFinish(f_vm);
 }
@@ -43,8 +51,7 @@ int ROC::LuaQuatDef::Create(lua_State *f_vm)
     argStream.ReadNextNumber(l_quatW);
     if(!argStream.HasErrors())
     {
-        Quat l_quat;
-        l_quat = std::isnan(l_quatW) ? Quat(l_vec) : Quat(l_quatW, l_vec.x, l_vec.y, l_vec.z);
+        Quat l_quat = (std::isnan(l_quatW) ? Quat(l_vec) : Quat(l_quatW, l_vec.x, l_vec.y, l_vec.z));
         argStream.PushQuat(l_quat);
     }
     else argStream.PushBoolean(false);
@@ -115,16 +122,33 @@ int ROC::LuaQuatDef::SetEuler(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Add(lua_State *f_vm)
 {
-    // bool Quat:add(userdata quat)
+    // userdata Quat:add(userdata quat)
+    // userdata Quat()+Quat()
     Quat *l_quatA, *l_quatB;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quatA);
     argStream.ReadQuat(l_quatB);
     if(!argStream.HasErrors())
     {
-        Quat l_quatC = *l_quatA + *l_quatB;
-        std::memcpy(l_quatA, &l_quatC, sizeof(Quat));
-        argStream.PushBoolean(true);
+        Quat l_quatC = (*l_quatA) + (*l_quatB);
+        argStream.PushQuat(l_quatC);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaQuatDef::Subtract(lua_State *f_vm)
+{
+    // userdata Quat:subtract(userdata quat)
+    // userdata Quat()-Quat()
+    Quat *l_quatA, *l_quatB;
+    ArgReader argStream(f_vm);
+    argStream.ReadQuat(l_quatA);
+    argStream.ReadQuat(l_quatB);
+    if(!argStream.HasErrors())
+    {
+        Quat l_quatC = (*l_quatA) - (*l_quatB);
+        argStream.PushQuat(l_quatC);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -132,16 +156,16 @@ int ROC::LuaQuatDef::Add(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Multiply(lua_State *f_vm)
 {
-    // bool Quat:multiply(userdata quat)
+    // userdata Quat:multiply(userdata quat)
+    // userdata Quat()*Quat()
     Quat *l_quatA, *l_quatB;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quatA);
     argStream.ReadQuat(l_quatB);
     if(!argStream.HasErrors())
     {
-        Quat l_quatC = *l_quatA * *l_quatB;
-        std::memcpy(l_quatA, &l_quatC, sizeof(Quat));
-        argStream.PushBoolean(true);
+        Quat l_quatC = (*l_quatA) * (*l_quatB);
+        argStream.PushQuat(l_quatC);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -149,7 +173,8 @@ int ROC::LuaQuatDef::Multiply(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Inverse(lua_State *f_vm)
 {
-    // bool Quat:inverse()
+    // userdata Quat:inverse()
+    // userdata -Quat()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -157,7 +182,7 @@ int ROC::LuaQuatDef::Inverse(lua_State *f_vm)
     {
         Quat l_quatInv = glm::inverse(*l_quat);
         std::memcpy(l_quat, &l_quatInv, sizeof(Quat));
-        argStream.PushBoolean(true);
+        argStream.PushQuat(l_quatInv);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -165,15 +190,14 @@ int ROC::LuaQuatDef::Inverse(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Conjugate(lua_State *f_vm)
 {
-    // bool Quat:conjugate()
+    // userdata Quat:conjugate()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
     if(!argStream.HasErrors())
     {
         Quat l_quatConj = glm::conjugate(*l_quat);
-        std::memcpy(l_quat, &l_quatConj, sizeof(Quat));
-        argStream.PushBoolean(true);
+        argStream.PushQuat(l_quatConj);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -181,15 +205,14 @@ int ROC::LuaQuatDef::Conjugate(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Normalize(lua_State *f_vm)
 {
-    // bool Quat:normalize()
+    // userdata Quat:normalize()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
     if(!argStream.HasErrors())
     {
         Quat l_quatNorm = glm::normalize(*l_quat);
-        std::memcpy(l_quat, &l_quatNorm, sizeof(Quat));
-        argStream.PushBoolean(true);
+        argStream.PushQuat(l_quatNorm);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -198,6 +221,7 @@ int ROC::LuaQuatDef::Normalize(lua_State *f_vm)
 int ROC::LuaQuatDef::Length(lua_State *f_vm)
 {
     // float Quat:length()
+    // float #Quat()
     Quat *l_quat;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quat);
@@ -212,7 +236,7 @@ int ROC::LuaQuatDef::Length(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Dot(lua_State *f_vm)
 {
-    // float Quat:dot()
+    // float Quat:dot(userdata quat)
     Quat *l_quatA, *l_quatB;
     ArgReader argStream(f_vm);
     argStream.ReadQuat(l_quatA);
@@ -228,7 +252,7 @@ int ROC::LuaQuatDef::Dot(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Rotate(lua_State *f_vm)
 {
-    // bool Quat:rotate(float angle, float axisX, float axisY, float axisZ)
+    // userdata Quat:rotate(float angle, float axisX, float axisY, float axisZ)
     Quat *l_quat;
     float l_angle;
     glm::vec3 l_axis;
@@ -239,8 +263,7 @@ int ROC::LuaQuatDef::Rotate(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Quat l_quatRot = glm::rotate(*l_quat, l_angle, l_axis);
-        std::memcpy(l_quat, &l_quatRot, sizeof(Quat));
-        argStream.PushBoolean(true);
+        argStream.PushQuat(l_quatRot);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -248,7 +271,7 @@ int ROC::LuaQuatDef::Rotate(lua_State *f_vm)
 
 int ROC::LuaQuatDef::RotateVector(lua_State *f_vm)
 {
-    // bool Quat:rotateVector(float vecX, float vecY, float vecZ)
+    // float float float Quat:rotateVector(float vecX, float vecY, float vecZ)
     Quat *l_quat;
     glm::vec3 l_vec;
     ArgReader argStream(f_vm);
@@ -265,7 +288,7 @@ int ROC::LuaQuatDef::RotateVector(lua_State *f_vm)
 
 int ROC::LuaQuatDef::Lerp(lua_State *f_vm)
 {
-    // bool Quat:lerp(userdata quat, float lerp)
+    // userdata Quat:lerp(userdata quat, float lerp)
     Quat *l_quatA, *l_quatB;
     float l_blend;
     ArgReader argStream(f_vm);
@@ -275,15 +298,14 @@ int ROC::LuaQuatDef::Lerp(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Quat l_quatC = glm::lerp(*l_quatA, *l_quatB, l_blend);
-        std::memcpy(l_quatA, &l_quatC, sizeof(Quat));
-        argStream.PushBoolean(true);
+        argStream.PushQuat(l_quatC);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int ROC::LuaQuatDef::Slerp(lua_State *f_vm)
 {
-    // bool Quat:slerp(userdata quat, float slerp)
+    // userdata Quat:slerp(userdata quat, float slerp)
     Quat *l_quatA, *l_quatB;
     float l_blend;
     ArgReader argStream(f_vm);
@@ -293,8 +315,24 @@ int ROC::LuaQuatDef::Slerp(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         Quat l_quatC = glm::slerp(*l_quatA, *l_quatB, l_blend);
-        std::memcpy(l_quatA, &l_quatC, sizeof(Quat));
-        argStream.PushBoolean(true);
+        argStream.PushQuat(l_quatC);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaQuatDef::Equal(lua_State *f_vm)
+{
+    // bool Quat:equal(userdata quat)
+    // bool (Quat() == Quat())
+    Quat *l_quatA, *l_quatB;
+    ArgReader argStream(f_vm);
+    argStream.ReadQuat(l_quatA);
+    argStream.ReadQuat(l_quatB);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = ((*l_quatA) == (*l_quatB));
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

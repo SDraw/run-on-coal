@@ -135,7 +135,7 @@ void ROC::VRManager::DoPulse()
     // Update controllers
     m_leftController.m_updated = false;
     m_rightController.m_updated = false;
-    for(vr::TrackedDeviceIndex_t i = vr::k_unTrackedDeviceIndex_Hmd + 1; (i < vr::k_unMaxTrackedDeviceCount); i++)
+    for(vr::TrackedDeviceIndex_t i = vr::k_unTrackedDeviceIndex_Hmd + 1U; (i < vr::k_unMaxTrackedDeviceCount); i++)
     {
         if(m_vrSystem->IsTrackedDeviceConnected(i))
         {
@@ -188,7 +188,7 @@ void ROC::VRManager::UpdateControllerInput(VRController &f_controller, const std
         vr::VRControllerState_t &l_newState = f_controller.m_newState;
 
         // Update buttons press
-        for(const auto iter : g_VRControllerButtons)
+        for(const auto &iter : g_VRControllerButtons)
         {
             if((iter.first & l_newState.ulButtonPressed) != (iter.first & l_oldState.ulButtonPressed))
             {

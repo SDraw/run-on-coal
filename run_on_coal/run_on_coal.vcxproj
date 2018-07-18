@@ -120,7 +120,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -145,7 +145,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/luauft8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -172,7 +172,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -210,7 +210,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/sfeMovie/include;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/lua/include;../vendor/sajson;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/luautf8;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/intervaltree;../vendor/base64;../vendor/openvr/headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

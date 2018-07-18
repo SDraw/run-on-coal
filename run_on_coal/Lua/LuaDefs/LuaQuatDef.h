@@ -20,7 +20,9 @@ class LuaQuatDef final
     static int Lerp(lua_State *f_vm);
     static int Slerp(lua_State *f_vm);
     static int Add(lua_State *f_vm);
+    static int Subtract(lua_State *f_vm);
     static int Multiply(lua_State *f_vm);
+    static int Equal(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 
