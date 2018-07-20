@@ -65,6 +65,9 @@ public:
     void GetCursorPosition(glm::ivec2 &f_pos);
     void SetCursorPosition(const glm::ivec2 &f_pos);
 
+    void GetClipboardString(std::string &f_str);
+    void SetClipboardString(const std::string &f_str);
+
     static bool IsKeyPressed(int f_key);
     static bool IsMouseKeyPressed(int f_key);
 

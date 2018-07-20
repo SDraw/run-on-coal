@@ -312,24 +312,3 @@ void ROC::Collision::SetMotionType(int f_type)
         }
     }
 }
-
-void ROC::Collision::GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat &f_rot)
-{
-    if(m_rigidBody)
-    {
-        btTransform l_transform;
-        switch(m_motionType)
-        {
-            case CMT_Default: case CMT_Static:
-                l_transform = m_rigidBody->getCenterOfMassTransform();
-                break;
-            case CMT_Kinematic:
-                m_rigidBody->getMotionState()->getWorldTransform(l_transform);
-                break;
-        }
-        std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-        btQuaternion l_rotation = l_transform.getRotation();
-        for(int i = 0; i < 4; i++) f_rot[i] = l_rotation[i];
-        l_transform.getOpenGLMatrix(glm::value_ptr(f_mat));
-    }
-}

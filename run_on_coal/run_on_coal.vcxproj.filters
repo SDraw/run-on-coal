@@ -240,6 +240,9 @@
     <ClCompile Include="Lua\LuaDefs\LuaVRDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Transformation.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -474,6 +477,9 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaVRDef.h">
       <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Transformation.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

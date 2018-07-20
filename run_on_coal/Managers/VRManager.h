@@ -17,6 +17,8 @@ class VRManager final
     RenderTarget *m_rightEyeRT;
     glm::uvec2 m_targetSize;
     vr::Texture_t m_vrTexture[2];
+    vr::VREvent_t m_event;
+    bool m_quitState;
 
     enum RMVRStage : unsigned char
     {
@@ -83,7 +85,7 @@ protected:
     void EnableRenderTarget();
     void DisableRenderTarget();
 
-    void DoPulse();
+    bool DoPulse();
     void SubmitRender();
     
     friend class Core;

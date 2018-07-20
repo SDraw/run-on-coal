@@ -42,6 +42,8 @@ void ROC::LuaInputDef::Init(lua_State *f_vm)
     lua_register(f_vm, "joypadGetButtonState", JoypadGetButtonState);
     lua_register(f_vm, "joypadHasAxis", JoypadHasAxis);
     lua_register(f_vm, "joypadGetAxisValue", JoypadGetAxisValue);
+    lua_register(f_vm, "getClipboard", GetClipboard);
+    lua_register(f_vm, "setClipboard", SetClipboard);
 }
 
 int ROC::LuaInputDef::SetCursorMode(lua_State *f_vm)
@@ -327,6 +329,28 @@ int ROC::LuaInputDef::JoypadGetAxisValue(lua_State *f_vm)
             argStream.PushNumber(l_val);
         }
         else argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaInputDef::GetClipboard(lua_State *f_vm)
+{
+    ArgReader argStream(f_vm);
+    std::string l_clipboard;
+    LuaManager::GetCore()->GetSfmlManager()->GetClipboardString(l_clipboard);
+    argStream.PushText(l_clipboard);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaInputDef::SetClipboard(lua_State *f_vm)
+{
+    ArgReader argStream(f_vm);
+    std::string l_clipboard;
+    argStream.ReadText(l_clipboard);
+    if(!argStream.HasErrors())
+    {
+        LuaManager::GetCore()->GetSfmlManager()->SetClipboardString(l_clipboard);
+        argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

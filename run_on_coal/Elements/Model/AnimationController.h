@@ -9,18 +9,27 @@ class AnimationController final
 {
     Animation *m_animation;
     unsigned int m_tick;
-    enum AnimationState { None = 0U, Paused, Playing } m_state;
+    enum AnimationControllerState
+    { 
+        ACS_None = 0U,
+        ACS_Paused,
+        ACS_Playing
+    } m_state;
     float m_speed;
 
     bool m_blend;
     unsigned int m_blendTime;
     unsigned int m_blendTimeTick;
+    float m_blendValue;
 public:
     inline Animation* GetAnimation() { return m_animation; };
 
     bool Play();
     bool Pause();
     bool Reset();
+
+    inline bool IsPlaying() const { return (m_state == ACS_Playing); }
+    inline bool IsPaused() const { return (m_state == ACS_Paused); }
 
     bool SetSpeed(float f_speed);
     inline float GetSpeed() const { return m_speed; }
@@ -36,7 +45,10 @@ protected:
 
     void SetAnimation(Animation *f_anim);
 
-    void Update(std::vector<Bone*> &f_bones);
+    inline unsigned int GetTick() const { return m_tick; }
+    inline float GetBlendValue() const { return m_blendValue; }
+
+    void Update();
 
     friend class Model;
     friend class InheritanceManager;

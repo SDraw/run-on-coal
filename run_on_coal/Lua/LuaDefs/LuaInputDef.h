@@ -26,6 +26,8 @@ class LuaInputDef final
     static int JoypadGetButtonState(lua_State *f_vm);
     static int JoypadHasAxis(lua_State *f_vm);
     static int JoypadGetAxisValue(lua_State *f_vm);
+    static int GetClipboard(lua_State *f_vm);
+    static int SetClipboard(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

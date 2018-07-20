@@ -44,7 +44,6 @@ void ROC::LuaModelDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "getRotation", GetRotation);
     LuaUtils::AddClassMethod(f_vm, "setScale", SetScale);
     LuaUtils::AddClassMethod(f_vm, "getScale", GetScale);
-    LuaUtils::AddClassMethod(f_vm, "getMatrix", GetMatrix);
     LuaUtils::AddClassMethod(f_vm, "draw", Draw);
     LuaUtils::AddClassMethod(f_vm, "attach", Attach);
     LuaUtils::AddClassMethod(f_vm, "detach", Detach);
@@ -112,24 +111,12 @@ int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
 {
     // float float float Model:getPosition()
     Model *l_model;
-    bool l_global = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
-    argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        if(l_global && l_model->HasParent())
-        {
-            btTransform l_transform = btTransform::getIdentity();
-            l_transform.setFromOpenGLMatrix(glm::value_ptr(l_model->GetGlobalMatrix()));
-            const btVector3 &l_position = l_transform.getOrigin();
-            for(int i = 0; i < 3; i++) argStream.PushNumber(l_position[i]);
-        }
-        else
-        {
-            const glm::vec3& l_pos = l_model->GetPosition();
-            for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
-        }
+        const glm::vec3& l_pos = l_model->GetPosition();
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -154,24 +141,12 @@ int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
 {
     // float float float float Model:getRotation()
     Model *l_model;
-    bool l_global = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
-    argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        if(l_global && l_model->HasParent())
-        {
-            btTransform l_transform = btTransform::getIdentity();
-            l_transform.setFromOpenGLMatrix(glm::value_ptr(l_model->GetGlobalMatrix()));
-            const btQuaternion &l_rotation = l_transform.getRotation();
-            for(int i = 0; i < 4; i++) argStream.PushNumber(l_rotation[i]);
-        }
-        else
-        {
-            const glm::quat& l_rotation = l_model->GetRotation();
-            for(int i = 0; i < 4; i++) argStream.PushNumber(l_rotation[i]);
-        }
+        const glm::quat& l_rotation = l_model->GetRotation();
+        for(int i = 0; i < 4; i++) argStream.PushNumber(l_rotation[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -196,42 +171,12 @@ int ROC::LuaModelDef::GetScale(lua_State *f_vm)
 {
     // float float float Model:getScale()
     Model *l_model;
-    bool l_global = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
-    argStream.ReadNextBoolean(l_global);
     if(!argStream.HasErrors())
     {
-        if(l_global && l_model->HasParent())
-        {
-            glm::vec3 l_scale, l_position, l_skew;
-            glm::vec4 l_projection;
-            glm::quat l_rotation;
-            glm::decompose(l_model->GetGlobalMatrix(), l_scale, l_rotation, l_position, l_skew, l_projection);
-            for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
-        }
-        else
-        {
-            const glm::vec3& l_scale = l_model->GetScale();
-            for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
-        }
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int ROC::LuaModelDef::GetMatrix(lua_State *f_vm)
-{
-    // float float float float float float float float float float float float float float float float Model:getMatrix([bool global = false])
-    Model *l_model;
-    bool l_global = false;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_model);
-    argStream.ReadNextBoolean(l_global);
-    if(!argStream.HasErrors())
-    {
-        const glm::mat4 &l_matrix = l_global ? l_model->GetGlobalMatrix() : l_model->GetLocalMatrix();
-        const float *l_matrixPtr = glm::value_ptr(l_matrix);
-        for(int i = 0; i < 16; i++) argStream.PushNumber(l_matrixPtr[i]);
+        const glm::vec3& l_scale = l_model->GetScale();
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_scale[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

@@ -118,10 +118,11 @@ bool ROC::Animation::Load(const std::string &f_path)
     return m_loaded;
 }
 
-void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
+void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones, float f_blend)
 {
     if(m_loaded)
     {
+        bool l_enableBlending = (f_blend == 1.f);
         size_t l_frame = static_cast<size_t>(((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_framesCount);
         f_tick = f_tick%m_duration;
 
@@ -131,12 +132,16 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones)
             if(!m_searchResult.empty())
             {
                 keyframeData &l_keyframeData = m_searchResult.back().value;
-                if(l_keyframeData.m_static) f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
+                if(l_keyframeData.m_static)
+                {
+                    f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
+                    l_enableBlending ? f_bones[i]->SetFrameData(l_keyframeData.m_leftData) : f_bones[i]->SetFrameData(l_keyframeData.m_leftData, f_blend);
+                }
                 else
                 {
                     float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
                     m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
-                    f_bones[i]->SetFrameData(m_tempFrameData);
+                    l_enableBlending ? f_bones[i]->SetFrameData(m_tempFrameData) : f_bones[i]->SetFrameData(m_tempFrameData, f_blend);
                 }
 
                 m_searchResult.clear();

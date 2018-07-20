@@ -13,11 +13,12 @@ ROC::AnimationController::AnimationController()
 {
     m_animation = nullptr;
     m_tick = 0U;
-    m_state = AnimationState::None;
+    m_state = ACS_None;
     m_speed = 1.f;
     m_blend = true;
     m_blendTime = ROC_ANIMCONTROL_BLEND_DEFTIME;
     m_blendTimeTick = 0U;
+    m_blendValue = 1.f;
 }
 ROC::AnimationController::~AnimationController()
 {
@@ -31,22 +32,22 @@ void ROC::AnimationController::SetAnimation(Animation *f_anim)
         m_tick = 0U;
         m_blend = true;
         m_blendTimeTick = 0U;
-        if(m_state == AnimationState::None) m_state = AnimationState::Paused;
+        if(m_state == ACS_None) m_state = ACS_Paused;
     }
-    else m_state = AnimationState::None;
+    else m_state = ACS_None;
 }
 
 bool ROC::AnimationController::Play()
 {
     if(m_animation)
     {
-        if(m_state != AnimationState::Playing) m_state = AnimationState::Playing;
+        if(m_state != ACS_Playing) m_state = ACS_Playing;
     }
     return (m_animation != nullptr);
 }
 bool ROC::AnimationController::Pause()
 {
-    if(m_animation) m_state = AnimationState::Paused;
+    if(m_animation) m_state = ACS_Paused;
     return (m_animation != nullptr);
 }
 bool ROC::AnimationController::Reset()
@@ -91,9 +92,9 @@ bool ROC::AnimationController::SetBlendTime(unsigned int f_val)
     return (m_animation != nullptr);
 }
 
-void ROC::AnimationController::Update(std::vector<Bone*> &f_bones)
+void ROC::AnimationController::Update()
 {
-    if(m_animation && (m_state == AnimationState::Playing))
+    if(m_animation && (m_state == ACS_Playing))
     {
         m_tick += static_cast<unsigned int>(static_cast<float>(SystemTick::GetDelta())*m_speed);
         m_tick %= m_animation->GetDuration();
@@ -104,10 +105,9 @@ void ROC::AnimationController::Update(std::vector<Bone*> &f_bones)
             {
                 m_blendTimeTick = m_blendTime;
                 m_blend = false;
+                m_blendValue = 1.f;
             }
-            float l_blendValue = static_cast<float>(m_blendTimeTick) / static_cast<float>(m_blendTime);
-            for(auto iter : f_bones) iter->SetBlending(l_blendValue);
+            else m_blendValue = static_cast<float>(m_blendTimeTick) / static_cast<float>(m_blendTime);
         }
-        m_animation->GetData(m_tick, f_bones);
     }
 }

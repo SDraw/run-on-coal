@@ -14,19 +14,17 @@ class Collision;
 class Geometry;
 class Skeleton;
 class AnimationController;
+class Transformation;
+
 class Model final : public Element
 {
     Geometry *m_geometry;
 
-    glm::vec3 m_position;
-    glm::quat m_rotation;
-    glm::vec3 m_scale;
-    glm::mat4 m_localMatrix;
-    glm::mat4 m_globalMatrix;
+
     float m_boundSphereRaduis;
-    bool m_useScale;
-    bool m_rebuildMatrix;
-    bool m_rebuilded;
+    Transformation *m_localTransform;
+    glm::mat4 m_fullMatrix;
+    bool m_updated;
 
     Model *m_parent;
     int m_parentBone;
@@ -39,16 +37,15 @@ public:
     inline Geometry* GetGeometry() { return m_geometry; }
 
     void SetPosition(const glm::vec3 &f_pos);
-    inline const glm::vec3& GetPosition() const { return m_position; }
+    const glm::vec3& GetPosition() const;
 
     void SetRotation(const glm::quat &f_rot);
-    inline const glm::quat& GetRotation() const { return m_rotation; }
+    const glm::quat& GetRotation() const;
 
     void SetScale(const glm::vec3 &f_scl);
-    inline const glm::vec3& GetScale() const { return m_scale; }
+    const glm::vec3& GetScale() const;
 
-    inline const glm::mat4& GetLocalMatrix() const { return m_localMatrix; }
-    inline const glm::mat4& GetGlobalMatrix() const { return m_globalMatrix; }
+    inline const glm::mat4& GetFullMatrix() const { return m_fullMatrix; }
 
     float inline GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
@@ -75,6 +72,7 @@ protected:
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
 
     void Update(ModelUpdateStage f_stage, bool f_arg1 = false);
+    inline const bool IsUpdated() const { return m_updated; }
 
     void SetParent(Model *f_model, int f_bone = -1);
 

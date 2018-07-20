@@ -63,8 +63,6 @@ public:
 
     void SetMotionType(int f_type);
     inline int GetMotionType() const { return m_motionType; }
-
-    void GetTransform(glm::mat4 &f_mat, glm::vec3 &f_pos, glm::quat &f_rot);
 protected:
     Collision();
     ~Collision();

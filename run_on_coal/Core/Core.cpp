@@ -127,8 +127,8 @@ bool ROC::Core::DoPulse()
     SystemTick::UpdateTick();
     m_networkManager->DoPulse();
     m_asyncManager->DoPulse();
-    if(m_vrManager) m_vrManager->DoPulse();
-    m_state = m_sfmlManager->DoPulse();
+    if(m_vrManager) m_state &= m_vrManager->DoPulse();
+    m_state &= m_sfmlManager->DoPulse();
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();
     m_preRenderManager->DoPulse_S2();

@@ -154,10 +154,10 @@ void ROC::RenderManager::Render(Model *f_model)
     {
         if(m_activeScene->IsValidForRender())
         {
-            if(m_activeScene->GetCamera()->IsInFrustum(f_model->GetGlobalMatrix(), f_model->GetBoundSphereRadius()))
+            if(m_activeScene->GetCamera()->IsInFrustum(f_model->GetFullMatrix(), f_model->GetBoundSphereRadius()))
             {
                 Shader *l_shader = m_activeScene->GetShader();
-                l_shader->SetModelMatrix(f_model->GetGlobalMatrix());
+                l_shader->SetModelMatrix(f_model->GetFullMatrix());
 
                 if(f_model->HasSkeleton())
                 {

@@ -2,11 +2,13 @@
 
 #include "Elements/Model/Skeleton.h"
 
+#include "Elements/Animation/Animation.h"
 #include "Elements/Animation/BoneFrameData.h"
 #include "Elements/Geometry/BoneCollisionData.hpp"
 #include "Elements/Geometry/BoneData.hpp"
 #include "Elements/Geometry/BoneJointData.hpp"
 #include "Elements/Model/Bone.h"
+#include "Utils/Transformation.h"
 
 #define ROC_BONECOL_TYPE_SPHERE 0U
 #define ROC_BONECOL_TYPE_BOX 1U
@@ -55,7 +57,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
             l_bone->GenerateBindPose();
         }
     }
-    m_poseMatrices.resize(m_bonesCount);
+    m_poseMatrices.assign(m_bonesCount, g_IdentityMatrix);
     m_poseMatrices.shrink_to_fit();
 
     m_hasStaticBoneCollision = false;
@@ -105,12 +107,6 @@ ROC::Skeleton::~Skeleton()
     m_fastBoneVector.clear();
 }
 
-void ROC::Skeleton::Update()
-{
-    for(auto iter : m_fastBoneVector) iter->Update();
-    for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_boneVector[i]->GetPoseMatrix(), sizeof(glm::mat4));
-}
-
 void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model)
 {
     if(!m_hasStaticBoneCollision)
@@ -142,7 +138,7 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
             }
 
             btTransform l_boneTransform, l_bodyOffset = btTransform::getIdentity(), l_bodyTransform;
-            l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetMatrix()));
+            l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetFullMatrix()));
 
             l_bodyOffset.setOrigin(btVector3(iter->m_offset.x, iter->m_offset.y, iter->m_offset.z));
             l_bodyOffset.setRotation(btQuaternion(iter->m_offsetRotation.x, iter->m_offsetRotation.y, iter->m_offsetRotation.z, iter->m_offsetRotation.w));
@@ -177,10 +173,10 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
             skJoint *l_joint = new skJoint();
             l_joint->m_boneID = static_cast<size_t>(iter->m_boneID);
             l_joint->m_offsetMatrix.push_back(btTransform());
-            l_joint->m_offsetMatrix[ROC_SKELETON_TRANSFORMATION_MAIN].setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_joint->m_boneID]->GetLocalMatrix()));
+            l_joint->m_offsetMatrix[ROC_SKELETON_TRANSFORMATION_MAIN].setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_joint->m_boneID]->GetLocalTransformation()->GetMatrix()));
 
             btTransform l_boneTransform;
-            l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_joint->m_boneID]->GetMatrix()));
+            l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_joint->m_boneID]->GetFullMatrix()));
 
             btCollisionShape *l_jointShape = new btEmptyShape();
             btDefaultMotionState *l_jointFallMotionState = new btDefaultMotionState(l_boneTransform);
@@ -199,7 +195,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 
                 btTransform l_jointPartTransform = btTransform::getIdentity(), l_jointPartResultTransform;
 
-                l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_jointPart->m_boneID]->GetMatrix()));
+                l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[l_jointPart->m_boneID]->GetFullMatrix()));
                 l_jointPartTransform.setOrigin(btVector3(l_partData.m_offset.x, l_partData.m_offset.y, l_partData.m_offset.z));
                 l_jointPartTransform.setRotation(btQuaternion(l_partData.m_rotation.x, l_partData.m_rotation.y, l_partData.m_rotation.z, l_partData.m_rotation.w));
 
@@ -290,6 +286,36 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
     }
 }
 
+void ROC::Skeleton::SetCollisionIgnoring(btRigidBody *f_body, bool f_ignore)
+{
+    if(m_hasStaticBoneCollision)
+    {
+        for(auto iter : m_collisionVector)
+        {
+            f_body->setIgnoreCollisionCheck(iter->m_rigidBody, f_ignore);
+            iter->m_rigidBody->setIgnoreCollisionCheck(f_body, f_ignore);
+        }
+    }
+    if(m_hasDynamicBoneCollision)
+    {
+        for(auto iter : m_jointVector)
+        {
+            for(auto iter1 : iter->m_partsVector)
+            {
+                f_body->setIgnoreCollisionCheck(iter1->m_rigidBody, f_ignore);
+                iter1->m_rigidBody->setIgnoreCollisionCheck(f_body, f_ignore);
+            }
+        }
+    }
+}
+
+void ROC::Skeleton::Update(Animation *f_anim, unsigned int f_tick, float f_blend)
+{
+    f_anim->GetData(f_tick, m_boneVector, f_blend);
+    for(auto iter : m_fastBoneVector) iter->Update();
+    for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_boneVector[i]->GetPoseMatrix(), sizeof(glm::mat4));
+}
+
 void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model, bool f_enabled)
 {
     switch(f_stage)
@@ -307,7 +333,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                     for(auto iter : m_collisionVector)
                     {
                         // BodyGlobal = Model * (Bone * BodyBoneOffset)
-                        l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetMatrix()));
+                        l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetFullMatrix()));
                         l_transform2.mult(l_transform1, iter->m_offset[ROC_SKELETON_TRANSFORMATION_MAIN]);
                         l_transform1.mult(l_model, l_transform2);
                         f_enabled ? iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_rigidBody->setCenterOfMassTransform(l_transform1);
@@ -321,7 +347,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                         if(m_boneVector[iter->m_boneID]->HasParent())
                         {
                             // BodyGlobal = Model * (ParentBone * BodyBoneOffset)
-                            l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetParent()->GetMatrix()));
+                            l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetParent()->GetFullMatrix()));
                             l_transform2.mult(l_transform1, iter->m_offsetMatrix[ROC_SKELETON_TRANSFORMATION_MAIN]);
                             l_transform1.mult(l_model, l_transform2);
 
@@ -357,7 +383,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                             Bone *l_bone = m_boneVector[iter1->m_boneID];
                             l_transform1.mult(iter1->m_rigidBody->getCenterOfMassTransform(), iter1->m_offset[ROC_SKELETON_TRANSFORMATION_INVERSE]);
                             l_transform2.mult(l_modelInv, l_transform1);
-                            l_bone->SetMatrix(l_transform2);
+                            l_bone->SetFullMatrix(l_transform2);
                             l_transform1.mult(l_transform2, iter1->m_offset[ROC_SKELETON_TRANSFORMATION_BIND]);
 
                             l_bone->SetPoseMatrix(l_transform1);
@@ -372,7 +398,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                         for(auto iter1 : iter->m_partsVector)
                         {
                             // BodyGlobal = Model * (BoneMatrix * BodyBoneOffset)
-                            l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter1->m_boneID]->GetMatrix()));
+                            l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter1->m_boneID]->GetFullMatrix()));
                             l_transform2.mult(l_transform1, iter1->m_offset[ROC_SKELETON_TRANSFORMATION_MAIN]);
                             l_transform1.mult(l_model, l_transform2);
 

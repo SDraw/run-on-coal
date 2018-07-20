@@ -3,6 +3,7 @@
 namespace ROC
 {
 
+class Animation;
 class Bone;
 struct BoneCollisionData;
 struct BoneData;
@@ -56,7 +57,7 @@ protected:
     explicit Skeleton(const std::vector<BoneData*> &f_data);
     ~Skeleton();
 
-    void Update();
+    void Update(Animation *f_anim, unsigned int f_tick, float f_blend);
 
     inline std::vector<Bone*>& GetBones() { return m_boneVector; }
     inline const std::vector<glm::mat4>& GetPoseMatrices() const { return m_poseMatrices; }
@@ -66,6 +67,8 @@ protected:
 
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
     inline const std::vector<skJoint*>& GetJoints() const { return m_jointVector; }
+
+    void SetCollisionIgnoring(btRigidBody *f_body, bool f_ignore);
 
     void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model, bool f_enabled);
 

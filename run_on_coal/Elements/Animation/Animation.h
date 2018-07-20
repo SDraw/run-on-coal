@@ -32,7 +32,7 @@ class Animation final : public Element
 public:
     inline size_t GetBonesCount() const { return static_cast<size_t>(m_bonesCount); }
     inline unsigned int GetDuration() const { return m_duration; }
-    void GetData(unsigned int f_tick, std::vector<Bone*> &f_bones);
+    void GetData(unsigned int f_tick, std::vector<Bone*> &f_bones, float f_blend = 1.f);
 protected:
     Animation();
     ~Animation();

@@ -192,6 +192,16 @@ void ROC::SfmlManager::SetCursorPosition(const glm::ivec2 &f_pos)
     sf::Mouse::setPosition((sf::Vector2i&)f_pos, *m_window);
 }
 
+void ROC::SfmlManager::GetClipboardString(std::string &f_str)
+{
+    sf::String l_string = sf::Clipboard::getString();
+    f_str.assign(l_string);
+}
+void ROC::SfmlManager::SetClipboardString(const std::string &f_str)
+{
+    sf::Clipboard::setString(f_str);
+}
+
 bool ROC::SfmlManager::IsKeyPressed(int f_key)
 {
     return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(f_key));

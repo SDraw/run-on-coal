@@ -24,6 +24,12 @@ ROC::ArgReader::~ArgReader()
 {
 }
 
+void ROC::ArgReader::SetError(const char *f_str)
+{
+    m_hasErrors = true;
+    m_error.assign(f_str);
+}
+
 void ROC::ArgReader::ReadBoolean(bool &f_val)
 {
     if(!m_hasErrors)
@@ -31,17 +37,9 @@ void ROC::ArgReader::ReadBoolean(bool &f_val)
         if(m_argCurrent <= m_argCount)
         {
             if(lua_isboolean(m_vm, m_argCurrent)) f_val = (lua_toboolean(m_vm, m_argCurrent++) == 1);
-            else
-            {
-                m_error.assign("Expected boolean");
-                m_hasErrors = true;
-            }
+            else SetError("Expected boolean");
         }
-        else
-        {
-            m_error.assign("Not enough arguments");
-            m_hasErrors = true;
-        }
+        else SetError("Not enough arguments");
     }
 }
 
@@ -57,17 +55,9 @@ void ROC::ArgReader::ReadText(std::string &f_val)
                 const char *l_string = lua_tolstring(m_vm, m_argCurrent++, &l_size);
                 f_val.assign(l_string, l_size);
             }
-            else
-            {
-                m_error.assign("Expected string");
-                m_hasErrors = true;
-            }
+            else SetError("Expected string");
         }
-        else
-        {
-            m_error.assign("Not enough arguments");
-            m_hasErrors = true;
-        }
+        else SetError("Not enough arguments");
     }
 }
 void ROC::ArgReader::ReadFunction(LuaFunction &f_func)
@@ -84,17 +74,9 @@ void ROC::ArgReader::ReadFunction(LuaFunction &f_func)
                 lua_insert(m_vm, m_argCurrent);
                 m_argCurrent++;
             }
-            else
-            {
-                m_error.assign("Expected function");
-                m_hasErrors = true;
-            }
+            else SetError("Expected function");
         }
-        else
-        {
-            m_error.assign("Not enough arguments");
-            m_hasErrors = true;
-        }
+        else SetError("Not enough arguments");
     }
 }
 void ROC::ArgReader::ReadCustomData(CustomData &f_data)
@@ -126,18 +108,12 @@ void ROC::ArgReader::ReadCustomData(CustomData &f_data)
                     f_data.SetString(l_text, l_len);
                 } break;
                 default:
-                {
-                    m_error.assign("Invalid data type");
-                    m_hasErrors = true;
-                }
+                    SetError("Invalid data type");
+                    break;
             }
             if(!m_hasErrors) m_argCurrent++;
         }
-        else
-        {
-            m_error.assign("Not enough arguments");
-            m_hasErrors = true;
-        }
+        else SetError("Not enough arguments");
     }
 }
 void ROC::ArgReader::ReadQuat(Quat *&f_quat)
@@ -148,23 +124,11 @@ void ROC::ArgReader::ReadQuat(Quat *&f_quat)
         {
             if(lua_isuserdata(m_vm, m_argCurrent))
             {
-                if((f_quat = *reinterpret_cast<Quat**>(luaL_checkudata(m_vm, m_argCurrent++, "Quat"))) == nullptr)
-                {
-                    m_error.assign("Expected Quat");
-                    m_hasErrors = true;
-                }
+                if((f_quat = *reinterpret_cast<Quat**>(luaL_checkudata(m_vm, m_argCurrent++, "Quat"))) == nullptr) SetError("Expected Quat");
             }
-            else
-            {
-                m_error.assign("Expected Quat");
-                m_hasErrors = true;
-            }
+            else SetError("Expected Quat");
         }
-        else
-        {
-            m_error.assign("Not enough arguments");
-            m_hasErrors = true;
-        }
+        else SetError("Not enough arguments");
     }
 }
 
