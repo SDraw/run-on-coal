@@ -138,8 +138,11 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
             }
             else
             {
-                std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
-                m_updated = true;
+                if(m_localTransform->IsUpdated())
+                {
+                    std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
+                    m_updated = true;
+                }
             }
         } break;
 
@@ -147,6 +150,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
         {
             if(m_collision)
             {
+                m_updated = false;
                 if(m_collision->IsActive())
                 {
                     glm::vec3 l_pos;
@@ -158,8 +162,11 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
                     m_localTransform->SetRotation(l_rot);
 
                     m_localTransform->UpdateMatrix();
-                    std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
-                    m_updated = true;
+                    if(m_localTransform->IsUpdated())
+                    {
+                        std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
+                        m_updated = true;
+                    }
                 }
             }
         } break;
