@@ -42,6 +42,8 @@ class Skeleton final
     };
     std::vector<skJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
+
+    static bool ms_physicsEnabled;
 public:
     inline size_t GetBonesCount() const { return m_bonesCount; }
 
@@ -68,9 +70,10 @@ protected:
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
     inline const std::vector<skJoint*>& GetJoints() const { return m_jointVector; }
 
+    void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model);
     void SetCollisionIgnoring(btRigidBody *f_body, bool f_ignore);
 
-    void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model, bool f_enabled);
+    static void SetPhysicsEnabled(bool f_state);
 
     friend class Model;
     friend class RenderManager;

@@ -14,16 +14,16 @@ extern const float g_Epsilon;
 
 ROC::BoneFrameData::BoneFrameData()
 {
-    std::memcpy(&m_position, &g_DefaultPosition, sizeof(glm::vec3));
-    std::memcpy(&m_rotation, &g_DefaultRotation, sizeof(glm::quat));
-    std::memcpy(&m_scale, &g_DefaultScale, sizeof(glm::vec3));
+    m_position = g_DefaultPosition;
+    m_rotation = g_DefaultRotation;
+    m_scale = g_DefaultScale;
     m_useScale = false;
 }
 ROC::BoneFrameData::BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec3 &f_scl)
 {
-    std::memcpy(&m_position, &f_pos, sizeof(glm::vec3));
-    std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
-    std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
+    m_position = f_pos;
+    m_rotation = f_rot;
+    m_scale = f_scl;
     m_useScale = glm::all(glm::epsilonNotEqual(m_scale, g_DefaultScale, g_Epsilon));
 }
 ROC::BoneFrameData::~BoneFrameData()

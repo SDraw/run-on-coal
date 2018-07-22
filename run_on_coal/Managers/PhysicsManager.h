@@ -24,7 +24,7 @@ class PhysicsManager final
     PhysicsManager(const PhysicsManager& that);
     PhysicsManager &operator =(const PhysicsManager &that);
 public:
-    inline void SetPhysicsEnabled(bool f_value) { m_enabled = f_value; }
+    void SetPhysicsEnabled(bool f_value);
     inline bool GetPhysicsEnabled() const { return m_enabled; }
     void SetFloorEnabled(bool f_value);
     inline bool GetFloorEnabled() const { return (m_floorBody != nullptr); }

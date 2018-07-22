@@ -132,7 +132,7 @@ void ROC::Camera::Update()
     if(m_rebuildView)
     {
         glm::vec3 l_viewPoint = m_viewPosition + m_viewDirection;
-        m_viewMatrix = glm::lookAtRH(m_viewPosition, l_viewPoint, m_upDirection);
+        m_viewMatrix = glm::lookAt(m_viewPosition, l_viewPoint, m_upDirection);
     }
     if(m_rebuildProjection)
     {

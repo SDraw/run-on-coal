@@ -8,10 +8,6 @@ namespace ROC
 {
 
 extern const glm::mat4 g_IdentityMatrix;
-extern const glm::vec3 g_DefaultPosition;
-extern const glm::quat g_DefaultRotation;
-extern const glm::vec3 g_DefaultScale;
-extern const float g_Epsilon;
 
 }
 

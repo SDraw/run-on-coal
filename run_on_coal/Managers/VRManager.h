@@ -18,7 +18,7 @@ class VRManager final
     glm::uvec2 m_targetSize;
     vr::Texture_t m_vrTexture[2];
     vr::VREvent_t m_event;
-    bool m_quitState;
+    bool m_state;
 
     enum RMVRStage : unsigned char
     {

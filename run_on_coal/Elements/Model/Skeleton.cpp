@@ -26,6 +26,8 @@ extern const glm::mat4 g_IdentityMatrix;
 
 }
 
+bool ROC::Skeleton::ms_physicsEnabled = false;
+
 ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
 {
     for(auto iter : f_data)
@@ -316,7 +318,7 @@ void ROC::Skeleton::Update(Animation *f_anim, unsigned int f_tick, float f_blend
     for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_boneVector[i]->GetPoseMatrix(), sizeof(glm::mat4));
 }
 
-void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model, bool f_enabled)
+void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model)
 {
     switch(f_stage)
     {
@@ -336,7 +338,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                         l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetFullMatrix()));
                         l_transform2.mult(l_transform1, iter->m_offset[ROC_SKELETON_TRANSFORMATION_MAIN]);
                         l_transform1.mult(l_model, l_transform2);
-                        f_enabled ? iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_rigidBody->setCenterOfMassTransform(l_transform1);
+                        ms_physicsEnabled ? iter->m_rigidBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_rigidBody->setCenterOfMassTransform(l_transform1);
                     }
                 }
 
@@ -351,14 +353,14 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                             l_transform2.mult(l_transform1, iter->m_offsetMatrix[ROC_SKELETON_TRANSFORMATION_MAIN]);
                             l_transform1.mult(l_model, l_transform2);
 
-                            f_enabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
+                            ms_physicsEnabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
                         }
                         else
                         {
                             // BodyGlobal = Model * BodyBoneOffset
                             l_transform1.mult(l_model, iter->m_offsetMatrix[ROC_SKELETON_TRANSFORMATION_MAIN]);
 
-                            f_enabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
+                            ms_physicsEnabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
                         }
                     }
                 }
@@ -372,7 +374,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                 btTransform l_model;
                 btTransform l_transform1, l_transform2;
                 l_model.setFromOpenGLMatrix(glm::value_ptr(f_model));
-                if(f_enabled)
+                if(ms_physicsEnabled)
                 {
                     btTransform l_modelInv = l_model.inverse();
                     for(auto iter : m_jointVector)
@@ -409,4 +411,9 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
             }
         } break;
     }
+}
+
+void ROC::Skeleton::SetPhysicsEnabled(bool f_state)
+{
+    ms_physicsEnabled = f_state;
 }

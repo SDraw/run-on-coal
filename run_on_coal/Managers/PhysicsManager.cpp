@@ -48,6 +48,15 @@ ROC::PhysicsManager::~PhysicsManager()
     delete m_broadPhase;
 }
 
+void ROC::PhysicsManager::SetPhysicsEnabled(bool f_value)
+{
+    if(m_enabled != f_value)
+    {
+        m_enabled = f_value;
+        ROC::Skeleton::SetPhysicsEnabled(m_enabled);
+    }
+}
+
 void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
 {
     if(f_value && (m_floorBody == nullptr))

@@ -73,7 +73,7 @@ ROC::VRManager::VRManager(Core *f_core)
     m_leftController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, { 0U }, { 0U }, false };
     m_rightController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, { 0U }, { 0U }, false };
     m_event = { 0 };
-    m_quitState = false;
+    m_state = true;
 
     m_luaArguments = new LuaArguments();
 }
@@ -118,12 +118,12 @@ bool ROC::VRManager::DoPulse()
         switch(m_event.eventType)
         {
             case vr::VREvent_DriverRequestedQuit: case vr::VREvent_Quit:
-                m_quitState = true;
+                m_state = false;
                 break;
         }
     }
 
-    if(!m_quitState)
+    if(m_state)
     {
         // Update HMD data
         m_vrCompositor->WaitGetPoses(m_trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
@@ -181,7 +181,7 @@ bool ROC::VRManager::DoPulse()
         }
     }
 
-    return m_quitState;
+    return m_state;
 }
 
 void ROC::VRManager::UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose)

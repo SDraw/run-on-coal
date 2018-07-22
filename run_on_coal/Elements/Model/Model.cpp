@@ -13,10 +13,6 @@ namespace ROC
 {
 
 extern const glm::mat4 g_IdentityMatrix;
-extern const glm::vec3 g_DefaultPosition;
-extern const glm::quat g_DefaultRotation;
-extern const glm::vec3 g_DefaultScale;
-extern const float g_Epsilon;
 
 }
 
@@ -101,13 +97,12 @@ void ROC::Model::SetCollision(Collision *f_col)
     if(m_skeleton)
     {
         btRigidBody *l_body = (f_col ? f_col->GetRigidBody() : m_collision->GetRigidBody());
-        bool l_collisionIgnoring = (f_col != nullptr);
         m_skeleton->SetCollisionIgnoring(l_body, (f_col != nullptr));
     }
     m_collision = f_col;
 }
 
-void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
+void ROC::Model::Update(ModelUpdateStage f_stage)
 {
     switch(f_stage)
     {
@@ -181,13 +176,13 @@ void ROC::Model::Update(ModelUpdateStage f_stage, bool f_arg1)
                     m_animController->Update();
                     if(m_animController->IsPlaying()) m_skeleton->Update(l_anim,m_animController->GetTick(), m_animController->GetBlendValue());
                 }
-                m_skeleton->UpdateCollision(Skeleton::SUS_Static, m_fullMatrix, f_arg1);
+                m_skeleton->UpdateCollision(Skeleton::SUS_Static, m_fullMatrix);
             }
         } break;
 
         case MUS_SkeletonDynamic:
         {
-            if(m_skeleton) m_skeleton->UpdateCollision(Skeleton::SUS_Dynamic, m_fullMatrix, f_arg1);
+            if(m_skeleton) m_skeleton->UpdateCollision(Skeleton::SUS_Dynamic, m_fullMatrix);
         } break;
     }
 }

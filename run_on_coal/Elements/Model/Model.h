@@ -71,7 +71,7 @@ protected:
 
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
 
-    void Update(ModelUpdateStage f_stage, bool f_arg1 = false);
+    void Update(ModelUpdateStage f_stage);
     inline const bool IsUpdated() const { return m_updated; }
 
     void SetParent(Model *f_model, int f_bone = -1);
