@@ -73,9 +73,15 @@ bool ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)
     return (l_error == 0);
 }
 
+void ROC::LuaManager::DoPulse()
+{
+    // Lua GC can't keep up to clean custom userdata on high ticks by itself, let's help it
+    lua_gc(m_vm, LUA_GCSTEP, 0);
+}
+
 void ROC::LuaManager::CallFunction(const LuaFunction &f_func, const LuaArguments *f_args)
 {
-    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.m_ref);
+    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.GetReference());
 
     for(auto &iter : f_args->GetArgumentsVectorRef())
     {

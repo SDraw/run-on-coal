@@ -32,6 +32,7 @@ protected:
 
     static void SetCore(Core *f_core);
 
+    void DoPulse();
     void CallFunction(const LuaFunction &f_func, const LuaArguments *f_args);
 
     friend class Core;

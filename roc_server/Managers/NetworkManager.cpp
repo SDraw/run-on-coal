@@ -46,7 +46,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     }
 
     m_clientVector.assign(l_configManager->GetMaxClients(), nullptr);
-    m_argument = new LuaArguments();
+    m_luaArguments = new LuaArguments();
 
     m_networkClientConnectCallback = nullptr;
     m_networkClientDisconnectCallback = nullptr;
@@ -59,7 +59,7 @@ ROC::NetworkManager::~NetworkManager()
         m_networkInterface->Shutdown(ROC_NETWORK_DISCONNECT_DURATION);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
-    delete m_argument;
+    delete m_luaArguments;
 }
 
 unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
@@ -121,9 +121,9 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);
 
-                    m_argument->PushArgument(l_client, "Client");
-                    l_eventManager->CallEvent("onNetworkClientConnect", m_argument);
-                    m_argument->Clear();
+                    m_luaArguments->PushArgument(l_client, "Client");
+                    l_eventManager->CallEvent("onNetworkClientConnect", m_luaArguments);
+                    m_luaArguments->Clear();
                     m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_DISCONNECTION_NOTIFICATION: case ID_CONNECTION_LOST:
@@ -138,9 +138,9 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientDisconnectCallback) (*m_networkClientDisconnectCallback)(l_client);
 
-                    m_argument->PushArgument(l_client, "Client");
-                    l_eventManager->CallEvent("onNetworkClientDisconnect", m_argument);
-                    m_argument->Clear();
+                    m_luaArguments->PushArgument(l_client, "Client");
+                    l_eventManager->CallEvent("onNetworkClientDisconnect", m_luaArguments);
+                    m_luaArguments->Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
                     m_clientVector[l_packet->guid.systemIndex] = nullptr;
@@ -161,10 +161,10 @@ void ROC::NetworkManager::DoPulse()
 
                             if(m_networkDataRecieveCallback) (*m_networkDataRecieveCallback)(l_client, l_stringData);
 
-                            m_argument->PushArgument(l_client, "Client");
-                            m_argument->PushArgument(l_stringData);
-                            l_eventManager->CallEvent("onNetworkDataRecieve", m_argument);
-                            m_argument->Clear();
+                            m_luaArguments->PushArgument(l_client, "Client");
+                            m_luaArguments->PushArgument(l_stringData);
+                            l_eventManager->CallEvent("onNetworkDataRecieve", m_luaArguments);
+                            m_luaArguments->Clear();
                         }
                     }
                 } break;

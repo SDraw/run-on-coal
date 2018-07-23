@@ -19,7 +19,7 @@ class NetworkManager final
 
     std::vector<Client*> m_clientVector;
 
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
 
     OnNetworkClientConnectCallback m_networkClientConnectCallback;
     OnNetworkClientDisconnectCallback m_networkClientDisconnectCallback;

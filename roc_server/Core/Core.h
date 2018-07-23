@@ -26,7 +26,7 @@ class Core final
 
     std::string m_workingDir;
     std::chrono::milliseconds m_pulseTick;
-    LuaArguments *m_argument;
+    LuaArguments *m_luaArguments;
 
     static OnServerStartCallback ms_serverStartCallback;
     OnServerPulseCallback m_serverPulseCallback;

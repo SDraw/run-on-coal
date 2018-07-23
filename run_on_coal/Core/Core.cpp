@@ -133,5 +133,6 @@ bool ROC::Core::DoPulse()
     m_physicsManager->DoPulse();
     m_preRenderManager->DoPulse_S2();
     m_renderManager->DoPulse();
+    m_luaManager->DoPulse();
     return m_state;
 }
