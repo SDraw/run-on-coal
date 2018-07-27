@@ -243,6 +243,15 @@ bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, gl
     return l_result;
 }
 
+void ROC::PhysicsManager::SetDebugDrawer(btIDebugDraw *f_drawer)
+{
+    m_dynamicWorld->setDebugDrawer(f_drawer);
+}
+void ROC::PhysicsManager::DrawDebugWorld()
+{
+    m_dynamicWorld->debugDrawWorld();
+}
+
 void ROC::PhysicsManager::DoPulse()
 {
     if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, ROC_PHYSICS_DEFAULT_SUBSTEPS, ROC_PHYSICS_DEFAULT_TIMESTEP);

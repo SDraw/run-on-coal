@@ -17,30 +17,30 @@ class Skeleton final
     std::vector<Bone*> m_fastBoneVector;
     std::vector<glm::mat4> m_poseMatrices;
 
-    struct skCollision
+    struct SkeletonCollision
     {
         btAlignedObjectArray<btTransform> m_offset; // [0] - normal
         btRigidBody *m_rigidBody;
-        int m_boneID;
+        size_t m_boneID;
     };
-    std::vector<skCollision*> m_collisionVector;
+    std::vector<SkeletonCollision*> m_collisionVector;
     bool m_hasStaticBoneCollision;
 
-    struct skJoint
+    struct SkeletonJointPart
     {
-        btAlignedObjectArray<btTransform> m_offsetMatrix; // [0] - main
+        btAlignedObjectArray<btTransform> m_offset; // [0] - main, [1] - inverse, [2] - bone bind
+        btRigidBody *m_rigidBody;
+        btGeneric6DofSpringConstraint *m_constraint;
+        size_t m_boneID;
+    };
+    struct SkeletonJoint
+    {
+        btAlignedObjectArray<btTransform> m_transform;
         btRigidBody *m_emptyBody;
         size_t m_boneID;
-        struct jtPart
-        {
-            btAlignedObjectArray<btTransform> m_offset; // [0] - main, [1] - inverse, [2] - bone bind
-            btRigidBody *m_rigidBody;
-            btGeneric6DofSpringConstraint *m_constraint;
-            size_t m_boneID;
-        };
-        std::vector<jtPart*> m_partsVector;
+        std::vector<SkeletonJointPart*> m_partsVector;
     };
-    std::vector<skJoint*> m_jointVector;
+    std::vector<SkeletonJoint*> m_jointVector;
     bool m_hasDynamicBoneCollision;
 
     static bool ms_physicsEnabled;
@@ -65,10 +65,10 @@ protected:
     inline const std::vector<glm::mat4>& GetPoseMatrices() const { return m_poseMatrices; }
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);
-    inline const std::vector<skCollision*>& GetCollision() const { return m_collisionVector; }
+    inline const std::vector<SkeletonCollision*>& GetCollision() const { return m_collisionVector; }
 
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
-    inline const std::vector<skJoint*>& GetJoints() const { return m_jointVector; }
+    inline const std::vector<SkeletonJoint*>& GetJoints() const { return m_jointVector; }
 
     void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model);
     void SetCollisionIgnoring(btRigidBody *f_body, bool f_ignore);

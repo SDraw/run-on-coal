@@ -13,6 +13,7 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
+#include "Managers/VRManager.h"
 
 #include "Elements/Animation/Animation.h"
 #include "Elements/Geometry/Geometry.h"

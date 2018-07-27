@@ -4,6 +4,7 @@
 #include "Core/Core.h"
 #include "Managers/RenderManager/Quad2D.h"
 #include "Managers/RenderManager/Quad3D.h"
+#include "Managers/RenderManager/PhysicsDrawer.h"
 #include "Elements/Font.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Geometry/Material.h"
@@ -19,6 +20,7 @@
 #include "Managers/ConfigManager.h"
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
+#include "Managers/PhysicsManager.h"
 #include "Managers/SfmlManager.h"
 #include "Managers/VRManager.h"
 #include "Elements/Camera.h"
@@ -44,6 +46,7 @@ const std::vector<std::string> g_VRRenderSide
 
 ROC::RenderManager::RenderManager(Core *f_core)
 {
+    btIDebugDraw;
     m_core = f_core;
     m_vrManager = m_core->GetVRManager();
 
@@ -64,6 +67,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_activeScene = nullptr;
     m_quad2D = new Quad2D();
     m_quad3D = new Quad3D();
+    m_physicsDrawer = new PhysicsDrawer();
+    m_core->GetPhysicsManager()->SetDebugDrawer(m_physicsDrawer);
 
     m_dummyTexture = new Texture();
     m_dummyTexture->LoadDummy();
@@ -265,6 +270,29 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
                 (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
                 m_quad3D->Draw();
             }
+        }
+    }
+}
+void ROC::RenderManager::DrawPhysicWorld()
+{
+    if(!m_locked && m_activeScene)
+    {
+        if(m_activeScene->IsValidForRender())
+        {
+            Shader *l_shader = m_activeScene->GetShader();
+            l_shader->SetModelMatrix(g_IdentityMatrix);
+            l_shader->SetAnimated(0U);
+            l_shader->SetMaterialType((Material::MPB_Depth | Material::MPB_Doubleside));
+            l_shader->SetMaterialParam(g_EmptyVec4);
+
+            DisableCulling();
+            EnableDepth();
+            DisableBlending();
+            m_dummyTexture->Bind();
+
+            m_core->GetPhysicsManager()->DrawDebugWorld();
+            m_physicsDrawer->Draw();
+            m_physicsDrawer->ClearStoredLines();
         }
     }
 }

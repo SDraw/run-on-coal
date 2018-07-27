@@ -46,10 +46,14 @@ protected:
     void AddCollision(Collision *f_col);
     void RemoveCollision(Collision *f_col);
 
+    void SetDebugDrawer(btIDebugDraw *f_drawer);
+    void DrawDebugWorld();
+
     void DoPulse();
 
     friend class Core;
     friend class ElementManager;
+    friend class RenderManager;
     friend class SfmlManager;
 };
 

@@ -243,6 +243,9 @@
     <ClCompile Include="Utils\Transformation.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\RenderManager\PhysicsDrawer.cpp">
+      <Filter>Managers\RenderManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -480,6 +483,9 @@
     </ClInclude>
     <ClInclude Include="Utils\Transformation.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\RenderManager\PhysicsDrawer.h">
+      <Filter>Managers\RenderManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

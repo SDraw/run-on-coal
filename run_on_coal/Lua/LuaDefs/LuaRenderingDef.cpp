@@ -28,6 +28,7 @@ void ROC::LuaRenderingDef::Init(lua_State *f_vm)
     lua_register(f_vm, "setClearColor", SetClearColor);
     lua_register(f_vm, "setRenderArea", SetRenderArea);
     lua_register(f_vm, "setPolygonMode", SetPolygonMode);
+    lua_register(f_vm, "drawPhysics", DrawPhysics);
 }
 
 int ROC::LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
@@ -91,5 +92,14 @@ int ROC::LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
         else argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaRenderingDef::DrawPhysics(lua_State *f_vm)
+{
+    // bool drawPhysics()
+    ArgReader argStream(f_vm);
+    LuaManager::GetCore()->GetRenderManager()->DrawPhysicWorld();
+    argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }

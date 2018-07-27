@@ -297,6 +297,7 @@
     <ClInclude Include="Lua\LuaArguments.h" />
     <ClInclude Include="Managers\EventManager.h" />
     <ClInclude Include="Managers\NetworkManager.h" />
+    <ClInclude Include="Managers\RenderManager\PhysicsDrawer.h" />
     <ClInclude Include="Managers\RenderManager\Quad2D.h" />
     <ClInclude Include="Managers\RenderManager\Quad3D.h" />
     <ClInclude Include="Managers\RenderManager\RenderManager.h" />
@@ -402,6 +403,7 @@
     <ClCompile Include="Lua\LuaArguments.cpp" />
     <ClCompile Include="Managers\EventManager.cpp" />
     <ClCompile Include="Managers\NetworkManager.cpp" />
+    <ClCompile Include="Managers\RenderManager\PhysicsDrawer.cpp" />
     <ClCompile Include="Managers\RenderManager\Quad2D.cpp" />
     <ClCompile Include="Managers\RenderManager\Quad3D.cpp" />
     <ClCompile Include="Managers\RenderManager\RenderManager.cpp" />
