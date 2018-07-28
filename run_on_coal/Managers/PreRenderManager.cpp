@@ -113,14 +113,14 @@ void ROC::PreRenderManager::DoPulse_S1()
     while(!m_nodeStack.empty())
     {
         TreeNode *l_current = m_nodeStack.back();
-        m_nodeStack.pop_back();
-
-        auto &l_nodeChildren = l_current->GetChildren();
-        m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
-
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
         if(!l_model->HasCollision()) l_model->Update(Model::MUS_Matrix);
-        l_model->Update(Model::MUS_SkeletonStatic);
+        l_model->Update(Model::MUS_Animation);
+        if(!l_model->HasParent()) l_model->Update(Model::MUS_SkeletonCollisionStatic);
+
+        m_nodeStack.pop_back();
+        auto &l_nodeChildren = l_current->GetChildren();
+        m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
     }
 }
 void ROC::PreRenderManager::DoPulse_S2()
@@ -130,13 +130,13 @@ void ROC::PreRenderManager::DoPulse_S2()
     while(!m_nodeStack.empty())
     {
         TreeNode *l_current = m_nodeStack.back();
-        m_nodeStack.pop_back();
-
-        auto &l_nodeChildren = l_current->GetChildren();
-        m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
-
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
         l_model->Update(l_model->HasCollision() ? Model::MUS_Collision : Model::MUS_Matrix);
-        l_model->Update(Model::MUS_SkeletonDynamic);
+        if(l_model->HasParent()) l_model->Update(Model::MUS_SkeletonCollisionStatic);
+        l_model->Update(Model::MUS_SkeletonCollisionDynamic);
+
+        m_nodeStack.pop_back();
+        auto &l_nodeChildren = l_current->GetChildren();
+        m_nodeStack.insert(m_nodeStack.end(), l_nodeChildren.rbegin(), l_nodeChildren.rend());
     }
 }

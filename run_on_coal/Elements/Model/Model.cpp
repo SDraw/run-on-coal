@@ -118,7 +118,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                     if(m_parent->IsUpdated() || l_bone->IsUpdated() || m_localTransform->IsUpdated())
                     {
                         m_fullMatrix = l_bone->GetFullMatrix()*m_localTransform->GetMatrix();
-                        m_fullMatrix =  m_parent->m_fullMatrix*m_fullMatrix;
+                        m_fullMatrix = m_parent->m_fullMatrix*m_fullMatrix;
                         m_updated = true;
                     }
                 }
@@ -166,7 +166,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
             }
         } break;
 
-        case MUS_SkeletonStatic:
+        case MUS_Animation:
         {
             if(m_skeleton)
             {
@@ -174,13 +174,17 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 if(l_anim)
                 {
                     m_animController->Update();
-                    if(m_animController->IsPlaying()) m_skeleton->Update(l_anim,m_animController->GetTick(), m_animController->GetBlendValue());
+                    if(m_animController->IsPlaying()) m_skeleton->Update(l_anim, m_animController->GetTick(), m_animController->GetBlendValue());
                 }
-                m_skeleton->UpdateCollision(Skeleton::SUS_Static, m_fullMatrix);
             }
         } break;
 
-        case MUS_SkeletonDynamic:
+        case MUS_SkeletonCollisionStatic:
+        {
+            if(m_skeleton) m_skeleton->UpdateCollision(Skeleton::SUS_Static, m_fullMatrix);
+        } break;
+
+        case MUS_SkeletonCollisionDynamic:
         {
             if(m_skeleton) m_skeleton->UpdateCollision(Skeleton::SUS_Dynamic, m_fullMatrix);
         } break;

@@ -355,16 +355,13 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                             l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetParent()->GetFullMatrix()));
                             l_transform2.mult(l_transform1, iter->m_transform[ROC_SKELETON_TRANSFORMATION_MAIN]);
                             l_transform1.mult(l_model, l_transform2);
-
-                            ms_physicsEnabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
                         }
                         else
                         {
                             // BodyGlobal = Model * Joint
                             l_transform1.mult(l_model, iter->m_transform[ROC_SKELETON_TRANSFORMATION_MAIN]);
-
-                            ms_physicsEnabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
                         }
+                        ms_physicsEnabled ? iter->m_emptyBody->getMotionState()->setWorldTransform(l_transform1) : iter->m_emptyBody->setCenterOfMassTransform(l_transform1);
                     }
                 }
             }

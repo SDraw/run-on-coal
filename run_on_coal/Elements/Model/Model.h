@@ -62,8 +62,9 @@ protected:
     {
         MUS_Matrix,
         MUS_Collision,
-        MUS_SkeletonStatic,
-        MUS_SkeletonDynamic
+        MUS_Animation,
+        MUS_SkeletonCollisionStatic,
+        MUS_SkeletonCollisionDynamic
     };
 
     explicit Model(Geometry *f_geometry);
