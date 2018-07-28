@@ -61,10 +61,12 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data, float f_blend)
 void ROC::Bone::SetFullMatrix(const btTransform &f_transform)
 {
     f_transform.getOpenGLMatrix(glm::value_ptr(m_fullMatrix));
+    m_updated = true;
 }
 void ROC::Bone::SetPoseMatrix(const btTransform &f_transform)
 {
     f_transform.getOpenGLMatrix(glm::value_ptr(m_poseMatrix));
+    m_updated = true;
 }
 
 void ROC::Bone::Update()

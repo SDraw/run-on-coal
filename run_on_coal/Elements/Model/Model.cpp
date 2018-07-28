@@ -117,8 +117,8 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                     Bone *l_bone = m_parent->m_skeleton->GetBones()[static_cast<size_t>(m_parentBone)];
                     if(m_parent->IsUpdated() || l_bone->IsUpdated() || m_localTransform->IsUpdated())
                     {
-                        m_fullMatrix = l_bone->GetFullMatrix()*m_parent->m_fullMatrix;
-                        m_fullMatrix = m_fullMatrix*m_localTransform->GetMatrix();
+                        m_fullMatrix = l_bone->GetFullMatrix()*m_localTransform->GetMatrix();
+                        m_fullMatrix =  m_parent->m_fullMatrix*m_fullMatrix;
                         m_updated = true;
                     }
                 }
