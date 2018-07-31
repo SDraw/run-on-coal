@@ -29,7 +29,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_geometry = f_geometry;
 
     m_parent = nullptr;
-    m_parentBone = -1;
+    m_parentBone = nullptr;
 
     m_animController = new AnimationController();
     m_skeleton = nullptr;
@@ -89,7 +89,8 @@ const glm::vec3& ROC::Model::GetScale() const
 void ROC::Model::SetParent(Model *f_model, int f_bone)
 {
     m_parent = f_model;
-    m_parentBone = f_bone;
+    if(m_parent && (f_bone != -1)) m_parentBone = m_parent->GetSkeleton()->GetBones()[static_cast<size_t>(f_bone)];
+    else m_parentBone = nullptr;
 }
 
 void ROC::Model::SetCollision(Collision *f_col)
@@ -112,13 +113,21 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
             m_localTransform->UpdateMatrix();
             if(m_parent)
             {
-                if(m_parentBone != -1)
+                if(m_parentBone)
                 {
-                    Bone *l_bone = m_parent->m_skeleton->GetBones()[static_cast<size_t>(m_parentBone)];
-                    if(m_parent->IsUpdated() || l_bone->IsUpdated() || m_localTransform->IsUpdated())
+                    if(m_parent->IsUpdated() || m_parentBone->IsUpdated() || m_localTransform->IsUpdated())
                     {
-                        m_fullMatrix = l_bone->GetFullMatrix()*m_localTransform->GetMatrix();
-                        m_fullMatrix = m_parent->m_fullMatrix*m_fullMatrix;
+                        if(m_parentBone->IsDynamic())
+                        {
+                            // Almost accurate, inverse bone body offset is needed
+                            m_parentBone->GetDynamicBody()->getWorldTransform().getOpenGLMatrix(glm::value_ptr(m_fullMatrix));
+                            m_fullMatrix = m_fullMatrix*m_localTransform->GetMatrix();
+                        }
+                        else
+                        {
+                            m_fullMatrix = m_parentBone->GetFullMatrix()*m_localTransform->GetMatrix();
+                            m_fullMatrix = m_parent->m_fullMatrix*m_fullMatrix;
+                        }
                         m_updated = true;
                     }
                 }

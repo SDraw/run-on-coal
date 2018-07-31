@@ -10,6 +10,7 @@
 namespace ROC
 {
 
+class Bone;
 class Collision;
 class Geometry;
 class Skeleton;
@@ -19,15 +20,14 @@ class Transformation;
 class Model final : public Element
 {
     Geometry *m_geometry;
-
-
     float m_boundSphereRaduis;
+
     Transformation *m_localTransform;
     glm::mat4 m_fullMatrix;
     bool m_updated;
 
     Model *m_parent;
-    int m_parentBone;
+    Bone *m_parentBone;
 
     AnimationController *m_animController;
     Skeleton *m_skeleton;

@@ -278,7 +278,8 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                         l_jointPart->m_constraint->setStiffness(k + 3, l_partData.m_angularStiffness[k]);
                     }
                 }
-
+                m_boneVector[l_jointPart->m_boneID]->SetDynamic(true);
+                m_boneVector[l_jointPart->m_boneID]->SetDynamicBody(l_jointPart->m_rigidBody);
                 l_joint->m_partsVector.push_back(l_jointPart);
             }
             l_joint->m_partsVector.shrink_to_fit();
