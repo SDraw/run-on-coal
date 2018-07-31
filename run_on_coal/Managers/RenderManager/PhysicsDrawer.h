@@ -3,8 +3,6 @@
 namespace ROC
 {
 
-#define ROC_PHYSICSDRAWER_DEBUG_TYPE (btIDebugDraw::DBG_DrawWireframe)
-
 class PhysicsDrawer final : public btIDebugDraw
 {
     GLuint m_VBO;
@@ -20,7 +18,7 @@ public:
     virtual void reportErrorWarning(const char* warningString) {};
     virtual void draw3dText(const btVector3& location, const char* textString) {};
     virtual void setDebugMode(int debugMode) {};
-    virtual int	getDebugMode() const { return ROC_PHYSICSDRAWER_DEBUG_TYPE; };
+    virtual int	getDebugMode() const { return btIDebugDraw::DBG_DrawWireframe; };
 protected:
     void ClearStoredLines();
     void Draw();

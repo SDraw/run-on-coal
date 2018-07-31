@@ -58,6 +58,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
             m_fastBoneVector.push_back(l_bone);
             l_bone->GenerateBindPose();
         }
+        m_fastBoneVector.shrink_to_fit();
     }
     m_poseMatrices.assign(m_bonesCount, g_IdentityMatrix);
     m_poseMatrices.shrink_to_fit();

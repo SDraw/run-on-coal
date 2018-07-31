@@ -22,6 +22,7 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_localTransform->SetScale(f_scl);
     m_localTransform->UpdateMatrix();
 
+    m_fullMatrix = g_IdentityMatrix;
     m_bindMatrix = g_IdentityMatrix;
     m_poseMatrix = g_IdentityMatrix;
     m_updated = true;

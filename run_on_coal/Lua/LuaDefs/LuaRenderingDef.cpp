@@ -33,7 +33,7 @@ void ROC::LuaRenderingDef::Init(lua_State *f_vm)
 
 int ROC::LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
 {
-    // clearRenderArea( [bool depth = true, bool color = true] )
+    // bool clearRenderArea( [bool depth = true, bool color = true] )
     bool l_depth = true;
     bool l_color = true;
     ArgReader argStream(f_vm);
