@@ -83,14 +83,14 @@ void ROC::PhysicsManager::SetGravity(const glm::vec3 &f_grav)
     btCollisionObjectArray &l_objectArray = m_dynamicWorld->getCollisionObjectArray();
     for(int i = 0, j = l_objectArray.size(); i < j; i++)
     {
-        btRigidBody *l_body = dynamic_cast<btRigidBody*>(l_objectArray[i]);
+
+        btRigidBody *l_body = btRigidBody::upcast(l_objectArray[i]);
         if(l_body)
         {
             l_body->setGravity(l_grav);
             l_body->activate(true);
         }
     }
-
 }
 void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
 {
