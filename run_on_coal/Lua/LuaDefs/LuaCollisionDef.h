@@ -28,8 +28,6 @@ class LuaCollisionDef final
     static int ApplyTorque(lua_State *f_vm);
     static int SetMotionType(lua_State *f_vm);
     static int GetMotionType(lua_State *f_vm);
-    static int Attach(lua_State *f_vm);
-    static int Detach(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

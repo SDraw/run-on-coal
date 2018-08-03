@@ -20,7 +20,7 @@ class InheritanceManager final
 {
     Core *m_core;
 
-    std::multimap<Element*, Element*> m_inheritMap; //child - parent
+    std::multimap<Element*, Element*> m_inheritMap; // Child <-> Parent
 
     void AddInheritance(Element *f_child, Element *f_parent);
     void RemoveInheritance(Element *f_child, Element *f_parent);
@@ -31,9 +31,8 @@ public:
     bool DetachModel(Model *f_model);
     bool SetModelAnimation(Model *f_model, Animation *f_anim);
     bool RemoveModelAnimation(Model *f_model);
-
-    bool AttachCollisionToModel(Collision *f_col, Model *f_model);
-    bool DetachCollision(Collision *f_col);
+    bool SetModelCollision(Model *f_model, Collision *f_col);
+    bool RemoveModelCollision(Model *f_model);
 
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool RemoveSceneCamera(Scene *f_scene);

@@ -85,17 +85,9 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
                 case Element::ET_Animation:
                     reinterpret_cast<Model*>(f_child)->GetAnimationController()->SetAnimation(nullptr);
                     break;
-            }
-        } break;
-        case Element::ET_Collision:
-        {
-            switch(f_parent->GetElementType())
-            {
-                case Element::ET_Model:
-                {
-                    reinterpret_cast<Collision*>(f_child)->SetParentModel(nullptr);
-                    reinterpret_cast<Model*>(f_parent)->SetCollision(nullptr);
-                } break;
+                case Element::ET_Collision:
+                    reinterpret_cast<Model*>(f_child)->SetCollision(nullptr);
+                    break;
             }
         } break;
         case Element::ET_Camera:
@@ -226,24 +218,24 @@ bool ROC::InheritanceManager::DetachModel(Model *f_model)
     return l_result;
 }
 
-bool ROC::InheritanceManager::AttachCollisionToModel(Collision *f_col, Model *f_model)
+bool ROC::InheritanceManager::SetModelCollision(Model *f_model, Collision *f_col)
 {
     bool l_result = false;
-    if(!f_col->GetParentModel() && !f_model->HasCollision() && !f_model->GetParent())
+    if(!f_model->HasCollision() && !f_model->GetParent())
     {
-        AddInheritance(f_col, f_model);
-        f_col->SetParentModel(f_model);
+        AddInheritance(f_model, f_col);
         f_model->SetCollision(f_col);
         l_result = true;
     }
     return l_result;
 }
-bool ROC::InheritanceManager::DetachCollision(Collision *f_col)
+bool ROC::InheritanceManager::RemoveModelCollision(Model *f_model)
 {
     bool l_result = false;
-    if(f_col->GetParentModel())
+    Collision *l_col = f_model->GetCollsion();
+    if(l_col)
     {
-        RemoveInheritance(f_col, f_col->GetParentModel());
+        RemoveInheritance(f_model, l_col);
         l_result = true;
     }
     return l_result;

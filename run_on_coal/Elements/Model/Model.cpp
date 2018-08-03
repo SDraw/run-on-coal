@@ -43,6 +43,7 @@ ROC::Model::Model(Geometry *f_geometry)
             if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsData(), this);
         }
     }
+
     m_collision = nullptr;
 }
 ROC::Model::~Model()
@@ -55,7 +56,6 @@ ROC::Model::~Model()
 void ROC::Model::SetPosition(const glm::vec3 &f_pos)
 {
     m_localTransform->SetPosition(f_pos);
-    if(m_collision) m_collision->SetPosition(f_pos);
 }
 const glm::vec3& ROC::Model::GetPosition() const
 {
@@ -65,7 +65,6 @@ const glm::vec3& ROC::Model::GetPosition() const
 void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
     m_localTransform->SetRotation(f_rot);
-    if(m_collision) m_collision->SetRotation(f_rot);
 }
 const glm::quat& ROC::Model::GetRotation() const
 {
@@ -97,8 +96,8 @@ void ROC::Model::SetCollision(Collision *f_col)
 {
     if(m_skeleton)
     {
-        btRigidBody *l_body = (f_col ? f_col->GetRigidBody() : m_collision->GetRigidBody());
-        m_skeleton->SetCollisionIgnoring(l_body, (f_col != nullptr));
+        btCollisionObject *l_col = (f_col ? f_col->GetRigidBody() : m_collision->GetRigidBody());
+        m_skeleton->SetCollisionIgnoring(l_col, (f_col != nullptr));
     }
     m_collision = f_col;
 }
@@ -155,22 +154,12 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
             if(m_collision)
             {
                 m_updated = false;
-                if(m_collision->IsActive())
+                m_localTransform->UpdateMatrix();
+                if(m_collision->IsActive() || m_localTransform->IsUpdated())
                 {
-                    glm::vec3 l_pos;
-                    m_collision->GetPosition(l_pos);
-                    m_localTransform->SetPosition(l_pos);
-
-                    glm::quat l_rot;
-                    m_collision->GetRotation(l_rot);
-                    m_localTransform->SetRotation(l_rot);
-
-                    m_localTransform->UpdateMatrix();
-                    if(m_localTransform->IsUpdated())
-                    {
-                        std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
-                        m_updated = true;
-                    }
+                    m_collision->GetMatrix(m_fullMatrix);
+                    m_fullMatrix = m_fullMatrix*m_localTransform->GetMatrix();
+                    m_updated = true;
                 }
             }
         } break;

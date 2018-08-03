@@ -25,7 +25,6 @@ class Bone final
 public:
     inline bool IsUpdated() const { return m_updated; }
     inline bool IsDynamic() const { return m_dynamic; }
-    inline const btRigidBody* GetDynamicBody() const { return m_dynamicBody; }
     inline const Transformation* GetLocalTransformation() const { return m_localTransform; }
     inline const glm::mat4& GetBindMatrix() const { return m_bindMatrix; }
     inline const glm::mat4& GetFullMatrix() const { return m_fullMatrix; }
@@ -46,11 +45,13 @@ protected:
 
     inline void SetDynamic(bool f_state) { m_dynamic = f_state; }
     inline void SetDynamicBody(btRigidBody *f_body) { m_dynamicBody = f_body; }
+    inline const btRigidBody* GetDynamicBody() const { return m_dynamicBody; }
 
     void SetFullMatrix(const btTransform &f_transform);
     void SetPoseMatrix(const btTransform &f_transform);
 
     friend class Animation;
+    friend class Model;
     friend class Skeleton;
 };
 

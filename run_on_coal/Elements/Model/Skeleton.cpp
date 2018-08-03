@@ -293,14 +293,14 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
     }
 }
 
-void ROC::Skeleton::SetCollisionIgnoring(btRigidBody *f_body, bool f_ignore)
+void ROC::Skeleton::SetCollisionIgnoring(btCollisionObject *f_obj, bool f_ignore)
 {
     if(m_hasStaticBoneCollision)
     {
         for(auto iter : m_collisionVector)
         {
-            f_body->setIgnoreCollisionCheck(iter->m_rigidBody, f_ignore);
-            iter->m_rigidBody->setIgnoreCollisionCheck(f_body, f_ignore);
+            f_obj->setIgnoreCollisionCheck(iter->m_rigidBody, f_ignore);
+            iter->m_rigidBody->setIgnoreCollisionCheck(f_obj, f_ignore);
         }
     }
     if(m_hasDynamicBoneCollision)
@@ -309,8 +309,8 @@ void ROC::Skeleton::SetCollisionIgnoring(btRigidBody *f_body, bool f_ignore)
         {
             for(auto iter1 : iter->m_partsVector)
             {
-                f_body->setIgnoreCollisionCheck(iter1->m_rigidBody, f_ignore);
-                iter1->m_rigidBody->setIgnoreCollisionCheck(f_body, f_ignore);
+                f_obj->setIgnoreCollisionCheck(iter1->m_rigidBody, f_ignore);
+                iter1->m_rigidBody->setIgnoreCollisionCheck(f_obj, f_ignore);
             }
         }
     }

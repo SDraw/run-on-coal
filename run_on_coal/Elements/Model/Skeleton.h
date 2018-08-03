@@ -71,7 +71,7 @@ protected:
     inline const std::vector<SkeletonJoint*>& GetJoints() const { return m_jointVector; }
 
     void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model);
-    void SetCollisionIgnoring(btRigidBody *f_body, bool f_ignore);
+    void SetCollisionIgnoring(btCollisionObject *f_obj, bool f_ignore);
 
     static void SetPhysicsEnabled(bool f_state);
 

@@ -4,9 +4,10 @@ namespace ROC
 {
 
 class Core;
+class Collision;
 class Element;
 class Model;
-class Collision;
+
 class PhysicsManager final
 {
     Core *m_core;
@@ -51,7 +52,7 @@ protected:
 
     void DoPulse();
 
-    friend class Core;
+    friend Core;
     friend class ElementManager;
     friend class RenderManager;
     friend class SfmlManager;

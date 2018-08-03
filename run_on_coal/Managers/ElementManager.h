@@ -4,20 +4,21 @@ namespace ROC
 {
 
 class Core;
-class Geometry;
-class Model;
-class Element;
 class Animation;
-class Scene;
 class Camera;
+class Collision;
+class Element;
+class File;
+class Font;
+class Geometry;
 class Light;
+class Model;
+class Scene;
 class RenderTarget;
 class Shader;
 class Sound;
 class Texture;
-class Font;
-class File;
-class Collision;
+
 class ElementManager final
 {
     Core *m_core;

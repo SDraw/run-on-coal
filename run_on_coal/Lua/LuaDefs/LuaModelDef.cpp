@@ -56,7 +56,9 @@ void ROC::LuaModelDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "resetAnimation", ResetAnimation);
     LuaUtils::AddClassMethod(f_vm, "setAnimationProperty", SetAnimationProperty);
     LuaUtils::AddClassMethod(f_vm, "getAnimationProperty", GetAnimationProperty);
+    LuaUtils::AddClassMethod(f_vm, "setCollision", SetCollision);
     LuaUtils::AddClassMethod(f_vm, "getCollision", GetCollision);
+    LuaUtils::AddClassMethod(f_vm, "removeCollision", RemoveCollision);
     LuaUtils::AddClassMethod(f_vm, "setCollidable", SetCollidable);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
@@ -395,8 +397,38 @@ int ROC::LuaModelDef::GetCollision(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        Collision *l_col = l_model->GetCollision();
+        Collision *l_col = l_model->GetCollsion();
         l_col ? argStream.PushElement(l_col) : argStream.PushBoolean(false);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaModelDef::SetCollision(lua_State *f_vm)
+{
+    // bool Model:setCollision(element col)
+    Model *l_model;
+    Collision *l_col;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_model);
+    argStream.ReadElement(l_col);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetModelCollision(l_model, l_col);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaModelDef::RemoveCollision(lua_State *f_vm)
+{
+    // bool Model:removeCollision()
+    Model *l_model;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_model);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveModelCollision(l_model);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

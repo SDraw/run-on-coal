@@ -2,19 +2,14 @@
 
 #include "Elements/Element.h"
 
-#define ROC_MODEL_UPDATE_MATRIX 0
-#define ROC_MODEL_UPDATE_COLLISION 1
-#define ROC_MODEL_UPDATE_SKELETON1 2
-#define ROC_MODEL_UPDATE_SKELETON2 3
-
 namespace ROC
 {
 
+class AnimationController;
 class Bone;
 class Collision;
 class Geometry;
 class Skeleton;
-class AnimationController;
 class Transformation;
 
 class Model final : public Element
@@ -56,7 +51,7 @@ public:
     inline bool HasSkeleton() const { return (m_skeleton != nullptr); }
 
     inline bool HasCollision() const { return (m_collision != nullptr); }
-    inline Collision* GetCollision() { return m_collision; }
+    inline Collision* GetCollsion() { return m_collision; }
 protected:
     enum ModelUpdateStage : unsigned char
     {

@@ -40,7 +40,6 @@ ROC::PhysicsManager::~PhysicsManager()
         delete m_floorBody->getMotionState();
         delete m_floorBody;
     }
-
     delete m_dynamicWorld;
     delete m_solver;
     delete m_dispatcher;
@@ -109,8 +108,8 @@ void ROC::PhysicsManager::SetCollisionScale(Collision *f_col, const glm::vec3 &f
 }
 bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
 {
-    std::vector<btRigidBody*> l_bodies1, l_bodies2;
-    if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetCollision()->GetRigidBody());
+    std::vector<btCollisionObject*> l_bodies1, l_bodies2;
+    if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetCollsion()->GetRigidBody());
     else
     {
         if(f_model1->HasSkeleton())
@@ -129,7 +128,7 @@ bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, 
             }
         }
     }
-    if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetCollision()->GetRigidBody());
+    if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetCollsion()->GetRigidBody());
     else
     {
         if(f_model2->HasSkeleton())

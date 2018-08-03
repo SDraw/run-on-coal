@@ -53,8 +53,6 @@ void ROC::LuaCollisionDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "applyTorque", ApplyTorque);
     LuaUtils::AddClassMethod(f_vm, "setMotionType", SetMotionType);
     LuaUtils::AddClassMethod(f_vm, "getMotionType", GetMotionType);
-    LuaUtils::AddClassMethod(f_vm, "attach", Attach);
-    LuaUtils::AddClassMethod(f_vm, "detach", Detach);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
@@ -433,36 +431,5 @@ int ROC::LuaCollisionDef::GetMotionType(lua_State *f_vm)
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_collision);
     !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypesTable[static_cast<size_t>(l_collision->GetMotionType())]) : argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-
-int ROC::LuaCollisionDef::Attach(lua_State *f_vm)
-{
-    // bool Collision:attach(element model)
-    Collision *l_col;
-    Model *l_model;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_col);
-    argStream.ReadElement(l_model);
-    if(!argStream.HasErrors())
-    {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachCollisionToModel(l_col, l_model);
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int ROC::LuaCollisionDef::Detach(lua_State *f_vm)
-{
-    // bool Collision:detach()
-    Collision *l_col;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_col);
-    if(!argStream.HasErrors())
-    {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->DetachCollision(l_col);
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
