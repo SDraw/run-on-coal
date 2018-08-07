@@ -219,7 +219,7 @@ void ROC::VRManager::UpdateControllerInput(VRController &f_controller, const std
                 m_luaArguments->PushArgument(f_hand);
                 m_luaArguments->PushArgument(iter.second);
                 m_luaArguments->PushArgument(l_pressState ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRControllerKeyPress", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onVRControllerKeyPress, m_luaArguments);
                 m_luaArguments->Clear();
             }
         }
@@ -233,7 +233,7 @@ void ROC::VRManager::UpdateControllerInput(VRController &f_controller, const std
                 m_luaArguments->PushArgument(f_hand);
                 m_luaArguments->PushArgument(iter.second);
                 m_luaArguments->PushArgument(l_touchState ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRControllerKeyTouch", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onVRControllerKeyTouch, m_luaArguments);
                 m_luaArguments->Clear();
             }
         }
@@ -249,7 +249,7 @@ void ROC::VRManager::UpdateControllerInput(VRController &f_controller, const std
                 m_luaArguments->PushArgument(static_cast<int>(i));
                 m_luaArguments->PushArgument(l_newAxis.x);
                 m_luaArguments->PushArgument(l_newAxis.y);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onVRControllerAxis", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onVRControllerAxis, m_luaArguments);
                 m_luaArguments->Clear();
             }
         }

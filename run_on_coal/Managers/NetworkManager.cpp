@@ -125,7 +125,7 @@ void ROC::NetworkManager::DoPulse()
                     if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[1]);
 
                     m_luaArguments->PushArgument(g_networkStateTable[1]);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_luaArguments);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onNetworkStateChange, m_luaArguments);
                     m_luaArguments->Clear();
                 } break;
                 case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -136,7 +136,7 @@ void ROC::NetworkManager::DoPulse()
                     if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[0]);
 
                     m_luaArguments->PushArgument(g_networkStateTable[0]);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkStateChange", m_luaArguments);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onNetworkStateChange, m_luaArguments);
                     m_luaArguments->Clear();
                 } break;
                 case ID_ROC_DATA_PACKET:
@@ -153,7 +153,7 @@ void ROC::NetworkManager::DoPulse()
                             if(m_dataCallback) (*m_dataCallback)(l_stringData);
 
                             m_luaArguments->PushArgument(l_stringData);
-                            m_core->GetLuaManager()->GetEventManager()->CallEvent("onNetworkDataRecieve", m_luaArguments);
+                            m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onNetworkDataRecieve, m_luaArguments);
                             m_luaArguments->Clear();
                         }
                     }

@@ -33,10 +33,24 @@ public:
 
     void CallEvent(const std::string &f_event, const LuaArguments *f_args);
 protected:
+    enum EventManagerEvent : size_t
+    {
+        EME_onServerStart = 0U,
+        EME_onServerStop,
+        EME_onServerPulse,
+        EME_onNetworkClientConnect,
+        EME_onNetworkClientDisconnect,
+        EME_onNetworkDataRecieve
+    };
+
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();
 
+    void CallEvent(EventManagerEvent f_event, const LuaArguments *f_args);
+
+    friend class Core;
     friend class LuaManager;
+    friend class NetworkManager;
 };
 
 }

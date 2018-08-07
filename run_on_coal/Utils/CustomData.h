@@ -3,6 +3,8 @@
 namespace ROC
 {
 
+class Element;
+
 class CustomData
 {
     union
@@ -48,8 +50,8 @@ public:
     inline float GetFloat() const { return m_float; }
     void SetFloat(float f_val);
 
-    void GetElement(void *&f_ptr, std::string &f_name) const;
-    void SetElement(void *f_ptr, const std::string &f_name);
+    Element* GetElement() const;
+    void SetElement(Element *f_element);
 
     inline const std::string& GetString() const { return m_string; }
     void SetString(const std::string &f_val);

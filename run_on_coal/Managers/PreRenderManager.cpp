@@ -106,7 +106,7 @@ void ROC::PreRenderManager::RemoveLink(Model *f_model)
 void ROC::PreRenderManager::DoPulse_S1()
 {
     if(m_callback) (*m_callback)();
-    m_core->GetLuaManager()->GetEventManager()->CallEvent("onPreRender", m_luaArguments);
+    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onPreRender, m_luaArguments);
 
     auto &l_rootNodes = m_modelTreeRoot->GetChildren();
     m_nodeStack.insert(m_nodeStack.end(), l_rootNodes.rbegin(), l_rootNodes.rend());

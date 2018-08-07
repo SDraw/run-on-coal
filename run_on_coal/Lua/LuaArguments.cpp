@@ -35,9 +35,9 @@ void ROC::LuaArguments::PushArgument(float f_val)
     m_dummyData.SetFloat(f_val);
     m_vArgs.push_back(m_dummyData);
 }
-void ROC::LuaArguments::PushArgument(void *f_val, const std::string &f_name)
+void ROC::LuaArguments::PushArgument(Element *f_element)
 {
-    m_dummyData.SetElement(f_val,f_name);
+    m_dummyData.SetElement(f_element);
     m_vArgs.push_back(m_dummyData);
 }
 void ROC::LuaArguments::PushArgument(const std::string &f_val)

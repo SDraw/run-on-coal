@@ -7,6 +7,7 @@
 #include "Lua/LuaFunction.h"
 
 #include "Managers/LogManager.h"
+#include "Elements/Element.h"
 #include "Lua/LuaDefs/LuaAnimationDef.h"
 #include "Lua/LuaDefs/LuaCameraDef.h"
 #include "Lua/LuaDefs/LuaCollisionDef.h"
@@ -143,10 +144,8 @@ void ROC::LuaManager::CallFunction(const LuaFunction &f_func, const LuaArguments
                 break;
             case CustomData::CDT_Element:
             {
-                void *l_ptr;
-                std::string l_className;
-                iter.GetElement(l_ptr, l_className);
-                LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_ptr, l_className.c_str());
+                Element *l_element = iter.GetElement();
+                LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
             } break;
             case CustomData::CDT_String:
             {

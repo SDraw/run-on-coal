@@ -4,6 +4,8 @@
 namespace ROC
 {
 
+class Element;
+
 class LuaArguments final
 {
     CustomData m_dummyData;
@@ -17,7 +19,7 @@ public:
     void PushArgument(int f_val);
     void PushArgument(double f_val);
     void PushArgument(float f_val);
-    void PushArgument(void *f_val, const std::string &f_name);
+    void PushArgument(Element *f_element);
     void PushArgument(const std::string &f_val);
     void PushArgument(const char *f_val, size_t f_size);
 

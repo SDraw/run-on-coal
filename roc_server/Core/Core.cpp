@@ -78,7 +78,7 @@ ROC::Core* ROC::Core::Init()
         delete l_meta;
 
         if(ms_serverStartCallback) (*ms_serverStartCallback)();
-        ms_instance->m_luaManager->GetEventManager()->CallEvent("onServerStart", ms_instance->m_luaArguments);
+        ms_instance->m_luaManager->GetEventManager()->CallEvent(EventManager::EME_onServerStart, ms_instance->m_luaArguments);
     }
     return ms_instance;
 }
@@ -87,7 +87,7 @@ void ROC::Core::Terminate()
     if(ms_instance)
     {
         if(ms_instance->m_serverStopCallback) (*ms_instance->m_serverStopCallback)();
-        ms_instance->m_luaManager->GetEventManager()->CallEvent("onServerStop", ms_instance->m_luaArguments);
+        ms_instance->m_luaManager->GetEventManager()->CallEvent(EventManager::EME_onServerStop, ms_instance->m_luaArguments);
 
         delete ms_instance;
         ms_instance = nullptr;
@@ -99,7 +99,7 @@ void ROC::Core::DoPulse()
     m_networkManager->DoPulse();
 
     if(m_serverPulseCallback) (*m_serverPulseCallback)();
-    m_luaManager->GetEventManager()->CallEvent("onServerPulse", m_luaArguments);
+    m_luaManager->GetEventManager()->CallEvent(EventManager::EME_onServerPulse, m_luaArguments);
 
     m_luaManager->DoPulse();
 

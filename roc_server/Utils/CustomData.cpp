@@ -59,15 +59,13 @@ void ROC::CustomData::SetFloat(float f_val)
     m_float = f_val;
     m_type = CDT_Float;
 }
-void ROC::CustomData::GetElement(void *&f_ptr, std::string &f_name) const
+ROC::Element* ROC::CustomData::GetElement() const
 {
-    f_ptr = m_ptr;
-    f_name.assign(m_string);
+    return reinterpret_cast<Element*>(m_ptr);
 }
-void ROC::CustomData::SetElement(void *f_ptr, const std::string &f_name)
+void ROC::CustomData::SetElement(Element *f_element)
 {
-    m_ptr = f_ptr;
-    m_string.assign(f_name);
+    m_ptr = f_element;
     m_type = CDT_Element;
 }
 void ROC::CustomData::SetString(const std::string &f_val)

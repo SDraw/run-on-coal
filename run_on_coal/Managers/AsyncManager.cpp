@@ -79,9 +79,9 @@ void ROC::AsyncManager::DoPulse()
 
                 if(m_callback) (*m_callback)(iter.m_geometry, iter.m_result);
 
-                m_luaArguments->PushArgument(iter.m_geometry, "Geometry");
+                m_luaArguments->PushArgument(iter.m_geometry);
                 m_luaArguments->PushArgument(iter.m_result);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onGeometryLoad", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onGeometryLoad, m_luaArguments);
                 m_luaArguments->Clear();
 
                 if(!iter.m_result) m_core->GetElementManager()->DestroyElement(iter.m_geometry);

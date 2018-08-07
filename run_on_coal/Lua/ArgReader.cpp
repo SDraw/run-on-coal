@@ -10,6 +10,7 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
+#include "Elements/Element.h"
 #include "Utils/LuaUtils.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
@@ -99,7 +100,7 @@ void ROC::ArgReader::ReadCustomData(CustomData &f_data)
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_data.SetElement(l_element, l_element->GetElementTypeName());
+                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_data.SetElement(l_element);
                 } break;
                 case LUA_TSTRING:
                 {
@@ -238,10 +239,8 @@ void ROC::ArgReader::PushCustomData(const CustomData &f_data)
             break;
         case CustomData::CDT_Element:
         {
-            void *l_ptr;
-            std::string l_className;
-            f_data.GetElement(l_ptr, l_className);
-            LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_ptr, l_className.c_str());
+            Element *l_element = f_data.GetElement();
+            LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
         } break;
     }
     if(f_data.GetType() != CustomData::CDT_None) m_returnCount++;
@@ -275,7 +274,7 @@ void ROC::ArgReader::ReadArguments(LuaArguments &f_args)
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_args.PushArgument(l_element, l_element->GetElementTypeName());
+                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_args.PushArgument(l_element);
                 } break;
                 case LUA_TSTRING:
                 {

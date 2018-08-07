@@ -121,8 +121,8 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);
 
-                    m_luaArguments->PushArgument(l_client, "Client");
-                    l_eventManager->CallEvent("onNetworkClientConnect", m_luaArguments);
+                    m_luaArguments->PushArgument(l_client);
+                    l_eventManager->CallEvent(EventManager::EME_onNetworkClientConnect, m_luaArguments);
                     m_luaArguments->Clear();
                     m_core->GetLogManager()->Log(l_log);
                 } break;
@@ -138,8 +138,8 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientDisconnectCallback) (*m_networkClientDisconnectCallback)(l_client);
 
-                    m_luaArguments->PushArgument(l_client, "Client");
-                    l_eventManager->CallEvent("onNetworkClientDisconnect", m_luaArguments);
+                    m_luaArguments->PushArgument(l_client);
+                    l_eventManager->CallEvent(EventManager::EME_onNetworkClientDisconnect, m_luaArguments);
                     m_luaArguments->Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
@@ -161,9 +161,9 @@ void ROC::NetworkManager::DoPulse()
 
                             if(m_networkDataRecieveCallback) (*m_networkDataRecieveCallback)(l_client, l_stringData);
 
-                            m_luaArguments->PushArgument(l_client, "Client");
+                            m_luaArguments->PushArgument(l_client);
                             m_luaArguments->PushArgument(l_stringData);
-                            l_eventManager->CallEvent("onNetworkDataRecieve", m_luaArguments);
+                            l_eventManager->CallEvent(EventManager::EME_onNetworkDataRecieve, m_luaArguments);
                             m_luaArguments->Clear();
                         }
                     }

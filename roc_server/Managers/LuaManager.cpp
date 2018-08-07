@@ -6,11 +6,13 @@
 #include "Lua/LuaArguments.h"
 
 #include "Managers/LogManager.h"
+#include "Elements/Element.h"
 #include "Lua/LuaDefs/LuaClientDef.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaEventsDef.h"
 #include "Lua/LuaDefs/LuaFileDef.h"
 #include "Lua/LuaDefs/LuaUtilsDef.h"
+#include "Utils/LuaUtils.h"
 
 #define ROC_LUA_METATABLE "roc_mt"
 
@@ -104,23 +106,8 @@ void ROC::LuaManager::CallFunction(const LuaFunction &f_func, const LuaArguments
                 break;
             case CustomData::CDT_Element:
             {
-                void *l_ptr;
-                std::string l_className;
-                iter.GetElement(l_ptr, l_className);
-
-                luaL_getmetatable(m_vm, ROC_LUA_METATABLE_USERDATA);
-                lua_pushlightuserdata(m_vm, l_ptr);
-                lua_rawget(m_vm, -2);
-                if(lua_isnil(m_vm, -1))
-                {
-                    lua_pop(m_vm, 1);
-                    *reinterpret_cast<void**>(lua_newuserdata(m_vm, sizeof(void*))) = l_ptr;
-                    luaL_setmetatable(m_vm, l_className.c_str());
-                    lua_pushlightuserdata(m_vm, l_ptr);
-                    lua_pushvalue(m_vm, -2);
-                    lua_rawset(m_vm, -4);
-                }
-                lua_remove(m_vm, -2);
+                Element *l_element = iter.GetElement();
+                LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
             } break;
             case CustomData::CDT_String:
             {

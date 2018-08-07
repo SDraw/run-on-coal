@@ -147,9 +147,9 @@ bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, const Lua
     return l_result;
 }
 
-void ROC::EventManager::CallEvent(const std::string &f_event, const LuaArguments *f_args)
+void ROC::EventManager::CallEvent(EventManagerEvent f_event, const LuaArguments *f_args)
 {
-    auto iter = m_eventMap.find(f_event);
+    auto iter = m_eventMap.find(g_DefaultEventsNames[f_event]);
     if(iter != m_eventMapEnd)
     {
         EventHeap *l_heap = iter->second;
@@ -176,6 +176,43 @@ void ROC::EventManager::CallEvent(const std::string &f_event, const LuaArguments
                 delete l_heap;
                 m_eventMap.erase(iter);
                 m_eventMapEnd = m_eventMap.end();
+            }
+        }
+    }
+}
+
+void ROC::EventManager::CallEvent(const std::string &f_event, const LuaArguments *f_args)
+{
+    if(std::find(g_DefaultEventsNames.begin(), g_DefaultEventsNames.end(), f_event) == g_DefaultEventsNames.end())
+    {
+        auto iter = m_eventMap.find(f_event);
+        if(iter != m_eventMapEnd)
+        {
+            EventHeap *l_heap = iter->second;
+            if(!l_heap->m_active)
+            {
+                l_heap->m_active = true;
+                if(!l_heap->m_deleted)
+                {
+                    auto &l_eventVector = l_heap->m_eventVector;
+                    auto &l_heapIter = l_heap->m_eventVectorIter;
+                    for(l_heapIter = l_eventVector.begin(); l_heapIter != l_eventVector.end(); ++l_heapIter)
+                    {
+                        if(!l_heapIter->m_deleted) m_luaManager->CallFunction(l_heapIter->m_function, f_args);
+                        if(l_heapIter->m_deleted)
+                        {
+                            l_heapIter = l_eventVector.erase(l_heapIter);
+                            if(l_heapIter == l_eventVector.end()) break;
+                        }
+                    }
+                }
+                l_heap->m_active = false;
+                if(l_heap->m_deleted)
+                {
+                    delete l_heap;
+                    m_eventMap.erase(iter);
+                    m_eventMapEnd = m_eventMap.end();
+                }
             }
         }
     }

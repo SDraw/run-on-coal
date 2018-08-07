@@ -250,7 +250,7 @@ bool ROC::SfmlManager::DoPulse()
 
                 m_luaArguments->PushArgument(static_cast<int>(m_event.size.width));
                 m_luaArguments->PushArgument(static_cast<int>(m_event.size.height));
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowResize", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onWindowResize, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
             case sf::Event::GainedFocus: case sf::Event::LostFocus:
@@ -258,7 +258,7 @@ bool ROC::SfmlManager::DoPulse()
                 if(m_windowFocusCallback) (*m_windowFocusCallback)(m_event.type == sf::Event::GainedFocus);
 
                 m_luaArguments->PushArgument(m_event.type == sf::Event::GainedFocus ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onWindowFocus", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onWindowFocus, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
             case sf::Event::KeyPressed: case sf::Event::KeyReleased:
@@ -269,7 +269,7 @@ bool ROC::SfmlManager::DoPulse()
 
                     m_luaArguments->PushArgument(g_KeyNamesTable[m_event.key.code]);
                     m_luaArguments->PushArgument(m_event.type == sf::Event::KeyPressed ? 1 : 0);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onKeyPress", m_luaArguments);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onKeyPress, m_luaArguments);
                     m_luaArguments->Clear();
                 }
             } break;
@@ -284,7 +284,7 @@ bool ROC::SfmlManager::DoPulse()
                     if(m_textInputCallback) (*m_textInputCallback)(l_input);
 
                     m_luaArguments->PushArgument(l_input);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onTextInput", m_luaArguments);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onTextInput, m_luaArguments);
                     m_luaArguments->Clear();
                 }
             } break;
@@ -296,7 +296,7 @@ bool ROC::SfmlManager::DoPulse()
 
                     m_luaArguments->PushArgument(m_event.mouseMove.x);
                     m_luaArguments->PushArgument(m_event.mouseMove.y);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorMove", m_luaArguments);
+                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onCursorMove, m_luaArguments);
                     m_luaArguments->Clear();
                     l_mouseFix = true;
                 }
@@ -306,7 +306,7 @@ bool ROC::SfmlManager::DoPulse()
                 if(m_cursorEnterCallback) (*m_cursorEnterCallback)(m_event.type == sf::Event::MouseEntered);
 
                 m_luaArguments->PushArgument(m_event.type == sf::Event::MouseEntered ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onCursorEnter", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onCursorEnter, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
@@ -315,7 +315,7 @@ bool ROC::SfmlManager::DoPulse()
 
                 m_luaArguments->PushArgument(g_MouseKeyNamesTable[m_event.mouseButton.button]);
                 m_luaArguments->PushArgument(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseKeyPress", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onMouseKeyPress, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
             case sf::Event::MouseWheelScrolled:
@@ -324,7 +324,7 @@ bool ROC::SfmlManager::DoPulse()
 
                 m_luaArguments->PushArgument(m_event.mouseWheelScroll.wheel);
                 m_luaArguments->PushArgument(m_event.mouseWheelScroll.delta);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onMouseScroll", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onMouseScroll, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
             case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
@@ -333,7 +333,7 @@ bool ROC::SfmlManager::DoPulse()
 
                 m_luaArguments->PushArgument(static_cast<int>(m_event.joystickConnect.joystickId));
                 m_luaArguments->PushArgument(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadStateChange", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onJoypadStateChange, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
             case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
@@ -343,7 +343,7 @@ bool ROC::SfmlManager::DoPulse()
                 m_luaArguments->PushArgument(static_cast<int>(m_event.joystickButton.joystickId));
                 m_luaArguments->PushArgument(static_cast<int>(m_event.joystickButton.button));
                 m_luaArguments->PushArgument(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadButton", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onJoypadButton, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
             case sf::Event::JoystickMoved:
@@ -353,7 +353,7 @@ bool ROC::SfmlManager::DoPulse()
                 m_luaArguments->PushArgument(static_cast<int>(m_event.joystickMove.joystickId));
                 m_luaArguments->PushArgument(g_JoypadAxisNamesTable[m_event.joystickMove.axis]);
                 m_luaArguments->PushArgument(m_event.joystickMove.position);
-                m_core->GetLuaManager()->GetEventManager()->CallEvent("onJoypadAxis", m_luaArguments);
+                m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onJoypadAxis, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
         }

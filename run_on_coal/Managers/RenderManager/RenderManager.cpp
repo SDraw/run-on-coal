@@ -376,7 +376,7 @@ void ROC::RenderManager::DoPulse()
 
     if(m_callback) (*m_callback)();
     EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
-    l_eventManager->CallEvent("onRender", m_luaArguments);
+    l_eventManager->CallEvent(EventManager::EME_onRender, m_luaArguments);
 
     if(m_vrManager)
     {
@@ -389,7 +389,7 @@ void ROC::RenderManager::DoPulse()
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
-        l_eventManager->CallEvent("onVRRender", m_luaArguments);
+        l_eventManager->CallEvent(EventManager::EME_onVRRender, m_luaArguments);
         m_luaArguments->Clear();
 
         m_vrManager->SetVRStage(VRManager::VRS_Right);
@@ -397,7 +397,7 @@ void ROC::RenderManager::DoPulse()
         glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
-        l_eventManager->CallEvent("onVRRender", m_luaArguments);
+        l_eventManager->CallEvent(EventManager::EME_onVRRender, m_luaArguments);
         m_luaArguments->Clear();
 
         m_vrManager->SubmitRender();
