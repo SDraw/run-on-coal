@@ -9,8 +9,6 @@
 #include "Managers/NetworkManager.h"
 #include "Lua/LuaArguments.h"
 
-#define ROC_DEFAULT_SCRIPTS_PATH "server_scripts/"
-
 ROC::Core* ROC::Core::ms_instance = nullptr;
 ROC::OnServerStartCallback ROC::Core::ms_serverStartCallback = nullptr;
 
@@ -55,8 +53,8 @@ ROC::Core* ROC::Core::Init()
         ms_instance = new Core();
 
         // Load default scripts
-        std::string l_metaPath(ROC_DEFAULT_SCRIPTS_PATH);
-        l_metaPath.append("meta.xml");
+        std::string l_metaPath(ms_instance->GetConfigManager()->GetScriptsDirectory());
+        l_metaPath.append("/meta.xml");
         pugi::xml_document *l_meta = new pugi::xml_document();
         if(l_meta->load_file(l_metaPath.c_str()))
         {
@@ -68,12 +66,20 @@ ROC::Core* ROC::Core::Init()
                     pugi::xml_attribute l_attrib = l_node.attribute("src");
                     if(l_attrib)
                     {
-                        std::string l_path(ROC_DEFAULT_SCRIPTS_PATH);
+                        std::string l_path(ms_instance->GetConfigManager()->GetScriptsDirectory());
+                        l_path.push_back('/');
                         l_path.append(l_attrib.as_string());
                         ms_instance->m_luaManager->LoadScript(l_path);
                     }
                 }
             }
+        }
+        else
+        {
+            std::string l_error("Unable to find '");
+            l_error.append(l_metaPath);
+            l_error.push_back('\'');
+            ms_instance->GetLogManager()->Log(l_error);
         }
         delete l_meta;
 

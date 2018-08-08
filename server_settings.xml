@@ -4,4 +4,5 @@
     <param name="port" value="42000"/>
     <param name="max_clients" value="10"/>
     <param name="pulse_tick" value="10"/>
+    <param name="scripts_dir" value="server_scripts"/>
 </settings>

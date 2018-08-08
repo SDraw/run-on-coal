@@ -83,43 +83,46 @@ void ROC::LuaManager::DoPulse()
 
 void ROC::LuaManager::CallFunction(const LuaFunction &f_func, const LuaArguments *f_args)
 {
-    lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.GetReference());
+    if(f_func.IsValid() && f_func.GetVM() == m_vm)
+    {
+        lua_rawgeti(m_vm, LUA_REGISTRYINDEX, f_func.GetReference());
 
-    for(auto &iter : f_args->GetArgumentsVectorRef())
-    {
-        switch(iter.GetType())
+        for(auto &iter : f_args->GetArgumentsVectorRef())
         {
-            case CustomData::CDT_Nil:
-                lua_pushnil(m_vm);
-                break;
-            case CustomData::CDT_Boolean:
-                lua_pushboolean(m_vm, iter.GetBoolean());
-                break;
-            case CustomData::CDT_Integer:
-                lua_pushinteger(m_vm, iter.GetInteger());
-                break;
-            case CustomData::CDT_Double:
-                lua_pushnumber(m_vm, iter.GetDouble());
-                break;
-            case CustomData::CDT_Float:
-                lua_pushnumber(m_vm, iter.GetFloat());
-                break;
-            case CustomData::CDT_Element:
+            switch(iter.GetType())
             {
-                Element *l_element = iter.GetElement();
-                LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
-            } break;
-            case CustomData::CDT_String:
-            {
-                const std::string &l_string = iter.GetString();
-                lua_pushlstring(m_vm, l_string.data(), l_string.size());
-            } break;
+                case CustomData::CDT_Nil:
+                    lua_pushnil(m_vm);
+                    break;
+                case CustomData::CDT_Boolean:
+                    lua_pushboolean(m_vm, iter.GetBoolean());
+                    break;
+                case CustomData::CDT_Integer:
+                    lua_pushinteger(m_vm, iter.GetInteger());
+                    break;
+                case CustomData::CDT_Double:
+                    lua_pushnumber(m_vm, iter.GetDouble());
+                    break;
+                case CustomData::CDT_Float:
+                    lua_pushnumber(m_vm, iter.GetFloat());
+                    break;
+                case CustomData::CDT_Element:
+                {
+                    Element *l_element = iter.GetElement();
+                    LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
+                } break;
+                case CustomData::CDT_String:
+                {
+                    const std::string &l_string = iter.GetString();
+                    lua_pushlstring(m_vm, l_string.data(), l_string.size());
+                } break;
+            }
         }
-    }
-    if(lua_pcall(m_vm, f_args->GetArgumentsCount(), 0, 0))
-    {
-        std::string l_log(lua_tostring(m_vm, -1));
-        m_core->GetLogManager()->Log(l_log);
-        lua_pop(m_vm, 1);
+        if(lua_pcall(m_vm, f_args->GetArgumentsCount(), 0, 0))
+        {
+            std::string l_log(lua_tostring(m_vm, -1));
+            m_core->GetLogManager()->Log(l_log);
+            lua_pop(m_vm, 1);
+        }
     }
 }

@@ -12,13 +12,14 @@
 #define ROC_CONFIG_ATTRIB_FPSLIMIT 4
 #define ROC_CONFIG_ATTRIB_VSYNC 5
 #define ROC_CONFIG_ATTRIB_VR 6
+#define ROC_CONFIG_ATTRIB_SCRIPTSDIR 7
 
 namespace ROC
 {
 
 const std::vector<std::string> g_configAttributeTable
 {
-    "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync", "vr"
+    "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync", "vr", "scripts_dir"
 };
 
 }
@@ -32,6 +33,7 @@ ROC::ConfigManager::ConfigManager()
     m_fpsLimit = 60U;
     m_vsync = false;
     m_vrMode = false;
+    m_scriptsDir.assign("scripts");
 
     pugi::xml_document *l_settings = new pugi::xml_document();
     if(l_settings->load_file("settings.xml"))
@@ -78,6 +80,9 @@ ROC::ConfigManager::ConfigManager()
                                 break;
                             case ROC_CONFIG_ATTRIB_VR:
                                 m_vrMode = l_attrib.as_bool(false);
+                                break;
+                            case ROC_CONFIG_ATTRIB_SCRIPTSDIR:
+                                m_scriptsDir.assign(l_attrib.as_string("scripts"));
                                 break;
                         }
                     }

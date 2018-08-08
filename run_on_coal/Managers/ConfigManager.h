@@ -12,6 +12,7 @@ class ConfigManager final
     unsigned int m_fpsLimit;
     bool m_vsync;
     bool m_vrMode;
+    std::string m_scriptsDir;
 public:
     inline bool IsLogEnabled() const { return m_logging; }
     inline bool IsFullscreenEnabled() const { return m_fullscreen; }
@@ -20,6 +21,7 @@ public:
     inline unsigned int GetFPSLimit() const { return m_fpsLimit; }
     inline bool GetVSync() const { return m_vsync; }
     inline bool IsVRModeEnabled() const { return m_vrMode; }
+    inline const std::string& GetScriptsDirectory() const { return m_scriptsDir; }
 protected:
     ConfigManager();
     ~ConfigManager();
