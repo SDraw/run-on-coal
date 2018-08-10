@@ -61,17 +61,7 @@ void ROC::Transformation::SetScale(const glm::vec3 &f_scl)
     }
 }
 
-void ROC::Transformation::Inverse()
-{
-    UpdateMatrix();
-    m_matrix = glm::inverse(m_matrix);
-
-    glm::vec3 l_dummyVec3;
-    glm::vec4 l_dummyVec4;
-    glm::decompose(m_matrix, m_scale, m_rotation, m_position, l_dummyVec3, l_dummyVec4);
-}
-
-void ROC::Transformation::GetMatrix(glm::mat4 &f_mat)
+void ROC::Transformation::GetMatrix(glm::mat4 &f_mat) const
 {
     std::memcpy(&f_mat, &m_matrix, sizeof(glm::mat4));
 }

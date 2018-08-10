@@ -10,11 +10,11 @@
 #define ROC_SHADER_BONES_BINDPOINT 0
 
 #if defined _WIN64
-    #define ROC_SHADER_BONES_COUNT 227ULL
+#define ROC_SHADER_BONES_COUNT 227ULL
 #elif defined _WIN32
-    #define ROC_SHADER_BONES_COUNT 227U
+#define ROC_SHADER_BONES_COUNT 227U
 #else
-    #define ROC_SHADER_BONES_COUNT 227
+#define ROC_SHADER_BONES_COUNT 227
 #endif
 
 namespace ROC
@@ -28,9 +28,6 @@ const std::vector<std::string> g_DefaultUniformsTable = {
     "gTexture0", "gColor",
     "gTime"
 };
-extern const glm::vec3 g_EmptyVec3;
-extern const glm::vec4 g_EmptyVec4;
-extern const glm::mat4 g_EmptyMat4;
 
 }
 
@@ -45,47 +42,21 @@ ROC::Shader::Shader()
 
     m_program = 0U;
 
-    m_projectionUniform = -1;
-    m_viewUniform = -1;
-    m_viewProjectionUniform = -1;
-    m_modelUniform = -1;
-    m_cameraPositionUniform = -1;
-    m_cameraDirectionUniform = -1;
-    m_lightColorUniform = -1;
-    m_lightDirectionUniform = -1;
-    m_lightParamUniform = -1;
-    m_materialParamUniform = -1;
-    m_materialTypeUniform = -1;
-    m_animatedUniform = -1;
-    m_texture0Uniform = -1;
-    m_timeUniform = -1;
-    m_colorUniform = -1;
-
-    m_projectionUniformValue = g_EmptyMat4;
-    m_viewUniformValue = g_EmptyMat4;
-    m_viewProjectionUniformValue = g_EmptyMat4;
-    m_modelUniformValue = g_EmptyMat4;
-    m_cameraPositionUniformValue = g_EmptyVec3;
-    m_cameraDirectionUniformValue = g_EmptyVec3;
-    m_lightingUniformValue = 0U;
-    m_lightColorUniformValue = g_EmptyVec4;
-    m_lightDirectionUniformValue = g_EmptyVec3;
-    m_lightParamUniformValue = g_EmptyVec4;
-    m_materialParamUniformValue = g_EmptyVec4;
-    m_materialTypeUniformValue = 0;
-    m_animatedUniformValue = 0U;
-    m_timeUniformValue = 0.f;
-    m_colorUniformValue = g_EmptyVec4;
+    m_defaultUniforms.assign(SDU_LastEnumIndex, nullptr);
 
     m_uniformMapEnd = m_uniformMap.end();
 
-    m_bindPool = new Pool(static_cast<size_t>(ms_drawableMaxCount));
+    m_bindPool = new Pool(ms_drawableMaxCount);
 
     m_active = false;
 }
 ROC::Shader::~Shader()
 {
     if(m_program) glDeleteProgram(m_program);
+    for(auto iter : m_defaultUniforms)
+    {
+        if(iter) delete iter;
+    }
     for(auto &iter : m_uniformMap) delete iter.second;
     m_uniformMap.clear();
     delete m_bindPool;
@@ -246,6 +217,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
     }
     return (m_program != 0U);
 }
+
 void ROC::Shader::SetupUniformsAndLocations()
 {
     glBindAttribLocation(m_program, 0, "gVertexPosition");
@@ -257,31 +229,31 @@ void ROC::Shader::SetupUniformsAndLocations()
     glUseProgram(m_program);
 
     //Matrices
-    m_projectionUniform = glGetUniformLocation(m_program, "gProjectionMatrix");
-    m_viewUniform = glGetUniformLocation(m_program, "gViewMatrix");
-    m_viewProjectionUniform = glGetUniformLocation(m_program, "gViewProjectionMatrix");
-    m_modelUniform = glGetUniformLocation(m_program, "gModelMatrix");
+    FindDefaultUniform(SDU_Projection, "gProjectionMatrix", ShaderUniform::SUT_Mat4);
+    FindDefaultUniform(SDU_View, "gViewMatrix", ShaderUniform::SUT_Mat4);
+    FindDefaultUniform(SDU_ViewProjection, "gViewProjectionMatrix", ShaderUniform::SUT_Mat4);
+    FindDefaultUniform(SDU_Model, "gModelMatrix", ShaderUniform::SUT_Mat4);
     //Camera
-    m_cameraPositionUniform = glGetUniformLocation(m_program, "gCameraPosition");
-    m_cameraDirectionUniform = glGetUniformLocation(m_program, "gCameraDirection");
+    FindDefaultUniform(SDU_CameraPosition, "gCameraPosition", ShaderUniform::SUT_Float3);
+    FindDefaultUniform(SDU_CameraDirection, "gCameraDirection", ShaderUniform::SUT_Float3);
     //Light
-    m_lightColorUniform = glGetUniformLocation(m_program, "gLightColor");
-    m_lightDirectionUniform = glGetUniformLocation(m_program, "gLightDirection");
-    m_lightParamUniform = glGetUniformLocation(m_program, "gLightParam");
+    FindDefaultUniform(SDU_LightColor, "gLightColor", ShaderUniform::SUT_Float4);
+    FindDefaultUniform(SDU_LightDirection, "gLightDirection", ShaderUniform::SUT_Float3);
+    FindDefaultUniform(SDU_LightParam, "gLightParam", ShaderUniform::SUT_Float4);
     //Material
-    m_materialParamUniform = glGetUniformLocation(m_program, "gMaterialParam");
-    m_materialTypeUniform = glGetUniformLocation(m_program, "gMaterialType");
+    FindDefaultUniform(SDU_MaterialParam, "gMaterialParam", ShaderUniform::SUT_Float4);
+    FindDefaultUniform(SDU_MaterialType, "gMaterialType", ShaderUniform::SUT_Int);
     //Animation
-    m_animatedUniform = glGetUniformLocation(m_program, "gAnimated");
+    FindDefaultUniform(SDU_Animated, "gAnimated", ShaderUniform::SUT_Bool);
     unsigned int l_boneUniform = glGetUniformBlockIndex(m_program, "gBonesUniform");
     if(l_boneUniform != 0U) glUniformBlockBinding(m_program, l_boneUniform, ROC_SHADER_BONES_BINDPOINT);
     //Samplers
-    m_texture0Uniform = glGetUniformLocation(m_program, "gTexture0");
-    if(m_texture0Uniform != -1) glUniform1i(m_texture0Uniform, 0);
+    FindDefaultUniform(SDU_DiffuseTexture, "gTexture0", ShaderUniform::SUT_Sampler);
+    if(m_defaultUniforms[SDU_DiffuseTexture]) m_defaultUniforms[SDU_DiffuseTexture]->SetSampler(0);
     //Time
-    m_timeUniform = glGetUniformLocation(m_program, "gTime");
+    FindDefaultUniform(SDU_Time, "gTime", ShaderUniform::SUT_Float);
     //Color (RenderTarget, Texture, Font)
-    m_colorUniform = glGetUniformLocation(m_program, "gColor");
+    FindDefaultUniform(SDU_Color, "gColor", ShaderUniform::SUT_Float4);
 
     //Get list of custom uniforms
     std::vector<GLchar> l_uniformName(256U);
@@ -303,6 +275,11 @@ void ROC::Shader::SetupUniformsAndLocations()
     }
     m_uniformMapEnd = m_uniformMap.end();
 }
+void ROC::Shader::FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_name, unsigned int f_type)
+{
+    int l_tempUniform = glGetUniformLocation(m_program, f_name);
+    if(l_tempUniform != -1) m_defaultUniforms[f_sud] = new ShaderUniform(f_type, l_tempUniform);
+}
 
 ROC::ShaderUniform* ROC::Shader::GetUniform(const std::string &f_uniform)
 {
@@ -314,135 +291,51 @@ ROC::ShaderUniform* ROC::Shader::GetUniform(const std::string &f_uniform)
 
 void ROC::Shader::SetProjectionMatrix(const glm::mat4 &f_value)
 {
-    if(m_projectionUniform != -1)
-    {
-        if(std::memcmp(&m_projectionUniformValue, &f_value, sizeof(glm::mat4)) != 0)
-        {
-            std::memcpy(&m_projectionUniformValue, &f_value, sizeof(glm::mat4));
-            glUniformMatrix4fv(m_projectionUniform, 1, GL_FALSE, glm::value_ptr(m_projectionUniformValue));
-        }
-    }
+    if(m_defaultUniforms[SDU_Projection]) m_defaultUniforms[SDU_Projection]->SetValue(f_value);
 }
 void ROC::Shader::SetViewMatrix(const glm::mat4 &f_value)
 {
-    if(m_viewUniform != -1)
-    {
-        if(std::memcmp(&m_viewUniformValue, &f_value, sizeof(glm::mat4)) != 0)
-        {
-            std::memcpy(&m_viewUniformValue, &f_value, sizeof(glm::mat4));
-            glUniformMatrix4fv(m_viewUniform, 1, GL_FALSE, glm::value_ptr(m_viewUniformValue));
-        }
-    }
+    if(m_defaultUniforms[SDU_View]) m_defaultUniforms[SDU_View]->SetValue(f_value);
 }
 void ROC::Shader::SetViewProjectionMatrix(const glm::mat4 &f_value)
 {
-    if(m_viewProjectionUniform != -1)
-    {
-        if(std::memcmp(&m_viewProjectionUniformValue, &f_value, sizeof(glm::mat4)) != 0)
-        {
-            std::memcpy(&m_viewProjectionUniformValue, &f_value, sizeof(glm::mat4));
-            glUniformMatrix4fv(m_viewProjectionUniform, 1, GL_FALSE, glm::value_ptr(m_viewProjectionUniformValue));
-        }
-    }
+    if(m_defaultUniforms[SDU_ViewProjection]) m_defaultUniforms[SDU_ViewProjection]->SetValue(f_value);
 }
 void ROC::Shader::SetModelMatrix(const glm::mat4 &f_value)
 {
-    if(m_modelUniform != -1)
-    {
-        if(std::memcmp(&m_modelUniformValue, &f_value, sizeof(glm::mat4)) != 0)
-        {
-            std::memcpy(&m_modelUniformValue, &f_value, sizeof(glm::mat4));
-            glUniformMatrix4fv(m_modelUniform, 1, GL_FALSE, glm::value_ptr(m_modelUniformValue));
-        }
-    }
+    if(m_defaultUniforms[SDU_Model]) m_defaultUniforms[SDU_Model]->SetValue(f_value);
 }
 void ROC::Shader::SetCameraPosition(const glm::vec3 &f_value)
 {
-    if(m_cameraPositionUniform != -1)
-    {
-        if(m_cameraPositionUniformValue != f_value)
-        {
-            std::memcpy(&m_cameraPositionUniformValue, &f_value, sizeof(glm::vec3));
-            glUniform3f(m_cameraPositionUniform, m_cameraPositionUniformValue.x, m_cameraPositionUniformValue.y, m_cameraPositionUniformValue.z);
-        }
-    }
+    if(m_defaultUniforms[SDU_CameraPosition]) m_defaultUniforms[SDU_CameraPosition]->SetValue(f_value);
 }
 void ROC::Shader::SetCameraDirection(const glm::vec3 &f_value)
 {
-    if(m_cameraDirectionUniform != -1)
-    {
-        if(m_cameraDirectionUniformValue != f_value)
-        {
-            std::memcpy(&m_cameraDirectionUniformValue, &f_value, sizeof(glm::vec3));
-            glUniform3f(m_cameraDirectionUniform, m_cameraDirectionUniformValue.x, m_cameraDirectionUniformValue.y, m_cameraDirectionUniformValue.z);
-        }
-    }
+    if(m_defaultUniforms[SDU_CameraDirection]) m_defaultUniforms[SDU_CameraDirection]->SetValue(f_value);
 }
 void ROC::Shader::SetLightColor(const glm::vec4 &f_value)
 {
-    if(m_lightColorUniform != -1)
-    {
-        if(m_lightColorUniformValue != f_value)
-        {
-            std::memcpy(&m_lightColorUniformValue, &f_value, sizeof(glm::vec4));
-            glUniform4f(m_lightColorUniform, m_lightColorUniformValue.r, m_lightColorUniformValue.g, m_lightColorUniformValue.b, m_lightColorUniformValue.a);
-        }
-    }
+    if(m_defaultUniforms[SDU_LightColor]) m_defaultUniforms[SDU_LightColor]->SetValue(f_value);
 }
 void ROC::Shader::SetLightDirection(const glm::vec3 &f_value)
 {
-    if(m_lightDirectionUniform != -1)
-    {
-        if(m_lightDirectionUniformValue != f_value)
-        {
-            std::memcpy(&m_lightDirectionUniformValue, &f_value, sizeof(glm::vec3));
-            glUniform3f(m_lightDirectionUniform, m_lightDirectionUniformValue.x, m_lightDirectionUniformValue.y, m_lightDirectionUniformValue.z);
-        }
-    }
+    if(m_defaultUniforms[SDU_LightDirection]) m_defaultUniforms[SDU_LightDirection]->SetValue(f_value);
 }
 void ROC::Shader::SetLightParam(const glm::vec4 &f_value)
 {
-    if(m_lightParamUniform != -1)
-    {
-        if(m_lightParamUniformValue != f_value)
-        {
-            std::memcpy(&m_lightParamUniformValue, &f_value, sizeof(glm::vec4));
-            glUniform4f(m_lightParamUniform, m_lightParamUniformValue.x, m_lightParamUniformValue.y, m_lightParamUniformValue.z, m_lightParamUniformValue.w);
-        }
-    }
+    if(m_defaultUniforms[SDU_LightParam]) m_defaultUniforms[SDU_LightParam]->SetValue(f_value);
 }
 void ROC::Shader::SetMaterialParam(const glm::vec4 &f_value)
 {
-    if(m_materialParamUniform != -1)
-    {
-        if(m_materialParamUniformValue != f_value)
-        {
-            std::memcpy(&m_materialParamUniformValue, &f_value, sizeof(glm::vec4));
-            glUniform4f(m_materialParamUniform, m_materialParamUniformValue.x, m_materialParamUniformValue.y, m_materialParamUniformValue.z, m_materialParamUniformValue.w);
-        }
-    }
+    if(m_defaultUniforms[SDU_MaterialParam]) m_defaultUniforms[SDU_MaterialParam]->SetValue(f_value);
 }
 void ROC::Shader::SetMaterialType(int f_value)
 {
-    if(m_materialTypeUniform != -1)
-    {
-        if(m_materialTypeUniformValue != f_value)
-        {
-            m_materialTypeUniformValue = f_value;
-            glUniform1i(m_materialTypeUniform, m_materialTypeUniformValue);
-        }
-    }
+    if(m_defaultUniforms[SDU_MaterialType]) m_defaultUniforms[SDU_MaterialType]->SetValue(f_value);
 }
-void ROC::Shader::SetAnimated(unsigned int f_value)
+void ROC::Shader::SetAnimated(bool f_value)
 {
-    if(m_animatedUniform != -1)
-    {
-        if(m_animatedUniformValue != f_value)
-        {
-            m_animatedUniformValue = f_value;
-            glUniform1ui(m_animatedUniform, m_animatedUniformValue);
-        }
-    }
+    if(m_defaultUniforms[SDU_Animated]) m_defaultUniforms[SDU_Animated]->SetValue(f_value);
 }
 void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
 {
@@ -455,25 +348,11 @@ void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
 }
 void ROC::Shader::SetTime(float f_value)
 {
-    if(m_timeUniform != -1)
-    {
-        if(m_timeUniformValue != f_value)
-        {
-            m_timeUniformValue = f_value;
-            glUniform1f(m_timeUniform, m_timeUniformValue);
-        }
-    }
+    if(m_defaultUniforms[SDU_Time]) m_defaultUniforms[SDU_Time]->SetValue(f_value);
 }
 void ROC::Shader::SetColor(const glm::vec4 &f_value)
 {
-    if(m_colorUniform != -1)
-    {
-        if(m_colorUniformValue != f_value)
-        {
-            std::memcpy(&m_colorUniformValue, &f_value, sizeof(glm::vec4));
-            glUniform4f(m_colorUniform, m_colorUniformValue.r, m_colorUniformValue.g, m_colorUniformValue.b, m_colorUniformValue.a);
-        }
-    }
+    if(m_defaultUniforms[SDU_Color]) m_defaultUniforms[SDU_Color]->SetValue(f_value);
 }
 
 bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
@@ -571,6 +450,14 @@ void ROC::Shader::Enable()
     if(!m_active)
     {
         glUseProgram(m_program);
+        for(auto iter : m_defaultUniforms)
+        {
+            if(iter)
+            {
+                iter->SetActive(true);
+                iter->Update();
+            }
+        }
         for(auto &iter : m_uniformMap)
         {
             ShaderUniform *l_shaderUniform = iter.second;
@@ -596,6 +483,10 @@ void ROC::Shader::Disable()
 {
     if(m_active)
     {
+        for(auto iter : m_defaultUniforms)
+        {
+            if(iter) iter->SetActive(false);
+        }
         for(auto &iter : m_uniformMap) iter.second->SetActive(false);
         m_active = false;
     }

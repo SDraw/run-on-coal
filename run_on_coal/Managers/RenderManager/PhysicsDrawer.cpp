@@ -28,29 +28,24 @@ ROC::PhysicsDrawer::~PhysicsDrawer()
 
 void ROC::PhysicsDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
-    if(m_lines.size() < ROC_PHYSICSDRAWER_MAX_LINES)
-    {
-        glm::vec3 l_start(from.x(), from.y(), from.z());
-        glm::vec3 l_stop(to.x(), to.y(), to.z());
-        m_lines.push_back(l_start);
-        m_lines.push_back(l_stop);
-    }
+    glm::vec3 l_start(from.x(), from.y(), from.z());
+    glm::vec3 l_stop(to.x(), to.y(), to.z());
+    m_lines.push_back(l_start);
+    m_lines.push_back(l_stop);
 }
 
 void ROC::PhysicsDrawer::Draw()
 {
-    size_t l_count = m_lines.size();
-    if(l_count > 0U)
+    if(!m_lines.empty())
     {
         GLBinder::BindArrayBuffer(m_VBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, l_count*sizeof(glm::vec3), m_lines.data());
-
         GLBinder::BindVertexArray(m_VAO);
-        glDrawArrays(GL_LINES, 0, static_cast<int>(l_count));
+        while(!m_lines.empty())
+        {
+            size_t l_count = m_lines.size() % ROC_PHYSICSDRAWER_MAX_LINES;
+            glBufferSubData(GL_ARRAY_BUFFER, 0, l_count*sizeof(glm::vec3), m_lines.data());
+            glDrawArrays(GL_LINES, 0, static_cast<int>(l_count));
+            m_lines.erase(m_lines.begin(), m_lines.begin() + l_count);
+        }
     }
-}
-
-void ROC::PhysicsDrawer::ClearStoredLines()
-{
-    m_lines.clear();
 }

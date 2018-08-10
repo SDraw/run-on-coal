@@ -26,11 +26,9 @@ public:
     inline const glm::vec3& GetScale() const { return m_scale; }
     inline bool IsScaled() const { return m_useScale; }
 
-    void Inverse();
-
     inline bool IsUpdated() const { return m_updated; }
     void UpdateMatrix();
-    void GetMatrix(glm::mat4 &f_mat);
+    void GetMatrix(glm::mat4 &f_mat) const;
     inline const glm::mat4& GetMatrix() const { return m_matrix; }
 };
 

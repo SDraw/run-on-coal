@@ -20,7 +20,6 @@ public:
     virtual void setDebugMode(int debugMode) {};
     virtual int	getDebugMode() const { return btIDebugDraw::DBG_DrawWireframe; };
 protected:
-    void ClearStoredLines();
     void Draw();
 
     friend class RenderManager;

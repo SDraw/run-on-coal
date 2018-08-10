@@ -12,37 +12,27 @@ class Shader final : public Element
 {
     GLuint m_program;
 
-    GLint m_projectionUniform;
-    GLint m_viewUniform;
-    GLint m_viewProjectionUniform;
-    GLint m_modelUniform;
-    GLint m_cameraPositionUniform;
-    GLint m_cameraDirectionUniform;
-    GLint m_lightColorUniform;
-    GLint m_lightDirectionUniform;
-    GLint m_lightParamUniform;
-    GLint m_materialParamUniform;
-    GLint m_materialTypeUniform;
-    GLint m_animatedUniform;
-    GLint m_texture0Uniform;
-    GLint m_timeUniform;
-    GLint m_colorUniform;
+    enum ShaderDefaultUniform : size_t
+    {
+        SDU_Projection,
+        SDU_View,
+        SDU_ViewProjection,
+        SDU_Model,
+        SDU_CameraPosition,
+        SDU_CameraDirection,
+        SDU_LightColor,
+        SDU_LightDirection,
+        SDU_LightParam,
+        SDU_MaterialParam,
+        SDU_MaterialType,
+        SDU_Animated,
+        SDU_DiffuseTexture,
+        SDU_Time,
+        SDU_Color,
 
-    glm::mat4 m_projectionUniformValue;
-    glm::mat4 m_viewUniformValue;
-    glm::mat4 m_viewProjectionUniformValue;
-    glm::mat4 m_modelUniformValue;
-    glm::vec3 m_cameraPositionUniformValue;
-    glm::vec3 m_cameraDirectionUniformValue;
-    unsigned int m_lightingUniformValue;
-    glm::vec4 m_lightColorUniformValue;
-    glm::vec3 m_lightDirectionUniformValue;
-    glm::vec4 m_lightParamUniformValue;
-    glm::vec4 m_materialParamUniformValue;
-    int m_materialTypeUniformValue;
-    unsigned int m_animatedUniformValue;
-    float m_timeUniformValue;
-    glm::vec4 m_colorUniformValue;
+        SDU_LastEnumIndex
+    };
+    std::vector<ShaderUniform*> m_defaultUniforms;
 
     std::unordered_map<std::string, ShaderUniform*> m_uniformMap;
     std::unordered_map<std::string, ShaderUniform*>::iterator m_uniformMapEnd;
@@ -64,6 +54,7 @@ class Shader final : public Element
     std::string m_error;
 
     void SetupUniformsAndLocations();
+    void FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_name, unsigned int f_type);
 public:
     ShaderUniform* GetUniform(const std::string &f_uniform);
 protected:
@@ -83,7 +74,7 @@ protected:
     void SetLightParam(const glm::vec4 &f_value);
     void SetMaterialParam(const glm::vec4 &f_value);
     void SetMaterialType(int f_value);
-    void SetAnimated(unsigned int f_value);
+    void SetAnimated(bool f_value);
     static void SetBoneMatrices(const std::vector<glm::mat4> &f_value);
     void SetTime(float f_value);
     void SetColor(const glm::vec4 &f_value);

@@ -167,9 +167,9 @@ void ROC::RenderManager::Render(Model *f_model)
                 if(f_model->HasSkeleton())
                 {
                     Shader::SetBoneMatrices(f_model->GetSkeleton()->GetPoseMatrices());
-                    l_shader->SetAnimated(1U);
+                    l_shader->SetAnimated(true);
                 }
-                else l_shader->SetAnimated(0U);
+                else l_shader->SetAnimated(false);
 
                 for(auto iter : f_model->GetGeometry()->GetMaterialVector())
                 {
@@ -292,7 +292,6 @@ void ROC::RenderManager::DrawPhysicWorld()
 
             m_core->GetPhysicsManager()->DrawDebugWorld();
             m_physicsDrawer->Draw();
-            m_physicsDrawer->ClearStoredLines();
         }
     }
 }
