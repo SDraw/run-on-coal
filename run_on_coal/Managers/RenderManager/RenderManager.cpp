@@ -93,6 +93,7 @@ ROC::RenderManager::~RenderManager()
     delete m_quad2D;
     delete m_quad3D;
     delete m_dummyTexture;
+    delete m_physicsDrawer;
     delete m_luaArguments;
     Font::DestroyVAO();
     Font::DestroyLibrary();

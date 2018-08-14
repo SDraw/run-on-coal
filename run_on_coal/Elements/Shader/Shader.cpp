@@ -52,7 +52,11 @@ ROC::Shader::Shader()
 }
 ROC::Shader::~Shader()
 {
-    if(m_program) glDeleteProgram(m_program);
+    if(m_program)
+    {
+        if(m_active) glUseProgram(0U);
+        glDeleteProgram(m_program);
+    }
     for(auto iter : m_defaultUniforms)
     {
         if(iter) delete iter;
