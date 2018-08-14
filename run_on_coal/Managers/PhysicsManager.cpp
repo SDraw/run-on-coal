@@ -82,7 +82,6 @@ void ROC::PhysicsManager::SetGravity(const glm::vec3 &f_grav)
     btCollisionObjectArray &l_objectArray = m_dynamicWorld->getCollisionObjectArray();
     for(int i = 0, j = l_objectArray.size(); i < j; i++)
     {
-
         btRigidBody *l_body = btRigidBody::upcast(l_objectArray[i]);
         if(l_body)
         {
@@ -108,45 +107,41 @@ void ROC::PhysicsManager::SetCollisionScale(Collision *f_col, const glm::vec3 &f
 }
 bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
 {
-    std::vector<btCollisionObject*> l_bodies1, l_bodies2;
+    std::vector<btRigidBody*> l_bodies1, l_bodies2;
     if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetCollsion()->GetRigidBody());
-    else
+    if(f_model1->HasSkeleton())
     {
-        if(f_model1->HasSkeleton())
+        Skeleton *l_skeleton = f_model1->GetSkeleton();
+        if(l_skeleton->HasStaticBoneCollision())
         {
-            Skeleton *l_skeleton = f_model1->GetSkeleton();
-            if(l_skeleton->HasStaticBoneCollision())
+            for(auto iter : l_skeleton->GetCollision()) l_bodies1.push_back(iter->m_rigidBody);
+        }
+        if(l_skeleton->HasDynamicBoneCollision())
+        {
+            for(auto iter : l_skeleton->GetJoints())
             {
-                for(auto iter : l_skeleton->GetCollision()) l_bodies1.push_back(iter->m_rigidBody);
-            }
-            if(l_skeleton->HasDynamicBoneCollision())
-            {
-                for(auto iter : l_skeleton->GetJoints())
-                {
-                    for(auto iter1 : iter->m_partsVector) l_bodies1.push_back(iter1->m_rigidBody);
-                }
+                for(auto iter1 : iter->m_partsVector) l_bodies1.push_back(iter1->m_rigidBody);
             }
         }
     }
+
     if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetCollsion()->GetRigidBody());
-    else
+    if(f_model2->HasSkeleton())
     {
-        if(f_model2->HasSkeleton())
+        Skeleton *l_skeleton = f_model2->GetSkeleton();
+        if(l_skeleton->HasStaticBoneCollision())
         {
-            Skeleton *l_skeleton = f_model2->GetSkeleton();
-            if(l_skeleton->HasStaticBoneCollision())
+            for(auto iter : l_skeleton->GetCollision()) l_bodies2.push_back(iter->m_rigidBody);
+        }
+        if(l_skeleton->HasDynamicBoneCollision())
+        {
+            for(auto iter : l_skeleton->GetJoints())
             {
-                for(auto iter : l_skeleton->GetCollision()) l_bodies2.push_back(iter->m_rigidBody);
-            }
-            if(l_skeleton->HasDynamicBoneCollision())
-            {
-                for(auto iter : l_skeleton->GetJoints())
-                {
-                    for(auto iter1 : iter->m_partsVector) l_bodies2.push_back(iter1->m_rigidBody);
-                }
+                for(auto iter1 : iter->m_partsVector) l_bodies2.push_back(iter1->m_rigidBody);
             }
         }
     }
+
     for(auto iter1 : l_bodies1)
     {
         for(auto iter2 : l_bodies2)

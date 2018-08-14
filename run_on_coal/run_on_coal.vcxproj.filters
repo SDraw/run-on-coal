@@ -1,16 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Managers\EventManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\InheritanceManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Managers\LogManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Managers\LuaManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Managers\SoundManager.cpp">
@@ -246,19 +240,19 @@
     <ClCompile Include="Managers\RenderManager\PhysicsDrawer.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\LuaManager.cpp">
+      <Filter>Managers\LuaManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\EventManager.cpp">
+      <Filter>Managers\LuaManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Managers\EventManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\InheritanceManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\LogManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\LuaManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\SoundManager.h">
@@ -487,6 +481,12 @@
     <ClInclude Include="Managers\RenderManager\PhysicsDrawer.h">
       <Filter>Managers\RenderManager</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\LuaManager.h">
+      <Filter>Managers\LuaManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\EventManager.h">
+      <Filter>Managers\LuaManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">
@@ -533,6 +533,9 @@
     </Filter>
     <Filter Include="Elements\Shader">
       <UniqueIdentifier>{ff2440a4-1008-4d94-ad83-6e149765d7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\LuaManager">
+      <UniqueIdentifier>{2d089435-570a-40f6-96f8-4bcc9197273e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

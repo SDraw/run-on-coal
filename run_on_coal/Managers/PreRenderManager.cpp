@@ -8,8 +8,6 @@
 
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
-#include "Managers/PhysicsManager.h"
-#include "Elements/Model/Skeleton.h"
 
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
@@ -114,6 +112,7 @@ void ROC::PreRenderManager::DoPulse_S1()
     {
         TreeNode *l_current = m_nodeStack.back();
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
+
         if(!l_model->HasCollision()) l_model->Update(Model::MUS_Matrix);
         l_model->Update(Model::MUS_Animation);
         l_model->Update(Model::MUS_SkeletonCollisionStatic);
@@ -131,6 +130,7 @@ void ROC::PreRenderManager::DoPulse_S2()
     {
         TreeNode *l_current = m_nodeStack.back();
         Model *l_model = reinterpret_cast<Model*>(l_current->GetPointer());
+
         l_model->Update(l_model->HasCollision() ? Model::MUS_Collision : Model::MUS_Matrix);
         l_model->Update(Model::MUS_SkeletonCollisionDynamic);
 
