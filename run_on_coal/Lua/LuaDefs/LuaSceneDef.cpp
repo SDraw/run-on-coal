@@ -31,6 +31,8 @@ void ROC::LuaSceneDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setShader", SetShader);
     LuaUtils::AddClassMethod(f_vm, "getShader", GetShader);
     LuaUtils::AddClassMethod(f_vm, "removeShader", RemoveShader);
+    LuaUtils::AddClassMethod(f_vm, "setSkyGradient", SetSkyGradient);
+    LuaUtils::AddClassMethod(f_vm, "getSkyGradient", GetSkyGradient);
     LuaUtils::AddClassMethod(f_vm, "setActive", SetActive);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
@@ -212,6 +214,40 @@ int ROC::LuaSceneDef::RemoveShader(lua_State *f_vm)
     {
         bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneShader(l_scene);
         argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaSceneDef::SetSkyGradient(lua_State *f_vm)
+{
+    // bool Scene:setSkyGradient(float r1, float g1, float b1, float r2, float g2, float b2)
+    Scene *l_scene;
+    glm::vec3 l_gradientDown, l_gradientUp;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gradientDown[i]);
+    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gradientUp[i]);
+    if(!argStream.HasErrors())
+    {
+        l_scene->SetSkyGradient(l_gradientDown, l_gradientUp);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaSceneDef::GetSkyGradient(lua_State *f_vm)
+{
+    // float float float float float float Scene:getSkyGradient()
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors())
+    {
+        glm::vec3 l_gradientDown, l_gradientUp;
+        l_scene->GetSkyGradient(l_gradientDown, l_gradientUp);
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_gradientDown[i]);
+        for(int i = 0; i < 3; i++) argStream.PushNumber(l_gradientUp[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

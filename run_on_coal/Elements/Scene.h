@@ -16,6 +16,9 @@ class Scene final : public Element
     RenderTarget *m_renderTarget;
     Shader *m_shader;
 
+    glm::vec3 m_skyGradientDown;
+    glm::vec3 m_skyGradientUp;
+
     bool m_active;
 public:
     inline Camera* GetCamera() { return m_camera; }
@@ -27,6 +30,9 @@ public:
     inline bool HasLight() const { return (m_light != nullptr); }
     inline bool HasRenderTarget() const { return (m_renderTarget != nullptr); }
     inline bool HasShader() const { return (m_shader != nullptr); }
+
+    void SetSkyGradient(const glm::vec3 &f_colorDown, const glm::vec3 &f_colorUp);
+    void GetSkyGradient(glm::vec3 &f_colorDown, glm::vec3 &f_colorUp) const;
 
     inline bool IsValidForRender() const { return ((m_camera != nullptr) && (m_shader != nullptr)); }
     inline bool IsActive() const { return m_active; }

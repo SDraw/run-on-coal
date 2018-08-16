@@ -25,7 +25,7 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
     if(m_type == RTT_None)
     {
         m_type = f_type;
-        btClamp(f_type, static_cast<int>(RTT_Shadow), static_cast<int>(RTT_RGBAF));
+        btClamp(m_type, static_cast<int>(RTT_Shadow), static_cast<int>(RTT_RGBAF));
         m_filtering = f_filter;
         btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
 
@@ -103,15 +103,15 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
 
 void ROC::RenderTarget::Bind()
 {
-    if(m_type != RTT_None) GLBinder::BindTexture2D(m_texture);
+    if(m_texture != 0U) GLBinder::BindTexture2D(m_texture);
 }
 void ROC::RenderTarget::Enable()
 {
-    if(m_type != RTT_None) GLBinder::BindFramebuffer(m_frameBuffer);
+    if(m_frameBuffer != 0U) GLBinder::BindFramebuffer(m_frameBuffer);
 }
 void ROC::RenderTarget::Disable()
 {
-    if(m_type != RTT_None) GLBinder::BindFramebuffer(NULL);
+    if(m_frameBuffer != 0U) GLBinder::BindFramebuffer(NULL);
 }
 
 void ROC::RenderTarget::Clear()

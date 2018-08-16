@@ -23,6 +23,8 @@ class Shader final : public Element
         SDU_LightColor,
         SDU_LightDirection,
         SDU_LightParam,
+        SDU_SkyGradientDown,
+        SDU_SkyGradientUp,
         SDU_MaterialParam,
         SDU_MaterialType,
         SDU_Animated,
@@ -32,7 +34,7 @@ class Shader final : public Element
 
         SDU_LastEnumIndex
     };
-    std::vector<ShaderUniform*> m_defaultUniforms;
+    ShaderUniform *m_defaultUniforms[SDU_LastEnumIndex];
 
     std::unordered_map<std::string, ShaderUniform*> m_uniformMap;
     std::unordered_map<std::string, ShaderUniform*>::iterator m_uniformMapEnd;
@@ -72,6 +74,8 @@ protected:
     void SetLightColor(const glm::vec4 &f_value);
     void SetLightDirection(const glm::vec3 &f_value);
     void SetLightParam(const glm::vec4 &f_value);
+    void SetSkyGradientDown(const glm::vec3 &f_value);
+    void SetSkyGradientUp(const glm::vec3 &f_value);
     void SetMaterialParam(const glm::vec4 &f_value);
     void SetMaterialType(int f_value);
     void SetAnimated(bool f_value);

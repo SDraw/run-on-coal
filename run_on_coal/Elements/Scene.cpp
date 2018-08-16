@@ -10,6 +10,7 @@ namespace ROC
 {
 
 extern const glm::vec3 g_DefaultPosition;
+extern const glm::vec3 g_EmptyVec3;
 extern const glm::vec4 g_EmptyVec4;
 extern const glm::mat4 g_EmptyMat4;
 
@@ -25,10 +26,24 @@ ROC::Scene::Scene()
     m_renderTarget = nullptr;
     m_shader = nullptr;
 
+    m_skyGradientDown = g_EmptyVec3;
+    m_skyGradientUp = g_EmptyVec3;
+
     m_active = false;
 }
 ROC::Scene::~Scene()
 {
+}
+
+void ROC::Scene::SetSkyGradient(const glm::vec3 &f_colorDown, const glm::vec3 &f_colorUp)
+{
+    if(m_skyGradientDown != f_colorDown) std::memcpy(&m_skyGradientDown, &f_colorDown, sizeof(glm::vec3));
+    if(m_skyGradientUp != f_colorUp) std::memcpy(&m_skyGradientUp, &f_colorUp, sizeof(glm::vec3));
+}
+void ROC::Scene::GetSkyGradient(glm::vec3 &f_colorDown, glm::vec3 &f_colorUp) const
+{
+    std::memcpy(&f_colorDown, &m_skyGradientDown, sizeof(glm::vec3));
+    std::memcpy(&f_colorUp, &m_skyGradientUp, sizeof(glm::vec3));
 }
 
 void ROC::Scene::SetCamera(Camera *f_cam)
@@ -77,6 +92,9 @@ void ROC::Scene::SetShader(Shader *f_shader)
         m_shader->SetLightColor(m_light ? m_light->GetColor() : g_EmptyVec4);
         m_shader->SetLightDirection(m_light ? m_light->GetDirection() : g_DefaultPosition);
         m_shader->SetLightParam(m_light ? m_light->GetParams() : g_EmptyVec4);
+
+        m_shader->SetSkyGradientDown(m_skyGradientDown);
+        m_shader->SetSkyGradientUp(m_skyGradientUp);
     }
 }
 
@@ -98,6 +116,9 @@ void ROC::Scene::Enable()
             m_shader->SetLightColor(m_light ? m_light->GetColor() : g_EmptyVec4);
             m_shader->SetLightDirection(m_light ? m_light->GetDirection() : g_DefaultPosition);
             m_shader->SetLightParam(m_light ? m_light->GetParams() : g_EmptyVec4);
+
+            m_shader->SetSkyGradientDown(m_skyGradientDown);
+            m_shader->SetSkyGradientUp(m_skyGradientUp);
         }
         m_active = true;
     }

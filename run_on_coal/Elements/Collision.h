@@ -13,7 +13,6 @@ class Collision final : public Element
 public:
     enum CollisionType
     {
-        CT_None = -1,
         CT_Sphere,
         CT_Box,
         CT_Cylinder,

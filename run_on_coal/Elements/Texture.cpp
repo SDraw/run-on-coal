@@ -36,7 +36,7 @@ ROC::Texture::Texture()
 }
 ROC::Texture::~Texture()
 {
-    if(m_texture)
+    if(m_texture != 0U)
     {
         if(GLBinder::IsTextureBinded(m_texture)) GLBinder::ResetTexture();
         glDeleteTextures(1, &m_texture);

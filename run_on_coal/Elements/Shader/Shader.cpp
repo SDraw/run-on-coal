@@ -24,6 +24,7 @@ const std::vector<std::string> g_DefaultUniformsTable = {
     "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBonesUniform", "gBoneMatrix", "gBoneMatrix[0]",
     "gLightColor", "gLightDirection", "gLightParam",
     "gCameraPosition", "gCameraDirection",
+    "gSkyGradientDown", "gSkyGradientUp",
     "gMaterialType", "gMaterialParam",
     "gTexture0", "gColor",
     "gTime"
@@ -42,7 +43,7 @@ ROC::Shader::Shader()
 
     m_program = 0U;
 
-    m_defaultUniforms.assign(SDU_LastEnumIndex, nullptr);
+    for(size_t i = 0U; i < SDU_LastEnumIndex; i++) m_defaultUniforms[i] = nullptr;
 
     m_uniformMapEnd = m_uniformMap.end();
 
@@ -232,34 +233,37 @@ void ROC::Shader::SetupUniformsAndLocations()
 
     glUseProgram(m_program);
 
-    //Matrices
+    // Matrices
     FindDefaultUniform(SDU_Projection, "gProjectionMatrix", ShaderUniform::SUT_Mat4);
     FindDefaultUniform(SDU_View, "gViewMatrix", ShaderUniform::SUT_Mat4);
     FindDefaultUniform(SDU_ViewProjection, "gViewProjectionMatrix", ShaderUniform::SUT_Mat4);
     FindDefaultUniform(SDU_Model, "gModelMatrix", ShaderUniform::SUT_Mat4);
-    //Camera
+    // Camera
     FindDefaultUniform(SDU_CameraPosition, "gCameraPosition", ShaderUniform::SUT_Float3);
     FindDefaultUniform(SDU_CameraDirection, "gCameraDirection", ShaderUniform::SUT_Float3);
-    //Light
+    // Light
     FindDefaultUniform(SDU_LightColor, "gLightColor", ShaderUniform::SUT_Float4);
     FindDefaultUniform(SDU_LightDirection, "gLightDirection", ShaderUniform::SUT_Float3);
     FindDefaultUniform(SDU_LightParam, "gLightParam", ShaderUniform::SUT_Float4);
-    //Material
+    // Sky
+    FindDefaultUniform(SDU_SkyGradientDown, "gSkyGradientDown", ShaderUniform::SUT_Float3);
+    FindDefaultUniform(SDU_SkyGradientUp, "gSkyGradientUp", ShaderUniform::SUT_Float3);
+    // Material
     FindDefaultUniform(SDU_MaterialParam, "gMaterialParam", ShaderUniform::SUT_Float4);
     FindDefaultUniform(SDU_MaterialType, "gMaterialType", ShaderUniform::SUT_Int);
-    //Animation
+    // Animation
     FindDefaultUniform(SDU_Animated, "gAnimated", ShaderUniform::SUT_Bool);
     unsigned int l_boneUniform = glGetUniformBlockIndex(m_program, "gBonesUniform");
     if(l_boneUniform != 0U) glUniformBlockBinding(m_program, l_boneUniform, ROC_SHADER_BONES_BINDPOINT);
-    //Samplers
+    // Samplers
     FindDefaultUniform(SDU_DiffuseTexture, "gTexture0", ShaderUniform::SUT_Sampler);
     if(m_defaultUniforms[SDU_DiffuseTexture]) m_defaultUniforms[SDU_DiffuseTexture]->SetSampler(0);
-    //Time
+    // Time
     FindDefaultUniform(SDU_Time, "gTime", ShaderUniform::SUT_Float);
-    //Color (RenderTarget, Texture, Font)
+    // Color (RenderTarget, Texture, Font)
     FindDefaultUniform(SDU_Color, "gColor", ShaderUniform::SUT_Float4);
 
-    //Get list of custom uniforms
+    // Get list of custom uniforms
     std::vector<GLchar> l_uniformName(256U);
     int l_activeUniformCount = 0;
     glGetProgramiv(m_program, GL_ACTIVE_UNIFORMS, &l_activeUniformCount);
@@ -328,6 +332,14 @@ void ROC::Shader::SetLightDirection(const glm::vec3 &f_value)
 void ROC::Shader::SetLightParam(const glm::vec4 &f_value)
 {
     if(m_defaultUniforms[SDU_LightParam]) m_defaultUniforms[SDU_LightParam]->SetValue(f_value);
+}
+void ROC::Shader::SetSkyGradientDown(const glm::vec3 &f_value)
+{
+    if(m_defaultUniforms[SDU_SkyGradientDown]) m_defaultUniforms[SDU_SkyGradientDown]->SetValue(f_value);
+}
+void ROC::Shader::SetSkyGradientUp(const glm::vec3 &f_value)
+{
+    if(m_defaultUniforms[SDU_SkyGradientUp]) m_defaultUniforms[SDU_SkyGradientUp]->SetValue(f_value);
 }
 void ROC::Shader::SetMaterialParam(const glm::vec4 &f_value)
 {
