@@ -4,6 +4,7 @@ namespace ROC
 {
 
 class Texture;
+
 class Material final
 {
     int m_verticesCount;
@@ -13,6 +14,9 @@ class Material final
     unsigned char m_type;
     glm::vec4 m_params;
     Texture *m_texture;
+
+    Material(const Material &that);
+    Material& operator=(const Material &that);
 public:
     enum MaterialPropertyBit : unsigned char
     {
@@ -50,7 +54,7 @@ protected:
 
     inline void SetParams(const glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
 
-    inline Texture* GetTexture() { return m_texture; }
+    inline Texture* GetTexture() const { return m_texture; }
 
     void Draw();
 

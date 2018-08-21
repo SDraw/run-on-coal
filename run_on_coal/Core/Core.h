@@ -47,8 +47,8 @@ class Core final
     OnEngineStopCallback m_engineStopCallback;
 
     Core();
-    Core(const Core& that);
-    Core &operator =(const Core &that);
+    Core(const Core &that);
+    Core& operator=(const Core &that);
     ~Core();
 public:
     static Core* Init();
@@ -57,22 +57,23 @@ public:
     static inline void SetEngineStartCallback(OnEngineStartCallback f_callback) { ms_engineStartCallback = f_callback; }
     inline void SetEngineStopCallback(OnEngineStopCallback f_callback) { m_engineStopCallback = f_callback; }
 
-    bool DoPulse();
     inline const std::string& GetWorkingDirectory() const { return m_workingDir; }
 
-    inline ConfigManager* GetConfigManager() { return m_configManager; }
-    inline ElementManager* GetElementManager() { return m_elementManager; }
-    inline SfmlManager* GetSfmlManager() { return m_sfmlManager; }
-    inline AsyncManager* GetAsyncManager() { return m_asyncManager; }
+    inline ConfigManager* GetConfigManager() const { return m_configManager; }
+    inline ElementManager* GetElementManager() const { return m_elementManager; }
+    inline SfmlManager* GetSfmlManager() const { return m_sfmlManager; }
+    inline AsyncManager* GetAsyncManager() const { return m_asyncManager; }
     inline InheritanceManager* GetInheritManager() { return m_inheritManager; }
-    inline LogManager* GetLogManager() { return m_logManager; }
-    inline LuaManager* GetLuaManager() { return m_luaManager; }
-    inline NetworkManager* GetNetworkManager() { return m_networkManager; }
-    inline PhysicsManager* GetPhysicsManager() { return m_physicsManager; }
-    inline RenderManager* GetRenderManager() { return m_renderManager; }
-    inline PreRenderManager* GetPreRenderManager() { return m_preRenderManager; }
-    inline SoundManager* GetSoundManager() { return m_soundManager; }
-    inline VRManager* GetVRManager() { return m_vrManager; }
+    inline LogManager* GetLogManager() const { return m_logManager; }
+    inline LuaManager* GetLuaManager() const { return m_luaManager; }
+    inline NetworkManager* GetNetworkManager() const { return m_networkManager; }
+    inline PhysicsManager* GetPhysicsManager() const { return m_physicsManager; }
+    inline RenderManager* GetRenderManager() const { return m_renderManager; }
+    inline PreRenderManager* GetPreRenderManager() const { return m_preRenderManager; }
+    inline SoundManager* GetSoundManager() const { return m_soundManager; }
+    inline VRManager* GetVRManager() const { return m_vrManager; }
+
+    bool DoPulse();
 };
 
 }

@@ -37,6 +37,9 @@ class Font final : public Element
 
     bool m_loaded;
 
+    Font(const Font &that);
+    Font& operator=(const Font &that);
+
     bool LoadChar(unsigned int f_char);
 public:
     enum FontFilteringType

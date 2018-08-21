@@ -22,15 +22,15 @@ class PhysicsManager final
 
     btRigidBody *m_floorBody;
 
-    PhysicsManager(const PhysicsManager& that);
-    PhysicsManager &operator =(const PhysicsManager &that);
+    PhysicsManager(const PhysicsManager &that);
+    PhysicsManager& operator=(const PhysicsManager &that);
 public:
     void SetPhysicsEnabled(bool f_value);
     inline bool GetPhysicsEnabled() const { return m_enabled; }
     void SetFloorEnabled(bool f_value);
     inline bool GetFloorEnabled() const { return (m_floorBody != nullptr); }
     void SetGravity(const glm::vec3 &f_grav);
-    void GetGravity(glm::vec3 &f_grav);
+    void GetGravity(glm::vec3 &f_grav) const;
 
     void SetCollisionScale(Collision *f_col, const glm::vec3 &f_scale);
     static bool SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state);

@@ -245,7 +245,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 l_jointPart->m_rigidBody->setFriction(l_partData.m_friction);
                 l_jointPart->m_rigidBody->setDamping(l_partData.m_damping.x, l_partData.m_damping.y);
 
-                if(i == 0)
+                if(i == 0U)
                 {
                     // First joint part is connected to joint empty body
                     btTransform l_jointConstraintOffset = btTransform::getIdentity();
@@ -260,6 +260,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 
                     l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_prevJointRigidBody, *l_jointPart->m_rigidBody, l_prevJointPartToBoneTransform, l_jointPart->m_offset[ROC_SKELETON_TRANSFORMATION_INVERSE], false);
                 }
+                l_jointPart->m_constraint->setDbgDrawSize(0.5f);
 
                 l_jointPart->m_constraint->setLinearLowerLimit(btVector3(l_partData.m_lowerLinearLimit.x, l_partData.m_lowerLinearLimit.y, l_partData.m_lowerLinearLimit.z));
                 l_jointPart->m_constraint->setLinearUpperLimit(btVector3(l_partData.m_upperLinearLimit.x, l_partData.m_upperLinearLimit.y, l_partData.m_upperLinearLimit.z));
@@ -312,6 +313,9 @@ void ROC::Skeleton::SetCollisionIgnoring(btCollisionObject *f_obj, bool f_ignore
                 f_obj->setIgnoreCollisionCheck(iter1->m_rigidBody, f_ignore);
                 iter1->m_rigidBody->setIgnoreCollisionCheck(f_obj, f_ignore);
             }
+
+            iter->m_emptyBody->setIgnoreCollisionCheck(f_obj, f_ignore);
+            f_obj->setIgnoreCollisionCheck(iter->m_emptyBody, f_ignore);
         }
     }
 }
@@ -389,12 +393,12 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                         {
                             // BoneFull = ((ModelInverse * BodyGlobal) * BodyBoneOffsetInverse)
                             Bone *l_bone = m_boneVector[iter1->m_boneID];
-                            l_transform1.mult(l_modelInv,iter1->m_rigidBody->getCenterOfMassTransform());
-                            l_transform2.mult(l_transform1,iter1->m_offset[ROC_SKELETON_TRANSFORMATION_INVERSE]);
+                            l_transform1.mult(l_modelInv, iter1->m_rigidBody->getInterpolationWorldTransform());
+                            l_transform2.mult(l_transform1, iter1->m_offset[ROC_SKELETON_TRANSFORMATION_INVERSE]);
                             l_bone->SetFullMatrix(l_transform1);
 
                             // BonePose = BoneFull * BoneBind
-                            l_transform1.mult(l_transform2,iter1->m_offset[ROC_SKELETON_TRANSFORMATION_BIND]);
+                            l_transform1.mult(l_transform2, iter1->m_offset[ROC_SKELETON_TRANSFORMATION_BIND]);
                             l_bone->SetPoseMatrix(l_transform1);
                             std::memcpy(&m_poseMatrices[iter1->m_boneID], &l_bone->GetPoseMatrix(), sizeof(glm::mat4));
                         }

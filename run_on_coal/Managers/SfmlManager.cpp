@@ -133,7 +133,7 @@ ROC::SfmlManager::~SfmlManager()
     delete m_luaArguments;
 }
 
-void ROC::SfmlManager::GetWindowPosition(glm::ivec2 &f_pos)
+void ROC::SfmlManager::GetWindowPosition(glm::ivec2 &f_pos) const
 {
     sf::Vector2i l_position = m_window->getPosition();
     f_pos.x = l_position.x;
@@ -144,7 +144,7 @@ void ROC::SfmlManager::SetWindowPosition(const glm::ivec2 &f_pos)
     sf::Vector2i l_position(f_pos.x, f_pos.y);
     m_window->setPosition(l_position);
 }
-void ROC::SfmlManager::GetWindowSize(glm::ivec2 &f_size)
+void ROC::SfmlManager::GetWindowSize(glm::ivec2 &f_size) const
 {
     sf::Vector2u l_size = m_window->getSize();
     f_size.x = static_cast<int>(l_size.x);
@@ -182,7 +182,7 @@ void ROC::SfmlManager::SetCursorMode(bool f_visible, bool f_lock)
     m_window->setMouseCursorGrabbed(f_lock);
     m_window->setMouseCursorVisible(f_visible);
 }
-void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos)
+void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos) const
 {
     sf::Vector2i l_position = sf::Mouse::getPosition(*m_window);
     std::memcpy(&f_pos, &l_position, sizeof(glm::ivec2));
@@ -192,7 +192,7 @@ void ROC::SfmlManager::SetCursorPosition(const glm::ivec2 &f_pos)
     sf::Mouse::setPosition((sf::Vector2i&)f_pos, *m_window);
 }
 
-void ROC::SfmlManager::GetClipboardString(std::string &f_str)
+void ROC::SfmlManager::GetClipboardString(std::string &f_str) const
 {
     sf::String l_string = sf::Clipboard::getString();
     f_str.assign(l_string);

@@ -13,6 +13,9 @@ class ConfigManager final
     bool m_vsync;
     bool m_vrMode;
     std::string m_scriptsDir;
+
+    ConfigManager(const ConfigManager &that);
+    ConfigManager& operator=(const ConfigManager &that);
 public:
     inline bool IsLogEnabled() const { return m_logging; }
     inline bool IsFullscreenEnabled() const { return m_fullscreen; }

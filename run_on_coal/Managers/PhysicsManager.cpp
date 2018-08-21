@@ -90,7 +90,7 @@ void ROC::PhysicsManager::SetGravity(const glm::vec3 &f_grav)
         }
     }
 }
-void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav)
+void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav) const
 {
     std::memcpy(&f_grav, m_dynamicWorld->getGravity().m_floats, sizeof(glm::vec3));
 }

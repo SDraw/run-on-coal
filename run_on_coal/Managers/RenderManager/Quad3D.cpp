@@ -80,7 +80,7 @@ void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_r
         m_vertex[2].x = m_vertex[4].x = m_vertex[5].x = m_size.x / 2.f;
         m_vertex[1].y = m_vertex[2].y = m_vertex[4].y = -m_size.y / 2.f;
 
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO[ROC_QUAD3D_VERTEX_BUFFER]);
+        GLBinder::BindArrayBuffer(m_VBO[ROC_QUAD3D_VERTEX_BUFFER]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3)*ROC_QUAD3D_VERTEX_COUNT, m_vertex);
     }
 }

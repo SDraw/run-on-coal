@@ -6,6 +6,7 @@ namespace ROC
 {
 
 class Core;
+
 class File final : public Element
 {
     enum FileMode
@@ -17,6 +18,9 @@ class File final : public Element
     FileMode m_type = FM_None;
     std::fstream *m_file;
     std::string m_path;
+
+    File(const File &that);
+    File& operator=(const File &that);
 public:
     size_t Read(std::string &f_data, size_t f_lenght);
     size_t Write(const std::string &f_data);
@@ -24,7 +28,7 @@ public:
     size_t GetSize();
     bool SetPosition(size_t f_pos);
     size_t GetPosition();
-    inline bool IsEOF() { return (m_file ? m_file->eof() : false); }
+    inline bool IsEOF() const { return (m_file ? m_file->eof() : false); }
     void Flush();
 
     inline const std::string& GetPath() const { return m_path; }

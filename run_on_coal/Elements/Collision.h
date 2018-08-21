@@ -4,12 +4,14 @@
 namespace ROC
 {
 
-class Model;
 class Collision final : public Element
 {
     btRigidBody *m_rigidBody;
     int m_motionType;
     glm::vec3 m_scale;
+
+    Collision(const Collision &that);
+    Collision& operator=(const Collision &that);
 public:
     enum CollisionType
     {

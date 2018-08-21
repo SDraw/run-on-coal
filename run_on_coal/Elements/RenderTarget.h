@@ -15,6 +15,9 @@ class RenderTarget final : public Drawable
 
     std::string m_error;
 
+    RenderTarget(const RenderTarget &that);
+    RenderTarget& operator=(const RenderTarget &that);
+
     void Clear();
 public:
     enum RenderTargetType

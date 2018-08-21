@@ -5,6 +5,7 @@ namespace ROC
 
 class Core;
 class LuaArguments;
+
 typedef void(*OnWindowResizeCallback)(unsigned int, unsigned int);
 typedef void(*OnWindowFocusCallback)(bool);
 typedef void(*OnKeyPressCallback)(int, bool);
@@ -46,12 +47,12 @@ class SfmlManager final
     OnJoypadButtonCallback m_joypadButtonCallback;
     OnJoypadAxisCallback m_joypadAxisCallback;
 
-    SfmlManager(const SfmlManager& that);
-    SfmlManager &operator =(const SfmlManager &that);
+    SfmlManager(const SfmlManager &that);
+    SfmlManager& operator=(const SfmlManager &that);
 public:
-    void GetWindowPosition(glm::ivec2 &f_pos);
+    void GetWindowPosition(glm::ivec2 &f_pos) const;
     void SetWindowPosition(const glm::ivec2 &f_pos);
-    void GetWindowSize(glm::ivec2 &f_size);
+    void GetWindowSize(glm::ivec2 &f_size) const;
     inline void CloseWindow() { m_active = false; }
     inline void SetVSync(bool f_sync) { m_window->setVerticalSyncEnabled(f_sync); }
     void SetFramelimit(unsigned int f_fps);
@@ -62,10 +63,10 @@ public:
     inline bool GetFocusState() const { return m_window->hasFocus(); }
 
     void SetCursorMode(bool f_visible, bool f_lock);
-    void GetCursorPosition(glm::ivec2 &f_pos);
+    void GetCursorPosition(glm::ivec2 &f_pos) const;
     void SetCursorPosition(const glm::ivec2 &f_pos);
 
-    void GetClipboardString(std::string &f_str);
+    void GetClipboardString(std::string &f_str) const;
     void SetClipboardString(const std::string &f_str);
 
     static bool IsKeyPressed(int f_key);

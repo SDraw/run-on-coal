@@ -27,9 +27,12 @@ class Model final : public Element
     AnimationController *m_animController;
     Skeleton *m_skeleton;
     Collision *m_collision;
+
+    Model(const Model &that);
+    Model& operator=(const Model &that);
 public:
     inline bool HasGeometry() const { return (m_geometry != nullptr); }
-    inline Geometry* GetGeometry() { return m_geometry; }
+    inline Geometry* GetGeometry() const { return m_geometry; }
 
     void SetPosition(const glm::vec3 &f_pos);
     const glm::vec3& GetPosition() const;
@@ -42,16 +45,16 @@ public:
 
     inline const glm::mat4& GetFullMatrix() const { return m_fullMatrix; }
 
-    float inline GetBoundSphereRadius() const { return m_boundSphereRaduis; }
+    inline float GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
     inline bool HasParent() const { return (m_parent != nullptr); }
-    inline Model* GetParent() { return m_parent; }
+    inline Model* GetParent() const { return m_parent; }
 
-    inline AnimationController* GetAnimationController() { return m_animController; }
+    inline AnimationController* GetAnimationController() const { return m_animController; }
     inline bool HasSkeleton() const { return (m_skeleton != nullptr); }
 
     inline bool HasCollision() const { return (m_collision != nullptr); }
-    inline Collision* GetCollsion() { return m_collision; }
+    inline Collision* GetCollsion() const { return m_collision; }
 protected:
     enum ModelUpdateStage : unsigned char
     {
@@ -66,15 +69,13 @@ protected:
     ~Model();
 
     inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
+    void SetParent(Model *f_model, int f_bone = -1);
+    void SetCollision(Collision *f_col);
+
+    inline Skeleton* GetSkeleton() const { return m_skeleton; }
 
     void Update(ModelUpdateStage f_stage);
-    inline const bool IsUpdated() const { return m_updated; }
-
-    void SetParent(Model *f_model, int f_bone = -1);
-
-    inline Skeleton* GetSkeleton() { return m_skeleton; }
-
-    void SetCollision(Collision *f_col);
+    inline bool IsUpdated() const { return m_updated; }
 
     friend class ElementManager;
     friend class InheritanceManager;

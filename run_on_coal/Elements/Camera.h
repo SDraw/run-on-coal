@@ -25,6 +25,9 @@ class Camera final : public Element
     glm::vec4 m_planes[6];
 
     static vr::IVRSystem *ms_vrSystem;
+
+    Camera(const Camera &that);
+    Camera& operator=(const Camera &that);
 public:
     enum CameraProjectionType
     {

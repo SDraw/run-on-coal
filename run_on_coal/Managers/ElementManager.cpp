@@ -313,7 +313,7 @@ ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, const glm::vec3
     return l_col;
 }
 
-bool ROC::ElementManager::IsValidElement(void *f_ptr)
+bool ROC::ElementManager::IsValidElement(void *f_ptr) const
 {
     auto iter = m_elementSet.find(f_ptr);
     return (iter != m_elementSetEnd);

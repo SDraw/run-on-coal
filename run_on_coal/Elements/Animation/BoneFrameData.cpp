@@ -30,7 +30,7 @@ ROC::BoneFrameData::~BoneFrameData()
 {
 }
 
-bool ROC::BoneFrameData::IsEqual(BoneFrameData *f_data) const
+bool ROC::BoneFrameData::IsEqual(const BoneFrameData *f_data) const
 {
     bool l_positionResult = (m_position == f_data->m_position);
     bool l_rotationResult = (m_rotation == f_data->m_rotation);
@@ -53,7 +53,7 @@ void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_leftData, BoneFrameDat
     m_useScale = (f_leftData->m_useScale || f_rightData->m_useScale);
 }
 
-bool ROC::BoneFrameData::Copy(BoneFrameData *f_src, BoneFrameData *f_dst)
+bool ROC::BoneFrameData::Copy(const BoneFrameData *f_src, BoneFrameData *f_dst)
 {
     bool l_positionResult = (f_src->m_position != f_dst->m_position);
     if(l_positionResult) std::memcpy(&f_dst->m_position, &f_src->m_position, sizeof(glm::vec3));

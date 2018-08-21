@@ -37,8 +37,16 @@ ROC::Scene::~Scene()
 
 void ROC::Scene::SetSkyGradient(const glm::vec3 &f_colorDown, const glm::vec3 &f_colorUp)
 {
-    if(m_skyGradientDown != f_colorDown) std::memcpy(&m_skyGradientDown, &f_colorDown, sizeof(glm::vec3));
-    if(m_skyGradientUp != f_colorUp) std::memcpy(&m_skyGradientUp, &f_colorUp, sizeof(glm::vec3));
+    if(m_skyGradientDown != f_colorDown)
+    {
+        std::memcpy(&m_skyGradientDown, &f_colorDown, sizeof(glm::vec3));
+        if(m_active && m_shader) m_shader->SetSkyGradientDown(m_skyGradientDown);
+    }
+    if(m_skyGradientUp != f_colorUp)
+    {
+        std::memcpy(&m_skyGradientUp, &f_colorUp, sizeof(glm::vec3));
+        if(m_active && m_shader) m_shader->SetSkyGradientUp(m_skyGradientUp);
+    }
 }
 void ROC::Scene::GetSkyGradient(glm::vec3 &f_colorDown, glm::vec3 &f_colorUp) const
 {

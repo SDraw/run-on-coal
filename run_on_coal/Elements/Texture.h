@@ -9,6 +9,9 @@ class Texture final : public Drawable
     int m_type;
     glm::ivec2 m_size;
     GLuint m_texture;
+
+    Texture(const Texture &that);
+    Texture& operator=(const Texture &that);
 public:
     enum TextureType
     {

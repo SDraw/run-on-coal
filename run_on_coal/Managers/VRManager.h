@@ -50,8 +50,8 @@ class VRManager final
 
     LuaArguments *m_luaArguments;
 
-    VRManager(const VRManager& that);
-    VRManager &operator =(const VRManager &that);
+    VRManager(const VRManager &that);
+    VRManager& operator=(const VRManager &that);
 
     void UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose);
     void UpdateControllerInput(VRController &f_controller, const std::string &f_hand);

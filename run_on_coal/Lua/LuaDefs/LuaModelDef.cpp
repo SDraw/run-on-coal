@@ -44,6 +44,7 @@ void ROC::LuaModelDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "getRotation", GetRotation);
     LuaUtils::AddClassMethod(f_vm, "setScale", SetScale);
     LuaUtils::AddClassMethod(f_vm, "getScale", GetScale);
+    LuaUtils::AddClassMethod(f_vm, "getMatrix", GetMatrix);
     LuaUtils::AddClassMethod(f_vm, "draw", Draw);
     LuaUtils::AddClassMethod(f_vm, "attach", Attach);
     LuaUtils::AddClassMethod(f_vm, "detach", Detach);
@@ -79,6 +80,7 @@ int ROC::LuaModelDef::Create(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int ROC::LuaModelDef::GetGeometry(lua_State *f_vm)
 {
     // element Model:getGeometry()
@@ -93,6 +95,7 @@ int ROC::LuaModelDef::GetGeometry(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int ROC::LuaModelDef::SetPosition(lua_State *f_vm)
 {
     // bool Model:setPosition(float x, float y, float z)
@@ -123,6 +126,7 @@ int ROC::LuaModelDef::GetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int ROC::LuaModelDef::SetRotation(lua_State *f_vm)
 {
     // bool Model:setRotation(float x, float y, float z, float w)
@@ -153,6 +157,7 @@ int ROC::LuaModelDef::GetRotation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int ROC::LuaModelDef::SetScale(lua_State *f_vm)
 {
     // bool Model:setScale(float x, float y, float z)
@@ -183,6 +188,24 @@ int ROC::LuaModelDef::GetScale(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
+int ROC::LuaModelDef::GetMatrix(lua_State *f_vm)
+{
+    Model *l_model;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_model);
+    if(!argStream.HasErrors())
+    {
+        const glm::mat4 &l_mat = l_model->GetFullMatrix();
+        for(int i = 0; i < 4; i++)
+        {
+            for(int j = 0; j < 4; j++) argStream.PushNumber(l_mat[i][j]);
+        }
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
 int ROC::LuaModelDef::Draw(lua_State *f_vm)
 {
     // bool Model:draw()

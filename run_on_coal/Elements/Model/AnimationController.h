@@ -5,6 +5,7 @@ namespace ROC
 
 class Animation;
 class Bone;
+
 class AnimationController final
 {
     Animation *m_animation;
@@ -21,6 +22,9 @@ class AnimationController final
     unsigned int m_blendTime;
     unsigned int m_blendTimeTick;
     float m_blendValue;
+
+    AnimationController(const AnimationController &that);
+    AnimationController& operator=(const AnimationController &that);
 public:
     inline Animation* GetAnimation() { return m_animation; };
 

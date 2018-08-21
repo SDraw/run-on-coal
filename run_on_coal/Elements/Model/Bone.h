@@ -20,7 +20,7 @@ class Bone final
     btRigidBody *m_dynamicBody;
     bool m_dynamic;
 
-    Bone(const Bone& that);
+    Bone(const Bone &that);
     Bone& operator=(const Bone &that);
 public:
     inline bool IsUpdated() const { return m_updated; }
@@ -40,7 +40,7 @@ protected:
 
     inline void SetParent(Bone *f_bone) { m_parent = f_bone; }
     inline bool HasParent() const { return (m_parent != nullptr); }
-    inline Bone* GetParent() { return m_parent; }
+    inline Bone* GetParent() const { return m_parent; }
     inline void AddChild(Bone *f_bone) { m_childBoneVector.push_back(f_bone); }
 
     inline void SetDynamic(bool f_state) { m_dynamic = f_state; }

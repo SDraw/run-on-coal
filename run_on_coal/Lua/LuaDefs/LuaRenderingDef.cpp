@@ -86,7 +86,7 @@ int ROC::LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
         int l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFillTable);
         if(l_type != -1)
         {
-            RenderManager::SetPolygonMode(l_type);
+            LuaManager::GetCore()->GetRenderManager()->SetPolygonMode(l_type);
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);
@@ -99,7 +99,7 @@ int ROC::LuaRenderingDef::DrawPhysics(lua_State *f_vm)
 {
     // bool drawPhysics()
     ArgReader argStream(f_vm);
-    LuaManager::GetCore()->GetRenderManager()->DrawPhysicWorld();
+    LuaManager::GetCore()->GetRenderManager()->DrawPhysics();
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }

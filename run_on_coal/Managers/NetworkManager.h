@@ -5,6 +5,7 @@ namespace ROC
 
 class Core;
 class LuaArguments;
+
 typedef void(*OnNetworkStateChangeCallback)(const std::string&);
 typedef void(*OnNetworkDataRecieveCallback)(const std::string&);
 
@@ -32,8 +33,8 @@ class NetworkManager final
 
     static unsigned char GetPacketIdentifier(RakNet::Packet *f_packet);
 
-    NetworkManager(const NetworkManager& that);
-    NetworkManager &operator =(const NetworkManager &that);
+    NetworkManager(const NetworkManager &that);
+    NetworkManager& operator=(const NetworkManager &that);
 public:
     bool Connect(const std::string &f_ip, unsigned short f_port);
     bool Disconnect();

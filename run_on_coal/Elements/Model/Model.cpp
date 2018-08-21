@@ -87,29 +87,42 @@ const glm::vec3& ROC::Model::GetScale() const
 
 void ROC::Model::SetParent(Model *f_model, int f_bone)
 {
-    m_parent = f_model;
     if(m_parent && (f_bone != -1)) m_parentBone = m_parent->GetSkeleton()->GetBones()[static_cast<size_t>(f_bone)];
     else m_parentBone = nullptr;
 }
 
 void ROC::Model::SetCollision(Collision *f_col)
 {
-    if(m_skeleton)
-    {
-        btCollisionObject *l_col = (f_col ? f_col->GetRigidBody() : m_collision->GetRigidBody());
-        m_skeleton->SetCollisionIgnoring(l_col, (f_col != nullptr));
-    }
+    if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), false);
     m_collision = f_col;
+    if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), true);
 }
 
 void ROC::Model::Update(ModelUpdateStage f_stage)
 {
     switch(f_stage)
     {
+        case MUS_Collision:
+        {
+            m_updated = false;
+            m_localTransform->UpdateMatrix();
+
+            if(m_collision)
+            {
+                if(m_collision->IsActive() || m_localTransform->IsUpdated())
+                {
+                    m_collision->GetMatrix(m_fullMatrix);
+                    m_fullMatrix = m_fullMatrix*m_localTransform->GetMatrix();
+                    m_updated = true;
+                }
+            }
+        } break;
+
         case MUS_Matrix:
         {
             m_updated = false;
             m_localTransform->UpdateMatrix();
+
             if(m_parent)
             {
                 if(m_parentBone)
@@ -144,21 +157,6 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 if(m_localTransform->IsUpdated())
                 {
                     std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
-                    m_updated = true;
-                }
-            }
-        } break;
-
-        case MUS_Collision:
-        {
-            if(m_collision)
-            {
-                m_updated = false;
-                m_localTransform->UpdateMatrix();
-                if(m_collision->IsActive() || m_localTransform->IsUpdated())
-                {
-                    m_collision->GetMatrix(m_fullMatrix);
-                    m_fullMatrix = m_fullMatrix*m_localTransform->GetMatrix();
                     m_updated = true;
                 }
             }

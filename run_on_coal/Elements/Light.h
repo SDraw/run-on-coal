@@ -9,6 +9,9 @@ class Light final : public Element
     glm::vec3 m_direction;
     glm::vec4 m_color;
     glm::vec4 m_params;
+
+    Light(const Light &that);
+    Light& operator=(const Light &that);
 public:
     inline void SetParams(const glm::vec4 &f_val) { std::memcpy(&m_params, &f_val, sizeof(glm::vec4)); }
     inline const glm::vec4& GetParams() const { return m_params; }

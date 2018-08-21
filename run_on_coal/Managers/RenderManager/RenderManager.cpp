@@ -256,7 +256,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
 
                 Shader *l_shader = m_activeScene->GetShader();
                 l_shader->SetAnimated(0U);
-                l_shader->SetModelMatrix(m_quad3D->GetMatrixRef());
+                l_shader->SetModelMatrix(m_quad3D->GetMatrix());
                 l_shader->SetMaterialParam(g_EmptyVec4);
 
                 int l_materialType = 0;
@@ -274,7 +274,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
         }
     }
 }
-void ROC::RenderManager::DrawPhysicWorld()
+void ROC::RenderManager::DrawPhysics()
 {
     if(!m_locked && m_activeScene)
     {
@@ -318,6 +318,14 @@ void ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
         std::memcpy(&m_clearColor, &f_color, sizeof(glm::vec4));
         glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
     }
+}
+void ROC::RenderManager::SetViewport(const glm::ivec4 &f_area)
+{ 
+    if(!m_locked) glViewport(f_area.x, f_area.y, f_area.z, f_area.w); 
+}
+void ROC::RenderManager::SetPolygonMode(int f_mode)
+{ 
+    if(!m_locked) glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode);
 }
 
 void ROC::RenderManager::DisableDepth()

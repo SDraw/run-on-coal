@@ -44,11 +44,15 @@ class Skeleton final
     bool m_hasDynamicBoneCollision;
 
     static bool ms_physicsEnabled;
+
+    Skeleton(const Skeleton &that);
+    Skeleton& operator=(const Skeleton &that);
 public:
     inline size_t GetBonesCount() const { return m_bonesCount; }
 
     inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }
     inline bool HasDynamicBoneCollision() const { return m_hasDynamicBoneCollision; }
+    inline bool HasAnyCollision() const { return (m_hasStaticBoneCollision || m_hasDynamicBoneCollision); }
 protected:
     enum SkeletonUpdateStage : unsigned char
     {
@@ -61,7 +65,7 @@ protected:
 
     void Update(Animation *f_anim, unsigned int f_tick, float f_blend);
 
-    inline std::vector<Bone*>& GetBones() { return m_boneVector; }
+    inline const std::vector<Bone*>& GetBones() const { return m_boneVector; }
     inline const std::vector<glm::mat4>& GetPoseMatrices() const { return m_poseMatrices; }
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);

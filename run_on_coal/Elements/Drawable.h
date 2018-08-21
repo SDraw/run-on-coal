@@ -6,6 +6,8 @@ namespace ROC
 
 class Drawable : public Element
 {
+    Drawable(const Drawable &that);
+    Drawable& operator=(const Drawable &that);
 public:
     enum DrawableFilteringType
     {

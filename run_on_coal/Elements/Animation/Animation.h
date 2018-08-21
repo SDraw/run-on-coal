@@ -6,6 +6,7 @@ namespace ROC
 
 class Bone;
 class BoneFrameData;
+
 class Animation final : public Element
 {
     unsigned int m_bonesCount;
@@ -27,6 +28,9 @@ class Animation final : public Element
     std::vector<Interval<keyframeData>> m_searchResult;
 
     bool m_loaded;
+
+    Animation(const Animation &that);
+    Animation& operator=(const Animation &that);
 
     void Clean();
 public:

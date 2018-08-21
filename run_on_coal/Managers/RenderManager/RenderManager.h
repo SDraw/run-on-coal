@@ -16,6 +16,7 @@ class Texture;
 class Font;
 class PhysicsDrawer;
 class LuaArguments;
+
 typedef void(*OnRenderCallback)(void);
 typedef void(*OnVRRenderCallback)(const std::string &f_side);
 
@@ -58,8 +59,8 @@ class RenderManager final
     OnRenderCallback m_callback;
     OnVRRenderCallback m_vrCallback;
 
-    RenderManager(const RenderManager& that);
-    RenderManager &operator =(const RenderManager &that);
+    RenderManager(const RenderManager &that);
+    RenderManager& operator=(const RenderManager &that);
 public:
     void SetActiveScene(Scene *f_scene);
 
@@ -67,12 +68,12 @@ public:
     void Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color);
     void Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
     void Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
-    void DrawPhysicWorld();
+    void DrawPhysics();
 
     void ClearRenderArea(bool f_depth = true, bool f_color = true);
     void SetClearColour(const glm::vec4 &f_color);
-    static inline void SetViewport(const glm::ivec4 &f_area) { glViewport(f_area.x, f_area.y, f_area.z, f_area.w); }
-    static inline void SetPolygonMode(int f_mode) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode); }
+    void SetViewport(const glm::ivec4 &f_area);
+    void SetPolygonMode(int f_mode);
 
     inline void SetRenderCallback(OnRenderCallback f_callback) { m_callback = f_callback; }
     inline void SetVRRenderCallback(OnVRRenderCallback f_callback) { m_vrCallback = f_callback; }

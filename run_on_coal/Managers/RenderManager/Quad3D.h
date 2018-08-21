@@ -13,11 +13,14 @@ class Quad3D final
     glm::vec3 m_vertex[6];
     GLuint m_VBO[3];
     GLuint m_VAO;
+
+    Quad3D(const Quad3D &that);
+    Quad3D& operator=(const Quad3D &that);
 protected:
     Quad3D();
     ~Quad3D();
 
-    inline glm::mat4& GetMatrixRef() { return m_matrix; }
+    inline const glm::mat4& GetMatrix() const { return m_matrix; }
 
     void SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size);
     void Draw();

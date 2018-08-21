@@ -10,6 +10,9 @@ class LuaArguments final
 {
     CustomData m_dummyData;
     std::vector<CustomData> m_vArgs;
+
+    LuaArguments(const LuaArguments &that);
+    LuaArguments& operator=(const LuaArguments &that);
 public:
     LuaArguments();
     ~LuaArguments();

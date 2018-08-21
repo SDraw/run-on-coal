@@ -9,6 +9,9 @@ class PhysicsDrawer final : public btIDebugDraw
     GLuint m_VAO;
 
     std::vector<glm::vec3> m_lines;
+
+    PhysicsDrawer(const PhysicsDrawer &that);
+    PhysicsDrawer& operator=(const PhysicsDrawer &that);
 public:
     PhysicsDrawer();
     ~PhysicsDrawer();
@@ -18,7 +21,7 @@ public:
     virtual void reportErrorWarning(const char* warningString) {};
     virtual void draw3dText(const btVector3& location, const char* textString) {};
     virtual void setDebugMode(int debugMode) {};
-    virtual int	getDebugMode() const { return btIDebugDraw::DBG_DrawWireframe; };
+    virtual int	getDebugMode() const { return (DBG_DrawWireframe | DBG_DrawConstraints | DBG_DrawNormals); };
 protected:
     void Draw();
 

@@ -20,11 +20,14 @@ class Scene final : public Element
     glm::vec3 m_skyGradientUp;
 
     bool m_active;
+
+    Scene(const Scene &that);
+    Scene& operator=(const Scene &that);
 public:
-    inline Camera* GetCamera() { return m_camera; }
-    inline Light* GetLight() { return m_light; }
-    inline RenderTarget* GetRenderTarget() { return m_renderTarget; }
-    inline Shader* GetShader() { return m_shader; }
+    inline Camera* GetCamera() const { return m_camera; }
+    inline Light* GetLight() const { return m_light; }
+    inline RenderTarget* GetRenderTarget() const { return m_renderTarget; }
+    inline Shader* GetShader() const { return m_shader; }
 
     inline bool HasCamera() const { return (m_camera != nullptr); }
     inline bool HasLight() const { return (m_light != nullptr); }

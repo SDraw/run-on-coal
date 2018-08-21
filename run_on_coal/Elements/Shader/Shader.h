@@ -55,6 +55,9 @@ class Shader final : public Element
     bool m_active;
     std::string m_error;
 
+    Shader(const Shader &that);
+    Shader& operator=(const Shader &that);
+
     void SetupUniformsAndLocations();
     void FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_name, unsigned int f_type);
 public:

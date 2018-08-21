@@ -15,6 +15,9 @@ class ShaderUniform final
     };
     bool m_isActive;
     bool m_needUpdate;
+
+    ShaderUniform(const ShaderUniform &that);
+    ShaderUniform& operator=(const ShaderUniform &that);
 public:
     enum ShaderUniformType
     {

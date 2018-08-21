@@ -28,6 +28,9 @@ class ElementManager final
 
     void AddElementToSet(void *f_ptr);
     void RemoveElementFromSet(void *f_ptr);
+
+    ElementManager(const ElementManager &that);
+    ElementManager& operator=(const ElementManager &that);
 public:
     Scene* CreateScene();
     Camera* CreateCamera(int f_type);
@@ -45,7 +48,7 @@ public:
     File* OpenFile(const std::string &f_path, bool f_ro);
     Collision* CreateCollision(int f_type, const glm::vec3 &f_size, float f_mass);
 
-    bool IsValidElement(void *f_ptr);
+    bool IsValidElement(void *f_ptr) const;
     bool DestroyElement(Element *f_element);
 protected:
     explicit ElementManager(Core *f_core);

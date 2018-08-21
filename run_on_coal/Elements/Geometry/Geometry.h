@@ -8,6 +8,7 @@ class Material;
 struct BoneCollisionData;
 struct BoneData;
 struct BoneJointData;
+
 class Geometry final : public Element
 {
     std::vector<Material*> m_materialVector;
@@ -29,6 +30,9 @@ class Geometry final : public Element
     bool m_async;
     bool m_released;
 
+    Geometry(const Geometry &that);
+    Geometry& operator=(const Geometry &that);
+
     void Clear();
 public:
     inline bool IsLoaded() const { return (m_loadState == GLS_Loaded); }
@@ -40,6 +44,7 @@ public:
 protected:
     explicit Geometry(bool f_async);
     ~Geometry();
+
     bool Load(const std::string &f_path);
     void GenerateVAOs();
 

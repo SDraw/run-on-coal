@@ -7,6 +7,7 @@ class Core;
 class Model;
 class LuaArguments;
 class TreeNode;
+
 typedef void(*OnPreRender)(void);
 
 class PreRenderManager final
@@ -22,8 +23,8 @@ class PreRenderManager final
     LuaArguments *m_luaArguments;
     OnPreRender m_callback;
 
-    PreRenderManager(const PreRenderManager& that);
-    PreRenderManager &operator =(const PreRenderManager &that);
+    PreRenderManager(const PreRenderManager &that);
+    PreRenderManager& operator=(const PreRenderManager &that);
 public:
     inline void SetPreRenderCallback(OnPreRender f_callback) { m_callback = f_callback; }
 protected:

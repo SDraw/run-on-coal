@@ -10,6 +10,9 @@ class Quad2D final
 
     GLuint m_VBO[2];
     GLuint m_VAO;
+
+    Quad2D(const Quad2D &that);
+    Quad2D& operator=(const Quad2D &that);
 protected:
     Quad2D();
     ~Quad2D();
