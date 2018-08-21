@@ -106,7 +106,7 @@ size_t ROC::File::GetSize()
     }
     return l_size;
 }
-size_t ROC::File::GetPosition()
+size_t ROC::File::GetPosition() const
 {
     size_t l_pos = 0U;
     if(m_file) l_pos = static_cast<size_t>((m_type == FM_Read) ? m_file->tellg() : m_file->tellp());

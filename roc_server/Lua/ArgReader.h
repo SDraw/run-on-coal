@@ -17,8 +17,8 @@ class ArgReader final
     std::string m_error;
     bool m_hasErrors;
 
-    ArgReader(const ArgReader& that);
-    ArgReader &operator=(const ArgReader &that);
+    ArgReader(const ArgReader &that);
+    ArgReader& operator=(const ArgReader &that);
 
     void SetError(const char *f_str);
 public:

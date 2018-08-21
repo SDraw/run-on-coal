@@ -6,6 +6,7 @@ namespace ROC
 class Core;
 class Client;
 class LuaArguments;
+
 typedef void(*OnNetworkClientConnectCallback)(Client*);
 typedef void(*OnNetworkClientDisconnectCallback)(Client*);
 typedef void(*OnNetworkDataRecieveCallback)(Client*, const std::string&);
@@ -27,12 +28,12 @@ class NetworkManager final
 
     static unsigned char GetPacketIdentifier(RakNet::Packet *f_packet);
 
-    NetworkManager(const NetworkManager& that);
-    NetworkManager &operator =(const NetworkManager &that);
+    NetworkManager(const NetworkManager &that);
+    NetworkManager& operator=(const NetworkManager &that);
 public:
     bool Disconnect(Client *f_client);
     bool SendData(Client *f_client, const std::string &f_data);
-    int GetPing(Client *f_client);
+    int GetPing(Client *f_client) const;
 
     inline void SetNetworkClientConnectCallback(OnNetworkClientConnectCallback f_callback) { m_networkClientConnectCallback = f_callback; }
     inline void SetNetworkClientDisconnectCallback(OnNetworkClientDisconnectCallback f_callback) { m_networkClientDisconnectCallback = f_callback; }

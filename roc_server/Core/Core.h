@@ -33,19 +33,19 @@ class Core final
     OnServerStopCallback m_serverStopCallback;
 
     Core();
-    Core(const Core& that);
-    Core &operator =(const Core &that);
+    Core(const Core &that);
+    Core& operator=(const Core &that);
     ~Core();
 public:
     static Core* Init();
     static void Terminate();
 
     inline const std::string& GetWorkingDirectory() const { return m_workingDir; }
-    inline ConfigManager* GetConfigManager() { return m_configManager; }
-    inline ElementManager* GetElementManager() { return m_elementManager; }
-    inline LogManager* GetLogManager() { return m_logManager; }
-    inline LuaManager* GetLuaManager() { return m_luaManager; }
-    inline NetworkManager* GetNetworkManager() { return m_networkManager; }
+    inline ConfigManager* GetConfigManager() const { return m_configManager; }
+    inline ElementManager* GetElementManager() const { return m_elementManager; }
+    inline LogManager* GetLogManager() const { return m_logManager; }
+    inline LuaManager* GetLuaManager() const { return m_luaManager; }
+    inline NetworkManager* GetNetworkManager() const { return m_networkManager; }
 
     static inline void SetServerStartCallback(OnServerStartCallback f_callback) { ms_serverStartCallback = f_callback; }
     inline void SetServerPulseCallback(OnServerPulseCallback f_callback) { m_serverPulseCallback = f_callback; }

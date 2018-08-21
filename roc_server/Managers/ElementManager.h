@@ -7,12 +7,16 @@ class Core;
 class Client;
 class Element;
 class File;
+
 class ElementManager final
 {
     Core *m_core;
 
     std::unordered_set<void*> m_elementSet;
     std::unordered_set<void*>::iterator m_elementSetEnd;
+
+    ElementManager(const ElementManager &that);
+    ElementManager& operator=(const ElementManager &that);
 
     void AddElementToSet(void *f_ptr);
     void RemoveElementFromSet(void *f_ptr);

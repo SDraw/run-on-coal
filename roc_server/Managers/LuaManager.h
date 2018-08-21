@@ -9,6 +9,7 @@ class Core;
 class EventManager;
 class LuaArguments;
 class LuaFunction;
+
 class LuaManager final
 {
     Core *m_core;
@@ -17,11 +18,11 @@ class LuaManager final
     lua_State *m_vm;
     EventManager *m_eventManager;
 
-    LuaManager(const LuaManager& that);
-    LuaManager &operator =(const LuaManager &that);
+    LuaManager(const LuaManager &that);
+    LuaManager& operator=(const LuaManager &that);
 public:
     static inline Core* GetCore() { return ms_core; }
-    inline EventManager* GetEventManager() { return m_eventManager; }
+    inline EventManager* GetEventManager() const { return m_eventManager; }
 
     bool LoadScript(const std::string &f_script, bool f_asFile = true);
 protected:

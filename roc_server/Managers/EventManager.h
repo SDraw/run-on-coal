@@ -6,6 +6,7 @@ namespace ROC
 
 class LuaManager;
 class LuaArguments;
+
 class EventManager final
 {
     LuaManager *m_luaManager;
@@ -24,6 +25,9 @@ class EventManager final
     };
     std::unordered_map<std::string,EventHeap*> m_eventMap;
     std::unordered_map<std::string, EventHeap*>::iterator m_eventMapEnd;
+
+    EventManager(const EventManager &that);
+    EventManager& operator=(const EventManager &that);
 public:
     bool AddEvent(const std::string &f_event);
     bool AddEventHandler(const std::string &f_event, LuaFunction &f_func);

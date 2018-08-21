@@ -95,7 +95,7 @@ bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
     }
     return (m_networkInterface != nullptr);
 }
-int ROC::NetworkManager::GetPing(Client *f_client)
+int ROC::NetworkManager::GetPing(Client *f_client) const
 {
     return (m_networkInterface->GetLastPing(f_client->GetAddress()));
 }

@@ -12,6 +12,9 @@ class ConfigManager final
     unsigned short m_maxClients;
     unsigned int m_pulseTick;
     std::string m_scriptsDir;
+
+    ConfigManager(const ConfigManager &that);
+    ConfigManager& operator=(const ConfigManager &that);
 public:
     inline bool IsConfigParsed() const { return m_configParsed; }
     inline bool IsLogEnabled() const { return m_logging; }
