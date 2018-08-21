@@ -13,9 +13,6 @@ const GLint g_FontSwizzleMask[] = { GL_ONE, GL_ONE, GL_ONE, GL_RED };
 
 }
 
-#define ROC_FONT_VERTEX_BUFFER 0U
-#define ROC_FONT_UV_BUFFER 1U
-
 #define ROC_FONT_CHAR_VERTICES 6U
 #define ROC_FONT_TEXT_BLOCK 512U
 
@@ -68,27 +65,27 @@ void ROC::Font::DestroyLibrary()
 void ROC::Font::CreateVAO()
 {
     glGenVertexArrays(1, &ms_VAO);
-    glGenBuffers(2, ms_VBO);
-
     glBindVertexArray(ms_VAO);
 
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, ms_VBO[ROC_FONT_VERTEX_BUFFER]);
+    glGenBuffers(static_cast<int>(FBI_BufferCount), ms_VBO);
+
+    glEnableVertexAttribArray(FBI_Vertex);
+    glBindBuffer(GL_ARRAY_BUFFER, ms_VBO[FBI_Vertex]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, NULL, GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
+    glVertexAttribPointer(FBI_Vertex, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
     ms_vertices.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec3(0.f, 0.f, 1.f));
 
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, ms_VBO[ROC_FONT_UV_BUFFER]);
+    glEnableVertexAttribArray(FBI_UV);
+    glBindBuffer(GL_ARRAY_BUFFER, ms_VBO[FBI_UV]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, NULL, GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
+    glVertexAttribPointer(FBI_UV, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
     ms_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec2(0.f));
 
     glBindVertexArray(NULL);
 }
 void ROC::Font::DestroyVAO()
 {
-    glDeleteBuffers(2, ms_VBO);
+    glDeleteBuffers(static_cast<int>(FBI_BufferCount), ms_VBO);
     glDeleteVertexArrays(1, &ms_VAO);
 
     ms_vertices.clear();
@@ -242,19 +239,10 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
 
             if(l_charCount > 0)
             {
-                if(GLBinder::IsArrayBufferBinded(ms_VBO[ROC_FONT_VERTEX_BUFFER]))
-                {
-                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
-                    GLBinder::BindArrayBuffer(ms_VBO[ROC_FONT_UV_BUFFER]);
-                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
-                }
-                else
-                {
-                    if(!GLBinder::IsArrayBufferBinded(ms_VBO[ROC_FONT_UV_BUFFER])) GLBinder::BindArrayBuffer(ms_VBO[ROC_FONT_UV_BUFFER]);
-                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
-                    GLBinder::BindArrayBuffer(ms_VBO[ROC_FONT_VERTEX_BUFFER]);
-                    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
-                }
+                GLBinder::BindArrayBuffer(ms_VBO[FBI_Vertex]);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_vertices.data());
+                GLBinder::BindArrayBuffer(ms_VBO[FBI_UV]);
+                glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * l_charCount, ms_uv.data());
                 glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(ROC_FONT_CHAR_VERTICES * l_charCount));
             }
             l_textRange.x = ++l_textRange.z * ROC_FONT_TEXT_BLOCK;

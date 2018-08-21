@@ -8,7 +8,17 @@ class Texture;
 class Material final
 {
     int m_verticesCount;
-    GLuint m_VBO[5];
+    enum MaterialBufferIndex : size_t
+    {
+        MBI_Vertex = 0U,
+        MBI_UV,
+        MBI_Normal,
+        MBI_Weight,
+        MBI_WeightIndex,
+
+        MBI_BufferCount
+    };
+    GLuint m_VBO[MBI_BufferCount];
     GLuint m_VAO;
 
     unsigned char m_type;

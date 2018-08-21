@@ -11,6 +11,12 @@ struct BoneJointData;
 
 class Geometry final : public Element
 {
+    enum GeometrySetByte : unsigned char
+    {
+        GSB_Animated = 0x2U,
+        GSB_Collision = 0xCBU
+    };
+
     std::vector<Material*> m_materialVector;
     unsigned int m_materialCount;
 

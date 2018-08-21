@@ -20,10 +20,6 @@
 #include "Utils/LuaUtils.h"
 #include "Utils/MathUtils.h"
 
-#define ROC_MODEL_ANIMPROPERTY_SPEED 0
-#define ROC_MODEL_ANIMPROPERTY_PROGRESS 1
-#define ROC_MODEL_ANIMPROPERTY_BLENDTIME 2
-
 namespace ROC
 {
 
@@ -33,6 +29,10 @@ const std::vector<std::string> g_AnimationPropertiesTable
 };
 
 }
+
+#define ROC_MODEL_ANIMPROPERTY_SPEED 0
+#define ROC_MODEL_ANIMPROPERTY_PROGRESS 1
+#define ROC_MODEL_ANIMPROPERTY_BLENDTIME 2
 
 void ROC::LuaModelDef::Init(lua_State *f_vm)
 {

@@ -26,9 +26,6 @@
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
 
-#define ROC_VRRENDER_SIDE_LEFT 0U
-#define ROC_VRRENDER_SIDE_RIGHT 1U
-
 namespace ROC
 {
 
@@ -43,6 +40,9 @@ const std::vector<std::string> g_VRRenderSide
 };
 
 }
+
+#define ROC_VRRENDER_SIDE_LEFT 0U
+#define ROC_VRRENDER_SIDE_RIGHT 1U
 
 ROC::RenderManager::RenderManager(Core *f_core)
 {

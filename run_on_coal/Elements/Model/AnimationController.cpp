@@ -7,8 +7,6 @@
 
 #include "Utils/SystemTick.h"
 
-#define ROC_ANIMCONTROL_BLEND_DEFTIME 500U
-
 ROC::AnimationController::AnimationController()
 {
     m_animation = nullptr;
@@ -16,7 +14,7 @@ ROC::AnimationController::AnimationController()
     m_state = ACS_None;
     m_speed = 1.f;
     m_blend = true;
-    m_blendTime = ROC_ANIMCONTROL_BLEND_DEFTIME;
+    m_blendTime = 500U;
     m_blendTimeTick = 0U;
     m_blendValue = 1.f;
 }

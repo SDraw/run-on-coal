@@ -32,9 +32,9 @@ class Shader final : public Element
         SDU_Time,
         SDU_Color,
 
-        SDU_LastEnumIndex
+        SDU_UniformCount
     };
-    ShaderUniform *m_defaultUniforms[SDU_LastEnumIndex];
+    ShaderUniform *m_defaultUniforms[SDU_UniformCount];
 
     std::unordered_map<std::string, ShaderUniform*> m_uniformMap;
     std::unordered_map<std::string, ShaderUniform*>::iterator m_uniformMapEnd;

@@ -28,7 +28,14 @@ class Font final : public Element
     std::unordered_map<unsigned int, charData*>::iterator m_charIter;
     std::unordered_map<unsigned int, charData*>::iterator m_charMapEnd;
 
-    static GLuint ms_VBO[2];
+    enum FontBufferIndex : size_t
+    {
+        FBI_Vertex = 0U,
+        FBI_UV,
+
+        FBI_BufferCount
+    };
+    static GLuint ms_VBO[FBI_BufferCount];
     static std::vector<glm::vec3> ms_vertices;
     static std::vector<glm::vec2> ms_uv;
     static GLuint ms_VAO;

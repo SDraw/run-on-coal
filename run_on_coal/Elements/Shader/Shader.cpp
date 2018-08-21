@@ -7,16 +7,6 @@
 
 #include "Utils/EnumUtils.h"
 
-#define ROC_SHADER_BONES_BINDPOINT 0
-
-#if defined _WIN64
-#define ROC_SHADER_BONES_COUNT 227ULL
-#elif defined _WIN32
-#define ROC_SHADER_BONES_COUNT 227U
-#else
-#define ROC_SHADER_BONES_COUNT 227
-#endif
-
 namespace ROC
 {
 
@@ -32,6 +22,15 @@ const std::vector<std::string> g_DefaultUniformsTable = {
 
 }
 
+#define ROC_SHADER_BONES_BINDPOINT 0U
+#if defined _WIN64
+#define ROC_SHADER_BONES_COUNT 227ULL
+#elif defined _WIN32
+#define ROC_SHADER_BONES_COUNT 227U
+#else
+#define ROC_SHADER_BONES_COUNT 227
+#endif
+
 int ROC::Shader::ms_drawableMaxCount = 0;
 GLuint ROC::Shader::ms_bonesUBO = 0U;
 bool ROC::Shader::ms_uboFix = false;
@@ -43,11 +42,11 @@ ROC::Shader::Shader()
 
     m_program = 0U;
 
-    for(size_t i = 0U; i < SDU_LastEnumIndex; i++) m_defaultUniforms[i] = nullptr;
+    for(size_t i = 0U; i < SDU_UniformCount; i++) m_defaultUniforms[i] = nullptr;
 
     m_uniformMapEnd = m_uniformMap.end();
 
-    m_bindPool = new Pool(ms_drawableMaxCount);
+    m_bindPool = new Pool(static_cast<size_t>(ms_drawableMaxCount));
 
     m_active = false;
 }

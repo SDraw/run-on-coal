@@ -5,15 +5,6 @@
 #include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 
-#define ROC_CONFIG_ATTRIB_ANTIALIASING 0
-#define ROC_CONFIG_ATTRIB_DIMENSION 1
-#define ROC_CONFIG_ATTRIB_FULLSCREEN 2
-#define ROC_CONFIG_ATTRIB_LOGGING 3
-#define ROC_CONFIG_ATTRIB_FPSLIMIT 4
-#define ROC_CONFIG_ATTRIB_VSYNC 5
-#define ROC_CONFIG_ATTRIB_VR 6
-#define ROC_CONFIG_ATTRIB_SCRIPTSDIR 7
-
 namespace ROC
 {
 
@@ -23,6 +14,15 @@ const std::vector<std::string> g_configAttributeTable
 };
 
 }
+
+#define ROC_CONFIG_ATTRIB_ANTIALIASING 0
+#define ROC_CONFIG_ATTRIB_DIMENSION 1
+#define ROC_CONFIG_ATTRIB_FULLSCREEN 2
+#define ROC_CONFIG_ATTRIB_LOGGING 3
+#define ROC_CONFIG_ATTRIB_FPSLIMIT 4
+#define ROC_CONFIG_ATTRIB_VSYNC 5
+#define ROC_CONFIG_ATTRIB_VR 6
+#define ROC_CONFIG_ATTRIB_SCRIPTSDIR 7
 
 ROC::ConfigManager::ConfigManager()
 {

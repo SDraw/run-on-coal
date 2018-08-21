@@ -5,10 +5,23 @@ namespace ROC
 
 class PhysicsDrawer final : public btIDebugDraw
 {
-    GLuint m_VBO;
+    enum PhysicsDrawerBufferIndex : size_t
+    {
+        PDBI_Vertex = 0U,
+        PDBI_Color,
+
+        PDBI_BufferCount
+    };
+    enum PhysicsDrawerBufferAttribute : size_t
+    {
+        PDBA_Vertex = 0U,
+        PDBA_Color = 2U
+    };
+    GLuint m_VBO[PDBI_BufferCount];
     GLuint m_VAO;
 
     std::vector<glm::vec3> m_lines;
+    std::vector<glm::vec3> m_colors;
 
     PhysicsDrawer(const PhysicsDrawer &that);
     PhysicsDrawer& operator=(const PhysicsDrawer &that);
@@ -21,7 +34,7 @@ public:
     virtual void reportErrorWarning(const char* warningString) {};
     virtual void draw3dText(const btVector3& location, const char* textString) {};
     virtual void setDebugMode(int debugMode) {};
-    virtual int	getDebugMode() const { return (DBG_DrawWireframe | DBG_DrawConstraints | DBG_DrawNormals); };
+    virtual int	getDebugMode() const { return (DBG_DrawWireframe | DBG_DrawConstraints | DBG_DrawConstraintLimits | DBG_DrawNormals); };
 protected:
     void Draw();
 

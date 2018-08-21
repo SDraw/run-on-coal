@@ -17,9 +17,23 @@ class Skeleton final
     std::vector<Bone*> m_fastBoneVector;
     std::vector<glm::mat4> m_poseMatrices;
 
+    enum SkeletonCollisionType : unsigned char
+    {
+        SCT_Sphere = 0U,
+        SCT_Box,
+        SCT_Cylinder,
+        SCT_Capsule,
+        SCT_Cone
+    };
+    enum SkeletonTransformationType : size_t
+    {
+        STT_Main = 0U,
+        STT_Inverse,
+        STT_Bind
+    };
     struct SkeletonCollision
     {
-        btAlignedObjectArray<btTransform> m_offset; // [0] - normal
+        btAlignedObjectArray<btTransform> m_offset; // [0] - main
         btRigidBody *m_rigidBody;
         size_t m_boneID;
     };

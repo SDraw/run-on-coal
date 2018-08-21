@@ -15,6 +15,8 @@ const unsigned char g_TextureDummyPattern[] = {
 };
 const glm::ivec2 g_TextureDummySize(2, 2);
 
+}
+
 #if defined _WIN64
     #define ROC_TEXTURE_CUBESIDES_COUNT 6ULL
 #elif defined _WIN32
@@ -22,8 +24,6 @@ const glm::ivec2 g_TextureDummySize(2, 2);
 #else
     #define ROC_TEXTURE_CUBESIDES_COUNT 6
 #endif
-
-}
 
 ROC::Texture::Texture()
 {

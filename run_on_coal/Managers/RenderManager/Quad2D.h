@@ -8,7 +8,14 @@ class Quad2D final
     glm::vec3 m_vertex[6];
     glm::vec2 m_size;
 
-    GLuint m_VBO[2];
+    enum QuadBufferIndex : size_t
+    {
+        QBI_Vertex = 0U,
+        QBI_UV,
+
+        QBI_BufferCount
+    };
+    GLuint m_VBO[QBI_BufferCount];
     GLuint m_VAO;
 
     Quad2D(const Quad2D &that);

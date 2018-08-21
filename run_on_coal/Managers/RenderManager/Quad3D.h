@@ -10,8 +10,16 @@ class Quad3D final
     glm::vec2 m_size;
     glm::mat4 m_matrix;
 
+    enum QuadBufferIndex : size_t
+    {
+        QBI_Vertex = 0U,
+        QBI_UV,
+        QBI_Normal,
+
+        QBI_BufferCount
+    };
     glm::vec3 m_vertex[6];
-    GLuint m_VBO[3];
+    GLuint m_VBO[QBI_BufferCount];
     GLuint m_VAO;
 
     Quad3D(const Quad3D &that);

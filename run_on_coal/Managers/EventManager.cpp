@@ -6,10 +6,6 @@
 #include "Lua/LuaArguments.h"
 #include "Utils/EnumUtils.h"
 
-#define ROC_EVENT_MISSING 0U
-#define ROC_EVENT_DELETED 1U
-#define ROC_EVENT_EXISTS 2U
-
 namespace ROC
 {
 
@@ -27,6 +23,10 @@ const std::vector<std::string> g_DefaultEventsNames
 };
 
 }
+
+#define ROC_EVENT_MISSING 0U
+#define ROC_EVENT_DELETED 1U
+#define ROC_EVENT_EXISTS 2U
 
 ROC::EventManager::EventManager(LuaManager *f_luaManager)
 {

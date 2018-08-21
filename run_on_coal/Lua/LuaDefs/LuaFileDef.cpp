@@ -11,9 +11,6 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-#define ROC_FILE_MANAGE_CREATE 0
-#define ROC_FILE_MANAGE_OPEN 1
-
 namespace ROC
 {
 
@@ -23,6 +20,9 @@ const std::vector<std::string> g_FileManageTypesTable
 };
 
 }
+
+#define ROC_FILE_MANAGE_CREATE 0
+#define ROC_FILE_MANAGE_OPEN 1
 
 void ROC::LuaFileDef::Init(lua_State *f_vm)
 {

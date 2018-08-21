@@ -8,9 +8,6 @@
 
 #include "Utils/zlibUtils.h"
 
-#define ROC_GEOMETRY_SETTER_ANIMATED 0x2U
-#define ROC_GEOMETRY_SETTER_COLLISION 0xCBU
-
 ROC::Geometry::Geometry(bool f_async)
 {
     m_elementType = ET_Geometry;
@@ -87,7 +84,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
                 std::vector<glm::vec4> l_weightData;
                 std::vector<glm::ivec4> l_indexData;
-                if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
+                if(l_type == GSB_Animated)
                 {
                     // Weights
                     l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
@@ -153,7 +150,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 6])]);
                         l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 7])]);
                         l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 8])]);
-                        if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
+                        if(l_type == GSB_Animated)
                         {
                             l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j])]);
                             l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j + 1])]);
@@ -171,7 +168,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_material->LoadVertices(l_tempVertex);
                     l_material->LoadUVs(l_tempUV);
                     l_material->LoadNormals(l_tempNormal);
-                    if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
+                    if(l_type == GSB_Animated)
                     {
                         l_material->LoadWeights(l_tempWeight);
                         l_material->LoadIndices(l_tempIndex);
@@ -196,7 +193,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 }
                 m_boundSphereRaduis = glm::length(l_farthestPoint);
 
-                if(l_type == ROC_GEOMETRY_SETTER_ANIMATED)
+                if(l_type == GSB_Animated)
                 {
                     int l_bonesSize;
                     l_file.read(reinterpret_cast<char*>(&l_bonesSize), sizeof(int));
@@ -229,13 +226,13 @@ bool ROC::Geometry::Load(const std::string &f_path)
         }
         if(l_result && !m_async) m_loadState = GLS_Loaded;
 
-        if(l_result && (l_type == ROC_GEOMETRY_SETTER_ANIMATED))
+        if(l_result && (l_type == GSB_Animated))
         {
             try
             {
-                unsigned char l_physicBlock = 0U;
-                l_file.read(reinterpret_cast<char*>(&l_physicBlock), sizeof(unsigned char));
-                if(l_physicBlock == ROC_GEOMETRY_SETTER_COLLISION)
+                unsigned char l_physicsBlock = 0U;
+                l_file.read(reinterpret_cast<char*>(&l_physicsBlock), sizeof(unsigned char));
+                if(l_physicsBlock == GSB_Collision)
                 {
                     unsigned int l_scbCount = 0U;
                     l_file.read(reinterpret_cast<char*>(&l_scbCount), sizeof(unsigned int));
