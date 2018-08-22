@@ -98,8 +98,10 @@ int ROC::LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
 int ROC::LuaRenderingDef::DrawPhysics(lua_State *f_vm)
 {
     // bool drawPhysics()
+    float l_width = 1.f;
     ArgReader argStream(f_vm);
-    LuaManager::GetCore()->GetRenderManager()->DrawPhysics();
+    argStream.ReadNextNumber(l_width);
+    LuaManager::GetCore()->GetRenderManager()->DrawPhysics(l_width);
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }

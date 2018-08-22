@@ -42,10 +42,12 @@ void ROC::PhysicsDrawer::drawLine(const btVector3& from, const btVector3& to, co
     m_colors.insert(m_colors.end(), 2U, l_vec);
 }
 
-void ROC::PhysicsDrawer::Draw()
+void ROC::PhysicsDrawer::Draw(float f_width)
 {
     if(!m_lines.empty())
     {
+        if(f_width != 1.f) glLineWidth(f_width);
+
         GLBinder::BindVertexArray(m_VAO);
         while(!m_lines.empty())
         {
@@ -62,5 +64,7 @@ void ROC::PhysicsDrawer::Draw()
             m_lines.erase(m_lines.begin(), m_lines.begin() + l_count);
             m_colors.erase(m_colors.begin(), m_colors.begin() + l_count);
         }
+
+        if(f_width != 1.f) glLineWidth(1.f);
     }
 }

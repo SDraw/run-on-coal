@@ -36,7 +36,7 @@ public:
     virtual void setDebugMode(int debugMode) {};
     virtual int	getDebugMode() const { return (DBG_DrawWireframe | DBG_DrawConstraints | DBG_DrawConstraintLimits | DBG_DrawNormals); };
 protected:
-    void Draw();
+    void Draw(float f_width);
 
     friend class RenderManager;
 };

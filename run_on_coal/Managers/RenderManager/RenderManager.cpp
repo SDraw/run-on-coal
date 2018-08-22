@@ -142,6 +142,12 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
                     }
                 }
             }
+
+            if(m_activeScene->HasShader())
+            {
+                Shader *l_shader = m_activeScene->GetShader();
+                l_shader->SetTime(m_core->GetSfmlManager()->GetTime());
+            }
         }
     }
 }
@@ -274,7 +280,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
         }
     }
 }
-void ROC::RenderManager::DrawPhysics()
+void ROC::RenderManager::DrawPhysics(float f_width)
 {
     if(!m_locked && m_activeScene)
     {
@@ -292,7 +298,7 @@ void ROC::RenderManager::DrawPhysics()
             m_dummyTexture->Bind();
 
             m_core->GetPhysicsManager()->DrawDebugWorld();
-            m_physicsDrawer->Draw();
+            m_physicsDrawer->Draw(f_width);
         }
     }
 }
