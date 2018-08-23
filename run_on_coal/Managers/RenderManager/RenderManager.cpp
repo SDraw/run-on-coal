@@ -2,6 +2,7 @@
 
 #include "Managers/RenderManager/RenderManager.h"
 #include "Core/Core.h"
+#include "Managers/LogManager.h"
 #include "Managers/RenderManager/Quad2D.h"
 #include "Managers/RenderManager/Quad3D.h"
 #include "Managers/RenderManager/PhysicsDrawer.h"
@@ -46,7 +47,6 @@ const std::vector<std::string> g_VRRenderSide
 
 ROC::RenderManager::RenderManager(Core *f_core)
 {
-    btIDebugDraw;
     m_core = f_core;
     m_vrManager = m_core->GetVRManager();
 
@@ -319,10 +319,13 @@ void ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
 }
 void ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
 {
-    if(m_clearColor != f_color)
+    if(!m_locked)
     {
-        std::memcpy(&m_clearColor, &f_color, sizeof(glm::vec4));
-        glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+        if(m_clearColor != f_color)
+        {
+            std::memcpy(&m_clearColor, &f_color, sizeof(glm::vec4));
+            glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+        }
     }
 }
 void ROC::RenderManager::SetViewport(const glm::ivec4 &f_area)

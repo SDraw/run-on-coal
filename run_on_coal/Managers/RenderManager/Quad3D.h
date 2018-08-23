@@ -13,8 +13,8 @@ class Quad3D final
     enum QuadBufferIndex : size_t
     {
         QBI_Vertex = 0U,
-        QBI_UV,
         QBI_Normal,
+        QBI_UV,
 
         QBI_BufferCount
     };

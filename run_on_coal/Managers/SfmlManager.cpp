@@ -37,10 +37,17 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_windowVideoMode = sf::VideoMode(l_windowSize.x, l_windowSize.y);
 
     m_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
-    m_contextSettings.depthBits = 24U;
+    m_contextSettings.depthBits = 32U;
 #ifdef _DEBUG
     m_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Debug;
+#else
+    m_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Default;
 #endif
+    m_contextSettings.majorVersion = 0U;
+    m_contextSettings.minorVersion = 0U;
+    m_contextSettings.sRgbCapable = false;
+    m_contextSettings.stencilBits = 0U;
+
     m_windowStyle = (l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default);
 
     m_window = new sf::Window();

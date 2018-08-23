@@ -20,15 +20,15 @@ ROC::Quad2D::Quad2D()
 
     glGenBuffers(static_cast<int>(QBI_BufferCount), m_VBO);
 
-    glEnableVertexAttribArray(QBI_Vertex);
+    glEnableVertexAttribArray(QBA_Vertex);
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[QBI_Vertex]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_QUAD2D_VERTEX_COUNT, NULL, GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(QBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(QBA_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    glEnableVertexAttribArray(QBI_UV);
+    glEnableVertexAttribArray(QBA_UV);
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[QBI_UV]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2U * ROC_QUAD2D_VERTEX_COUNT, g_QuadVertexUV, GL_STATIC_DRAW);
-    glVertexAttribPointer(QBI_UV, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(QBA_UV, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
     for(auto &iter : m_vertex) iter = glm::vec3(0.f, 0.f, 1.0f);
 }

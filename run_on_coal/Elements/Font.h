@@ -35,6 +35,11 @@ class Font final : public Element
 
         FBI_BufferCount
     };
+    enum FontBufferAttribute : size_t
+    {
+        FBA_Vertex = 0U,
+        FBA_UV = 2U
+    };
     static GLuint ms_VBO[FBI_BufferCount];
     static std::vector<glm::vec3> ms_vertices;
     static std::vector<glm::vec2> ms_uv;

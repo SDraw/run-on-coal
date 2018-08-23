@@ -15,6 +15,11 @@ class Quad2D final
 
         QBI_BufferCount
     };
+    enum QuadBufferAttribute : size_t
+    {
+        QBA_Vertex = 0U,
+        QBA_UV = 2U
+    };
     GLuint m_VBO[QBI_BufferCount];
     GLuint m_VAO;
 

@@ -15,13 +15,13 @@ ROC::PhysicsDrawer::PhysicsDrawer()
 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[PDBI_Vertex]);
     glBufferData(GL_ARRAY_BUFFER, ROC_PHYSICSDRAWER_MAX_LINES*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(PDBA_Vertex);
-    glVertexAttribPointer(PDBA_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(PDBI_Vertex);
+    glVertexAttribPointer(PDBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[PDBI_Color]);
     glBufferData(GL_ARRAY_BUFFER, ROC_PHYSICSDRAWER_MAX_LINES*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(PDBA_Color);
-    glVertexAttribPointer(PDBA_Color, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(PDBI_Color);
+    glVertexAttribPointer(PDBI_Color, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 ROC::PhysicsDrawer::~PhysicsDrawer()
 {

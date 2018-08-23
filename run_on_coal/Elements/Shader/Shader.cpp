@@ -225,8 +225,8 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
 void ROC::Shader::SetupUniformsAndLocations()
 {
     glBindAttribLocation(m_program, 0, "gVertexPosition");
-    glBindAttribLocation(m_program, 1, "gVertexUV");
-    glBindAttribLocation(m_program, 2, "gVertexNormal");
+    glBindAttribLocation(m_program, 1, "gVertexNormal");
+    glBindAttribLocation(m_program, 2, "gVertexUV");
     glBindAttribLocation(m_program, 3, "gVertexWeight");
     glBindAttribLocation(m_program, 4, "gVertexIndex");
 

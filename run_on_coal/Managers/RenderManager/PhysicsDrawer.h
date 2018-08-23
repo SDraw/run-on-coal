@@ -12,11 +12,6 @@ class PhysicsDrawer final : public btIDebugDraw
 
         PDBI_BufferCount
     };
-    enum PhysicsDrawerBufferAttribute : size_t
-    {
-        PDBA_Vertex = 0U,
-        PDBA_Color = 2U
-    };
     GLuint m_VBO[PDBI_BufferCount];
     GLuint m_VAO;
 
