@@ -6,6 +6,7 @@
 #include "Elements/RenderTarget.h"
 #include "Lua/LuaArguments.h"
 
+#include "Managers/ConfigManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/EventManager.h"
 #include "Elements/Camera.h"
@@ -44,30 +45,40 @@ ROC::VRManager::VRManager(Core *f_core)
     m_leftEyePosition = g_EmptyVec3;
     m_rightEyePosition = g_EmptyVec3;
 
-    vr::HmdError l_hmdError = vr::EVRInitError::VRInitError_None;
-    m_vrSystem = vr::VR_Init(&l_hmdError, vr::EVRApplicationType::VRApplication_Scene);
-    if(l_hmdError != vr::EVRInitError::VRInitError_None)
+    if(m_core->GetConfigManager()->IsVRModeEnabled())
     {
-        MessageBoxA(NULL, "Unable to start application in VR mode", NULL, MB_OK | MB_ICONEXCLAMATION);
-        exit(EXIT_FAILURE);
-    }
-    Camera::SetVRSystem(m_vrSystem);
+        vr::HmdError l_hmdError = vr::EVRInitError::VRInitError_None;
+        m_vrSystem = vr::VR_Init(&l_hmdError, vr::EVRApplicationType::VRApplication_Scene);
+        if(l_hmdError != vr::EVRInitError::VRInitError_None)
+        {
+            MessageBoxA(NULL, "Unable to start application in VR mode", NULL, MB_OK | MB_ICONEXCLAMATION);
+            exit(EXIT_FAILURE);
+        }
+        Camera::SetVRSystem(m_vrSystem);
 
-    m_vrCompositor = vr::VRCompositor();
-    if(!m_vrCompositor)
+        m_vrCompositor = vr::VRCompositor();
+        if(!m_vrCompositor)
+        {
+            MessageBoxA(NULL, "Unable to initialize SteamVR compositor", NULL, MB_OK | MB_ICONEXCLAMATION);
+            exit(EXIT_FAILURE);
+        }
+
+        m_vrSystem->GetRecommendedRenderTargetSize(&m_targetSize.x, &m_targetSize.y);
+        m_leftEyeRT = new RenderTarget();
+        m_leftEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear);
+        m_rightEyeRT = new RenderTarget();
+        m_rightEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear);
+
+        m_vrTexture[0] = { UIntToPtr(m_leftEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+        m_vrTexture[1] = { UIntToPtr(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+    }
+    else
     {
-        MessageBoxA(NULL, "Unable to initialize SteamVR compositor", NULL, MB_OK | MB_ICONEXCLAMATION);
-        exit(EXIT_FAILURE);
+        m_vrSystem = nullptr;
+        m_vrCompositor = nullptr;
+        m_leftEyeRT = nullptr;
+        m_rightEyeRT = nullptr;
     }
-
-    m_vrSystem->GetRecommendedRenderTargetSize(&m_targetSize.x, &m_targetSize.y);
-    m_leftEyeRT = new RenderTarget();
-    m_leftEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear);
-    m_rightEyeRT = new RenderTarget();
-    m_rightEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear);
-
-    m_vrTexture[0] = { UIntToPtr(m_leftEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
-    m_vrTexture[1] = { UIntToPtr(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
     m_vrStage = VRS_None;
     m_leftController = { g_EmptyVec3, g_DefaultRotation, g_EmptyVec3, g_EmptyVec3, { 0U }, { 0U }, false };
@@ -79,7 +90,7 @@ ROC::VRManager::VRManager(Core *f_core)
 }
 ROC::VRManager::~VRManager()
 {
-    vr::VR_Shutdown();
+    if(m_vrSystem) vr::VR_Shutdown();
     delete m_leftEyeRT;
     delete m_rightEyeRT;
     delete m_luaArguments;
@@ -87,94 +98,103 @@ ROC::VRManager::~VRManager()
 
 void ROC::VRManager::EnableRenderTarget()
 {
-    switch(m_vrStage)
+    if(m_vrSystem)
     {
-        case VRS_Left:
-            m_leftEyeRT->Enable();
-            break;
-        case VRS_Right:
-            m_rightEyeRT->Enable();
-            break;
+        switch(m_vrStage)
+        {
+            case VRS_Left:
+                m_leftEyeRT->Enable();
+                break;
+            case VRS_Right:
+                m_rightEyeRT->Enable();
+                break;
+        }
     }
 }
 void ROC::VRManager::DisableRenderTarget()
 {
-    switch(m_vrStage)
+    if(m_vrSystem)
     {
-        case VRS_Left:
-            m_leftEyeRT->Disable();
-            break;
-        case VRS_Right:
-            m_rightEyeRT->Disable();
-            break;
+        switch(m_vrStage)
+        {
+            case VRS_Left:
+                m_leftEyeRT->Disable();
+                break;
+            case VRS_Right:
+                m_rightEyeRT->Disable();
+                break;
+        }
     }
 }
 
 bool ROC::VRManager::DoPulse()
 {
-    // Poll events
-    while(m_vrSystem->PollNextEvent(&m_event, sizeof(vr::VREvent_t)))
+    if(m_vrSystem)
     {
-        switch(m_event.eventType)
+        // Poll events
+        while(m_vrSystem->PollNextEvent(&m_event, sizeof(vr::VREvent_t)))
         {
-            case vr::VREvent_DriverRequestedQuit: case vr::VREvent_Quit:
-                m_state = false;
-                break;
-        }
-    }
-
-    if(m_state)
-    {
-        // Update HMD data
-        m_vrCompositor->WaitGetPoses(m_trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-        m_vrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, 0.f, m_trackedPoses, vr::k_unMaxTrackedDeviceCount);
-
-        const vr::TrackedDevicePose_t &l_hmdPose = m_trackedPoses[vr::k_unTrackedDeviceIndex_Hmd];
-        if(l_hmdPose.bPoseIsValid)
-        {
-            MathUtils::ExtractMatrix(l_hmdPose.mDeviceToAbsoluteTracking, m_transform);
-            btTransform l_transform;
-            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-
-            btVector3 &l_origin = l_transform.getOrigin();
-            std::memcpy(&m_headPosition, l_origin.m_floats, sizeof(glm::vec3));
-            btQuaternion l_rotation = l_transform.getRotation();
-            for(int i = 0; i < 4; i++) m_headRotation[i] = l_rotation[i];
-
-            vr::HmdMatrix34_t l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Left);
-            MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
-            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-            std::memcpy(&m_leftEyePosition, l_origin.m_floats, sizeof(glm::vec3));
-
-            l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Right);
-            MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
-            l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-            std::memcpy(&m_rightEyePosition, l_origin.m_floats, sizeof(glm::vec3));
-        }
-
-        // Update controllers
-        m_leftController.m_updated = false;
-        m_rightController.m_updated = false;
-        for(vr::TrackedDeviceIndex_t i = vr::k_unTrackedDeviceIndex_Hmd + 1U; i < vr::k_unMaxTrackedDeviceCount; i++)
-        {
-            if(m_vrSystem->IsTrackedDeviceConnected(i))
+            switch(m_event.eventType)
             {
-                if((m_vrSystem->GetTrackedDeviceClass(i) == vr::TrackedDeviceClass_Controller) && m_trackedPoses[i].bPoseIsValid)
+                case vr::VREvent_DriverRequestedQuit: case vr::VREvent_Quit:
+                    m_state = false;
+                    break;
+            }
+        }
+
+        if(m_state)
+        {
+            // Update HMD data
+            m_vrCompositor->WaitGetPoses(m_trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+            m_vrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, 0.f, m_trackedPoses, vr::k_unMaxTrackedDeviceCount);
+
+            const vr::TrackedDevicePose_t &l_hmdPose = m_trackedPoses[vr::k_unTrackedDeviceIndex_Hmd];
+            if(l_hmdPose.bPoseIsValid)
+            {
+                MathUtils::ExtractMatrix(l_hmdPose.mDeviceToAbsoluteTracking, m_transform);
+                btTransform l_transform;
+                l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+
+                btVector3 &l_origin = l_transform.getOrigin();
+                std::memcpy(&m_headPosition, l_origin.m_floats, sizeof(glm::vec3));
+                btQuaternion l_rotation = l_transform.getRotation();
+                for(int i = 0; i < 4; i++) m_headRotation[i] = l_rotation[i];
+
+                vr::HmdMatrix34_t l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Left);
+                MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
+                l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+                std::memcpy(&m_leftEyePosition, l_origin.m_floats, sizeof(glm::vec3));
+
+                l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Right);
+                MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
+                l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+                std::memcpy(&m_rightEyePosition, l_origin.m_floats, sizeof(glm::vec3));
+            }
+
+            // Update controllers
+            m_leftController.m_updated = false;
+            m_rightController.m_updated = false;
+            for(vr::TrackedDeviceIndex_t i = vr::k_unTrackedDeviceIndex_Hmd + 1U; i < vr::k_unMaxTrackedDeviceCount; i++)
+            {
+                if(m_vrSystem->IsTrackedDeviceConnected(i))
                 {
-                    switch(m_vrSystem->GetControllerRoleForTrackedDeviceIndex(i))
+                    if((m_vrSystem->GetTrackedDeviceClass(i) == vr::TrackedDeviceClass_Controller) && m_trackedPoses[i].bPoseIsValid)
                     {
-                        case vr::TrackedControllerRole_LeftHand:
+                        switch(m_vrSystem->GetControllerRoleForTrackedDeviceIndex(i))
                         {
-                            UpdateControllerPose(m_leftController, m_trackedPoses[i]);
-                            m_vrSystem->GetControllerState(i, &m_leftController.m_newState, sizeof(vr::VRControllerState_t));
-                            UpdateControllerInput(m_leftController, "left");
-                        } break;
-                        case vr::TrackedControllerRole_RightHand:
-                        {
-                            UpdateControllerPose(m_rightController, m_trackedPoses[i]);
-                            m_vrSystem->GetControllerState(i, &m_rightController.m_newState, sizeof(vr::VRControllerState_t));
-                            UpdateControllerInput(m_rightController, "right");
-                        } break;
+                            case vr::TrackedControllerRole_LeftHand:
+                            {
+                                UpdateControllerPose(m_leftController, m_trackedPoses[i]);
+                                m_vrSystem->GetControllerState(i, &m_leftController.m_newState, sizeof(vr::VRControllerState_t));
+                                UpdateControllerInput(m_leftController, "left");
+                            } break;
+                            case vr::TrackedControllerRole_RightHand:
+                            {
+                                UpdateControllerPose(m_rightController, m_trackedPoses[i]);
+                                m_vrSystem->GetControllerState(i, &m_rightController.m_newState, sizeof(vr::VRControllerState_t));
+                                UpdateControllerInput(m_rightController, "right");
+                            } break;
+                        }
                     }
                 }
             }
@@ -260,6 +280,9 @@ void ROC::VRManager::UpdateControllerInput(VRController &f_controller, const std
 
 void ROC::VRManager::SubmitRender()
 {
-    m_vrCompositor->Submit(vr::Eye_Left, &m_vrTexture[0]);
-    m_vrCompositor->Submit(vr::Eye_Right, &m_vrTexture[1]);
+    if(m_vrCompositor)
+    {
+        m_vrCompositor->Submit(vr::Eye_Left, &m_vrTexture[0]);
+        m_vrCompositor->Submit(vr::Eye_Right, &m_vrTexture[1]);
+    }
 }

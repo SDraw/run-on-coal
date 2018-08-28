@@ -83,11 +83,14 @@ protected:
 
     void RemoveAsActiveScene(Scene *f_scene);
 
+    void UpdateViewportSize(const glm::ivec2 &f_size);
+
     void DoPulse();
 
     friend class Core;
     friend class ElementManager;
     friend class InheritanceManager;
+    friend class SfmlManager;
 };
 
 }

@@ -34,6 +34,7 @@ void ROC::LuaInputDef::Init(lua_State *f_vm)
     lua_register(f_vm, "setWindowIcon", SetWindowIcon);
     lua_register(f_vm, "requestWindowFocus", RequestWindowFocus);
     lua_register(f_vm, "getWindowFocus", GetWindowFocus);
+    lua_register(f_vm, "setWindowInputEnabled", SetWindowInputEnabled);
     lua_register(f_vm, "closeWindow", CloseWindow);
     lua_register(f_vm, "isKeyPressed", IsKeyPressed);
     lua_register(f_vm, "isMouseKeyPressed", IsMouseKeyPressed);
@@ -245,6 +246,20 @@ int ROC::LuaInputDef::GetWindowFocus(lua_State *f_vm)
     // bool getWindowFocus()
     ArgReader argStream(f_vm);
     argStream.PushBoolean(LuaManager::GetCore()->GetSfmlManager()->GetFocusState());
+    return argStream.GetReturnValue();
+}
+int ROC::LuaInputDef::SetWindowInputEnabled(lua_State *f_vm)
+{
+    // bool setWindowInputEnabled(bool state)
+    bool l_state;
+    ArgReader argStream(f_vm);
+    argStream.ReadBoolean(l_state);
+    if(!argStream.HasErrors())
+    {
+        ROC::LuaManager::GetCore()->GetSfmlManager()->SetInputEnabled(l_state);
+        argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

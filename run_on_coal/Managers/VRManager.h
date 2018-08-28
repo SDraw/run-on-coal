@@ -56,6 +56,8 @@ class VRManager final
     void UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose);
     void UpdateControllerInput(VRController &f_controller, const std::string &f_hand);
 public:
+    inline bool IsVREnabled() const { return (m_vrSystem != nullptr); }
+
     inline const glm::uvec2& GetTargetsSize() const { return m_targetSize; }
 
     inline const glm::vec3& GetHeadPosition() const { return m_headPosition; }

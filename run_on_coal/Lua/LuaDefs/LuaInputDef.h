@@ -18,6 +18,7 @@ class LuaInputDef final
     static int SetWindowIcon(lua_State *f_vm);
     static int RequestWindowFocus(lua_State *f_vm);
     static int GetWindowFocus(lua_State *f_vm);
+    static int SetWindowInputEnabled(lua_State *f_vm);
     static int CloseWindow(lua_State *f_vm);
     static int IsKeyPressed(lua_State *f_vm);
     static int IsMouseKeyPressed(lua_State *f_vm);

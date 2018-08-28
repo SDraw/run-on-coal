@@ -26,6 +26,7 @@
 #include "Managers/VRManager.h"
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
+#include "Utils/GLBinder.h"
 
 namespace ROC
 {
@@ -36,8 +37,8 @@ extern const glm::vec4 g_EmptyVec4;
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
 const glm::vec4 g_DefaultClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
 const std::vector<std::string> g_VRRenderSide
-{ 
-    "left", "right" 
+{
+    "left", "right"
 };
 
 }
@@ -110,37 +111,13 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
         if(m_activeScene)
         {
             m_activeScene->Enable();
-            if(m_activeScene->HasRenderTarget())
-            {
-                RenderTarget *l_rt = m_activeScene->GetRenderTarget();
-                m_skipNoDepthMaterials = l_rt->IsShadowType();
-                const glm::ivec2 &l_targetSize = l_rt->GetSize();
-                if(m_viewportSize != l_targetSize)
-                {
-                    std::memcpy(&m_viewportSize, &l_targetSize, sizeof(glm::ivec2));
-                    glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
-                }
-            }
+            if(m_activeScene->HasRenderTarget()) m_skipNoDepthMaterials = m_activeScene->GetRenderTarget()->IsShadowType();
             else
             {
                 m_skipNoDepthMaterials = false;
 
-                if(m_vrManager && m_vrLock)
-                {
-                    m_vrManager->EnableRenderTarget();
-                    const glm::uvec2 &l_rtSize = m_vrManager->GetTargetsSize();
-                    glViewport(0, 0, l_rtSize.x, l_rtSize.y);
-                }
-                else
-                {
-                    glm::ivec2 l_windowSize;
-                    m_core->GetSfmlManager()->GetWindowSize(l_windowSize);
-                    if(m_viewportSize != l_windowSize)
-                    {
-                        std::memcpy(&m_viewportSize, &l_windowSize, sizeof(glm::ivec2));
-                        glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
-                    }
-                }
+                if(m_vrManager->IsVREnabled() && m_vrLock) m_vrManager->EnableRenderTarget();
+                else GLBinder::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
             }
 
             if(m_activeScene->HasShader())
@@ -158,6 +135,11 @@ void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
         m_activeScene->Disable();
         m_activeScene = nullptr;
     }
+}
+
+void ROC::RenderManager::UpdateViewportSize(const glm::ivec2 &f_size)
+{
+    std::memcpy(&m_viewportSize, &f_size, sizeof(glm::ivec2));
 }
 
 void ROC::RenderManager::Render(Model *f_model)
@@ -295,6 +277,7 @@ void ROC::RenderManager::DrawPhysics(float f_width)
             DisableCulling();
             EnableDepth();
             DisableBlending();
+
             m_dummyTexture->Bind();
 
             m_core->GetPhysicsManager()->DrawDebugWorld();
@@ -329,11 +312,11 @@ void ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
     }
 }
 void ROC::RenderManager::SetViewport(const glm::ivec4 &f_area)
-{ 
-    if(!m_locked) glViewport(f_area.x, f_area.y, f_area.z, f_area.w); 
+{
+    if(!m_locked) GLBinder::SetViewport(f_area.x, f_area.y, f_area.z, f_area.w);
 }
 void ROC::RenderManager::SetPolygonMode(int f_mode)
-{ 
+{
     if(!m_locked) glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode);
 }
 
@@ -388,14 +371,14 @@ void ROC::RenderManager::EnableCulling()
 
 void ROC::RenderManager::DoPulse()
 {
-    m_time = m_core->GetSfmlManager()->GetTime();
     m_locked = false;
+    m_time = m_core->GetSfmlManager()->GetTime();
 
     if(m_callback) (*m_callback)();
     EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
     l_eventManager->CallEvent(EventManager::EME_onRender, m_luaArguments);
 
-    if(m_vrManager)
+    if(m_vrManager->IsVREnabled())
     {
         m_vrLock = true;
 
@@ -403,7 +386,6 @@ void ROC::RenderManager::DoPulse()
 
         m_vrManager->SetVRStage(VRManager::VRS_Left);
         m_vrManager->EnableRenderTarget();
-        glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         l_eventManager->CallEvent(EventManager::EME_onVRRender, m_luaArguments);
@@ -411,7 +393,6 @@ void ROC::RenderManager::DoPulse()
 
         m_vrManager->SetVRStage(VRManager::VRS_Right);
         m_vrManager->EnableRenderTarget();
-        glViewport(0, 0, l_rtSize.x, l_rtSize.y);
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         l_eventManager->CallEvent(EventManager::EME_onVRRender, m_luaArguments);
@@ -422,6 +403,6 @@ void ROC::RenderManager::DoPulse()
         m_vrLock = false;
     }
 
-    m_locked = true;
     m_core->GetSfmlManager()->SwapBuffers();
+    m_locked = true;
 }

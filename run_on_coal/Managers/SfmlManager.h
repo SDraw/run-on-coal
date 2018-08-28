@@ -33,6 +33,8 @@ class SfmlManager final
     sf::Clock m_clock;
     float m_time;
 
+    bool m_inputState;
+
     LuaArguments *m_luaArguments;
 
     OnWindowResizeCallback m_windowResizeCallback;
@@ -61,6 +63,7 @@ public:
     bool SetIcon(const std::string &f_path);
     inline void RequestFocus() { m_window->requestFocus(); }
     inline bool GetFocusState() const { return m_window->hasFocus(); }
+    inline void SetInputEnabled(bool f_state) { m_inputState = f_state; }
 
     void SetCursorMode(bool f_visible, bool f_lock);
     void GetCursorPosition(glm::ivec2 &f_pos) const;

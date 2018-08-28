@@ -107,7 +107,11 @@ void ROC::RenderTarget::Bind()
 }
 void ROC::RenderTarget::Enable()
 {
-    if(m_frameBuffer != 0U) GLBinder::BindFramebuffer(m_frameBuffer);
+    if(m_frameBuffer != 0U)
+    {
+        GLBinder::BindFramebuffer(m_frameBuffer);
+        GLBinder::SetViewport(0, 0, m_size.x, m_size.y);
+    }
 }
 void ROC::RenderTarget::Disable()
 {

@@ -9,6 +9,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager.h"
 #include "Managers/PhysicsManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Shader/Shader.h"
 #include "Utils/PathUtils.h"
 
@@ -104,6 +105,8 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     l_log.append("GLEW ");
     l_log.append(reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
     m_core->GetLogManager()->Log(l_log);
+
+    m_inputState = false;
 
     m_luaArguments = new LuaArguments();
 
@@ -253,10 +256,13 @@ bool ROC::SfmlManager::DoPulse()
                 break;
             case sf::Event::Resized:
             {
-                if(m_windowResizeCallback) (*m_windowResizeCallback)(m_event.size.width, m_event.size.height);
+                glm::ivec2 l_size(static_cast<int>(m_event.size.width), static_cast<int>(m_event.size.height));
+                m_core->GetRenderManager()->UpdateViewportSize(l_size);
 
-                m_luaArguments->PushArgument(static_cast<int>(m_event.size.width));
-                m_luaArguments->PushArgument(static_cast<int>(m_event.size.height));
+                if(m_windowResizeCallback) (*m_windowResizeCallback)(m_event.size.width,m_event.size.height);
+
+                m_luaArguments->PushArgument(l_size.x);
+                m_luaArguments->PushArgument(l_size.y);
                 m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onWindowResize, m_luaArguments);
                 m_luaArguments->Clear();
             } break;
@@ -282,22 +288,25 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::TextEntered:
             {
-                if(m_event.text.unicode > 31 && !(m_event.text.unicode >= 127 && m_event.text.unicode <= 160))
+                if(m_inputState)
                 {
-                    sf::String l_text(m_event.text.unicode);
-                    std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
-                    std::string l_input(l_utf8.begin(), l_utf8.end());
+                    if(m_event.text.unicode > 31 && !(m_event.text.unicode >= 127 && m_event.text.unicode <= 160))
+                    {
+                        sf::String l_text(m_event.text.unicode);
+                        std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
+                        std::string l_input(l_utf8.begin(), l_utf8.end());
 
-                    if(m_textInputCallback) (*m_textInputCallback)(l_input);
+                        if(m_textInputCallback) (*m_textInputCallback)(l_input);
 
-                    m_luaArguments->PushArgument(l_input);
-                    m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onTextInput, m_luaArguments);
-                    m_luaArguments->Clear();
+                        m_luaArguments->PushArgument(l_input);
+                        m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onTextInput, m_luaArguments);
+                        m_luaArguments->Clear();
+                    }
                 }
             } break;
             case sf::Event::MouseMoved:
             {
-                if(!l_mouseFix)
+                if(!l_mouseFix) // Prevent loop if cursor position is changed in onCursorMove event
                 {
                     if(m_mouseMoveCallback) (*m_mouseMoveCallback)(m_event.mouseMove.x, m_event.mouseMove.y);
 

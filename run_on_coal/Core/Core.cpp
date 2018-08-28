@@ -45,7 +45,7 @@ ROC::Core::Core()
     m_sfmlManager = new SfmlManager(this);
     m_asyncManager = new AsyncManager(this);
     m_preRenderManager = new PreRenderManager(this);
-    m_vrManager = (m_configManager->IsVRModeEnabled() ? new VRManager(this) : nullptr);
+    m_vrManager = new VRManager(this);
     m_renderManager = new RenderManager(this);
     m_networkManager = new NetworkManager(this);
 
@@ -133,7 +133,7 @@ bool ROC::Core::DoPulse()
     SystemTick::UpdateTick();
     m_networkManager->DoPulse();
     m_asyncManager->DoPulse();
-    if(m_vrManager) m_state = (m_state && m_vrManager->DoPulse());
+    m_state = (m_state && m_vrManager->DoPulse());
     m_state = (m_state && m_sfmlManager->DoPulse());
     m_preRenderManager->DoPulse_S1();
     m_physicsManager->DoPulse();
