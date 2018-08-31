@@ -4,7 +4,10 @@
 GLuint ROC::GLBinder::ms_arrayBuffer = 0U;
 GLuint ROC::GLBinder::ms_vertexArray = 0U;
 GLuint ROC::GLBinder::ms_texture = 0U;
+GLenum ROC::GLBinder::ms_textureType = 0U;
 GLuint ROC::GLBinder::ms_frameBuffer = 0U;
+GLuint ROC::GLBinder::ms_renderBuffer = 0U;
+GLuint ROC::GLBinder::ms_shaderProgram = 0U;
 int ROC::GLBinder::ms_viewportX = 0;
 int ROC::GLBinder::ms_viewportY = 0;
 int ROC::GLBinder::ms_viewportW = 0;
@@ -12,42 +15,117 @@ int ROC::GLBinder::ms_viewportH = 0;
 
 void ROC::GLBinder::BindArrayBuffer(GLuint f_buffer)
 {
-    if(ms_arrayBuffer != f_buffer)
+    if((ms_arrayBuffer != f_buffer) && (f_buffer != 0U))
     {
-        glBindBuffer(GL_ARRAY_BUFFER, f_buffer);
         ms_arrayBuffer = f_buffer;
+        glBindBuffer(GL_ARRAY_BUFFER, ms_arrayBuffer);
     }
 }
+void ROC::GLBinder::ResetArrayBuffer(GLuint f_buffer)
+{
+    if(f_buffer != 0U)
+    {
+        if(ms_arrayBuffer == f_buffer) ms_arrayBuffer = 0U;
+    }
+    else ms_arrayBuffer = 0U;
+}
+
 void ROC::GLBinder::BindVertexArray(GLuint f_array)
 {
-    if(ms_vertexArray != f_array)
+    if((ms_vertexArray != f_array) && (f_array != 0U))
     {
-        glBindVertexArray(f_array);
         ms_vertexArray = f_array;
+        glBindVertexArray(ms_vertexArray);
     }
 }
-void ROC::GLBinder::BindTexture2D(GLuint f_texture)
+void ROC::GLBinder::ResetVertexArray(GLuint f_array)
 {
-    if(ms_texture != f_texture)
+    if(f_array != 0U)
     {
-        glBindTexture(GL_TEXTURE_2D, f_texture);
-        ms_texture = f_texture;
+        if(ms_vertexArray == f_array) ms_vertexArray = 0U;
     }
+    else ms_vertexArray = 0U;
 }
-void ROC::GLBinder::BindTextureCube(GLuint f_texture)
+
+void ROC::GLBinder::BindTexture(GLuint f_texture, GLenum f_type)
 {
-    if(ms_texture != f_texture)
+    if((ms_texture != f_texture) && (f_texture != 0U))
     {
-        glBindTexture(GL_TEXTURE_CUBE_MAP, f_texture);
         ms_texture = f_texture;
+        ms_textureType = f_type;
+        glBindTexture(f_type, ms_texture);
     }
 }
+void ROC::GLBinder::GetBindedTexture(GLuint &f_texture, GLenum &f_type)
+{
+    f_texture = ms_texture;
+    f_type = ms_textureType;
+}
+void ROC::GLBinder::ResetTexture(GLuint f_texture)
+{
+    if(f_texture != 0U)
+    {
+        if(ms_texture == f_texture)
+        {
+            ms_texture = 0U;
+            ms_textureType = 0U;
+        }
+    }
+    else
+    {
+        ms_texture = 0U;
+        ms_textureType = 0U;
+    }
+}
+
 void ROC::GLBinder::BindFramebuffer(GLuint f_buffer)
 {
     if(ms_frameBuffer != f_buffer)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, f_buffer);
         ms_frameBuffer = f_buffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, ms_frameBuffer);
+    }
+}
+void ROC::GLBinder::ResetFramebuffer(GLuint f_buffer)
+{
+    if(((f_buffer != 0U) && (ms_frameBuffer == f_buffer)) || (ms_frameBuffer != 0U))
+    {
+        ms_frameBuffer = 0U;
+        glBindFramebuffer(GL_FRAMEBUFFER, ms_frameBuffer);
+    }
+}
+
+void ROC::GLBinder::BindRenderbuffer(GLuint f_buffer)
+{
+    if(ms_renderBuffer != f_buffer)
+    {
+        ms_renderBuffer = f_buffer;
+        glBindRenderbuffer(GL_RENDERBUFFER, ms_renderBuffer);
+    }
+}
+void ROC::GLBinder::ResetRenderbuffer(GLuint f_buffer)
+{
+    if(((f_buffer != 0U) && (ms_renderBuffer == f_buffer)) || (ms_renderBuffer != 0U))
+    {
+        ms_renderBuffer = 0U;
+        glBindRenderbuffer(GL_RENDERBUFFER, ms_renderBuffer);
+    }
+}
+
+void ROC::GLBinder::UseShaderProgram(GLuint f_program)
+{
+    if((ms_shaderProgram != f_program) && (f_program != 0U))
+    {
+        ms_shaderProgram = f_program;
+        glUseProgram(ms_shaderProgram);
+    }
+}
+void ROC::GLBinder::ResetShaderProgram(GLuint f_program)
+{
+    if(((f_program != 0U) && (ms_shaderProgram == f_program)) || (ms_shaderProgram != 0U))
+    {
+        ms_shaderProgram = 0U;
+        glUseProgram(ms_shaderProgram);
     }
 }
 

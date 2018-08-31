@@ -29,17 +29,17 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
         m_filtering = f_filter;
         btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
 
-        GLint l_lastFramebuffer = 0;
-        glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &l_lastFramebuffer);
+        GLint l_lastFramebuffer = GLBinder::GetBindedFramebuffer();
 
         glGenFramebuffers(1, &m_frameBuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+        GLBinder::BindFramebuffer(m_frameBuffer);
 
-        GLint l_lastTexture = 0;
-        glGetIntegerv(GL_TEXTURE_BINDING_2D, &l_lastTexture);
+        GLuint l_lastTexture;
+        GLenum l_lastTextureType;
+        GLBinder::GetBindedTexture(l_lastTexture, l_lastTextureType);
 
         glGenTextures(1, &m_texture);
-        glBindTexture(GL_TEXTURE_2D, m_texture);
+        GLBinder::BindTexture(m_texture, GLBinder::GLBTT_2D);
         switch(m_type)
         {
             case RTT_Shadow:
@@ -68,13 +68,17 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
 
         if(m_type > RTT_Shadow)
         {
+            GLuint l_lastRenderbuffer = GLBinder::GetBindedRenderbuffer();
+
             glGenRenderbuffers(1, &m_renderBuffer);
-            glBindRenderbuffer(GL_RENDERBUFFER, m_renderBuffer);
+            GLBinder::BindRenderbuffer(m_renderBuffer);
             glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, f_size.x, f_size.y);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_renderBuffer);
 
             glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
             glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+            GLBinder::BindRenderbuffer(l_lastRenderbuffer);
         }
         else
         {
@@ -89,21 +93,17 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
             m_error.append(std::to_string(glCheckFramebufferStatus(GL_FRAMEBUFFER)));
             Clear();
         }
-        else
-        {
-            glBindRenderbuffer(GL_RENDERBUFFER, 0);
-            std::memcpy(&m_size, &f_size, sizeof(glm::ivec2));
-        }
+        else std::memcpy(&m_size, &f_size, sizeof(glm::ivec2));
 
-        glBindFramebuffer(GL_FRAMEBUFFER, l_lastFramebuffer);
-        if(l_lastTexture) glBindTexture(GL_TEXTURE_2D, l_lastTexture);
+        GLBinder::BindFramebuffer(l_lastFramebuffer);
+        GLBinder::GetBindedTexture(l_lastTexture, l_lastTextureType);
     }
     return (m_type != RTT_None);
 }
 
 void ROC::RenderTarget::Bind()
 {
-    if(m_texture != 0U) GLBinder::BindTexture2D(m_texture);
+    if(m_texture != 0U) GLBinder::BindTexture(m_texture, GLBinder::GLBTT_2D);
 }
 void ROC::RenderTarget::Enable()
 {
@@ -115,7 +115,7 @@ void ROC::RenderTarget::Enable()
 }
 void ROC::RenderTarget::Disable()
 {
-    if(m_frameBuffer != 0U) GLBinder::BindFramebuffer(NULL);
+    if(m_frameBuffer != 0U) GLBinder::BindFramebuffer(0U);
 }
 
 void ROC::RenderTarget::Clear()
@@ -124,18 +124,19 @@ void ROC::RenderTarget::Clear()
     m_filtering = DFT_None;
     if(m_texture != 0U)
     {
-        if(GLBinder::IsTextureBinded(m_texture)) GLBinder::ResetTexture();
+        GLBinder::ResetTexture(m_texture);
         glDeleteTextures(1, &m_texture);
         m_texture = 0U;
     }
     if(m_renderBuffer != 0U)
     {
+        GLBinder::ResetRenderbuffer(m_renderBuffer);
         glDeleteRenderbuffers(1, &m_renderBuffer);
         m_renderBuffer = 0U;
     }
     if(m_frameBuffer != 0U)
     {
-        if(GLBinder::IsFramebufferBinded(m_frameBuffer)) GLBinder::ResetFramebuffer();
+        GLBinder::ResetFramebuffer(m_frameBuffer);
         glDeleteFramebuffers(1, &m_frameBuffer);
         m_frameBuffer = 0U;
     }

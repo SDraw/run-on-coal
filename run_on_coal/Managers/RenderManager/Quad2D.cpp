@@ -16,17 +16,17 @@ extern const float g_QuadVertexUV[];
 ROC::Quad2D::Quad2D()
 {
     glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
+    GLBinder::BindVertexArray(m_VAO);
 
     glGenBuffers(static_cast<int>(QBI_BufferCount), m_VBO);
 
     glEnableVertexAttribArray(QBA_Vertex);
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[QBI_Vertex]);
+    GLBinder::BindArrayBuffer(m_VBO[QBI_Vertex]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_QUAD2D_VERTEX_COUNT, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(QBA_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     glEnableVertexAttribArray(QBA_UV);
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[QBI_UV]);
+    GLBinder::BindArrayBuffer(m_VBO[QBI_UV]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2U * ROC_QUAD2D_VERTEX_COUNT, g_QuadVertexUV, GL_STATIC_DRAW);
     glVertexAttribPointer(QBA_UV, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
@@ -34,7 +34,10 @@ ROC::Quad2D::Quad2D()
 }
 ROC::Quad2D::~Quad2D()
 {
+    for(size_t i = 0U; i < QBI_BufferCount; i++) GLBinder::ResetArrayBuffer(m_VBO[i]);
     glDeleteBuffers(static_cast<int>(QBI_BufferCount), m_VBO);
+    
+    GLBinder::ResetVertexArray(m_VAO);
     glDeleteVertexArrays(1, &m_VAO);
 }
 

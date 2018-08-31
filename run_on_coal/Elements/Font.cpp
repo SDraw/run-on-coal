@@ -46,7 +46,7 @@ ROC::Font::~Font()
 {
     if(m_loaded)
     {
-        if(GLBinder::IsTextureBinded(m_atlasTexture)) GLBinder::ResetTexture();
+        GLBinder::ResetTexture(m_atlasTexture);
         glDeleteTextures(1, &m_atlasTexture);
         delete m_atlasPack;
         FT_Done_Face(m_face);
@@ -65,27 +65,28 @@ void ROC::Font::DestroyLibrary()
 void ROC::Font::CreateVAO()
 {
     glGenVertexArrays(1, &ms_VAO);
-    glBindVertexArray(ms_VAO);
+    GLBinder::BindVertexArray(ms_VAO);
 
     glGenBuffers(static_cast<int>(FBI_BufferCount), ms_VBO);
 
     glEnableVertexAttribArray(FBA_Vertex);
-    glBindBuffer(GL_ARRAY_BUFFER, ms_VBO[FBI_Vertex]);
+    GLBinder::BindArrayBuffer(ms_VBO[FBI_Vertex]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(FBA_Vertex, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), NULL);
     ms_vertices.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec3(0.f, 0.f, 1.f));
 
     glEnableVertexAttribArray(FBA_UV);
-    glBindBuffer(GL_ARRAY_BUFFER, ms_VBO[FBI_UV]);
+    GLBinder::BindArrayBuffer(ms_VBO[FBI_UV]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(FBA_UV, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
     ms_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec2(0.f));
-
-    glBindVertexArray(NULL);
 }
 void ROC::Font::DestroyVAO()
 {
+    for(size_t i = 0U; i < FBI_BufferCount; i++) GLBinder::ResetArrayBuffer(ms_VBO[i]);
     glDeleteBuffers(static_cast<int>(FBI_BufferCount), ms_VBO);
+
+    GLBinder::ResetVertexArray(ms_VAO);
     glDeleteVertexArrays(1, &ms_VAO);
 
     ms_vertices.clear();
@@ -126,11 +127,12 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             }
 
             // Generate atlas texture
-            GLint l_lastTexture = 0;
-            glGetIntegerv(GL_TEXTURE_BINDING_2D, &l_lastTexture);
+            GLuint l_lastTexture;
+            GLenum l_lastTextureType;
+            GLBinder::GetBindedTexture(l_lastTexture, l_lastTextureType);
 
             glGenTextures(1, &m_atlasTexture);
-            glBindTexture(GL_TEXTURE_2D, m_atlasTexture);
+            GLBinder::BindTexture(m_atlasTexture, GLBinder::GLBTT_2D);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filteringType);
@@ -138,7 +140,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, g_FontSwizzleMask);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_atlasSize.x, m_atlasSize.y, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 
-            if(l_lastTexture) glBindTexture(GL_TEXTURE_2D, l_lastTexture);
+            GLBinder::BindTexture(l_lastTexture, l_lastTextureType);
 
             // Generate atlas
             m_atlasPack = new rbp::MaxRectsBinPack();
@@ -187,7 +189,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
     if(m_loaded)
     {
         GLBinder::BindVertexArray(ms_VAO);
-        GLBinder::BindTexture2D(m_atlasTexture);
+        GLBinder::BindTexture(m_atlasTexture, GLBinder::GLBTT_2D);
 
         glm::vec4 l_linePos(f_pos, 0.f, 0.f); // [line_x, line_y, char_x, char_y]
         glm::tvec3<size_t> l_textRange(0U); // [range_min, range_max, subpart]

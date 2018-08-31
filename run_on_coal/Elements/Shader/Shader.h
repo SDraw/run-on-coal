@@ -52,7 +52,6 @@ class Shader final : public Element
     static GLuint ms_bonesUBO;
     static bool ms_uboFix;
 
-    bool m_active;
     std::string m_error;
 
     Shader(const Shader &that);

@@ -6,6 +6,7 @@
 #include "Elements/Geometry/BoneJointData.hpp"
 #include "Elements/Geometry/Material.h"
 
+#include "Utils/GLBinder.h"
 #include "Utils/zlibUtils.h"
 
 ROC::Geometry::Geometry(bool f_async)
@@ -31,13 +32,8 @@ bool ROC::Geometry::Load(const std::string &f_path)
     {
         m_loadState = GLS_Loading;
 
-        GLint l_lastArrayBuffer = 0;
-        GLint l_lastVertexArray = 0;
-        if(!m_async)
-        {
-            glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &l_lastArrayBuffer);
-            glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &l_lastVertexArray);
-        }
+        GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
+        GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
 
         unsigned char l_type;
         std::ifstream l_file;
@@ -301,11 +297,8 @@ bool ROC::Geometry::Load(const std::string &f_path)
             }
         }
 
-        if(!m_async)
-        {
-            glBindBuffer(GL_ARRAY_BUFFER, l_lastArrayBuffer);
-            glBindVertexArray(l_lastVertexArray);
-        }
+        GLBinder::BindArrayBuffer(l_lastArrayBuffer);
+        GLBinder::BindVertexArray(l_lastVertexArray);
     }
     return l_result;
 }

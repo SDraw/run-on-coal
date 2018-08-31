@@ -6,6 +6,7 @@
 #include "Utils/Pool.h"
 
 #include "Utils/EnumUtils.h"
+#include "Utils/GLBinder.h"
 
 namespace ROC
 {
@@ -47,14 +48,12 @@ ROC::Shader::Shader()
     m_uniformMapEnd = m_uniformMap.end();
 
     m_bindPool = new Pool(static_cast<size_t>(ms_drawableMaxCount));
-
-    m_active = false;
 }
 ROC::Shader::~Shader()
 {
     if(m_program)
     {
-        if(m_active) glUseProgram(0U);
+        GLBinder::ResetShaderProgram(m_program);
         glDeleteProgram(m_program);
     }
     for(auto iter : m_defaultUniforms)
@@ -207,10 +206,9 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                     if(l_fragmentShader) glDetachShader(m_program, l_fragmentShader);
                     if(l_geometryShader) glDetachShader(m_program, l_geometryShader);
 
-                    GLint l_lastProgram = 0;
-                    glGetIntegerv(GL_CURRENT_PROGRAM, &l_lastProgram);
+                    GLint l_lastProgram = GLBinder::GetUsedShaderProgram();
                     SetupUniformsAndLocations();
-                    glUseProgram(l_lastProgram);
+                    GLBinder::UseShaderProgram(l_lastProgram);
                 }
             }
         }
@@ -230,7 +228,7 @@ void ROC::Shader::SetupUniformsAndLocations()
     glBindAttribLocation(m_program, 3, "gVertexWeight");
     glBindAttribLocation(m_program, 4, "gVertexIndex");
 
-    glUseProgram(m_program);
+    GLBinder::UseShaderProgram(m_program);
 
     // Matrices
     FindDefaultUniform(SDU_Projection, "gProjectionMatrix", ShaderUniform::SUT_Mat4);
@@ -462,47 +460,39 @@ void ROC::Shader::UpdateDrawableMaxCount()
 
 void ROC::Shader::Enable()
 {
-    if(!m_active)
+    GLBinder::UseShaderProgram(m_program);
+    for(auto iter : m_defaultUniforms)
     {
-        glUseProgram(m_program);
-        for(auto iter : m_defaultUniforms)
+        if(iter)
         {
-            if(iter)
-            {
-                iter->SetActive(true);
-                iter->Update();
-            }
+            iter->SetActive(true);
+            iter->Update();
         }
-        for(auto &iter : m_uniformMap)
+    }
+    for(auto &iter : m_uniformMap)
+    {
+        ShaderUniform *l_shaderUniform = iter.second;
+        l_shaderUniform->SetActive(true);
+        l_shaderUniform->Update();
+    }
+    if(!m_drawableBind.empty())
+    {
+        unsigned int l_slot = 0U;
+        for(auto &iter : m_drawableBind)
         {
-            ShaderUniform *l_shaderUniform = iter.second;
-            l_shaderUniform->SetActive(true);
-            l_shaderUniform->Update();
+            glActiveTexture(GL_TEXTURE1 + l_slot);
+            iter.m_element->Bind();
+            l_slot++;
         }
-        if(!m_drawableBind.empty())
-        {
-            unsigned int l_slot = 0U;
-            for(auto &iter : m_drawableBind)
-            {
-                glActiveTexture(GL_TEXTURE1 + l_slot);
-                iter.m_element->Bind();
-                l_slot++;
-            }
-            glActiveTexture(GL_TEXTURE0);
-        }
-        m_active = true;
+        glActiveTexture(GL_TEXTURE0);
     }
 }
 
 void ROC::Shader::Disable()
 {
-    if(m_active)
+    for(auto iter : m_defaultUniforms)
     {
-        for(auto iter : m_defaultUniforms)
-        {
-            if(iter) iter->SetActive(false);
-        }
-        for(auto &iter : m_uniformMap) iter.second->SetActive(false);
-        m_active = false;
+        if(iter) iter->SetActive(false);
     }
+    for(auto &iter : m_uniformMap) iter.second->SetActive(false);
 }

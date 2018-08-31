@@ -9,24 +9,30 @@
 ROC::PhysicsDrawer::PhysicsDrawer()
 {
     glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
+    GLBinder::BindVertexArray(m_VAO);
 
     glGenBuffers(static_cast<int>(PDBI_BufferCount), m_VBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[PDBI_Vertex]);
+    GLBinder::BindArrayBuffer(m_VBO[PDBI_Vertex]);
     glBufferData(GL_ARRAY_BUFFER, ROC_PHYSICSDRAWER_MAX_LINES*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(PDBI_Vertex);
     glVertexAttribPointer(PDBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[PDBI_Color]);
+    GLBinder::BindArrayBuffer(m_VBO[PDBI_Color]);
     glBufferData(GL_ARRAY_BUFFER, ROC_PHYSICSDRAWER_MAX_LINES*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(PDBI_Color);
     glVertexAttribPointer(PDBI_Color, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 ROC::PhysicsDrawer::~PhysicsDrawer()
-{
+{ 
+    for(size_t i = 0U; i < PDBI_BufferCount; i++) GLBinder::ResetArrayBuffer(m_VBO[i]);
     glDeleteBuffers(static_cast<int>(PDBI_BufferCount), m_VBO);
-    if(m_VAO != 0U) glDeleteVertexArrays(1, &m_VAO);
+
+    if(m_VAO != 0U)
+    {
+        GLBinder::ResetVertexArray(m_VAO);
+        glDeleteVertexArrays(1, &m_VAO);
+    }
 }
 
 void ROC::PhysicsDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
