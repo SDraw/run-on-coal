@@ -29,7 +29,7 @@ int ROC::LuaGeometryDef::Create(lua_State *f_vm)
     argStream.ReadNextBoolean(l_async);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        Geometry *l_geometry = LuaManager::GetCore()->GetElementManager()->CreateGeometry(l_path,l_async);
+        Geometry *l_geometry = Core::GetCore()->GetElementManager()->CreateGeometry(l_path,l_async);
         l_geometry ? argStream.PushElement(l_geometry) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);

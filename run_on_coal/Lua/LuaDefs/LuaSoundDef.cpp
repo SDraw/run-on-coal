@@ -60,7 +60,7 @@ int ROC::LuaSoundDef::Create(lua_State *f_vm)
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        Sound *l_sound = LuaManager::GetCore()->GetElementManager()->CreateSound(l_path);
+        Sound *l_sound = Core::GetCore()->GetElementManager()->CreateSound(l_path);
         l_sound ? argStream.PushElement(l_sound) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -361,7 +361,7 @@ int ROC::LuaSoundDef::SetListenerOrientation(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_up[i]);
     if(!argStream.HasErrors())
     {
-        SoundManager *l_soundManager = LuaManager::GetCore()->GetSoundManager();
+        SoundManager *l_soundManager = Core::GetCore()->GetSoundManager();
         l_soundManager->SetListenerPosition(l_pos);
         l_soundManager->SetListenerDirection(l_dir);
         l_soundManager->SetListenerUp(l_up);
@@ -375,7 +375,7 @@ int ROC::LuaSoundDef::GetListenerOrientation(lua_State *f_vm)
 {
     // float float float float float float float float float soundGetListenerOrientation()
     ArgReader argStream(f_vm);
-    SoundManager *l_soundManager = LuaManager::GetCore()->GetSoundManager();
+    SoundManager *l_soundManager = Core::GetCore()->GetSoundManager();
 
     const glm::vec3 &l_pos = l_soundManager->GetListenerPosition();
     argStream.PushNumber(l_pos.x);
@@ -403,7 +403,7 @@ int ROC::LuaSoundDef::SetGlobalVolume(lua_State *f_vm)
     argStream.ReadNumber(l_volume);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSoundManager()->SetGlobalVolume(l_volume);
+        Core::GetCore()->GetSoundManager()->SetGlobalVolume(l_volume);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -413,6 +413,6 @@ int ROC::LuaSoundDef::GetGlobalVolume(lua_State *f_vm)
 {
     // float soundGetGlobalVolume()
     ArgReader argStream(f_vm);
-    argStream.PushNumber(LuaManager::GetCore()->GetSoundManager()->GetGlobalVolume());
+    argStream.PushNumber(Core::GetCore()->GetSoundManager()->GetGlobalVolume());
     return argStream.GetReturnValue();
 }

@@ -56,7 +56,7 @@ int ROC::LuaInputDef::SetCursorMode(lua_State *f_vm)
     argStream.ReadBoolean(l_locked);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSfmlManager()->SetCursorMode(l_visible, l_locked);
+        Core::GetCore()->GetSfmlManager()->SetCursorMode(l_visible, l_locked);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -67,7 +67,7 @@ int ROC::LuaInputDef::GetCursorPosition(lua_State *f_vm)
     // int int getCursorPosition()
     ArgReader argStream(f_vm);
     glm::ivec2 l_pos;
-    LuaManager::GetCore()->GetSfmlManager()->GetCursorPosition(l_pos);
+    Core::GetCore()->GetSfmlManager()->GetCursorPosition(l_pos);
     argStream.PushInteger(l_pos.x);
     argStream.PushInteger(l_pos.y);
     return argStream.GetReturnValue();
@@ -80,7 +80,7 @@ int ROC::LuaInputDef::SetCursorPosition(lua_State *f_vm)
     for(int i = 0; i < 2; i++) argStream.ReadInteger(l_pos[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSfmlManager()->SetCursorPosition(l_pos);
+        Core::GetCore()->GetSfmlManager()->SetCursorPosition(l_pos);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -95,7 +95,7 @@ int ROC::LuaInputDef::SetWindowPosition(lua_State *f_vm)
     for(int i = 0; i < 2; i++) argStream.ReadInteger(l_pos[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSfmlManager()->SetWindowPosition(l_pos);
+        Core::GetCore()->GetSfmlManager()->SetWindowPosition(l_pos);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -106,7 +106,7 @@ int ROC::LuaInputDef::GetWindowPosition(lua_State *f_vm)
     // int int getWindowPosition()
     ArgReader argStream(f_vm);
     glm::ivec2 l_pos;
-    LuaManager::GetCore()->GetSfmlManager()->GetWindowPosition(l_pos);
+    Core::GetCore()->GetSfmlManager()->GetWindowPosition(l_pos);
     argStream.PushInteger(l_pos.x);
     argStream.PushInteger(l_pos.y);
     return argStream.GetReturnValue();
@@ -116,7 +116,7 @@ int ROC::LuaInputDef::GetWindowSize(lua_State *f_vm)
     // int getWindowSize()
     ArgReader argStream(f_vm);
     glm::ivec2 l_size;
-    LuaManager::GetCore()->GetSfmlManager()->GetWindowSize(l_size);
+    Core::GetCore()->GetSfmlManager()->GetWindowSize(l_size);
     argStream.PushInteger(l_size.x);
     argStream.PushInteger(l_size.y);
     return argStream.GetReturnValue();
@@ -125,7 +125,7 @@ int ROC::LuaInputDef::CloseWindow(lua_State *f_vm)
 {
     // bool closeWindow()
     ArgReader argStream(f_vm);
-    LuaManager::GetCore()->GetSfmlManager()->CloseWindow();
+    Core::GetCore()->GetSfmlManager()->CloseWindow();
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }
@@ -177,7 +177,7 @@ int ROC::LuaInputDef::SetWindowVSync(lua_State *f_vm)
     argStream.ReadBoolean(l_sync);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSfmlManager()->SetVSync(l_sync);
+        Core::GetCore()->GetSfmlManager()->SetVSync(l_sync);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -191,7 +191,7 @@ int ROC::LuaInputDef::SetWindowFramelimit(lua_State *f_vm)
     argStream.ReadInteger(l_fps);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSfmlManager()->SetFramelimit(l_fps);
+        Core::GetCore()->GetSfmlManager()->SetFramelimit(l_fps);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -201,7 +201,7 @@ int ROC::LuaInputDef::GetWindowFramelimit(lua_State *f_vm)
 {
     // int getWindowFramelimit()
     ArgReader argStream(f_vm);
-    argStream.PushInteger(LuaManager::GetCore()->GetSfmlManager()->GetFramelimit());
+    argStream.PushInteger(Core::GetCore()->GetSfmlManager()->GetFramelimit());
     return argStream.GetReturnValue();
 }
 int ROC::LuaInputDef::SetWindowTitle(lua_State *f_vm)
@@ -213,7 +213,7 @@ int ROC::LuaInputDef::SetWindowTitle(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         sf::String l_title32 = sf::String::fromUtf8(l_title.begin(), l_title.end());
-        LuaManager::GetCore()->GetSfmlManager()->SetTitle(l_title32);
+        Core::GetCore()->GetSfmlManager()->SetTitle(l_title32);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -227,7 +227,7 @@ int ROC::LuaInputDef::SetWindowIcon(lua_State *f_vm)
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        bool l_result = LuaManager::GetCore()->GetSfmlManager()->SetIcon(l_path);
+        bool l_result = Core::GetCore()->GetSfmlManager()->SetIcon(l_path);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -237,7 +237,7 @@ int ROC::LuaInputDef::RequestWindowFocus(lua_State *f_vm)
 {
     // bool requestWindowFocus()
     ArgReader argStream(f_vm);
-    LuaManager::GetCore()->GetSfmlManager()->RequestFocus();
+    Core::GetCore()->GetSfmlManager()->RequestFocus();
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }
@@ -245,7 +245,7 @@ int ROC::LuaInputDef::GetWindowFocus(lua_State *f_vm)
 {
     // bool getWindowFocus()
     ArgReader argStream(f_vm);
-    argStream.PushBoolean(LuaManager::GetCore()->GetSfmlManager()->GetFocusState());
+    argStream.PushBoolean(Core::GetCore()->GetSfmlManager()->GetFocusState());
     return argStream.GetReturnValue();
 }
 int ROC::LuaInputDef::SetWindowInputEnabled(lua_State *f_vm)
@@ -256,7 +256,7 @@ int ROC::LuaInputDef::SetWindowInputEnabled(lua_State *f_vm)
     argStream.ReadBoolean(l_state);
     if(!argStream.HasErrors())
     {
-        ROC::LuaManager::GetCore()->GetSfmlManager()->SetInputEnabled(l_state);
+        ROC::Core::GetCore()->GetSfmlManager()->SetInputEnabled(l_state);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -353,7 +353,7 @@ int ROC::LuaInputDef::GetClipboard(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);
     std::string l_clipboard;
-    LuaManager::GetCore()->GetSfmlManager()->GetClipboardString(l_clipboard);
+    Core::GetCore()->GetSfmlManager()->GetClipboardString(l_clipboard);
     argStream.PushText(l_clipboard);
     return argStream.GetReturnValue();
 }
@@ -364,7 +364,7 @@ int ROC::LuaInputDef::SetClipboard(lua_State *f_vm)
     argStream.ReadText(l_clipboard);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetSfmlManager()->SetClipboardString(l_clipboard);
+        Core::GetCore()->GetSfmlManager()->SetClipboardString(l_clipboard);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

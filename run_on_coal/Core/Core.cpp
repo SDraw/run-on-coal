@@ -38,10 +38,7 @@ ROC::Core::Core()
     m_elementManager = new ElementManager(this);
     m_soundManager = new SoundManager();
     m_physicsManager = new PhysicsManager(this);
-
     m_luaManager = new LuaManager(this);
-    LuaManager::SetCore(this);
-
     m_sfmlManager = new SfmlManager(this);
     m_asyncManager = new AsyncManager(this);
     m_preRenderManager = new PreRenderManager(this);

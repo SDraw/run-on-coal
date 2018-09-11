@@ -72,7 +72,7 @@ int ROC::LuaCollisionDef::Create(lua_State *f_vm)
         int l_type = EnumUtils::ReadEnumVector(l_typeString, g_CollisionTypesTable);
         if(l_type != -1)
         {
-            Collision *l_col = LuaManager::GetCore()->GetElementManager()->CreateCollision(l_type, l_size, l_mass);
+            Collision *l_col = Core::GetCore()->GetElementManager()->CreateCollision(l_type, l_size, l_mass);
             l_col ? argStream.PushElement(l_col) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
@@ -155,7 +155,7 @@ int ROC::LuaCollisionDef::SetScale(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_scale[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetPhysicsManager()->SetCollisionScale(l_col, l_scale);
+        Core::GetCore()->GetPhysicsManager()->SetCollisionScale(l_col, l_scale);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

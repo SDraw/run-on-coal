@@ -27,7 +27,7 @@ int ROC::LuaAnimationDef::Create(lua_State *f_vm)
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        Animation *l_anim = ROC::LuaManager::GetCore()->GetElementManager()->CreateAnimation(l_path);
+        Animation *l_anim = ROC::Core::GetCore()->GetElementManager()->CreateAnimation(l_path);
         l_anim ? argStream.PushElement(l_anim) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);

@@ -13,7 +13,6 @@ class LuaFunction;
 class LuaManager final
 {
     Core *m_core;
-    static Core *ms_core;
 
     lua_State *m_vm;
     EventManager *m_eventManager;
@@ -23,15 +22,12 @@ class LuaManager final
     LuaManager(const LuaManager &that);
     LuaManager& operator=(const LuaManager &that);
 public:
-    static inline Core* GetCore() { return ms_core; }
     inline EventManager* GetEventManager() const { return m_eventManager; }
 
     bool LoadScript(const std::string &f_script, bool f_asFile = true);
 protected:
     explicit LuaManager(Core *f_core);
     ~LuaManager();
-
-    static void SetCore(Core *f_core);
 
     void DoPulse();
     void CallFunction(const LuaFunction &f_func, const LuaArguments *f_args);

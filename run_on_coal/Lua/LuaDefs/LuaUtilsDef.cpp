@@ -35,7 +35,7 @@ int ROC::LuaUtilsDef::LogPrint(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetLogManager()->Log(l_text);
+        Core::GetCore()->GetLogManager()->Log(l_text);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -55,7 +55,7 @@ int ROC::LuaUtilsDef::GetTime(lua_State *f_vm)
 {
     // float getTime()
     ArgReader argStream(f_vm);
-    argStream.PushNumber(LuaManager::GetCore()->GetSfmlManager()->GetTime());
+    argStream.PushNumber(Core::GetCore()->GetSfmlManager()->GetTime());
     return argStream.GetReturnValue();
 }
 

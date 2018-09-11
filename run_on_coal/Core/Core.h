@@ -52,6 +52,7 @@ class Core final
     ~Core();
 public:
     static Core* Init();
+    inline static Core* GetCore() { return ms_instance; }
     static void Terminate();
 
     static inline void SetEngineStartCallback(OnEngineStartCallback f_callback) { ms_engineStartCallback = f_callback; }

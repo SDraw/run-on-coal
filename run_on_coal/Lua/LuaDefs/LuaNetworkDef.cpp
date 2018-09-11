@@ -37,7 +37,7 @@ int ROC::LuaNetworkDef::Connect(lua_State *f_vm)
     argStream.ReadInteger(l_port);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetNetworkManager()->Connect(l_ip, l_port);
+        bool l_result = Core::GetCore()->GetNetworkManager()->Connect(l_ip, l_port);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -47,7 +47,7 @@ int ROC::LuaNetworkDef::Disconnect(lua_State *f_vm)
 {
     // bool networkDisconnect
     ArgReader argStream(f_vm);
-    bool l_result = LuaManager::GetCore()->GetNetworkManager()->Disconnect();
+    bool l_result = Core::GetCore()->GetNetworkManager()->Disconnect();
     argStream.PushBoolean(l_result);
     return argStream.GetReturnValue();
 }
@@ -59,7 +59,7 @@ int ROC::LuaNetworkDef::SendData(lua_State *f_vm)
     argStream.ReadText(l_data);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetNetworkManager()->SendData(l_data);
+        bool l_result = Core::GetCore()->GetNetworkManager()->SendData(l_data);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -69,13 +69,13 @@ int ROC::LuaNetworkDef::GetState(lua_State *f_vm)
 {
     // str networkGetState()
     ArgReader argStream(f_vm);
-    argStream.PushText(g_NetworkStatesTable[LuaManager::GetCore()->GetNetworkManager()->GetNetworkState()]);
+    argStream.PushText(g_NetworkStatesTable[Core::GetCore()->GetNetworkManager()->GetNetworkState()]);
     return argStream.GetReturnValue();
 }
 int ROC::LuaNetworkDef::GetPing(lua_State *f_vm)
 {
     // int networkGetPing()
     ArgReader argStream(f_vm);
-    argStream.PushInteger(LuaManager::GetCore()->GetNetworkManager()->GetPing());
+    argStream.PushInteger(Core::GetCore()->GetNetworkManager()->GetPing());
     return argStream.GetReturnValue();
 }

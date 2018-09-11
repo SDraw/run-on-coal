@@ -111,7 +111,7 @@ int ROC::LuaElementDef::Destroy(lua_State *f_vm)
     argStream.ReadElement(l_element);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetElementManager()->DestroyElement(l_element);
+        bool l_result = Core::GetCore()->GetElementManager()->DestroyElement(l_element);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

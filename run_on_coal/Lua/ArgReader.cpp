@@ -100,7 +100,7 @@ void ROC::ArgReader::ReadCustomData(CustomData &f_data)
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_data.SetElement(l_element);
+                    if(Core::GetCore()->GetElementManager()->IsValidElement(l_element)) f_data.SetElement(l_element);
                 } break;
                 case LUA_TSTRING:
                 {
@@ -274,7 +274,7 @@ void ROC::ArgReader::ReadArguments(LuaArguments &f_args)
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaManager::GetCore()->GetElementManager()->IsValidElement(l_element)) f_args.PushArgument(l_element);
+                    if(Core::GetCore()->GetElementManager()->IsValidElement(l_element)) f_args.PushArgument(l_element);
                 } break;
                 case LUA_TSTRING:
                 {
@@ -302,7 +302,7 @@ bool ROC::ArgReader::HasErrors()
         l_log.append(m_error);
         l_log.append(" at argument ");
         l_log.append(std::to_string(m_argCurrent));
-        LuaManager::GetCore()->GetLogManager()->Log(l_log);
+        Core::GetCore()->GetLogManager()->Log(l_log);
     }
     return m_hasErrors;
 }

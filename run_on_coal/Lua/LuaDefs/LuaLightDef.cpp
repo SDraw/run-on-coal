@@ -27,7 +27,7 @@ int ROC::LuaLightDef::Create(lua_State *f_vm)
 {
     // element Light()
     ArgReader argStream(f_vm);
-    Light *l_light = LuaManager::GetCore()->GetElementManager()->CreateLight();
+    Light *l_light = Core::GetCore()->GetElementManager()->CreateLight();
     l_light ? argStream.PushElement(l_light) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

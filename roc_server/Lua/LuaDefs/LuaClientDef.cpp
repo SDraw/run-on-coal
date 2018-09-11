@@ -31,7 +31,7 @@ int ROC::LuaClientDef::Disconnect(lua_State *f_vm)
     argStream.ReadElement(l_client);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetNetworkManager()->Disconnect(l_client);
+        bool l_result = Core::GetCore()->GetNetworkManager()->Disconnect(l_client);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -47,7 +47,7 @@ int ROC::LuaClientDef::SendData(lua_State *f_vm)
     argStream.ReadText(l_data);
     if(!argStream.HasErrors() && !l_data.empty())
     {
-        bool l_result = LuaManager::GetCore()->GetNetworkManager()->SendData(l_client, l_data);
+        bool l_result = Core::GetCore()->GetNetworkManager()->SendData(l_client, l_data);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -87,7 +87,7 @@ int ROC::LuaClientDef::GetPing(lua_State *f_vm)
     argStream.ReadElement(l_client);
     if(!argStream.HasErrors())
     {
-        int l_ping = LuaManager::GetCore()->GetNetworkManager()->GetPing(l_client);
+        int l_ping = Core::GetCore()->GetNetworkManager()->GetPing(l_client);
         argStream.PushNumber(l_ping);
     }
     else argStream.PushBoolean(false);

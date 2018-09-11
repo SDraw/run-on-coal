@@ -35,7 +35,7 @@ int ROC::LuaShaderDef::Create(lua_State *f_vm)
     argStream.ReadNextText(l_gsp);
     if(!argStream.HasErrors() && !l_vsp.empty() && !l_fsp.empty())
     {
-        Shader *l_shader = LuaManager::GetCore()->GetElementManager()->CreateShader(l_vsp, l_fsp, l_gsp);
+        Shader *l_shader = Core::GetCore()->GetElementManager()->CreateShader(l_vsp, l_fsp, l_gsp);
         l_shader ? argStream.PushElement(l_shader) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -248,7 +248,7 @@ int ROC::LuaShaderDef::Attach(lua_State *f_vm)
     argStream.ReadText(l_uniform);
     if(!argStream.HasErrors() && !l_uniform.empty())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->AttachDrawableToShader(l_shader, l_drawable, l_uniform);
+        bool l_result = Core::GetCore()->GetInheritManager()->AttachDrawableToShader(l_shader, l_drawable, l_uniform);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -264,7 +264,7 @@ int ROC::LuaShaderDef::Detach(lua_State *f_vm)
     argStream.ReadElement(l_drawable);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->DetachDrawableFromShader(l_shader, l_drawable);
+        bool l_result = Core::GetCore()->GetInheritManager()->DetachDrawableFromShader(l_shader, l_drawable);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

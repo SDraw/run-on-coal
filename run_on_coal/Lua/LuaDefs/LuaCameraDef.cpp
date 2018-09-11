@@ -58,7 +58,7 @@ int ROC::LuaCameraDef::Create(lua_State *f_vm)
         int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypesTable);
         if(l_type != -1)
         {
-            Camera *l_camera = LuaManager::GetCore()->GetElementManager()->CreateCamera(l_type);
+            Camera *l_camera = Core::GetCore()->GetElementManager()->CreateCamera(l_type);
             l_camera ? argStream.PushElement(l_camera) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

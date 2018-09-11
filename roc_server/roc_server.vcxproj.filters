@@ -12,13 +12,7 @@
     <ClCompile Include="Managers\ConfigManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\EventManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\LogManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Managers\LuaManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Managers\NetworkManager.cpp">
@@ -75,6 +69,12 @@
     <ClCompile Include="Lua\LuaFunction.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\LuaManager.cpp">
+      <Filter>Managers\LuaManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\EventManager.cpp">
+      <Filter>Managers\LuaManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -88,13 +88,7 @@
     <ClInclude Include="Managers\ElementManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\EventManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\LogManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\LuaManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\NetworkManager.h">
@@ -145,6 +139,12 @@
     <ClInclude Include="Lua\LuaFunction.h">
       <Filter>Lua</Filter>
     </ClInclude>
+    <ClInclude Include="Managers\LuaManager.h">
+      <Filter>Managers\LuaManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\EventManager.h">
+      <Filter>Managers\LuaManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -173,6 +173,9 @@
     </Filter>
     <Filter Include="Lua\LuaDefs">
       <UniqueIdentifier>{27625308-a46c-41bf-bbad-fe1d88a35cda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\LuaManager">
+      <UniqueIdentifier>{6cc7d9c4-250d-4f31-8544-27792ef4de5d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

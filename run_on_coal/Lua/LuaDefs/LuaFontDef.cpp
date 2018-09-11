@@ -43,7 +43,7 @@ int ROC::LuaFontDef::Create(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
         int l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_FilteringTypesTable);
-        Font *l_font = LuaManager::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, l_filteringType);
+        Font *l_font = Core::GetCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, l_filteringType);
         l_font ? argStream.PushElement(l_font) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -64,7 +64,7 @@ int ROC::LuaFontDef::Draw(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_text.empty())
     {
         sf::String l_utf32Text = sf::String::fromUtf8(l_text.begin(), l_text.end());
-        LuaManager::GetCore()->GetRenderManager()->Render(l_font, l_pos, l_utf32Text, l_color);
+        Core::GetCore()->GetRenderManager()->Render(l_font, l_pos, l_utf32Text, l_color);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

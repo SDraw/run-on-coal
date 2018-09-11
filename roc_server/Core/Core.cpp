@@ -25,10 +25,7 @@ ROC::Core::Core()
     m_configManager = new ConfigManager();
     m_logManager = new LogManager(this);
     m_elementManager = new ElementManager(this);
-
     m_luaManager = new LuaManager(this);
-    LuaManager::SetCore(this);
-
     m_networkManager = new NetworkManager(this);
     m_luaArguments = new LuaArguments();
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());

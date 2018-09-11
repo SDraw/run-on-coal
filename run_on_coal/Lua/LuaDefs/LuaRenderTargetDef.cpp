@@ -47,7 +47,7 @@ int ROC::LuaRenderTargetDef::Create(lua_State *f_vm)
         if(l_rtType != -1)
         {
             int l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypesTable);
-            RenderTarget *l_rt = LuaManager::GetCore()->GetElementManager()->CreateRenderTarget(l_rtType, l_size, l_filteringType);
+            RenderTarget *l_rt = Core::GetCore()->GetElementManager()->CreateRenderTarget(l_rtType, l_size, l_filteringType);
             l_rt ? argStream.PushElement(l_rt) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

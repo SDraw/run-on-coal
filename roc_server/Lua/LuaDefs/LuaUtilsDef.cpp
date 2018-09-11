@@ -33,7 +33,7 @@ int ROC::LuaUtilsDef::LogPrint(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetLogManager()->Log(l_text);
+        Core::GetCore()->GetLogManager()->Log(l_text);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

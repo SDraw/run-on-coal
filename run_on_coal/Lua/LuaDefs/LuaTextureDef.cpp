@@ -68,8 +68,8 @@ int ROC::LuaTextureDef::Create(lua_State *f_vm)
             argStream.ReadNextBoolean(l_compress);
 
             Texture *l_texture = nullptr;
-            if(l_path.size() == 1U) l_texture = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path[0], l_textureType, l_filteringType, l_compress);
-            else if(l_path.size() == 6U)  l_texture = LuaManager::GetCore()->GetElementManager()->CreateTexture(l_path, l_filteringType, l_compress);
+            if(l_path.size() == 1U) l_texture = Core::GetCore()->GetElementManager()->CreateTexture(l_path[0], l_textureType, l_filteringType, l_compress);
+            else if(l_path.size() == 6U)  l_texture = Core::GetCore()->GetElementManager()->CreateTexture(l_path, l_filteringType, l_compress);
             l_texture ? argStream.PushElement(l_texture) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

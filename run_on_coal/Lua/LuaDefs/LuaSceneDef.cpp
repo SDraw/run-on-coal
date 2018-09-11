@@ -42,7 +42,7 @@ int ROC::LuaSceneDef::Create(lua_State *f_vm)
 {
     // element Scene()
     ArgReader argStream(f_vm);
-    Scene *l_scene = LuaManager::GetCore()->GetElementManager()->CreateScene();
+    Scene *l_scene = Core::GetCore()->GetElementManager()->CreateScene();
     l_scene ? argStream.PushElement(l_scene) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
@@ -57,7 +57,7 @@ int ROC::LuaSceneDef::SetCamera(lua_State *f_vm)
     argStream.ReadElement(l_camera);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneCamera(l_scene, l_camera);
+        bool l_result = Core::GetCore()->GetInheritManager()->SetSceneCamera(l_scene, l_camera);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -85,7 +85,7 @@ int ROC::LuaSceneDef::RemoveCamera(lua_State *f_vm)
     argStream.ReadElement(l_scene);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneCamera(l_scene);
+        bool l_result = Core::GetCore()->GetInheritManager()->RemoveSceneCamera(l_scene);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -102,7 +102,7 @@ int ROC::LuaSceneDef::SetLight(lua_State *f_vm)
     argStream.ReadElement(l_light);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneLight(l_scene, l_light);
+        bool l_result = Core::GetCore()->GetInheritManager()->SetSceneLight(l_scene, l_light);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -130,7 +130,7 @@ int ROC::LuaSceneDef::RemoveLight(lua_State *f_vm)
     argStream.ReadElement(l_scene);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneLight(l_scene);
+        bool l_result = Core::GetCore()->GetInheritManager()->RemoveSceneLight(l_scene);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -147,7 +147,7 @@ int ROC::LuaSceneDef::SetRenderTarget(lua_State *f_vm)
     argStream.ReadElement(l_rt);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneRenderTarget(l_scene, l_rt);
+        bool l_result = Core::GetCore()->GetInheritManager()->SetSceneRenderTarget(l_scene, l_rt);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -171,7 +171,7 @@ int ROC::LuaSceneDef::RemoveRenderTarget(lua_State *f_vm)
     argStream.ReadElement(l_scene);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneRenderTarget(l_scene);
+        bool l_result = Core::GetCore()->GetInheritManager()->RemoveSceneRenderTarget(l_scene);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -188,7 +188,7 @@ int ROC::LuaSceneDef::SetShader(lua_State *f_vm)
     argStream.ReadElement(l_shader);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->SetSceneShader(l_scene, l_shader);
+        bool l_result = Core::GetCore()->GetInheritManager()->SetSceneShader(l_scene, l_shader);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -212,7 +212,7 @@ int ROC::LuaSceneDef::RemoveShader(lua_State *f_vm)
     argStream.ReadElement(l_scene);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaManager::GetCore()->GetInheritManager()->RemoveSceneShader(l_scene);
+        bool l_result = Core::GetCore()->GetInheritManager()->RemoveSceneShader(l_scene);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -261,7 +261,7 @@ int ROC::LuaSceneDef::SetActive(lua_State *f_vm)
     argStream.ReadElement(l_scene);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetRenderManager()->SetActiveScene(l_scene);
+        Core::GetCore()->GetRenderManager()->SetActiveScene(l_scene);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

@@ -28,7 +28,7 @@ int ROC::LuaPhysicsDef::SetEnabled(lua_State *f_vm)
     argStream.ReadBoolean(l_val);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetPhysicsManager()->SetPhysicsEnabled(l_val);
+        Core::GetCore()->GetPhysicsManager()->SetPhysicsEnabled(l_val);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -38,7 +38,7 @@ int ROC::LuaPhysicsDef::GetEnabled(lua_State *f_vm)
 {
     // bool physicsGetEnabled()
     ArgReader argStream(f_vm);
-    argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetPhysicsEnabled());
+    argStream.PushBoolean(Core::GetCore()->GetPhysicsManager()->GetPhysicsEnabled());
     return argStream.GetReturnValue();
 }
 
@@ -50,7 +50,7 @@ int ROC::LuaPhysicsDef::SetFloorEnabled(lua_State *f_vm)
     argStream.ReadBoolean(l_val);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetPhysicsManager()->SetFloorEnabled(l_val);
+        Core::GetCore()->GetPhysicsManager()->SetFloorEnabled(l_val);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -60,7 +60,7 @@ int ROC::LuaPhysicsDef::GetFloorEnabled(lua_State *f_vm)
 {
     // bool physicsGetFloorEnabled()
     ArgReader argStream(f_vm);
-    argStream.PushBoolean(LuaManager::GetCore()->GetPhysicsManager()->GetFloorEnabled());
+    argStream.PushBoolean(Core::GetCore()->GetPhysicsManager()->GetFloorEnabled());
     return argStream.GetReturnValue();
 }
 
@@ -72,7 +72,7 @@ int ROC::LuaPhysicsDef::SetGravity(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gravity[i]);
     if(!argStream.HasErrors())
     {
-        LuaManager::GetCore()->GetPhysicsManager()->SetGravity(l_gravity);
+        Core::GetCore()->GetPhysicsManager()->SetGravity(l_gravity);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -83,7 +83,7 @@ int ROC::LuaPhysicsDef::GetGravity(lua_State *f_vm)
     // float float float physicsGetGravity()
     ArgReader argStream(f_vm);
     glm::vec3 l_grav;
-    LuaManager::GetCore()->GetPhysicsManager()->GetGravity(l_grav);
+    Core::GetCore()->GetPhysicsManager()->GetGravity(l_grav);
     argStream.PushNumber(l_grav.x);
     argStream.PushNumber(l_grav.y);
     argStream.PushNumber(l_grav.z);
@@ -101,7 +101,7 @@ int ROC::LuaPhysicsDef::RayCast(lua_State *f_vm)
     {
         glm::vec3 l_hitNormal;
         Element *l_hitElement = nullptr;
-        if(LuaManager::GetCore()->GetPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, l_hitElement))
+        if(Core::GetCore()->GetPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, l_hitElement))
         {
             argStream.PushNumber(l_end.x);
             argStream.PushNumber(l_end.y);

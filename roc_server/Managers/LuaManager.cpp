@@ -16,8 +16,6 @@
 
 #define ROC_LUA_METATABLE "roc_mt"
 
-ROC::Core* ROC::LuaManager::ms_core = nullptr;
-
 ROC::LuaManager::LuaManager(Core *f_core)
 {
     m_core = f_core;
@@ -56,11 +54,6 @@ ROC::LuaManager::~LuaManager()
 {
     delete m_eventManager;
     lua_close(m_vm);
-}
-
-void ROC::LuaManager::SetCore(Core *f_core)
-{
-    ms_core = f_core;
 }
 
 bool ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)
