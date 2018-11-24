@@ -368,9 +368,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
         {
             if(m_hasDynamicBoneCollision)
             {
-                btTransform l_model;
                 btTransform l_transform1, l_transform2;
-                l_model.setFromOpenGLMatrix(glm::value_ptr(f_model));
                 if(ms_physicsEnabled)
                 {
                     // btTransform works bad with inversion of imported scaled matrices
@@ -384,9 +382,9 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                         {
                             // BoneFull = ((ModelInverse * BodyGlobal) * BodyBoneOffsetInverse)
                             Bone *l_bone = m_boneVector[iter1->m_boneID];
-                            l_transform1.mult(l_modelInv, iter1->m_rigidBody->getInterpolationWorldTransform());
+                            l_transform1.mult(l_modelInv, iter1->m_rigidBody->getWorldTransform());
                             l_transform2.mult(l_transform1, iter1->m_offset[STT_Inverse]);
-                            l_bone->SetFullMatrix(l_transform1);
+                            l_bone->SetFullMatrix(l_transform2);
 
                             // BonePose = BoneFull * BoneBind
                             l_transform1.mult(l_transform2, iter1->m_offset[STT_Bind]);
@@ -397,6 +395,8 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                 }
                 else
                 {
+                    btTransform l_model;
+                    l_model.setFromOpenGLMatrix(glm::value_ptr(f_model));
                     for(auto iter : m_jointVector)
                     {
                         for(auto iter1 : iter->m_partsVector)

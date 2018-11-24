@@ -145,10 +145,8 @@ void ROC::Camera::Update()
                 m_projectionMatrix = glm::ortho(m_orthoParams.x, m_orthoParams.y, m_orthoParams.z, m_orthoParams.w, m_depth.x, m_depth.y);
                 break;
             case CPT_Screen:
-            {
                 m_projectionMatrix = glm::ortho(m_orthoParams.x, m_orthoParams.y, m_orthoParams.z, m_orthoParams.w);
-                m_projectionMatrix[2][2] = -1.f; // Is this bug of GLM 0.9.9.0 or feature?
-            } break;
+                break;
             case CPT_VRLeft:
             {
                 if(ms_vrSystem)
