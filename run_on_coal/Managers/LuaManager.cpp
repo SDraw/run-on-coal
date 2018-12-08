@@ -6,6 +6,7 @@
 #include "Lua/LuaArguments.h"
 #include "Lua/LuaFunction.h"
 
+#include "Managers/ConfigManager.h"
 #include "Managers/LogManager.h"
 #include "Elements/Element.h"
 #include "Lua/LuaDefs/LuaAnimationDef.h"
@@ -94,16 +95,48 @@ ROC::LuaManager::~LuaManager()
     lua_close(m_vm);
 }
 
-bool ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)
+void ROC::LuaManager::LoadDefaultScripts()
 {
-    int l_error = ((f_asFile ? luaL_loadfile(m_vm, f_script.c_str()) : luaL_loadstring(m_vm, f_script.c_str())) || lua_pcall(m_vm, 0, 0, 0));
-    if(l_error)
+    // Load default scripts
+    std::string l_metaPath(m_core->GetConfigManager()->GetScriptsDirectory());
+    l_metaPath.append("/meta.xml");
+    pugi::xml_document *l_meta = new pugi::xml_document();
+    if(l_meta->load_file(l_metaPath.c_str()))
+    {
+        pugi::xml_node l_metaRoot = l_meta->child("meta");
+        if(l_metaRoot)
+        {
+            for(pugi::xml_node l_node = l_metaRoot.child("script"); l_node; l_node = l_node.next_sibling("script"))
+            {
+                pugi::xml_attribute l_attrib = l_node.attribute("src");
+                if(l_attrib)
+                {
+                    std::string l_path(m_core->GetConfigManager()->GetScriptsDirectory());
+                    l_path.push_back('/');
+                    l_path.append(l_attrib.as_string());
+                    LoadScript(l_path);
+                }
+            }
+        }
+    }
+    else
+    {
+        std::string l_error("Unable to find '");
+        l_error.append(l_metaPath);
+        l_error.push_back('\'');
+        m_core->GetLogManager()->Log(l_error);
+    }
+    delete l_meta;
+}
+
+void ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)
+{
+    if((f_asFile ? luaL_loadfile(m_vm, f_script.c_str()) : luaL_loadstring(m_vm, f_script.c_str())) || lua_pcall(m_vm, 0, 0, 0))
     {
         std::string l_log(lua_tostring(m_vm, -1));
         m_core->GetLogManager()->Log(l_log);
         lua_pop(m_vm, 1);
     }
-    return (l_error == 0);
 }
 
 void ROC::LuaManager::DoPulse()

@@ -49,36 +49,7 @@ ROC::Core* ROC::Core::Init()
     {
         ms_instance = new Core();
 
-        // Load default scripts
-        std::string l_metaPath(ms_instance->GetConfigManager()->GetScriptsDirectory());
-        l_metaPath.append("/meta.xml");
-        pugi::xml_document *l_meta = new pugi::xml_document();
-        if(l_meta->load_file(l_metaPath.c_str()))
-        {
-            pugi::xml_node l_metaRoot = l_meta->child("meta");
-            if(l_metaRoot)
-            {
-                for(pugi::xml_node l_node = l_metaRoot.child("script"); l_node; l_node = l_node.next_sibling("script"))
-                {
-                    pugi::xml_attribute l_attrib = l_node.attribute("src");
-                    if(l_attrib)
-                    {
-                        std::string l_path(ms_instance->GetConfigManager()->GetScriptsDirectory());
-                        l_path.push_back('/');
-                        l_path.append(l_attrib.as_string());
-                        ms_instance->m_luaManager->LoadScript(l_path);
-                    }
-                }
-            }
-        }
-        else
-        {
-            std::string l_error("Unable to find '");
-            l_error.append(l_metaPath);
-            l_error.push_back('\'');
-            ms_instance->GetLogManager()->Log(l_error);
-        }
-        delete l_meta;
+        ms_instance->GetLuaManager()->LoadDefaultScripts();
 
         if(ms_serverStartCallback) (*ms_serverStartCallback)();
         ms_instance->m_luaManager->GetEventManager()->CallEvent(EventManager::EME_onServerStart, ms_instance->m_luaArguments);

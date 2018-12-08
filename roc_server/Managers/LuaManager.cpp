@@ -5,6 +5,7 @@
 #include "Managers/EventManager.h"
 #include "Lua/LuaArguments.h"
 
+#include "Managers/ConfigManager.h"
 #include "Managers/LogManager.h"
 #include "Elements/Element.h"
 #include "Lua/LuaDefs/LuaClientDef.h"
@@ -54,6 +55,40 @@ ROC::LuaManager::~LuaManager()
 {
     delete m_eventManager;
     lua_close(m_vm);
+}
+
+void ROC::LuaManager::LoadDefaultScripts()
+{
+    // Load default scripts
+    std::string l_metaPath(m_core->GetConfigManager()->GetScriptsDirectory());
+    l_metaPath.append("/meta.xml");
+    pugi::xml_document *l_meta = new pugi::xml_document();
+    if(l_meta->load_file(l_metaPath.c_str()))
+    {
+        pugi::xml_node l_metaRoot = l_meta->child("meta");
+        if(l_metaRoot)
+        {
+            for(pugi::xml_node l_node = l_metaRoot.child("script"); l_node; l_node = l_node.next_sibling("script"))
+            {
+                pugi::xml_attribute l_attrib = l_node.attribute("src");
+                if(l_attrib)
+                {
+                    std::string l_path(m_core->GetConfigManager()->GetScriptsDirectory());
+                    l_path.push_back('/');
+                    l_path.append(l_attrib.as_string());
+                    LoadScript(l_path);
+                }
+            }
+        }
+    }
+    else
+    {
+        std::string l_error("Unable to find '");
+        l_error.append(l_metaPath);
+        l_error.push_back('\'');
+        m_core->GetLogManager()->Log(l_error);
+    }
+    delete l_meta;
 }
 
 bool ROC::LuaManager::LoadScript(const std::string &f_script, bool f_asFile)

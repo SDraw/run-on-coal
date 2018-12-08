@@ -27,6 +27,8 @@ protected:
     explicit LuaManager(Core *f_core);
     ~LuaManager();
 
+    void LoadDefaultScripts();
+
     void DoPulse();
     void CallFunction(const LuaFunction &f_func, const LuaArguments *f_args);
 
