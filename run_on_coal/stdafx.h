@@ -42,7 +42,6 @@
 #include "lua.hpp"
 #include "pugixml.hpp"
 #include "zlib.h"
-#include "IntervalTree.h"
 
 #include "MessageIdentifiers.h"
 #include "BitStream.h"

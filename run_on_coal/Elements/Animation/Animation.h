@@ -23,9 +23,8 @@ class Animation final : public Element
         unsigned int m_duration = 0U; // Duration between left and right keyframes in milliseconds
         bool m_static = false;
     };
-    std::vector<IntervalTree<keyframeData>*> m_boneIntervals;
+    std::vector<std::vector<keyframeData>> m_boneIntervals;
     BoneFrameData *m_tempFrameData;
-    std::vector<Interval<keyframeData>> m_searchResult;
 
     bool m_loaded;
 
