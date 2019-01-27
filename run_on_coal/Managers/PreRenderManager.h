@@ -15,8 +15,8 @@ class PreRenderManager final
     Core *m_core;
 
     TreeNode *m_modelTreeRoot;
-    std::unordered_map<Model*, TreeNode*> m_modelToNodeMap;
-    std::unordered_map<Model*, TreeNode*>::iterator m_modelToNodeMapEnd;
+    std::map<Model*, TreeNode*> m_modelToNodeMap;
+    std::map<Model*, TreeNode*>::iterator m_modelToNodeMapEnd;
 
     std::vector<TreeNode*> m_nodeStack;
 

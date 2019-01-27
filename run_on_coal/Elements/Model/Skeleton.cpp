@@ -315,7 +315,7 @@ void ROC::Skeleton::Update(Animation *f_anim, unsigned int f_tick, float f_blend
 {
     f_anim->GetData(f_tick, m_boneVector, f_blend);
     for(auto iter : m_fastBoneVector) iter->Update();
-    for(size_t i = 0; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_boneVector[i]->GetPoseMatrix(), sizeof(glm::mat4));
+    for(size_t i = 0U; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_boneVector[i]->GetPoseMatrix(), sizeof(glm::mat4));
 }
 
 void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model)

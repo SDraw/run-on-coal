@@ -10,6 +10,7 @@
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Camera.h"
 #include "Elements/Light.h"
+#include "Elements/Model/Model.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Scene.h"
 #include "Elements/Shader/Shader.h"
@@ -19,6 +20,8 @@
 void ROC::LuaSceneDef::Init(lua_State *f_vm)
 {
     LuaUtils::AddClass(f_vm, "Scene", Create);
+    LuaUtils::AddClassMethod(f_vm, "addModel", AddModel);
+    LuaUtils::AddClassMethod(f_vm, "removeModel", RemoveModel);
     LuaUtils::AddClassMethod(f_vm, "setCamera", SetCamera);
     LuaUtils::AddClassMethod(f_vm, "getCamera", GetCamera);
     LuaUtils::AddClassMethod(f_vm, "removeCamera", RemoveCamera);
@@ -34,6 +37,7 @@ void ROC::LuaSceneDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setSkyGradient", SetSkyGradient);
     LuaUtils::AddClassMethod(f_vm, "getSkyGradient", GetSkyGradient);
     LuaUtils::AddClassMethod(f_vm, "setActive", SetActive);
+    LuaUtils::AddClassMethod(f_vm, "draw", Draw);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
@@ -44,6 +48,39 @@ int ROC::LuaSceneDef::Create(lua_State *f_vm)
     ArgReader argStream(f_vm);
     Scene *l_scene = Core::GetCore()->GetElementManager()->CreateScene();
     l_scene ? argStream.PushElement(l_scene) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaSceneDef::AddModel(lua_State *f_vm)
+{
+    // bool Scene:addModel(element model)
+    Scene *l_scene;
+    Model *l_model;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    argStream.ReadElement(l_model);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = Core::GetCore()->GetInheritManager()->AddModelToScene(l_scene, l_model);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+int ROC::LuaSceneDef::RemoveModel(lua_State *f_vm)
+{
+    // bool Scene:removeModel(element model)
+    Scene *l_scene;
+    Model *l_model;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    argStream.ReadElement(l_model);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = Core::GetCore()->GetInheritManager()->RemoveModelFromScene(l_scene, l_model);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
@@ -263,6 +300,21 @@ int ROC::LuaSceneDef::SetActive(lua_State *f_vm)
     {
         Core::GetCore()->GetRenderManager()->SetActiveScene(l_scene);
         argStream.PushBoolean(true);
+    }
+    else argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int ROC::LuaSceneDef::Draw(lua_State *f_vm)
+{
+    // bool Scene:draw()
+    Scene *l_scene;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_scene);
+    if(!argStream.HasErrors())
+    {
+        Core::GetCore()->GetRenderManager()->DrawScene(l_scene);
+        argStream.PushBoolean(l_scene->IsActive());
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

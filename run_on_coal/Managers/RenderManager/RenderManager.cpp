@@ -142,40 +142,54 @@ void ROC::RenderManager::UpdateViewportSize(const glm::ivec2 &f_size)
     std::memcpy(&m_viewportSize, &f_size, sizeof(glm::ivec2));
 }
 
-void ROC::RenderManager::Render(Model *f_model)
+void ROC::RenderManager::DrawScene(Scene *f_scene)
 {
-    if(!m_locked && m_activeScene && f_model->HasGeometry())
+    if(!m_locked && (m_activeScene == f_scene))
     {
         if(m_activeScene->IsValidForRender())
         {
-            if(m_activeScene->GetCamera()->IsInFrustum(f_model->GetFullMatrix(), f_model->GetBoundSphereRadius()))
+            Shader *l_shader = m_activeScene->GetShader();
+            RenderTarget *l_renderTarget = m_activeScene->GetRenderTarget();
+            bool l_skipTextures = (l_renderTarget ? l_renderTarget->IsShadowType() : false);
+
+            auto l_distantModelVector = m_activeScene->GetDistantModels();
+            for(const auto l_distantModel : l_distantModelVector)
             {
-                Shader *l_shader = m_activeScene->GetShader();
-                l_shader->SetModelMatrix(f_model->GetFullMatrix());
-
-                if(f_model->HasSkeleton())
+                if(l_distantModel->m_visible)
                 {
-                    Shader::SetBoneMatrices(f_model->GetSkeleton()->GetPoseMatrices());
-                    l_shader->SetAnimated(true);
-                }
-                else l_shader->SetAnimated(false);
-
-                for(auto iter : f_model->GetGeometry()->GetMaterialVector())
-                {
-                    if(iter->HasDepth()) EnableDepth();
-                    else
+                    Model *l_model = l_distantModel->m_model;
+                    if(l_model->HasGeometry())
                     {
-                        if(m_skipNoDepthMaterials) continue;
-                        else DisableDepth();
-                    }
-                    iter->IsTransparent() ? EnableBlending() : DisableBlending();
-                    iter->IsDoubleSided() ? DisableCulling() : EnableCulling();
+                        l_shader->SetModelMatrix(l_model->GetFullMatrix());
 
-                    Texture *l_texture = iter->HasTexture() ? iter->GetTexture() : m_dummyTexture;
-                    l_texture->Bind();
-                    l_shader->SetMaterialType(static_cast<int>(iter->GetType()));
-                    l_shader->SetMaterialParam(iter->GetParams());
-                    iter->Draw();
+                        if(l_model->HasSkeleton())
+                        {
+                            Shader::SetBoneMatrices(l_model->GetSkeleton()->GetPoseMatrices());
+                            l_shader->SetAnimated(true);
+                        }
+                        else l_shader->SetAnimated(false);
+
+                        for(const auto l_material : l_model->GetGeometry()->GetMaterialVector())
+                        {
+                            if(l_material->HasDepth()) EnableDepth();
+                            else
+                            {
+                                if(m_skipNoDepthMaterials) continue;
+                                else DisableDepth();
+                            }
+                            l_material->IsTransparent() ? EnableBlending() : DisableBlending();
+                            l_material->IsDoubleSided() ? DisableCulling() : EnableCulling();
+
+                            if(!l_skipTextures)
+                            {
+                                Texture *l_texture = l_material->HasTexture() ? l_material->GetTexture() : m_dummyTexture;
+                                l_texture->Bind();
+                            }
+                            l_shader->SetMaterialType(static_cast<int>(l_material->GetType()));
+                            l_shader->SetMaterialParam(l_material->GetParams());
+                            l_material->Draw();
+                        }
+                    }
                 }
             }
         }
@@ -243,7 +257,7 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
                 m_quad3D->SetTransformation(f_pos, f_rot, f_size);
 
                 Shader *l_shader = m_activeScene->GetShader();
-                l_shader->SetAnimated(0U);
+                l_shader->SetAnimated(false);
                 l_shader->SetModelMatrix(m_quad3D->GetMatrix());
                 l_shader->SetMaterialParam(g_EmptyVec4);
 
@@ -270,7 +284,7 @@ void ROC::RenderManager::DrawPhysics(float f_width)
         {
             Shader *l_shader = m_activeScene->GetShader();
             l_shader->SetModelMatrix(g_IdentityMatrix);
-            l_shader->SetAnimated(0U);
+            l_shader->SetAnimated(false);
             l_shader->SetMaterialType((Material::MPB_Depth | Material::MPB_Doubleside));
             l_shader->SetMaterialParam(g_EmptyVec4);
 

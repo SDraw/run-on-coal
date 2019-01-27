@@ -6,6 +6,8 @@ namespace ROC
 class LuaSceneDef final
 {
     static int Create(lua_State *f_vm);
+    static int AddModel(lua_State *f_vm);
+    static int RemoveModel(lua_State *f_vm);
     static int SetCamera(lua_State *f_vm);
     static int GetCamera(lua_State *f_vm);
     static int RemoveCamera(lua_State *f_vm);
@@ -21,6 +23,7 @@ class LuaSceneDef final
     static int SetSkyGradient(lua_State *f_vm);
     static int GetSkyGradient(lua_State *f_vm);
     static int SetActive(lua_State *f_vm);
+    static int Draw(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

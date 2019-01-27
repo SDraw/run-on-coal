@@ -64,10 +64,10 @@ class RenderManager final
 public:
     void SetActiveScene(Scene *f_scene);
 
-    void Render(Model *f_model);
     void Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color);
     void Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
     void Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
+    void DrawScene(Scene *f_scene);
     void DrawPhysics(float f_width);
 
     void ClearRenderArea(bool f_depth = true, bool f_color = true);

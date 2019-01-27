@@ -88,6 +88,9 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
                 case Element::ET_Collision:
                     reinterpret_cast<Model*>(f_child)->SetCollision(nullptr);
                     break;
+                case Element::ET_Scene:
+                    reinterpret_cast<Scene*>(f_parent)->RemoveModel(reinterpret_cast<Model*>(f_child));
+                    break;
             }
         } break;
         case Element::ET_Camera:
@@ -240,7 +243,27 @@ bool ROC::InheritanceManager::RemoveModelCollision(Model *f_model)
     }
     return l_result;
 }
-
+bool ROC::InheritanceManager::AddModelToScene(Scene *f_scene, Model *f_model)
+{
+    bool l_result = false;
+    if(!f_scene->HasModel(f_model))
+    {
+        AddInheritance(f_model, f_scene);
+        f_scene->AddModel(f_model);
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::InheritanceManager::RemoveModelFromScene(Scene *f_scene, Model *f_model)
+{
+    bool l_result = false;
+    if(f_scene->HasModel(f_model))
+    {
+        RemoveInheritance(f_model, f_scene);
+        l_result = true;
+    }
+    return l_result;
+}
 bool ROC::InheritanceManager::SetSceneCamera(Scene *f_scene, Camera *f_camera)
 {
     bool l_result = false;

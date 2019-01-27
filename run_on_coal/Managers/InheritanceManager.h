@@ -37,6 +37,8 @@ public:
     bool SetModelCollision(Model *f_model, Collision *f_col);
     bool RemoveModelCollision(Model *f_model);
 
+    bool AddModelToScene(Scene *f_scene, Model *f_model);
+    bool RemoveModelFromScene(Scene *f_scene, Model *f_model);
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool RemoveSceneCamera(Scene *f_scene);
     bool SetSceneLight(Scene *f_scene, Light *f_light);
