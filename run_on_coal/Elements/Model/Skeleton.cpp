@@ -133,7 +133,7 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
             }
 
             btTransform l_boneTransform, l_bodyOffset = btTransform::getIdentity(), l_bodyTransform;
-            l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[iter->m_boneID]->GetFullMatrix()));
+            l_boneTransform.setFromOpenGLMatrix(glm::value_ptr(m_boneVector[static_cast<size_t>(iter->m_boneID)]->GetFullMatrix()));
 
             l_bodyOffset.setOrigin(btVector3(iter->m_offset.x, iter->m_offset.y, iter->m_offset.z));
             l_bodyOffset.setRotation(btQuaternion(iter->m_offsetRotation.x, iter->m_offsetRotation.y, iter->m_offsetRotation.z, iter->m_offsetRotation.w));

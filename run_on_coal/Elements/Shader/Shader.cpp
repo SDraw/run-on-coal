@@ -56,10 +56,7 @@ ROC::Shader::~Shader()
         GLBinder::ResetShaderProgram(m_program);
         glDeleteProgram(m_program);
     }
-    for(auto iter : m_defaultUniforms)
-    {
-        if(iter) delete iter;
-    }
+    for(auto iter : m_defaultUniforms) delete iter;
     for(auto &iter : m_uniformMap) delete iter.second;
     m_uniformMap.clear();
     delete m_bindPool;

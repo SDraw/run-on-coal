@@ -39,7 +39,7 @@ int ROC::Pool::Allocate()
     }
     if(l_allocated != -1)
     {
-        for(size_t i = static_cast<size_t>(l_allocated + 1); i < m_size; i++)
+        for(size_t i = static_cast<size_t>(l_allocated)+1U; i < m_size; i++)
         {
             if(m_poolData[i] == 0U)
             {

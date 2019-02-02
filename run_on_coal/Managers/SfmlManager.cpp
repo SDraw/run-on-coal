@@ -58,7 +58,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     if(glGetString(GL_VERSION) == NULL)
     {
-        l_log.assign("SFML error: Unable to create OpenGL ");
+        l_log.assign("SFML: Unable to create OpenGL ");
         l_log.append(std::to_string(m_contextSettings.majorVersion));
         l_log.push_back('.');
         l_log.append(std::to_string(m_contextSettings.minorVersion));
@@ -73,7 +73,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         sf::ContextSettings l_createdContextSettings = m_window->getSettings();
         if(l_createdContextSettings.majorVersion * 10U + l_createdContextSettings.minorVersion < ROC_OPENGL_MIN_VERSION)
         {
-            l_log.assign("Minimal supported version of OpenGL is ");
+            l_log.assign("SFML: Minimal supported version of OpenGL is ");
             l_log.append(ROC_OPENGL_MIN_VERSION_STRING);
             m_core->GetLogManager()->Log(l_log);
 
@@ -89,7 +89,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     GLenum l_error = glewInit();
     if(l_error != GLEW_OK)
     {
-        l_log.assign("GLEW error: ");
+        l_log.assign("GLEW: ");
         l_log.append(reinterpret_cast<const char*>(glewGetErrorString(l_error)));
         m_core->GetLogManager()->Log(l_log);
 

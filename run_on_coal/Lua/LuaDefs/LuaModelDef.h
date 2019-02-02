@@ -14,7 +14,6 @@ class LuaModelDef final
     static int SetScale(lua_State *f_vm);
     static int GetScale(lua_State *f_vm);
     static int GetMatrix(lua_State *f_vm);
-    //static int Draw(lua_State *f_vm);
     static int Attach(lua_State *f_vm);
     static int Detach(lua_State *f_vm);
     static int GetParent(lua_State *f_vm);

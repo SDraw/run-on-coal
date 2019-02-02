@@ -4,7 +4,13 @@
 
 #include "Utils/GLBinder.h"
 
+#if defined _WIN64
+#define ROC_PHYSICSDRAWER_MAX_LINES 65536ULL
+#elif defined _WIN32
 #define ROC_PHYSICSDRAWER_MAX_LINES 65536U
+#else
+#define ROC_PHYSICSDRAWER_MAX_LINES 65536
+#endif
 
 ROC::PhysicsDrawer::PhysicsDrawer()
 {
@@ -24,7 +30,7 @@ ROC::PhysicsDrawer::PhysicsDrawer()
     glVertexAttribPointer(PDBI_Color, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 ROC::PhysicsDrawer::~PhysicsDrawer()
-{ 
+{
     for(size_t i = 0U; i < PDBI_BufferCount; i++) GLBinder::ResetArrayBuffer(m_VBO[i]);
     glDeleteBuffers(static_cast<int>(PDBI_BufferCount), m_VBO);
 
@@ -57,7 +63,7 @@ void ROC::PhysicsDrawer::Draw(float f_width)
         GLBinder::BindVertexArray(m_VAO);
         while(!m_lines.empty())
         {
-            size_t l_count = m_lines.size() % ROC_PHYSICSDRAWER_MAX_LINES; // Count is same for m_colors
+            size_t l_count = std::min(ROC_PHYSICSDRAWER_MAX_LINES, m_lines.size()); // Count is same for m_colors
 
             GLBinder::BindArrayBuffer(m_VBO[PDBI_Vertex]);
             glBufferSubData(GL_ARRAY_BUFFER, 0, l_count*sizeof(glm::vec3), m_lines.data());

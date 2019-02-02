@@ -45,7 +45,6 @@ void ROC::LuaModelDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setScale", SetScale);
     LuaUtils::AddClassMethod(f_vm, "getScale", GetScale);
     LuaUtils::AddClassMethod(f_vm, "getMatrix", GetMatrix);
-    //LuaUtils::AddClassMethod(f_vm, "draw", Draw);
     LuaUtils::AddClassMethod(f_vm, "attach", Attach);
     LuaUtils::AddClassMethod(f_vm, "detach", Detach);
     LuaUtils::AddClassMethod(f_vm, "getParent", GetParent);
@@ -206,20 +205,6 @@ int ROC::LuaModelDef::GetMatrix(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-//int ROC::LuaModelDef::Draw(lua_State *f_vm)
-//{
-//    // bool Model:draw()
-//    Model *l_model;
-//    ArgReader argStream(f_vm);
-//    argStream.ReadElement(l_model);
-//    if(!argStream.HasErrors())
-//    {
-//        Core::GetCore()->GetRenderManager()->Render(l_model);
-//        argStream.PushBoolean(true);
-//    }
-//    else argStream.PushBoolean(false);
-//    return argStream.GetReturnValue();
-//}
 int ROC::LuaModelDef::Attach(lua_State *f_vm)
 {
     // bool Model:attach(element parentModel [, int boneIndex = -1 ])

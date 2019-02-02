@@ -51,7 +51,7 @@ ROC::VRManager::VRManager(Core *f_core)
         m_vrSystem = vr::VR_Init(&l_hmdError, vr::EVRApplicationType::VRApplication_Scene);
         if(l_hmdError != vr::EVRInitError::VRInitError_None)
         {
-            MessageBoxA(NULL, "Unable to start application in VR mode", NULL, MB_OK | MB_ICONEXCLAMATION);
+            MessageBoxA(NULL, "OpenVR: Unable to start application in VR mode", NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
         }
         Camera::SetVRSystem(m_vrSystem);
@@ -59,15 +59,23 @@ ROC::VRManager::VRManager(Core *f_core)
         m_vrCompositor = vr::VRCompositor();
         if(!m_vrCompositor)
         {
-            MessageBoxA(NULL, "Unable to initialize SteamVR compositor", NULL, MB_OK | MB_ICONEXCLAMATION);
+            MessageBoxA(NULL, "OpenVR: Unable to initialize SteamVR compositor", NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
         }
 
         m_vrSystem->GetRecommendedRenderTargetSize(&m_targetSize.x, &m_targetSize.y);
         m_leftEyeRT = new RenderTarget();
-        m_leftEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear);
+        if(!m_leftEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
+        {
+            MessageBoxA(NULL, "OpenVR: Unable to create render target for left eye", NULL, MB_OK | MB_ICONEXCLAMATION);
+            exit(EXIT_FAILURE);
+        }
         m_rightEyeRT = new RenderTarget();
-        m_rightEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear);
+        if(!m_rightEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
+        {
+            MessageBoxA(NULL, "OpenVR: Unable to create render target for right eye", NULL, MB_OK | MB_ICONEXCLAMATION);
+            exit(EXIT_FAILURE);
+        }
 
         m_vrTexture[0] = { UIntToPtr(m_leftEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         m_vrTexture[1] = { UIntToPtr(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
