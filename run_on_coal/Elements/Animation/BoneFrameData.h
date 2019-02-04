@@ -18,8 +18,6 @@ public:
 
     void SetInterpolated(BoneFrameData *f_data, float f_blend);
     void SetInterpolated(BoneFrameData *f_leftData, BoneFrameData *f_rightData, float f_blend);
-
-    static bool Copy(const BoneFrameData *f_src, BoneFrameData *f_dst);
 };
 
 }
