@@ -187,7 +187,7 @@ int ROC::LuaFileDef::Delete(lua_State *f_vm)
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        bool l_result = File::Delete(Core::GetCore(), l_path);
+        bool l_result = File::Delete(l_path);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -202,7 +202,7 @@ int ROC::LuaFileDef::Rename(lua_State *f_vm)
     argStream.ReadText(l_new);
     if(!argStream.HasErrors() && !l_old.empty() && !l_new.empty())
     {
-        bool l_result = File::Rename(Core::GetCore(), l_old, l_new);
+        bool l_result = File::Rename(l_old, l_new);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

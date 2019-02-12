@@ -22,7 +22,6 @@
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager/RenderManager.h"
-#include "Utils/PathUtils.h"
 
 ROC::ElementManager::ElementManager(Core *f_core)
 {
@@ -75,11 +74,7 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
 {
     Animation *l_anim = new Animation();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_anim->Load(l_path)) AddElementToSet(l_anim);
+    if(l_anim->Load(f_path)) AddElementToSet(l_anim);
     else
     {
         delete l_anim;
@@ -92,18 +87,14 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
 {
     Geometry *l_geometry = new Geometry(f_async);
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
     if(f_async)
     {
         AddElementToSet(l_geometry);
-        m_core->GetAsyncManager()->AddGeometryToQueue(l_geometry, l_path);
+        m_core->GetAsyncManager()->AddGeometryToQueue(l_geometry, f_path);
     }
     else
     {
-        if(l_geometry->Load(l_path)) AddElementToSet(l_geometry);
+        if(l_geometry->Load(f_path)) AddElementToSet(l_geometry);
         else
         {
             delete l_geometry;
@@ -138,24 +129,7 @@ ROC::Shader* ROC::ElementManager::CreateShader(const std::string &f_vpath, const
 {
     Shader *l_shader = new Shader();
 
-    std::string l_path[3] = { f_vpath, f_fpath, f_gpath };
-
-    if(!f_vpath.empty())
-    {
-        PathUtils::EscapePath(l_path[0]);
-        l_path[0].insert(0U, m_core->GetWorkingDirectory());
-    }
-    if(!f_fpath.empty())
-    {
-        PathUtils::EscapePath(l_path[1]);
-        l_path[1].insert(0U, m_core->GetWorkingDirectory());
-    }
-    if(!f_gpath.empty())
-    {
-        PathUtils::EscapePath(l_path[2]);
-        l_path[2].insert(0U, m_core->GetWorkingDirectory());
-    }
-    if(l_shader->Load(l_path[0], l_path[1], l_path[2])) AddElementToSet(l_shader);
+    if(l_shader->Load(f_vpath, f_fpath, f_gpath)) AddElementToSet(l_shader);
     else
     {
         const std::string &l_shaderError = l_shader->GetError();
@@ -181,11 +155,7 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path)
 {
     Sound *l_sound = new Sound();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_sound->Load(l_path)) AddElementToSet(l_sound);
+    if(l_sound->Load(f_path)) AddElementToSet(l_sound);
     else
     {
         delete l_sound;
@@ -212,11 +182,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
 {
     Texture *l_texture = new Texture();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_texture->Load(l_path, f_type, f_filter, f_compress)) AddElementToSet(l_texture);
+    if(l_texture->Load(f_path, f_type, f_filter, f_compress)) AddElementToSet(l_texture);
     else
     {
         delete l_texture;
@@ -228,16 +194,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
 {
     Texture *l_texture = new Texture();
 
-    std::vector<std::string> l_path;
-    for(auto iter : f_path)
-    {
-        std::string l_iterPath(iter);
-        PathUtils::EscapePath(iter);
-        l_iterPath.insert(0U, m_core->GetWorkingDirectory());
-        l_path.push_back(l_iterPath);
-    }
-
-    if(l_texture->LoadCubemap(l_path, f_filter, f_compress)) AddElementToSet(l_texture);
+    if(l_texture->LoadCubemap(f_path, f_filter, f_compress)) AddElementToSet(l_texture);
     else
     {
         delete l_texture;
@@ -250,11 +207,7 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
 {
     Font *l_font = new Font();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_font->Load(l_path, f_size, f_atlas, f_filter)) AddElementToSet(l_font);
+    if(l_font->Load(f_path, f_size, f_atlas, f_filter)) AddElementToSet(l_font);
     else
     {
         delete l_font;
@@ -267,11 +220,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_file->Create(l_path, f_path)) AddElementToSet(l_file);
+    if(l_file->Create(f_path)) AddElementToSet(l_file);
     else
     {
         delete l_file;
@@ -283,11 +232,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_file->Open(l_path, f_path, f_ro)) AddElementToSet(l_file);
+    if(l_file->Open(f_path, f_ro)) AddElementToSet(l_file);
     else
     {
         delete l_file;

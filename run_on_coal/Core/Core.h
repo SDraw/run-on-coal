@@ -39,7 +39,6 @@ class Core final
     SoundManager *m_soundManager;
     VRManager *m_vrManager;
 
-    std::string m_workingDir;
     bool m_state;
     LuaArguments *m_luaArguments;
 
@@ -57,8 +56,6 @@ public:
 
     static inline void SetEngineStartCallback(OnEngineStartCallback f_callback) { ms_engineStartCallback = f_callback; }
     inline void SetEngineStopCallback(OnEngineStopCallback f_callback) { m_engineStopCallback = f_callback; }
-
-    inline const std::string& GetWorkingDirectory() const { return m_workingDir; }
 
     inline ConfigManager* GetConfigManager() const { return m_configManager; }
     inline ElementManager* GetElementManager() const { return m_elementManager; }

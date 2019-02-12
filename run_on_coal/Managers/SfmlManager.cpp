@@ -11,7 +11,6 @@
 #include "Managers/PhysicsManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Elements/Shader/Shader.h"
-#include "Utils/PathUtils.h"
 
 #define ROC_OPENGL_MIN_VERSION 31U
 #define ROC_OPENGL_MIN_VERSION_STRING "3.1"
@@ -51,8 +50,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_windowStyle = (l_configManager->IsFullscreenEnabled() ? sf::Style::Fullscreen : sf::Style::Default);
 
-    m_window = new sf::Window();
-    m_window->create(m_windowVideoMode, "RunOnCoal", m_windowStyle, m_contextSettings);
+    m_window = new sf::Window(m_windowVideoMode, "RunOnCoal Engine Application", m_windowStyle, m_contextSettings);
     m_window->setActive(true);
     m_active = true;
 
@@ -62,7 +60,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         l_log.append(std::to_string(m_contextSettings.majorVersion));
         l_log.push_back('.');
         l_log.append(std::to_string(m_contextSettings.minorVersion));
-        l_log.append(" context. Check supported version for your videocard");
+        l_log.append(" context. Check supported version for your videocard.");
         m_core->GetLogManager()->Log(l_log);
 
         MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
@@ -173,12 +171,8 @@ bool ROC::SfmlManager::SetIcon(const std::string &f_path)
 {
     bool l_result = false;
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
     sf::Image l_image;
-    if(l_image.loadFromFile(l_path))
+    if(l_image.loadFromFile(f_path))
     {
         sf::Vector2u l_size = l_image.getSize();
         m_window->setIcon(l_size.x, l_size.y, l_image.getPixelsPtr());

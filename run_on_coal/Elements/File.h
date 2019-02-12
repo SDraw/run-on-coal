@@ -5,8 +5,6 @@
 namespace ROC
 {
 
-class Core;
-
 class File final : public Element
 {
     enum FileMode
@@ -33,13 +31,13 @@ public:
 
     inline const std::string& GetPath() const { return m_path; }
 
-    static bool Delete(Core *f_core, const std::string &f_path);
-    static bool Rename(Core *f_core, const std::string &f_old, const std::string &f_new);
+    static bool Delete(const std::string &f_path);
+    static bool Rename(const std::string &f_old, const std::string &f_new);
 protected:
     File();
     ~File();
-    bool Create(const std::string &f_path, const std::string &f_rPath);
-    bool Open(const std::string &f_path, const std::string &f_rPath, bool f_ro);
+    bool Create(const std::string &f_path);
+    bool Open(const std::string &f_path, bool f_ro);
 
     friend class ElementManager;
 };

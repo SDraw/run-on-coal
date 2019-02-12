@@ -6,7 +6,6 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <regex>
 #include <vector>
 #include <queue>
 #include <unordered_map>
@@ -16,7 +15,6 @@
 #include <thread>
 #include <mutex>
 #include <ctime>
-#include <direct.h>
 
 #include "GL/glew.h"
 

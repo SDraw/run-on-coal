@@ -1,9 +1,6 @@
 #include "stdafx.h"
 
 #include "Elements/File.h"
-#include "Core/Core.h"
-
-#include "Utils/PathUtils.h"
 
 ROC::File::File()
 {
@@ -20,7 +17,7 @@ ROC::File::~File()
     }
 }
 
-bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
+bool ROC::File::Create(const std::string &f_path)
 {
     if(!m_file)
     {
@@ -33,12 +30,12 @@ bool ROC::File::Create(const std::string &f_path, const std::string &f_rPath)
         else
         {
             m_type = FM_Write;
-            m_path.assign(f_rPath);
+            m_path.assign(f_path);
         }
     }
     return (m_file != nullptr);
 }
-bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool f_ro)
+bool ROC::File::Open(const std::string &f_path, bool f_ro)
 {
     if(!m_file)
     {
@@ -51,7 +48,7 @@ bool ROC::File::Open(const std::string &f_path, const std::string &f_rPath, bool
         else
         {
             m_type = f_ro ? FM_Read : FM_Write;
-            m_path.assign(f_rPath);
+            m_path.assign(f_path);
         }
     }
     return (m_file != nullptr);
@@ -129,21 +126,11 @@ void ROC::File::Flush()
     if(m_file) m_file->flush();
 }
 
-bool ROC::File::Delete(Core *f_core, const std::string &f_path)
+bool ROC::File::Delete(const std::string &f_path)
 {
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, f_core->GetWorkingDirectory());
-    return !std::remove(l_path.c_str());
+    return !std::remove(f_path.c_str());
 }
-bool ROC::File::Rename(Core *f_core, const std::string &f_old, const std::string &f_new)
+bool ROC::File::Rename(const std::string &f_old, const std::string &f_new)
 {
-    std::string l_pathOld(f_old), l_pathNew(f_new);
-
-    PathUtils::EscapePath(l_pathOld);
-    l_pathOld.insert(0U, f_core->GetWorkingDirectory());
-    PathUtils::EscapePath(l_pathNew);
-    l_pathNew.insert(0U, f_core->GetWorkingDirectory());
-
-    return !std::rename(l_pathOld.c_str(), l_pathNew.c_str());
+    return !std::rename(f_old.c_str(), f_new.c_str());
 }

@@ -24,14 +24,6 @@ ROC::OnEngineStartCallback ROC::Core::ms_engineStartCallback = nullptr;
 
 ROC::Core::Core()
 {
-    std::string l_appPath(_MAX_PATH, '\0');
-    _getcwd(&l_appPath[0], _MAX_PATH);
-    l_appPath.erase(std::remove(l_appPath.begin(), l_appPath.end(), '\0'), l_appPath.end());
-
-    std::regex l_regex("\\\\");
-    std::regex_replace(std::back_inserter(m_workingDir), l_appPath.begin(), l_appPath.end(), l_regex, "/");
-    m_workingDir.push_back('/');
-
     m_configManager = new ConfigManager();
     m_logManager = new LogManager(this);
     m_inheritManager = new InheritanceManager(this);

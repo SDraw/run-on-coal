@@ -315,7 +315,6 @@
     <ClInclude Include="Utils\GLBinder.h" />
     <ClInclude Include="Utils\LuaUtils.h" />
     <ClInclude Include="Utils\MathUtils.h" />
-    <ClInclude Include="Utils\PathUtils.h" />
     <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\SystemTick.h" />
     <ClInclude Include="Utils\Transformation.h" />
@@ -429,7 +428,6 @@
     </ClCompile>
     <ClCompile Include="Utils\LuaUtils.cpp" />
     <ClCompile Include="Utils\MathUtils.cpp" />
-    <ClCompile Include="Utils\PathUtils.cpp" />
     <ClCompile Include="Utils\Pool.cpp" />
     <ClCompile Include="Utils\SystemTick.cpp" />
     <ClCompile Include="Utils\Transformation.cpp" />

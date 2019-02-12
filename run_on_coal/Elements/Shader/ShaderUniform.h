@@ -13,8 +13,8 @@ class ShaderUniform final
         int m_int[4];
         unsigned int m_bool[4];
     };
-    bool m_isActive;
-    bool m_needUpdate;
+    bool m_active;
+    bool m_updated;
 
     ShaderUniform(const ShaderUniform &that);
     ShaderUniform& operator=(const ShaderUniform &that);
@@ -67,7 +67,7 @@ protected:
     ShaderUniform(unsigned int f_type, int f_uniform);
     ~ShaderUniform();
 
-    inline void SetActive(bool f_active) { m_isActive = f_active; }
+    inline void SetActive(bool f_active) { m_active = f_active; }
 
     bool SetSampler(int f_sampler);
 

@@ -201,9 +201,6 @@
     <ClCompile Include="Utils\zlibUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\PathUtils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\EnumUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -440,9 +437,6 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Utils\zlibUtils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\PathUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Utils\EnumUtils.h">
