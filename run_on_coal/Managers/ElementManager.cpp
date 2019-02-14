@@ -58,7 +58,6 @@ ROC::Scene* ROC::ElementManager::CreateScene()
 ROC::Camera* ROC::ElementManager::CreateCamera(int f_type)
 {
     Camera *l_camera = new Camera(f_type);
-
     AddElementToSet(l_camera);
     return l_camera;
 }

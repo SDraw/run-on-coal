@@ -63,7 +63,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
     Font::CreateLibrary();
     Font::CreateVAO();
     Shader::UpdateDrawableMaxCount();
-    Shader::CreateBonesUBO();
 
     m_activeScene = nullptr;
     m_quad2D = new Quad2D();
@@ -98,7 +97,6 @@ ROC::RenderManager::~RenderManager()
     delete m_luaArguments;
     Font::DestroyVAO();
     Font::DestroyLibrary();
-    Shader::DestroyBonesUBO();
 }
 
 void ROC::RenderManager::SetActiveScene(Scene *f_scene)
@@ -164,7 +162,7 @@ void ROC::RenderManager::DrawScene(Scene *f_scene)
 
                         if(l_model->HasSkeleton())
                         {
-                            Shader::SetBoneMatrices(l_model->GetSkeleton()->GetPoseMatrices());
+                            l_shader->SetBoneMatrices(l_model->GetSkeleton()->GetPoseMatrices());
                             l_shader->SetAnimated(true);
                         }
                         else l_shader->SetAnimated(false);

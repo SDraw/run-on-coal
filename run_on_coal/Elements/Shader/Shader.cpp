@@ -12,7 +12,7 @@ namespace ROC
 {
 
 const std::vector<std::string> g_DefaultUniformsTable = {
-    "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBonesUniform", "gBoneMatrix", "gBoneMatrix[0]",
+    "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBoneMatrix",
     "gLightColor", "gLightDirection", "gLightParam",
     "gCameraPosition", "gCameraDirection",
     "gSkyGradientDown", "gSkyGradientUp",
@@ -23,18 +23,15 @@ const std::vector<std::string> g_DefaultUniformsTable = {
 
 }
 
-#define ROC_SHADER_BONES_BINDPOINT 0U
 #if defined _WIN64
-#define ROC_SHADER_BONES_COUNT 227ULL
+#define ROC_SHADER_BONES_COUNT 128ULL
 #elif defined _WIN32
-#define ROC_SHADER_BONES_COUNT 227U
+#define ROC_SHADER_BONES_COUNT 128U
 #else
-#define ROC_SHADER_BONES_COUNT 227
+#define ROC_SHADER_BONES_COUNT 128
 #endif
 
 int ROC::Shader::ms_drawableMaxCount = 0;
-GLuint ROC::Shader::ms_bonesUBO = 0U;
-bool ROC::Shader::ms_uboFix = false;
 
 ROC::Shader::Shader()
 {
@@ -232,6 +229,8 @@ void ROC::Shader::SetupUniformsAndLocations()
     FindDefaultUniform(SDU_View, "gViewMatrix", ShaderUniform::SUT_Mat4);
     FindDefaultUniform(SDU_ViewProjection, "gViewProjectionMatrix", ShaderUniform::SUT_Mat4);
     FindDefaultUniform(SDU_Model, "gModelMatrix", ShaderUniform::SUT_Mat4);
+    FindDefaultUniform(SDU_BoneMatrices, "gBoneMatrix", ShaderUniform::SUT_Mat4);
+
     // Camera
     FindDefaultUniform(SDU_CameraPosition, "gCameraPosition", ShaderUniform::SUT_Float3);
     FindDefaultUniform(SDU_CameraDirection, "gCameraDirection", ShaderUniform::SUT_Float3);
@@ -247,8 +246,6 @@ void ROC::Shader::SetupUniformsAndLocations()
     FindDefaultUniform(SDU_MaterialType, "gMaterialType", ShaderUniform::SUT_Int);
     // Animation
     FindDefaultUniform(SDU_Animated, "gAnimated", ShaderUniform::SUT_Bool);
-    unsigned int l_boneUniform = glGetUniformBlockIndex(m_program, "gBonesUniform");
-    if(l_boneUniform != 0U) glUniformBlockBinding(m_program, l_boneUniform, ROC_SHADER_BONES_BINDPOINT);
     // Samplers
     FindDefaultUniform(SDU_DiffuseTexture, "gTexture0", ShaderUniform::SUT_Sampler);
     if(m_defaultUniforms[SDU_DiffuseTexture]) m_defaultUniforms[SDU_DiffuseTexture]->SetSampler(0);
@@ -349,11 +346,14 @@ void ROC::Shader::SetAnimated(bool f_value)
 }
 void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
 {
-    if(ms_bonesUBO != 0U)
+    if(m_defaultUniforms[SDU_BoneMatrices])
     {
-        if(ms_uboFix) glFinish();
-        GLsizeiptr l_matrixCount = std::min(f_value.size(), ROC_SHADER_BONES_COUNT);
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, l_matrixCount*sizeof(glm::mat4), f_value.data());
+        if(m_defaultUniforms[SDU_BoneMatrices]->IsActive())
+        {
+            // Forced set of uniform value
+            int l_size = static_cast<int>(std::min(f_value.size(), ROC_SHADER_BONES_COUNT));
+            glUniformMatrix4fv(m_defaultUniforms[SDU_BoneMatrices]->GetUniform(), l_size, GL_FALSE, reinterpret_cast<const float*>(f_value.data()));
+        }
     }
 }
 void ROC::Shader::SetTime(float f_value)
@@ -428,27 +428,6 @@ bool ROC::Shader::HasAttached(Drawable *f_drawable) const
     return l_result;
 }
 
-void ROC::Shader::CreateBonesUBO()
-{
-    if(ms_bonesUBO == 0U)
-    {
-        glGenBuffers(1, &ms_bonesUBO);
-        glBindBufferBase(GL_UNIFORM_BUFFER, ROC_SHADER_BONES_BINDPOINT, ms_bonesUBO);
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * ROC_SHADER_BONES_COUNT, NULL, GL_DYNAMIC_DRAW);
-    }
-}
-void ROC::Shader::DestroyBonesUBO()
-{
-    if(ms_bonesUBO != 0U)
-    {
-        glDeleteBuffers(1, &ms_bonesUBO);
-        ms_bonesUBO = 0U;
-    }
-}
-void ROC::Shader::EnableUBOFix()
-{
-    ms_uboFix = true;
-}
 void ROC::Shader::UpdateDrawableMaxCount()
 {
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &ms_drawableMaxCount);

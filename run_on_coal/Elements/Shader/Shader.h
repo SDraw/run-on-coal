@@ -18,6 +18,7 @@ class Shader final : public Element
         SDU_View,
         SDU_ViewProjection,
         SDU_Model,
+        SDU_BoneMatrices,
         SDU_CameraPosition,
         SDU_CameraDirection,
         SDU_LightColor,
@@ -49,9 +50,6 @@ class Shader final : public Element
     std::vector<drawableBindData> m_drawableBind;
     static int ms_drawableMaxCount;
 
-    static GLuint ms_bonesUBO;
-    static bool ms_uboFix;
-
     std::string m_error;
 
     Shader(const Shader &that);
@@ -71,6 +69,7 @@ protected:
     void SetViewMatrix(const glm::mat4 &f_value);
     void SetViewProjectionMatrix(const glm::mat4 &f_value);
     void SetModelMatrix(const glm::mat4 &f_value);
+    void SetBoneMatrices(const std::vector<glm::mat4> &f_value);
     void SetCameraPosition(const glm::vec3 &f_value);
     void SetCameraDirection(const glm::vec3 &f_value);
     void SetLightColor(const glm::vec4 &f_value);
@@ -81,7 +80,6 @@ protected:
     void SetMaterialParam(const glm::vec4 &f_value);
     void SetMaterialType(int f_value);
     void SetAnimated(bool f_value);
-    static void SetBoneMatrices(const std::vector<glm::mat4> &f_value);
     void SetTime(float f_value);
     void SetColor(const glm::vec4 &f_value);
 
@@ -90,9 +88,6 @@ protected:
     bool HasAttached(Drawable *f_drawable) const;
 
     static void UpdateDrawableMaxCount();
-    static void CreateBonesUBO();
-    static void DestroyBonesUBO();
-    static void EnableUBOFix();
 
     void Enable();
     void Disable();

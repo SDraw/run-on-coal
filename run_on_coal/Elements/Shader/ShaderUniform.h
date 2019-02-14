@@ -63,6 +63,8 @@ public:
     bool SetValue(const glm::mat2 &f_val);
     bool SetValue(const glm::mat3 &f_val);
     bool SetValue(const glm::mat4 &f_val);
+
+    inline bool IsActive() const { return m_active; }
 protected:
     ShaderUniform(unsigned int f_type, int f_uniform);
     ~ShaderUniform();
@@ -70,6 +72,7 @@ protected:
     inline void SetActive(bool f_active) { m_active = f_active; }
 
     bool SetSampler(int f_sampler);
+    inline int GetUniform() const { return m_uniform; }
 
     void Update();
 
