@@ -5,6 +5,7 @@ namespace ROC
 {
 
 class Drawable;
+class Light;
 class Pool;
 class ShaderUniform;
 
@@ -21,11 +22,8 @@ class Shader final : public Element
         SDU_BoneMatrices,
         SDU_CameraPosition,
         SDU_CameraDirection,
-        SDU_LightColor,
-        SDU_LightDirection,
-        SDU_LightParam,
-        SDU_SkyGradientDown,
-        SDU_SkyGradientUp,
+        SDU_LightData,
+        SDU_LightsCount,
         SDU_MaterialParam,
         SDU_MaterialType,
         SDU_Animated,
@@ -72,11 +70,7 @@ protected:
     void SetBoneMatrices(const std::vector<glm::mat4> &f_value);
     void SetCameraPosition(const glm::vec3 &f_value);
     void SetCameraDirection(const glm::vec3 &f_value);
-    void SetLightColor(const glm::vec4 &f_value);
-    void SetLightDirection(const glm::vec3 &f_value);
-    void SetLightParam(const glm::vec4 &f_value);
-    void SetSkyGradientDown(const glm::vec3 &f_value);
-    void SetSkyGradientUp(const glm::vec3 &f_value);
+    void SetLightsData(const std::vector<Light*> &f_data);
     void SetMaterialParam(const glm::vec4 &f_value);
     void SetMaterialType(int f_value);
     void SetAnimated(bool f_value);

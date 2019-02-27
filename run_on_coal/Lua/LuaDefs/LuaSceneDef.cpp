@@ -25,8 +25,7 @@ void ROC::LuaSceneDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setCamera", SetCamera);
     LuaUtils::AddClassMethod(f_vm, "getCamera", GetCamera);
     LuaUtils::AddClassMethod(f_vm, "removeCamera", RemoveCamera);
-    LuaUtils::AddClassMethod(f_vm, "setLight", SetLight);
-    LuaUtils::AddClassMethod(f_vm, "getLight", GetLight);
+    LuaUtils::AddClassMethod(f_vm, "addLight", AddLight);
     LuaUtils::AddClassMethod(f_vm, "removeLight", RemoveLight);
     LuaUtils::AddClassMethod(f_vm, "setRenderTarget", SetRenderTarget);
     LuaUtils::AddClassMethod(f_vm, "getRenderTarget", GetRenderTarget);
@@ -34,8 +33,6 @@ void ROC::LuaSceneDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setShader", SetShader);
     LuaUtils::AddClassMethod(f_vm, "getShader", GetShader);
     LuaUtils::AddClassMethod(f_vm, "removeShader", RemoveShader);
-    LuaUtils::AddClassMethod(f_vm, "setSkyGradient", SetSkyGradient);
-    LuaUtils::AddClassMethod(f_vm, "getSkyGradient", GetSkyGradient);
     LuaUtils::AddClassMethod(f_vm, "setActive", SetActive);
     LuaUtils::AddClassMethod(f_vm, "draw", Draw);
     LuaElementDef::AddHierarchyMethods(f_vm);
@@ -129,7 +126,7 @@ int ROC::LuaSceneDef::RemoveCamera(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int ROC::LuaSceneDef::SetLight(lua_State *f_vm)
+int ROC::LuaSceneDef::AddLight(lua_State *f_vm)
 {
     // bool Scene:setLight(element light)
     Scene *l_scene;
@@ -139,22 +136,8 @@ int ROC::LuaSceneDef::SetLight(lua_State *f_vm)
     argStream.ReadElement(l_light);
     if(!argStream.HasErrors())
     {
-        bool l_result = Core::GetCore()->GetInheritManager()->SetSceneLight(l_scene, l_light);
+        bool l_result = Core::GetCore()->GetInheritManager()->AddSceneLight(l_scene, l_light);
         argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int ROC::LuaSceneDef::GetLight(lua_State *f_vm)
-{
-    // element Scene:getLight()
-    Scene *l_scene;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_scene);
-    if(!argStream.HasErrors())
-    {
-        Light *l_light = l_scene->GetLight();
-        l_light ? argStream.PushElement(l_light) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -163,11 +146,13 @@ int ROC::LuaSceneDef::RemoveLight(lua_State *f_vm)
 {
     // bool Scene:removeLight()
     Scene *l_scene;
+    Light *l_light;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_scene);
+    argStream.ReadElement(l_light);
     if(!argStream.HasErrors())
     {
-        bool l_result = Core::GetCore()->GetInheritManager()->RemoveSceneLight(l_scene);
+        bool l_result = Core::GetCore()->GetInheritManager()->RemoveSceneLight(l_scene,l_light);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -251,40 +236,6 @@ int ROC::LuaSceneDef::RemoveShader(lua_State *f_vm)
     {
         bool l_result = Core::GetCore()->GetInheritManager()->RemoveSceneShader(l_scene);
         argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-
-int ROC::LuaSceneDef::SetSkyGradient(lua_State *f_vm)
-{
-    // bool Scene:setSkyGradient(float r1, float g1, float b1, float r2, float g2, float b2)
-    Scene *l_scene;
-    glm::vec3 l_gradientDown, l_gradientUp;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_scene);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gradientDown[i]);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gradientUp[i]);
-    if(!argStream.HasErrors())
-    {
-        l_scene->SetSkyGradient(l_gradientDown, l_gradientUp);
-        argStream.PushBoolean(true);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-int ROC::LuaSceneDef::GetSkyGradient(lua_State *f_vm)
-{
-    // float float float float float float Scene:getSkyGradient()
-    Scene *l_scene;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_scene);
-    if(!argStream.HasErrors())
-    {
-        glm::vec3 l_gradientDown, l_gradientUp;
-        l_scene->GetSkyGradient(l_gradientDown, l_gradientUp);
-        for(int i = 0; i < 3; i++) argStream.PushNumber(l_gradientDown[i]);
-        for(int i = 0; i < 3; i++) argStream.PushNumber(l_gradientUp[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

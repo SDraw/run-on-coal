@@ -41,8 +41,8 @@ public:
     bool RemoveModelFromScene(Scene *f_scene, Model *f_model);
     bool SetSceneCamera(Scene *f_scene, Camera *f_camera);
     bool RemoveSceneCamera(Scene *f_scene);
-    bool SetSceneLight(Scene *f_scene, Light *f_light);
-    bool RemoveSceneLight(Scene *f_scene);
+    bool AddSceneLight(Scene *f_scene, Light *f_light);
+    bool RemoveSceneLight(Scene *f_scene, Light *f_light);
     bool SetSceneRenderTarget(Scene *f_scene, RenderTarget *f_rt);
     bool RemoveSceneRenderTarget(Scene *f_scene);
     bool SetSceneShader(Scene *f_scene, Shader *f_shader);

@@ -4,7 +4,7 @@
 namespace ROC
 {
 
-extern const glm::vec3 g_DefaultPosition;
+extern const glm::vec3 g_EmptyVec3;
 extern const glm::vec3 g_DefaultScale;
 extern const glm::quat g_DefaultRotation;
 extern const glm::mat4 g_IdentityMatrix;
@@ -14,7 +14,7 @@ extern const float g_Epsilon;
 
 ROC::Transformation::Transformation()
 {
-    m_position = g_DefaultPosition;
+    m_position = g_EmptyVec3;
     m_rotation = g_DefaultRotation;
     m_scale = g_DefaultScale;
     m_matrix = g_IdentityMatrix;

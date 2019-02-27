@@ -20,7 +20,7 @@ public:
         ET_Scene,
         ET_Camera, 
         ET_Light, 
-        ET_RenderTarget, 
+        ET_RenderTarget,
         ET_Shader,
         ET_Sound, 
         ET_Texture, 

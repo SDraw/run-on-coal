@@ -2,9 +2,16 @@
 
 #include "Managers/SoundManager.h"
 
+namespace ROC
+{
+
+extern const glm::vec3 g_EmptyVec3;
+
+}
+
 ROC::SoundManager::SoundManager()
 {
-    m_listenerPosition = glm::vec3(0.f);
+    m_listenerPosition = g_EmptyVec3;
     m_listenerDirection = glm::vec3(0.f, 0.f, -1.f);
     m_listenerUp = glm::vec3(0.f, 1.f, 0.f);
     m_globalVolume = 100.f;

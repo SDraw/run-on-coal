@@ -62,9 +62,9 @@ ROC::Camera* ROC::ElementManager::CreateCamera(int f_type)
     return l_camera;
 }
 
-ROC::Light* ROC::ElementManager::CreateLight()
+ROC::Light* ROC::ElementManager::CreateLight(unsigned char f_type)
 {
-    Light *l_light = new Light();
+    Light *l_light = new Light(f_type);
     AddElementToSet(l_light);
     return l_light;
 }

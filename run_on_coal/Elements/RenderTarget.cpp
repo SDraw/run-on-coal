@@ -29,22 +29,20 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
         m_filtering = f_filter;
         btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
 
-        GLint l_lastFramebuffer = GLBinder::GetBindedFramebuffer();
+        const GLuint l_lastFramebuffer = GLBinder::GetBindedFramebuffer();
 
         glGenFramebuffers(1, &m_frameBuffer);
         GLBinder::BindFramebuffer(m_frameBuffer);
 
-        GLuint l_lastTexture;
-        GLenum l_lastTextureType;
-        GLBinder::GetBindedTexture(l_lastTexture, l_lastTextureType);
+        const GLuint l_lastTexture2D = GLBinder::GetBindedTexture2D();
 
         glGenTextures(1, &m_texture);
-        GLBinder::BindTexture(m_texture, GLBinder::GLBTT_2D);
+        GLBinder::BindTexture2D(m_texture);
         switch(m_type)
         {
             case RTT_Shadow:
             {
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -96,14 +94,14 @@ bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filte
         else std::memcpy(&m_size, &f_size, sizeof(glm::ivec2));
 
         GLBinder::BindFramebuffer(l_lastFramebuffer);
-        GLBinder::GetBindedTexture(l_lastTexture, l_lastTextureType);
+        GLBinder::BindTexture2D(l_lastTexture2D);
     }
     return (m_type != RTT_None);
 }
 
 void ROC::RenderTarget::Bind()
 {
-    if(m_texture != 0U) GLBinder::BindTexture(m_texture, GLBinder::GLBTT_2D);
+    if(m_texture != 0U) GLBinder::BindTexture2D(m_texture);
 }
 void ROC::RenderTarget::Enable()
 {
@@ -124,7 +122,7 @@ void ROC::RenderTarget::Clear()
     m_filtering = DFT_None;
     if(m_texture != 0U)
     {
-        GLBinder::ResetTexture(m_texture);
+        GLBinder::ResetTexture2D(m_texture);
         glDeleteTextures(1, &m_texture);
         m_texture = 0U;
     }

@@ -7,7 +7,9 @@ class Transformation;
 
 class Bone final
 {
+#ifdef _DEBUG
     std::string m_name;
+#endif
     Transformation *m_localTransform;
     glm::mat4 m_fullMatrix;
     glm::mat4 m_bindMatrix;

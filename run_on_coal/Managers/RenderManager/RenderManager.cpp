@@ -150,6 +150,8 @@ void ROC::RenderManager::DrawScene(Scene *f_scene)
             RenderTarget *l_renderTarget = m_activeScene->GetRenderTarget();
             bool l_skipTextures = (l_renderTarget ? l_renderTarget->IsShadowType() : false);
 
+            if(l_skipTextures) m_dummyTexture->Bind();
+
             auto l_distantModelVector = m_activeScene->GetDistantModels();
             for(const auto l_distantModel : l_distantModelVector)
             {

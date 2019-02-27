@@ -3,6 +3,7 @@
 #include "Elements/Shader/Shader.h"
 #include "Elements/Shader/ShaderUniform.h"
 #include "Elements/Drawable.h"
+#include "Elements/Light.h"
 #include "Utils/Pool.h"
 
 #include "Utils/EnumUtils.h"
@@ -11,24 +12,31 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_DefaultUniformsTable = {
+const std::vector<std::string> g_DefaultUniformsTable
+{
     "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBoneMatrix",
-    "gLightColor", "gLightDirection", "gLightParam",
     "gCameraPosition", "gCameraDirection",
-    "gSkyGradientDown", "gSkyGradientUp",
+    "gLightData", "gLightsCount",
     "gMaterialType", "gMaterialParam",
     "gTexture0", "gColor",
     "gTime"
+};
+const std::string g_DefaultShaderDefines[]
+{
+    "#version 330 core", "#define MAX_BONES ", "#define MAX_LIGHTS "
 };
 
 }
 
 #if defined _WIN64
 #define ROC_SHADER_BONES_COUNT 128ULL
+#define ROC_SHADER_LIGHTS_COUNT 4ULL
 #elif defined _WIN32
 #define ROC_SHADER_BONES_COUNT 128U
+#define ROC_SHADER_LIGHTS_COUNT 4U
 #else
 #define ROC_SHADER_BONES_COUNT 128
+#define ROC_SHADER_LIGHTS_COUNT 4
 #endif
 
 int ROC::Shader::ms_drawableMaxCount = 0;
@@ -66,12 +74,24 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
     {
         std::ifstream l_file;
 
+        std::string l_definesAppend;
+        l_definesAppend.append(g_DefaultShaderDefines[0U]);
+        l_definesAppend.push_back('\n');
+        l_definesAppend.append(g_DefaultShaderDefines[1U]);
+        l_definesAppend.append(std::to_string(ROC_SHADER_BONES_COUNT));
+        l_definesAppend.push_back('\n');
+        l_definesAppend.append(g_DefaultShaderDefines[2U]);
+        l_definesAppend.append(std::to_string(ROC_SHADER_LIGHTS_COUNT));
+        l_definesAppend.push_back('\n');
+
         GLuint l_vertexShader = 0U;
         l_file.open(f_vpath, std::ios::in);
         if(!l_file.fail())
         {
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
+
+            l_shaderData.insert(l_shaderData.begin(), l_definesAppend.begin(), l_definesAppend.end());
 
             if(!l_shaderData.empty())
             {
@@ -107,6 +127,8 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
         {
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
+
+            l_shaderData.insert(l_shaderData.begin(), l_definesAppend.begin(), l_definesAppend.end());
 
             if(!l_shaderData.empty())
             {
@@ -144,6 +166,8 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             {
                 std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
                 l_file.close();
+
+                l_shaderData.insert(l_shaderData.begin(), l_definesAppend.begin(), l_definesAppend.end());
 
                 if(!l_shaderData.empty())
                 {
@@ -235,12 +259,8 @@ void ROC::Shader::SetupUniformsAndLocations()
     FindDefaultUniform(SDU_CameraPosition, "gCameraPosition", ShaderUniform::SUT_Float3);
     FindDefaultUniform(SDU_CameraDirection, "gCameraDirection", ShaderUniform::SUT_Float3);
     // Light
-    FindDefaultUniform(SDU_LightColor, "gLightColor", ShaderUniform::SUT_Float4);
-    FindDefaultUniform(SDU_LightDirection, "gLightDirection", ShaderUniform::SUT_Float3);
-    FindDefaultUniform(SDU_LightParam, "gLightParam", ShaderUniform::SUT_Float4);
-    // Sky
-    FindDefaultUniform(SDU_SkyGradientDown, "gSkyGradientDown", ShaderUniform::SUT_Float3);
-    FindDefaultUniform(SDU_SkyGradientUp, "gSkyGradientUp", ShaderUniform::SUT_Float3);
+    FindDefaultUniform(SDU_LightData, "gLightData", ShaderUniform::SUT_Mat4); // Array
+    FindDefaultUniform(SDU_LightsCount, "gLightsCount", ShaderUniform::SUT_Int);
     // Material
     FindDefaultUniform(SDU_MaterialParam, "gMaterialParam", ShaderUniform::SUT_Float4);
     FindDefaultUniform(SDU_MaterialType, "gMaterialType", ShaderUniform::SUT_Int);
@@ -312,25 +332,29 @@ void ROC::Shader::SetCameraDirection(const glm::vec3 &f_value)
 {
     if(m_defaultUniforms[SDU_CameraDirection]) m_defaultUniforms[SDU_CameraDirection]->SetValue(f_value);
 }
-void ROC::Shader::SetLightColor(const glm::vec4 &f_value)
+void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
 {
-    if(m_defaultUniforms[SDU_LightColor]) m_defaultUniforms[SDU_LightColor]->SetValue(f_value);
-}
-void ROC::Shader::SetLightDirection(const glm::vec3 &f_value)
-{
-    if(m_defaultUniforms[SDU_LightDirection]) m_defaultUniforms[SDU_LightDirection]->SetValue(f_value);
-}
-void ROC::Shader::SetLightParam(const glm::vec4 &f_value)
-{
-    if(m_defaultUniforms[SDU_LightParam]) m_defaultUniforms[SDU_LightParam]->SetValue(f_value);
-}
-void ROC::Shader::SetSkyGradientDown(const glm::vec3 &f_value)
-{
-    if(m_defaultUniforms[SDU_SkyGradientDown]) m_defaultUniforms[SDU_SkyGradientDown]->SetValue(f_value);
-}
-void ROC::Shader::SetSkyGradientUp(const glm::vec3 &f_value)
-{
-    if(m_defaultUniforms[SDU_SkyGradientUp]) m_defaultUniforms[SDU_SkyGradientUp]->SetValue(f_value);
+    size_t l_count = std::min(f_data.size(), ROC_SHADER_LIGHTS_COUNT);
+    if(m_defaultUniforms[SDU_LightsCount]) m_defaultUniforms[SDU_LightsCount]->SetValue(static_cast<int>(l_count));
+    if(m_defaultUniforms[SDU_LightData])
+    {
+        // Forced data fill
+        glm::mat4 l_data[ROC_SHADER_LIGHTS_COUNT];
+        for(size_t i = 0U; i < l_count; i++)
+        {
+            Light *l_light = f_data[i];
+            const glm::vec2 &l_cutoff = l_light->GetCutoff();
+
+            std::memcpy(&l_data[i][0], &l_light->GetPosition(), sizeof(glm::vec3));
+            std::memcpy(&l_data[i][1], &l_light->GetDirection(), sizeof(glm::vec3));
+            std::memcpy(&l_data[i][2], &l_light->GetColor(), sizeof(glm::vec4));
+            l_data[i][0][3] = l_cutoff.x;
+            l_data[i][1][3] = l_cutoff.y;
+            std::memcpy(&l_data[i][3], &l_light->GetFalloff(), sizeof(glm::vec3));
+            l_data[i][3][3] = static_cast<float>(l_light->GetType());
+        }
+        glUniformMatrix4fv(m_defaultUniforms[SDU_LightData]->GetUniform(), static_cast<int>(l_count), GL_FALSE, reinterpret_cast<const float*>(&l_data));
+    }
 }
 void ROC::Shader::SetMaterialParam(const glm::vec4 &f_value)
 {

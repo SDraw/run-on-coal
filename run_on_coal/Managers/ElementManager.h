@@ -34,7 +34,7 @@ class ElementManager final
 public:
     Scene* CreateScene();
     Camera* CreateCamera(int f_type);
-    Light* CreateLight();
+    Light* CreateLight(unsigned char f_type);
     Geometry* CreateGeometry(const std::string &f_path, bool f_async = false);
     Model* CreateModel(Geometry *f_geometry);
     Shader* CreateShader(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);

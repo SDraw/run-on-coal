@@ -9,10 +9,11 @@
 #include "Managers/EventManager.h"
 #include "Managers/LuaManager.h"
 
-ROC::AsyncManager::AsyncManager(Core *f_core) : m_threadSwitch(true)
+ROC::AsyncManager::AsyncManager(Core *f_core)
 {
     m_core = f_core;
 
+    m_threadSwitch = true;
     m_loadThread = new std::thread(&ROC::AsyncManager::LoadThread, this);
 
     m_luaArguments = new LuaArguments();

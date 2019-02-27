@@ -26,7 +26,7 @@ class AnimationController final
     AnimationController(const AnimationController &that);
     AnimationController& operator=(const AnimationController &that);
 public:
-    inline Animation* GetAnimation() { return m_animation; };
+    inline Animation* GetAnimation() const { return m_animation; };
 
     bool Play();
     bool Pause();

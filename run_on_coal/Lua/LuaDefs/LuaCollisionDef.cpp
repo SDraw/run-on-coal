@@ -139,7 +139,7 @@ int ROC::LuaCollisionDef::GetRotation(lua_State *f_vm)
     {
         glm::quat l_rot;
         l_col->GetRotation(l_rot);
-        for(int i = 0; i < 4; i++)  argStream.PushNumber(l_rot[i]);
+        for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

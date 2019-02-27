@@ -30,10 +30,6 @@ const std::vector<std::string> g_AnimationPropertiesTable
 
 }
 
-#define ROC_MODEL_ANIMPROPERTY_SPEED 0
-#define ROC_MODEL_ANIMPROPERTY_PROGRESS 1
-#define ROC_MODEL_ANIMPROPERTY_BLENDTIME 2
-
 void ROC::LuaModelDef::Init(lua_State *f_vm)
 {
     LuaUtils::AddClass(f_vm, "Model", Create);
@@ -276,7 +272,7 @@ int ROC::LuaModelDef::GetAnimation(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        Animation *l_anim = l_model->GetAnimationController()->GetAnimation();
+        Animation *l_anim = l_model->GetAnimation();
         l_anim ? argStream.PushElement(l_anim) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -304,7 +300,7 @@ int ROC::LuaModelDef::PlayAnimation(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->GetAnimationController()->Play();
+        bool l_result = l_model->PlayAnimation();
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -318,7 +314,7 @@ int ROC::LuaModelDef::PauseAnimation(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->GetAnimationController()->Pause();
+        bool l_result = l_model->PauseAnimation();
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -332,7 +328,7 @@ int ROC::LuaModelDef::ResetAnimation(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->GetAnimationController()->Reset();
+        bool l_result = l_model->ResetAnimation();
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -342,26 +338,21 @@ int ROC::LuaModelDef::SetAnimationProperty(lua_State *f_vm)
 {
     // bool Model:setAnimationProperty(str property, float value)
     Model *l_model;
-    std::string l_property;
+    std::string l_propertyString;
     float l_value;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
-    argStream.ReadText(l_property);
+    argStream.ReadText(l_propertyString);
     argStream.ReadNumber(l_value);
-    if(!argStream.HasErrors() && !l_property.empty())
+    if(!argStream.HasErrors() && !l_propertyString.empty())
     {
         bool l_result = false;
-        switch(EnumUtils::ReadEnumVector(l_property, g_AnimationPropertiesTable))
+        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationPropertiesTable);
+        if(l_enum != -1)
         {
-            case ROC_MODEL_ANIMPROPERTY_SPEED:
-                l_result = l_model->GetAnimationController()->SetSpeed(l_value);
-                break;
-            case ROC_MODEL_ANIMPROPERTY_PROGRESS:
-                l_result = l_model->GetAnimationController()->SetProgress(l_value);
-                break;
-            case ROC_MODEL_ANIMPROPERTY_BLENDTIME:
-                l_model->GetAnimationController()->SetBlendTime(static_cast<unsigned int>(l_value));
-                break;
+            Model::ModelAnimationProperty l_property = static_cast<Model::ModelAnimationProperty>(l_enum);
+            l_result = l_model->SetAnimationProperty(l_property, l_value);
+
         }
         argStream.PushBoolean(l_result);
     }
@@ -372,26 +363,25 @@ int ROC::LuaModelDef::GetAnimationProperty(lua_State *f_vm)
 {
     // float Model:getAnimationProperty(str property)
     Model *l_model;
-    std::string l_property;
+    std::string l_propertyString;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
-    argStream.ReadText(l_property);
-    if(!argStream.HasErrors() && !l_property.empty())
+    argStream.ReadText(l_propertyString);
+    if(!argStream.HasErrors() && !l_propertyString.empty())
     {
-        float l_value = -1.f;
-        switch(EnumUtils::ReadEnumVector(l_property, g_AnimationPropertiesTable))
+        bool l_result = false;
+        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationPropertiesTable);
+        if(l_enum != -1)
         {
-            case ROC_MODEL_ANIMPROPERTY_SPEED:
-                l_value = l_model->GetAnimationController()->GetSpeed();
-                break;
-            case ROC_MODEL_ANIMPROPERTY_PROGRESS:
-                l_value = l_model->GetAnimationController()->GetProgress();
-                break;
-            case ROC_MODEL_ANIMPROPERTY_BLENDTIME:
-                l_value = static_cast<float>(l_model->GetAnimationController()->GetBlendTime());
-                break;
+            float l_value = 0.f;
+            Model::ModelAnimationProperty l_property = static_cast<Model::ModelAnimationProperty>(l_enum);
+            if(l_model->GetAnimationProperty(l_property, l_value))
+            {
+                argStream.PushNumber(l_value);
+                l_result = true;
+            }
         }
-        argStream.PushNumber(l_value);
+        if(!l_result) argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

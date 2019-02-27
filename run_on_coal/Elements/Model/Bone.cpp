@@ -14,7 +14,9 @@ extern const glm::mat4 g_IdentityMatrix;
 ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scl)
 {
     m_parent = nullptr;
+#ifdef _DEBUG
     m_name.assign(f_name);
+#endif
 
     m_localTransform = new Transformation();
     m_localTransform->SetPosition(f_pos);

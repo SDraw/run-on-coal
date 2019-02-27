@@ -8,6 +8,8 @@
 namespace ROC
 {
 
+extern const glm::vec2 g_EmptyVec2;
+
 const float g_FontDefaultAtlasOffset = 1.f / static_cast<float>(ROC_FONT_ATLAS_SIZE);
 const GLint g_FontSwizzleMask[] = { GL_ONE, GL_ONE, GL_ONE, GL_RED };
 
@@ -33,7 +35,7 @@ ROC::Font::Font()
     m_size = 0.f;
 
     m_atlasTexture = 0U;
-    m_atlasOffset = glm::vec2(0.f);
+    m_atlasOffset = g_EmptyVec2;
     m_atlasSize = glm::ivec2(0);
     m_atlasPack = nullptr;
 
@@ -46,7 +48,7 @@ ROC::Font::~Font()
 {
     if(m_loaded)
     {
-        GLBinder::ResetTexture(m_atlasTexture);
+        GLBinder::ResetTexture2D(m_atlasTexture);
         glDeleteTextures(1, &m_atlasTexture);
         delete m_atlasPack;
         FT_Done_Face(m_face);
@@ -79,7 +81,7 @@ void ROC::Font::CreateVAO()
     GLBinder::BindArrayBuffer(ms_VBO[FBI_UV]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(FBA_UV, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), NULL);
-    ms_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, glm::vec2(0.f));
+    ms_uv.assign(ROC_FONT_CHAR_VERTICES * ROC_FONT_TEXT_BLOCK, g_EmptyVec2);
 }
 void ROC::Font::DestroyVAO()
 {
@@ -127,12 +129,10 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             }
 
             // Generate atlas texture
-            GLuint l_lastTexture;
-            GLenum l_lastTextureType;
-            GLBinder::GetBindedTexture(l_lastTexture, l_lastTextureType);
+            const GLuint l_lastTexture2D = GLBinder::GetBindedTexture2D();
 
             glGenTextures(1, &m_atlasTexture);
-            GLBinder::BindTexture(m_atlasTexture, GLBinder::GLBTT_2D);
+            GLBinder::BindTexture2D(m_atlasTexture);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filteringType);
@@ -140,7 +140,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, g_FontSwizzleMask);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_atlasSize.x, m_atlasSize.y, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 
-            GLBinder::BindTexture(l_lastTexture, l_lastTextureType);
+            GLBinder::BindTexture2D(l_lastTexture2D);
 
             // Generate atlas
             m_atlasPack = new rbp::MaxRectsBinPack();
@@ -189,7 +189,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
     if(m_loaded)
     {
         GLBinder::BindVertexArray(ms_VAO);
-        GLBinder::BindTexture(m_atlasTexture, GLBinder::GLBTT_2D);
+        GLBinder::BindTexture2D(m_atlasTexture);
 
         glm::vec4 l_linePos(f_pos, 0.f, 0.f); // [line_x, line_y, char_x, char_y]
         glm::tvec3<size_t> l_textRange(0U); // [range_min, range_max, subpart]

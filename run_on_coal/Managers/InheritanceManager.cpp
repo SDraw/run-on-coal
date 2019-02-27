@@ -83,8 +83,10 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
                     reinterpret_cast<Model*>(f_child)->SetGeometry(nullptr);
                     break;
                 case Element::ET_Animation:
-                    reinterpret_cast<Model*>(f_child)->GetAnimationController()->SetAnimation(nullptr);
-                    break;
+                {
+                    Model *l_model = reinterpret_cast<Model*>(f_child);
+                    if(l_model->HasAnimationController()) l_model->GetAnimationController()->SetAnimation(nullptr);
+                } break;
                 case Element::ET_Collision:
                     reinterpret_cast<Model*>(f_child)->SetCollision(nullptr);
                     break;
@@ -107,7 +109,7 @@ void ROC::InheritanceManager::InheritanceBreakProcessing(Element *f_child, Eleme
             switch(f_parent->GetElementType())
             {
                 case Element::ET_Scene:
-                    reinterpret_cast<Scene*>(f_parent)->SetLight(nullptr);
+                    reinterpret_cast<Scene*>(f_parent)->RemoveLight(reinterpret_cast<Light*>(f_child));
                     break;
             }
         } break;
@@ -151,9 +153,10 @@ void ROC::InheritanceManager::SetModelGeometry(Model *f_model, Geometry *f_geome
 bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_anim)
 {
     bool l_result = false;
-    if(f_model->HasSkeleton())
+    if(f_model->HasSkeleton() && f_model->HasAnimationController())
     {
-        Animation *l_modelAnim = f_model->GetAnimationController()->GetAnimation();
+        AnimationController *l_animController = f_model->GetAnimationController();
+        Animation *l_modelAnim = l_animController->GetAnimation();
         if(l_modelAnim == f_anim) l_result = true;
         else
         {
@@ -161,7 +164,7 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
             {
                 if(l_modelAnim) RemoveInheritance(f_model, l_modelAnim);
                 AddInheritance(f_model, f_anim);
-                f_model->GetAnimationController()->SetAnimation(f_anim);
+                l_animController->SetAnimation(f_anim);
                 l_result = true;
             }
         }
@@ -171,11 +174,14 @@ bool ROC::InheritanceManager::SetModelAnimation(Model *f_model, Animation *f_ani
 bool ROC::InheritanceManager::RemoveModelAnimation(Model *f_model)
 {
     bool l_result = false;
-    Animation *l_anim = f_model->GetAnimationController()->GetAnimation();
-    if(l_anim)
+    if(f_model->HasAnimationController())
     {
-        RemoveInheritance(f_model, l_anim);
-        l_result = true;
+        Animation *l_anim = f_model->GetAnimationController()->GetAnimation();
+        if(l_anim)
+        {
+            RemoveInheritance(f_model, l_anim);
+            l_result = true;
+        }
     }
     return l_result;
 }
@@ -288,26 +294,23 @@ bool ROC::InheritanceManager::RemoveSceneCamera(Scene *f_scene)
     }
     return l_result;
 }
-bool ROC::InheritanceManager::SetSceneLight(Scene *f_scene, Light *f_light)
+bool ROC::InheritanceManager::AddSceneLight(Scene *f_scene, Light *f_light)
 {
     bool l_result = false;
-    Light *l_sceneLight = f_scene->GetLight();
-    if(l_sceneLight != f_light)
+    if(!f_scene->HasLight(f_light))
     {
-        if(l_sceneLight) RemoveInheritance(l_sceneLight, f_scene);
         AddInheritance(f_light, f_scene);
-        f_scene->SetLight(f_light);
+        f_scene->AddLight(f_light);
         l_result = true;
     }
     return l_result;
 }
-bool ROC::InheritanceManager::RemoveSceneLight(Scene *f_scene)
+bool ROC::InheritanceManager::RemoveSceneLight(Scene *f_scene, Light *f_light)
 {
     bool l_result = false;
-    Light *l_light = f_scene->GetLight();
-    if(l_light)
+    if(f_scene->HasLight(f_light))
     {
-        RemoveInheritance(l_light, f_scene);
+        RemoveInheritance(f_light, f_scene);
         l_result = true;
     }
     return l_result;

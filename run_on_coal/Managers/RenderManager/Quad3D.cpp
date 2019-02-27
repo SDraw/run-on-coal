@@ -8,7 +8,8 @@ namespace ROC
 {
 
 extern const glm::mat4 g_IdentityMatrix;
-extern const glm::vec3 g_DefaultPosition;
+extern const glm::vec2 g_EmptyVec2;
+extern const glm::vec3 g_EmptyVec3;
 extern const glm::quat g_DefaultRotation;
 
 extern const float g_QuadVertexUV[];
@@ -19,9 +20,9 @@ extern const float g_QuadVertexUV[];
 
 ROC::Quad3D::Quad3D()
 {
-    m_position = g_DefaultPosition;
+    m_position = g_EmptyVec3;
     m_rotation = g_DefaultRotation;
-    m_size = glm::vec2(0.f);
+    m_size = g_EmptyVec2;
     m_matrix = g_IdentityMatrix;
 
     glGenVertexArrays(1, &m_VAO);

@@ -31,7 +31,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_parent = nullptr;
     m_parentBone = nullptr;
 
-    m_animController = new AnimationController();
+    m_animController = nullptr;
     m_skeleton = nullptr;
     if(m_geometry)
     {
@@ -41,6 +41,7 @@ ROC::Model::Model(Geometry *f_geometry)
             m_skeleton = new Skeleton(m_geometry->GetBonesData());
             if(m_geometry->HasBonesCollisionData()) m_skeleton->InitStaticBoneCollision(m_geometry->GetBonesCollisionData(), this);
             if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsData(), this);
+            m_animController = new AnimationController();
         }
     }
 
@@ -96,6 +97,70 @@ void ROC::Model::SetCollision(Collision *f_col)
     if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), false);
     m_collision = f_col;
     if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), true);
+}
+
+ROC::Animation* ROC::Model::GetAnimation() const
+{
+    Animation *l_anim = nullptr;
+    if(m_animController) l_anim = m_animController->GetAnimation();
+    return l_anim;
+}
+bool ROC::Model::PlayAnimation()
+{
+    bool l_result = false;
+    if(m_animController) l_result = m_animController->Play();
+    return l_result;
+}
+bool ROC::Model::PauseAnimation()
+{
+    bool l_result = false;
+    if(m_animController) l_result = m_animController->Pause();
+    return l_result;
+}
+bool ROC::Model::ResetAnimation()
+{
+    bool l_result = false;
+    if(m_animController) l_result = m_animController->Reset();
+    return l_result;
+}
+
+bool ROC::Model::GetAnimationProperty(ModelAnimationProperty f_prop, float &f_value)
+{
+    if(m_animController)
+    {
+        switch(f_prop)
+        {
+            case MAP_Speed:
+                f_value = m_animController->GetSpeed();
+                break;
+            case MAP_Progress:
+                f_value = m_animController->GetProgress();
+                break;
+            case Map_BlendTime:
+                f_value = static_cast<float>(m_animController->GetBlendTime());
+                break;
+        }
+    }
+    return (m_animController != nullptr);
+}
+bool ROC::Model::SetAnimationProperty(ModelAnimationProperty f_prop, float f_value)
+{
+    if(m_animController)
+    {
+        switch(f_prop)
+        {
+            case MAP_Speed:
+                m_animController->SetSpeed(f_value);
+                break;
+            case MAP_Progress:
+                m_animController->SetProgress(f_value);
+                break;
+            case Map_BlendTime:
+                m_animController->SetBlendTime(static_cast<unsigned int>(f_value));
+                break;
+        }
+    }
+    return (m_animController != nullptr);
 }
 
 void ROC::Model::Update(ModelUpdateStage f_stage)
@@ -164,7 +229,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
 
         case MUS_Animation:
         {
-            if(m_skeleton)
+            if(m_skeleton && m_animController)
             {
                 Animation *l_anim = m_animController->GetAnimation();
                 if(l_anim)

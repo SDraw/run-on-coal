@@ -7,19 +7,14 @@ class GLBinder
 {
     __declspec(thread) static GLuint ms_arrayBuffer;
     __declspec(thread) static GLuint ms_vertexArray;
-    __declspec(thread) static GLuint ms_texture;
+    __declspec(thread) static GLuint ms_texture2D;
+    __declspec(thread) static GLuint ms_textureCubemap;
     __declspec(thread) static GLenum ms_textureType;
     __declspec(thread) static GLuint ms_frameBuffer;
     __declspec(thread) static GLuint ms_renderBuffer;
     __declspec(thread) static GLuint ms_shaderProgram;
     __declspec(thread) static int ms_viewportX, ms_viewportY, ms_viewportW, ms_viewportH;
 public:
-    enum GLBinderTextureType : GLenum
-    {
-        GLBTT_2D = GL_TEXTURE_2D,
-        GLBTT_Cube = GL_TEXTURE_CUBE_MAP
-    };
-
     static void BindArrayBuffer(GLuint f_buffer);
     inline static GLuint GetBindedArrayBuffer() { return ms_arrayBuffer; }
     static void ResetArrayBuffer(GLuint f_buffer = 0U);
@@ -28,9 +23,13 @@ public:
     inline static GLuint GetBindedVertexArray() { return ms_vertexArray; }
     static void ResetVertexArray(GLuint f_array = 0U);
 
-    static void BindTexture(GLuint f_texture, GLenum f_type);
-    static void GetBindedTexture(GLuint &f_texture, GLenum &f_type);
-    static void ResetTexture(GLuint f_texture = 0U);
+    static void BindTexture2D(GLuint f_texture);
+    inline static GLuint GetBindedTexture2D() { return ms_texture2D; }
+    static void ResetTexture2D(GLuint f_texture = 0U);
+
+    static void BindTextureCubemap(GLuint f_texture);
+    inline static GLuint GetBindedTextureCubemap() { return ms_textureCubemap; }
+    static void ResetTextureCubemap(GLuint f_texture = 0U);
 
     static void BindFramebuffer(GLuint f_buffer);
     inline static GLuint GetBindedFramebuffer() { return ms_frameBuffer; }

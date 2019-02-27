@@ -114,7 +114,6 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones, f
     if(m_loaded)
     {
         bool l_enableBlending = (f_blend == 1.f);
-        size_t l_frame = static_cast<size_t>(((f_tick - f_tick%m_frameDelta) / m_frameDelta) % m_framesCount);
         f_tick = f_tick%m_duration;
 
         for(size_t i = 0U; i < static_cast<size_t>(m_bonesCount); i++)

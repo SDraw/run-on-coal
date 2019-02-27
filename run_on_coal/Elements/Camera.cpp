@@ -9,7 +9,7 @@ vr::IVRSystem *ROC::Camera::ms_vrSystem = nullptr;
 namespace ROC
 {
 
-extern const glm::vec3 g_DefaultPosition;
+extern const glm::vec3 g_EmptyVec3;
 const glm::vec3 g_CameraDefaultViewDirection(0.f, 0.f, -1.f);
 const glm::vec3 g_CameraDefaultUpDirection(0.f, 1.f, 0.f);
 
@@ -23,7 +23,7 @@ ROC::Camera::Camera(int f_type)
     m_type = f_type;
     btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_VRRight));
 
-    m_viewPosition = g_DefaultPosition;
+    m_viewPosition = g_EmptyVec3;
     m_viewDirection = g_CameraDefaultViewDirection;
     m_upDirection = g_CameraDefaultUpDirection;
     m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, g_CameraDefaultUpDirection);

@@ -5,7 +5,8 @@
 namespace ROC
 {
 
-extern const glm::vec3 g_DefaultPosition;
+extern const glm::vec2 g_EmptyVec2;
+extern const glm::vec3 g_EmptyVec3;
 
 }
 
@@ -18,8 +19,8 @@ ROC::Sound::Sound()
     m_relative = false;
     m_looped = false;
     m_mono = false;
-    m_v3DPosition = glm::vec3(0.f);
-    m_v3DDistance = glm::vec2(0.f);
+    m_v3DPosition = g_EmptyVec3;
+    m_v3DDistance = g_EmptyVec2;
 }
 ROC::Sound::~Sound()
 {
@@ -138,7 +139,7 @@ bool ROC::Sound::Set3DPositionEnabled(bool f_state)
                 }
                 else
                 {
-                    std::memcpy(&m_v3DPosition, &g_DefaultPosition, sizeof(glm::vec3));
+                    std::memcpy(&m_v3DPosition, &g_EmptyVec3, sizeof(glm::vec3));
                     m_v3DDistance.x = m_v3DDistance.y = 0.f;
                 }
             }

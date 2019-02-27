@@ -240,7 +240,7 @@ bool ROC::SfmlManager::DoPulse()
                 glm::ivec2 l_size(static_cast<int>(m_event.size.width), static_cast<int>(m_event.size.height));
                 m_core->GetRenderManager()->UpdateViewportSize(l_size);
 
-                if(m_windowResizeCallback) (*m_windowResizeCallback)(m_event.size.width,m_event.size.height);
+                if(m_windowResizeCallback) (*m_windowResizeCallback)(m_event.size.width, m_event.size.height);
 
                 m_luaArguments->PushArgument(l_size.x);
                 m_luaArguments->PushArgument(l_size.y);
