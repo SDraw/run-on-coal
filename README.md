@@ -8,7 +8,6 @@ Simple and light-weight 3D game engine.
 * OpenGL 3.1+ rendering
 * GLSL shaders
 * Keyframed skeletal animation with hardware skinning
-* Directional lights
 * Frustum culling
 * Keyboard, mouse and joypad input
 * Physics using [Bullet Physics](../../../../bulletphysics/bullet3)
