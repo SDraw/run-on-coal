@@ -27,7 +27,7 @@ const std::vector<std::string> g_DefaultUniformsTable
 
 }
 
-#define ROC_SHADER_BONES_COUNT 227
+#define ROC_SHADER_BONES_COUNT 128
 #define ROC_SHADER_LIGHTS_COUNT 4
 
 const std::string g_DefaultShaderDefines
