@@ -9,6 +9,9 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/GLBinder.h"
 
+#define DEF_TO_STR(s) #s
+#define DEF_VAL_TO_STR(s) DEF_TO_STR(s)
+
 namespace ROC
 {
 
@@ -21,23 +24,18 @@ const std::vector<std::string> g_DefaultUniformsTable
     "gTexture0", "gColor",
     "gTime"
 };
-const std::string g_DefaultShaderDefines[]
-{
-    "#version 330 core", "#define MAX_BONES ", "#define MAX_LIGHTS "
-};
 
 }
 
-#if defined _WIN64
-#define ROC_SHADER_BONES_COUNT 128ULL
-#define ROC_SHADER_LIGHTS_COUNT 4ULL
-#elif defined _WIN32
-#define ROC_SHADER_BONES_COUNT 128U
-#define ROC_SHADER_LIGHTS_COUNT 4U
-#else
-#define ROC_SHADER_BONES_COUNT 128
+#define ROC_SHADER_BONES_COUNT 227
 #define ROC_SHADER_LIGHTS_COUNT 4
-#endif
+
+const std::string g_DefaultShaderDefines
+{
+    "#version 330 core\n"
+    "#define MAX_BONES " DEF_VAL_TO_STR(ROC_SHADER_BONES_COUNT) "\n"
+    "#define MAX_LIGHTS " DEF_VAL_TO_STR(ROC_SHADER_LIGHTS_COUNT) "\n"
+};
 
 int ROC::Shader::ms_drawableMaxCount = 0;
 
@@ -74,16 +72,6 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
     {
         std::ifstream l_file;
 
-        std::string l_definesAppend;
-        l_definesAppend.append(g_DefaultShaderDefines[0U]);
-        l_definesAppend.push_back('\n');
-        l_definesAppend.append(g_DefaultShaderDefines[1U]);
-        l_definesAppend.append(std::to_string(ROC_SHADER_BONES_COUNT));
-        l_definesAppend.push_back('\n');
-        l_definesAppend.append(g_DefaultShaderDefines[2U]);
-        l_definesAppend.append(std::to_string(ROC_SHADER_LIGHTS_COUNT));
-        l_definesAppend.push_back('\n');
-
         GLuint l_vertexShader = 0U;
         l_file.open(f_vpath, std::ios::in);
         if(!l_file.fail())
@@ -91,7 +79,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_shaderData.insert(l_shaderData.begin(), l_definesAppend.begin(), l_definesAppend.end());
+            l_shaderData.insert(l_shaderData.begin(),g_DefaultShaderDefines.begin(),g_DefaultShaderDefines.end());
 
             if(!l_shaderData.empty())
             {
@@ -128,7 +116,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_shaderData.insert(l_shaderData.begin(), l_definesAppend.begin(), l_definesAppend.end());
+            l_shaderData.insert(l_shaderData.begin(),g_DefaultShaderDefines.begin(),g_DefaultShaderDefines.end());
 
             if(!l_shaderData.empty())
             {
@@ -167,7 +155,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
                 l_file.close();
 
-                l_shaderData.insert(l_shaderData.begin(), l_definesAppend.begin(), l_definesAppend.end());
+                l_shaderData.insert(l_shaderData.begin(),g_DefaultShaderDefines.begin(),g_DefaultShaderDefines.end());
 
                 if(!l_shaderData.empty())
                 {
@@ -334,7 +322,7 @@ void ROC::Shader::SetCameraDirection(const glm::vec3 &f_value)
 }
 void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
 {
-    size_t l_count = std::min(f_data.size(), ROC_SHADER_LIGHTS_COUNT);
+    size_t l_count = std::min(f_data.size(), static_cast<size_t>(ROC_SHADER_LIGHTS_COUNT));
     if(m_defaultUniforms[SDU_LightsCount]) m_defaultUniforms[SDU_LightsCount]->SetValue(static_cast<int>(l_count));
     if(m_defaultUniforms[SDU_LightData])
     {
@@ -375,8 +363,8 @@ void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
         if(m_defaultUniforms[SDU_BoneMatrices]->IsActive())
         {
             // Forced set of uniform value
-            int l_size = static_cast<int>(std::min(f_value.size(), ROC_SHADER_BONES_COUNT));
-            glUniformMatrix4fv(m_defaultUniforms[SDU_BoneMatrices]->GetUniform(), l_size, GL_FALSE, reinterpret_cast<const float*>(f_value.data()));
+            size_t l_size = std::min(f_value.size(), static_cast<size_t>(ROC_SHADER_BONES_COUNT));
+            glUniformMatrix4fv(m_defaultUniforms[SDU_BoneMatrices]->GetUniform(), static_cast<int>(l_size), GL_FALSE, reinterpret_cast<const float*>(f_value.data()));
         }
     }
 }

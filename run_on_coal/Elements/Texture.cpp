@@ -17,13 +17,7 @@ const glm::ivec2 g_TextureDummySize(2, 2);
 
 }
 
-#if defined _WIN64
-#define ROC_TEXTURE_CUBESIDES_COUNT 6ULL
-#elif defined _WIN32
-#define ROC_TEXTURE_CUBESIDES_COUNT 6U
-#else
 #define ROC_TEXTURE_CUBESIDES_COUNT 6
-#endif
 
 ROC::Texture::Texture()
 {
@@ -90,7 +84,7 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
 
-        for(size_t i = 0U, j = std::min(ROC_TEXTURE_CUBESIDES_COUNT, f_path.size()); i < j; i++)
+        for(size_t i = 0U, j = std::min(static_cast<size_t>(ROC_TEXTURE_CUBESIDES_COUNT), f_path.size()); i < j; i++)
         {
             sf::Image l_image;
             if(l_image.loadFromFile(f_path[i]))

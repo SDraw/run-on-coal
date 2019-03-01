@@ -18,8 +18,8 @@ const std::vector<std::string> g_VRControllersTable
 
 }
 
-#define ROC_VR_CONTROLLER_LEFT 0U
-#define ROC_VR_CONTROLLER_RIGHT 1U
+#define ROC_VR_CONTROLLER_LEFT 0
+#define ROC_VR_CONTROLLER_RIGHT 1
 
 void ROC::LuaVRDef::Init(lua_State *f_vm)
 {

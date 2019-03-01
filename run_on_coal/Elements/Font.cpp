@@ -15,8 +15,8 @@ const GLint g_FontSwizzleMask[] = { GL_ONE, GL_ONE, GL_ONE, GL_RED };
 
 }
 
-#define ROC_FONT_CHAR_VERTICES 6U
-#define ROC_FONT_TEXT_BLOCK 512U
+#define ROC_FONT_CHAR_VERTICES 6
+#define ROC_FONT_TEXT_BLOCK 512
 
 FT_Library ROC::Font::ms_library = FT_Library();
 

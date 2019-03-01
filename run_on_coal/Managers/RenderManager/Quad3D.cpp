@@ -16,7 +16,7 @@ extern const float g_QuadVertexUV[];
 
 }
 
-#define ROC_QUAD3D_VERTEX_COUNT 6U
+#define ROC_QUAD3D_VERTEX_COUNT 6
 
 ROC::Quad3D::Quad3D()
 {

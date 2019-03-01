@@ -50,6 +50,8 @@ class Shader final : public Element
 
     std::string m_error;
 
+    const static std::string ms_defaultDefines;
+
     Shader(const Shader &that);
     Shader& operator=(const Shader &that);
 
