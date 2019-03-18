@@ -334,10 +334,10 @@ void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
             const glm::vec2 &l_cutoff = l_light->GetCutoff();
 
             std::memcpy(&l_data[i][0], &l_light->GetPosition(), sizeof(glm::vec3));
-            std::memcpy(&l_data[i][1], &l_light->GetDirection(), sizeof(glm::vec3));
-            std::memcpy(&l_data[i][2], &l_light->GetColor(), sizeof(glm::vec4));
             l_data[i][0][3] = l_cutoff.x;
+            std::memcpy(&l_data[i][1], &l_light->GetDirection(), sizeof(glm::vec3));
             l_data[i][1][3] = l_cutoff.y;
+            std::memcpy(&l_data[i][2], &l_light->GetColor(), sizeof(glm::vec4));
             std::memcpy(&l_data[i][3], &l_light->GetFalloff(), sizeof(glm::vec3));
             l_data[i][3][3] = static_cast<float>(l_light->GetType());
         }
