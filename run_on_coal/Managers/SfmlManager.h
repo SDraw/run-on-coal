@@ -49,8 +49,8 @@ class SfmlManager final
     OnJoypadButtonCallback m_joypadButtonCallback;
     OnJoypadAxisCallback m_joypadAxisCallback;
 
-    SfmlManager(const SfmlManager &that);
-    SfmlManager& operator=(const SfmlManager &that);
+    SfmlManager(const SfmlManager &that) = delete;
+    SfmlManager& operator=(const SfmlManager &that) = delete;
 public:
     void GetWindowPosition(glm::ivec2 &f_pos) const;
     void SetWindowPosition(const glm::ivec2 &f_pos);

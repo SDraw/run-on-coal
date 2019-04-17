@@ -9,14 +9,12 @@
 #include "Utils/GLBinder.h"
 #include "Utils/zlibUtils.h"
 
-ROC::Geometry::Geometry(bool f_async)
+ROC::Geometry::Geometry(bool f_async) : m_async(f_async)
 {
     m_elementType = ET_Geometry;
     m_elementTypeName.assign("Geometry");
 
     m_loadState = GLS_NotLoaded;
-    m_async = f_async;
-    m_released = !m_async;
     m_materialCount = 0U;
     m_boundSphereRaduis = 0.f;
 }
@@ -27,7 +25,6 @@ ROC::Geometry::~Geometry()
 
 bool ROC::Geometry::Load(const std::string &f_path)
 {
-    bool l_result = false;
     if(m_loadState == GLS_NotLoaded)
     {
         m_loadState = GLS_Loading;
@@ -113,7 +110,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_file.read(reinterpret_cast<char*>(&l_materialType), sizeof(unsigned char));
                     l_file.read(reinterpret_cast<char*>(&l_materialParam), sizeof(glm::vec4));
                     l_file.read(reinterpret_cast<char*>(&l_difTextureLength), sizeof(unsigned char));
-                    if(l_difTextureLength)
+                    if(l_difTextureLength > 0U)
                     {
                         l_difTexture.resize(l_difTextureLength);
                         l_file.read(&l_difTexture[0], l_difTextureLength);
@@ -201,7 +198,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         unsigned char l_boneNameLength;
 
                         l_file.read(reinterpret_cast<char*>(&l_boneNameLength), sizeof(unsigned char));
-                        if(l_boneNameLength)
+                        if(l_boneNameLength > 0U)
                         {
                             l_boneData->m_name.resize(l_boneNameLength);
                             l_file.read(&l_boneData->m_name[0], l_boneNameLength);
@@ -213,94 +210,97 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     }
                     m_bonesData.shrink_to_fit();
                 }
-                l_result = true;
             }
         }
         catch(const std::exception&)
         {
             Clear();
+            m_loadState = GLS_LoadFail;
         }
-        if(l_result && !m_async) m_loadState = GLS_Loaded;
 
-        if(l_result && (l_type == GSB_Animated))
+        if(m_loadState != GLS_LoadFail) 
         {
-            try
+            if(l_type == GSB_Animated)
             {
-                unsigned char l_physicsBlock = 0U;
-                l_file.read(reinterpret_cast<char*>(&l_physicsBlock), sizeof(unsigned char));
-                if(l_physicsBlock == GSB_Collision)
+                try
                 {
-                    unsigned int l_scbCount = 0U;
-                    l_file.read(reinterpret_cast<char*>(&l_scbCount), sizeof(unsigned int));
-                    for(unsigned int i = 0U; i < l_scbCount; i++)
+                    unsigned char l_physicsBlock = 0U;
+                    l_file.read(reinterpret_cast<char*>(&l_physicsBlock), sizeof(unsigned char));
+                    if(l_physicsBlock == GSB_Collision)
                     {
-                        BoneCollisionData *l_colData = new BoneCollisionData();
-                        m_collisionData.push_back(l_colData);
-                        l_file.read(reinterpret_cast<char*>(&l_colData->m_type), sizeof(unsigned char));
-                        l_file.read(reinterpret_cast<char*>(&l_colData->m_size), sizeof(glm::vec3));
-                        l_file.read(reinterpret_cast<char*>(&l_colData->m_offset), sizeof(glm::vec3));
-                        l_file.read(reinterpret_cast<char*>(&l_colData->m_offsetRotation), sizeof(glm::quat));
-                        l_file.read(reinterpret_cast<char*>(&l_colData->m_boneID), sizeof(unsigned int));
-                    }
-                    m_collisionData.shrink_to_fit();
-
-                    unsigned int l_jointsCount = 0U;
-                    l_file.read(reinterpret_cast<char*>(&l_jointsCount), sizeof(unsigned int));
-                    for(unsigned int i = 0U; i < l_jointsCount; i++)
-                    {
-                        unsigned int l_jointParts = 0U;
-                        l_file.read(reinterpret_cast<char*>(&l_jointParts), sizeof(unsigned int));
-
-                        if(l_jointParts > 0U)
+                        unsigned int l_scbCount = 0U;
+                        l_file.read(reinterpret_cast<char*>(&l_scbCount), sizeof(unsigned int));
+                        for(unsigned int i = 0U; i < l_scbCount; i++)
                         {
-                            BoneJointData *l_joint = new BoneJointData();
-                            m_jointData.push_back(l_joint);
-                            l_file.read(reinterpret_cast<char*>(&l_joint->m_boneID), sizeof(unsigned int));
-                            for(unsigned int j = 0; j < l_jointParts; j++)
-                            {
-                                BoneJointPartData l_jointPart;
-
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_boneID), sizeof(unsigned int));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_type), sizeof(unsigned char));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_size), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_offset), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_rotation), sizeof(glm::quat));
-
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_mass), sizeof(float));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_restutition), sizeof(float));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_friction), sizeof(float));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_damping), sizeof(glm::vec2));
-
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_lowerAngularLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_upperAngularLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_angularStiffness), sizeof(glm::vec3));
-
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_lowerLinearLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_upperLinearLimit), sizeof(glm::vec3));
-                                l_file.read(reinterpret_cast<char*>(&l_jointPart.m_linearStiffness), sizeof(glm::vec3));
-
-                                l_joint->m_jointPartVector.push_back(l_jointPart);
-                            }
-                            l_joint->m_jointPartVector.shrink_to_fit();
+                            BoneCollisionData *l_colData = new BoneCollisionData();
+                            m_collisionData.push_back(l_colData);
+                            l_file.read(reinterpret_cast<char*>(&l_colData->m_type), sizeof(unsigned char));
+                            l_file.read(reinterpret_cast<char*>(&l_colData->m_size), sizeof(glm::vec3));
+                            l_file.read(reinterpret_cast<char*>(&l_colData->m_offset), sizeof(glm::vec3));
+                            l_file.read(reinterpret_cast<char*>(&l_colData->m_offsetRotation), sizeof(glm::quat));
+                            l_file.read(reinterpret_cast<char*>(&l_colData->m_boneID), sizeof(unsigned int));
                         }
+                        m_collisionData.shrink_to_fit();
+
+                        unsigned int l_jointsCount = 0U;
+                        l_file.read(reinterpret_cast<char*>(&l_jointsCount), sizeof(unsigned int));
+                        for(unsigned int i = 0U; i < l_jointsCount; i++)
+                        {
+                            unsigned int l_jointParts = 0U;
+                            l_file.read(reinterpret_cast<char*>(&l_jointParts), sizeof(unsigned int));
+
+                            if(l_jointParts > 0U)
+                            {
+                                BoneJointData *l_joint = new BoneJointData();
+                                m_jointData.push_back(l_joint);
+                                l_file.read(reinterpret_cast<char*>(&l_joint->m_boneID), sizeof(unsigned int));
+                                for(unsigned int j = 0; j < l_jointParts; j++)
+                                {
+                                    BoneJointPartData l_jointPart;
+
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_boneID), sizeof(unsigned int));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_type), sizeof(unsigned char));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_size), sizeof(glm::vec3));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_offset), sizeof(glm::vec3));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_rotation), sizeof(glm::quat));
+
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_mass), sizeof(float));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_restutition), sizeof(float));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_friction), sizeof(float));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_damping), sizeof(glm::vec2));
+
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_lowerAngularLimit), sizeof(glm::vec3));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_upperAngularLimit), sizeof(glm::vec3));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_angularStiffness), sizeof(glm::vec3));
+
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_lowerLinearLimit), sizeof(glm::vec3));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_upperLinearLimit), sizeof(glm::vec3));
+                                    l_file.read(reinterpret_cast<char*>(&l_jointPart.m_linearStiffness), sizeof(glm::vec3));
+
+                                    l_joint->m_jointPartVector.push_back(l_jointPart);
+                                }
+                                l_joint->m_jointPartVector.shrink_to_fit();
+                            }
+                        }
+                        m_jointData.shrink_to_fit();
                     }
-                    m_jointData.shrink_to_fit();
+                }
+                catch(const std::exception&)
+                {
+                    for(auto iter : m_collisionData) delete iter;
+                    m_collisionData.clear();
+
+                    for(auto iter : m_jointData) delete iter;
+                    m_jointData.clear();
                 }
             }
-            catch(const std::exception&)
-            {
-                for(auto iter : m_collisionData) delete iter;
-                m_collisionData.clear();
-
-                for(auto iter : m_jointData) delete iter;
-                m_jointData.clear();
-            }
+            m_loadState = (m_async ? GLS_GeneratingVAO : GLS_Loaded);
         }
 
         GLBinder::BindArrayBuffer(l_lastArrayBuffer);
         GLBinder::BindVertexArray(l_lastVertexArray);
     }
-    return l_result;
+    return (m_loadState != GLS_LoadFail);
 }
 
 void ROC::Geometry::Clear()
@@ -321,16 +321,19 @@ void ROC::Geometry::Clear()
     m_jointData.clear();
 
     m_loadState = GLS_NotLoaded;
-
-    if(m_async) m_released = true;
 }
 
 void ROC::Geometry::GenerateVAOs()
 {
-    if(m_async && (m_loadState == GLS_Loading))
+    if(m_async && (m_loadState == GLS_GeneratingVAO))
     {
+        GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
+        GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
+
         for(auto iter : m_materialVector) iter->GenerateVAO();
         m_loadState = GLS_Loaded;
-        m_released = true;
+
+        GLBinder::BindArrayBuffer(l_lastArrayBuffer);
+        GLBinder::BindVertexArray(l_lastVertexArray);
     }
 }

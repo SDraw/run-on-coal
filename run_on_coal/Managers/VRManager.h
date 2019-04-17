@@ -50,8 +50,8 @@ class VRManager final
 
     LuaArguments *m_luaArguments;
 
-    VRManager(const VRManager &that);
-    VRManager& operator=(const VRManager &that);
+    VRManager(const VRManager &that) = delete;
+    VRManager& operator=(const VRManager &that) = delete;
 
     void UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose);
     void UpdateControllerInput(VRController &f_controller, const std::string &f_hand);
@@ -85,7 +85,6 @@ protected:
     inline void SetVRStage(RMVRStage f_stage) { m_vrStage = f_stage; }
 
     void EnableRenderTarget();
-    void DisableRenderTarget();
 
     bool DoPulse();
     void SubmitRender();

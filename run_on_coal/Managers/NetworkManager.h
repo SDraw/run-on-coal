@@ -33,8 +33,8 @@ class NetworkManager final
 
     static unsigned char GetPacketIdentifier(RakNet::Packet *f_packet);
 
-    NetworkManager(const NetworkManager &that);
-    NetworkManager& operator=(const NetworkManager &that);
+    NetworkManager(const NetworkManager &that) = delete;
+    NetworkManager& operator=(const NetworkManager &that) = delete;
 public:
     bool Connect(const std::string &f_ip, unsigned short f_port);
     bool Disconnect();

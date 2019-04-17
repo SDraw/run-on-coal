@@ -13,8 +13,8 @@ class Light final : public Element
     glm::vec3 m_falloff;
     unsigned char m_type;
 
-    Light(const Light &that);
-    Light& operator=(const Light &that);
+    Light(const Light &that) = delete;
+    Light& operator=(const Light &that) = delete;
 public:
     enum LightType : unsigned char
     {

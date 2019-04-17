@@ -4,8 +4,8 @@
 
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
-#include "Managers/EventManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/EventManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"

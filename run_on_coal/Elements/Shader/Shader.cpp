@@ -9,8 +9,8 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/GLBinder.h"
 
-#define DEF_TO_STR(s) #s
-#define DEF_VAL_TO_STR(s) DEF_TO_STR(s)
+#define ROC_SHADER_BONES_COUNT 227
+#define ROC_SHADER_LIGHTS_COUNT 4
 
 namespace ROC
 {
@@ -25,17 +25,16 @@ const std::vector<std::string> g_DefaultUniformsTable
     "gTime"
 };
 
+const std::string g_DefaultShaderDefines = (std::string() +
+    "#version 330 core\n" +
+    "#define MAX_BONES " + std::to_string(ROC_SHADER_BONES_COUNT) + '\n' +
+    "#define MAX_LIGHTS " + std::to_string(ROC_SHADER_LIGHTS_COUNT) + '\n' +
+    "#define LIGHT_DIRECTIONAL " + std::to_string(ROC::Light::LT_Directional) + '\n' +
+    "#define LIGHT_POINT " + std::to_string(ROC::Light::LT_Point) + '\n' +
+    "#define LIGHT_SPOTLIGHT " + std::to_string(ROC::Light::LT_Spotlight) + '\n'
+    );
+
 }
-
-#define ROC_SHADER_BONES_COUNT 128
-#define ROC_SHADER_LIGHTS_COUNT 4
-
-const std::string g_DefaultShaderDefines
-{
-    "#version 330 core\n"
-    "#define MAX_BONES " DEF_VAL_TO_STR(ROC_SHADER_BONES_COUNT) "\n"
-    "#define MAX_LIGHTS " DEF_VAL_TO_STR(ROC_SHADER_LIGHTS_COUNT) "\n"
-};
 
 int ROC::Shader::ms_drawableMaxCount = 0;
 
@@ -79,7 +78,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_shaderData.insert(l_shaderData.begin(),g_DefaultShaderDefines.begin(),g_DefaultShaderDefines.end());
+            l_shaderData.insert(l_shaderData.begin(), g_DefaultShaderDefines.begin(), g_DefaultShaderDefines.end());
 
             if(!l_shaderData.empty())
             {
@@ -116,7 +115,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_shaderData.insert(l_shaderData.begin(),g_DefaultShaderDefines.begin(),g_DefaultShaderDefines.end());
+            l_shaderData.insert(l_shaderData.begin(), g_DefaultShaderDefines.begin(), g_DefaultShaderDefines.end());
 
             if(!l_shaderData.empty())
             {
@@ -155,7 +154,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 std::string l_shaderData((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
                 l_file.close();
 
-                l_shaderData.insert(l_shaderData.begin(),g_DefaultShaderDefines.begin(),g_DefaultShaderDefines.end());
+                l_shaderData.insert(l_shaderData.begin(), g_DefaultShaderDefines.begin(), g_DefaultShaderDefines.end());
 
                 if(!l_shaderData.empty())
                 {
@@ -334,10 +333,10 @@ void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
             const glm::vec2 &l_cutoff = l_light->GetCutoff();
 
             std::memcpy(&l_data[i][0], &l_light->GetPosition(), sizeof(glm::vec3));
-            l_data[i][0][3] = l_cutoff.x;
             std::memcpy(&l_data[i][1], &l_light->GetDirection(), sizeof(glm::vec3));
-            l_data[i][1][3] = l_cutoff.y;
             std::memcpy(&l_data[i][2], &l_light->GetColor(), sizeof(glm::vec4));
+            l_data[i][0][3] = l_cutoff.x;
+            l_data[i][1][3] = l_cutoff.y;
             std::memcpy(&l_data[i][3], &l_light->GetFalloff(), sizeof(glm::vec3));
             l_data[i][3][3] = static_cast<float>(l_light->GetType());
         }

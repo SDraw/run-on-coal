@@ -16,7 +16,7 @@
 #include "Elements/Sound.h"
 #include "Elements/Texture.h"
 
-#include "Managers/AsyncManager.h"
+#include "Managers/AsyncManager/AsyncManager.h"
 #include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/PhysicsManager.h"
@@ -89,7 +89,7 @@ ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bo
     if(f_async)
     {
         AddElementToSet(l_geometry);
-        m_core->GetAsyncManager()->AddGeometryToQueue(l_geometry, f_path);
+        m_core->GetAsyncManager()->AddGeometryLoad(l_geometry, f_path);
     }
     else
     {
@@ -297,7 +297,7 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             case Element::ET_Geometry:
             {
                 Geometry *l_geometry = reinterpret_cast<Geometry*>(f_element);
-                if(!l_geometry->IsAsyncLoad() || l_geometry->IsReleased())
+                if(l_geometry->CanBeDestroyed())
                 {
                     m_core->GetInheritManager()->RemoveParentRelations(f_element);
                     RemoveElementFromSet(f_element);

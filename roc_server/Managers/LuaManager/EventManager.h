@@ -26,8 +26,8 @@ class EventManager final
     std::unordered_map<std::string,EventHeap*> m_eventMap;
     std::unordered_map<std::string, EventHeap*>::iterator m_eventMapEnd;
 
-    EventManager(const EventManager &that);
-    EventManager& operator=(const EventManager &that);
+    EventManager(const EventManager &that) = delete;
+    EventManager& operator=(const EventManager &that) = delete;
 public:
     bool AddEvent(const std::string &f_event);
     bool AddEventHandler(const std::string &f_event, LuaFunction &f_func);

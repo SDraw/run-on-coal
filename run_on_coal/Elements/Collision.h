@@ -10,8 +10,8 @@ class Collision final : public Element
     int m_motionType;
     glm::vec3 m_scale;
 
-    Collision(const Collision &that);
-    Collision& operator=(const Collision &that);
+    Collision(const Collision &that) = delete;
+    Collision& operator=(const Collision &that) = delete;
 public:
     enum CollisionType
     {

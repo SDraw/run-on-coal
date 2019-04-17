@@ -23,8 +23,8 @@ class Quad2D final
     GLuint m_VBO[QBI_BufferCount];
     GLuint m_VAO;
 
-    Quad2D(const Quad2D &that);
-    Quad2D& operator=(const Quad2D &that);
+    Quad2D(const Quad2D &that) = delete;
+    Quad2D& operator=(const Quad2D &that) = delete;
 protected:
     Quad2D();
     ~Quad2D();

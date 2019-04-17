@@ -3,7 +3,7 @@
 #include "Lua/LuaDefs/LuaVRDef.h"
 
 #include "Core/Core.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Managers/VRManager.h"
 #include "Lua/ArgReader.h"
 #include "Utils/EnumUtils.h"

@@ -15,8 +15,8 @@ class RenderTarget final : public Drawable
 
     std::string m_error;
 
-    RenderTarget(const RenderTarget &that);
-    RenderTarget& operator=(const RenderTarget &that);
+    RenderTarget(const RenderTarget &that) = delete;
+    RenderTarget& operator=(const RenderTarget &that) = delete;
 
     void Clear();
 public:

@@ -8,8 +8,8 @@ class Client final : public Element
 {
     RakNet::SystemAddress m_address;
 
-    Client(const Client &that);
-    Client& operator=(const Client &that);
+    Client(const Client &that) = delete;
+    Client& operator=(const Client &that) = delete;
 public:
     inline RakNet::SystemIndex GetID() const { return m_address.systemIndex; }
     void GetAddress(std::string &f_ip, unsigned short &f_port) const;

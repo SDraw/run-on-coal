@@ -5,7 +5,7 @@
 
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Lua/ArgReader.h"
 #include "Utils/LuaUtils.h"

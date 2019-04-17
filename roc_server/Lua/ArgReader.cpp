@@ -9,7 +9,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Elements/Element.h"
 #include "Utils/LuaUtils.h"
 

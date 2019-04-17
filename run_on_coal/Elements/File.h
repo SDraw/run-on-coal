@@ -17,8 +17,8 @@ class File final : public Element
     std::fstream *m_file;
     std::string m_path;
 
-    File(const File &that);
-    File& operator=(const File &that);
+    File(const File &that) = delete;
+    File& operator=(const File &that) = delete;
 public:
     size_t Read(std::string &f_data, size_t f_lenght);
     size_t Write(const std::string &f_data);

@@ -33,8 +33,8 @@ class Scene final : public Element
 
     bool m_active;
 
-    Scene(const Scene &that);
-    Scene& operator=(const Scene &that);
+    Scene(const Scene &that) = delete;
+    Scene& operator=(const Scene &that) = delete;
 
     void UpdateDistantModels();
 

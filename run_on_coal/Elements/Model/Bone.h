@@ -22,8 +22,8 @@ class Bone final
     btRigidBody *m_dynamicBody;
     bool m_dynamic;
 
-    Bone(const Bone &that);
-    Bone& operator=(const Bone &that);
+    Bone(const Bone &that) = delete;
+    Bone& operator=(const Bone &that) = delete;
 public:
     inline bool IsUpdated() const { return m_updated; }
     inline bool IsDynamic() const { return m_dynamic; }

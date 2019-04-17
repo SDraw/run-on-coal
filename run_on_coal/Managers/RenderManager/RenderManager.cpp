@@ -19,8 +19,8 @@
 #include "Utils/Pool.h"
 
 #include "Managers/ConfigManager.h"
-#include "Managers/EventManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/EventManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/SfmlManager.h"
 #include "Managers/VRManager.h"
@@ -79,6 +79,7 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_skipNoDepthMaterials = false;
     m_time = 0.f;
     m_locked = true;
+    m_vrLock = false;
     m_textureMatrix = g_IdentityMatrix;
 
     m_clearColor = g_DefaultClearColor;
@@ -114,7 +115,7 @@ void ROC::RenderManager::SetActiveScene(Scene *f_scene)
             {
                 m_skipNoDepthMaterials = false;
 
-                if(m_vrManager->IsVREnabled() && m_vrLock) m_vrManager->EnableRenderTarget();
+                if(m_vrLock) m_vrManager->EnableRenderTarget();
                 else GLBinder::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
             }
 
@@ -395,8 +396,6 @@ void ROC::RenderManager::DoPulse()
     if(m_vrManager->IsVREnabled())
     {
         m_vrLock = true;
-
-        const glm::uvec2 &l_rtSize = m_vrManager->GetTargetsSize();
 
         m_vrManager->SetVRStage(VRManager::VRS_Left);
         m_vrManager->EnableRenderTarget();

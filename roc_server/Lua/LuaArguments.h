@@ -11,8 +11,8 @@ class LuaArguments final
     CustomData m_dummyData;
     std::vector<CustomData> m_vArgs;
 
-    LuaArguments(const LuaArguments &that);
-    LuaArguments& operator=(const LuaArguments &that);
+    LuaArguments(const LuaArguments &that) = delete;
+    LuaArguments& operator=(const LuaArguments &that) = delete;
 public:
     LuaArguments();
     ~LuaArguments();

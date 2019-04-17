@@ -29,8 +29,8 @@ class ElementManager final
     void AddElementToSet(void *f_ptr);
     void RemoveElementFromSet(void *f_ptr);
 
-    ElementManager(const ElementManager &that);
-    ElementManager& operator=(const ElementManager &that);
+    ElementManager(const ElementManager &that) = delete;
+    ElementManager& operator=(const ElementManager &that) = delete;
 public:
     Scene* CreateScene();
     Camera* CreateCamera(int f_type);

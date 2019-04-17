@@ -14,6 +14,9 @@ class Sound final : public Element
 
     glm::vec3 m_v3DPosition;
     glm::vec2 m_v3DDistance;
+
+    Sound(const Sound &that) = delete;
+    Sound& operator=(const Sound &that) = delete;
 public:
     void Play();
     void Pause();

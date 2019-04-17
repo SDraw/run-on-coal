@@ -23,8 +23,8 @@ class AnimationController final
     unsigned int m_blendTimeTick;
     float m_blendValue;
 
-    AnimationController(const AnimationController &that);
-    AnimationController& operator=(const AnimationController &that);
+    AnimationController(const AnimationController &that) = delete;
+    AnimationController& operator=(const AnimationController &that) = delete;
 public:
     inline Animation* GetAnimation() const { return m_animation; };
 

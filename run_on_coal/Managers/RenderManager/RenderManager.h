@@ -59,8 +59,8 @@ class RenderManager final
     OnRenderCallback m_callback;
     OnVRRenderCallback m_vrCallback;
 
-    RenderManager(const RenderManager &that);
-    RenderManager& operator=(const RenderManager &that);
+    RenderManager(const RenderManager &that) = delete;
+    RenderManager& operator=(const RenderManager &that) = delete;
 public:
     void SetActiveScene(Scene *f_scene);
 

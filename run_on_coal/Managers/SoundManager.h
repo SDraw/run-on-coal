@@ -10,8 +10,8 @@ class SoundManager final
     glm::vec3 m_listenerUp;
     float m_globalVolume;
 
-    SoundManager(const SoundManager &that);
-    SoundManager& operator=(const SoundManager &that);
+    SoundManager(const SoundManager &that) = delete;
+    SoundManager& operator=(const SoundManager &that) = delete;
 public:
     void SetListenerPosition(const glm::vec3 &f_pos);
     inline const glm::vec3& GetListenerPosition() const { return m_listenerPosition; }

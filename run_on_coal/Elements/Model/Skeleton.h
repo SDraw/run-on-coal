@@ -59,8 +59,8 @@ class Skeleton final
 
     static bool ms_physicsEnabled;
 
-    Skeleton(const Skeleton &that);
-    Skeleton& operator=(const Skeleton &that);
+    Skeleton(const Skeleton &that) = delete;
+    Skeleton& operator=(const Skeleton &that) = delete;
 public:
     inline size_t GetBonesCount() const { return m_bonesCount; }
 

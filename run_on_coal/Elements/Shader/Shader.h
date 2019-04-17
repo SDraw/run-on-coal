@@ -52,8 +52,8 @@ class Shader final : public Element
 
     const static std::string ms_defaultDefines;
 
-    Shader(const Shader &that);
-    Shader& operator=(const Shader &that);
+    Shader(const Shader &that) = delete;
+    Shader& operator=(const Shader &that) = delete;
 
     void SetupUniformsAndLocations();
     void FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_name, unsigned int f_type);

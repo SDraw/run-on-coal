@@ -33,8 +33,8 @@ class Core final
     OnServerStopCallback m_serverStopCallback;
 
     Core();
-    Core(const Core &that);
-    Core& operator=(const Core &that);
+    Core(const Core &that) = delete;
+    Core& operator=(const Core &that) = delete;
     ~Core();
 public:
     static Core* Init();

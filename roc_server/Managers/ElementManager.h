@@ -15,8 +15,8 @@ class ElementManager final
     std::unordered_set<void*> m_elementSet;
     std::unordered_set<void*>::iterator m_elementSetEnd;
 
-    ElementManager(const ElementManager &that);
-    ElementManager& operator=(const ElementManager &that);
+    ElementManager(const ElementManager &that) = delete;
+    ElementManager& operator=(const ElementManager &that) = delete;
 
     void AddElementToSet(void *f_ptr);
     void RemoveElementFromSet(void *f_ptr);

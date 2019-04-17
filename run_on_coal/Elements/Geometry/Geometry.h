@@ -30,14 +30,15 @@ class Geometry final : public Element
     {
         GLS_NotLoaded,
         GLS_Loading,
-        GLS_Loaded
+        GLS_GeneratingVAO,
+        GLS_Loaded,
+        GLS_LoadFail
     };
     std::atomic<GeometryLoadState> m_loadState;
-    bool m_async;
-    bool m_released;
+    const bool m_async;
 
-    Geometry(const Geometry &that);
-    Geometry& operator=(const Geometry &that);
+    Geometry(const Geometry &that) = delete;
+    Geometry& operator=(const Geometry &that) = delete;
 
     void Clear();
 public:
@@ -54,17 +55,16 @@ protected:
     bool Load(const std::string &f_path);
     void GenerateVAOs();
 
-    inline bool IsAsyncLoad() const { return m_async; }
-    inline bool IsReleased() const { return m_released; }
+    bool CanBeDestroyed() const { return (m_loadState == GLS_Loaded || m_loadState == GLS_LoadFail); }
 
     inline const std::vector<Material*>& GetMaterialVector() const { return m_materialVector; }
     inline const std::vector<BoneData*>& GetBonesData() const { return m_bonesData; };
     inline const std::vector<BoneCollisionData*>& GetBonesCollisionData() const { return m_collisionData; }
     inline const std::vector<BoneJointData*>& GetJointsData() const { return m_jointData; }
 
-    friend class AsyncManager;
     friend class ElementManager;
     friend class RenderManager;
+    friend class AsyncGeometryTask;
     friend class Model;
 };
 

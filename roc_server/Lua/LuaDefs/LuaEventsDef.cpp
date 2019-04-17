@@ -3,8 +3,8 @@
 #include "Lua/LuaDefs/LuaEventsDef.h"
 
 #include "Core/Core.h"
-#include "Managers/EventManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/EventManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaArguments.h"
 #include "Lua/LuaFunction.h"

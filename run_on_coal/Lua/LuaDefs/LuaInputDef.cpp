@@ -4,7 +4,7 @@
 
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Managers/SfmlManager.h"
 #include "Lua/ArgReader.h"

@@ -123,9 +123,6 @@
     <ClCompile Include="Utils\TreeNode.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\AsyncManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaDefs\LuaAnimationDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
@@ -237,11 +234,20 @@
     <ClCompile Include="Managers\RenderManager\PhysicsDrawer.cpp">
       <Filter>Managers\RenderManager</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\LuaManager.cpp">
+    <ClCompile Include="Managers\LuaManager\EventManager.cpp">
       <Filter>Managers\LuaManager</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\EventManager.cpp">
+    <ClCompile Include="Managers\LuaManager\LuaManager.cpp">
       <Filter>Managers\LuaManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\AsyncManager\AsyncManager.cpp">
+      <Filter>Managers\AsyncManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\AsyncManager\AsyncTask.cpp">
+      <Filter>Managers\AsyncManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\AsyncManager\AsyncGeometryTask.cpp">
+      <Filter>Managers\AsyncManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -364,9 +370,6 @@
     <ClInclude Include="Utils\TreeNode.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\AsyncManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaAnimationDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
@@ -475,11 +478,20 @@
     <ClInclude Include="Managers\RenderManager\PhysicsDrawer.h">
       <Filter>Managers\RenderManager</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\LuaManager.h">
+    <ClInclude Include="Managers\LuaManager\EventManager.h">
       <Filter>Managers\LuaManager</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\EventManager.h">
+    <ClInclude Include="Managers\LuaManager\LuaManager.h">
       <Filter>Managers\LuaManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\AsyncManager\AsyncManager.h">
+      <Filter>Managers\AsyncManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\AsyncManager\AsyncTask.h">
+      <Filter>Managers\AsyncManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\AsyncManager\AsyncGeometryTask.h">
+      <Filter>Managers\AsyncManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -530,6 +542,9 @@
     </Filter>
     <Filter Include="Managers\LuaManager">
       <UniqueIdentifier>{2d089435-570a-40f6-96f8-4bcc9197273e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers\AsyncManager">
+      <UniqueIdentifier>{04bdb1bf-1b2f-4eb2-ab0f-c7838f241146}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

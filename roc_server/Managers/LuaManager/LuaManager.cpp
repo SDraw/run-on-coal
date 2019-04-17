@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Core/Core.h"
-#include "Managers/EventManager.h"
+#include "Managers/LuaManager/EventManager.h"
 #include "Lua/LuaArguments.h"
 
 #include "Managers/ConfigManager.h"
@@ -76,7 +76,13 @@ void ROC::LuaManager::LoadDefaultScripts()
                     std::string l_path(m_core->GetConfigManager()->GetScriptsDirectory());
                     l_path.push_back('/');
                     l_path.append(l_attrib.as_string());
-                    LoadScript(l_path);
+                    if(LoadScript(l_path))
+                    {
+                        std::string l_info("Script '");
+                        l_info.append(l_path);
+                        l_info.append("' is loaded successfully");
+                        m_core->GetLogManager()->Log(l_info);
+                    }
                 }
             }
         }

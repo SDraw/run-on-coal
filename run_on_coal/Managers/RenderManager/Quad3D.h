@@ -22,8 +22,8 @@ class Quad3D final
     GLuint m_VBO[QBI_BufferCount];
     GLuint m_VAO;
 
-    Quad3D(const Quad3D &that);
-    Quad3D& operator=(const Quad3D &that);
+    Quad3D(const Quad3D &that) = delete;
+    Quad3D& operator=(const Quad3D &that) = delete;
 protected:
     Quad3D();
     ~Quad3D();

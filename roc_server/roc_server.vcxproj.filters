@@ -69,10 +69,10 @@
     <ClCompile Include="Lua\LuaFunction.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\LuaManager.cpp">
+    <ClCompile Include="Managers\LuaManager\EventManager.cpp">
       <Filter>Managers\LuaManager</Filter>
     </ClCompile>
-    <ClCompile Include="Managers\EventManager.cpp">
+    <ClCompile Include="Managers\LuaManager\LuaManager.cpp">
       <Filter>Managers\LuaManager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -139,10 +139,10 @@
     <ClInclude Include="Lua\LuaFunction.h">
       <Filter>Lua</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\LuaManager.h">
+    <ClInclude Include="Managers\LuaManager\EventManager.h">
       <Filter>Managers\LuaManager</Filter>
     </ClInclude>
-    <ClInclude Include="Managers\EventManager.h">
+    <ClInclude Include="Managers\LuaManager\LuaManager.h">
       <Filter>Managers\LuaManager</Filter>
     </ClInclude>
   </ItemGroup>

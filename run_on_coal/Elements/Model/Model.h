@@ -29,8 +29,8 @@ class Model final : public Element
     Skeleton *m_skeleton;
     Collision *m_collision;
 
-    Model(const Model &that);
-    Model& operator=(const Model &that);
+    Model(const Model &that) = delete;
+    Model& operator=(const Model &that) = delete;
 public:
     enum ModelAnimationProperty : unsigned char
     {

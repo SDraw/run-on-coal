@@ -28,8 +28,8 @@ class Animation final : public Element
 
     bool m_loaded;
 
-    Animation(const Animation &that);
-    Animation& operator=(const Animation &that);
+    Animation(const Animation &that) = delete;
+    Animation& operator=(const Animation &that) = delete;
 
     void Clean();
 public:

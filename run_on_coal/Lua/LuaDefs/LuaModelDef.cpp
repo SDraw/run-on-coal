@@ -6,7 +6,7 @@
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/InheritanceManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager/RenderManager.h"

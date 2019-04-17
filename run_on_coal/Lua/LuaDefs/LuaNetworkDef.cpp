@@ -3,7 +3,7 @@
 #include "Lua/LuaDefs/LuaNetworkDef.h"
 
 #include "Core/Core.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Managers/NetworkManager.h"
 #include "Managers/LogManager.h"
 #include "Lua/ArgReader.h"

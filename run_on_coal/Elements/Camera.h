@@ -26,8 +26,8 @@ class Camera final : public Element
 
     static vr::IVRSystem *ms_vrSystem;
 
-    Camera(const Camera &that);
-    Camera& operator=(const Camera &that);
+    Camera(const Camera &that) = delete;
+    Camera& operator=(const Camera &that) = delete;
 public:
     enum CameraProjectionType
     {

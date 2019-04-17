@@ -49,8 +49,8 @@ class Font final : public Element
 
     bool m_loaded;
 
-    Font(const Font &that);
-    Font& operator=(const Font &that);
+    Font(const Font &that) = delete;
+    Font& operator=(const Font &that) = delete;
 
     bool LoadChar(unsigned int f_char);
 public:

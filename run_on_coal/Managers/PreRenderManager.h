@@ -23,8 +23,8 @@ class PreRenderManager final
     LuaArguments *m_luaArguments;
     OnPreRender m_callback;
 
-    PreRenderManager(const PreRenderManager &that);
-    PreRenderManager& operator=(const PreRenderManager &that);
+    PreRenderManager(const PreRenderManager &that) = delete;
+    PreRenderManager& operator=(const PreRenderManager &that) = delete;
 public:
     inline void SetPreRenderCallback(OnPreRender f_callback) { m_callback = f_callback; }
 protected:

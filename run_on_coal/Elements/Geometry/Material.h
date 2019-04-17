@@ -25,8 +25,8 @@ class Material final
     glm::vec4 m_params;
     Texture *m_texture;
 
-    Material(const Material &that);
-    Material& operator=(const Material &that);
+    Material(const Material &that) = delete;
+    Material& operator=(const Material &that) = delete;
 public:
     enum MaterialPropertyBit : unsigned char
     {

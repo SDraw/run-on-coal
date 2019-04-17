@@ -289,13 +289,16 @@
     <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaVRDef.h" />
     <ClInclude Include="Lua\LuaFunction.h" />
-    <ClInclude Include="Managers\AsyncManager.h" />
+    <ClInclude Include="Managers\AsyncManager\AsyncGeometryTask.h" />
+    <ClInclude Include="Managers\AsyncManager\AsyncManager.h" />
+    <ClInclude Include="Managers\AsyncManager\AsyncTask.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
     <ClInclude Include="Managers\LogManager.h" />
     <ClInclude Include="Lua\ArgReader.h" />
     <ClInclude Include="Lua\LuaArguments.h" />
-    <ClInclude Include="Managers\EventManager.h" />
+    <ClInclude Include="Managers\LuaManager\EventManager.h" />
+    <ClInclude Include="Managers\LuaManager\LuaManager.h" />
     <ClInclude Include="Managers\NetworkManager.h" />
     <ClInclude Include="Managers\RenderManager\PhysicsDrawer.h" />
     <ClInclude Include="Managers\RenderManager\Quad2D.h" />
@@ -303,7 +306,6 @@
     <ClInclude Include="Managers\RenderManager\RenderManager.h" />
     <ClInclude Include="Managers\SfmlManager.h" />
     <ClInclude Include="Managers\InheritanceManager.h" />
-    <ClInclude Include="Managers\LuaManager.h" />
     <ClInclude Include="Managers\PhysicsManager.h" />
     <ClInclude Include="Managers\PreRenderManager.h" />
     <ClInclude Include="Managers\VRManager.h" />
@@ -394,13 +396,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Managers\AsyncManager.cpp" />
+    <ClCompile Include="Managers\AsyncManager\AsyncGeometryTask.cpp" />
+    <ClCompile Include="Managers\AsyncManager\AsyncManager.cpp" />
+    <ClCompile Include="Managers\AsyncManager\AsyncTask.cpp" />
     <ClCompile Include="Managers\ConfigManager.cpp" />
     <ClCompile Include="Managers\ElementManager.cpp" />
     <ClCompile Include="Managers\LogManager.cpp" />
     <ClCompile Include="Lua\ArgReader.cpp" />
     <ClCompile Include="Lua\LuaArguments.cpp" />
-    <ClCompile Include="Managers\EventManager.cpp" />
+    <ClCompile Include="Managers\LuaManager\EventManager.cpp" />
+    <ClCompile Include="Managers\LuaManager\LuaManager.cpp" />
     <ClCompile Include="Managers\NetworkManager.cpp" />
     <ClCompile Include="Managers\RenderManager\PhysicsDrawer.cpp" />
     <ClCompile Include="Managers\RenderManager\Quad2D.cpp" />
@@ -408,7 +413,6 @@
     <ClCompile Include="Managers\RenderManager\RenderManager.cpp" />
     <ClCompile Include="Managers\SfmlManager.cpp" />
     <ClCompile Include="Managers\InheritanceManager.cpp" />
-    <ClCompile Include="Managers\LuaManager.cpp" />
     <ClCompile Include="Managers\PhysicsManager.cpp" />
     <ClCompile Include="Managers\PreRenderManager.cpp" />
     <ClCompile Include="Managers\SoundManager.cpp" />

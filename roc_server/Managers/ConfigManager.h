@@ -13,8 +13,8 @@ class ConfigManager final
     unsigned int m_pulseTick;
     std::string m_scriptsDir;
 
-    ConfigManager(const ConfigManager &that);
-    ConfigManager& operator=(const ConfigManager &that);
+    ConfigManager(const ConfigManager &that) = delete;
+    ConfigManager& operator=(const ConfigManager &that) = delete;
 public:
     inline bool IsConfigParsed() const { return m_configParsed; }
     inline bool IsLogEnabled() const { return m_logging; }

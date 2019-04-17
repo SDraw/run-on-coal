@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 #include "Core/Core.h"
-#include "Managers/EventManager.h"
+#include "Managers/LuaManager/EventManager.h"
 #include "Lua/LuaArguments.h"
 #include "Lua/LuaFunction.h"
 

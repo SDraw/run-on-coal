@@ -27,8 +27,8 @@ class InheritanceManager final
 
     static void InheritanceBreakProcessing(Element *f_child, Element *f_parent);
 
-    InheritanceManager(const InheritanceManager &that);
-    InheritanceManager& operator=(const InheritanceManager &that);
+    InheritanceManager(const InheritanceManager &that) = delete;
+    InheritanceManager& operator=(const InheritanceManager &that) = delete;
 public:
     bool AttachModelToModel(Model *f_model, Model *f_parent, int f_bone = -1);
     bool DetachModel(Model *f_model);

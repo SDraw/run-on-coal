@@ -7,8 +7,8 @@
 #include "Lua/LuaArguments.h"
 
 #include "Managers/ConfigManager.h"
-#include "Managers/LuaManager.h"
-#include "Managers/EventManager.h"
+#include "Managers/LuaManager/LuaManager.h"
+#include "Managers/LuaManager/EventManager.h"
 #include "Elements/Camera.h"
 #include "Utils/MathUtils.h"
 
@@ -115,21 +115,6 @@ void ROC::VRManager::EnableRenderTarget()
                 break;
             case VRS_Right:
                 m_rightEyeRT->Enable();
-                break;
-        }
-    }
-}
-void ROC::VRManager::DisableRenderTarget()
-{
-    if(m_vrSystem)
-    {
-        switch(m_vrStage)
-        {
-            case VRS_Left:
-                m_leftEyeRT->Disable();
-                break;
-            case VRS_Right:
-                m_rightEyeRT->Disable();
                 break;
         }
     }

@@ -4,8 +4,8 @@
 #include "Core/Core.h"
 #include "Lua/LuaArguments.h"
 
-#include "Managers/EventManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/EventManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 
 namespace ROC
 {

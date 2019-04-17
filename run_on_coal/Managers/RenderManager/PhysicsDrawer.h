@@ -18,8 +18,8 @@ class PhysicsDrawer final : public btIDebugDraw
     std::vector<glm::vec3> m_lines;
     std::vector<glm::vec3> m_colors;
 
-    PhysicsDrawer(const PhysicsDrawer &that);
-    PhysicsDrawer& operator=(const PhysicsDrawer &that);
+    PhysicsDrawer(const PhysicsDrawer &that) = delete;
+    PhysicsDrawer& operator=(const PhysicsDrawer &that) = delete;
 public:
     PhysicsDrawer();
     ~PhysicsDrawer();

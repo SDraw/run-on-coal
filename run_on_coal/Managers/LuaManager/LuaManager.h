@@ -17,12 +17,12 @@ class LuaManager final
     lua_State *m_vm;
     EventManager *m_eventManager;
 
-    LuaManager(const LuaManager &that);
-    LuaManager& operator=(const LuaManager &that);
+    LuaManager(const LuaManager &that) = delete;
+    LuaManager& operator=(const LuaManager &that) = delete;
+
+    void LoadScript(const std::string &f_script, bool f_asFile = true);
 public:
     inline EventManager* GetEventManager() const { return m_eventManager; }
-
-    bool LoadScript(const std::string &f_script, bool f_asFile = true);
 protected:
     explicit LuaManager(Core *f_core);
     ~LuaManager();

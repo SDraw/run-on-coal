@@ -6,10 +6,10 @@
 #include "Lua/LuaArguments.h"
 
 #include "Managers/ConfigManager.h"
-#include "Managers/EventManager.h"
+#include "Managers/LuaManager/EventManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
-#include "Managers/LuaManager.h"
+#include "Managers/LuaManager/LuaManager.h"
 
 #define ROC_NETWORK_MAX_CONNECTIONS 8
 #define ROC_NETWORK_DISCONNECT_DURATION 300U

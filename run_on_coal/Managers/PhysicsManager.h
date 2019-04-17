@@ -22,8 +22,8 @@ class PhysicsManager final
 
     btRigidBody *m_floorBody;
 
-    PhysicsManager(const PhysicsManager &that);
-    PhysicsManager& operator=(const PhysicsManager &that);
+    PhysicsManager(const PhysicsManager &that) = delete;
+    PhysicsManager& operator=(const PhysicsManager &that) = delete;
 public:
     void SetPhysicsEnabled(bool f_value);
     inline bool GetPhysicsEnabled() const { return m_enabled; }
