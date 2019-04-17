@@ -26,11 +26,11 @@ ROC::AsyncManager::~AsyncManager()
     m_threadSwitch = false;
     m_loadThread->join();
 
-    for(auto iter : m_q0) delete iter;
-    m_q0.clear();
+    for(auto iter : m_preparedTasks) delete iter;
+    m_preparedTasks.clear();
 
-    for(auto iter : m_q2) delete iter;
-    m_q2.clear();
+    for(auto iter : m_executedTasks) delete iter;
+    m_executedTasks.clear();
 
     delete m_luaArguments;
 }
@@ -39,9 +39,9 @@ void ROC::AsyncManager::AddGeometryLoad(Geometry *f_geometry, const std::string 
 {
     AsyncGeometryTask *l_task = new AsyncGeometryTask(f_geometry, f_path);
 
-    m_q0Mutex.lock();
-    m_q0.push_back(l_task);
-    m_q0Mutex.unlock();
+    m_preparedTasksMutex.lock();
+    m_preparedTasks.push_back(l_task);
+    m_preparedTasksMutex.unlock();
 }
 
 void ROC::AsyncManager::LoadThread()
@@ -53,18 +53,18 @@ void ROC::AsyncManager::LoadThread()
     std::chrono::milliseconds l_sleepTime(10U);
     while(m_threadSwitch)
     {
-        if(m_q0Mutex.try_lock())
+        if(m_preparedTasksMutex.try_lock())
         {
-            m_q0.swap(m_q1);
-            m_q0Mutex.unlock();
+            m_preparedTasks.swap(m_executionTasks);
+            m_preparedTasksMutex.unlock();
         }
-        if(!m_q1.empty())
+        if(!m_executionTasks.empty())
         {
-            for(auto iter : m_q1) iter->Execute();
+            for(auto iter : m_executionTasks) iter->Execute();
 
-            m_q2Mutex.lock();
-            m_q1.swap(m_q2);
-            m_q2Mutex.unlock();
+            m_executedTasksMutex.lock();
+            m_executionTasks.swap(m_executedTasks);
+            m_executedTasksMutex.unlock();
         }
         std::this_thread::sleep_for(l_sleepTime);
     }
@@ -72,11 +72,11 @@ void ROC::AsyncManager::LoadThread()
 
 void ROC::AsyncManager::DoPulse()
 {
-    if(m_q2Mutex.try_lock())
+    if(m_executedTasksMutex.try_lock())
     {
-        if(!m_q2.empty())
+        if(!m_executedTasks.empty())
         {
-            for(auto iter : m_q2)
+            for(auto iter : m_executedTasks)
             {
                 iter->PostExecute();
 
@@ -104,8 +104,8 @@ void ROC::AsyncManager::DoPulse()
 
                 delete iter;
             }
-            m_q2.clear();
+            m_executedTasks.clear();
         }
-        m_q2Mutex.unlock();
+        m_executedTasksMutex.unlock();
     }
 }

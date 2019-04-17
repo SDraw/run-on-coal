@@ -17,13 +17,13 @@ class AsyncManager final
     std::atomic<bool> m_threadSwitch;
     std::thread *m_loadThread;
 
-    std::vector<AsyncTask*> m_q0;
-    std::mutex m_q0Mutex;
+    std::vector<AsyncTask*> m_preparedTasks;
+    std::mutex m_preparedTasksMutex;
 
-    std::vector<AsyncTask*> m_q1; // Access only from new context thread
+    std::vector<AsyncTask*> m_executionTasks; // Access only from new context thread
 
-    std::vector<AsyncTask*> m_q2;
-    std::mutex m_q2Mutex;
+    std::vector<AsyncTask*> m_executedTasks;
+    std::mutex m_executedTasksMutex;
 
     LuaArguments *m_luaArguments;
 
