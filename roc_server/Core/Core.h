@@ -1,4 +1,5 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
@@ -8,7 +9,6 @@ class ElementManager;
 class LogManager;
 class LuaManager;
 class NetworkManager;
-class LuaArguments;
 
 typedef void(*OnServerStartCallback)(void);
 typedef void(*OnServerPulseCallback)(void);
@@ -26,7 +26,7 @@ class Core final
 
     std::string m_workingDir;
     std::chrono::milliseconds m_pulseTick;
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
 
     static OnServerStartCallback ms_serverStartCallback;
     OnServerPulseCallback m_serverPulseCallback;

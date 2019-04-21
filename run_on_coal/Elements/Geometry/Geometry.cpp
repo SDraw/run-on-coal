@@ -9,14 +9,14 @@
 #include "Utils/GLBinder.h"
 #include "Utils/zlibUtils.h"
 
-ROC::Geometry::Geometry(bool f_async) : m_async(f_async)
+ROC::Geometry::Geometry()
 {
     m_elementType = ET_Geometry;
     m_elementTypeName.assign("Geometry");
 
-    m_loadState = GLS_NotLoaded;
     m_materialCount = 0U;
     m_boundSphereRaduis = 0.f;
+    m_loaded = false;
 }
 ROC::Geometry::~Geometry()
 {
@@ -25,10 +25,8 @@ ROC::Geometry::~Geometry()
 
 bool ROC::Geometry::Load(const std::string &f_path)
 {
-    if(m_loadState == GLS_NotLoaded)
+    if(!m_loaded)
     {
-        m_loadState = GLS_Loading;
-
         GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
         GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
 
@@ -166,7 +164,6 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         l_material->LoadWeights(l_tempWeight);
                         l_material->LoadIndices(l_tempIndex);
                     }
-                    if(!m_async) l_material->GenerateVAO();
                     l_material->LoadTexture(l_difTexture);
                 }
                 m_materialCount = static_cast<unsigned int>(l_materialCount);
@@ -211,14 +208,14 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     m_bonesData.shrink_to_fit();
                 }
             }
+            m_loaded = true;
         }
         catch(const std::exception&)
         {
             Clear();
-            m_loadState = GLS_LoadFail;
         }
 
-        if(m_loadState != GLS_LoadFail) 
+        if(m_loaded)
         {
             if(l_type == GSB_Animated)
             {
@@ -294,13 +291,12 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     m_jointData.clear();
                 }
             }
-            m_loadState = (m_async ? GLS_GeneratingVAO : GLS_Loaded);
         }
 
         GLBinder::BindArrayBuffer(l_lastArrayBuffer);
         GLBinder::BindVertexArray(l_lastVertexArray);
     }
-    return (m_loadState != GLS_LoadFail);
+    return m_loaded;
 }
 
 void ROC::Geometry::Clear()
@@ -320,18 +316,17 @@ void ROC::Geometry::Clear()
     for(auto iter : m_jointData) delete iter;
     m_jointData.clear();
 
-    m_loadState = GLS_NotLoaded;
+    m_loaded = false;
 }
 
 void ROC::Geometry::GenerateVAOs()
 {
-    if(m_async && (m_loadState == GLS_GeneratingVAO))
+    if(m_loaded)
     {
         GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
         GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
 
         for(auto iter : m_materialVector) iter->GenerateVAO();
-        m_loadState = GLS_Loaded;
 
         GLBinder::BindArrayBuffer(l_lastArrayBuffer);
         GLBinder::BindVertexArray(l_lastVertexArray);

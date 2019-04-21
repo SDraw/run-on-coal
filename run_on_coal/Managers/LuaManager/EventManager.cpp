@@ -3,7 +3,8 @@
 #include "Managers/LuaManager/EventManager.h"
 
 #include "Managers/LuaManager/LuaManager.h"
-#include "Lua/LuaArguments.h"
+#include "Lua/LuaFunction.h"
+#include "Utils/CustomArguments.h"
 #include "Utils/EnumUtils.h"
 
 namespace ROC
@@ -18,8 +19,7 @@ const std::vector<std::string> g_DefaultEventsNames
     "onJoypadStateChange", "onJoypadButton", "onJoypadAxis",
     "onVRControllerKeyPress", "onVRControllerKeyTouch", "onVRControllerAxis",
     "onTextInput",
-    "onNetworkStateChange", "onNetworkDataRecieve",
-    "onGeometryLoad"
+    "onNetworkStateChange", "onNetworkDataRecieve"
 };
 
 }
@@ -64,7 +64,7 @@ bool ROC::EventManager::AddEvent(const std::string &f_event)
     }
     return l_result;
 }
-bool ROC::EventManager::AddEventHandler(const std::string &f_event, LuaFunction &f_func)
+bool ROC::EventManager::AddEventHandler(const std::string &f_event, const LuaFunction &f_func)
 {
     bool l_result = false;
     auto iter = m_eventMap.find(f_event);
@@ -154,7 +154,7 @@ bool ROC::EventManager::RemoveEventHandler(const std::string &f_event, LuaFuncti
     return l_result;
 }
 
-void ROC::EventManager::CallEvent(EventManagerEvent f_event, const LuaArguments *f_args)
+void ROC::EventManager::CallEvent(EventManagerEvent f_event, const CustomArguments &f_args)
 {
     auto iter = m_eventMap.find(g_DefaultEventsNames[f_event]);
     if(iter != m_eventMapEnd)
@@ -188,7 +188,7 @@ void ROC::EventManager::CallEvent(EventManagerEvent f_event, const LuaArguments 
     }
 }
 
-void ROC::EventManager::CallEvent(const std::string &f_event, const LuaArguments *f_args)
+void ROC::EventManager::CallEvent(const std::string &f_event, const CustomArguments &f_args)
 {
     if(std::find(g_DefaultEventsNames.begin(), g_DefaultEventsNames.end(), f_event) == g_DefaultEventsNames.end())
     {

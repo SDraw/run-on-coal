@@ -8,7 +8,7 @@
 #include "Managers/LuaManager/LuaManager.h"
 #include "Elements/Element.h"
 #include "Lua/ArgReader.h"
-#include "Lua/LuaArguments.h"
+#include "Utils/CustomArguments.h"
 #include "Utils/LuaUtils.h"
 
 
@@ -55,11 +55,11 @@ int ROC::LuaElementDef::SetData(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        CustomData l_data;
-        argStream.ReadCustomData(l_data);
-        if(!argStream.HasErrors() && l_data.GetType() != CustomData::CDT_None)
+        CustomArgument l_data;
+        argStream.ReadArgument(l_data);
+        if(!argStream.HasErrors())
         {
-            bool l_result = l_element->SetCustomData(l_key, l_data);
+            bool l_result = l_element->SetData(l_key, l_data);
             argStream.PushBoolean(l_result);
         }
         else argStream.PushBoolean(false);
@@ -78,9 +78,8 @@ int ROC::LuaElementDef::GetData(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        CustomData l_data;
-        l_element->GetCustomData(l_key, l_data);
-        (l_data.GetType() != CustomData::CDT_None) ? argStream.PushCustomData(l_data) : argStream.PushBoolean(false);
+        CustomArgument l_data;
+        l_element->GetData(l_key, l_data) ? argStream.PushArgument(l_data) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -96,7 +95,7 @@ int ROC::LuaElementDef::RemoveData(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        bool l_result = l_element->RemoveCustomData(l_key);
+        bool l_result = l_element->RemoveData(l_key);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

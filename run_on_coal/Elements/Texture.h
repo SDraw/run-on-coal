@@ -28,6 +28,7 @@ public:
 protected:
     Texture();
     ~Texture();
+
     bool Load(const std::string &f_path, int f_type, int f_filter = DFT_Nearest, bool f_compress = false);
     bool LoadCubemap(const std::vector<std::string> &f_path, int f_filter = DFT_Nearest, bool f_compress = false);
     bool LoadDummy();
@@ -37,8 +38,9 @@ protected:
     void Bind();
 
     friend class ElementManager;
-    friend class Material;
     friend class RenderManager;
+    friend class AsyncTextureTask;
+    friend class Material;
     friend class Shader;
 };
 

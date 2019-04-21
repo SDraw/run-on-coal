@@ -1,4 +1,5 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
@@ -16,7 +17,6 @@ class PreRenderManager;
 class RenderManager;
 class SoundManager;
 class VRManager;
-class LuaArguments;
 
 typedef void(*OnEngineStartCallback)(void);
 typedef void(*OnEngineStopCallback)(void);
@@ -40,7 +40,7 @@ class Core final
     VRManager *m_vrManager;
 
     bool m_state;
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
 
     static OnEngineStartCallback ms_engineStartCallback;
     OnEngineStopCallback m_engineStopCallback;

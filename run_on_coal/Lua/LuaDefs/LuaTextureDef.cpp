@@ -5,10 +5,12 @@
 #include "Lua/LuaDefs/LuaElementDef.h"
 
 #include "Core/Core.h"
+#include "Managers/AsyncManager/AsyncManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager/LuaManager.h"
 #include "Elements/Texture.h"
 #include "Lua/ArgReader.h"
+#include "Lua/LuaFunction.h"
 #include "Utils/LuaUtils.h"
 #include "Utils/EnumUtils.h"
 
@@ -33,8 +35,9 @@ void ROC::LuaTextureDef::Init(lua_State *f_vm)
 
 int ROC::LuaTextureDef::Create(lua_State *f_vm)
 {
-    // element Texture(str type, str path, str filtering)
-    // element Texture(str type = "cube", str path1, ... , str path6, str filtering)
+    // element Texture(str type, str path [, str filtering, function callback ])
+    // element Texture(str type = "cube", str path1, ... , str path6 [, str filtering)
+    // element Texture(str type = "cube", str path1, ... , str path6, str filtering, function callback)
     std::string l_type;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_type);
@@ -53,23 +56,53 @@ int ROC::LuaTextureDef::Create(lua_State *f_vm)
             case Texture::TT_Cubemap:
             {
                 l_path.resize(6U);
-                for(int i = 0; i < 6; i++) argStream.ReadText(l_path[6]);
+                for(size_t i = 0U; i < 6U; i++) argStream.ReadText(l_path[6]);
                 if(argStream.HasErrors()) l_path.clear();
             } break;
         }
         if(!l_path.empty())
         {
-            std::string l_filtering;
+            std::string l_filtering("nearest");
+            bool l_compress = false;
+            LuaFunction l_callback;
+
             argStream.ReadNextText(l_filtering);
             int l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypesTable);
-
-            bool l_compress = false;
             argStream.ReadNextBoolean(l_compress);
+            argStream.ReadNextFunction(l_callback);
 
-            Texture *l_texture = nullptr;
-            if(l_path.size() == 1U) l_texture = Core::GetCore()->GetElementManager()->CreateTexture(l_path[0], l_textureType, l_filteringType, l_compress);
-            else if(l_path.size() == 6U)  l_texture = Core::GetCore()->GetElementManager()->CreateTexture(l_path, l_filteringType, l_compress);
-            l_texture ? argStream.PushElement(l_texture) : argStream.PushBoolean(false);
+            switch(l_path.size())
+            {
+                case 1U:
+                {
+                    if(l_callback.IsValid())
+                    {
+                        void *l_task = Core::GetCore()->GetAsyncManager()->LoadTexture(l_path[0U], l_textureType, l_filteringType, l_compress, l_callback);
+                        argStream.PushPointer(l_task);
+                    }
+                    else
+                    {
+                        Texture *l_texture = Core::GetCore()->GetElementManager()->CreateTexture(l_path[0U], l_textureType, l_filteringType, l_compress);
+                        l_texture ? argStream.PushElement(l_texture) : argStream.PushBoolean(false);
+                    }
+                } break;
+                case 6U:
+                {
+                    if(l_callback.IsValid())
+                    {
+                        void *l_task = Core::GetCore()->GetAsyncManager()->LoadTexture(l_path, l_filteringType, l_compress, l_callback);
+                        argStream.PushPointer(l_task);
+                    }
+                    else
+                    {
+                        Texture *l_texture = Core::GetCore()->GetElementManager()->CreateTexture(l_path, l_filteringType, l_compress);
+                        l_texture ? argStream.PushElement(l_texture) : argStream.PushBoolean(false);
+                    }
+                } break;
+                default:
+                    argStream.PushBoolean(false);
+                    break;
+            }
         }
         else argStream.PushBoolean(false);
     }

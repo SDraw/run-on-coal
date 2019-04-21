@@ -12,7 +12,7 @@ class AsyncGeometryTask final : public AsyncTask
     AsyncGeometryTask(const AsyncGeometryTask &that) = delete;
     AsyncGeometryTask& operator=(const AsyncGeometryTask &that) = delete;
 protected:
-    explicit AsyncGeometryTask(Geometry *f_geometry, const std::string &f_path);
+    explicit AsyncGeometryTask(const std::string &f_path);
     ~AsyncGeometryTask();
 
     void Execute();

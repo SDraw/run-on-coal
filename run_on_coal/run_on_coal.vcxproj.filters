@@ -16,9 +16,6 @@
     <ClCompile Include="Lua\ArgReader.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaArguments.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
@@ -113,9 +110,6 @@
     </ClCompile>
     <ClCompile Include="..\vendor\RectangleBinPack\Rect.cpp">
       <Filter>vendor\RectangleBinPack</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils\CustomData.cpp">
-      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="Managers\RenderManager\Quad3D.cpp">
       <Filter>Managers\RenderManager</Filter>
@@ -249,6 +243,15 @@
     <ClCompile Include="Managers\AsyncManager\AsyncGeometryTask.cpp">
       <Filter>Managers\AsyncManager</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\AsyncManager\AsyncTextureTask.cpp">
+      <Filter>Managers\AsyncManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CustomArgument.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CustomArguments.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -265,9 +268,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Lua\ArgReader.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaArguments.h">
       <Filter>Lua</Filter>
     </ClInclude>
     <ClInclude Include="Managers\ElementManager.h">
@@ -351,9 +351,6 @@
     </ClInclude>
     <ClInclude Include="Elements\Drawable.h">
       <Filter>Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\CustomData.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Geometry\BoneJointData.hpp">
       <Filter>Elements\Geometry</Filter>
@@ -492,6 +489,15 @@
     </ClInclude>
     <ClInclude Include="Managers\AsyncManager\AsyncGeometryTask.h">
       <Filter>Managers\AsyncManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\AsyncManager\AsyncTextureTask.h">
+      <Filter>Managers\AsyncManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CustomArgument.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CustomArguments.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

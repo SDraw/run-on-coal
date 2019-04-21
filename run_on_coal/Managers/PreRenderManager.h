@@ -1,11 +1,11 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
 class Model;
-class LuaArguments;
 class TreeNode;
 
 typedef void(*OnPreRender)(void);
@@ -20,7 +20,7 @@ class PreRenderManager final
 
     std::vector<TreeNode*> m_nodeStack;
 
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
     OnPreRender m_callback;
 
     PreRenderManager(const PreRenderManager &that) = delete;

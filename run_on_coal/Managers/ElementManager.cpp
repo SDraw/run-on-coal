@@ -82,23 +82,19 @@ ROC::Animation* ROC::ElementManager::CreateAnimation(const std::string &f_path)
     return l_anim;
 }
 
-ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path, bool f_async)
+ROC::Geometry* ROC::ElementManager::CreateGeometry(const std::string &f_path)
 {
-    Geometry *l_geometry = new Geometry(f_async);
+    Geometry *l_geometry = new Geometry();
 
-    if(f_async)
+    if(l_geometry->Load(f_path))
     {
+        l_geometry->GenerateVAOs();
         AddElementToSet(l_geometry);
-        m_core->GetAsyncManager()->AddGeometryLoad(l_geometry, f_path);
     }
     else
     {
-        if(l_geometry->Load(f_path)) AddElementToSet(l_geometry);
-        else
-        {
-            delete l_geometry;
-            l_geometry = nullptr;
-        }
+        delete l_geometry;
+        l_geometry = nullptr;
     }
     return l_geometry;
 }
@@ -108,11 +104,8 @@ ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
     Model *l_model = nullptr;
     if(f_geometry)
     {
-        if(f_geometry->IsLoaded())
-        {
-            l_model = new Model(f_geometry);
-            m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
-        }
+        l_model = new Model(f_geometry);
+        m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
     }
     else l_model = new Model(nullptr);
     if(l_model)
@@ -297,13 +290,10 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             case Element::ET_Geometry:
             {
                 Geometry *l_geometry = reinterpret_cast<Geometry*>(f_element);
-                if(l_geometry->CanBeDestroyed())
-                {
-                    m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                    RemoveElementFromSet(f_element);
-                    delete l_geometry;
-                    l_result = true;
-                }
+                m_core->GetInheritManager()->RemoveParentRelations(f_element);
+                RemoveElementFromSet(f_element);
+                delete l_geometry;
+                l_result = true;
             } break;
 
             case Element::ET_Model:

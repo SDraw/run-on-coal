@@ -6,8 +6,8 @@
 #include "Managers/LuaManager/EventManager.h"
 #include "Managers/LuaManager/LuaManager.h"
 #include "Lua/ArgReader.h"
-#include "Lua/LuaArguments.h"
 #include "Lua/LuaFunction.h"
+#include "Utils/CustomArguments.h"
 
 void ROC::LuaEventsDef::Init(lua_State *f_vm)
 {
@@ -84,12 +84,12 @@ int ROC::LuaEventsDef::Call(lua_State *f_vm)
     // bool callEvent(str eventName, var value1, ...)
     std::string l_event;
     ArgReader argStream(f_vm);
-    LuaArguments l_arguments;
+    CustomArguments l_arguments;
     argStream.ReadText(l_event);
     if(!argStream.HasErrors() && !l_event.empty())
     {
         argStream.ReadArguments(l_arguments);
-        Core::GetCore()->GetLuaManager()->GetEventManager()->CallEvent(l_event, &l_arguments);
+        Core::GetCore()->GetLuaManager()->GetEventManager()->CallEvent(l_event, l_arguments);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

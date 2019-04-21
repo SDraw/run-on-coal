@@ -1,10 +1,10 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
-class LuaArguments;
 
 typedef void(*OnNetworkStateChangeCallback)(const std::string&);
 typedef void(*OnNetworkDataRecieveCallback)(const std::string&);
@@ -27,7 +27,7 @@ class NetworkManager final
     };
     NetworkState m_networkState;
 
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
     OnNetworkStateChangeCallback m_stateCallback;
     OnNetworkDataRecieveCallback m_dataCallback;
 

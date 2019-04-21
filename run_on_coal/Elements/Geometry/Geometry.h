@@ -19,43 +19,30 @@ class Geometry final : public Element
 
     std::vector<Material*> m_materialVector;
     unsigned int m_materialCount;
-
     float m_boundSphereRaduis;
 
     std::vector<BoneData*> m_bonesData;
     std::vector<BoneCollisionData*> m_collisionData;
     std::vector<BoneJointData*> m_jointData;
 
-    enum GeometryLoadState : unsigned char
-    {
-        GLS_NotLoaded,
-        GLS_Loading,
-        GLS_GeneratingVAO,
-        GLS_Loaded,
-        GLS_LoadFail
-    };
-    std::atomic<GeometryLoadState> m_loadState;
-    const bool m_async;
+    bool m_loaded;
 
     Geometry(const Geometry &that) = delete;
     Geometry& operator=(const Geometry &that) = delete;
 
     void Clear();
 public:
-    inline bool IsLoaded() const { return (m_loadState == GLS_Loaded); }
     inline float GetBoundSphereRadius() const { return m_boundSphereRaduis; }
 
     inline bool HasBonesData() const { return !m_bonesData.empty(); }
     inline bool HasBonesCollisionData() const { return !m_collisionData.empty(); }
     inline bool HasJointsData() const { return !m_jointData.empty(); }
 protected:
-    explicit Geometry(bool f_async);
+    explicit Geometry();
     ~Geometry();
 
     bool Load(const std::string &f_path);
     void GenerateVAOs();
-
-    bool CanBeDestroyed() const { return (m_loadState == GLS_Loaded || m_loadState == GLS_LoadFail); }
 
     inline const std::vector<Material*>& GetMaterialVector() const { return m_materialVector; }
     inline const std::vector<BoneData*>& GetBonesData() const { return m_bonesData; };

@@ -2,24 +2,24 @@
 
 #include "Managers/AsyncManager/AsyncManager.h"
 #include "Managers/AsyncManager/AsyncTask.h"
-#include "Managers/AsyncManager/AsyncGeometryTask.h"
-#include "Lua/LuaArguments.h"
+#include "Utils/CustomArguments.h"
 
 #include "Core/Core.h"
+#include "Managers/AsyncManager/AsyncGeometryTask.h"
+#include "Managers/AsyncManager/AsyncTextureTask.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LuaManager/EventManager.h"
 #include "Managers/LuaManager/LuaManager.h"
+#include "Lua/LuaFunction.h"
 
 ROC::AsyncManager::AsyncManager(Core *f_core)
 {
     m_core = f_core;
 
     m_threadSwitch = true;
-    m_loadThread = new std::thread(&ROC::AsyncManager::LoadThread, this);
+    m_loadThread = new std::thread(&ROC::AsyncManager::ExecutionThread, this);
 
-    m_luaArguments = new LuaArguments();
-
-    m_geometryCallback = nullptr;
+    m_asyncTaskCallback = nullptr;
 }
 ROC::AsyncManager::~AsyncManager()
 {
@@ -31,20 +31,74 @@ ROC::AsyncManager::~AsyncManager()
 
     for(auto iter : m_executedTasks) delete iter;
     m_executedTasks.clear();
-
-    delete m_luaArguments;
 }
 
-void ROC::AsyncManager::AddGeometryLoad(Geometry *f_geometry, const std::string &f_path)
+void* ROC::AsyncManager::LoadGeometry(const std::string &f_path)
 {
-    AsyncGeometryTask *l_task = new AsyncGeometryTask(f_geometry, f_path);
+    AsyncTask *l_task = new AsyncGeometryTask(f_path);
 
     m_preparedTasksMutex.lock();
     m_preparedTasks.push_back(l_task);
     m_preparedTasksMutex.unlock();
+
+    return l_task;
+}
+void* ROC::AsyncManager::LoadGeometry(const std::string &f_path, const LuaFunction &f_callback)
+{
+    AsyncTask *l_task = new AsyncGeometryTask(f_path);
+    l_task->SetLuaCallback(f_callback);
+
+    m_preparedTasksMutex.lock();
+    m_preparedTasks.push_back(l_task);
+    m_preparedTasksMutex.unlock();
+
+    return l_task;
 }
 
-void ROC::AsyncManager::LoadThread()
+void* ROC::AsyncManager::LoadTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress, const LuaFunction &f_callback)
+{
+    AsyncTask *l_task = new AsyncTextureTask(f_path, f_type, f_filter, f_compress);
+    l_task->SetLuaCallback(f_callback);
+
+    m_preparedTasksMutex.lock();
+    m_preparedTasks.push_back(l_task);
+    m_preparedTasksMutex.unlock();
+
+    return l_task;
+}
+void* ROC::AsyncManager::LoadTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress, const LuaFunction &f_callback)
+{
+    AsyncTask *l_task = new AsyncTextureTask(f_path, f_filter, f_compress);
+    l_task->SetLuaCallback(f_callback);
+
+    m_preparedTasksMutex.lock();
+    m_preparedTasks.push_back(l_task);
+    m_preparedTasksMutex.unlock();
+
+    return l_task;
+}
+void* ROC::AsyncManager::LoadTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress)
+{
+    AsyncTask *l_task = new AsyncTextureTask(f_path, f_type, f_filter, f_compress);
+
+    m_preparedTasksMutex.lock();
+    m_preparedTasks.push_back(l_task);
+    m_preparedTasksMutex.unlock();
+
+    return l_task;
+}
+void* ROC::AsyncManager::LoadTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
+{
+    AsyncTask *l_task = new AsyncTextureTask(f_path, f_filter, f_compress);
+
+    m_preparedTasksMutex.lock();
+    m_preparedTasks.push_back(l_task);
+    m_preparedTasksMutex.unlock();
+
+    return l_task;
+}
+
+void ROC::AsyncManager::ExecutionThread()
 {
     sf::Context l_context;
     l_context.setActive(true);
@@ -80,27 +134,19 @@ void ROC::AsyncManager::DoPulse()
             {
                 iter->PostExecute();
 
-                bool l_result = (iter->GetResult() == AsyncTask::ATR_Success);
-                switch(iter->GetType())
-                {
-                    case AsyncTask::ATT_Geometry:
-                    {
-                        if(m_geometryCallback) (*m_geometryCallback)(reinterpret_cast<Geometry*>(iter->GetElement()), l_result);
-                    } break;
-                }
+                Element *l_element = reinterpret_cast<Element*>(iter->GetElement());
+                if(l_element) m_core->GetElementManager()->AddElementToSet(l_element);
 
-                m_luaArguments->PushArgument(iter->GetElement());
-                m_luaArguments->PushArgument(l_result);
-                switch(iter->GetType())
-                {
-                    case AsyncTask::ATT_Geometry:
-                        m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onGeometryLoad, m_luaArguments);
-                        break;
-                }
-                m_luaArguments->Clear();
+                if(m_asyncTaskCallback) (*m_asyncTaskCallback)(iter, l_element);
 
-                // Cleanup
-                if(!l_result) m_core->GetElementManager()->DestroyElement(iter->GetElement());
+                const LuaFunction &l_luaFuncion = iter->GetLuaCallback();
+                if(l_luaFuncion.IsValid())
+                {
+                    m_luaArguments.Push(reinterpret_cast<void*>(iter));
+                    l_element ? m_luaArguments.Push(l_element) : m_luaArguments.Push(false);
+                    m_core->GetLuaManager()->CallFunction(l_luaFuncion, m_luaArguments);
+                    m_luaArguments.Clear();
+                }
 
                 delete iter;
             }

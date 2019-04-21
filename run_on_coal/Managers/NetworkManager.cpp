@@ -2,7 +2,6 @@
 
 #include "Managers/NetworkManager.h"
 #include "Core/Core.h"
-#include "Lua/LuaArguments.h"
 
 #include "Managers/LuaManager/EventManager.h"
 #include "Managers/LuaManager/LuaManager.h"
@@ -29,7 +28,6 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     m_core = f_core;
     m_networkInterface = nullptr;
     m_networkState = NS_Disconnected;
-    m_luaArguments = new LuaArguments();
     m_stateCallback = nullptr;
     m_dataCallback = nullptr;
 }
@@ -40,7 +38,6 @@ ROC::NetworkManager::~NetworkManager()
         m_networkInterface->Shutdown(ROC_NETWORK_SHUTDOWN_DURATION);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
-    delete m_luaArguments;
 }
 
 unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
@@ -126,9 +123,9 @@ void ROC::NetworkManager::DoPulse()
                     m_networkState = NS_Disconnected;
                     if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[ROC_NETWORK_STATESTRING_DISCONNECTED]);
 
-                    m_luaArguments->PushArgument(g_networkStateTable[ROC_NETWORK_STATESTRING_DISCONNECTED]);
+                    m_luaArguments.Push(g_networkStateTable[ROC_NETWORK_STATESTRING_DISCONNECTED]);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onNetworkStateChange, m_luaArguments);
-                    m_luaArguments->Clear();
+                    m_luaArguments.Clear();
                 } break;
                 case ID_CONNECTION_REQUEST_ACCEPTED:
                 {
@@ -137,9 +134,9 @@ void ROC::NetworkManager::DoPulse()
                     m_networkInterface->SetOccasionalPing(true);
                     if(m_stateCallback) (*m_stateCallback)(g_networkStateTable[ROC_NETWORK_STATESTRING_CONNECTED]);
 
-                    m_luaArguments->PushArgument(g_networkStateTable[ROC_NETWORK_STATESTRING_CONNECTED]);
+                    m_luaArguments.Push(g_networkStateTable[ROC_NETWORK_STATESTRING_CONNECTED]);
                     m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onNetworkStateChange, m_luaArguments);
-                    m_luaArguments->Clear();
+                    m_luaArguments.Clear();
                 } break;
                 case ID_ROC_DATA_PACKET:
                 {
@@ -154,9 +151,9 @@ void ROC::NetworkManager::DoPulse()
                         {
                             if(m_dataCallback) (*m_dataCallback)(l_stringData);
 
-                            m_luaArguments->PushArgument(l_stringData);
+                            m_luaArguments.Push(l_stringData);
                             m_core->GetLuaManager()->GetEventManager()->CallEvent(EventManager::EME_onNetworkDataRecieve, m_luaArguments);
-                            m_luaArguments->Clear();
+                            m_luaArguments.Clear();
                         }
                     }
                 } break;

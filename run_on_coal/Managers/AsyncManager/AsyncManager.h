@@ -1,14 +1,15 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
 class AsyncTask;
-class Geometry;
-class LuaArguments;
+class Element;
+class LuaFunction;
 
-typedef void(*OnGeometryLoadCallback)(Geometry*, bool);
+typedef void(*OnAsyncTaskFinish)(void*, Element*);
 
 class AsyncManager final
 {
@@ -25,26 +26,31 @@ class AsyncManager final
     std::vector<AsyncTask*> m_executedTasks;
     std::mutex m_executedTasksMutex;
 
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
 
-    OnGeometryLoadCallback m_geometryCallback;
+    OnAsyncTaskFinish m_asyncTaskCallback;
 
-    void LoadThread();
+    void ExecutionThread();
 
     AsyncManager(const AsyncManager &that) = delete;
     AsyncManager& operator=(const AsyncManager &that) = delete;
 public:
-    inline void SetGeometryCallback(OnGeometryLoadCallback f_callback) { m_geometryCallback = f_callback; }
+    inline void SetAsyncTaskCallback(OnAsyncTaskFinish f_callback) { m_asyncTaskCallback = f_callback; }
+
+    void* LoadGeometry(const std::string &f_path, const LuaFunction &f_callback);
+    void* LoadGeometry(const std::string &f_path);
+
+    void* LoadTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress, const LuaFunction &f_callback);
+    void* LoadTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress, const LuaFunction &f_callback);
+    void* LoadTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress);
+    void* LoadTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
 protected:
     explicit AsyncManager(Core *f_core);
     ~AsyncManager();
 
-    void AddGeometryLoad(Geometry *f_geometry, const std::string &f_path);
-
     void DoPulse();
 
     friend class Core;
-    friend class ElementManager;
 };
 
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
@@ -15,7 +16,6 @@ class RenderTarget;
 class Texture;
 class Font;
 class PhysicsDrawer;
-class LuaArguments;
 
 typedef void(*OnRenderCallback)(void);
 typedef void(*OnVRRenderCallback)(const std::string &f_side);
@@ -41,7 +41,7 @@ class RenderManager final
     PhysicsDrawer *m_physicsDrawer;
     Texture *m_lastTexture;
 
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
 
     float m_time;
 
@@ -64,16 +64,16 @@ class RenderManager final
 public:
     void SetActiveScene(Scene *f_scene);
 
-    void Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color);
-    void Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
-    void Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
-    void DrawScene(Scene *f_scene);
-    void DrawPhysics(float f_width);
+    bool Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color);
+    bool Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
+    bool Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
+    bool DrawScene(Scene *f_scene);
+    bool DrawPhysics(float f_width);
 
-    void ClearRenderArea(bool f_depth = true, bool f_color = true);
-    void SetClearColour(const glm::vec4 &f_color);
-    void SetViewport(const glm::ivec4 &f_area);
-    void SetPolygonMode(int f_mode);
+    bool ClearRenderArea(bool f_depth = true, bool f_color = true);
+    bool SetClearColour(const glm::vec4 &f_color);
+    bool SetViewport(const glm::ivec4 &f_area);
+    bool SetPolygonMode(int f_mode);
 
     inline void SetRenderCallback(OnRenderCallback f_callback) { m_callback = f_callback; }
     inline void SetVRRenderCallback(OnVRRenderCallback f_callback) { m_vrCallback = f_callback; }

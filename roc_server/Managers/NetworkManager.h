@@ -1,11 +1,11 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
 class Client;
-class LuaArguments;
 
 typedef void(*OnNetworkClientConnectCallback)(Client*);
 typedef void(*OnNetworkClientDisconnectCallback)(Client*);
@@ -20,7 +20,7 @@ class NetworkManager final
 
     std::vector<Client*> m_clientVector;
 
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
 
     OnNetworkClientConnectCallback m_networkClientConnectCallback;
     OnNetworkClientDisconnectCallback m_networkClientDisconnectCallback;

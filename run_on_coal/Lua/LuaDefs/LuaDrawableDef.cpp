@@ -53,8 +53,8 @@ int ROC::LuaDrawableDef::Draw(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
-        Core::GetCore()->GetRenderManager()->Render(l_drawable, l_pos, l_size, l_rot, l_color);
-        argStream.PushBoolean(true);
+        bool l_result = Core::GetCore()->GetRenderManager()->Render(l_drawable, l_pos, l_size, l_rot, l_color);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -76,8 +76,8 @@ int ROC::LuaDrawableDef::Draw3D(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         glm::quat l_rotQuat(l_rot);
-        Core::GetCore()->GetRenderManager()->Render(l_drawable, l_pos, l_rot, l_size, l_params);
-        argStream.PushBoolean(true);
+        bool l_result = Core::GetCore()->GetRenderManager()->Render(l_drawable, l_pos, l_rot, l_size, l_params);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

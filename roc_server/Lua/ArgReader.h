@@ -3,9 +3,9 @@
 namespace ROC
 {
 
+class CustomArgument;
+class CustomArguments;
 class Element;
-class CustomData;
-class LuaArguments;
 class LuaFunction;
 
 class ArgReader final
@@ -30,9 +30,9 @@ public:
     template<typename T> void ReadInteger(T &f_val);
     void ReadText(std::string &f_val);
     void ReadFunction(LuaFunction &f_func);
-    void ReadArguments(LuaArguments &f_args);
     template<class T> void ReadElement(T *&f_element);
-    void ReadCustomData(CustomData &f_data);
+    void ReadArguments(CustomArguments &f_args);
+    void ReadArgument(CustomArgument &f_data);
 
     bool IsNextBoolean();
     bool IsNextNumber();
@@ -45,15 +45,17 @@ public:
     template<typename T> void ReadNextNumber(T &f_val);
     template<typename T> void ReadNextInteger(T &f_val);
     void ReadNextText(std::string &f_val);
+    void ReadNextFunction(LuaFunction &f_func);
     template<class T> void ReadNextElement(T *&f_element);
 
     void PushNil();
     void PushBoolean(bool f_val);
     void PushNumber(lua_Number f_val);
     void PushInteger(lua_Integer f_val);
+    void PushPointer(void *f_val);
     void PushText(const std::string &f_val);
     void PushElement(Element *f_element);
-    void PushCustomData(const CustomData &f_data);
+    void PushArgument(const CustomArgument &f_data);
 
     bool HasErrors();
     inline int GetReturnValue() const { return m_returnCount; }

@@ -41,8 +41,8 @@ int ROC::LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
     argStream.ReadNextBoolean(l_color);
     if(!argStream.HasErrors())
     {
-        Core::GetCore()->GetRenderManager()->ClearRenderArea(l_depth, l_color);
-        argStream.PushBoolean(true);
+        bool l_result = Core::GetCore()->GetRenderManager()->ClearRenderArea(l_depth, l_color);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -55,8 +55,8 @@ int ROC::LuaRenderingDef::SetClearColor(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
-        Core::GetCore()->GetRenderManager()->SetClearColour(l_color);
-        argStream.PushBoolean(true);
+        bool l_result = Core::GetCore()->GetRenderManager()->SetClearColour(l_color);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -69,8 +69,8 @@ int ROC::LuaRenderingDef::SetRenderArea(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadInteger(l_area[i]);
     if(!argStream.HasErrors())
     {
-        Core::GetCore()->GetRenderManager()->SetViewport(l_area);
-        argStream.PushBoolean(true);
+        bool l_result = Core::GetCore()->GetRenderManager()->SetViewport(l_area);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
@@ -86,8 +86,8 @@ int ROC::LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
         int l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFillTable);
         if(l_type != -1)
         {
-            Core::GetCore()->GetRenderManager()->SetPolygonMode(l_type);
-            argStream.PushBoolean(true);
+            bool l_result = Core::GetCore()->GetRenderManager()->SetPolygonMode(l_type);
+            argStream.PushBoolean(l_result);
         }
         else argStream.PushBoolean(false);
     }
@@ -101,7 +101,7 @@ int ROC::LuaRenderingDef::DrawPhysics(lua_State *f_vm)
     float l_width = 1.f;
     ArgReader argStream(f_vm);
     argStream.ReadNextNumber(l_width);
-    Core::GetCore()->GetRenderManager()->DrawPhysics(l_width);
-    argStream.PushBoolean(true);
+    bool l_result = Core::GetCore()->GetRenderManager()->DrawPhysics(l_width);
+    argStream.PushBoolean(l_result);
     return argStream.GetReturnValue();
 }

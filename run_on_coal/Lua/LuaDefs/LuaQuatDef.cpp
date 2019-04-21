@@ -5,8 +5,6 @@
 #include "Lua/ArgReader.h"
 #include "Utils/LuaUtils.h"
 
-#include "Utils/CustomData.h"
-
 void ROC::LuaQuatDef::Init(lua_State *f_vm)
 {
     LuaUtils::AddClass(f_vm, "Quat", Create);

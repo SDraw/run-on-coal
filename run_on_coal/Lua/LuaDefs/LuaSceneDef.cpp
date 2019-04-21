@@ -264,8 +264,8 @@ int ROC::LuaSceneDef::Draw(lua_State *f_vm)
     argStream.ReadElement(l_scene);
     if(!argStream.HasErrors())
     {
-        Core::GetCore()->GetRenderManager()->DrawScene(l_scene);
-        argStream.PushBoolean(l_scene->IsActive());
+        bool l_result = Core::GetCore()->GetRenderManager()->DrawScene(l_scene);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

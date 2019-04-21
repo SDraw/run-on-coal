@@ -7,8 +7,8 @@ namespace ROC
 
 class Core;
 class EventManager;
-class LuaArguments;
 class LuaFunction;
+class CustomArguments;
 
 class LuaManager final
 {
@@ -30,7 +30,7 @@ protected:
     void LoadDefaultScripts();
 
     void DoPulse();
-    void CallFunction(const LuaFunction &f_func, const LuaArguments *f_args);
+    void CallFunction(const LuaFunction &f_func, const CustomArguments &f_args);
 
     friend class Core;
     friend class EventManager;

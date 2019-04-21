@@ -2,15 +2,14 @@
 
 #include "Lua/ArgReader.h"
 #include "Elements/Element.h"
-#include "Lua/LuaArguments.h"
 #include "Lua/LuaFunction.h"
-#include "Utils/CustomData.h"
+#include "Utils/CustomArgument.h"
+#include "Utils/CustomArguments.h"
 
 #include "Core/Core.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager/LuaManager.h"
-#include "Elements/Element.h"
 #include "Utils/LuaUtils.h"
 
 ROC::ArgReader::ArgReader(lua_State *f_vm)
@@ -80,7 +79,7 @@ void ROC::ArgReader::ReadFunction(LuaFunction &f_func)
         else SetError("Not enough arguments");
     }
 }
-void ROC::ArgReader::ReadCustomData(CustomData &f_data)
+void ROC::ArgReader::ReadArgument(CustomArgument &f_data)
 {
     if(!m_hasErrors)
     {
@@ -89,24 +88,28 @@ void ROC::ArgReader::ReadCustomData(CustomData &f_data)
             switch(lua_type(m_vm, m_argCurrent))
             {
                 case LUA_TNIL:
-                    f_data.SetNil();
+                    f_data = CustomArgument();
                     break;
                 case LUA_TBOOLEAN:
-                    f_data.SetBoolean(lua_toboolean(m_vm, m_argCurrent) == 1);
+                    f_data = CustomArgument(lua_toboolean(m_vm, m_argCurrent) == 1);
                     break;
                 case LUA_TNUMBER:
-                    f_data.SetDouble(lua_tonumber(m_vm, m_argCurrent));
+                    f_data = CustomArgument(lua_tonumber(m_vm, m_argCurrent));
+                    break;
+                case LUA_TLIGHTUSERDATA:
+                    f_data = CustomArgument(lua_touserdata(m_vm, m_argCurrent));
                     break;
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(Core::GetCore()->GetElementManager()->IsValidElement(l_element)) f_data.SetElement(l_element);
+                    if(Core::GetCore()->GetElementManager()->IsValidElement(l_element)) f_data = CustomArgument(l_element);
                 } break;
                 case LUA_TSTRING:
                 {
                     size_t l_len;
                     const char *l_text = lua_tolstring(m_vm, m_argCurrent, &l_len);
-                    f_data.SetString(l_text, l_len);
+                    std::string l_string(l_text, l_len);
+                    f_data = CustomArgument(l_string);
                 } break;
                 default:
                     SetError("Invalid data type");
@@ -174,6 +177,20 @@ void ROC::ArgReader::ReadNextText(std::string &f_val)
         }
     }
 }
+void ROC::ArgReader::ReadNextFunction(LuaFunction &f_func)
+{
+    if(!m_hasErrors && (m_argCurrent <= m_argCount))
+    {
+        if(lua_isfunction(m_vm, m_argCurrent))
+        {
+            void *l_ptr = const_cast<void*>(lua_topointer(m_vm, m_argCurrent));
+            lua_settop(m_vm, m_argCurrent);
+            f_func.Retrieve(m_vm, l_ptr);
+            lua_insert(m_vm, m_argCurrent);
+            m_argCurrent++;
+        }
+    }
+}
 
 void ROC::ArgReader::PushNil()
 {
@@ -195,40 +212,51 @@ void ROC::ArgReader::PushInteger(lua_Integer f_val)
     lua_pushinteger(m_vm, f_val);
     m_returnCount++;
 }
+void ROC::ArgReader::PushPointer(void *f_val)
+{
+    lua_pushlightuserdata(m_vm, f_val);
+    m_returnCount++;
+}
 void ROC::ArgReader::PushText(const std::string &f_val)
 {
     lua_pushlstring(m_vm, f_val.data(), f_val.size());
     m_returnCount++;
 }
-void ROC::ArgReader::PushCustomData(const CustomData &f_data)
+void ROC::ArgReader::PushArgument(const CustomArgument &f_data)
 {
     switch(f_data.GetType())
     {
-        case CustomData::CDT_Nil:
+        case CustomArgument::CAT_Nil:
             PushNil();
             break;
-        case CustomData::CDT_Boolean:
+        case CustomArgument::CAT_Boolean:
             PushBoolean(f_data.GetBoolean());
             break;
-        case CustomData::CDT_Integer:
+        case CustomArgument::CAT_Integer:
             PushInteger(f_data.GetInteger());
             break;
-        case CustomData::CDT_Double:
+        case CustomArgument::CAT_UInteger:
+            PushInteger(f_data.GetUInteger());
+            break;
+        case CustomArgument::CAT_Double:
             PushNumber(f_data.GetDouble());
             break;
-        case CustomData::CDT_Float:
+        case CustomArgument::CAT_Float:
             PushNumber(f_data.GetFloat());
             break;
-        case CustomData::CDT_String:
+        case CustomArgument::CAT_String:
             PushText(f_data.GetString());
             break;
-        case CustomData::CDT_Element:
+        case CustomArgument::CAT_Pointer:
+            PushPointer(f_data.GetPointer());
+            break;
+        case CustomArgument::CAT_Element:
         {
             Element *l_element = f_data.GetElement();
             LuaUtils::PushElementInMetatable(m_vm, ROC_LUA_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
         } break;
     }
-    if(f_data.GetType() != CustomData::CDT_None) m_returnCount++;
+    m_returnCount++;
 }
 void ROC::ArgReader::PushElement(Element *f_element)
 {
@@ -236,7 +264,7 @@ void ROC::ArgReader::PushElement(Element *f_element)
     m_returnCount++;
 }
 
-void ROC::ArgReader::ReadArguments(LuaArguments &f_args)
+void ROC::ArgReader::ReadArguments(CustomArguments &f_args)
 {
     if(!m_hasErrors)
     {
@@ -245,21 +273,25 @@ void ROC::ArgReader::ReadArguments(LuaArguments &f_args)
             switch(lua_type(m_vm, m_argCurrent))
             {
                 case LUA_TBOOLEAN:
-                    f_args.PushArgument(lua_toboolean(m_vm, m_argCurrent) == 1);
+                    f_args.Push(lua_toboolean(m_vm, m_argCurrent) == 1);
                     break;
                 case LUA_TNUMBER:
-                    f_args.PushArgument(lua_tonumber(m_vm, m_argCurrent));
+                    f_args.Push(lua_tonumber(m_vm, m_argCurrent));
+                    break;
+                case LUA_TLIGHTUSERDATA:
+                    f_args.Push(lua_touserdata(m_vm, m_argCurrent));
                     break;
                 case LUA_TUSERDATA:
                 {
                     Element *l_element = *reinterpret_cast<Element**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(Core::GetCore()->GetElementManager()->IsValidElement(l_element)) f_args.PushArgument(l_element);
+                    if(Core::GetCore()->GetElementManager()->IsValidElement(l_element)) f_args.Push(l_element);
                 } break;
                 case LUA_TSTRING:
                 {
                     size_t l_len;
                     const char *l_text = lua_tolstring(m_vm, m_argCurrent, &l_len);
-                    f_args.PushArgument(l_text, l_len);
+                    std::string l_string(l_text, l_len);
+                    f_args.Push(l_string);
                 } break;
             }
         }

@@ -26,7 +26,6 @@ class ElementManager final
     std::unordered_set<void*> m_elementSet;
     std::unordered_set<void*>::iterator m_elementSetEnd;
 
-    void AddElementToSet(void *f_ptr);
     void RemoveElementFromSet(void *f_ptr);
 
     ElementManager(const ElementManager &that) = delete;
@@ -35,7 +34,7 @@ public:
     Scene* CreateScene();
     Camera* CreateCamera(int f_type);
     Light* CreateLight(unsigned char f_type);
-    Geometry* CreateGeometry(const std::string &f_path, bool f_async = false);
+    Geometry* CreateGeometry(const std::string &f_path);
     Model* CreateModel(Geometry *f_geometry);
     Shader* CreateShader(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     Animation* CreateAnimation(const std::string &f_path);
@@ -53,6 +52,8 @@ public:
 protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
+
+    void AddElementToSet(void *f_ptr);
 
     friend class Core;
     friend class AsyncManager;

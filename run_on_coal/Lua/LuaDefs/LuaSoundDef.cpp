@@ -54,7 +54,7 @@ void ROC::LuaSoundDef::Init(lua_State *f_vm)
 
 int ROC::LuaSoundDef::Create(lua_State *f_vm)
 {
-    // element Sound(str path [, bool loop = false])
+    // element Sound(str path)
     std::string l_path;
     ArgReader argStream(f_vm);
     argStream.ReadText(l_path);
@@ -378,19 +378,13 @@ int ROC::LuaSoundDef::GetListenerOrientation(lua_State *f_vm)
     SoundManager *l_soundManager = Core::GetCore()->GetSoundManager();
 
     const glm::vec3 &l_pos = l_soundManager->GetListenerPosition();
-    argStream.PushNumber(l_pos.x);
-    argStream.PushNumber(l_pos.y);
-    argStream.PushNumber(l_pos.z);
+    for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
 
     const glm::vec3 &l_dir = l_soundManager->GetListenerDirection();
-    argStream.PushNumber(l_dir.x);
-    argStream.PushNumber(l_dir.y);
-    argStream.PushNumber(l_dir.z);
+    for(int i = 0; i < 3; i++) argStream.PushNumber(l_dir[i]);
 
     const glm::vec3 &l_up = l_soundManager->GetListenerUp();
-    argStream.PushNumber(l_up.x);
-    argStream.PushNumber(l_up.y);
-    argStream.PushNumber(l_up.z);
+    for(int i = 0; i < 3; i++) argStream.PushNumber(l_up[i]);
 
     return argStream.GetReturnValue();
 }

@@ -7,7 +7,6 @@
 #include "Managers/LogManager.h"
 #include "Managers/LuaManager/LuaManager.h"
 #include "Managers/NetworkManager.h"
-#include "Lua/LuaArguments.h"
 
 ROC::Core* ROC::Core::ms_instance = nullptr;
 ROC::OnServerStartCallback ROC::Core::ms_serverStartCallback = nullptr;
@@ -27,7 +26,6 @@ ROC::Core::Core()
     m_elementManager = new ElementManager(this);
     m_luaManager = new LuaManager(this);
     m_networkManager = new NetworkManager(this);
-    m_luaArguments = new LuaArguments();
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());
 
     m_serverPulseCallback = nullptr;
@@ -40,7 +38,6 @@ ROC::Core::~Core()
     delete m_luaManager;
     delete m_logManager;
     delete m_configManager;
-    delete m_luaArguments;
 }
 
 ROC::Core* ROC::Core::Init()

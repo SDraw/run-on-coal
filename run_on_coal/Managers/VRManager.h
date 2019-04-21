@@ -1,11 +1,11 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
 class RenderTarget;
-class LuaArguments;
 
 class VRManager final
 {
@@ -48,7 +48,7 @@ class VRManager final
     glm::vec3 m_leftEyePosition;
     glm::vec3 m_rightEyePosition;
 
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
 
     VRManager(const VRManager &that) = delete;
     VRManager& operator=(const VRManager &that) = delete;

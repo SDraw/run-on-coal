@@ -3,7 +3,6 @@
 #include "Managers/NetworkManager.h"
 #include "Core/Core.h"
 #include "Elements/Client.h"
-#include "Lua/LuaArguments.h"
 
 #include "Managers/ConfigManager.h"
 #include "Managers/LuaManager/EventManager.h"
@@ -46,7 +45,6 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     }
 
     m_clientVector.assign(l_configManager->GetMaxClients(), nullptr);
-    m_luaArguments = new LuaArguments();
 
     m_networkClientConnectCallback = nullptr;
     m_networkClientDisconnectCallback = nullptr;
@@ -59,7 +57,6 @@ ROC::NetworkManager::~NetworkManager()
         m_networkInterface->Shutdown(ROC_NETWORK_DISCONNECT_DURATION);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
-    delete m_luaArguments;
 }
 
 unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
@@ -69,7 +66,7 @@ unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
     {
         if(f_packet->data[0] == ID_TIMESTAMP)
         {
-            RakAssert(f_packet->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
+            RakAssert(f_packet->length > (sizeof(RakNet::MessageID) + sizeof(RakNet::Time)));
             l_result = f_packet->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
         }
         else l_result = f_packet->data[0];
@@ -121,9 +118,9 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);
 
-                    m_luaArguments->PushArgument(l_client);
+                    m_luaArguments.Push(l_client);
                     l_eventManager->CallEvent(EventManager::EME_onNetworkClientConnect, m_luaArguments);
-                    m_luaArguments->Clear();
+                    m_luaArguments.Clear();
                     m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_DISCONNECTION_NOTIFICATION: case ID_CONNECTION_LOST:
@@ -138,9 +135,9 @@ void ROC::NetworkManager::DoPulse()
 
                     if(m_networkClientDisconnectCallback) (*m_networkClientDisconnectCallback)(l_client);
 
-                    m_luaArguments->PushArgument(l_client);
+                    m_luaArguments.Push(l_client);
                     l_eventManager->CallEvent(EventManager::EME_onNetworkClientDisconnect, m_luaArguments);
-                    m_luaArguments->Clear();
+                    m_luaArguments.Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
                     m_clientVector[l_packet->guid.systemIndex] = nullptr;
@@ -161,10 +158,10 @@ void ROC::NetworkManager::DoPulse()
 
                             if(m_networkDataRecieveCallback) (*m_networkDataRecieveCallback)(l_client, l_stringData);
 
-                            m_luaArguments->PushArgument(l_client);
-                            m_luaArguments->PushArgument(l_stringData);
+                            m_luaArguments.Push(l_client);
+                            m_luaArguments.Push(l_stringData);
                             l_eventManager->CallEvent(EventManager::EME_onNetworkDataRecieve, m_luaArguments);
-                            m_luaArguments->Clear();
+                            m_luaArguments.Clear();
                         }
                     }
                 } break;

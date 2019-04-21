@@ -9,7 +9,7 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/GLBinder.h"
 
-#define ROC_SHADER_BONES_COUNT 128
+#define ROC_SHADER_BONES_COUNT 227
 #define ROC_SHADER_LIGHTS_COUNT 4
 
 namespace ROC

@@ -36,7 +36,7 @@ int ROC::LuaRenderTargetDef::Create(lua_State *f_vm)
     // element RenderTarget(int width, int height, str type [, str filtering = "nearest"])
     std::string l_type;
     glm::ivec2 l_size;
-    std::string l_filtering;
+    std::string l_filtering("nearest");
     ArgReader argStream(f_vm);
     argStream.ReadText(l_type);
     for(int i = 0; i < 2; i++) argStream.ReadInteger(l_size[i]);

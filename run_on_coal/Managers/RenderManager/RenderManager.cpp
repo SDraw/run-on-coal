@@ -15,7 +15,6 @@
 #include "Elements/Scene.h"
 #include "Elements/Shader/Shader.h"
 #include "Elements/Texture.h"
-#include "Lua/LuaArguments.h"
 #include "Utils/Pool.h"
 
 #include "Managers/ConfigManager.h"
@@ -85,7 +84,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_clearColor = g_DefaultClearColor;
     m_core->GetSfmlManager()->GetWindowSize(m_viewportSize);
 
-    m_luaArguments = new LuaArguments();
     m_callback = nullptr;
     m_vrCallback = nullptr;
 }
@@ -95,7 +93,6 @@ ROC::RenderManager::~RenderManager()
     delete m_quad3D;
     delete m_dummyTexture;
     delete m_physicsDrawer;
-    delete m_luaArguments;
     Font::DestroyVAO();
     Font::DestroyLibrary();
 }
@@ -141,8 +138,9 @@ void ROC::RenderManager::UpdateViewportSize(const glm::ivec2 &f_size)
     std::memcpy(&m_viewportSize, &f_size, sizeof(glm::ivec2));
 }
 
-void ROC::RenderManager::DrawScene(Scene *f_scene)
+bool ROC::RenderManager::DrawScene(Scene *f_scene)
 {
+    bool l_result = false;
     if(!m_locked && (m_activeScene == f_scene))
     {
         if(m_activeScene->IsValidForRender())
@@ -193,11 +191,15 @@ void ROC::RenderManager::DrawScene(Scene *f_scene)
                     }
                 }
             }
+
+            l_result = true;
         }
     }
+    return l_result;
 }
-void ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color)
+bool ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::String &f_text, const glm::vec4 &f_color)
 {
+    bool l_result = false;
     if(!m_locked && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
@@ -209,11 +211,15 @@ void ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const sf::
             l_shader->SetModelMatrix(g_IdentityMatrix);
             l_shader->SetColor(f_color);
             f_font->Draw(f_text, f_pos);
+
+            l_result = true;
         }
     }
+    return l_result;
 }
-void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)
+bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)
 {
+    bool l_result = false;
     if(!m_locked && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
@@ -241,11 +247,15 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
             DisableDepth();
             f_drawable->IsTransparent() ? EnableBlending() : DisableBlending();
             m_quad2D->Draw();
+
+            l_result = true;
         }
     }
+    return l_result;
 }
-void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
+bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
 {
+    bool l_result = false;
     if(!m_locked && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
@@ -274,11 +284,15 @@ void ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
                 (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
                 m_quad3D->Draw();
             }
+
+            l_result = true;
         }
     }
+    return l_result;
 }
-void ROC::RenderManager::DrawPhysics(float f_width)
+bool ROC::RenderManager::DrawPhysics(float f_width)
 {
+    bool l_result = false;
     if(!m_locked && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
@@ -297,11 +311,14 @@ void ROC::RenderManager::DrawPhysics(float f_width)
 
             m_core->GetPhysicsManager()->DrawDebugWorld();
             m_physicsDrawer->Draw(f_width);
+
+            l_result = true;
         }
     }
+    return l_result;
 }
 
-void ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
+bool ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
 {
     if(!m_locked)
     {
@@ -314,8 +331,9 @@ void ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
         if(f_color) l_params |= GL_COLOR_BUFFER_BIT;
         glClear(l_params);
     }
+    return !m_locked;
 }
-void ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
+bool ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
 {
     if(!m_locked)
     {
@@ -325,14 +343,17 @@ void ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
             glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
         }
     }
+    return !m_locked;
 }
-void ROC::RenderManager::SetViewport(const glm::ivec4 &f_area)
+bool ROC::RenderManager::SetViewport(const glm::ivec4 &f_area)
 {
     if(!m_locked) GLBinder::SetViewport(f_area.x, f_area.y, f_area.z, f_area.w);
+    return !m_locked;
 }
-void ROC::RenderManager::SetPolygonMode(int f_mode)
+bool ROC::RenderManager::SetPolygonMode(int f_mode)
 {
     if(!m_locked) glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode);
+    return !m_locked;
 }
 
 void ROC::RenderManager::DisableDepth()
@@ -400,16 +421,16 @@ void ROC::RenderManager::DoPulse()
         m_vrManager->SetVRStage(VRManager::VRS_Left);
         m_vrManager->EnableRenderTarget();
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
-        m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
+        m_luaArguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         l_eventManager->CallEvent(EventManager::EME_onVRRender, m_luaArguments);
-        m_luaArguments->Clear();
+        m_luaArguments.Clear();
 
         m_vrManager->SetVRStage(VRManager::VRS_Right);
         m_vrManager->EnableRenderTarget();
         if(m_vrCallback) (*m_vrCallback)(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
-        m_luaArguments->PushArgument(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
+        m_luaArguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         l_eventManager->CallEvent(EventManager::EME_onVRRender, m_luaArguments);
-        m_luaArguments->Clear();
+        m_luaArguments.Clear();
 
         m_vrManager->SubmitRender();
         m_vrManager->SetVRStage(VRManager::VRS_None);

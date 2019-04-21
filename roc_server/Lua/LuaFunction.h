@@ -28,7 +28,7 @@ public:
     ~LuaFunction();
 
     LuaFunction& operator=(const LuaFunction& f_func);
-    bool operator==( const LuaFunction& f_func ) const;
+    bool operator==(const LuaFunction& f_func) const;
 
     inline lua_State* GetVM() const { return m_vm; }
     inline bool IsValid() const { return ((m_vm != nullptr) && (m_ptr != nullptr) && (m_ref != 0)); }

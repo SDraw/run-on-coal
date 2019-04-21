@@ -3,7 +3,6 @@
 #include "Managers/PreRenderManager.h"
 #include "Core/Core.h"
 #include "Elements/Model/Model.h"
-#include "Lua/LuaArguments.h"
 #include "Utils/TreeNode.h"
 
 #include "Managers/LuaManager/EventManager.h"
@@ -12,7 +11,6 @@
 ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
-    m_luaArguments = new LuaArguments();
     m_callback = nullptr;
     m_modelTreeRoot = new TreeNode(nullptr);
     m_modelToNodeMapEnd = m_modelToNodeMap.end();
@@ -31,7 +29,6 @@ ROC::PreRenderManager::~PreRenderManager()
         delete l_node;
     }
     delete m_modelTreeRoot;
-    delete m_luaArguments;
 }
 
 void ROC::PreRenderManager::AddModel(Model *f_model)

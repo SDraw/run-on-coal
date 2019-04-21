@@ -14,7 +14,7 @@ ROC::Element::~Element()
     m_customDataMap.clear();
 }
 
-bool ROC::Element::SetCustomData(const std::string &f_key, CustomData &f_val)
+bool ROC::Element::SetData(const std::string &f_key, const CustomArgument &f_val)
 {
     bool l_result = false;
     if(f_key.length() <= ROC_ELEMENT_CUSTOMDATA_KEYLENGTH)
@@ -30,12 +30,18 @@ bool ROC::Element::SetCustomData(const std::string &f_key, CustomData &f_val)
     }
     return l_result;
 }
-void ROC::Element::GetCustomData(const std::string &f_key, CustomData &f_val)
+bool ROC::Element::GetData(const std::string &f_key, CustomArgument &f_val)
 {
+    bool l_result = false;
     auto iter = m_customDataMap.find(f_key);
-    if(iter != m_customDataMapEnd) f_val = iter->second;
+    if(iter != m_customDataMapEnd)
+    {
+        f_val = iter->second;
+        l_result = true;
+    }
+    return l_result;
 }
-bool ROC::Element::RemoveCustomData(const std::string &f_key)
+bool ROC::Element::RemoveData(const std::string &f_key)
 {
     bool l_result = false;
     auto iter = m_customDataMap.find(f_key);

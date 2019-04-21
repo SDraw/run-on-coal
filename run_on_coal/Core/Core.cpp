@@ -15,7 +15,6 @@
 #include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
 #include "Managers/VRManager.h"
-#include "Lua/LuaArguments.h"
 
 #include "Utils/SystemTick.h"
 
@@ -41,7 +40,6 @@ ROC::Core::Core()
     m_engineStopCallback = nullptr;
 
     m_state = true;
-    m_luaArguments = new LuaArguments();
 }
 ROC::Core::~Core()
 {
@@ -58,8 +56,6 @@ ROC::Core::~Core()
     delete m_sfmlManager;
     delete m_logManager;
     delete m_configManager;
-
-    delete m_luaArguments;
 }
 
 ROC::Core* ROC::Core::Init()

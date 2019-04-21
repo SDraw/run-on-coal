@@ -64,8 +64,8 @@ int ROC::LuaFontDef::Draw(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_text.empty())
     {
         sf::String l_utf32Text = sf::String::fromUtf8(l_text.begin(), l_text.end());
-        Core::GetCore()->GetRenderManager()->Render(l_font, l_pos, l_utf32Text, l_color);
-        argStream.PushBoolean(true);
+        bool l_result = Core::GetCore()->GetRenderManager()->Render(l_font, l_pos, l_utf32Text, l_color);
+        argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();

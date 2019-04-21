@@ -1,20 +1,16 @@
 #pragma once
+#include "Lua/LuaFunction.h"
 
 namespace ROC
 {
 
-class Element;
-class CustomData;
-
 class AsyncTask
 {
+    LuaFunction m_callback;
+
     AsyncTask(const AsyncTask &that) = delete;
     AsyncTask& operator=(const AsyncTask &that) = delete;
 public:
-    enum AsyncTaskType : unsigned char
-    {
-        ATT_Geometry = 0U
-    };
     enum AsyncTaskState : unsigned char
     {
         ATS_NotExecuted = 0U,
@@ -22,29 +18,19 @@ public:
         ATS_PostExecuting,
         ATS_Executed
     };
-    enum AsyncTaskResult : unsigned char
-    {
-        ATR_None = 0U,
-        ATR_Success,
-        ATR_Fail
-    };
 protected:
-    Element *m_taskElement;
-    AsyncTaskType m_taskType;
-    AsyncTaskState m_taskState;
-    AsyncTaskResult m_taskResult;
-    std::vector<CustomData*> m_taskResultData;
+    void *m_taskElement;
+    unsigned char m_taskState;
 
     AsyncTask();
     virtual ~AsyncTask();
 
+    inline void* GetElement() const { return m_taskElement; }
+    void SetLuaCallback(const LuaFunction &f_callback);
+    inline const LuaFunction& GetLuaCallback() const { return m_callback; }
+
     virtual void Execute() = 0;
     virtual void PostExecute() = 0;
-
-    inline AsyncTaskType GetType() const { return m_taskType; }
-    inline Element* GetElement() const { return m_taskElement; }
-    inline AsyncTaskResult GetResult() const { return m_taskResult; }
-    inline const std::vector<CustomData*>& GetResultData() const { return m_taskResultData; }
 
     friend class AsyncManager;
 };

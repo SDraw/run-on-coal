@@ -1,13 +1,13 @@
 #pragma once
-#include "Utils/CustomData.h"
+#include "Utils/CustomArgument.h"
 
 namespace ROC
 {
 
 class Element
 {
-    std::unordered_map<std::string, CustomData> m_customDataMap;
-    std::unordered_map<std::string, CustomData>::iterator m_customDataMapEnd;
+    std::unordered_map<std::string, CustomArgument> m_customDataMap;
+    std::unordered_map<std::string, CustomArgument>::iterator m_customDataMapEnd;
 
     Element(const Element &that) = delete;
     Element& operator=(const Element &that) = delete;
@@ -18,9 +18,9 @@ public:
         ET_File
     };
 
-    bool SetCustomData(const std::string &f_key, CustomData &f_val);
-    void GetCustomData(const std::string &f_key, CustomData &f_val);
-    bool RemoveCustomData(const std::string &f_key);
+    bool SetData(const std::string &f_key, const CustomArgument &f_val);
+    bool GetData(const std::string &f_key, CustomArgument &f_val);
+    bool RemoveData(const std::string &f_key);
 
     inline unsigned char GetElementType() const { return m_elementType; }
     inline const std::string& GetElementTypeName() const { return m_elementTypeName; }

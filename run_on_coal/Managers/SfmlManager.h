@@ -1,10 +1,10 @@
 #pragma once
+#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
-class LuaArguments;
 
 typedef void(*OnWindowResizeCallback)(unsigned int, unsigned int);
 typedef void(*OnWindowFocusCallback)(bool);
@@ -35,7 +35,7 @@ class SfmlManager final
 
     bool m_inputState;
 
-    LuaArguments *m_luaArguments;
+    CustomArguments m_luaArguments;
 
     OnWindowResizeCallback m_windowResizeCallback;
     OnWindowFocusCallback m_windowFocusCallback;

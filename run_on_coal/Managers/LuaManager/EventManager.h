@@ -5,7 +5,7 @@ namespace ROC
 {
 
 class LuaManager;
-class LuaArguments;
+class CustomArguments;
 
 class EventManager final
 {
@@ -30,12 +30,12 @@ class EventManager final
     EventManager& operator=(const EventManager &that) = delete;
 public:
     bool AddEvent(const std::string &f_event);
-    bool AddEventHandler(const std::string &f_event, LuaFunction &f_func);
+    bool AddEventHandler(const std::string &f_event, const LuaFunction &f_func);
 
     bool RemoveEvent(const std::string &f_event);
     bool RemoveEventHandler(const std::string &f_event, LuaFunction &f_func);
 
-    void CallEvent(const std::string &f_event, const LuaArguments *f_args); // Only custom events
+    void CallEvent(const std::string &f_event, const CustomArguments &f_args); // Only custom events
 protected:
     enum EventManagerEvent : size_t
     {
@@ -60,14 +60,13 @@ protected:
         EME_onVRControllerAxis,
         EME_onTextInput,
         EME_onNetworkStateChange,
-        EME_onNetworkDataRecieve,
-        EME_onGeometryLoad
+        EME_onNetworkDataRecieve
     };
 
     explicit EventManager(LuaManager *f_luaManager);
     ~EventManager();
 
-    void CallEvent(EventManagerEvent f_event, const LuaArguments *f_args); // Only default events
+    void CallEvent(EventManagerEvent f_event, const CustomArguments &f_args); // Only default events
 
     friend class Core;
     friend class AsyncManager;
