@@ -22,7 +22,6 @@ ROC::LogManager::LogManager(Core *f_core)
 }
 ROC::LogManager::~LogManager()
 {
-    Log("Server is shutting down...");
     if(m_enabled) m_log.close();
 }
 

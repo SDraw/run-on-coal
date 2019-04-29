@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "RocInc.h"
+#include "Core/Core.h"
 
 std::atomic<int> g_quitSetter = 0;
 
@@ -44,8 +44,11 @@ int main(int argc, char *argv[])
 
     SetConsoleTitleA("RunOnCoal Server");
 #endif
-    ROC::Core *l_core = ROC::Core::Init();
-    while(!g_quitSetter) l_core->DoPulse();
-    ROC::Core::Terminate();
+    if(ROC::Core::Init())
+    {
+        ROC::Core *l_core = ROC::Core::GetCore();
+        while(!g_quitSetter) l_core->DoPulse();
+        ROC::Core::Terminate();
+    }
     return EXIT_SUCCESS;
 }

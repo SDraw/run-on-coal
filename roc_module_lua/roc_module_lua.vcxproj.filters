@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Lua\ArgReader.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaVM.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaAnimationDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaCameraDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaCollisionDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaDrawableDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaElementDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaFontDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaGeometryDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaInputDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaLightDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaModelDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaNetworkDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaPhysicsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaQuatDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaRenderingDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaRenderTargetDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaSceneDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaShaderDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaSoundDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaTextureDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaDefs\LuaVRDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Utils\CustomArgument.cpp">
+      <Filter>shared\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Utils\CustomArguments.cpp">
+      <Filter>shared\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Utils\EnumUtils.cpp">
+      <Filter>shared\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
+      <Filter>vendor\luautf8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
+      <Filter>vendor\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\EventHandler.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\LuaModule.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\TaskHandler.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Utils\LuaUtils.cpp">
+      <Filter>shared\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Lua\LuaFunction.cpp">
+      <Filter>shared\Lua</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Lua\ArgReader.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaVM.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaAnimationDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaCameraDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaCollisionDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaDrawableDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaElementDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaFileDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaFontDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaGeometryDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaInputDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaLightDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaModelDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaNetworkDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaPhysicsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaQuatDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaRenderingDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaRenderTargetDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaSceneDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaShaderDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaSoundDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaTextureDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaDefs\LuaVRDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Module\EventHandler.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Module\LuaModule.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Module\TaskHandler.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{c817ff52-603f-4f24-8309-246a0fb02647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\LuaDefs">
+      <UniqueIdentifier>{41e0f9e0-9251-4e23-b1e2-fdf941646183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared">
+      <UniqueIdentifier>{6588d790-3db9-4d11-ab7d-87ae8335d0e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Utils">
+      <UniqueIdentifier>{25a16cdb-49d9-4e78-bb54-93245876e15d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{98643c28-1174-4f8f-bb77-7a03507b892f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\luautf8">
+      <UniqueIdentifier>{74e04421-249d-4e8f-b35b-1fbebfa19f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\pugixml">
+      <UniqueIdentifier>{881a7193-06fe-4eb1-b4fb-b435a237a794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module">
+      <UniqueIdentifier>{2de8f2d6-0f15-472e-9dac-2022011b3537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Lua">
+      <UniqueIdentifier>{2e3c2d80-04d9-455a-8f7a-267dfdcf11de}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

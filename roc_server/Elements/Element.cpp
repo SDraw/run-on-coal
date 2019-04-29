@@ -13,6 +13,16 @@ ROC::Element::~Element()
     m_customDataMap.clear();
 }
 
+unsigned char ROC::Element::GetElementType() const 
+{ 
+    return m_elementType; 
+}
+const std::string& ROC::Element::GetElementTypeName() const 
+{ 
+    return m_elementTypeName; 
+}
+
+
 bool ROC::Element::SetData(const std::string &f_key, const CustomArgument &f_val)
 {
     bool l_result = false;

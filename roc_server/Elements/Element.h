@@ -1,10 +1,11 @@
 #pragma once
+#include "Interfaces/IElement.h"
 #include "Utils/CustomArgument.h"
 
 namespace ROC
 {
 
-class Element
+class Element : public virtual IElement
 {
     std::unordered_map<std::string, CustomArgument> m_customDataMap;
     std::unordered_map<std::string, CustomArgument>::iterator m_customDataMapEnd;
@@ -22,8 +23,8 @@ public:
     bool GetData(const std::string &f_key, CustomArgument &f_val);
     bool RemoveData(const std::string &f_key);
 
-    inline unsigned char GetElementType() const { return m_elementType; }
-    inline const std::string& GetElementTypeName() const { return m_elementTypeName; }
+    unsigned char GetElementType() const;
+    const std::string& GetElementTypeName() const;
 protected:
     unsigned char m_elementType;
     std::string m_elementTypeName;

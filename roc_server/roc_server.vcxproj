@@ -81,11 +81,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin_win32\</OutDir>
-    <TargetName>$(ProjectName)_r</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>$(ProjectName)_r</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin_win64\</OutDir>
@@ -97,13 +97,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/pugixml;../vendor/RakNet/include;../vendor/base64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../shared;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../vendor/lua/lib/win32;../vendor/RakNet/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua53.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/RakNet/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -113,13 +113,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/pugixml;../vendor/RakNet/include;../vendor/base64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../shared;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../vendor/lua/lib/win64;../vendor/RakNet/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua53.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/RakNet/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -131,15 +131,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/pugixml;../vendor/RakNet/include;../vendor/base64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../shared;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>../vendor/lua/lib/win32;../vendor/RakNet/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua53.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/RakNet/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -151,15 +151,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;WINVER=0x0501;_WIN32_WINNT=0x0501;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;../vendor/lua/include;../vendor/luautf8;../vendor/pugixml;../vendor/RakNet/include;../vendor/base64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;../shared;../vendor/pugixml;../vendor/RakNet/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>../vendor/lua/lib/win64;../vendor/RakNet/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua53.lib;RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/RakNet/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,34 +167,25 @@
     <ClInclude Include="Elements\Client.h" />
     <ClInclude Include="Elements\Element.h" />
     <ClInclude Include="Elements\File.h" />
-    <ClInclude Include="Lua\ArgReader.h" />
-    <ClInclude Include="Lua\LuaDefs\LuaClientDef.h" />
-    <ClInclude Include="Lua\LuaDefs\LuaElementDef.h" />
-    <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h" />
-    <ClInclude Include="Lua\LuaDefs\LuaFileDef.h" />
-    <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h" />
-    <ClInclude Include="Lua\LuaFunction.h" />
+    <ClInclude Include="Interfaces\IClient.h" />
+    <ClInclude Include="Interfaces\ICore.h" />
+    <ClInclude Include="Interfaces\IElement.h" />
+    <ClInclude Include="Interfaces\IElementManager.h" />
+    <ClInclude Include="Interfaces\IFile.h" />
+    <ClInclude Include="Interfaces\ILogManager.h" />
+    <ClInclude Include="Interfaces\IModule.h" />
+    <ClInclude Include="Interfaces\INetworkManager.h" />
     <ClInclude Include="Managers\ConfigManager.h" />
     <ClInclude Include="Managers\ElementManager.h" />
     <ClInclude Include="Managers\LogManager.h" />
-    <ClInclude Include="Managers\LuaManager\EventManager.h" />
-    <ClInclude Include="Managers\LuaManager\LuaManager.h" />
+    <ClInclude Include="Managers\ModuleManager.h" />
     <ClInclude Include="Managers\NetworkManager.h" />
-    <ClInclude Include="RocInc.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Utils\CustomArgument.h" />
-    <ClInclude Include="Utils\CustomArguments.h" />
-    <ClInclude Include="Utils\EnumUtils.h" />
-    <ClInclude Include="Utils\LuaUtils.h" />
-    <ClInclude Include="Utils\PathUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\shared\Utils\CustomArgument.cpp" />
+    <ClCompile Include="..\shared\Utils\CustomArguments.cpp" />
+    <ClCompile Include="..\shared\Utils\EnumUtils.cpp" />
     <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -205,19 +196,11 @@
     <ClCompile Include="Elements\Client.cpp" />
     <ClCompile Include="Elements\Element.cpp" />
     <ClCompile Include="Elements\File.cpp" />
-    <ClCompile Include="Lua\ArgReader.cpp" />
-    <ClCompile Include="Lua\LuaDefs\LuaClientDef.cpp" />
-    <ClCompile Include="Lua\LuaDefs\LuaElementDef.cpp" />
-    <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp" />
-    <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp" />
-    <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp" />
-    <ClCompile Include="Lua\LuaFunction.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Managers\ConfigManager.cpp" />
     <ClCompile Include="Managers\ElementManager.cpp" />
     <ClCompile Include="Managers\LogManager.cpp" />
-    <ClCompile Include="Managers\LuaManager\EventManager.cpp" />
-    <ClCompile Include="Managers\LuaManager\LuaManager.cpp" />
+    <ClCompile Include="Managers\ModuleManager.cpp" />
     <ClCompile Include="Managers\NetworkManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -225,11 +208,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Utils\CustomArgument.cpp" />
-    <ClCompile Include="Utils\CustomArguments.cpp" />
-    <ClCompile Include="Utils\EnumUtils.cpp" />
-    <ClCompile Include="Utils\LuaUtils.cpp" />
-    <ClCompile Include="Utils\PathUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

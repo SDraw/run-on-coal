@@ -1,56 +1,43 @@
 #pragma once
+#include "Interfaces/ICore.h"
+#include "Managers/ElementManager.h"
+#include "Managers/LogManager.h"
+#include "Managers/NetworkManager.h"
 #include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class ConfigManager;
-class ElementManager;
-class LogManager;
-class LuaManager;
-class NetworkManager;
+class ModuleManager;
 
-typedef void(*OnServerStartCallback)(void);
-typedef void(*OnServerPulseCallback)(void);
-typedef void(*OnServerStopCallback)(void);
-
-class Core final
+class Core final : public ICore
 {
     static Core *ms_instance;
 
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
     LogManager *m_logManager;
-    LuaManager *m_luaManager;
+    ModuleManager *m_moduleManager;
     NetworkManager *m_networkManager;
 
-    std::string m_workingDir;
     std::chrono::milliseconds m_pulseTick;
-    CustomArguments m_luaArguments;
-
-    static OnServerStartCallback ms_serverStartCallback;
-    OnServerPulseCallback m_serverPulseCallback;
-    OnServerStopCallback m_serverStopCallback;
+    CustomArguments m_arguments;
 
     Core();
     Core(const Core &that) = delete;
     Core& operator=(const Core &that) = delete;
     ~Core();
 public:
-    static Core* Init();
+    static bool Init();
     inline static Core* GetCore() { return ms_instance; }
-    static void Terminate();
+    static bool Terminate();
 
-    inline const std::string& GetWorkingDirectory() const { return m_workingDir; }
     inline ConfigManager* GetConfigManager() const { return m_configManager; }
-    inline ElementManager* GetElementManager() const { return m_elementManager; }
-    inline LogManager* GetLogManager() const { return m_logManager; }
-    inline LuaManager* GetLuaManager() const { return m_luaManager; }
-    inline NetworkManager* GetNetworkManager() const { return m_networkManager; }
-
-    static inline void SetServerStartCallback(OnServerStartCallback f_callback) { ms_serverStartCallback = f_callback; }
-    inline void SetServerPulseCallback(OnServerPulseCallback f_callback) { m_serverPulseCallback = f_callback; }
-    inline void SetServerStopCallback(OnServerStopCallback f_callback) { m_serverStopCallback = f_callback; }
+    ElementManager* GetElementManager() const;
+    LogManager* GetLogManager() const;
+    inline ModuleManager* GetModuleManager() const { return m_moduleManager; }
+    NetworkManager* GetNetworkManager() const;
 
     void DoPulse();
 };

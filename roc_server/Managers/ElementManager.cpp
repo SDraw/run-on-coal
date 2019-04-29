@@ -3,11 +3,9 @@
 #include "Managers/ElementManager.h"
 #include "Core/Core.h"
 #include "Elements/Client.h"
-#include "Elements/File.h"
 
 #include "Managers/LogManager.h"
 #include "Managers/NetworkManager.h"
-#include "Utils/PathUtils.h"
 
 ROC::ElementManager::ElementManager(Core *f_core)
 {
@@ -53,11 +51,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_file->Create(l_path, f_path)) AddElementToSet(l_file);
+    if(l_file->Create(f_path)) AddElementToSet(l_file);
     else
     {
         delete l_file;
@@ -69,11 +63,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
 
-    std::string l_path(f_path);
-    PathUtils::EscapePath(l_path);
-    l_path.insert(0U, m_core->GetWorkingDirectory());
-
-    if(l_file->Open(l_path, f_path, f_ro)) AddElementToSet(l_file);
+    if(l_file->Open(f_path, f_ro)) AddElementToSet(l_file);
     else
     {
         delete l_file;
@@ -82,10 +72,19 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     return l_file;
 }
 
-bool ROC::ElementManager::IsValidElement(void *f_ptr)
+bool ROC::ElementManager::IsValidElement(IElement *f_ptr)
+{
+    return IsValidElement(dynamic_cast<Element*>(f_ptr));
+}
+bool ROC::ElementManager::IsValidElement(Element *f_ptr)
 {
     auto iter = m_elementSet.find(f_ptr);
     return (iter != m_elementSetEnd);
+}
+
+bool ROC::ElementManager::DestroyElement(IElement *f_element)
+{
+    return DestroyElement(dynamic_cast<Element*>(f_element));
 }
 bool ROC::ElementManager::DestroyElement(Element *f_element)
 {

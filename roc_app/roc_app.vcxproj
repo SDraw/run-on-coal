@@ -1,0 +1,431 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{15AAC079-9287-4A08-B4EE-686B7CAFA03D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>
+    </RootNamespace>
+    <ProjectName>roc_app</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <OutDir>../bin_win32/</OutDir>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <GenerateManifest>false</GenerateManifest>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>$(ProjectName)_d</TargetName>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <GenerateManifest>false</GenerateManifest>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <OutDir>../bin_win64/</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <OutDir>../bin_win32/</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <GenerateManifest>false</GenerateManifest>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>$(ProjectName)</TargetName>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <GenerateManifest>false</GenerateManifest>
+    <LinkIncremental>false</LinkIncremental>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <OutDir>../bin_win64/</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>false</EnablePREfast>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib/win32;../vendor/bullet/lib/win32;../vendor/freetype2/lib/win32;../vendor/glew/lib/win32;../vendor/zlib/lib/win32;../vendor/RakNet/lib/win32;../vendor/openvr/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EnableUAC>false</EnableUAC>
+      <Profile>false</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./;../vendor/bullet/include;../vendor/pugixml;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>false</EnablePREfast>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib/win64;../vendor/bullet/lib/win64;../vendor/freetype2/lib/win64;../vendor/glew/lib/win64;../vendor/zlib/lib/win64;../vendor/RakNet/lib/win64;../vendor/openvr/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EnableUAC>false</EnableUAC>
+      <Profile>false</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>false</EnablePREfast>
+      <OpenMPSupport>false</OpenMPSupport>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <MinimalRebuild>true</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib/win32;../vendor/bullet/lib/win32;../vendor/freetype2/lib/win32;../vendor/glew/lib/win32;../vendor/zlib/lib/win32;../vendor/RakNet/lib/win32;../vendor/openvr/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableUAC>false</EnableUAC>
+      <Profile>false</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnablePREfast>false</EnablePREfast>
+      <OpenMPSupport>false</OpenMPSupport>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <StringPooling>true</StringPooling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <ForcedIncludeFiles>
+      </ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>../vendor/SFML/lib/win64;../vendor/bullet/lib/win64;../vendor/freetype2/lib/win64;../vendor/glew/lib/win64;../vendor/zlib/lib/win64;../vendor/RakNet/lib/win64;../vendor/openvr/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableUAC>false</EnableUAC>
+      <Profile>false</Profile>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Elements\Animation\Animation.h" />
+    <ClInclude Include="Elements\Animation\BoneFrameData.h" />
+    <ClInclude Include="Elements\Camera.h" />
+    <ClInclude Include="Elements\Collision.h" />
+    <ClInclude Include="Elements\Drawable.h" />
+    <ClInclude Include="Elements\Element.h" />
+    <ClInclude Include="Elements\File.h" />
+    <ClInclude Include="Elements\Font.h" />
+    <ClInclude Include="Elements\Geometry\BoneCollisionData.hpp" />
+    <ClInclude Include="Elements\Geometry\BoneData.hpp" />
+    <ClInclude Include="Elements\Geometry\BoneJointData.hpp" />
+    <ClInclude Include="Elements\Geometry\Geometry.h" />
+    <ClInclude Include="Elements\Geometry\Material.h" />
+    <ClInclude Include="Elements\Light.h" />
+    <ClInclude Include="Elements\Model\AnimationController.h" />
+    <ClInclude Include="Elements\Model\Bone.h" />
+    <ClInclude Include="Elements\Model\Model.h" />
+    <ClInclude Include="Elements\Model\Skeleton.h" />
+    <ClInclude Include="Elements\RenderTarget.h" />
+    <ClInclude Include="Elements\Scene.h" />
+    <ClInclude Include="Elements\Shader\Shader.h" />
+    <ClInclude Include="Elements\Shader\ShaderUniform.h" />
+    <ClInclude Include="Elements\Sound.h" />
+    <ClInclude Include="Elements\Texture.h" />
+    <ClInclude Include="Interfaces\IAnimation.h" />
+    <ClInclude Include="Interfaces\IAsyncManager.h" />
+    <ClInclude Include="Interfaces\ICamera.h" />
+    <ClInclude Include="Interfaces\ICollision.h" />
+    <ClInclude Include="Interfaces\ICore.h" />
+    <ClInclude Include="Interfaces\IDrawable.h" />
+    <ClInclude Include="Interfaces\IElement.h" />
+    <ClInclude Include="Interfaces\IElementManager.h" />
+    <ClInclude Include="Interfaces\IFile.h" />
+    <ClInclude Include="Interfaces\IFont.h" />
+    <ClInclude Include="Interfaces\IGeometry.h" />
+    <ClInclude Include="Interfaces\IInheritanceManager.h" />
+    <ClInclude Include="Interfaces\ILogManager.h" />
+    <ClInclude Include="Interfaces\IModel.h" />
+    <ClInclude Include="Interfaces\IModule.h" />
+    <ClInclude Include="Interfaces\INetworkManager.h" />
+    <ClInclude Include="Interfaces\IPhysicsManager.h" />
+    <ClInclude Include="Interfaces\IRenderManager.h" />
+    <ClInclude Include="Interfaces\IRenderTarget.h" />
+    <ClInclude Include="Interfaces\IScene.h" />
+    <ClInclude Include="Interfaces\ISfmlManager.h" />
+    <ClInclude Include="Interfaces\IShader.h" />
+    <ClInclude Include="Interfaces\IShaderUniform.h" />
+    <ClInclude Include="Interfaces\ISound.h" />
+    <ClInclude Include="Interfaces\ISoundManager.h" />
+    <ClInclude Include="Interfaces\ITexture.h" />
+    <ClInclude Include="Interfaces\IVRManager.h" />
+    <ClInclude Include="Managers\AsyncManager\AsyncGeometryTask.h" />
+    <ClInclude Include="Managers\AsyncManager\AsyncManager.h" />
+    <ClInclude Include="Managers\AsyncManager\AsyncTask.h" />
+    <ClInclude Include="Managers\AsyncManager\AsyncTextureTask.h" />
+    <ClInclude Include="Managers\ConfigManager.h" />
+    <ClInclude Include="Managers\ElementManager.h" />
+    <ClInclude Include="Managers\LogManager.h" />
+    <ClInclude Include="Managers\ModuleManager.h" />
+    <ClInclude Include="Managers\NetworkManager.h" />
+    <ClInclude Include="Managers\RenderManager\PhysicsDrawer.h" />
+    <ClInclude Include="Managers\RenderManager\Quad2D.h" />
+    <ClInclude Include="Managers\RenderManager\Quad3D.h" />
+    <ClInclude Include="Managers\RenderManager\RenderManager.h" />
+    <ClInclude Include="Managers\SfmlManager.h" />
+    <ClInclude Include="Managers\InheritanceManager.h" />
+    <ClInclude Include="Managers\PhysicsManager.h" />
+    <ClInclude Include="Managers\PreRenderManager.h" />
+    <ClInclude Include="Managers\VRManager.h" />
+    <ClInclude Include="Managers\SoundManager.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utils\GLBinder.h" />
+    <ClInclude Include="Utils\MathUtils.h" />
+    <ClInclude Include="Utils\Pool.h" />
+    <ClInclude Include="Utils\SystemTick.h" />
+    <ClInclude Include="Utils\Transformation.h" />
+    <ClInclude Include="Utils\TreeNode.h" />
+    <ClInclude Include="Utils\zlibUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\shared\Utils\CustomArgument.cpp" />
+    <ClCompile Include="..\shared\Utils\CustomArguments.cpp" />
+    <ClCompile Include="..\shared\Utils\EnumUtils.cpp" />
+    <ClCompile Include="..\vendor\RectangleBinPack\MaxRectsBinPack.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\vendor\RectangleBinPack\Rect.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Core\Core.cpp" />
+    <ClCompile Include="Elements\Animation\Animation.cpp" />
+    <ClCompile Include="Elements\Animation\BoneFrameData.cpp" />
+    <ClCompile Include="Elements\Camera.cpp" />
+    <ClCompile Include="Elements\Collision.cpp" />
+    <ClCompile Include="Elements\Drawable.cpp" />
+    <ClCompile Include="Elements\Element.cpp" />
+    <ClCompile Include="Elements\File.cpp" />
+    <ClCompile Include="Elements\Font.cpp" />
+    <ClCompile Include="Elements\Geometry\Geometry.cpp" />
+    <ClCompile Include="Elements\Geometry\Material.cpp" />
+    <ClCompile Include="Elements\Light.cpp" />
+    <ClCompile Include="Elements\Model\AnimationController.cpp" />
+    <ClCompile Include="Elements\Model\Bone.cpp" />
+    <ClCompile Include="Elements\Model\Model.cpp" />
+    <ClCompile Include="Elements\Model\Skeleton.cpp" />
+    <ClCompile Include="Elements\RenderTarget.cpp" />
+    <ClCompile Include="Elements\Scene.cpp" />
+    <ClCompile Include="Elements\Shader\Shader.cpp" />
+    <ClCompile Include="Elements\Shader\ShaderUniform.cpp" />
+    <ClCompile Include="Elements\Sound.cpp" />
+    <ClCompile Include="Elements\Texture.cpp" />
+    <ClCompile Include="Utils\zlibUtils.cpp" />
+    <ClInclude Include="Interfaces\ILight.h">
+      <FileType>CppHeader</FileType>
+    </ClInclude>
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Managers\AsyncManager\AsyncGeometryTask.cpp" />
+    <ClCompile Include="Managers\AsyncManager\AsyncManager.cpp" />
+    <ClCompile Include="Managers\AsyncManager\AsyncTask.cpp" />
+    <ClCompile Include="Managers\AsyncManager\AsyncTextureTask.cpp" />
+    <ClCompile Include="Managers\ConfigManager.cpp" />
+    <ClCompile Include="Managers\ElementManager.cpp" />
+    <ClCompile Include="Managers\LogManager.cpp" />
+    <ClCompile Include="Managers\ModuleManager.cpp" />
+    <ClCompile Include="Managers\NetworkManager.cpp" />
+    <ClCompile Include="Managers\RenderManager\PhysicsDrawer.cpp" />
+    <ClCompile Include="Managers\RenderManager\Quad2D.cpp" />
+    <ClCompile Include="Managers\RenderManager\Quad3D.cpp" />
+    <ClCompile Include="Managers\RenderManager\RenderManager.cpp" />
+    <ClCompile Include="Managers\SfmlManager.cpp" />
+    <ClCompile Include="Managers\InheritanceManager.cpp" />
+    <ClCompile Include="Managers\PhysicsManager.cpp" />
+    <ClCompile Include="Managers\PreRenderManager.cpp" />
+    <ClCompile Include="Managers\SoundManager.cpp" />
+    <ClCompile Include="Managers\VRManager.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utils\GLBinder.cpp" />
+    <ClCompile Include="Utils\GlobalConstants.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utils\MathUtils.cpp" />
+    <ClCompile Include="Utils\Pool.cpp" />
+    <ClCompile Include="Utils\SystemTick.cpp" />
+    <ClCompile Include="Utils\Transformation.cpp" />
+    <ClCompile Include="Utils\TreeNode.cpp" />
+    <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="main_resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="main_resource.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

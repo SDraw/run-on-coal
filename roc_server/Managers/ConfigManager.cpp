@@ -9,14 +9,14 @@
 #define ROC_CONFIG_ATTRIB_PORT 2
 #define ROC_CONFIG_ATTRIB_MAXCLIENTS 3
 #define ROC_CONFIG_ATTRIB_PULSETICK 4
-#define ROC_CONFIG_ATTRIB_SCRIPTSDIR 5
+#define ROC_CONFIG_ATTRIB_MODULE 5
 
 namespace ROC
 {
 
 const std::vector<std::string> g_configAttributeTable
 {
-    "logging", "ip", "port", "max_clients", "pulse_tick", "scripts_dir"
+    "logging", "ip", "port", "max_clients", "pulse_tick", "module"
 };
 
 }
@@ -29,7 +29,6 @@ ROC::ConfigManager::ConfigManager()
     m_bindPort = 4200U;
     m_maxClients = 10U;
     m_pulseTick = 10U;
-    m_scriptsDir.assign("server_scripts");
 
     pugi::xml_document *l_settings = new pugi::xml_document();
     if(l_settings->load_file("server_settings.xml"))
@@ -63,9 +62,11 @@ ROC::ConfigManager::ConfigManager()
                             case ROC_CONFIG_ATTRIB_PULSETICK:
                                 m_pulseTick = l_attrib.as_uint(10U);
                                 break;
-                            case ROC_CONFIG_ATTRIB_SCRIPTSDIR:
-                                m_scriptsDir.assign(l_attrib.as_string("server_scripts"));
-                                break;
+                            case ROC_CONFIG_ATTRIB_MODULE:
+                            {
+                                std::string l_module = l_attrib.as_string();
+                                if(!l_module.empty()) m_modules.push_back(l_module);
+                            } break;
                         }
                     }
                 }

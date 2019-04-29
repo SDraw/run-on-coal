@@ -1,14 +1,15 @@
 #pragma once
+#include "Interfaces/IElementManager.h"
+#include "Elements/Element.h"
+#include "Elements/File.h"
 
 namespace ROC
 {
 
 class Core;
 class Client;
-class Element;
-class File;
 
-class ElementManager final
+class ElementManager final : public IElementManager
 {
     Core *m_core;
 
@@ -20,12 +21,15 @@ class ElementManager final
 
     void AddElementToSet(void *f_ptr);
     void RemoveElementFromSet(void *f_ptr);
+
+    // Interfaces reroute
+    bool IsValidElement(IElement *f_ptr);
+    bool DestroyElement(IElement *f_element);
 public:
     File* CreateFile_(const std::string &f_path);
     File* OpenFile(const std::string &f_path, bool f_ro);
-    void CloseFile(File *f_file);
 
-    bool IsValidElement(void *f_ptr);
+    bool IsValidElement(Element *f_ptr);
     bool DestroyElement(Element *f_element);
 protected:
     explicit ElementManager(Core *f_core);

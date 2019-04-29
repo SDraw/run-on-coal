@@ -11,7 +11,7 @@ class ConfigManager final
     unsigned short m_bindPort;
     unsigned short m_maxClients;
     unsigned int m_pulseTick;
-    std::string m_scriptsDir;
+    std::vector<std::string> m_modules;
 
     ConfigManager(const ConfigManager &that) = delete;
     ConfigManager& operator=(const ConfigManager &that) = delete;
@@ -22,7 +22,7 @@ public:
     inline unsigned short GetBindPort() const { return m_bindPort; }
     inline unsigned short GetMaxClients() const { return m_maxClients; }
     inline unsigned int GetPulseTick() const { return m_pulseTick; }
-    inline const std::string& GetScriptsDirectory() const { return m_scriptsDir; }
+    inline const std::vector<std::string>& GetModules() const { return m_modules; }
 protected:
     ConfigManager();
     ~ConfigManager();

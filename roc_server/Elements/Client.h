@@ -1,17 +1,18 @@
 #pragma once
+#include "Interfaces/IClient.h"
 #include "Elements/Element.h"
 
 namespace ROC
 {
 
-class Client final : public Element
+class Client final : public Element, public virtual IClient
 {
     RakNet::SystemAddress m_address;
 
     Client(const Client &that) = delete;
     Client& operator=(const Client &that) = delete;
 public:
-    inline RakNet::SystemIndex GetID() const { return m_address.systemIndex; }
+    unsigned int GetID() const;
     void GetAddress(std::string &f_ip, unsigned short &f_port) const;
 protected:
     explicit Client(const RakNet::SystemAddress &f_address);

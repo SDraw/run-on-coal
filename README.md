@@ -11,11 +11,11 @@ Simple and light-weight 3D game engine.
 * Frustum culling
 * Keyboard, mouse and joypad input
 * Physics using [Bullet Physics](../../../../bulletphysics/bullet3)
-* Scripting using [Lua](https://www.lua.org)
 * Audio playback with spatialization (Ogg, WAV, FLAC)
 * TrueType font rendering with Unicode characters support
 * Networking using [RakNet library](../../../../OculusVR/RakNet)
 * VR support
+* Modules support
 
 [![alt text](http://i.imgur.com/spFAFnr.png "Youtube playlist")](https://www.youtube.com/watch?v=L2UA3kquDpg&list=PLiEPsxTlqsDnI36XCCsG3jw32j2Gb-JGJ)
 

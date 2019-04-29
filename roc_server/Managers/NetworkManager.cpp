@@ -5,10 +5,10 @@
 #include "Elements/Client.h"
 
 #include "Managers/ConfigManager.h"
-#include "Managers/LuaManager/EventManager.h"
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
-#include "Managers/LuaManager/LuaManager.h"
+#include "Managers/ModuleManager.h"
+#include "Interfaces/IModule.h"
 
 #define ROC_NETWORK_MAX_CONNECTIONS 8
 #define ROC_NETWORK_DISCONNECT_DURATION 300U
@@ -45,10 +45,6 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     }
 
     m_clientVector.assign(l_configManager->GetMaxClients(), nullptr);
-
-    m_networkClientConnectCallback = nullptr;
-    m_networkClientDisconnectCallback = nullptr;
-    m_networkDataRecieveCallback = nullptr;
 }
 ROC::NetworkManager::~NetworkManager()
 {
@@ -74,10 +70,19 @@ unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
     return l_result;
 }
 
+bool ROC::NetworkManager::Disconnect(IClient *f_client)
+{
+    return Disconnect(dynamic_cast<Client*>(f_client));
+}
 bool ROC::NetworkManager::Disconnect(Client *f_client)
 {
     if(m_networkInterface) m_networkInterface->CloseConnection(f_client->GetAddress(), true);
     return (m_networkInterface != nullptr);
+}
+
+bool ROC::NetworkManager::SendData(IClient *f_client, const std::string &f_data)
+{
+    return SendData(dynamic_cast<Client*>(f_client), f_data);
 }
 bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
 {
@@ -92,6 +97,11 @@ bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
     }
     return (m_networkInterface != nullptr);
 }
+
+int ROC::NetworkManager::GetPing(IClient *f_client) const
+{
+    return GetPing(dynamic_cast<Client*>(f_client));
+}
 int ROC::NetworkManager::GetPing(Client *f_client) const
 {
     return (m_networkInterface->GetLastPing(f_client->GetAddress()));
@@ -101,7 +111,6 @@ void ROC::NetworkManager::DoPulse()
 {
     if(m_networkInterface)
     {
-        EventManager *l_eventManager = m_core->GetLuaManager()->GetEventManager();
         for(RakNet::Packet *l_packet = m_networkInterface->Receive(); l_packet; m_networkInterface->DeallocatePacket(l_packet), l_packet = m_networkInterface->Receive())
         {
             switch(GetPacketIdentifier(l_packet))
@@ -116,11 +125,9 @@ void ROC::NetworkManager::DoPulse()
                     Client *l_client = m_core->GetElementManager()->CreateClient(l_packet->systemAddress);
                     m_clientVector[l_packet->guid.systemIndex] = l_client;
 
-                    if(m_networkClientConnectCallback) (*m_networkClientConnectCallback)(l_client);
-
-                    m_luaArguments.Push(l_client);
-                    l_eventManager->CallEvent(EventManager::EME_onNetworkClientConnect, m_luaArguments);
-                    m_luaArguments.Clear();
+                    m_arguments.Push(l_client);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkClientConnect, m_arguments);
+                    m_arguments.Clear();
                     m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_DISCONNECTION_NOTIFICATION: case ID_CONNECTION_LOST:
@@ -133,11 +140,9 @@ void ROC::NetworkManager::DoPulse()
 
                     Client *l_client = m_clientVector[l_packet->guid.systemIndex];
 
-                    if(m_networkClientDisconnectCallback) (*m_networkClientDisconnectCallback)(l_client);
-
-                    m_luaArguments.Push(l_client);
-                    l_eventManager->CallEvent(EventManager::EME_onNetworkClientDisconnect, m_luaArguments);
-                    m_luaArguments.Clear();
+                    m_arguments.Push(l_client);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkClientDisconnect, m_arguments);
+                    m_arguments.Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
                     m_clientVector[l_packet->guid.systemIndex] = nullptr;
@@ -156,12 +161,10 @@ void ROC::NetworkManager::DoPulse()
                         {
                             Client *l_client = m_clientVector[l_packet->guid.systemIndex];
 
-                            if(m_networkDataRecieveCallback) (*m_networkDataRecieveCallback)(l_client, l_stringData);
-
-                            m_luaArguments.Push(l_client);
-                            m_luaArguments.Push(l_stringData);
-                            l_eventManager->CallEvent(EventManager::EME_onNetworkDataRecieve, m_luaArguments);
-                            m_luaArguments.Clear();
+                            m_arguments.Push(l_client);
+                            m_arguments.Push(l_stringData);
+                            m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkDataRecieve, m_arguments);
+                            m_arguments.Clear();
                         }
                     }
                 } break;

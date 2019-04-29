@@ -1,11 +1,12 @@
 #pragma once
+#include "Interfaces/ILogManager.h"
 
 namespace ROC
 {
 
 class Core;
 
-class LogManager final
+class LogManager final : public ILogManager
 {
     std::ofstream m_log;
     bool m_enabled;
@@ -17,7 +18,8 @@ public:
 protected:
     explicit LogManager(Core *f_core);
     ~LogManager();
-    friend class Core;
+
+    friend Core;
 };
 
 }
