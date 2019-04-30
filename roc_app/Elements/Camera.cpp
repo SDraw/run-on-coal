@@ -37,8 +37,6 @@ ROC::Camera::Camera(int f_type)
 
     m_rebuildView = false;
     m_rebuildProjection = false;
-
-    this->GetElementType();
 }
 ROC::Camera::~Camera()
 {
