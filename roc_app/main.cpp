@@ -10,6 +10,11 @@ int main(int argc, char *argv[])
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
 #endif
+    int a = 5;
+    unsigned int b = 0;
+    std::memcpy(&b, &a, sizeof(int));
+    std::cout << a << b << std::endl;
+
     if(ROC::Core::Init())
     {
         ROC::Core *l_core = ROC::Core::GetCore();

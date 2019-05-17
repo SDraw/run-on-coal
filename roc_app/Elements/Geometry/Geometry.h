@@ -19,7 +19,7 @@ class Geometry final : public Element, public virtual IGeometry
     };
 
     std::vector<Material*> m_materialVector;
-    unsigned int m_materialCount;
+    size_t m_materialCount;
     float m_boundSphereRaduis;
 
     std::vector<BoneData*> m_bonesData;

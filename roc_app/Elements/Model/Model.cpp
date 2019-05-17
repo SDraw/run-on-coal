@@ -52,14 +52,14 @@ ROC::Model::~Model()
     delete m_skeleton;
 }
 
-ROC::Geometry* ROC::Model::GetGeometry() const 
-{ 
-    return m_geometry; 
+ROC::Geometry* ROC::Model::GetGeometry() const
+{
+    return m_geometry;
 }
 
-float ROC::Model::GetBoundSphereRadius() const 
+float ROC::Model::GetBoundSphereRadius() const
 {
-    return m_boundSphereRaduis; 
+    return m_boundSphereRaduis;
 }
 
 void ROC::Model::SetPosition(const glm::vec3 &f_pos)
@@ -94,19 +94,19 @@ const glm::vec3& ROC::Model::GetScale() const
     return m_localTransform->GetScale();
 }
 
-const glm::mat4& ROC::Model::GetFullMatrix() const 
+const glm::mat4& ROC::Model::GetFullMatrix() const
 {
-    return m_fullMatrix; 
+    return m_fullMatrix;
 }
 
-ROC::Model* ROC::Model::GetParent() const 
-{ 
-    return m_parent; 
+ROC::Model* ROC::Model::GetParent() const
+{
+    return m_parent;
 }
 
-ROC::Collision* ROC::Model::GetCollsion() const 
+ROC::Collision* ROC::Model::GetCollsion() const
 {
-    return m_collision; 
+    return m_collision;
 }
 
 void ROC::Model::SetParent(Model *f_model, int f_bone)
@@ -192,11 +192,11 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
     {
         case MUS_Collision:
         {
-            m_updated = false;
-            m_localTransform->UpdateMatrix();
-
             if(m_collision)
             {
+                m_updated = false;
+                m_localTransform->UpdateMatrix();
+
                 if(m_collision->IsActive() || m_localTransform->IsUpdated())
                 {
                     m_collision->GetMatrix(m_fullMatrix);

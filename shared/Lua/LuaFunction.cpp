@@ -29,10 +29,10 @@ int LuaFunction::RetrieveGlobalReference(lua_State *f_vm, void *f_ptr)
     {
         LuaFunctionData l_funcData;
         l_funcData.m_ref = luaL_ref(f_vm, LUA_REGISTRYINDEX);
+        lua_rawgeti(f_vm, LUA_REGISTRYINDEX, l_funcData.m_ref); // Restore function in stack
         l_funcData.m_refCount++;
 
-        l_funcMap->insert(std::make_pair(f_ptr, l_funcData));
-
+        l_funcMap->emplace(f_ptr, l_funcData);
         l_ref = l_funcData.m_ref;
     }
 

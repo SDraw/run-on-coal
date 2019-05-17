@@ -47,7 +47,7 @@ protected:
 
     inline void SetDynamic(bool f_state) { m_dynamic = f_state; }
     inline void SetDynamicBody(btRigidBody *f_body) { m_dynamicBody = f_body; }
-    inline btRigidBody* GetDynamicBody() const { return m_dynamicBody; }
+    inline const btRigidBody* GetDynamicBody() const { return m_dynamicBody; }
 
     void SetFullMatrix(const btTransform &f_transform);
     void SetPoseMatrix(const btTransform &f_transform);

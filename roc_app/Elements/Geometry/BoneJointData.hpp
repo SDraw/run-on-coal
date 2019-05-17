@@ -23,7 +23,7 @@ struct BoneJointPartData
 struct BoneJointData
 {
     unsigned int m_boneID;
-    std::vector<BoneJointPartData> m_jointPartVector;
+    std::vector<BoneJointPartData> m_jointParts;
 };
 
 }

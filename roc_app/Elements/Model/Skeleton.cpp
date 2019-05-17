@@ -107,6 +107,8 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
     {
         for(auto iter : f_vec)
         {
+            if(iter->m_boneID >= m_bonesCount) continue; // Invalid bone id
+
             SkeletonCollision *l_colData = new SkeletonCollision();
 
             btCollisionShape *l_shape = nullptr;
@@ -163,8 +165,10 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
 {
     if(!m_hasDynamicBoneCollision)
     {
-        for(auto iter : f_vec)
+        for(const auto iter : f_vec)
         {
+            if(iter->m_boneID >= m_bonesCount) continue; // Invalid bone id
+
             SkeletonJoint *l_joint = new SkeletonJoint();
             l_joint->m_boneID = static_cast<size_t>(iter->m_boneID);
             l_joint->m_transform.push_back(btTransform::getIdentity()); // Local bone transformation
@@ -182,9 +186,11 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
             l_joint->m_emptyBody->setUserPointer(f_model);
             m_jointVector.push_back(l_joint);
 
-            for(size_t i = 0, j = iter->m_jointPartVector.size(); i < j; i++)
+            for(size_t i = 0, j = iter->m_jointParts.size(); i < j; i++)
             {
-                BoneJointPartData &l_partData = iter->m_jointPartVector[i];
+                const BoneJointPartData &l_partData = iter->m_jointParts[i];
+                if(l_partData.m_boneID >= m_bonesCount) continue; // Invalid bone id
+
                 SkeletonJointPart *l_jointPart = new SkeletonJointPart();
                 l_jointPart->m_boneID = static_cast<size_t>(l_partData.m_boneID);
 

@@ -1,7 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\vendor\pugixml\pugixml.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
+      <Filter>vendor\pugixml</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{78b9cbe2-ce0a-4993-9588-ce9df2413d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\pugixml">
+      <UniqueIdentifier>{de38c398-28d3-4b64-9526-f486a68b638f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -42,131 +42,126 @@ bool ROC::Geometry::Load(const std::string &f_path)
             if(!l_header.compare("ROC"))
             {
                 l_file.read(reinterpret_cast<char*>(&l_type), sizeof(unsigned char));
+                l_file.read(reinterpret_cast<char*>(&m_boundSphereRaduis), sizeof(float));
 
-                int l_compressedSize, l_uncompressedSize;
-                std::vector<unsigned char> l_tempData;
+                unsigned int l_materialCount = 0U;
+                l_file.read(reinterpret_cast<char*>(&l_materialCount), sizeof(unsigned int));
+                m_materialCount = l_materialCount;
 
-                //Vertices
-                std::vector<glm::vec3> l_vertexData;
-                l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
-                l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                l_tempData.resize(static_cast<size_t>(l_compressedSize));
-                l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                l_vertexData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec3));
-                zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_vertexData.data(), l_uncompressedSize);
-
-                //UVs
-                std::vector<glm::vec2> l_uvData;
-                l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
-                l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                l_tempData.resize(static_cast<size_t>(l_compressedSize));
-                l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                l_uvData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec2));
-                zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_uvData.data(), l_uncompressedSize);
-
-                //Normals
-                std::vector<glm::vec3> l_normalData;
-                l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
-                l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                l_tempData.resize(static_cast<size_t>(l_compressedSize));
-                l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                l_normalData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec3));
-                zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_normalData.data(), l_uncompressedSize);
-
-                std::vector<glm::vec4> l_weightData;
-                std::vector<glm::ivec4> l_indexData;
-                if(l_type == GSB_Animated)
+                // Materials
+                for(size_t i = 0U; i < m_materialCount; i++)
                 {
-                    // Weights
-                    l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
-                    l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                    l_tempData.resize(static_cast<size_t>(l_compressedSize));
-                    l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                    l_weightData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec4));
-                    zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_weightData.data(), l_uncompressedSize);
-
-                    //Indices
-                    l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
-                    l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                    l_tempData.resize(static_cast<size_t>(l_compressedSize));
-                    l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                    l_indexData.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(glm::vec4));
-                    zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_indexData.data(), l_uncompressedSize);
-                }
-
-                //Materials
-                int l_materialCount;
-                glm::vec3 l_farthestPoint(0.f);
-                l_file.read(reinterpret_cast<char*>(&l_materialCount), sizeof(int));
-                for(int i = 0; i < l_materialCount; i++)
-                {
-                    unsigned char l_materialType;
-                    glm::vec4 l_materialParam;
-                    unsigned char l_difTextureLength;
-                    std::string l_difTexture;
-
-                    l_file.read(reinterpret_cast<char*>(&l_materialType), sizeof(unsigned char));
-                    l_file.read(reinterpret_cast<char*>(&l_materialParam), sizeof(glm::vec4));
-                    l_file.read(reinterpret_cast<char*>(&l_difTextureLength), sizeof(unsigned char));
-                    if(l_difTextureLength > 0U)
-                    {
-                        l_difTexture.resize(l_difTextureLength);
-                        l_file.read(&l_difTexture[0], l_difTextureLength);
-                    }
-
-                    std::vector<int> l_faceIndex;
-                    l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(int));
-                    l_file.read(reinterpret_cast<char*>(&l_uncompressedSize), sizeof(int));
-                    l_tempData.resize(static_cast<size_t>(l_compressedSize));
-                    l_file.read(reinterpret_cast<char*>(l_tempData.data()), l_compressedSize);
-                    l_faceIndex.resize(static_cast<size_t>(l_uncompressedSize) / sizeof(int));
-                    zlibUtils::UncompressData(l_tempData.data(), l_compressedSize, l_faceIndex.data(), l_uncompressedSize);
-
-                    std::vector<glm::vec3> l_tempVertex;
-                    std::vector<glm::vec2> l_tempUV;
-                    std::vector<glm::vec3> l_tempNormal;
-                    std::vector<glm::vec4> l_tempWeight;
-                    std::vector<glm::ivec4> l_tempIndex;
-                    for(size_t j = 0, k = l_faceIndex.size(); j < k; j += 9U)
-                    {
-                        l_tempVertex.push_back(l_vertexData[static_cast<size_t>(l_faceIndex[j])]);
-                        l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
-                        l_tempVertex.push_back(l_vertexData[static_cast<size_t>(l_faceIndex[j + 1])]);
-                        l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
-                        l_tempVertex.push_back(l_vertexData[static_cast<size_t>(l_faceIndex[j + 2])]);
-                        l_farthestPoint = glm::max(l_farthestPoint, l_tempVertex.back());
-                        l_tempUV.push_back(l_uvData[static_cast<size_t>(l_faceIndex[j + 3])]);
-                        l_tempUV.push_back(l_uvData[static_cast<size_t>(l_faceIndex[j + 4])]);
-                        l_tempUV.push_back(l_uvData[static_cast<size_t>(l_faceIndex[j + 5])]);
-                        l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 6])]);
-                        l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 7])]);
-                        l_tempNormal.push_back(l_normalData[static_cast<size_t>(l_faceIndex[j + 8])]);
-                        if(l_type == GSB_Animated)
-                        {
-                            l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j])]);
-                            l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j + 1])]);
-                            l_tempWeight.push_back(l_weightData[static_cast<size_t>(l_faceIndex[j + 2])]);
-                            l_tempIndex.push_back(l_indexData[static_cast<size_t>(l_faceIndex[j])]);
-                            l_tempIndex.push_back(l_indexData[static_cast<size_t>(l_faceIndex[j + 1])]);
-                            l_tempIndex.push_back(l_indexData[static_cast<size_t>(l_faceIndex[j + 2])]);
-                        }
-                    }
-
-                    Material *l_material = new Material();
+                    Material *l_material = new Material;
                     m_materialVector.push_back(l_material);
+
+                    unsigned char l_materialType = 0U;
+                    l_file.read(reinterpret_cast<char*>(&l_materialType), sizeof(unsigned char));
                     l_material->SetType(l_materialType);
-                    l_material->SetParams(l_materialParam);
-                    l_material->LoadVertices(l_tempVertex);
-                    l_material->LoadUVs(l_tempUV);
-                    l_material->LoadNormals(l_tempNormal);
+
+                    glm::vec4 l_materialParams(1.f);
+                    l_file.read(reinterpret_cast<char*>(glm::value_ptr(l_materialParams)), sizeof(glm::vec4));
+                    l_material->SetParams(l_materialParams);
+
+                    unsigned char l_diffuseTextureNameLength = 0U;
+                    l_file.read(reinterpret_cast<char*>(&l_diffuseTextureNameLength), sizeof(unsigned char));
+                    if(l_diffuseTextureNameLength > 0U)
+                    {
+                        std::string l_diffuseTexture(l_diffuseTextureNameLength, '\0');
+                        l_file.read(&l_diffuseTexture[0], l_diffuseTextureNameLength);
+                        l_material->LoadTexture(l_diffuseTexture);
+                    }
+
+                    unsigned int l_compressedSize = 0U;
+                    unsigned int l_sourceSize = 0U;
+                    std::vector<char> l_compressedData;
+
+                    // Vertex data
+                    l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(unsigned int));
+                    l_file.read(reinterpret_cast<char*>(&l_sourceSize), sizeof(unsigned int));
+
+                    std::vector<glm::vec3> l_vertexData(l_sourceSize / sizeof(glm::vec3));
+                    l_compressedData.resize(l_compressedSize, '\0');
+                    l_file.read(l_compressedData.data(), l_compressedSize);
+                    if(zlibUtils::UncompressData(l_compressedData.data(), l_compressedSize, l_vertexData.data(), l_sourceSize) != l_sourceSize) throw std::exception();
+                    l_material->LoadVertices(l_vertexData);
+                    l_vertexData.clear();
+
+                    // Normal data
+                    l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(unsigned int));
+                    l_file.read(reinterpret_cast<char*>(&l_sourceSize), sizeof(unsigned int));
+
+                    std::vector<glm::vec3> l_normalData(l_sourceSize / sizeof(glm::vec3));
+                    l_compressedData.resize(l_compressedSize, '\0');
+                    l_file.read(l_compressedData.data(), l_compressedSize);
+                    if(zlibUtils::UncompressData(l_compressedData.data(), l_compressedSize, l_normalData.data(), l_sourceSize) != l_sourceSize) throw std::exception();
+                    l_material->LoadNormals(l_normalData);
+                    l_normalData.clear();
+
+                    // UV data
+                    l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(unsigned int));
+                    l_file.read(reinterpret_cast<char*>(&l_sourceSize), sizeof(unsigned int));
+
+                    std::vector<glm::vec2> l_uvData(l_sourceSize / sizeof(glm::vec2));
+                    l_compressedData.resize(l_compressedSize, '\0');
+                    l_file.read(l_compressedData.data(), l_compressedSize);
+                    if(zlibUtils::UncompressData(l_compressedData.data(), l_compressedSize, l_uvData.data(), l_sourceSize) != l_sourceSize) throw std::exception();
+                    l_material->LoadUVs(l_uvData);
+                    l_uvData.clear();
+
                     if(l_type == GSB_Animated)
                     {
-                        l_material->LoadWeights(l_tempWeight);
-                        l_material->LoadIndices(l_tempIndex);
+                        // Weight data
+                        l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(unsigned int));
+                        l_file.read(reinterpret_cast<char*>(&l_sourceSize), sizeof(unsigned int));
+
+                        std::vector<glm::vec4> l_weightData(l_sourceSize / sizeof(glm::vec4));
+                        l_compressedData.resize(l_compressedSize, '\0');
+                        l_file.read(l_compressedData.data(), l_compressedSize);
+                        if(zlibUtils::UncompressData(l_compressedData.data(), l_compressedSize, l_weightData.data(), l_sourceSize) != l_sourceSize) throw std::exception();
+                        l_material->LoadWeights(l_weightData);
+                        l_weightData.clear();
+
+                        // Index data
+                        l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(unsigned int));
+                        l_file.read(reinterpret_cast<char*>(&l_sourceSize), sizeof(unsigned int));
+
+                        std::vector<glm::ivec4> l_indexData(l_sourceSize / sizeof(glm::ivec4));
+                        l_compressedData.resize(l_compressedSize, '\0');
+                        l_file.read(l_compressedData.data(), l_compressedSize);
+                        if(zlibUtils::UncompressData(l_compressedData.data(), l_compressedSize, l_indexData.data(), l_sourceSize) != l_sourceSize) throw std::exception();
+                        l_material->LoadIndices(l_indexData);
+                        l_indexData.clear();
                     }
-                    l_material->LoadTexture(l_difTexture);
                 }
-                m_materialCount = static_cast<unsigned int>(l_materialCount);
+
+                // Skeleton
+                if(l_type == GSB_Animated)
+                {
+                    unsigned int l_bonesCount;
+                    l_file.read(reinterpret_cast<char*>(&l_bonesCount), sizeof(unsigned int));
+
+                    for(size_t i = 0; i < l_bonesCount; i++)
+                    {
+                        BoneData *l_boneData = new BoneData();
+                        m_bonesData.push_back(l_boneData);
+
+                        unsigned char l_boneNameLength;
+                        l_file.read(reinterpret_cast<char*>(&l_boneNameLength), sizeof(unsigned char));
+                        if(l_boneNameLength > 0U)
+                        {
+                            l_boneData->m_name.resize(l_boneNameLength);
+                            l_file.read(&l_boneData->m_name[0], l_boneNameLength);
+                        }
+                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_parent), sizeof(int));
+                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_position), sizeof(glm::vec3));
+                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_rotation), sizeof(glm::quat));
+                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_scale), sizeof(glm::vec3));
+                    }
+                    m_bonesData.shrink_to_fit();
+                }
+
+
+                // Sort materials
                 if(m_materialCount > 0U)
                 {
                     std::vector<Material*> l_matVecDef, l_matVecDefDouble, l_matVecDefTransp;
@@ -181,32 +176,6 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
                     m_materialVector.shrink_to_fit();
                 }
-                m_boundSphereRaduis = glm::length(l_farthestPoint);
-
-                if(l_type == GSB_Animated)
-                {
-                    int l_bonesSize;
-                    l_file.read(reinterpret_cast<char*>(&l_bonesSize), sizeof(int));
-
-                    for(int i = 0; i < l_bonesSize; i++)
-                    {
-                        BoneData *l_boneData = new BoneData();
-                        m_bonesData.push_back(l_boneData);
-                        unsigned char l_boneNameLength;
-
-                        l_file.read(reinterpret_cast<char*>(&l_boneNameLength), sizeof(unsigned char));
-                        if(l_boneNameLength > 0U)
-                        {
-                            l_boneData->m_name.resize(l_boneNameLength);
-                            l_file.read(&l_boneData->m_name[0], l_boneNameLength);
-                        }
-                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_parent), sizeof(int));
-                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_position), sizeof(glm::vec3));
-                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_rotation), sizeof(glm::quat));
-                        l_file.read(reinterpret_cast<char*>(&l_boneData->m_scale), sizeof(glm::vec3));
-                    }
-                    m_bonesData.shrink_to_fit();
-                }
             }
             m_loaded = true;
         }
@@ -215,6 +184,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
             Clear();
         }
 
+        // Static and dynamic collision, only for animated geometry
         if(m_loaded)
         {
             if(l_type == GSB_Animated)
@@ -231,6 +201,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                         {
                             BoneCollisionData *l_colData = new BoneCollisionData();
                             m_collisionData.push_back(l_colData);
+
                             l_file.read(reinterpret_cast<char*>(&l_colData->m_type), sizeof(unsigned char));
                             l_file.read(reinterpret_cast<char*>(&l_colData->m_size), sizeof(glm::vec3));
                             l_file.read(reinterpret_cast<char*>(&l_colData->m_offset), sizeof(glm::vec3));
@@ -241,6 +212,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
                         unsigned int l_jointsCount = 0U;
                         l_file.read(reinterpret_cast<char*>(&l_jointsCount), sizeof(unsigned int));
+
                         for(unsigned int i = 0U; i < l_jointsCount; i++)
                         {
                             unsigned int l_jointParts = 0U;
@@ -250,6 +222,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                             {
                                 BoneJointData *l_joint = new BoneJointData();
                                 m_jointData.push_back(l_joint);
+
                                 l_file.read(reinterpret_cast<char*>(&l_joint->m_boneID), sizeof(unsigned int));
                                 for(unsigned int j = 0; j < l_jointParts; j++)
                                 {
@@ -274,9 +247,9 @@ bool ROC::Geometry::Load(const std::string &f_path)
                                     l_file.read(reinterpret_cast<char*>(&l_jointPart.m_upperLinearLimit), sizeof(glm::vec3));
                                     l_file.read(reinterpret_cast<char*>(&l_jointPart.m_linearStiffness), sizeof(glm::vec3));
 
-                                    l_joint->m_jointPartVector.push_back(l_jointPart);
+                                    l_joint->m_jointParts.push_back(l_jointPart);
                                 }
-                                l_joint->m_jointPartVector.shrink_to_fit();
+                                l_joint->m_jointParts.shrink_to_fit();
                             }
                         }
                         m_jointData.shrink_to_fit();
@@ -339,5 +312,5 @@ float ROC::Geometry::GetBoundSphereRadius() const
 }
 size_t ROC::Geometry::GetMaterialsCount() const
 {
-    return static_cast<size_t>(m_materialCount);
+    return m_materialCount;
 }

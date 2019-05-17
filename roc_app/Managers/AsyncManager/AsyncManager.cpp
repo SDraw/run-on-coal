@@ -100,7 +100,7 @@ void ROC::AsyncManager::DoPulse()
                 if(l_element) m_core->GetElementManager()->AddElementToSet(l_element);
 
                 m_arguments.Push(iter);
-                m_arguments.Push(l_element ? l_element : false);
+                l_element ? m_arguments.Push(l_element) : m_arguments.Push(false);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnAsyncTask, m_arguments);
                 m_arguments.Clear();
 
