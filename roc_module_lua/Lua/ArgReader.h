@@ -69,9 +69,13 @@ template<typename T> void ArgReader::ReadNumber(T &f_val)
         {
             if(lua_isnumber(m_vm, m_argCurrent))
             {
-                lua_Number l_number = lua_tonumber(m_vm, m_argCurrent++);
-                if(std::isnan(l_number) || std::isinf(l_number)) SetError("Got NaN/Inf");
-                else f_val = static_cast<T>(l_number);
+                lua_Number l_number = lua_tonumber(m_vm, m_argCurrent);
+                if(!std::isnan(l_number) && !std::isinf(l_number))
+                {
+                    f_val = static_cast<T>(l_number);
+                    m_argCurrent++;
+                }
+                else SetError("Got NaN/Inf");
             }
             else SetError("Expected number");
         }
@@ -84,7 +88,11 @@ template<typename T> void ArgReader::ReadInteger(T &f_val)
     {
         if(m_argCurrent <= m_argCount)
         {
-            if(lua_isinteger(m_vm, m_argCurrent)) f_val = static_cast<T>(lua_tointeger(m_vm, m_argCurrent++));
+            if(lua_isinteger(m_vm, m_argCurrent))
+            {
+                f_val = static_cast<T>(lua_tointeger(m_vm, m_argCurrent));
+                m_argCurrent++;
+            }
             else SetError("Expected integer");
         }
         else SetError("Not enough arguments");
@@ -101,7 +109,8 @@ template<class T> void ArgReader::ReadElement(T *&f_element)
                 ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
                 if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element))
                 {
-                    if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_argCurrent++;
+                    f_element = dynamic_cast<T*>(l_element);
+                    if(f_element != nullptr) m_argCurrent++;
                     else SetError("Invalid element");
                 }
                 else SetError("Invalid element");
@@ -116,14 +125,22 @@ template<typename T> void ArgReader::ReadNextNumber(T &f_val)
 {
     if(!m_hasErrors && (m_argCurrent <= m_argCount))
     {
-        if(lua_isnumber(m_vm, m_argCurrent)) f_val = static_cast<T>(lua_tonumber(m_vm, m_argCurrent++));
+        if(lua_isnumber(m_vm, m_argCurrent))
+        {
+            f_val = static_cast<T>(lua_tonumber(m_vm, m_argCurrent));
+            m_argCurrent++;
+        }
     }
 };
 template<typename T> void ArgReader::ReadNextInteger(T &f_val)
 {
     if(!m_hasErrors && (m_argCurrent <= m_argCount))
     {
-        if(lua_isinteger(m_vm, m_argCurrent)) f_val = static_cast<T>(lua_tointeger(m_vm, m_argCurrent++));
+        if(lua_isinteger(m_vm, m_argCurrent))
+        {
+            f_val = static_cast<T>(lua_tointeger(m_vm, m_argCurrent));
+            m_argCurrent++;
+        }
     }
 };
 template<class T> void ArgReader::ReadNextElement(T *&f_element)
@@ -135,7 +152,8 @@ template<class T> void ArgReader::ReadNextElement(T *&f_element)
             ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
             if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element))
             {
-                if((f_element = dynamic_cast<T*>(l_element)) != nullptr) m_argCurrent++;
+                f_element = dynamic_cast<T*>(l_element);
+                if(f_element != nullptr) m_argCurrent++;
             }
         }
     }

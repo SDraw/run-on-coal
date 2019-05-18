@@ -33,7 +33,11 @@ void ArgReader::ReadBoolean(bool &f_val)
     {
         if(m_argCurrent <= m_argCount)
         {
-            if(lua_isboolean(m_vm, m_argCurrent)) f_val = (lua_toboolean(m_vm, m_argCurrent++) == 1);
+            if(lua_isboolean(m_vm, m_argCurrent))
+            {
+                f_val = (lua_toboolean(m_vm, m_argCurrent) == 1);
+                m_argCurrent++;
+            }
             else SetError("Expected boolean");
         }
         else SetError("Not enough arguments");
@@ -49,8 +53,9 @@ void ArgReader::ReadText(std::string &f_val)
             if(lua_isstring(m_vm, m_argCurrent))
             {
                 size_t l_size;
-                const char *l_string = lua_tolstring(m_vm, m_argCurrent++, &l_size);
+                const char *l_string = lua_tolstring(m_vm, m_argCurrent, &l_size);
                 f_val.assign(l_string, l_size);
+                m_argCurrent++;
             }
             else SetError("Expected string");
         }
@@ -66,6 +71,7 @@ void ArgReader::ReadPointer(void *&f_val)
             if(lua_isuserdata(m_vm, m_argCurrent))
             {
                 f_val = const_cast<void*>(lua_topointer(m_vm, m_argCurrent));
+                m_argCurrent++;
             }
             else SetError("Expected string");
         }
@@ -140,7 +146,9 @@ void ArgReader::ReadQuat(Quat *&f_quat)
         {
             if(lua_isuserdata(m_vm, m_argCurrent))
             {
-                if((f_quat = *reinterpret_cast<Quat**>(luaL_checkudata(m_vm, m_argCurrent++, "Quat"))) == nullptr) SetError("Expected Quat");
+                f_quat = *reinterpret_cast<Quat**>(luaL_checkudata(m_vm, m_argCurrent, "Quat"));
+                if(f_quat != nullptr) m_argCurrent++;
+                else SetError("Expected Quat");
             }
             else SetError("Expected Quat");
         }
@@ -189,7 +197,11 @@ void ArgReader::ReadNextBoolean(bool &f_val)
 {
     if(!m_hasErrors && (m_argCurrent <= m_argCount))
     {
-        if(lua_isboolean(m_vm, m_argCurrent)) f_val = (lua_toboolean(m_vm, m_argCurrent++) == 1);
+        if(lua_isboolean(m_vm, m_argCurrent))
+        {
+            f_val = (lua_toboolean(m_vm, m_argCurrent) == 1);
+            m_argCurrent++;
+        }
     }
 }
 void ArgReader::ReadNextText(std::string &f_val)
@@ -199,8 +211,9 @@ void ArgReader::ReadNextText(std::string &f_val)
         if(lua_isstring(m_vm, m_argCurrent))
         {
             size_t l_size;
-            const char *l_string = lua_tolstring(m_vm, m_argCurrent++, &l_size);
+            const char *l_string = lua_tolstring(m_vm, m_argCurrent, &l_size);
             f_val.assign(l_string, l_size);
+            m_argCurrent++;
         }
     }
 }
@@ -211,6 +224,7 @@ void ArgReader::ReadNextPointer(void *&f_val)
         if(lua_isuserdata(m_vm, m_argCurrent))
         {
             f_val = const_cast<void*>(lua_topointer(m_vm, m_argCurrent));
+            m_argCurrent++;
         }
     }
 }
