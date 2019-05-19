@@ -65,19 +65,19 @@ bool ROC::Animation::Load(const std::string &f_path)
                 std::vector<keyframeData> l_intervals;
                 keyframeData l_interval;
 
-                int l_intervalsCount = 0;
-                l_animFile.read(reinterpret_cast<char*>(&l_intervalsCount), sizeof(int));
+                unsigned int l_intervalsCount = 0;
+                l_animFile.read(reinterpret_cast<char*>(&l_intervalsCount), sizeof(unsigned int));
 
-                for(int j = 0; j < l_intervalsCount; j++)
+                for(unsigned int j = 0; j < l_intervalsCount; j++)
                 {
                     glm::vec3 l_position;
                     glm::quat l_rotation;
                     glm::vec3 l_scale;
-                    int l_frameIndex;
+                    unsigned int l_frameIndex;
                     l_animFile.read(reinterpret_cast<char*>(&l_position), sizeof(glm::vec3));
                     l_animFile.read(reinterpret_cast<char*>(&l_rotation), sizeof(glm::quat));
                     l_animFile.read(reinterpret_cast<char*>(&l_scale), sizeof(glm::vec3));
-                    l_animFile.read(reinterpret_cast<char*>(&l_frameIndex), sizeof(int));
+                    l_animFile.read(reinterpret_cast<char*>(&l_frameIndex), sizeof(unsigned int));
 
                     if(j == 0) l_interval.m_leftData = new BoneFrameData(l_position, l_rotation, l_scale);
                     else

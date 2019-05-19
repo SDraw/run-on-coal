@@ -203,7 +203,7 @@ bool Animation::Load(const std::string &f_path)
                     if(l_nodeIndex == b_node.get_length()) throw std::exception("Bone frame time node doesn't exist");
                     sajson::value l_node4 = b_node.get_object_value(l_nodeIndex);
                     if(l_node4.get_type() != sajson::TYPE_INTEGER && l_node4.get_type() != sajson::TYPE_DOUBLE) throw std::exception("Bone frame time node type isn't a number");
-                    l_keyframeData.m_frameIndex = static_cast<int>(l_node4.get_type() == sajson::TYPE_INTEGER ? l_node4.get_integer_value()*m_fps : l_node4.get_double_value()*static_cast<double>(m_fps));
+                    l_keyframeData.m_frameIndex = static_cast<unsigned int>(l_node4.get_type() == sajson::TYPE_INTEGER ? l_node4.get_integer_value()*m_fps : l_node4.get_double_value()*static_cast<double>(m_fps));
 
                     m_bones[i].m_keyframes.push_back(l_keyframeData);
                     l_previousKeyframe = l_keyframeData;
@@ -234,14 +234,14 @@ bool Animation::Generate(const std::string &f_path)
             l_file.write(reinterpret_cast<char*>(&m_bonesCount), sizeof(unsigned int));
             for(auto &iter : m_bones)
             {
-                int l_keyframesCount = static_cast<int>(iter.m_keyframes.size());
-                l_file.write(reinterpret_cast<char*>(&l_keyframesCount), sizeof(int));
+                unsigned int l_keyframesCount = static_cast<unsigned int>(iter.m_keyframes.size());
+                l_file.write(reinterpret_cast<char*>(&l_keyframesCount), sizeof(unsigned int));
                 for(auto &iter1 : iter.m_keyframes)
                 {
                     l_file.write(reinterpret_cast<char*>(&iter1.m_position), sizeof(glm::vec3));
                     l_file.write(reinterpret_cast<char*>(&iter1.m_rotation), sizeof(glm::quat));
                     l_file.write(reinterpret_cast<char*>(&iter1.m_scale), sizeof(glm::vec3));
-                    l_file.write(reinterpret_cast<char*>(&iter1.m_frameIndex), sizeof(int));
+                    l_file.write(reinterpret_cast<char*>(&iter1.m_frameIndex), sizeof(unsigned int));
                 }
             }
             l_file.flush();

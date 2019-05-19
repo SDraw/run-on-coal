@@ -7,7 +7,7 @@ class Animation
         glm::vec3 m_position;
         glm::quat m_rotation;
         glm::vec3 m_scale;
-        int m_frameIndex;
+        unsigned int m_frameIndex;
     };
     struct frameData
     {
