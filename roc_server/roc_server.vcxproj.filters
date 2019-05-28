@@ -18,9 +18,6 @@
     <ClCompile Include="Managers\NetworkManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
-      <Filter>vendor\pugixml</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\Client.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
@@ -41,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="..\shared\Utils\EnumUtils.cpp">
       <Filter>shared\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
+      <Filter>vendor\pugixml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

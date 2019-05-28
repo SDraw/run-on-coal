@@ -14,9 +14,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
-      <Filter>vendor\pugixml</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\ElementManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
@@ -167,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="Utils\zlibUtils.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
+      <Filter>vendor\pugixml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

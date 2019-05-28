@@ -90,9 +90,6 @@
     <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
       <Filter>vendor\luautf8</Filter>
     </ClCompile>
-    <ClCompile Include="..\vendor\pugixml\pugixml.cpp">
-      <Filter>vendor\pugixml</Filter>
-    </ClCompile>
     <ClCompile Include="Module\EventHandler.cpp">
       <Filter>Module</Filter>
     </ClCompile>
@@ -107,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="..\shared\Lua\LuaFunction.cpp">
       <Filter>shared\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
+      <Filter>vendor\pugixml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
