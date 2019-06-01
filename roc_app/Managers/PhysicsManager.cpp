@@ -119,6 +119,17 @@ void ROC::PhysicsManager::SetCollisionScale(Collision *f_col, const glm::vec3 &f
     }
 }
 
+bool ROC::PhysicsManager::SetCollisionsCollidable(ICollision *f_col1, ICollision *f_col2, bool f_state)
+{
+    return SetCollisionsCollidable(dynamic_cast<Collision*>(f_col1), dynamic_cast<Collision*>(f_col2), f_state);
+}
+bool ROC::PhysicsManager::SetCollisionsCollidable(Collision *f_col1, Collision *f_col2, bool f_state)
+{
+    f_col1->GetRigidBody()->setIgnoreCollisionCheck(f_col2->GetRigidBody(), !f_state);
+    f_col2->GetRigidBody()->setIgnoreCollisionCheck(f_col1->GetRigidBody(), !f_state);
+    return true;
+}
+
 bool ROC::PhysicsManager::SetModelsCollidable(IModel *f_model1, IModel *f_model2, bool f_state)
 {
     return SetModelsCollidable(dynamic_cast<Model*>(f_model1), dynamic_cast<Model*>(f_model2), f_state);

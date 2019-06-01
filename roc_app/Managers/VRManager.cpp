@@ -78,6 +78,8 @@ ROC::VRManager::VRManager(Core *f_core)
 
         m_vrTexture[0] = { UIntToPtr(m_leftEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         m_vrTexture[1] = { UIntToPtr(m_rightEyeRT->GetTextureID()), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+
+        UpdateEyesPosition();
     }
     else
     {
@@ -198,6 +200,9 @@ bool ROC::VRManager::DoPulse()
                 case vr::VREvent_DriverRequestedQuit: case vr::VREvent_Quit:
                     m_state = false;
                     break;
+                case vr::VREvent_IpdChanged:
+                    UpdateEyesPosition();
+                    break;
             }
         }
 
@@ -210,7 +215,7 @@ bool ROC::VRManager::DoPulse()
             const vr::TrackedDevicePose_t &l_hmdPose = m_trackedPoses[vr::k_unTrackedDeviceIndex_Hmd];
             if(l_hmdPose.bPoseIsValid)
             {
-                MathUtils::ExtractMatrix(l_hmdPose.mDeviceToAbsoluteTracking, m_transform);
+                MathUtils::ConvertMatrix(l_hmdPose.mDeviceToAbsoluteTracking, m_transform);
                 btTransform l_transform;
                 l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
 
@@ -218,16 +223,6 @@ bool ROC::VRManager::DoPulse()
                 std::memcpy(&m_headPosition, l_origin.m_floats, sizeof(glm::vec3));
                 btQuaternion l_rotation = l_transform.getRotation();
                 for(int i = 0; i < 4; i++) m_headRotation[i] = l_rotation[i];
-
-                vr::HmdMatrix34_t l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Left);
-                MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
-                l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-                std::memcpy(&m_leftEyePosition, l_origin.m_floats, sizeof(glm::vec3));
-
-                l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Right);
-                MathUtils::ExtractMatrix(l_eyeTransform, m_transform);
-                l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-                std::memcpy(&m_rightEyePosition, l_origin.m_floats, sizeof(glm::vec3));
             }
 
             // Update controllers
@@ -243,14 +238,14 @@ bool ROC::VRManager::DoPulse()
                         {
                             case vr::TrackedControllerRole_LeftHand:
                             {
+                                m_vrSystem->GetControllerStateWithPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, i, &m_leftController.m_newState, sizeof(vr::VRControllerState_t), &m_trackedPoses[i]);
                                 UpdateControllerPose(m_leftController, m_trackedPoses[i]);
-                                m_vrSystem->GetControllerState(i, &m_leftController.m_newState, sizeof(vr::VRControllerState_t));
                                 UpdateControllerInput(m_leftController, "left");
                             } break;
                             case vr::TrackedControllerRole_RightHand:
                             {
+                                m_vrSystem->GetControllerStateWithPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, i, &m_rightController.m_newState, sizeof(vr::VRControllerState_t), &m_trackedPoses[i]);
                                 UpdateControllerPose(m_rightController, m_trackedPoses[i]);
-                                m_vrSystem->GetControllerState(i, &m_rightController.m_newState, sizeof(vr::VRControllerState_t));
                                 UpdateControllerInput(m_rightController, "right");
                             } break;
                         }
@@ -263,12 +258,30 @@ bool ROC::VRManager::DoPulse()
     return m_state;
 }
 
+void ROC::VRManager::UpdateEyesPosition()
+{
+    btTransform l_transform;
+    btVector3 &l_origin = l_transform.getOrigin();
+
+    vr::HmdMatrix34_t l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Left);
+    MathUtils::ConvertMatrix(l_eyeTransform, m_transform);
+    m_transform = glm::inverse(m_transform);
+    l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+    std::memcpy(&m_leftEyePosition, l_origin.m_floats, sizeof(glm::vec3));
+
+    l_eyeTransform = m_vrSystem->GetEyeToHeadTransform(vr::Eye_Right);
+    MathUtils::ConvertMatrix(l_eyeTransform, m_transform);
+    m_transform = glm::inverse(m_transform);
+    l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
+    std::memcpy(&m_rightEyePosition, l_origin.m_floats, sizeof(glm::vec3));
+}
+
 void ROC::VRManager::UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose)
 {
     if(!f_controller.m_updated)
     {
         btTransform l_transform;
-        MathUtils::ExtractMatrix(f_pose.mDeviceToAbsoluteTracking, m_transform);
+        MathUtils::ConvertMatrix(f_pose.mDeviceToAbsoluteTracking, m_transform);
         l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
 
         std::memcpy(&f_controller.m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
@@ -341,7 +354,7 @@ void ROC::VRManager::SubmitRender()
 {
     if(m_vrCompositor)
     {
-        m_vrCompositor->Submit(vr::Eye_Left, &m_vrTexture[0]);
-        m_vrCompositor->Submit(vr::Eye_Right, &m_vrTexture[1]);
+        m_vrCompositor->Submit(vr::Eye_Left, &m_vrTexture[0U]);
+        m_vrCompositor->Submit(vr::Eye_Right, &m_vrTexture[1U]);
     }
 }

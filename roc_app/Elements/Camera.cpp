@@ -64,9 +64,9 @@ void ROC::Camera::SetPosition(const glm::vec3& f_pos)
         m_rebuildView = true;
     }
 }
-const glm::vec3& ROC::Camera::GetPosition() const 
-{ 
-    return m_viewPosition; 
+const glm::vec3& ROC::Camera::GetPosition() const
+{
+    return m_viewPosition;
 }
 
 void ROC::Camera::SetDirection(const glm::vec3& f_dir)
@@ -94,7 +94,7 @@ void ROC::Camera::SetDirection(const glm::quat &f_dir)
     }
 }
 const glm::vec3& ROC::Camera::GetDirection() const
-{ 
+{
     return m_viewDirection;
 }
 
@@ -106,9 +106,9 @@ void ROC::Camera::SetUpDirection(const glm::vec3 &f_dir)
         m_rebuildView = true;
     }
 }
-const glm::vec3& ROC::Camera::GetUpDirection() const 
-{ 
-    return m_upDirection; 
+const glm::vec3& ROC::Camera::GetUpDirection() const
+{
+    return m_upDirection;
 }
 
 void ROC::Camera::SetFOV(float f_fov)
@@ -159,21 +159,21 @@ void ROC::Camera::SetDepth(const glm::vec2 &f_depth)
     }
 }
 const glm::vec2& ROC::Camera::GetDepth() const
-{ 
-    return m_depth; 
+{
+    return m_depth;
 }
 
-const glm::mat4& ROC::Camera::GetViewMatrix() const 
-{ 
-    return m_viewMatrix; 
+const glm::mat4& ROC::Camera::GetViewMatrix() const
+{
+    return m_viewMatrix;
 }
-const glm::mat4& ROC::Camera::GetProjectionMatrix() const 
-{ 
-    return m_projectionMatrix; 
+const glm::mat4& ROC::Camera::GetProjectionMatrix() const
+{
+    return m_projectionMatrix;
 }
-const glm::mat4& ROC::Camera::GetViewProjectionMatrix() const 
-{ 
-    return m_viewProjectionMatrix; 
+const glm::mat4& ROC::Camera::GetViewProjectionMatrix() const
+{
+    return m_viewProjectionMatrix;
 }
 
 void ROC::Camera::Update()
@@ -182,6 +182,18 @@ void ROC::Camera::Update()
     {
         glm::vec3 l_viewPoint = m_viewPosition + m_viewDirection;
         m_viewMatrix = glm::lookAt(m_viewPosition, l_viewPoint, m_upDirection);
+
+        if(m_type == CPT_VRLeft || m_type == CPT_VRRight)
+        {
+            if(ms_vrSystem)
+            {
+                glm::mat4 l_eyeMat;
+                vr::HmdMatrix34_t l_eyeTransform = ms_vrSystem->GetEyeToHeadTransform((m_type == CPT_VRLeft) ? vr::Eye_Left : vr::Eye_Right);
+                MathUtils::ConvertMatrix(l_eyeTransform, l_eyeMat);
+                l_eyeMat = glm::inverse(l_eyeMat);
+                m_viewMatrix = m_viewMatrix*l_eyeMat;
+            }
+        }
     }
     if(m_rebuildProjection)
     {
@@ -196,20 +208,12 @@ void ROC::Camera::Update()
             case CPT_Screen:
                 m_projectionMatrix = glm::ortho(m_orthoParams.x, m_orthoParams.y, m_orthoParams.z, m_orthoParams.w);
                 break;
-            case CPT_VRLeft:
+            case CPT_VRLeft: case CPT_VRRight:
             {
                 if(ms_vrSystem)
                 {
-                    vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Left, m_depth.x, m_depth.y);
-                    MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
-                }
-            } break;
-            case CPT_VRRight:
-            {
-                if(ms_vrSystem)
-                {
-                    vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix(vr::Eye_Right, m_depth.x, m_depth.y);
-                    MathUtils::ExtractMatrix(l_projection, m_projectionMatrix);
+                    vr::HmdMatrix44_t l_projection = ms_vrSystem->GetProjectionMatrix((m_type == CPT_VRLeft) ? vr::Eye_Left : vr::Eye_Right, m_depth.x, m_depth.y);
+                    MathUtils::ConvertMatrix(l_projection, m_projectionMatrix);
                 }
             } break;
         }

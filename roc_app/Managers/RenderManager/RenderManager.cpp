@@ -444,14 +444,14 @@ void ROC::RenderManager::DoPulse()
         m_vrManager->EnableRenderTarget();
 
         m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
-        m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnRender, m_arguments);
+        m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments.Clear();
 
         m_vrManager->SetVRStage(VRManager::VRS_Right);
         m_vrManager->EnableRenderTarget();
 
         m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
-        m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnRender, m_arguments);
+        m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments.Clear();
 
         m_vrManager->SubmitRender();

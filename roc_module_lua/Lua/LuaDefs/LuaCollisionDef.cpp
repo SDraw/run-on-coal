@@ -42,6 +42,7 @@ void LuaCollisionDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "applyTorque", ApplyTorque);
     LuaUtils::AddClassMethod(f_vm, "setMotionType", SetMotionType);
     LuaUtils::AddClassMethod(f_vm, "getMotionType", GetMotionType);
+    LuaUtils::AddClassMethod(f_vm, "setCollidable", SetCollidable);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
@@ -420,5 +421,23 @@ int LuaCollisionDef::GetMotionType(lua_State *f_vm)
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_collision);
     !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypesTable[static_cast<size_t>(l_collision->GetMotionType())]) : argStream.PushBoolean(false);
+    return argStream.GetReturnValue();
+}
+
+int LuaCollisionDef::SetCollidable(lua_State *f_vm)
+{
+    // bool Collision:setCollidable(element collision, bool state)
+    ROC::ICollision *l_col1, *l_col2;
+    bool l_state;
+    ArgReader argStream(f_vm);
+    argStream.ReadElement(l_col1);
+    argStream.ReadElement(l_col2);
+    argStream.ReadBoolean(l_state);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetPhysicsManager()->SetCollisionsCollidable(l_col1, l_col2, l_state);
+        argStream.PushBoolean(l_result);
+    }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

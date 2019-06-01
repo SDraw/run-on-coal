@@ -226,7 +226,6 @@ void ROC::Collision::SetFriction(float f_val)
 {
     if(m_rigidBody)
     {
-        btClamp(f_val, 0.f, 1.f);
         m_rigidBody->setFriction(f_val);
         m_rigidBody->activate(true);
     }

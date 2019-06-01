@@ -28,6 +28,7 @@ class PhysicsManager final : public IPhysicsManager
 
     // Interfaces reroute
     void SetCollisionScale(ICollision *f_col, const glm::vec3 &f_scale);
+    bool SetCollisionsCollidable(ICollision *f_col1, ICollision *f_col2, bool f_state);
     bool SetModelsCollidable(IModel *f_model1, IModel *f_model2, bool f_state);
     bool RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, IElement *&f_element);
 public:
@@ -39,6 +40,7 @@ public:
     void GetGravity(glm::vec3 &f_grav) const;
 
     void SetCollisionScale(Collision *f_col, const glm::vec3 &f_scale);
+    bool SetCollisionsCollidable(Collision *f_col1, Collision *f_col2, bool f_state);
     static bool SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state);
 
     bool RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, Element *&f_element);

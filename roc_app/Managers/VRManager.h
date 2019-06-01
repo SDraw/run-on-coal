@@ -54,6 +54,7 @@ class VRManager final : public IVRManager
     VRManager(const VRManager &that) = delete;
     VRManager& operator=(const VRManager &that) = delete;
 
+    void UpdateEyesPosition();
     void UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose);
     void UpdateControllerInput(VRController &f_controller, const std::string &f_hand);
 public:
