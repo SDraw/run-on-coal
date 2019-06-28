@@ -31,41 +31,41 @@ ROC::InheritanceManager::~InheritanceManager()
 
 void ROC::InheritanceManager::AddInheritance(Element *f_child, Element *f_parent)
 {
-    m_inheritMap.insert(std::make_pair(f_child, f_parent));
+    m_inheritMap.emplace(f_child, f_parent);
 }
 void ROC::InheritanceManager::RemoveInheritance(Element *f_child, Element *f_parent)
 {
-    auto iter = m_inheritMap.equal_range(f_child);
-    for(auto iter1 = iter.first; iter1 != iter.second; iter1++)
+    auto l_searchPairs = m_inheritMap.equal_range(f_child);
+    for(auto l_searchPair = l_searchPairs.first; l_searchPair != l_searchPairs.second; ++l_searchPair)
     {
-        if(iter1->second == f_parent)
+        if(l_searchPair->second == f_parent)
         {
             InheritanceBreak(f_child, f_parent);
-            m_inheritMap.erase(iter1);
+            m_inheritMap.erase(l_searchPair);
             break;
         }
     }
 }
 void ROC::InheritanceManager::RemoveChildRelations(Element *f_child)
 {
-    auto iter = m_inheritMap.find(f_child);
-    while(iter != m_inheritMap.end())
+    auto l_searchPair = m_inheritMap.find(f_child);
+    while(l_searchPair != m_inheritMap.end())
     {
-        InheritanceBreak(iter->first, iter->second);
-        m_inheritMap.erase(iter);
-        iter = m_inheritMap.find(f_child);
+        InheritanceBreak(l_searchPair->first, l_searchPair->second);
+        m_inheritMap.erase(l_searchPair);
+        l_searchPair = m_inheritMap.find(f_child);
     }
 }
 void ROC::InheritanceManager::RemoveParentRelations(Element *f_parent)
 {
-    for(auto iter = m_inheritMap.begin(); iter != m_inheritMap.end();)
+    for(auto l_searchPair = m_inheritMap.begin(); l_searchPair != m_inheritMap.end();)
     {
-        if(iter->second == f_parent)
+        if(l_searchPair->second == f_parent)
         {
-            InheritanceBreak(iter->first, iter->second);
-            m_inheritMap.erase(iter++);
+            InheritanceBreak(l_searchPair->first, l_searchPair->second);
+            m_inheritMap.erase(l_searchPair++);
         }
-        else ++iter;
+        else ++l_searchPair;
     }
 }
 

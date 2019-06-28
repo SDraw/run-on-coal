@@ -33,7 +33,7 @@ public:
     virtual ICollision* GetCollsion() const = 0;
     virtual IAnimation* GetAnimation() const = 0;
 
-    virtual bool PlayAnimation() = 0;
+    virtual bool PlayAnimation(bool f_loop) = 0;
     virtual bool PauseAnimation() = 0;
     virtual bool ResetAnimation() = 0;
     virtual bool GetAnimationProperty(ModelAnimationProperty f_prop, float &f_value) = 0;

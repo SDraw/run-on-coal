@@ -21,10 +21,10 @@ ROC::AsyncManager::~AsyncManager()
     m_threadSwitch = false;
     m_loadThread->join();
 
-    for(auto iter : m_preparedTasks) delete iter;
+    for(auto l_task : m_preparedTasks) delete l_task;
     m_preparedTasks.clear();
 
-    for(auto iter : m_executedTasks) delete iter;
+    for(auto l_task : m_executedTasks) delete l_task;
     m_executedTasks.clear();
 }
 
@@ -76,7 +76,7 @@ void ROC::AsyncManager::ExecutionThread()
         }
         if(!m_executionTasks.empty())
         {
-            for(auto iter : m_executionTasks) iter->Execute();
+            for(auto l_task : m_executionTasks) l_task->Execute();
 
             m_executedTasksMutex.lock();
             m_executionTasks.swap(m_executedTasks);
@@ -92,19 +92,19 @@ void ROC::AsyncManager::DoPulse()
     {
         if(!m_executedTasks.empty())
         {
-            for(auto iter : m_executedTasks)
+            for(auto l_task : m_executedTasks)
             {
-                iter->PostExecute();
+                l_task->PostExecute();
 
-                Element *l_element = reinterpret_cast<Element*>(iter->GetElement());
+                Element *l_element = reinterpret_cast<Element*>(l_task->GetElement());
                 if(l_element) m_core->GetElementManager()->AddElementToSet(l_element);
 
-                m_arguments.Push(iter);
+                m_arguments.Push(l_task);
                 l_element ? m_arguments.Push(l_element) : m_arguments.Push(false);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnAsyncTask, m_arguments);
                 m_arguments.Clear();
 
-                delete iter;
+                delete l_task;
             }
             m_executedTasks.clear();
         }

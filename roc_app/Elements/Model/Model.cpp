@@ -83,11 +83,6 @@ const glm::quat& ROC::Model::GetRotation() const
 void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
     m_localTransform->SetScale(f_scl);
-    if(m_geometry)
-    {
-        m_boundSphereRaduis = m_geometry->GetBoundSphereRadius();
-        if(m_localTransform->IsScaled()) m_boundSphereRaduis *= glm::length(f_scl);
-    }
 }
 const glm::vec3& ROC::Model::GetScale() const
 {
@@ -111,6 +106,7 @@ ROC::Collision* ROC::Model::GetCollsion() const
 
 void ROC::Model::SetParent(Model *f_model, int f_bone)
 {
+    m_parent = f_model;
     if(m_parent && (f_bone != -1)) m_parentBone = m_parent->GetSkeleton()->GetBones()[static_cast<size_t>(f_bone)];
     else m_parentBone = nullptr;
 }
@@ -128,10 +124,10 @@ ROC::Animation* ROC::Model::GetAnimation() const
     if(m_animController) l_anim = m_animController->GetAnimation();
     return l_anim;
 }
-bool ROC::Model::PlayAnimation()
+bool ROC::Model::PlayAnimation(bool f_loop)
 {
     bool l_result = false;
-    if(m_animController) l_result = m_animController->Play();
+    if(m_animController) l_result = m_animController->Play(f_loop);
     return l_result;
 }
 bool ROC::Model::PauseAnimation()
@@ -200,7 +196,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 if(m_collision->IsActive() || m_localTransform->IsUpdated())
                 {
                     m_collision->GetMatrix(m_fullMatrix);
-                    m_fullMatrix = m_fullMatrix*m_localTransform->GetMatrix();
+                    m_fullMatrix *= m_localTransform->GetMatrix();
                     m_updated = true;
                 }
             }
@@ -217,17 +213,8 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 {
                     if(m_parent->IsUpdated() || m_parentBone->IsUpdated() || m_localTransform->IsUpdated())
                     {
-                        if(m_parentBone->IsDynamic())
-                        {
-                            // Almost accurate, inverse bone body offset is needed
-                            m_parentBone->GetDynamicBody()->getWorldTransform().getOpenGLMatrix(glm::value_ptr(m_fullMatrix));
-                            m_fullMatrix = m_fullMatrix*m_localTransform->GetMatrix();
-                        }
-                        else
-                        {
-                            m_fullMatrix = m_parentBone->GetFullMatrix()*m_localTransform->GetMatrix();
-                            m_fullMatrix = m_parent->m_fullMatrix*m_fullMatrix;
-                        }
+                        m_fullMatrix = m_parentBone->GetFullMatrix()*m_localTransform->GetMatrix();
+                        m_fullMatrix = m_parent->m_fullMatrix*m_fullMatrix;
                         m_updated = true;
                     }
                 }
@@ -246,6 +233,25 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 {
                     std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
                     m_updated = true;
+                }
+            }
+
+            // Update bounding sphere
+            if(m_updated)
+            {
+                if(m_geometry)
+                {
+                    if(m_parent)
+                    {
+                        glm::vec4 l_boundNormal(m_geometry->GetBoundSphereRadius(), 0.f, 0.f, 0.f);
+                        glm::vec4 l_boundNormalGlobal = m_fullMatrix*l_boundNormal;
+                        m_boundSphereRaduis = glm::length(l_boundNormalGlobal);
+                    }
+                    else
+                    {
+                        m_boundSphereRaduis = m_geometry->GetBoundSphereRadius();
+                        if(m_localTransform->IsScaled()) m_boundSphereRaduis *= glm::length(m_localTransform->GetScale());
+                    }
                 }
             }
         } break;

@@ -12,12 +12,12 @@ extern const glm::mat4 g_EmptyMat4;
 
 }
 
-bool ROC::Scene::DistantModelComparator_Geometry(const DistantModel *f_modelA, const DistantModel *f_modelB)
+bool ROC::Scene::RenderModelComparator_Geometry(const RenderModel *f_modelA, const RenderModel *f_modelB)
 {
     // Not an elegant way to compare by pointers, but groups are made anyway
     return (f_modelA->m_model->GetGeometry() < f_modelB->m_model->GetGeometry());
 }
-bool ROC::Scene::DistantModelComparator_Distance(const DistantModel *f_modelA, const DistantModel *f_modelB)
+bool ROC::Scene::RenderModelComparator_Distance(const RenderModel *f_modelA, const RenderModel *f_modelB)
 {
     return (f_modelA->m_distance < f_modelB->m_distance);
 }
@@ -37,8 +37,8 @@ ROC::Scene::Scene()
 }
 ROC::Scene::~Scene()
 {
-    for(auto iter : m_distModelVector) delete iter;
-    m_distModelVector.clear();
+    for(auto l_renderModel : m_renderModels) delete l_renderModel;
+    m_renderModels.clear();
 }
 
 void ROC::Scene::SetCamera(Camera *f_cam)
@@ -122,17 +122,17 @@ size_t ROC::Scene::GetLightsCount() const
 
 void ROC::Scene::AddModel(Model *f_model)
 {
-    DistantModel *l_distModel = new DistantModel(f_model, 0.f);
-    m_distModelVector.push_back(l_distModel);
+    RenderModel *l_renderModel = new RenderModel(f_model, 0.f);
+    m_renderModels.push_back(l_renderModel);
     m_sortByGeometry = true;
 }
 void ROC::Scene::RemoveModel(Model *f_model)
 {
-    for(auto iter = m_distModelVector.begin(), end = m_distModelVector.end(); iter != end; ++iter)
+    for(auto l_renderModelIter = m_renderModels.begin(), l_endIter = m_renderModels.end(); l_renderModelIter != l_endIter; ++l_renderModelIter)
     {
-        if((*iter)->m_model == f_model)
+        if((*l_renderModelIter)->m_model == f_model)
         {
-            m_distModelVector.erase(iter);
+            m_renderModels.erase(l_renderModelIter);
             break;
         }
     }
@@ -140,9 +140,9 @@ void ROC::Scene::RemoveModel(Model *f_model)
 bool ROC::Scene::HasModel(Model *f_model) const
 {
     bool l_result = false;
-    for(auto iter = m_distModelVector.begin(), end = m_distModelVector.end(); iter != end; ++iter)
+    for(auto l_renderModelIter = m_renderModels.begin(), l_endIter = m_renderModels.end(); l_renderModelIter != l_endIter; ++l_renderModelIter)
     {
-        if((*iter)->m_model == f_model)
+        if((*l_renderModelIter)->m_model == f_model)
         {
             l_result = true;
             break;
@@ -161,38 +161,38 @@ void ROC::Scene::UpdateDistantModels()
     if(m_camera)
     {
         // Sort models by geometry and distance to camera
-        size_t l_size = m_distModelVector.size();
+        size_t l_size = m_renderModels.size();
         if(l_size > 1U)
         {
             if(m_sortByGeometry)
             {
-                std::sort(m_distModelVector.begin(), m_distModelVector.end(), DistantModelComparator_Geometry);
+                std::sort(m_renderModels.begin(), m_renderModels.end(), RenderModelComparator_Geometry);
                 m_sortByGeometry = false;
             }
 
             const glm::vec3 &l_cameraPos = m_camera->GetPosition();
             glm::vec3 l_distModelPos(0.f);
             btTransform l_transform = btTransform::getIdentity();
-            Geometry *l_lastGeometry = m_distModelVector[0U]->m_model->GetGeometry();
+            Geometry *l_lastGeometry = m_renderModels[0U]->m_model->GetGeometry();
             for(size_t i = 0U, j = 0U; i < l_size; i++)
             {
-                DistantModel *l_distModel = m_distModelVector[i];
-                Model *l_model = l_distModel->m_model;
+                RenderModel *l_renderModel = m_renderModels[i];
+                Model *l_model = l_renderModel->m_model;
                 l_transform.setFromOpenGLMatrix(glm::value_ptr(l_model->GetFullMatrix()));
                 std::memcpy(&l_distModelPos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-                l_distModel->m_distance = glm::distance(l_cameraPos, l_distModelPos);
-                l_distModel->m_visible = m_camera->IsInFrustum(l_distModelPos, l_model->GetBoundSphereRadius());
+                l_renderModel->m_distance = glm::distance(l_cameraPos, l_distModelPos);
+                l_renderModel->m_visible = m_camera->IsInFrustum(l_distModelPos, l_model->GetBoundSphereRadius());
 
                 Geometry *l_stepGeometry = l_model->GetGeometry();
                 if(l_stepGeometry != l_lastGeometry)
                 {
-                    std::sort(m_distModelVector.begin() + j, m_distModelVector.begin() + i, DistantModelComparator_Distance);
+                    std::sort(m_renderModels.begin() + j, m_renderModels.begin() + i, RenderModelComparator_Distance);
                     l_lastGeometry = l_stepGeometry;
                     j = i;
                     continue;
                 }
 
-                if(i == (l_size - 1U)) std::sort(m_distModelVector.begin() + j, m_distModelVector.end(), DistantModelComparator_Distance);
+                if(i == (l_size - 1U)) std::sort(m_renderModels.begin() + j, m_renderModels.end(), RenderModelComparator_Distance);
             }
         }
     }

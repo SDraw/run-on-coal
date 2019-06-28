@@ -136,50 +136,50 @@ bool ROC::PhysicsManager::SetModelsCollidable(IModel *f_model1, IModel *f_model2
 }
 bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
 {
-    std::vector<btRigidBody*> l_bodies1, l_bodies2;
-    if(f_model1->HasCollision()) l_bodies1.push_back(f_model1->GetCollsion()->GetRigidBody());
+    std::vector<btRigidBody*> l_bodiesA, l_bodiesB;
+    if(f_model1->HasCollision()) l_bodiesA.push_back(f_model1->GetCollsion()->GetRigidBody());
     if(f_model1->HasSkeleton())
     {
         Skeleton *l_skeleton = f_model1->GetSkeleton();
         if(l_skeleton->HasStaticBoneCollision())
         {
-            for(auto iter : l_skeleton->GetCollision()) l_bodies1.push_back(iter->m_rigidBody);
+            for(auto l_skeletonCol : l_skeleton->GetCollision()) l_bodiesA.push_back(l_skeletonCol->m_rigidBody);
         }
         if(l_skeleton->HasDynamicBoneCollision())
         {
-            for(auto iter : l_skeleton->GetJoints())
+            for(auto l_joint : l_skeleton->GetJoints())
             {
-                for(auto iter1 : iter->m_partsVector) l_bodies1.push_back(iter1->m_rigidBody);
+                for(auto l_jointPart : l_joint->m_partsVector) l_bodiesA.push_back(l_jointPart->m_rigidBody);
             }
         }
     }
 
-    if(f_model2->HasCollision()) l_bodies2.push_back(f_model2->GetCollsion()->GetRigidBody());
+    if(f_model2->HasCollision()) l_bodiesB.push_back(f_model2->GetCollsion()->GetRigidBody());
     if(f_model2->HasSkeleton())
     {
         Skeleton *l_skeleton = f_model2->GetSkeleton();
         if(l_skeleton->HasStaticBoneCollision())
         {
-            for(auto iter : l_skeleton->GetCollision()) l_bodies2.push_back(iter->m_rigidBody);
+            for(auto l_skeletonCol : l_skeleton->GetCollision()) l_bodiesB.push_back(l_skeletonCol->m_rigidBody);
         }
         if(l_skeleton->HasDynamicBoneCollision())
         {
-            for(auto iter : l_skeleton->GetJoints())
+            for(auto l_joint : l_skeleton->GetJoints())
             {
-                for(auto iter1 : iter->m_partsVector) l_bodies2.push_back(iter1->m_rigidBody);
+                for(auto l_jointPart : l_joint->m_partsVector) l_bodiesB.push_back(l_jointPart->m_rigidBody);
             }
         }
     }
 
-    for(auto iter1 : l_bodies1)
+    for(auto l_bodyA : l_bodiesA)
     {
-        for(auto iter2 : l_bodies2)
+        for(auto l_bodyB : l_bodiesB)
         {
-            iter1->setIgnoreCollisionCheck(iter2, !f_state);
-            iter2->setIgnoreCollisionCheck(iter1, !f_state);
+            l_bodyA->setIgnoreCollisionCheck(l_bodyB, !f_state);
+            l_bodyB->setIgnoreCollisionCheck(l_bodyA, !f_state);
         }
     }
-    return (!l_bodies1.empty() && !l_bodies2.empty());
+    return (!l_bodiesA.empty() && !l_bodiesB.empty());
 }
 
 void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
@@ -194,17 +194,17 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
         Skeleton *l_skeleton = f_model->GetSkeleton();
         if(l_skeleton->HasStaticBoneCollision())
         {
-            for(auto iter : l_skeleton->GetCollision()) m_dynamicWorld->addRigidBody(iter->m_rigidBody);
+            for(auto l_skeletonCol : l_skeleton->GetCollision()) m_dynamicWorld->addRigidBody(l_skeletonCol->m_rigidBody);
         }
         if(l_skeleton->HasDynamicBoneCollision())
         {
-            for(auto iter : l_skeleton->GetJoints())
+            for(auto l_joint : l_skeleton->GetJoints())
             {
-                m_dynamicWorld->addRigidBody(iter->m_emptyBody);
-                for(auto iter1 : iter->m_partsVector)
+                m_dynamicWorld->addRigidBody(l_joint->m_emptyBody);
+                for(auto l_jointPart : l_joint->m_partsVector)
                 {
-                    m_dynamicWorld->addRigidBody(iter1->m_rigidBody);
-                    m_dynamicWorld->addConstraint(iter1->m_constraint, true);
+                    m_dynamicWorld->addRigidBody(l_jointPart->m_rigidBody);
+                    m_dynamicWorld->addConstraint(l_jointPart->m_constraint, true);
                 }
             }
         }
@@ -217,17 +217,17 @@ void ROC::PhysicsManager::RemoveModel(Model *f_model)
         Skeleton *l_skeleton = f_model->GetSkeleton();
         if(l_skeleton->HasStaticBoneCollision())
         {
-            for(auto iter : l_skeleton->GetCollision()) m_dynamicWorld->removeRigidBody(iter->m_rigidBody);
+            for(auto l_skeletonCol : l_skeleton->GetCollision()) m_dynamicWorld->removeRigidBody(l_skeletonCol->m_rigidBody);
         }
         if(l_skeleton->HasDynamicBoneCollision())
         {
-            for(auto iter : l_skeleton->GetJoints())
+            for(auto l_joint : l_skeleton->GetJoints())
             {
-                m_dynamicWorld->removeRigidBody(iter->m_emptyBody);
-                for(auto iter1 : iter->m_partsVector)
+                m_dynamicWorld->removeRigidBody(l_joint->m_emptyBody);
+                for(auto l_jointPart : l_joint->m_partsVector)
                 {
-                    m_dynamicWorld->removeRigidBody(iter1->m_rigidBody);
-                    m_dynamicWorld->removeConstraint(iter1->m_constraint);
+                    m_dynamicWorld->removeRigidBody(l_jointPart->m_rigidBody);
+                    m_dynamicWorld->removeConstraint(l_jointPart->m_constraint);
                 }
             }
         }

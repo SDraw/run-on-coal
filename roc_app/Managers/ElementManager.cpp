@@ -17,7 +17,7 @@ ROC::ElementManager::ElementManager(Core *f_core)
 }
 ROC::ElementManager::~ElementManager()
 {
-    for(auto iter : m_elementSet) delete reinterpret_cast<Element*>(iter);
+    for(auto l_element : m_elementSet) delete reinterpret_cast<Element*>(l_element);
 }
 
 void ROC::ElementManager::AddElementToSet(void *f_ptr)
@@ -27,12 +27,8 @@ void ROC::ElementManager::AddElementToSet(void *f_ptr)
 }
 void ROC::ElementManager::RemoveElementFromSet(void *f_ptr)
 {
-    auto l_checkIterator = m_elementSet.find(f_ptr);
-    if(l_checkIterator != m_elementSetEnd)
-    {
-        m_elementSet.erase(l_checkIterator);
-        m_elementSetEnd = m_elementSet.end();
-    }
+    m_elementSet.erase(f_ptr);
+    m_elementSetEnd = m_elementSet.end();
 }
 
 ROC::Scene* ROC::ElementManager::CreateScene()
@@ -249,8 +245,8 @@ bool ROC::ElementManager::IsValidElement(IElement *f_ptr) const
 }
 bool ROC::ElementManager::IsValidElement(Element *f_ptr) const
 {
-    auto iter = m_elementSet.find(f_ptr);
-    return (iter != m_elementSetEnd);
+    auto l_checkIterator = m_elementSet.find(f_ptr);
+    return (l_checkIterator != m_elementSetEnd);
 }
 
 bool ROC::ElementManager::DestroyElement(IElement *f_element)
@@ -273,8 +269,16 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
                 l_result = true;
             } break;
 
-            case Element::ET_Camera: case Element::ET_Light: case Element::ET_Texture: case Element::ET_RenderTarget:
+            case Element::ET_Camera: case Element::ET_Light: case Element::ET_Texture:
             {
+                m_core->GetInheritManager()->RemoveChildRelations(f_element);
+                RemoveElementFromSet(f_element);
+                delete f_element;
+                l_result = true;
+            } break;
+            case Element::ET_RenderTarget:
+            {
+                m_core->GetRenderManager()->RemoveAsActiveRenderTarget(reinterpret_cast<RenderTarget*>(f_element));
                 m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 RemoveElementFromSet(f_element);
                 delete f_element;

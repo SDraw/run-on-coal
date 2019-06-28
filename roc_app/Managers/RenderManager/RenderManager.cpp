@@ -35,15 +35,8 @@ extern const glm::vec4 g_EmptyVec4;
 
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
 const glm::vec4 g_DefaultClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
-const std::vector<std::string> g_VRRenderSide
-{
-    "left", "right"
-};
 
 }
-
-#define ROC_VRRENDER_SIDE_LEFT 0U
-#define ROC_VRRENDER_SIDE_RIGHT 1U
 
 ROC::RenderManager::RenderManager(Core *f_core)
 {
@@ -63,6 +56,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
     Font::CreateVAO();
     Shader::UpdateDrawableMaxCount();
 
+    m_active = false;
+    m_vrActive = false;
     m_activeScene = nullptr;
     m_quad2D = new Quad2D();
     m_quad3D = new Quad3D();
@@ -77,8 +72,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_cullEnabled = true;
     m_skipNoDepthMaterials = false;
     m_time = 0.f;
-    m_locked = true;
-    m_vrLock = false;
     m_textureMatrix = g_IdentityMatrix;
 
     m_clearColor = g_DefaultClearColor;
@@ -100,7 +93,7 @@ bool ROC::RenderManager::SetActiveScene(IScene *f_scene)
 }
 bool ROC::RenderManager::SetActiveScene(Scene *f_scene)
 {
-    if(!m_locked)
+    if(m_active)
     {
         if(m_activeScene) m_activeScene->Disable();
         m_activeScene = f_scene;
@@ -113,7 +106,7 @@ bool ROC::RenderManager::SetActiveScene(Scene *f_scene)
             {
                 m_skipNoDepthMaterials = false;
 
-                if(m_vrLock) m_vrManager->EnableRenderTarget();
+                if(m_vrActive) m_vrManager->RestoreRenderTarget();
                 else GLBinder::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
             }
 
@@ -124,7 +117,7 @@ bool ROC::RenderManager::SetActiveScene(Scene *f_scene)
             }
         }
     }
-    return !m_locked;
+    return m_active;
 }
 void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
 {
@@ -132,6 +125,25 @@ void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
     {
         m_activeScene->Disable();
         m_activeScene = nullptr;
+    }
+}
+
+void ROC::RenderManager::RemoveAsActiveRenderTarget(RenderTarget *f_rt)
+{
+    if(m_activeScene)
+    {
+        if(m_activeScene->HasRenderTarget())
+        {
+            if(m_activeScene->GetRenderTarget() == f_rt)
+            {
+                if(m_vrActive) m_vrManager->RestoreRenderTarget();
+                else
+                {
+                    GLBinder::BindFramebuffer(0U);
+                    GLBinder::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+                }
+            }
+        }
     }
 }
 
@@ -147,7 +159,7 @@ bool ROC::RenderManager::DrawScene(IScene *f_scene)
 bool ROC::RenderManager::DrawScene(Scene *f_scene)
 {
     bool l_result = false;
-    if(!m_locked && (m_activeScene == f_scene))
+    if(m_active && (m_activeScene == f_scene))
     {
         if(m_activeScene->IsValidForRender())
         {
@@ -157,12 +169,11 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
 
             if(l_skipTextures) m_dummyTexture->Bind();
 
-            auto l_distantModelVector = m_activeScene->GetDistantModels();
-            for(const auto l_distantModel : l_distantModelVector)
+            for(const auto l_renderModel : m_activeScene->GetRenderModels())
             {
-                if(l_distantModel->m_visible)
+                if(l_renderModel->m_visible)
                 {
-                    Model *l_model = l_distantModel->m_model;
+                    Model *l_model = l_renderModel->m_model;
                     if(l_model->HasGeometry())
                     {
                         l_shader->SetModelMatrix(l_model->GetFullMatrix());
@@ -174,7 +185,7 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
                         }
                         else l_shader->SetAnimated(false);
 
-                        for(const auto l_material : l_model->GetGeometry()->GetMaterialVector())
+                        for(const auto l_material : l_model->GetGeometry()->GetMaterials())
                         {
                             if(l_material->HasDepth()) EnableDepth();
                             else
@@ -212,7 +223,7 @@ bool ROC::RenderManager::Render(IFont *f_font, const glm::vec2 &f_pos, const std
 bool ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const std::string &f_text, const glm::vec4 &f_color)
 {
     bool l_result = false;
-    if(!m_locked && m_activeScene)
+    if(m_active && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
         {
@@ -239,7 +250,7 @@ bool ROC::RenderManager::Render(IDrawable *f_drawable, const glm::vec2 &f_pos, c
 bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)
 {
     bool l_result = false;
-    if(!m_locked && m_activeScene)
+    if(m_active && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
         {
@@ -280,7 +291,7 @@ bool ROC::RenderManager::Render(IDrawable *f_drawable, const glm::vec3 &f_pos, c
 bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
 {
     bool l_result = false;
-    if(!m_locked && m_activeScene)
+    if(m_active && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
         {
@@ -317,7 +328,7 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
 bool ROC::RenderManager::DrawPhysics(float f_width)
 {
     bool l_result = false;
-    if(!m_locked && m_activeScene)
+    if(m_active && m_activeScene)
     {
         if(m_activeScene->IsValidForRender())
         {
@@ -344,7 +355,7 @@ bool ROC::RenderManager::DrawPhysics(float f_width)
 
 bool ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
 {
-    if(!m_locked)
+    if(m_active)
     {
         int l_params = 0;
         if(f_depth)
@@ -355,11 +366,11 @@ bool ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
         if(f_color) l_params |= GL_COLOR_BUFFER_BIT;
         glClear(l_params);
     }
-    return !m_locked;
+    return m_active;
 }
 bool ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
 {
-    if(!m_locked)
+    if(m_active)
     {
         if(m_clearColor != f_color)
         {
@@ -367,17 +378,17 @@ bool ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
             glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
         }
     }
-    return !m_locked;
+    return m_active;
 }
 bool ROC::RenderManager::SetViewport(const glm::ivec4 &f_area)
 {
-    if(!m_locked) GLBinder::SetViewport(f_area.x, f_area.y, f_area.z, f_area.w);
-    return !m_locked;
+    if(m_active) GLBinder::SetViewport(f_area.x, f_area.y, f_area.z, f_area.w);
+    return m_active;
 }
 bool ROC::RenderManager::SetPolygonMode(int f_mode)
 {
-    if(!m_locked) glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode);
-    return !m_locked;
+    if(m_active) glPolygonMode(GL_FRONT_AND_BACK, GL_POINT + f_mode);
+    return m_active;
 }
 
 void ROC::RenderManager::DisableDepth()
@@ -431,34 +442,18 @@ void ROC::RenderManager::EnableCulling()
 
 void ROC::RenderManager::DoPulse()
 {
-    m_locked = false;
+    m_active = true;
     m_time = m_core->GetSfmlManager()->GetTime();
-
-    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnRender, m_arguments);
 
     if(m_vrManager->IsVREnabled())
     {
-        m_vrLock = true;
-
-        m_vrManager->SetVRStage(VRManager::VRS_Left);
-        m_vrManager->EnableRenderTarget();
-
-        m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
-        m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
-        m_arguments.Clear();
-
-        m_vrManager->SetVRStage(VRManager::VRS_Right);
-        m_vrManager->EnableRenderTarget();
-
-        m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
-        m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
-        m_arguments.Clear();
-
-        m_vrManager->SubmitRender();
-        m_vrManager->SetVRStage(VRManager::VRS_None);
-        m_vrLock = false;
+        m_vrActive = true;
+        m_vrManager->Render();
+        m_vrActive = false;
     }
 
+    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnRender, m_arguments);
+
     m_core->GetSfmlManager()->SwapBuffers();
-    m_locked = true;
+    m_active = false;
 }

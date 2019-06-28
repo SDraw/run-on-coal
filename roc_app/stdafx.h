@@ -1,6 +1,5 @@
 #pragma once
 #pragma warning (disable : 4250)
-#define _CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
 
 #include <iostream>
@@ -16,6 +15,8 @@
 #include <thread>
 #include <mutex>
 #include <ctime>
+
+#include <Windows.h>
 
 #include "GL/glew.h"
 

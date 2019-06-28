@@ -52,7 +52,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 for(size_t i = 0U; i < m_materialCount; i++)
                 {
                     Material *l_material = new Material;
-                    m_materialVector.push_back(l_material);
+                    m_materials.push_back(l_material);
 
                     unsigned char l_materialType = 0U;
                     l_file.read(reinterpret_cast<char*>(&l_materialType), sizeof(unsigned char));
@@ -165,16 +165,16 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 if(m_materialCount > 0U)
                 {
                     std::vector<Material*> l_matVecDef, l_matVecDefDouble, l_matVecDefTransp;
-                    for(auto iter : m_materialVector)
+                    for(auto l_mat : m_materials)
                     {
-                        if(iter->IsTransparent() || !iter->HasDepth()) l_matVecDefTransp.push_back(iter);
-                        else iter->IsDoubleSided() ? l_matVecDefDouble.push_back(iter) : l_matVecDef.push_back(iter);
+                        if(l_mat->IsTransparent() || !l_mat->HasDepth()) l_matVecDefTransp.push_back(l_mat);
+                        else l_mat->IsDoubleSided() ? l_matVecDefDouble.push_back(l_mat) : l_matVecDef.push_back(l_mat);
                     }
-                    m_materialVector.clear();
-                    m_materialVector.insert(m_materialVector.end(), l_matVecDefDouble.begin(), l_matVecDefDouble.end());
-                    m_materialVector.insert(m_materialVector.end(), l_matVecDef.begin(), l_matVecDef.end());
-                    m_materialVector.insert(m_materialVector.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
-                    m_materialVector.shrink_to_fit();
+                    m_materials.clear();
+                    m_materials.insert(m_materials.end(), l_matVecDefDouble.begin(), l_matVecDefDouble.end());
+                    m_materials.insert(m_materials.end(), l_matVecDef.begin(), l_matVecDef.end());
+                    m_materials.insert(m_materials.end(), l_matVecDefTransp.begin(), l_matVecDefTransp.end());
+                    m_materials.shrink_to_fit();
                 }
             }
             m_loaded = true;
@@ -257,10 +257,10 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 }
                 catch(const std::exception&)
                 {
-                    for(auto iter : m_collisionData) delete iter;
+                    for(auto l_colData : m_collisionData) delete l_colData;
                     m_collisionData.clear();
 
-                    for(auto iter : m_jointData) delete iter;
+                    for(auto l_jointData : m_jointData) delete l_jointData;
                     m_jointData.clear();
                 }
             }
@@ -274,19 +274,19 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
 void ROC::Geometry::Clear()
 {
-    for(auto iter : m_materialVector) delete iter;
-    m_materialVector.clear();
+    for(auto l_mat : m_materials) delete l_mat;
+    m_materials.clear();
 
     m_materialCount = 0U;
     m_boundSphereRaduis = 0.f;
 
-    for(auto iter : m_bonesData) delete iter;
+    for(auto l_boneData : m_bonesData) delete l_boneData;
     m_bonesData.clear();
 
-    for(auto iter : m_collisionData) delete iter;
+    for(auto l_colData : m_collisionData) delete l_colData;
     m_collisionData.clear();
 
-    for(auto iter : m_jointData) delete iter;
+    for(auto l_jointData : m_jointData) delete l_jointData;
     m_jointData.clear();
 
     m_loaded = false;
@@ -299,7 +299,7 @@ void ROC::Geometry::GenerateVAOs()
         GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
         GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
 
-        for(auto iter : m_materialVector) iter->GenerateVAO();
+        for(auto l_mat : m_materials) l_mat->GenerateVAO();
 
         GLBinder::BindArrayBuffer(l_lastArrayBuffer);
         GLBinder::BindVertexArray(l_lastVertexArray);

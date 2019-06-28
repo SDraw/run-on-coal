@@ -279,11 +279,13 @@ int LuaModelDef::PlayAnimation(lua_State *f_vm)
 {
     // bool Model:playAnimation()
     ROC::IModel *l_model;
+    bool l_loop = false;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_model);
+    argStream.ReadNextBoolean(l_loop);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->PlayAnimation();
+        bool l_result = l_model->PlayAnimation(l_loop);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

@@ -19,8 +19,8 @@ void ROC::TreeNode::AddChild(TreeNode *f_node)
 }
 void ROC::TreeNode::RemoveChild(TreeNode *f_node)
 {
-    auto iter = std::find(m_children.begin(), m_children.end(), f_node);
-    if(iter != m_children.end()) m_children.erase(iter);
+    auto l_searchIter = std::find(m_children.begin(), m_children.end(), f_node);
+    if(l_searchIter != m_children.end()) m_children.erase(l_searchIter);
 }
 bool ROC::TreeNode::HasChild(TreeNode *f_node)
 {

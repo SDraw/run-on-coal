@@ -58,8 +58,8 @@ ROC::Shader::~Shader()
         GLBinder::ResetShaderProgram(m_program);
         glDeleteProgram(m_program);
     }
-    for(auto iter : m_defaultUniforms) delete iter;
-    for(auto &iter : m_uniformMap) delete iter.second;
+    for(auto l_uniform : m_defaultUniforms) delete l_uniform;
+    for(auto &l_uniformPair : m_uniformMap) delete l_uniformPair.second;
     m_uniformMap.clear();
     delete m_bindPool;
     m_drawableBind.clear();
@@ -290,8 +290,8 @@ void ROC::Shader::FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_n
 ROC::ShaderUniform* ROC::Shader::GetUniform(const std::string &f_uniform)
 {
     ShaderUniform *l_shaderUniform = nullptr;
-    auto iter = m_uniformMap.find(f_uniform);
-    if(iter != m_uniformMapEnd) l_shaderUniform = iter->second;
+    auto l_uniformPair = m_uniformMap.find(f_uniform);
+    if(l_uniformPair != m_uniformMapEnd) l_shaderUniform = l_uniformPair->second;
     return l_shaderUniform;
 }
 
@@ -384,9 +384,9 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
     {
         ShaderUniform *l_shaderUniform = l_mapResult->second;
         bool l_isUsed = false;
-        for(const auto &iter : m_drawableBind)
+        for(const auto &l_bindData : m_drawableBind)
         {
-            if(iter.m_uniform == l_shaderUniform)
+            if(l_bindData.m_uniform == l_shaderUniform)
             {
                 l_isUsed = true;
                 break;
@@ -412,13 +412,13 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
 bool ROC::Shader::Detach(Drawable *f_drawable)
 {
     bool l_result = false;
-    for(auto iter = m_drawableBind.begin(), iterEnd = m_drawableBind.end(); iter != iterEnd; ++iter)
+    for(auto l_bindData = m_drawableBind.begin(), iterEnd = m_drawableBind.end(); l_bindData != iterEnd; ++l_bindData)
     {
-        if(iter->m_element == f_drawable)
+        if(l_bindData->m_element == f_drawable)
         {
-            m_bindPool->Reset(static_cast<size_t>(iter->m_slot - 1));
-            iter->m_uniform->SetSampler(0);
-            m_drawableBind.erase(iter);
+            m_bindPool->Reset(static_cast<size_t>(l_bindData->m_slot - 1));
+            l_bindData->m_uniform->SetSampler(0);
+            m_drawableBind.erase(l_bindData);
             l_result = true;
             break;
         }
@@ -428,9 +428,9 @@ bool ROC::Shader::Detach(Drawable *f_drawable)
 bool ROC::Shader::HasAttached(Drawable *f_drawable) const
 {
     bool l_result = false;
-    for(const auto &iter : m_drawableBind)
+    for(const auto &l_bindData : m_drawableBind)
     {
-        if(iter.m_element == f_drawable)
+        if(l_bindData.m_element == f_drawable)
         {
             l_result = true;
             break;
@@ -448,27 +448,27 @@ void ROC::Shader::UpdateDrawableMaxCount()
 void ROC::Shader::Enable()
 {
     GLBinder::UseShaderProgram(m_program);
-    for(auto iter : m_defaultUniforms)
+    for(auto l_uniform : m_defaultUniforms)
     {
-        if(iter)
+        if(l_uniform)
         {
-            iter->SetActive(true);
-            iter->Update();
+            l_uniform->SetActive(true);
+            l_uniform->Update();
         }
     }
-    for(auto &iter : m_uniformMap)
+    for(auto &l_uniformPair : m_uniformMap)
     {
-        ShaderUniform *l_shaderUniform = iter.second;
-        l_shaderUniform->SetActive(true);
-        l_shaderUniform->Update();
+        ShaderUniform *l_uniform = l_uniformPair.second;
+        l_uniform->SetActive(true);
+        l_uniform->Update();
     }
     if(!m_drawableBind.empty())
     {
         unsigned int l_slot = 0U;
-        for(auto &iter : m_drawableBind)
+        for(auto &l_bindData : m_drawableBind)
         {
             glActiveTexture(GL_TEXTURE1 + l_slot);
-            iter.m_element->Bind();
+            l_bindData.m_element->Bind();
             l_slot++;
         }
         glActiveTexture(GL_TEXTURE0);
@@ -477,9 +477,9 @@ void ROC::Shader::Enable()
 
 void ROC::Shader::Disable()
 {
-    for(auto iter : m_defaultUniforms)
+    for(auto l_uniform : m_defaultUniforms)
     {
-        if(iter) iter->SetActive(false);
+        if(l_uniform) l_uniform->SetActive(false);
     }
-    for(auto &iter : m_uniformMap) iter.second->SetActive(false);
+    for(auto &l_uniformPair : m_uniformMap) l_uniformPair.second->SetActive(false);
 }

@@ -46,7 +46,7 @@ ROC::Quad3D::Quad3D()
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ROC_QUAD3D_VERTEX_COUNT, l_normals.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(QBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    for(auto &iter : m_vertex) iter.z = 0.f;
+    for(auto &l_vertex : m_vertex) l_vertex.z = 0.f;
 }
 ROC::Quad3D::~Quad3D()
 {

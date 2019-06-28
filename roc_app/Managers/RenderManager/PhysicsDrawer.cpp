@@ -47,6 +47,20 @@ void ROC::PhysicsDrawer::drawLine(const btVector3& from, const btVector3& to, co
     std::memcpy(&l_vec, color.m_floats, sizeof(glm::vec3));
     m_colors.insert(m_colors.end(), 2U, l_vec);
 }
+void ROC::PhysicsDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)
+{
+    glm::vec3 l_vec;
+    std::memcpy(&l_vec, PointOnB.m_floats, sizeof(glm::vec3));
+    m_lines.push_back(l_vec);
+
+    glm::vec3 l_normal;
+    std::memcpy(&l_normal, normalOnB.m_floats, sizeof(glm::vec3));
+    l_vec += l_normal;
+    m_lines.push_back(l_vec);
+
+    std::memcpy(&l_vec, color.m_floats, sizeof(glm::vec3));
+    m_colors.insert(m_colors.end(), 2U, l_vec);
+}
 
 void ROC::PhysicsDrawer::Draw(float f_width)
 {

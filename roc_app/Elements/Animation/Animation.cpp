@@ -31,14 +31,14 @@ void ROC::Animation::Clean()
     m_duration = 0U;
     m_fps = 0U;
     delete m_tempFrameData;
-    for(auto &iter : m_boneIntervals)
+    for(auto &l_boneInterval : m_boneIntervals)
     {
-        for(size_t i = 0, j = iter.size(); i < j; i++)
+        for(size_t i = 0, j = l_boneInterval.size(); i < j; i++)
         {
-            if(i == 0U) delete iter[i].m_leftData;
-            else delete iter[i].m_rightData;
+            if(i == 0U) delete l_boneInterval[i].m_leftData;
+            else delete l_boneInterval[i].m_rightData;
         }
-        iter.clear();
+        l_boneInterval.clear();
     }
     m_boneIntervals.clear();
     m_loaded = false;

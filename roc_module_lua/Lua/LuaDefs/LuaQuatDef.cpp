@@ -28,13 +28,9 @@ void LuaQuatDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "slerp", Slerp);
     LuaUtils::AddClassMethod(f_vm, "dot", Dot);
     LuaUtils::AddClassMethod(f_vm, "__add", Add);
-    LuaUtils::AddClassMethod(f_vm, "add", Add);
     LuaUtils::AddClassMethod(f_vm, "__sub", Subtract);
-    LuaUtils::AddClassMethod(f_vm, "subtract", Subtract);
     LuaUtils::AddClassMethod(f_vm, "__mul", Multiply);
-    LuaUtils::AddClassMethod(f_vm, "multiply", Multiply);
     LuaUtils::AddClassMethod(f_vm, "__eq", Equal);
-    LuaUtils::AddClassMethod(f_vm, "equal", Equal);
 
     LuaUtils::AddClassFinish(f_vm);
 }

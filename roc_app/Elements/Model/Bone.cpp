@@ -28,13 +28,10 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_bindMatrix = g_IdentityMatrix;
     m_poseMatrix = g_IdentityMatrix;
     m_updated = true;
-
-    m_dynamic = false;
-    m_dynamicBody = nullptr;
 }
 ROC::Bone::~Bone()
 {
-    m_childBoneVector.clear();
+    m_children.clear();
     delete m_localTransform;
     m_parent = nullptr;
 }
@@ -84,7 +81,6 @@ void ROC::Bone::Update()
         if(m_parent->IsUpdated() || m_localTransform->IsUpdated())
         {
             m_fullMatrix = m_parent->m_fullMatrix*m_localTransform->GetMatrix();
-            m_poseMatrix = m_fullMatrix*m_bindMatrix;
             m_updated = true;
         }
     }
@@ -93,8 +89,8 @@ void ROC::Bone::Update()
         if(m_localTransform->IsUpdated())
         {
             std::memcpy(&m_fullMatrix, &m_localTransform->GetMatrix(), sizeof(glm::mat4));
-            m_poseMatrix = m_fullMatrix*m_bindMatrix;
             m_updated = true;
         }
     }
+    if(m_updated) m_poseMatrix = m_fullMatrix*m_bindMatrix;
 }

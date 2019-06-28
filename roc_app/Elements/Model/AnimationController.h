@@ -17,6 +17,7 @@ class AnimationController final
         ACS_Playing
     } m_state;
     float m_speed;
+    bool m_loop;
 
     bool m_blend;
     unsigned int m_blendTime;
@@ -28,7 +29,7 @@ class AnimationController final
 public:
     inline Animation* GetAnimation() const { return m_animation; };
 
-    bool Play();
+    bool Play(bool f_loop);
     bool Pause();
     bool Reset();
 

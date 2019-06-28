@@ -30,14 +30,16 @@ void ROC::AnimationController::SetAnimation(Animation *f_anim)
         m_blend = true;
         m_blendTimeTick = 0U;
         if(m_state == ACS_None) m_state = ACS_Paused;
+        m_loop = false;
     }
     else m_state = ACS_None;
 }
 
-bool ROC::AnimationController::Play()
+bool ROC::AnimationController::Play(bool f_loop)
 {
     if(m_animation)
     {
+        m_loop = f_loop;
         if(m_state != ACS_Playing) m_state = ACS_Playing;
     }
     return (m_animation != nullptr);
@@ -94,7 +96,15 @@ void ROC::AnimationController::Update()
     if(m_animation && (m_state == ACS_Playing))
     {
         m_tick += static_cast<unsigned int>(static_cast<float>(SystemTick::GetDelta())*m_speed);
-        m_tick %= m_animation->GetDuration();
+        if(m_loop) m_tick %= m_animation->GetDuration();
+        else
+        {
+            if(m_tick >= m_animation->GetDuration())
+            {
+                m_tick = m_animation->GetDuration();
+                m_state = ACS_Paused;
+            }
+        }
         if(m_blend)
         {
             m_blendTimeTick += static_cast<unsigned int>(SystemTick::GetDelta());

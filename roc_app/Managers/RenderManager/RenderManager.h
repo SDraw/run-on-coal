@@ -23,8 +23,8 @@ class RenderManager final : public IRenderManager
     Core *m_core;
     VRManager *m_vrManager;
 
-    bool m_locked;
-    bool m_vrLock;
+    bool m_active;
+    bool m_vrActive;
 
     glm::vec3 m_modelPosition;
     glm::mat4 m_textureMatrix;
@@ -81,6 +81,7 @@ protected:
     ~RenderManager();
 
     void RemoveAsActiveScene(Scene *f_scene);
+    void RemoveAsActiveRenderTarget(RenderTarget *f_rt);
 
     void UpdateViewportSize(const glm::ivec2 &f_size);
 

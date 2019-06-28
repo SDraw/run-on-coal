@@ -12,8 +12,8 @@ struct BoneJointData;
 class Skeleton final
 {
     size_t m_bonesCount;
-    std::vector<Bone*> m_boneVector;
-    std::vector<Bone*> m_fastBoneVector;
+    std::vector<Bone*> m_bones;
+    std::vector<Bone*> m_bonesTree; // Sorted bones by hierarchy
     std::vector<glm::mat4> m_poseMatrices;
 
     enum SkeletonCollisionType : unsigned char
@@ -78,7 +78,7 @@ protected:
 
     void Update(Animation *f_anim, unsigned int f_tick, float f_blend);
 
-    inline const std::vector<Bone*>& GetBones() const { return m_boneVector; }
+    inline const std::vector<Bone*>& GetBones() const { return m_bones; }
     inline const std::vector<glm::mat4>& GetPoseMatrices() const { return m_poseMatrices; }
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);

@@ -51,7 +51,7 @@ public:
     Collision* GetCollsion() const;
 
     Animation* GetAnimation() const;
-    bool PlayAnimation();
+    bool PlayAnimation(bool f_loop);
     bool PauseAnimation();
     bool ResetAnimation();
     bool GetAnimationProperty(ModelAnimationProperty f_prop, float &f_value);

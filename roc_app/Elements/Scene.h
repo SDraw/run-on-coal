@@ -12,12 +12,12 @@ namespace ROC
 class Camera;
 class Model;
 
-struct DistantModel
+struct RenderModel
 {
     Model *m_model;
     float m_distance;
     bool m_visible = true;
-    DistantModel(Model *f_model, float f_dist = 0.f)
+    RenderModel(Model *f_model, float f_dist = 0.f)
     {
         m_model = f_model;
         m_distance = f_dist;
@@ -40,8 +40,8 @@ class Scene final : public Element, public virtual IScene
 
     void UpdateDistantModels();
 
-    static bool DistantModelComparator_Geometry(const DistantModel *f_modelA, const DistantModel *f_modelB);
-    static bool DistantModelComparator_Distance(const DistantModel *f_modelA, const DistantModel *f_modelB);
+    static bool RenderModelComparator_Geometry(const RenderModel *f_modelA, const RenderModel *f_modelB);
+    static bool RenderModelComparator_Distance(const RenderModel *f_modelA, const RenderModel *f_modelB);
 public:
     Camera* GetCamera() const;
     RenderTarget* GetRenderTarget() const;
@@ -57,7 +57,7 @@ public:
     inline bool IsValidForRender() const { return ((m_camera != nullptr) && (m_shader != nullptr)); }
     bool IsActive() const;
 protected:
-    std::vector<DistantModel*> m_distModelVector;
+    std::vector<RenderModel*> m_renderModels;
 
     Scene();
     ~Scene();
@@ -71,7 +71,7 @@ protected:
 
     void AddModel(Model *f_model);
     void RemoveModel(Model *f_model);
-    const std::vector<DistantModel*>& GetDistantModels() const { return m_distModelVector; }
+    const std::vector<RenderModel*>& GetRenderModels() const { return m_renderModels; }
 
     void Enable();
     void Disable();

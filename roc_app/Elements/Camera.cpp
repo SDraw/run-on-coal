@@ -191,7 +191,7 @@ void ROC::Camera::Update()
                 vr::HmdMatrix34_t l_eyeTransform = ms_vrSystem->GetEyeToHeadTransform((m_type == CPT_VRLeft) ? vr::Eye_Left : vr::Eye_Right);
                 MathUtils::ConvertMatrix(l_eyeTransform, l_eyeMat);
                 l_eyeMat = glm::inverse(l_eyeMat);
-                m_viewMatrix = m_viewMatrix*l_eyeMat;
+                m_viewMatrix *= l_eyeMat;
             }
         }
     }
@@ -227,7 +227,7 @@ void ROC::Camera::Update()
         m_planes[3] = glm::row(m_viewProjectionMatrix, 3) - glm::row(m_viewProjectionMatrix, 1);
         m_planes[4] = glm::row(m_viewProjectionMatrix, 3) + glm::row(m_viewProjectionMatrix, 2);
         m_planes[5] = glm::row(m_viewProjectionMatrix, 3) - glm::row(m_viewProjectionMatrix, 2);
-        for(auto &iter : m_planes) iter /= sqrtf(iter.x*iter.x + iter.y*iter.y + iter.z*iter.z);
+        for(auto &l_plane : m_planes) l_plane /= sqrtf(l_plane.x*l_plane.x + l_plane.y*l_plane.y + l_plane.z*l_plane.z);
 
         m_rebuildView = false;
         m_rebuildProjection = false;
@@ -237,9 +237,9 @@ void ROC::Camera::Update()
 bool ROC::Camera::IsInFrustum(const glm::vec3 &f_pos, float f_radius)
 {
     bool l_result = true;
-    for(auto &iter : m_planes)
+    for(auto &l_plane : m_planes)
     {
-        if(iter.x*f_pos.x + iter.y*f_pos.y + iter.z*f_pos.z + iter.w < -f_radius)
+        if(l_plane.x*f_pos.x + l_plane.y*f_pos.y + l_plane.z*f_pos.z + l_plane.w < -f_radius)
         {
             l_result = false;
             break;
@@ -253,9 +253,9 @@ bool ROC::Camera::IsInFrustum(const glm::mat4 &f_mat, float f_radius)
     btTransform l_transform = btTransform::getIdentity();
     l_transform.setFromOpenGLMatrix(glm::value_ptr(f_mat));
     const btVector3 &l_position = l_transform.getOrigin();
-    for(auto &iter : m_planes)
+    for(auto &l_plane : m_planes)
     {
-        if(iter.x*l_position.x() + iter.y*l_position.y() + iter.z*l_position.z() + iter.w < -f_radius)
+        if(l_plane.x*l_position.x() + l_plane.y*l_position.y() + l_plane.z*l_position.z() + l_plane.w < -f_radius)
         {
             l_result = false;
             break;

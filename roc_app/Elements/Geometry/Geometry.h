@@ -18,7 +18,7 @@ class Geometry final : public Element, public virtual IGeometry
         GSB_Collision = 0xCBU
     };
 
-    std::vector<Material*> m_materialVector;
+    std::vector<Material*> m_materials;
     size_t m_materialCount;
     float m_boundSphereRaduis;
 
@@ -46,7 +46,7 @@ protected:
     bool Load(const std::string &f_path);
     void GenerateVAOs();
 
-    inline const std::vector<Material*>& GetMaterialVector() const { return m_materialVector; }
+    inline const std::vector<Material*>& GetMaterials() const { return m_materials; }
     inline const std::vector<BoneData*>& GetBonesData() const { return m_bonesData; };
     inline const std::vector<BoneCollisionData*>& GetBonesCollisionData() const { return m_collisionData; }
     inline const std::vector<BoneJointData*>& GetJointsData() const { return m_jointData; }

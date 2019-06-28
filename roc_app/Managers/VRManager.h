@@ -21,27 +21,28 @@ class VRManager final : public IVRManager
     vr::VREvent_t m_event;
     bool m_state;
 
-    enum RMVRStage : unsigned char
+    enum VRStage : unsigned char
     {
         VRS_None = 0U,
         VRS_Left,
         VRS_Right
     };
-    RMVRStage m_vrStage;
+    VRStage m_vrStage;
 
     vr::TrackedDevicePose_t m_trackedPoses[vr::k_unMaxTrackedDeviceCount];
     struct VRController
     {
+        vr::TrackedDeviceIndex_t m_id;
+        unsigned char m_hand;
         glm::vec3 m_position;
         glm::quat m_rotation;
         glm::vec3 m_velocity;
         glm::vec3 m_angularVelocity;
         vr::VRControllerState_t m_oldState;
         vr::VRControllerState_t m_newState;
-        bool m_updated;
+        bool m_active;
     };
-    VRController m_leftController;
-    VRController m_rightController;
+    std::vector<VRController*> m_vrControllers;
 
     glm::mat4 m_transform;
     glm::vec3 m_headPosition;
@@ -55,8 +56,9 @@ class VRManager final : public IVRManager
     VRManager& operator=(const VRManager &that) = delete;
 
     void UpdateEyesPosition();
-    void UpdateControllerPose(VRController &f_controller, const vr::TrackedDevicePose_t &f_pose);
-    void UpdateControllerInput(VRController &f_controller, const std::string &f_hand);
+    void AddController(vr::TrackedDeviceIndex_t f_id);
+    void UpdateControllerPose(VRController *f_controller);
+    void UpdateControllerInput(VRController *f_controller);
 public:
     bool IsVREnabled() const;
 
@@ -68,28 +70,21 @@ public:
     const glm::vec3& GetLeftEyePosition() const;
     const glm::vec3& GetRightEyePosition() const;
 
-    const bool IsLeftControllerActive() const;
-    const glm::vec3& GetLeftControllerPosition() const;
-    const glm::quat& GetLeftControllerRotation() const;
-    const glm::vec3& GetLeftControllerVelocity() const;
-    const glm::vec3& GetLeftControllerAngularVelocity() const;
-
-    const bool IsRightControllerActive() const;
-    const glm::vec3& GetRightControllerPosition() const;
-    const glm::quat& GetRightControllerRotation() const;
-    const glm::vec3& GetRightControllerVelocity() const;
-    const glm::vec3& GetRightControllerAngularVelocity() const;
+    bool IsControllerConnected(unsigned int f_id) const;
+    bool IsControllerActive(unsigned int f_id) const;
+    unsigned char GetControllerHandAssignment(unsigned int f_id) const;
+    bool GetControllerPosition(unsigned int f_id, glm::vec3 &f_pos) const;
+    bool GetControllerRotation(unsigned int f_id, glm::quat &f_rot) const;
+    bool GetControllerVelocity(unsigned int f_id, glm::vec3 &f_val) const;
+    bool GetControllerAngularVelocity(unsigned int f_id, glm::vec3 &f_val) const;
 protected:
     explicit VRManager(Core *f_core);
     ~VRManager();
 
-    inline RMVRStage GetVRStage() const { return m_vrStage; }
-    inline void SetVRStage(RMVRStage f_stage) { m_vrStage = f_stage; }
-
-    void EnableRenderTarget();
+    void Render();
+    void RestoreRenderTarget();
 
     bool DoPulse();
-    void SubmitRender();
     
     friend class Core;
     friend class RenderManager;

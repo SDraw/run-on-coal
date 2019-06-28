@@ -7,13 +7,10 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_VRControllersTable
+const std::vector<std::string> g_VRControllerHandsTable
 {
-    "left", "right"
+    "none", "left", "right"
 };
-
-#define VR_CONTROLLER_LEFT 0
-#define VR_CONTROLLER_RIGHT 1
 
 void LuaVRDef::Init(lua_State *f_vm)
 {
@@ -21,7 +18,9 @@ void LuaVRDef::Init(lua_State *f_vm)
     lua_register(f_vm, "vrGetHeadPosition", VRGetHeadPosition);
     lua_register(f_vm, "vrGetHeadRotation", VRGetHeadRotation);
     lua_register(f_vm, "vrGetEyesPosition", VRGetEyesPosition);
+    lua_register(f_vm, "vrIsControllerConnected", VRIsControllerConnected);
     lua_register(f_vm, "vrIsControllerActive", VRIsControllerActive);
+    lua_register(f_vm, "vrGetControllerHand", VRGetControllerHand);
     lua_register(f_vm, "vrGetControllerPosition", VRGetControllerPosition);
     lua_register(f_vm, "vrGetControllerRotation", VRGetControllerRotation);
     lua_register(f_vm, "vrGetControllerVelocity", VRGetControllerVelocity);
@@ -66,143 +65,120 @@ int LuaVRDef::VRGetEyesPosition(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
+int LuaVRDef::VRIsControllerConnected(lua_State *f_vm)
+{
+    // bool vrIsControllerConnected( int id )
+    ArgReader argStream(f_vm);
+    unsigned int l_id;
+    argStream.ReadInteger(l_id);
+    if(!argStream.HasErrors())
+    {
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->IsControllerConnected(l_id);
+        argStream.PushBoolean(l_result);
+    }
+    return argStream.GetReturnValue();
+}
+
 int LuaVRDef::VRIsControllerActive(lua_State *f_vm)
 {
-    // bool vrIsControllerActive( string controller )
+    // bool vrIsControllerActive( int id )
     ArgReader argStream(f_vm);
-    std::string l_controller;
-    argStream.ReadText(l_controller);
-    if(!argStream.HasErrors() && !l_controller.empty())
+    unsigned int l_id;
+    argStream.ReadInteger(l_id);
+    if(!argStream.HasErrors())
     {
-        ROC::IVRManager *l_vrManager = LuaModule::GetModule()->GetEngineCore()->GetVRManager();
-        switch(EnumUtils::ReadEnumVector(l_controller, g_VRControllersTable))
-        {
-            case VR_CONTROLLER_LEFT:
-                argStream.PushBoolean(l_vrManager->IsLeftControllerActive());
-                break;
-            case VR_CONTROLLER_RIGHT:
-                argStream.PushBoolean(l_vrManager->IsRightControllerActive());
-                break;
-            default:
-                argStream.PushBoolean(false);
-                break;
-        }
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->IsControllerActive(l_id);
+        argStream.PushBoolean(l_result);
+    }
+    return argStream.GetReturnValue();
+}
+
+int LuaVRDef::VRGetControllerHand(lua_State *f_vm)
+{
+    // string vrGetControllerHand( int id )
+    ArgReader argStream(f_vm);
+    unsigned int l_id;
+    argStream.ReadInteger(l_id);
+    if(!argStream.HasErrors())
+    {
+        unsigned char l_hand = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerHandAssignment(l_id);
+        argStream.PushText(g_VRControllerHandsTable[static_cast<size_t>(l_hand)]);
     }
     return argStream.GetReturnValue();
 }
 
 int LuaVRDef::VRGetControllerPosition(lua_State *f_vm)
 {
-    // float float float vrGetControllerPosition( string controller )
+    // float float float vrGetControllerPosition( int id )
     ArgReader argStream(f_vm);
-    std::string l_controller;
-    argStream.ReadText(l_controller);
-    if(!argStream.HasErrors() && !l_controller.empty())
+    unsigned int l_id;
+    argStream.ReadInteger(l_id);
+    if(!argStream.HasErrors())
     {
-        ROC::IVRManager *l_vrManager = LuaModule::GetModule()->GetEngineCore()->GetVRManager();
-        switch(EnumUtils::ReadEnumVector(l_controller, g_VRControllersTable))
+        glm::vec3 l_pos;
+        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerPosition(l_id, l_pos))
         {
-            case VR_CONTROLLER_LEFT:
-            {
-                const glm::vec3 &l_pos = l_vrManager->GetLeftControllerPosition();
-                for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
-            } break;
-            case VR_CONTROLLER_RIGHT:
-            {
-                const glm::vec3 &l_pos = l_vrManager->GetRightControllerPosition();
-                for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
-            } break;
-            default:
-                argStream.PushBoolean(false);
-                break;
+            for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
         }
+        else argStream.PushBoolean(false);
     }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
 int LuaVRDef::VRGetControllerRotation(lua_State *f_vm)
 {
-    // float float float float vrGetControllerRotation( string controller )
+    // float float float float vrGetControllerRotation( int id )
     ArgReader argStream(f_vm);
-    std::string l_controller;
-    argStream.ReadText(l_controller);
-    if(!argStream.HasErrors() && !l_controller.empty())
+    unsigned int l_id;
+    argStream.ReadInteger(l_id);
+    if(!argStream.HasErrors())
     {
-        ROC::IVRManager *l_vrManager = LuaModule::GetModule()->GetEngineCore()->GetVRManager();
-        switch(EnumUtils::ReadEnumVector(l_controller, g_VRControllersTable))
+        glm::quat l_rot;
+        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerRotation(l_id, l_rot))
         {
-            case VR_CONTROLLER_LEFT:
-            {
-                const glm::quat &l_rot = l_vrManager->GetLeftControllerRotation();
-                for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
-            } break;
-            case VR_CONTROLLER_RIGHT:
-            {
-                const glm::quat &l_rot = l_vrManager->GetRightControllerRotation();
-                for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
-            } break;
-            default:
-                argStream.PushBoolean(false);
-                break;
+            for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
         }
+        else argStream.PushBoolean(false);
     }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
 int LuaVRDef::VRGetControllerVelocity(lua_State *f_vm)
 {
-    // float float float vrGetControllerVelocity( string controller )
+    // float float float vrGetControllerVelocity( int id )
     ArgReader argStream(f_vm);
-    std::string l_controller;
-    argStream.ReadText(l_controller);
-    if(!argStream.HasErrors() && !l_controller.empty())
+    unsigned int l_id;
+    argStream.ReadInteger(l_id);
+    if(!argStream.HasErrors())
     {
-        ROC::IVRManager *l_vrManager = LuaModule::GetModule()->GetEngineCore()->GetVRManager();
-        switch(EnumUtils::ReadEnumVector(l_controller, g_VRControllersTable))
+        glm::vec3 l_val;
+        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerVelocity(l_id, l_val))
         {
-            case VR_CONTROLLER_LEFT:
-            {
-                const glm::vec3 &l_velocity = l_vrManager->GetLeftControllerVelocity();
-                for(int i = 0; i < 3; i++) argStream.PushNumber(l_velocity[i]);
-            } break;
-            case VR_CONTROLLER_RIGHT:
-            {
-                const glm::vec3 &l_velocity = l_vrManager->GetRightControllerVelocity();
-                for(int i = 0; i < 3; i++) argStream.PushNumber(l_velocity[i]);
-            } break;
-            default:
-                argStream.PushBoolean(false);
-                break;
+            for(int i = 0; i < 3; i++) argStream.PushNumber(l_val[i]);
         }
+        else argStream.PushBoolean(false);
     }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
 int LuaVRDef::VRGetControllerAngularVelocity(lua_State *f_vm)
 {
-    // float float float vrGetControllerAngularVelocity( string controller )
+    // float float float vrGetControllerAngularVelocity( int id )
     ArgReader argStream(f_vm);
-    std::string l_controller;
-    argStream.ReadText(l_controller);
-    if(!argStream.HasErrors() && !l_controller.empty())
+    unsigned int l_id;
+    argStream.ReadInteger(l_id);
+    if(!argStream.HasErrors())
     {
-        ROC::IVRManager *l_vrManager = LuaModule::GetModule()->GetEngineCore()->GetVRManager();
-        switch(EnumUtils::ReadEnumVector(l_controller, g_VRControllersTable))
+        glm::vec3 l_val;
+        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerAngularVelocity(l_id, l_val))
         {
-            case VR_CONTROLLER_LEFT:
-            {
-                const glm::vec3 &l_angVelocity = l_vrManager->GetLeftControllerAngularVelocity();
-                for(int i = 0; i < 3; i++) argStream.PushNumber(l_angVelocity[i]);
-            } break;
-            case VR_CONTROLLER_RIGHT:
-            {
-                const glm::vec3 &l_angVelocity = l_vrManager->GetRightControllerAngularVelocity();
-                for(int i = 0; i < 3; i++) argStream.PushNumber(l_angVelocity[i]);
-            } break;
-            default:
-                argStream.PushBoolean(false);
-                break;
+            for(int i = 0; i < 3; i++) argStream.PushNumber(l_val[i]);
         }
+        else argStream.PushBoolean(false);
     }
+    else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
