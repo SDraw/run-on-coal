@@ -14,12 +14,15 @@ class VRManager final : public IVRManager
 
     vr::IVRSystem *m_vrSystem;
     vr::IVRCompositor *m_vrCompositor;
-    RenderTarget *m_leftEyeRT;
-    RenderTarget *m_rightEyeRT;
+    vr::IVROverlay *m_vrOverlay;
+    vr::IVRNotifications *m_vrNotifications;
+
+    RenderTarget *m_eyeRT[2U];
     glm::uvec2 m_targetSize;
-    vr::Texture_t m_vrTexture[2];
+    vr::Texture_t m_vrTexture[2U];
     vr::VREvent_t m_event;
-    bool m_state;
+    vr::VROverlayHandle_t m_overlayHandle;
+    vr::VRNotificationId m_notificationID;
 
     enum VRStage : unsigned char
     {
@@ -28,6 +31,7 @@ class VRManager final : public IVRManager
         VRS_Right
     };
     VRStage m_vrStage;
+    bool m_state;
 
     vr::TrackedDevicePose_t m_trackedPoses[vr::k_unMaxTrackedDeviceCount];
     struct VRController
@@ -77,6 +81,11 @@ public:
     bool GetControllerRotation(unsigned int f_id, glm::quat &f_rot) const;
     bool GetControllerVelocity(unsigned int f_id, glm::vec3 &f_val) const;
     bool GetControllerAngularVelocity(unsigned int f_id, glm::vec3 &f_val) const;
+
+    bool ShowNotification(const std::string &f_title, const std::string &f_text, unsigned int f_time);
+
+    bool DrawEyeImage(unsigned char f_side, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color);
+    bool DrawEyeImage(unsigned char f_side, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params);
 protected:
     explicit VRManager(Core *f_core);
     ~VRManager();

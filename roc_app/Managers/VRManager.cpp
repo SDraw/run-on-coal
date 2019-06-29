@@ -7,6 +7,7 @@
 
 #include "Managers/ConfigManager.h"
 #include "Managers/ModuleManager.h"
+#include "Managers/RenderManager/RenderManager.h"
 #include "Interfaces/IModule.h"
 #include "Elements/Camera.h"
 #include "Utils/MathUtils.h"
@@ -31,12 +32,6 @@ ROC::VRManager::VRManager(Core *f_core)
 {
     m_core = f_core;
 
-    m_transform = g_IdentityMatrix;
-    m_headPosition = g_EmptyVec3;
-    m_headRotation = g_DefaultRotation;
-    m_leftEyePosition = g_EmptyVec3;
-    m_rightEyePosition = g_EmptyVec3;
-
     if(m_core->GetConfigManager()->IsVRModeEnabled())
     {
         vr::HmdError l_hmdError = vr::EVRInitError::VRInitError_None;
@@ -57,24 +52,41 @@ ROC::VRManager::VRManager(Core *f_core)
             exit(EXIT_FAILURE);
         }
 
+        m_vrOverlay = vr::VROverlay();
+        if(!m_vrOverlay)
+        {
+            MessageBoxA(NULL, "OpenVR: Unable to initialize SteamVR overlays", NULL, MB_OK | MB_ICONEXCLAMATION);
+            exit(EXIT_FAILURE);
+        }
+
+        m_vrNotifications = vr::VRNotifications();
+        if(!m_vrNotifications)
+        {
+            MessageBoxA(NULL, "OpenVR: Unable to initialize SteamVR notifications", NULL, MB_OK | MB_ICONEXCLAMATION);
+            exit(EXIT_FAILURE);
+        }
+
         m_vrSystem->GetRecommendedRenderTargetSize(&m_targetSize.x, &m_targetSize.y);
-        m_leftEyeRT = new RenderTarget();
-        if(!m_leftEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
+        m_eyeRT[VRE_Left] = new RenderTarget();
+        if(!m_eyeRT[VRE_Left]->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
         {
             MessageBoxA(NULL, "OpenVR: Unable to create render target for left eye", NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
         }
-        m_rightEyeRT = new RenderTarget();
-        if(!m_rightEyeRT->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
+        m_eyeRT[VRE_Right] = new RenderTarget();
+        if(!m_eyeRT[VRE_Right]->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
         {
             MessageBoxA(NULL, "OpenVR: Unable to create render target for right eye", NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
         }
 
-        m_vrTexture[0] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_leftEyeRT->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
-        m_vrTexture[1] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_rightEyeRT->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+        m_vrTexture[0] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_eyeRT[VRE_Left]->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+        m_vrTexture[1] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_eyeRT[VRE_Right]->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
         UpdateEyesPosition();
+
+        // Overlay
+        m_vrOverlay->CreateOverlay("roc_overlay", "ROC overlay", &m_overlayHandle);
 
         // Add controllers
         vr::TrackedDeviceIndex_t l_controllers[vr::k_unMaxTrackedDeviceCount];
@@ -85,20 +97,29 @@ ROC::VRManager::VRManager(Core *f_core)
     {
         m_vrSystem = nullptr;
         m_vrCompositor = nullptr;
-        m_leftEyeRT = nullptr;
-        m_rightEyeRT = nullptr;
+        m_vrNotifications = nullptr;
+        m_vrOverlay = nullptr;
+        m_overlayHandle = vr::k_ulOverlayHandleInvalid;
+        for(auto &l_rt : m_eyeRT) l_rt = nullptr;
     }
 
+    m_notificationID = 0;
     m_vrStage = VRS_None;
     m_event = { 0 };
     m_state = true;
+
+    m_transform = g_IdentityMatrix;
+    m_headPosition = g_EmptyVec3;
+    m_headRotation = g_DefaultRotation;
+    m_leftEyePosition = g_EmptyVec3;
+    m_rightEyePosition = g_EmptyVec3;
 }
 ROC::VRManager::~VRManager()
 {
-    if(m_vrSystem) vr::VR_Shutdown();
+    if(m_vrOverlay) m_vrOverlay->DestroyOverlay(m_overlayHandle);
+    //if(m_vrSystem) vr::VR_Shutdown(); // Somehow it starts home app. If home app is disabled, it brings to void space
     for(auto l_controller : m_vrControllers) delete l_controller;
-    delete m_leftEyeRT;
-    delete m_rightEyeRT;
+    for(auto l_rt : m_eyeRT) delete l_rt;
 }
 
 bool ROC::VRManager::IsVREnabled() const
@@ -226,26 +247,77 @@ bool ROC::VRManager::GetControllerAngularVelocity(unsigned int f_id, glm::vec3 &
     return l_result;
 }
 
+bool ROC::VRManager::ShowNotification(const std::string &f_title, const std::string &f_text, unsigned int f_time)
+{
+    bool l_result = false;
+    if(m_vrOverlay)
+    {
+        vr::EVROverlayError l_overlayError = m_vrOverlay->SetOverlayName(m_overlayHandle, f_title.c_str());
+        l_result = (l_result && (l_overlayError == vr::VROverlayError_None));
+    }
+    if(m_vrNotifications)
+    {
+        if(m_notificationID) m_vrNotifications->RemoveNotification(m_notificationID);
+        vr::EVRNotificationError l_notifyError = m_vrNotifications->CreateNotification(m_overlayHandle, f_time, vr::EVRNotificationType_Transient, f_text.c_str(), vr::EVRNotificationStyle_None, nullptr, &m_notificationID);
+        if(l_notifyError != vr::VRNotificationError_OK) m_notificationID = 0;
+        l_result = (l_result && (l_notifyError == vr::VRNotificationError_OK));
+    }
+    return l_result;
+}
+
+bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)
+{
+    bool l_result = false;
+    if(m_vrStage == VRS_None)
+    {
+        RenderTarget *l_rt = nullptr;
+        switch(f_side)
+        {
+            case VRE_Left: case VRE_Right:
+                l_rt = m_eyeRT[f_side];
+                break;
+        }
+        if(l_rt) m_core->GetRenderManager()->Render(l_rt, f_pos, f_size, f_rot, f_color);
+    }
+    return l_result;
+}
+bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
+{
+    bool l_result = false;
+    if(m_vrStage == VRS_None)
+    {
+        RenderTarget *l_rt = nullptr;
+        switch(f_side)
+        {
+            case VRE_Left: case VRE_Right:
+                l_rt = m_eyeRT[f_side];
+                break;
+        }
+        if(l_rt) l_result = m_core->GetRenderManager()->Render(l_rt, f_pos, f_rot, f_size, f_params);
+    }
+    return l_result;
+}
+
 void ROC::VRManager::Render()
 {
     if(m_vrStage == VRS_None)
     {
         m_vrStage = VRS_Left;
-        m_leftEyeRT->Enable();
+        m_eyeRT[VRE_Left]->Enable();
 
         m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments.Clear();
 
         m_vrStage = VRS_Right;
-        m_rightEyeRT->Enable();
+        m_eyeRT[VRE_Right]->Enable();
 
         m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments.Clear();
 
         m_vrStage = VRS_None;
-        m_rightEyeRT->Disable();
+        m_eyeRT[VRE_Right]->Disable();
         if(m_vrCompositor)
         {
             m_vrCompositor->Submit(vr::Eye_Left, &m_vrTexture[0U]);
@@ -258,10 +330,10 @@ void ROC::VRManager::RestoreRenderTarget()
     switch(m_vrStage)
     {
         case VRS_Left:
-            m_leftEyeRT->Enable();
+            m_eyeRT[VRE_Left]->Enable();
             break;
         case VRS_Right:
-            m_rightEyeRT->Enable();
+            m_eyeRT[VRE_Right]->Enable();
             break;
     }
 }
