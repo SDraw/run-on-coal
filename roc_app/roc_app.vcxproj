@@ -315,7 +315,6 @@
     <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\SystemTick.h" />
     <ClInclude Include="Utils\Transformation.h" />
-    <ClInclude Include="Utils\TreeNode.h" />
     <ClInclude Include="Utils\zlibUtils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -407,7 +406,6 @@
     <ClCompile Include="Utils\Pool.cpp" />
     <ClCompile Include="Utils\SystemTick.cpp" />
     <ClCompile Include="Utils\Transformation.cpp" />
-    <ClCompile Include="Utils\TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="main_resource.rc" />
