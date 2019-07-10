@@ -276,7 +276,6 @@
     <ClInclude Include="Interfaces\IFile.h" />
     <ClInclude Include="Interfaces\IFont.h" />
     <ClInclude Include="Interfaces\IGeometry.h" />
-    <ClInclude Include="Interfaces\IInheritanceManager.h" />
     <ClInclude Include="Interfaces\ILogManager.h" />
     <ClInclude Include="Interfaces\IModel.h" />
     <ClInclude Include="Interfaces\IModule.h" />
@@ -306,7 +305,6 @@
     <ClInclude Include="Managers\RenderManager\Quad3D.h" />
     <ClInclude Include="Managers\RenderManager\RenderManager.h" />
     <ClInclude Include="Managers\SfmlManager.h" />
-    <ClInclude Include="Managers\InheritanceManager.h" />
     <ClInclude Include="Managers\PhysicsManager.h" />
     <ClInclude Include="Managers\PreRenderManager.h" />
     <ClInclude Include="Managers\VRManager.h" />
@@ -390,7 +388,6 @@
     <ClCompile Include="Managers\RenderManager\Quad3D.cpp" />
     <ClCompile Include="Managers\RenderManager\RenderManager.cpp" />
     <ClCompile Include="Managers\SfmlManager.cpp" />
-    <ClCompile Include="Managers\InheritanceManager.cpp" />
     <ClCompile Include="Managers\PhysicsManager.cpp" />
     <ClCompile Include="Managers\PreRenderManager.cpp" />
     <ClCompile Include="Managers\SoundManager.cpp" />

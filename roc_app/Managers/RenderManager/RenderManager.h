@@ -54,6 +54,8 @@ class RenderManager final : public IRenderManager
     void DisableCulling();
     void EnableCulling();
 
+    void PrepareActiveScene();
+
     RenderManager(const RenderManager &that) = delete;
     RenderManager& operator=(const RenderManager &that) = delete;
 
@@ -81,15 +83,12 @@ protected:
     ~RenderManager();
 
     void RemoveAsActiveScene(Scene *f_scene);
-    void RemoveAsActiveRenderTarget(RenderTarget *f_rt);
-
     void UpdateViewportSize(const glm::ivec2 &f_size);
 
     void DoPulse();
 
     friend class Core;
     friend class ElementManager;
-    friend class InheritanceManager;
     friend class SfmlManager;
 };
 

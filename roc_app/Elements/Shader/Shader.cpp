@@ -44,6 +44,7 @@ ROC::Shader::Shader()
     m_elementTypeName.assign("Shader");
 
     m_program = 0U;
+    m_active = false;
 
     for(size_t i = 0U; i < SDU_UniformCount; i++) m_defaultUniforms[i] = nullptr;
 
@@ -379,30 +380,36 @@ void ROC::Shader::SetColor(const glm::vec4 &f_value)
 bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
 {
     bool l_result = false;
-    auto l_mapResult = m_uniformMap.find(f_uniform);
-    if(l_mapResult != m_uniformMapEnd)
+    if(!HasAttached(f_drawable))
     {
-        ShaderUniform *l_shaderUniform = l_mapResult->second;
-        bool l_isUsed = false;
-        for(const auto &l_bindData : m_drawableBind)
+        ShaderUniform *l_uniform = GetUniform(f_uniform);
+        if(l_uniform)
         {
-            if(l_bindData.m_uniform == l_shaderUniform)
+            bool l_used = false;
+            for(const auto &l_bindData : m_drawableBind)
             {
-                l_isUsed = true;
-                break;
-            }
-        }
-        if(!l_isUsed)
-        {
-            if((l_shaderUniform->IsSampler2D() && !f_drawable->IsCubic()) || (l_shaderUniform->IsSamplerCube() && f_drawable->IsCubic()))
-            {
-                int l_slot = m_bindPool->Allocate();
-                if(l_slot != -1)
+                if(l_bindData.m_uniform == l_uniform)
                 {
-                    DrawableBindData l_bind{ f_drawable, l_slot + 1, l_shaderUniform };
-                    m_drawableBind.push_back(l_bind);
-                    l_shaderUniform->SetSampler(l_slot + 1);
-                    l_result = true;
+                    l_used = true;
+                    break;
+                }
+            }
+            if(!l_used)
+            {
+                if((l_uniform->IsSampler2D() && !f_drawable->IsCubic()) || (l_uniform->IsSamplerCube() && f_drawable->IsCubic()))
+                {
+                    size_t l_slot = m_bindPool->Allocate();
+                    if(l_slot != Pool::ms_invalid)
+                    {
+                        DrawableBindData l_bind{ f_drawable, static_cast<int>(l_slot) + 1, l_uniform };
+                        m_drawableBind.push_back(l_bind);
+                        l_uniform->SetSampler(l_bind.m_slot);
+
+                        Element::AddChild(f_drawable);
+                        f_drawable->AddParent(this);
+
+                        l_result = true;
+                    }
                 }
             }
         }
@@ -412,13 +419,16 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
 bool ROC::Shader::Detach(Drawable *f_drawable)
 {
     bool l_result = false;
-    for(auto l_bindData = m_drawableBind.begin(), iterEnd = m_drawableBind.end(); l_bindData != iterEnd; ++l_bindData)
+    for(auto l_bindData = m_drawableBind.begin(), l_end = m_drawableBind.end(); l_bindData != l_end; ++l_bindData)
     {
         if(l_bindData->m_element == f_drawable)
         {
             m_bindPool->Reset(static_cast<size_t>(l_bindData->m_slot - 1));
             l_bindData->m_uniform->SetSampler(0);
             m_drawableBind.erase(l_bindData);
+
+            Element::RemoveChild(f_drawable);
+
             l_result = true;
             break;
         }
@@ -447,39 +457,96 @@ void ROC::Shader::UpdateDrawableMaxCount()
 
 void ROC::Shader::Enable()
 {
-    GLBinder::UseShaderProgram(m_program);
-    for(auto l_uniform : m_defaultUniforms)
+    if(!m_active)
     {
-        if(l_uniform)
+        GLBinder::UseShaderProgram(m_program);
+        for(auto l_uniform : m_defaultUniforms)
         {
+            if(l_uniform)
+            {
+                l_uniform->SetActive(true);
+                l_uniform->Update();
+            }
+        }
+        for(auto &l_uniformPair : m_uniformMap)
+        {
+            ShaderUniform *l_uniform = l_uniformPair.second;
             l_uniform->SetActive(true);
             l_uniform->Update();
         }
-    }
-    for(auto &l_uniformPair : m_uniformMap)
-    {
-        ShaderUniform *l_uniform = l_uniformPair.second;
-        l_uniform->SetActive(true);
-        l_uniform->Update();
-    }
-    if(!m_drawableBind.empty())
-    {
-        unsigned int l_slot = 0U;
-        for(auto &l_bindData : m_drawableBind)
+        if(!m_drawableBind.empty())
         {
-            glActiveTexture(GL_TEXTURE1 + l_slot);
-            l_bindData.m_element->Bind();
-            l_slot++;
+            unsigned int l_slot = 0U;
+            for(auto &l_bindData : m_drawableBind)
+            {
+                glActiveTexture(GL_TEXTURE1 + l_slot);
+                l_bindData.m_element->Bind();
+                l_slot++;
+            }
+            glActiveTexture(GL_TEXTURE0);
         }
-        glActiveTexture(GL_TEXTURE0);
+
+        m_active = true;
     }
 }
 
 void ROC::Shader::Disable()
 {
-    for(auto l_uniform : m_defaultUniforms)
+    if(m_active)
     {
-        if(l_uniform) l_uniform->SetActive(false);
+        for(auto l_uniform : m_defaultUniforms)
+        {
+            if(l_uniform) l_uniform->SetActive(false);
+        }
+        for(auto &l_uniformPair : m_uniformMap) l_uniformPair.second->SetActive(false);
+
+        m_active = false;
     }
-    for(auto &l_uniformPair : m_uniformMap) l_uniformPair.second->SetActive(false);
+}
+
+void ROC::Shader::OnParentLinkDestroyed(Element *f_parent)
+{
+    switch(f_parent->GetElementType())
+    {
+        case ET_Scene:
+            Disable();
+            break;
+    }
+
+    Element::OnParentLinkDestroyed(f_parent);
+}
+void ROC::Shader::OnChildLinkDestroyed(Element *f_child)
+{
+    switch(f_child->GetElementType())
+    {
+        case ET_Texture: case ET_RenderTarget:
+        {
+            for(auto l_bindData = m_drawableBind.begin(), l_end = m_drawableBind.end(); l_bindData != l_end; ++l_bindData)
+            {
+                if(l_bindData->m_element == f_child)
+                {
+                    m_bindPool->Reset(static_cast<size_t>(l_bindData->m_slot - 1));
+                    l_bindData->m_uniform->SetSampler(0);
+                    m_drawableBind.erase(l_bindData);
+                    break;
+                }
+            }
+        } break;
+    }
+
+    Element::OnChildLinkDestroyed(f_child);
+}
+
+// Interfaces reroute
+bool ROC::Shader::Attach(IDrawable *f_drawable, const std::string &f_uniform)
+{
+    return Attach(dynamic_cast<Drawable*>(f_drawable), f_uniform);
+}
+bool ROC::Shader::Detach(IDrawable *f_drawable)
+{
+    return Detach(dynamic_cast<Drawable*>(f_drawable));
+}
+bool ROC::Shader::HasAttached(IDrawable *f_drawable) const
+{
+    return HasAttached(dynamic_cast<Drawable*>(f_drawable));
 }

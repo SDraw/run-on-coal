@@ -24,7 +24,7 @@ void LuaModelDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setScale", SetScale);
     LuaUtils::AddClassMethod(f_vm, "getScale", GetScale);
     LuaUtils::AddClassMethod(f_vm, "getMatrix", GetMatrix);
-    LuaUtils::AddClassMethod(f_vm, "attach", Attach);
+    LuaUtils::AddClassMethod(f_vm, "attachTo", AttachTo);
     LuaUtils::AddClassMethod(f_vm, "detach", Detach);
     LuaUtils::AddClassMethod(f_vm, "getParent", GetParent);
     LuaUtils::AddClassMethod(f_vm, "setAnimation", SetAnimation);
@@ -184,9 +184,9 @@ int LuaModelDef::GetMatrix(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int LuaModelDef::Attach(lua_State *f_vm)
+int LuaModelDef::AttachTo(lua_State *f_vm)
 {
-    // bool Model:attach(element parentModel [, int boneIndex = -1 ])
+    // bool Model:attachTo(element parentModel [, int boneIndex = -1 ])
     ROC::IModel *l_model, *l_parent;
     int l_bone = -1;
     ArgReader argStream(f_vm);
@@ -196,7 +196,7 @@ int LuaModelDef::Attach(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         l_bone = std::max(-1, std::min(l_bone,std::numeric_limits<int>::max()));
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->AttachModelToModel(l_model, l_parent, l_bone);
+        bool l_result = l_model->AttachTo(l_parent, l_bone);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -210,7 +210,7 @@ int LuaModelDef::Detach(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->DetachModel(l_model);
+        bool l_result = l_model->Dettach();
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -224,7 +224,7 @@ int LuaModelDef::GetParent(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        ROC::IModel *l_parent = l_model->GetParent();
+        ROC::IModel *l_parent = l_model->GetParentModel();
         l_parent ? argStream.PushElement(l_parent) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -241,7 +241,7 @@ int LuaModelDef::SetAnimation(lua_State *f_vm)
     argStream.ReadElement(l_anim);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->SetModelAnimation(l_model, l_anim);
+        bool l_result = l_model->SetAnimation(l_anim);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -269,7 +269,7 @@ int LuaModelDef::RemoveAnimation(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->RemoveModelAnimation(l_model);
+        bool l_result = l_model->RemoveAnimation();
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -396,7 +396,7 @@ int LuaModelDef::SetCollision(lua_State *f_vm)
     argStream.ReadElement(l_col);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->SetModelCollision(l_model, l_col);
+        bool l_result = l_model->SetCollision(l_col);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -410,7 +410,7 @@ int LuaModelDef::RemoveCollision(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->RemoveModelCollision(l_model);
+        bool l_result = l_model->RemoveCollision();
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

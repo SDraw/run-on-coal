@@ -16,6 +16,9 @@ class RenderTarget final : public Drawable, public virtual IRenderTarget
 
     std::string m_error;
 
+    static RenderTarget *ms_fallbackRT;
+    static glm::ivec2 ms_fallbackSize;
+
     RenderTarget(const RenderTarget &that) = delete;
     RenderTarget& operator=(const RenderTarget &that) = delete;
 
@@ -37,6 +40,10 @@ protected:
     void Bind();
     void Enable();
     void Disable();
+    
+    static inline void SetFallbackRenderTarget(RenderTarget *f_rt) { ms_fallbackRT = f_rt; }
+    static inline void SetFallbackSize(const glm::ivec2 &f_size) { std::memcpy(&ms_fallbackSize, &f_size, sizeof(glm::ivec2)); }
+    static void Fallback();
 
     friend class ElementManager;
     friend class RenderManager;

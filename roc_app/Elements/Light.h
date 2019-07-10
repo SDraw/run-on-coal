@@ -40,6 +40,7 @@ protected:
 
     friend class ElementManager;
     friend class RenderManager;
+    friend class Scene;
 };
 
 }

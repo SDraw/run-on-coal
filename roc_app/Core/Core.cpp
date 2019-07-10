@@ -14,7 +14,6 @@ ROC::Core::Core()
 {
     m_configManager = new ConfigManager();
     m_logManager = new LogManager(this);
-    m_inheritManager = new InheritanceManager(this);
     m_elementManager = new ElementManager(this);
     m_soundManager = new SoundManager();
     m_physicsManager = new PhysicsManager(this);
@@ -33,7 +32,6 @@ ROC::Core::~Core()
     delete m_networkManager;
     delete m_soundManager;
     delete m_physicsManager;
-    delete m_inheritManager;
     delete m_asyncManager;
     delete m_elementManager;
     delete m_renderManager;
@@ -85,10 +83,6 @@ ROC::SfmlManager* ROC::Core::GetSfmlManager() const
 ROC::AsyncManager* ROC::Core::GetAsyncManager() const
 {
     return m_asyncManager;
-}
-ROC::InheritanceManager* ROC::Core::GetInheritManager() const
-{
-    return m_inheritManager;
 }
 ROC::LogManager* ROC::Core::GetLogManager() const
 {

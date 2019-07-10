@@ -8,6 +8,7 @@
 #include "Elements/File.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Light.h"
+#include "Elements/Model/Model.h"
 #include "Elements/RenderTarget.h"
 #include "Elements/Shader/Shader.h"
 #include "Elements/Scene.h"
@@ -18,16 +19,17 @@ namespace ROC
 {
 
 class Core;
-class Model;
 
 class ElementManager final : public IElementManager
 {
     Core *m_core;
 
-    std::unordered_set<void*> m_elementSet;
-    std::unordered_set<void*>::iterator m_elementSetEnd;
+    std::unordered_set<Element*> m_elements;
+    std::unordered_set<IElement*> m_interfaces;
+    std::unordered_set<Element*>::iterator m_elementsEnd;
+    std::unordered_set<IElement*>::iterator m_interfacesEnd;
 
-    void RemoveElementFromSet(void *f_ptr);
+    void RemoveElementFromSet(Element *f_ptr);
 
     ElementManager(const ElementManager &that) = delete;
     ElementManager& operator=(const ElementManager &that) = delete;
@@ -59,7 +61,7 @@ protected:
     explicit ElementManager(Core *f_core);
     ~ElementManager();
 
-    void AddElementToSet(void *f_ptr);
+    void AddElementToSet(Element *f_ptr);
 
     friend class Core;
     friend class AsyncManager;

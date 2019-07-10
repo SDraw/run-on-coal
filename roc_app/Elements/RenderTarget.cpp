@@ -4,6 +4,9 @@
 
 #include "Utils/GLBinder.h"
 
+ROC::RenderTarget *ROC::RenderTarget::ms_fallbackRT = nullptr;
+glm::ivec2 ROC::RenderTarget::ms_fallbackSize = glm::ivec2(0);
+
 ROC::RenderTarget::RenderTarget()
 {
     m_elementType = ET_RenderTarget;
@@ -155,5 +158,15 @@ void ROC::RenderTarget::Clear()
         GLBinder::ResetFramebuffer(m_frameBuffer);
         glDeleteFramebuffers(1, &m_frameBuffer);
         m_frameBuffer = 0U;
+    }
+}
+
+void ROC::RenderTarget::Fallback()
+{
+    if(ms_fallbackRT) ms_fallbackRT->Enable();
+    else
+    {
+        GLBinder::BindFramebuffer(0U);
+        GLBinder::SetViewport(0, 0, ms_fallbackSize.x, ms_fallbackSize.y);
     }
 }

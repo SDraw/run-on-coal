@@ -13,6 +13,7 @@ class Pool;
 class Shader final : public Element, public virtual IShader
 {
     GLuint m_program;
+    bool m_active;
 
     enum ShaderDefaultUniform : size_t
     {
@@ -58,11 +59,21 @@ class Shader final : public Element, public virtual IShader
 
     void SetupUniformsAndLocations();
     void FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_name, unsigned int f_type);
+
+    // Interfaces reroute
+    bool Attach(IDrawable *f_drawable, const std::string &f_uniform);
+    bool Detach(IDrawable *f_drawable);
+    bool HasAttached(IDrawable *f_drawable) const;
 public:
     ShaderUniform* GetUniform(const std::string &f_uniform);
+
+    bool Attach(Drawable *f_drawable, const std::string &f_uniform);
+    bool Detach(Drawable *f_drawable);
+    bool HasAttached(Drawable *f_drawable) const;
 protected:
     Shader();
     ~Shader();
+
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     inline const std::string& GetError() const { return m_error; }
 
@@ -80,17 +91,15 @@ protected:
     void SetTime(float f_value);
     void SetColor(const glm::vec4 &f_value);
 
-    bool Attach(Drawable *f_drawable, const std::string &f_uniform);
-    bool Detach(Drawable *f_drawable);
-    bool HasAttached(Drawable *f_drawable) const;
-
-    static void UpdateDrawableMaxCount();
-
     void Enable();
     void Disable();
 
+    static void UpdateDrawableMaxCount();
+
+    void OnParentLinkDestroyed(Element *f_parent);
+    void OnChildLinkDestroyed(Element *f_child);
+
     friend class ElementManager;
-    friend class InheritanceManager;
     friend class RenderManager;
     friend class SfmlManager;
     friend class Scene;

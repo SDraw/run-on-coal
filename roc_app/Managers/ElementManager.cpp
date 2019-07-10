@@ -4,7 +4,6 @@
 #include "Core/Core.h"
 #include "Elements/Model/Model.h"
 
-#include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
@@ -13,22 +12,29 @@
 ROC::ElementManager::ElementManager(Core *f_core)
 {
     m_core = f_core;
-    m_elementSetEnd = m_elementSet.end();
+    m_elementsEnd = m_elements.end();
+    m_interfacesEnd = m_interfaces.end();
 }
 ROC::ElementManager::~ElementManager()
 {
-    for(auto l_element : m_elementSet) delete reinterpret_cast<Element*>(l_element);
+    for(auto l_element : m_elements) delete reinterpret_cast<Element*>(l_element);
+    m_elements.clear();
+    m_interfaces.clear();
 }
 
-void ROC::ElementManager::AddElementToSet(void *f_ptr)
+void ROC::ElementManager::AddElementToSet(Element *f_ptr)
 {
-    m_elementSet.insert(f_ptr);
-    m_elementSetEnd = m_elementSet.end();
+    m_elements.insert(f_ptr);
+    m_interfaces.insert(f_ptr);
+    m_elementsEnd = m_elements.end();
+    m_interfacesEnd = m_interfaces.end();
 }
-void ROC::ElementManager::RemoveElementFromSet(void *f_ptr)
+void ROC::ElementManager::RemoveElementFromSet(Element *f_ptr)
 {
-    m_elementSet.erase(f_ptr);
-    m_elementSetEnd = m_elementSet.end();
+    m_elements.erase(f_ptr);
+    m_interfaces.erase(f_ptr);
+    m_elementsEnd = m_elements.end();
+    m_interfacesEnd = m_interfaces.end();
 }
 
 ROC::Scene* ROC::ElementManager::CreateScene()
@@ -88,13 +94,7 @@ ROC::IModel* ROC::ElementManager::CreateModel(IGeometry *f_geometry)
 }
 ROC::Model* ROC::ElementManager::CreateModel(Geometry *f_geometry)
 {
-    Model *l_model = nullptr;
-    if(f_geometry)
-    {
-        l_model = new Model(f_geometry);
-        m_core->GetInheritManager()->SetModelGeometry(l_model, f_geometry);
-    }
-    else l_model = new Model(nullptr);
+    Model *l_model = new Model(f_geometry);
     if(l_model)
     {
         AddElementToSet(l_model);
@@ -241,17 +241,21 @@ ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, const glm::vec3
 
 bool ROC::ElementManager::IsValidElement(IElement *f_ptr) const
 {
-    return IsValidElement(dynamic_cast<Element*>(f_ptr));
+    auto l_checkIterator = m_interfaces.find(f_ptr);
+    return (l_checkIterator != m_interfacesEnd);
 }
 bool ROC::ElementManager::IsValidElement(Element *f_ptr) const
 {
-    auto l_checkIterator = m_elementSet.find(f_ptr);
-    return (l_checkIterator != m_elementSetEnd);
+    auto l_checkIterator = m_elements.find(f_ptr);
+    return (l_checkIterator != m_elementsEnd);
 }
 
 bool ROC::ElementManager::DestroyElement(IElement *f_element)
 {
-    return DestroyElement(dynamic_cast<Element*>(f_element));
+    bool l_result = false;
+    auto l_checkIterator = m_interfaces.find(f_element);
+    if(l_checkIterator != m_interfacesEnd) l_result = DestroyElement(dynamic_cast<Element*>(f_element));
+    return l_result;
 }
 bool ROC::ElementManager::DestroyElement(Element *f_element)
 {
@@ -261,76 +265,18 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
         switch(f_element->GetElementType())
         {
             case Element::ET_Scene:
-            {
                 m_core->GetRenderManager()->RemoveAsActiveScene(reinterpret_cast<Scene*>(f_element));
-                m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-
-            case Element::ET_Camera: case Element::ET_Light: case Element::ET_Texture:
-            {
-                m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-            case Element::ET_RenderTarget:
-            {
-                m_core->GetRenderManager()->RemoveAsActiveRenderTarget(reinterpret_cast<RenderTarget*>(f_element));
-                m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-
-            case Element::ET_Animation:
-            {
-                m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-
-            case Element::ET_Geometry:
-            {
-                Geometry *l_geometry = reinterpret_cast<Geometry*>(f_element);
-                m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete l_geometry;
-                l_result = true;
-            } break;
-
+                break;
             case Element::ET_Model:
             {
-                m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                m_core->GetInheritManager()->RemoveChildRelations(f_element);
                 m_core->GetPreRenderManager()->RemoveModel(reinterpret_cast<Model*>(f_element));
                 m_core->GetPhysicsManager()->RemoveModel(reinterpret_cast<Model*>(f_element));
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-
-            case Element::ET_Shader:
-            {
-                m_core->GetInheritManager()->RemoveParentRelations(f_element);
-                m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
-            } break;
-
-            case Element::ET_Collision:
-            {
-                m_core->GetPhysicsManager()->RemoveCollision(reinterpret_cast<Collision*>(f_element));
-                m_core->GetInheritManager()->RemoveChildRelations(f_element);
-                RemoveElementFromSet(f_element);
-                delete f_element;
-                l_result = true;
             } break;
         }
+
+        RemoveElementFromSet(f_element);
+        delete f_element;
+        l_result = true;
     }
     return l_result;
 }

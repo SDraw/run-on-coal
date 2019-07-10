@@ -28,6 +28,8 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_bindMatrix = g_IdentityMatrix;
     m_poseMatrix = g_IdentityMatrix;
     m_updated = true;
+    m_dynamic = false;
+    m_dynamicBody = nullptr;
 }
 ROC::Bone::~Bone()
 {

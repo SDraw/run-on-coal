@@ -22,7 +22,7 @@ class Model final : public Element, public virtual IModel
     glm::mat4 m_fullMatrix;
     bool m_updated;
 
-    Model *m_parent;
+    Model *m_parentModel;
     Bone *m_parentBone;
 
     AnimationController *m_animController;
@@ -31,6 +31,11 @@ class Model final : public Element, public virtual IModel
 
     Model(const Model &that) = delete;
     Model& operator=(const Model &that) = delete;
+
+    // Interfaces reroute
+    bool AttachTo(IModel *f_model, int f_bone = -1);
+    bool SetCollision(ICollision *f_col);
+    bool SetAnimation(IAnimation *f_anim);
 public:
     inline bool HasGeometry() const { return (m_geometry != nullptr); }
     Geometry* GetGeometry() const;
@@ -44,12 +49,18 @@ public:
     const glm::vec3& GetScale() const;
     const glm::mat4& GetFullMatrix() const;
 
-    inline bool HasParent() const { return (m_parent != nullptr); }
-    Model* GetParent() const;
+    bool AttachTo(Model *f_model, int f_bone = -1);
+    bool Dettach();
+    Model* GetParentModel() const;
+    inline bool HasParentModel() const { return (m_parentModel != nullptr); }
 
-    inline bool HasCollision() const { return (m_collision != nullptr); }
+    bool SetCollision(Collision *f_col);
+    bool RemoveCollision();
     Collision* GetCollsion() const;
+    inline bool HasCollision() const { return (m_collision != nullptr); }
 
+    bool SetAnimation(Animation *f_anim);
+    bool RemoveAnimation();
     Animation* GetAnimation() const;
     bool PlayAnimation(bool f_loop);
     bool PauseAnimation();
@@ -69,10 +80,6 @@ protected:
     explicit Model(Geometry *f_geometry);
     ~Model();
 
-    inline void SetGeometry(Geometry *f_geometry) { m_geometry = f_geometry; }
-    void SetParent(Model *f_model, int f_bone = -1);
-    void SetCollision(Collision *f_col);
-
     inline bool HasAnimationController() const { return (m_animController != nullptr); }
     inline AnimationController* GetAnimationController() const { return m_animController; }
 
@@ -82,11 +89,13 @@ protected:
     void Update(ModelUpdateStage f_stage);
     inline bool IsUpdated() const { return m_updated; }
 
+    void OnParentLinkDestroyed(Element *f_parent);
+
     friend class ElementManager;
-    friend class InheritanceManager;
     friend class PhysicsManager;
     friend class PreRenderManager;
     friend class RenderManager;
+    friend class Scene;
 };
 
 }

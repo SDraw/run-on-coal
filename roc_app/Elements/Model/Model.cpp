@@ -3,6 +3,7 @@
 #include "Elements/Model/Model.h"
 #include "Utils/Transformation.h"
 
+#include "Elements/Animation/Animation.h"
 #include "Elements/Model/AnimationController.h"
 #include "Elements/Model/Bone.h"
 #include "Elements/Model/Skeleton.h"
@@ -26,7 +27,7 @@ ROC::Model::Model(Geometry *f_geometry)
 
     m_geometry = f_geometry;
 
-    m_parent = nullptr;
+    m_parentModel = nullptr;
     m_parentBone = nullptr;
 
     m_animController = nullptr;
@@ -41,6 +42,9 @@ ROC::Model::Model(Geometry *f_geometry)
             if(m_geometry->HasJointsData()) m_skeleton->InitDynamicBoneCollision(m_geometry->GetJointsData(), this);
             m_animController = new AnimationController();
         }
+
+        Element::AddParent(m_geometry);
+        m_geometry->AddChild(this);
     }
 
     m_collision = nullptr;
@@ -94,30 +98,119 @@ const glm::mat4& ROC::Model::GetFullMatrix() const
     return m_fullMatrix;
 }
 
-ROC::Model* ROC::Model::GetParent() const
+bool ROC::Model::AttachTo(Model *f_model, int f_bone)
 {
-    return m_parent;
+    bool l_result = false;
+    if((m_parentModel != f_model) && !Element::HasChild(f_model))
+    {
+        if(m_parentModel) Element::RemoveParent(m_parentModel);
+
+        m_parentModel = f_model;
+        Element::AddParent(m_parentModel);
+        m_parentModel->AddChild(this);
+
+        if((f_bone > -1) && m_parentModel->HasSkeleton())
+        {
+            size_t l_bone = std::min(static_cast<size_t>(f_bone), m_parentModel->GetSkeleton()->GetBonesCount()-1U);
+            m_parentBone = m_parentModel->GetSkeleton()->GetBones()[l_bone];
+        }
+        else m_parentBone = nullptr;
+
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::Model::Dettach()
+{
+    bool l_result = false;
+    if(m_parentModel)
+    {
+        Element::RemoveParent(m_parentModel);
+        m_parentModel = nullptr;
+        m_parentBone = nullptr;
+
+        l_result = true;
+    }
+    return l_result;
+}
+ROC::Model* ROC::Model::GetParentModel() const
+{
+    return m_parentModel;
 }
 
+bool ROC::Model::SetCollision(Collision *f_col)
+{
+    bool l_result = false;
+    if(m_collision != f_col)
+    {
+        if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), false);
+        if(m_collision) Element::RemoveParent(m_collision);
+
+        m_collision = f_col;
+        Element::AddParent(m_collision);
+        m_collision->AddChild(this);
+
+        if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), true);
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::Model::RemoveCollision()
+{
+    bool l_result = false;
+    if(m_collision)
+    {
+        if(m_skeleton) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), false);
+        Element::RemoveParent(m_collision);
+        m_collision = nullptr;
+        l_result = true;
+    }
+    return l_result;
+}
 ROC::Collision* ROC::Model::GetCollsion() const
 {
     return m_collision;
 }
 
-void ROC::Model::SetParent(Model *f_model, int f_bone)
+bool ROC::Model::SetAnimation(Animation *f_anim)
 {
-    m_parent = f_model;
-    if(m_parent && (f_bone != -1)) m_parentBone = m_parent->GetSkeleton()->GetBones()[static_cast<size_t>(f_bone)];
-    else m_parentBone = nullptr;
-}
+    bool l_result = false;
+    if(m_skeleton && m_animController)
+    {
+        if(m_skeleton->GetBonesCount() == f_anim->GetBonesCount())
+        {
+            if(m_animController->GetAnimation() != f_anim)
+            {
+                Animation *l_oldAnim = m_animController->GetAnimation();
+                if(l_oldAnim) Element::RemoveParent(l_oldAnim);
 
-void ROC::Model::SetCollision(Collision *f_col)
+                Element::AddParent(f_anim);
+                f_anim->AddChild(this);
+
+                m_animController->SetAnimation(f_anim);
+
+                l_result = true;
+            }
+        }
+    }
+    return l_result;
+}
+bool ROC::Model::RemoveAnimation()
 {
-    if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), false);
-    m_collision = f_col;
-    if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), true);
-}
+    bool l_result = false;
+    if(m_animController)
+    {
+        Animation *l_anim = m_animController->GetAnimation();
+        if(l_anim)
+        {
+            Element::RemoveParent(l_anim);
+            m_animController->SetAnimation(nullptr);
 
+            l_result = true;
+        }
+    }
+    return l_result;
+}
 ROC::Animation* ROC::Model::GetAnimation() const
 {
     Animation *l_anim = nullptr;
@@ -142,7 +235,6 @@ bool ROC::Model::ResetAnimation()
     if(m_animController) l_result = m_animController->Reset();
     return l_result;
 }
-
 bool ROC::Model::GetAnimationProperty(ModelAnimationProperty f_prop, float &f_value)
 {
     if(m_animController)
@@ -207,22 +299,31 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
             m_updated = false;
             m_localTransform->UpdateMatrix();
 
-            if(m_parent)
+            if(m_parentModel)
             {
                 if(m_parentBone)
                 {
-                    if(m_parent->IsUpdated() || m_parentBone->IsUpdated() || m_localTransform->IsUpdated())
+                    if(m_parentModel->IsUpdated() || m_parentBone->IsUpdated() || m_localTransform->IsUpdated())
                     {
-                        m_fullMatrix = m_parentBone->GetFullMatrix()*m_localTransform->GetMatrix();
-                        m_fullMatrix = m_parent->m_fullMatrix*m_fullMatrix;
+                        if(m_parentBone->IsDynamic())
+                        {
+                            // Critical stuff, add inverse bone body offset later
+                            m_parentBone->GetDynamicBody()->getWorldTransform().getOpenGLMatrix(glm::value_ptr(m_fullMatrix));
+                            m_fullMatrix *= m_localTransform->GetMatrix();
+                        }
+                        else
+                        {
+                            m_fullMatrix = m_parentBone->GetFullMatrix()*m_localTransform->GetMatrix();
+                            m_fullMatrix = m_parentModel->m_fullMatrix*m_fullMatrix;
+                        }
                         m_updated = true;
                     }
                 }
                 else
                 {
-                    if(m_parent->IsUpdated() || m_localTransform->IsUpdated())
+                    if(m_parentModel->IsUpdated() || m_localTransform->IsUpdated())
                     {
-                        m_fullMatrix = m_parent->m_fullMatrix*m_localTransform->GetMatrix();
+                        m_fullMatrix = m_parentModel->m_fullMatrix*m_localTransform->GetMatrix();
                         m_updated = true;
                     }
                 }
@@ -241,7 +342,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
             {
                 if(m_geometry)
                 {
-                    if(m_parent)
+                    if(m_parentModel)
                     {
                         glm::vec4 l_boundNormal(m_geometry->GetBoundSphereRadius(), 0.f, 0.f, 0.f);
                         glm::vec4 l_boundNormalGlobal = m_fullMatrix*l_boundNormal;
@@ -279,4 +380,41 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
             if(m_skeleton) m_skeleton->UpdateCollision(Skeleton::SUS_Dynamic, m_fullMatrix);
         } break;
     }
+}
+
+void ROC::Model::OnParentLinkDestroyed(Element *f_parent)
+{
+    switch(f_parent->GetElementType())
+    {
+        case ET_Animation:
+            m_animController->SetAnimation(nullptr);
+            break;
+        case ET_Geometry:
+            m_geometry = nullptr;
+            break;
+        case ET_Model:
+        {
+            m_parentModel = nullptr;
+            m_parentBone = nullptr;
+        } break;
+        case ET_Collision:
+            m_collision = nullptr;
+            break;
+    }
+
+    Element::OnParentLinkDestroyed(f_parent);
+}
+
+// Interfaces reroute
+bool ROC::Model::AttachTo(IModel *f_model, int f_bone)
+{
+    return AttachTo(dynamic_cast<Model*>(f_model), f_bone);
+}
+bool ROC::Model::SetCollision(ICollision *f_col)
+{
+    return SetCollision(dynamic_cast<Collision*>(f_col));
+}
+bool ROC::Model::SetAnimation(IAnimation *f_anim)
+{
+    return SetAnimation(dynamic_cast<Animation*>(f_anim));
 }

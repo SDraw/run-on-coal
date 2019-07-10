@@ -64,7 +64,6 @@ protected:
     inline btRigidBody* GetRigidBody() const { return m_rigidBody; }
 
     friend class ElementManager;
-    friend class InheritanceManager;
     friend class PhysicsManager;
     friend class Model;
 };

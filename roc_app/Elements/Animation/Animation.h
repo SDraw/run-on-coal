@@ -45,6 +45,7 @@ protected:
     void GetData(unsigned int f_tick, std::vector<Bone*> &f_bones, float f_blend = 1.f);
 
     friend class ElementManager;
+    friend class Model;
     friend class Skeleton;
 };
 

@@ -56,7 +56,6 @@ protected:
     void Update();
 
     friend class Model;
-    friend class InheritanceManager;
 };
 
 }

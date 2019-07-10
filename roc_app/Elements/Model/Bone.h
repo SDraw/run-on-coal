@@ -14,6 +14,8 @@ class Bone final
     glm::mat4 m_fullMatrix;
     glm::mat4 m_bindMatrix;
     glm::mat4 m_poseMatrix;
+    btRigidBody *m_dynamicBody;
+    bool m_dynamic;
     bool m_updated;
 
     Bone *m_parent;
@@ -23,10 +25,12 @@ class Bone final
     Bone& operator=(const Bone &that) = delete;
 public:
     inline bool IsUpdated() const { return m_updated; }
+    inline bool IsDynamic() const { return m_dynamic; }
     inline const Transformation* GetLocalTransformation() const { return m_localTransform; }
     inline const glm::mat4& GetBindMatrix() const { return m_bindMatrix; }
     inline const glm::mat4& GetFullMatrix() const { return m_fullMatrix; }
     inline const glm::mat4& GetPoseMatrix() const { return m_poseMatrix; }
+    inline const btRigidBody* GetDynamicBody() const { return m_dynamicBody; }
 protected:
     Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scl);
     ~Bone();
@@ -41,6 +45,8 @@ protected:
     inline Bone* GetParent() const { return m_parent; }
     inline void AddChild(Bone *f_bone) { m_children.push_back(f_bone); }
     inline const std::vector<Bone*>& GetChildren() const { return m_children; }
+    inline void SetDynamic(bool f_val) { m_dynamic = f_val; }
+    inline void SetDynamicBody(btRigidBody *f_body) { m_dynamicBody = f_body; }
 
     void SetFullMatrix(const btTransform &f_transform);
     void SetPoseMatrix(const btTransform &f_transform);

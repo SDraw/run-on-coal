@@ -2,7 +2,6 @@
 #include "Interfaces/ICore.h"
 #include "Managers/ElementManager.h"
 #include "Managers/AsyncManager/AsyncManager.h"
-#include "Managers/InheritanceManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/NetworkManager.h"
 #include "Managers/PhysicsManager.h"
@@ -26,7 +25,6 @@ class Core final : public ICore
     AsyncManager *m_asyncManager;
     ConfigManager *m_configManager;
     ElementManager *m_elementManager;
-    InheritanceManager *m_inheritManager;
     LogManager *m_logManager;
     ModuleManager *m_moduleManager;
     NetworkManager *m_networkManager;
@@ -52,7 +50,6 @@ public:
     inline ConfigManager* GetConfigManager() const { return m_configManager; }
     ElementManager* GetElementManager() const;
     AsyncManager* GetAsyncManager() const;
-    InheritanceManager* GetInheritManager() const;
     LogManager* GetLogManager() const;
     inline ModuleManager* GetModuleManager() const { return m_moduleManager; }
     NetworkManager* GetNetworkManager() const;

@@ -10,26 +10,27 @@
 ROC::ElementManager::ElementManager(Core *f_core)
 {
     m_core = f_core;
-    m_elementSetEnd = m_elementSet.end();
+    m_elementsEnd = m_elements.end();
+    m_interfacesEnd = m_interfaces.end();
 }
 ROC::ElementManager::~ElementManager()
 {
-    for(auto iter : m_elementSet) delete reinterpret_cast<Element*>(iter);
+    for(auto iter : m_elements) delete reinterpret_cast<Element*>(iter);
 }
 
-void ROC::ElementManager::AddElementToSet(void *f_ptr)
+void ROC::ElementManager::AddElementToSet(Element *f_ptr)
 {
-    m_elementSet.insert(f_ptr);
-    m_elementSetEnd = m_elementSet.end();
+    m_elements.insert(f_ptr);
+    m_interfaces.insert(f_ptr);
+    m_elementsEnd = m_elements.end();
+    m_interfacesEnd = m_interfaces.end();
 }
-void ROC::ElementManager::RemoveElementFromSet(void *f_ptr)
+void ROC::ElementManager::RemoveElementFromSet(Element *f_ptr)
 {
-    auto l_checkIterator = m_elementSet.find(f_ptr);
-    if(l_checkIterator != m_elementSetEnd)
-    {
-        m_elementSet.erase(l_checkIterator);
-        m_elementSetEnd = m_elementSet.end();
-    }
+    m_elements.erase(f_ptr);
+    m_interfaces.erase(f_ptr);
+    m_elementsEnd = m_elements.end();
+    m_interfacesEnd = m_interfaces.end();
 }
 
 ROC::Client* ROC::ElementManager::CreateClient(const RakNet::SystemAddress &f_address)
@@ -74,17 +75,21 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 
 bool ROC::ElementManager::IsValidElement(IElement *f_ptr)
 {
-    return IsValidElement(dynamic_cast<Element*>(f_ptr));
+    auto l_checkIterator = m_interfaces.find(f_ptr);
+    return (l_checkIterator != m_interfacesEnd);
 }
 bool ROC::ElementManager::IsValidElement(Element *f_ptr)
 {
-    auto iter = m_elementSet.find(f_ptr);
-    return (iter != m_elementSetEnd);
+    auto iter = m_elements.find(f_ptr);
+    return (iter != m_elementsEnd);
 }
 
 bool ROC::ElementManager::DestroyElement(IElement *f_element)
 {
-    return DestroyElement(dynamic_cast<Element*>(f_element));
+    bool l_result = false;
+    auto l_checkIterator = m_interfaces.find(f_element);
+    if(l_checkIterator != m_interfacesEnd) l_result = DestroyElement(dynamic_cast<Element*>(f_element));
+    return l_result;
 }
 bool ROC::ElementManager::DestroyElement(Element *f_element)
 {

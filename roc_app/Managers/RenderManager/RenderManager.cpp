@@ -128,28 +128,10 @@ void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
     }
 }
 
-void ROC::RenderManager::RemoveAsActiveRenderTarget(RenderTarget *f_rt)
-{
-    if(m_activeScene)
-    {
-        if(m_activeScene->HasRenderTarget())
-        {
-            if(m_activeScene->GetRenderTarget() == f_rt)
-            {
-                if(m_vrActive) m_vrManager->RestoreRenderTarget();
-                else
-                {
-                    GLBinder::BindFramebuffer(0U);
-                    GLBinder::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
-                }
-            }
-        }
-    }
-}
-
 void ROC::RenderManager::UpdateViewportSize(const glm::ivec2 &f_size)
 {
     std::memcpy(&m_viewportSize, &f_size, sizeof(glm::ivec2));
+    RenderTarget::SetFallbackSize(m_viewportSize);
 }
 
 bool ROC::RenderManager::DrawScene(IScene *f_scene)

@@ -22,7 +22,6 @@
 #include "Interfaces/ICore.h"
 #include "Interfaces/IAsyncManager.h"
 #include "Interfaces/IElementManager.h"
-#include "Interfaces/IInheritanceManager.h"
 #include "Interfaces/ILogManager.h"
 #include "Interfaces/INetworkManager.h"
 #include "Interfaces/IPhysicsManager.h"

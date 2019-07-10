@@ -29,10 +29,17 @@ public:
     virtual const glm::vec3& GetScale() const = 0;
     virtual const glm::mat4& GetFullMatrix() const = 0;
 
-    virtual IModel* GetParent() const = 0;
-    virtual ICollision* GetCollsion() const = 0;
-    virtual IAnimation* GetAnimation() const = 0;
+    virtual bool AttachTo(IModel *f_model, int f_bone = -1) = 0;
+    virtual bool Dettach() = 0;
+    virtual IModel* GetParentModel() const = 0;
 
+    virtual bool SetCollision(ICollision *f_col) = 0;
+    virtual bool RemoveCollision() = 0;
+    virtual ICollision* GetCollsion() const = 0;
+
+    virtual bool SetAnimation(IAnimation *f_anim) = 0;
+    virtual bool RemoveAnimation() = 0;
+    virtual IAnimation* GetAnimation() const = 0;
     virtual bool PlayAnimation(bool f_loop) = 0;
     virtual bool PauseAnimation() = 0;
     virtual bool ResetAnimation() = 0;

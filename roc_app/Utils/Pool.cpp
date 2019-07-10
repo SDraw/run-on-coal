@@ -2,6 +2,8 @@
 
 #include "Utils/Pool.h"
 
+const size_t ROC::Pool::ms_invalid = std::numeric_limits<size_t>::max();
+
 ROC::Pool::Pool(size_t f_size)
 {
     m_size = f_size;
@@ -13,33 +15,33 @@ ROC::Pool::~Pool()
     m_poolData.clear();
 }
 
-int ROC::Pool::Allocate()
+size_t ROC::Pool::Allocate()
 {
-    int l_allocated = -1;
+    size_t l_allocated = ms_invalid;
     for(size_t i = m_minimal; i < m_size; i++)
     {
         if(m_poolData[i] == 0U)
         {
             m_poolData[i] = 1U;
-            l_allocated = static_cast<int>(i);
+            l_allocated = i;
             break;
         }
     }
-    if(l_allocated == -1)
+    if(l_allocated == ms_invalid)
     {
         for(size_t i = 0; i < m_minimal; i++)
         {
             if(m_poolData[i] == 0U)
             {
                 m_poolData[i] = 1U;
-                l_allocated = static_cast<int>(i);
+                l_allocated = i;
                 break;
             }
         }
     }
-    if(l_allocated != -1)
+    if(l_allocated != ms_invalid)
     {
-        for(size_t i = static_cast<size_t>(l_allocated)+1U; i < m_size; i++)
+        for(size_t i = l_allocated+1U; i < m_size; i++)
         {
             if(m_poolData[i] == 0U)
             {

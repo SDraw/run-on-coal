@@ -41,101 +41,217 @@ ROC::Scene::~Scene()
     m_renderModels.clear();
 }
 
-void ROC::Scene::SetCamera(Camera *f_cam)
+bool ROC::Scene::SetCamera(Camera *f_cam)
 {
-    m_camera = f_cam;
-    if(m_active && m_shader)
+    bool l_result = false;
+
+    if(m_camera != f_cam)
     {
-        if(m_camera)
+        if(m_camera) Element::RemoveChild(m_camera);
+
+        m_camera = f_cam;
+        Element::AddChild(m_camera);
+        m_camera->AddParent(this);
+
+        if(m_active && m_shader)
         {
-            m_camera->Update();
-            UpdateDistantModels();
+            if(m_camera)
+            {
+                m_camera->Update();
+                UpdateRenderModels();
+            }
+            m_shader->SetProjectionMatrix(m_camera ? m_camera->GetProjectionMatrix() : g_EmptyMat4);
+            m_shader->SetViewMatrix(m_camera ? m_camera->GetViewMatrix() : g_EmptyMat4);
+            m_shader->SetViewProjectionMatrix(m_camera ? m_camera->GetViewProjectionMatrix() : g_EmptyMat4);
+            m_shader->SetCameraPosition(m_camera ? m_camera->GetPosition() : g_EmptyVec3);
+            m_shader->SetCameraDirection(m_camera ? m_camera->GetDirection() : g_EmptyVec3);
         }
-        m_shader->SetProjectionMatrix(m_camera ? m_camera->GetProjectionMatrix() : g_EmptyMat4);
-        m_shader->SetViewMatrix(m_camera ? m_camera->GetViewMatrix() : g_EmptyMat4);
-        m_shader->SetViewProjectionMatrix(m_camera ? m_camera->GetViewProjectionMatrix() : g_EmptyMat4);
-        m_shader->SetCameraPosition(m_camera ? m_camera->GetPosition() : g_EmptyVec3);
-        m_shader->SetCameraDirection(m_camera ? m_camera->GetDirection() : g_EmptyVec3);
+
+        l_result = true;
     }
+    return l_result;
+}
+bool ROC::Scene::RemoveCamera()
+{
+    bool l_result = false;
+    if(m_camera)
+    {
+        Element::RemoveChild(m_camera);
+        m_camera = nullptr;
+        l_result = true;
+    }
+    return l_result;
 }
 ROC::Camera* ROC::Scene::GetCamera() const
 {
     return m_camera;
 }
 
-void ROC::Scene::SetRenderTarget(RenderTarget *f_rt)
+bool ROC::Scene::SetRenderTarget(RenderTarget *f_rt)
 {
-    if(m_renderTarget && m_active) m_renderTarget->Disable();
-    m_renderTarget = f_rt;
-    if(m_renderTarget && m_active) m_renderTarget->Enable();
-}
-ROC::RenderTarget* ROC::Scene::GetRenderTarget() const 
-{ 
-    return m_renderTarget; 
-}
-
-
-void ROC::Scene::SetShader(Shader *f_shader)
-{
-    if(m_shader && m_active) m_shader->Disable();
-    m_shader = f_shader;
-    if(m_shader && m_active)
+    bool l_result = false;
+    if(m_renderTarget != f_rt)
     {
-        m_shader->Enable();
-        m_shader->SetProjectionMatrix(m_camera ? m_camera->GetProjectionMatrix() : g_EmptyMat4);
-        m_shader->SetViewMatrix(m_camera ? m_camera->GetViewMatrix() : g_EmptyMat4);
-        m_shader->SetViewProjectionMatrix(m_camera ? m_camera->GetViewProjectionMatrix() : g_EmptyMat4);
-        m_shader->SetCameraPosition(m_camera ? m_camera->GetPosition() : g_EmptyVec3);
-        m_shader->SetCameraDirection(m_camera ? m_camera->GetDirection() : g_EmptyVec3);
-        m_shader->SetLightsData(m_lights);
+        if(m_renderTarget)
+        {
+            if(m_active) m_renderTarget->Disable();
+            Element::RemoveChild(m_renderTarget);
+        }
+
+        m_renderTarget = f_rt;
+        Element::AddChild(m_renderTarget);
+        m_renderTarget->AddParent(this);
+
+        if(m_active) m_renderTarget->Enable();
+
+        l_result = true;
     }
+    return l_result;
 }
-ROC::Shader* ROC::Scene::GetShader() const 
-{ 
+bool ROC::Scene::RemoveRenderTarget()
+{
+    bool l_result = false;
+    if(m_renderTarget)
+    {
+        if(m_active) m_renderTarget->Disable();
+
+        Element::RemoveChild(m_renderTarget);
+        m_renderTarget = nullptr;
+
+        l_result = true;
+    }
+    return l_result;
+}
+ROC::RenderTarget* ROC::Scene::GetRenderTarget() const
+{
+    return m_renderTarget;
+}
+
+bool ROC::Scene::SetShader(Shader *f_shader)
+{
+    bool l_result = false;
+
+    if(m_shader != f_shader)
+    {
+        if(m_shader && m_active) m_shader->Disable();
+        Element::RemoveChild(m_shader);
+
+        m_shader = f_shader;
+        Element::AddChild(m_shader);
+        m_shader->AddParent(this);
+
+        if(m_shader && m_active)
+        {
+            m_shader->Enable();
+            m_shader->SetProjectionMatrix(m_camera ? m_camera->GetProjectionMatrix() : g_EmptyMat4);
+            m_shader->SetViewMatrix(m_camera ? m_camera->GetViewMatrix() : g_EmptyMat4);
+            m_shader->SetViewProjectionMatrix(m_camera ? m_camera->GetViewProjectionMatrix() : g_EmptyMat4);
+            m_shader->SetCameraPosition(m_camera ? m_camera->GetPosition() : g_EmptyVec3);
+            m_shader->SetCameraDirection(m_camera ? m_camera->GetDirection() : g_EmptyVec3);
+            m_shader->SetLightsData(m_lights);
+        }
+
+        l_result = true;
+    }
+    return l_result;
+}
+bool ROC::Scene::RemoveShader()
+{
+    bool l_result = false;
+    if(m_shader)
+    {
+        if(m_active) m_shader->Disable();
+
+        Element::RemoveChild(m_shader);
+        m_shader = nullptr;
+
+        l_result = true;
+    }
+    return l_result;
+}
+ROC::Shader* ROC::Scene::GetShader() const
+{
     return m_shader;
 }
 
 
-void ROC::Scene::AddLight(Light *f_light)
+bool ROC::Scene::AddLight(Light *f_light)
 {
-    m_lights.push_back(f_light);
-    if(m_active && m_shader) m_shader->SetLightsData(m_lights);
+    bool l_result = false;
+    if(!HasLight(f_light))
+    {
+        m_lights.push_back(f_light);
+        Element::AddChild(f_light);
+        f_light->AddParent(this);
+
+        if(m_active && m_shader) m_shader->SetLightsData(m_lights);
+
+        l_result = true;
+    }
+    return l_result;
 }
 bool ROC::Scene::HasLight(Light *f_light) const
 {
     bool l_result = (std::find(m_lights.begin(), m_lights.end(), f_light) != m_lights.end());
     return l_result;
 }
-void ROC::Scene::RemoveLight(Light *f_light)
+bool ROC::Scene::RemoveLight(Light *f_light)
 {
-    auto iter = std::find(m_lights.begin(), m_lights.end(), f_light);
-    if(iter != m_lights.end())
+    bool l_result = false;
+    if(HasLight(f_light))
     {
-        m_lights.erase(iter);
+        auto l_searchIter = std::find(m_lights.begin(), m_lights.end(), f_light);
+        if(l_searchIter != m_lights.end()) m_lights.erase(l_searchIter);
+
+        Element::RemoveChild(f_light);
+
         if(m_active && m_shader) m_shader->SetLightsData(m_lights);
+
+        l_result = true;
     }
+    return l_result;
 }
-size_t ROC::Scene::GetLightsCount() const 
-{ 
+size_t ROC::Scene::GetLightsCount() const
+{
     return m_lights.size();
 }
 
-void ROC::Scene::AddModel(Model *f_model)
+bool ROC::Scene::AddModel(Model *f_model)
 {
-    RenderModel *l_renderModel = new RenderModel(f_model, 0.f);
-    m_renderModels.push_back(l_renderModel);
-    m_sortByGeometry = true;
-}
-void ROC::Scene::RemoveModel(Model *f_model)
-{
-    for(auto l_renderModelIter = m_renderModels.begin(), l_endIter = m_renderModels.end(); l_renderModelIter != l_endIter; ++l_renderModelIter)
+    bool l_result = false;
+    if(!HasModel(f_model))
     {
-        if((*l_renderModelIter)->m_model == f_model)
-        {
-            m_renderModels.erase(l_renderModelIter);
-            break;
-        }
+        RenderModel *l_renderModel = new RenderModel(f_model, 0.f);
+        m_renderModels.push_back(l_renderModel);
+
+        Element::AddChild(f_model);
+        f_model->AddParent(this);
+
+        m_sortByGeometry = true;
+        l_result = true;
     }
+    return l_result;
+}
+bool ROC::Scene::RemoveModel(Model *f_model)
+{
+    bool l_result = false;
+
+    if(HasModel(f_model))
+    {
+        for(auto l_renderModelIter = m_renderModels.begin(), l_end = m_renderModels.end(); l_renderModelIter != l_end; ++l_renderModelIter)
+        {
+            if((*l_renderModelIter)->m_model == f_model)
+            {
+                m_renderModels.erase(l_renderModelIter);
+                break;
+            }
+        }
+
+        Element::RemoveChild(f_model);
+
+        l_result = true;
+    }
+    return l_result;
 }
 bool ROC::Scene::HasModel(Model *f_model) const
 {
@@ -151,12 +267,12 @@ bool ROC::Scene::HasModel(Model *f_model) const
     return l_result;
 }
 
-bool ROC::Scene::IsActive() const 
-{ 
+bool ROC::Scene::IsActive() const
+{
     return m_active;
 }
 
-void ROC::Scene::UpdateDistantModels()
+void ROC::Scene::UpdateRenderModels()
 {
     if(m_camera)
     {
@@ -205,7 +321,7 @@ void ROC::Scene::Enable()
         if(m_camera)
         {
             m_camera->Update();
-            UpdateDistantModels();
+            UpdateRenderModels();
         }
         if(m_renderTarget) m_renderTarget->Enable();
         if(m_shader)
@@ -230,4 +346,75 @@ void ROC::Scene::Disable()
         if(m_shader) m_shader->Disable();
         m_active = false;
     }
+}
+
+void ROC::Scene::OnChildLinkDestroyed(Element *f_child)
+{
+    switch(f_child->GetElementType())
+    {
+        case ET_Camera:
+            m_camera = nullptr;
+            break;
+        case ET_RenderTarget:
+        {
+            m_renderTarget = nullptr;
+            if(m_active) RenderTarget::Fallback();
+        } break;
+        case ET_Light:
+        {
+            auto l_searchIter = std::find(m_lights.begin(), m_lights.end(), f_child);
+            if(l_searchIter != m_lights.end()) m_lights.erase(l_searchIter);
+        } break;
+        case ET_Model:
+        {
+            for(auto l_searchIter = m_renderModels.begin(), l_end = m_renderModels.end(); l_searchIter != l_end; ++l_searchIter)
+            {
+                if((*l_searchIter)->m_model == f_child)
+                {
+                    m_renderModels.erase(l_searchIter);
+                    break;
+                }
+            }
+        } break;
+    }
+
+    Element::OnChildLinkDestroyed(f_child);
+}
+
+// Interfaces reroute
+bool ROC::Scene::SetCamera(ICamera *f_cam)
+{
+    return SetCamera(dynamic_cast<Camera*>(f_cam));
+}
+bool ROC::Scene::SetRenderTarget(IRenderTarget *f_rt)
+{
+    return SetRenderTarget(dynamic_cast<RenderTarget*>(f_rt));
+}
+bool ROC::Scene::SetShader(IShader *f_shader)
+{
+    return SetShader(dynamic_cast<Shader*>(f_shader));
+}
+bool ROC::Scene::AddLight(ILight *f_light)
+{
+    return AddLight(dynamic_cast<Light*>(f_light));
+}
+bool ROC::Scene::RemoveLight(ILight *f_light)
+{
+    return RemoveLight(dynamic_cast<Light*>(f_light));
+}
+bool ROC::Scene::HasLight(ILight *f_light) const
+{
+    return HasLight(dynamic_cast<Light*>(f_light));
+}
+bool ROC::Scene::AddModel(IModel *f_model)
+{
+    return AddModel(dynamic_cast<Model*>(f_model));
+}
+bool ROC::Scene::RemoveModel(IModel *f_model)
+{
+    return RemoveModel(dynamic_cast<Model*>(f_model));
+}
+bool ROC::Scene::HasModel(IModel *f_model) const
+{
+    return HasModel(dynamic_cast<Model*>(f_model));
 }

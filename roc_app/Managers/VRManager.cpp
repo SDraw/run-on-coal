@@ -9,7 +9,7 @@
 #include "Managers/ModuleManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Interfaces/IModule.h"
-#include "Elements/Camera.h"
+#include "Elements/Scene.h"
 #include "Utils/MathUtils.h"
 
 namespace ROC
@@ -46,25 +46,8 @@ ROC::VRManager::VRManager(Core *f_core)
         Camera::SetVRSystem(m_vrSystem);
 
         m_vrCompositor = vr::VRCompositor();
-        if(!m_vrCompositor)
-        {
-            MessageBoxA(NULL, "OpenVR: Unable to initialize SteamVR compositor", NULL, MB_OK | MB_ICONEXCLAMATION);
-            exit(EXIT_FAILURE);
-        }
-
         m_vrOverlay = vr::VROverlay();
-        if(!m_vrOverlay)
-        {
-            MessageBoxA(NULL, "OpenVR: Unable to initialize SteamVR overlays", NULL, MB_OK | MB_ICONEXCLAMATION);
-            exit(EXIT_FAILURE);
-        }
-
         m_vrNotifications = vr::VRNotifications();
-        if(!m_vrNotifications)
-        {
-            MessageBoxA(NULL, "OpenVR: Unable to initialize SteamVR notifications", NULL, MB_OK | MB_ICONEXCLAMATION);
-            exit(EXIT_FAILURE);
-        }
 
         m_vrSystem->GetRecommendedRenderTargetSize(&m_targetSize.x, &m_targetSize.y);
         m_eyeRT[VRE_Left] = new RenderTarget();
@@ -304,6 +287,7 @@ void ROC::VRManager::Render()
     {
         m_vrStage = VRS_Left;
         m_eyeRT[VRE_Left]->Enable();
+        RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRE_Left]);
 
         m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
@@ -311,6 +295,7 @@ void ROC::VRManager::Render()
 
         m_vrStage = VRS_Right;
         m_eyeRT[VRE_Right]->Enable();
+        RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRS_Right]);
 
         m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
@@ -318,6 +303,7 @@ void ROC::VRManager::Render()
 
         m_vrStage = VRS_None;
         m_eyeRT[VRE_Right]->Disable();
+        RenderTarget::SetFallbackRenderTarget(nullptr);
         if(m_vrCompositor)
         {
             m_vrCompositor->Submit(vr::Eye_Left, &m_vrTexture[0U]);

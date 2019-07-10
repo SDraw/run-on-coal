@@ -13,14 +13,16 @@ class ElementManager final : public IElementManager
 {
     Core *m_core;
 
-    std::unordered_set<void*> m_elementSet;
-    std::unordered_set<void*>::iterator m_elementSetEnd;
+    std::unordered_set<Element*> m_elements;
+    std::unordered_set<IElement*> m_interfaces;
+    std::unordered_set<Element*>::iterator m_elementsEnd;
+    std::unordered_set<IElement*>::iterator m_interfacesEnd;
 
     ElementManager(const ElementManager &that) = delete;
     ElementManager& operator=(const ElementManager &that) = delete;
 
-    void AddElementToSet(void *f_ptr);
-    void RemoveElementFromSet(void *f_ptr);
+    void AddElementToSet(Element *f_ptr);
+    void RemoveElementFromSet(Element *f_ptr);
 
     // Interfaces reroute
     bool IsValidElement(IElement *f_ptr);

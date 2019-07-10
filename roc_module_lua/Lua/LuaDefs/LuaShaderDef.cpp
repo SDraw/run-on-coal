@@ -241,7 +241,7 @@ int LuaShaderDef::Attach(lua_State *f_vm)
     argStream.ReadText(l_uniform);
     if(!argStream.HasErrors() && !l_uniform.empty())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->AttachDrawableToShader(l_shader, l_drawable, l_uniform);
+        bool l_result = l_shader->Attach(l_drawable, l_uniform);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -258,7 +258,7 @@ int LuaShaderDef::Detach(lua_State *f_vm)
     argStream.ReadElement(l_drawable);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetInheritManager()->DetachDrawableFromShader(l_shader, l_drawable);
+        bool l_result = l_shader->Detach(l_drawable);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
