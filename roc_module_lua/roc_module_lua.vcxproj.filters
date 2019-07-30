@@ -108,7 +108,9 @@
     <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefs\LuaCollidableDef.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaCollidableDef.cpp">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -196,7 +198,9 @@
     <ClInclude Include="Module\TaskHandler.h">
       <Filter>Module</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefs\LuaCollidableDef.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaCollidableDef.h">
+      <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lua">
