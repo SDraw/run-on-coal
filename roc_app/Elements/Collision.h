@@ -6,8 +6,6 @@
 namespace ROC
 {
 
-class Model;
-
 class Collision final : public Collidable, public virtual ICollision
 {
     btRigidBody *m_rigidBody;
@@ -55,9 +53,6 @@ public:
     void SetMotionType(int f_type);
     int GetMotionType() const;
 
-    void SetCollidable(Collision *f_col, bool f_state);
-    void SetCollidable(Model *f_model, bool f_state);
-
     void GetMatrix(glm::mat4 &f_mat) const;
 protected:
     Collision();
@@ -73,7 +68,7 @@ protected:
 
     friend class ElementManager;
     friend class PhysicsManager;
-    friend Model;
+    friend class Model;
 };
 
 }
