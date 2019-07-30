@@ -1,7 +1,5 @@
 #pragma once
 
-#define LM_METATABLE_USERDATA "lm_ud"
-
 class LuaModule;
 class LuaFunction;
 
@@ -10,6 +8,8 @@ class LuaVM
     LuaModule *m_luaModule;
 
     lua_State *m_vm;
+public:
+    static const char *ms_userdataMetatableName;
 protected:
     explicit LuaVM(LuaModule *f_module);
     ~LuaVM();

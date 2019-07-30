@@ -12,13 +12,13 @@ namespace ROC
 {
 
 extern const glm::mat4 g_IdentityMatrix;
+extern const glm::vec3 g_EmptyVec3;
 
 }
 
 ROC::Model::Model(Geometry *f_geometry)
 {
     m_elementType = ET_Model;
-    m_elementTypeName.assign("Model");
 
     m_localTransform = new Transformation();
     m_fullMatrix = g_IdentityMatrix;
@@ -143,14 +143,12 @@ bool ROC::Model::SetCollision(Collision *f_col)
     bool l_result = false;
     if(m_collision != f_col)
     {
-        if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), false);
         if(m_collision) Element::RemoveParent(m_collision);
 
         m_collision = f_col;
         Element::AddParent(m_collision);
         m_collision->AddChild(this);
 
-        if(m_skeleton && m_collision) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), true);
         l_result = true;
     }
     return l_result;
@@ -160,7 +158,6 @@ bool ROC::Model::RemoveCollision()
     bool l_result = false;
     if(m_collision)
     {
-        if(m_skeleton) m_skeleton->SetCollisionIgnoring(m_collision->GetRigidBody(), false);
         Element::RemoveParent(m_collision);
         m_collision = nullptr;
         l_result = true;
@@ -288,7 +285,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 if(m_collision->IsActive() || m_localTransform->IsUpdated())
                 {
                     m_collision->GetMatrix(m_fullMatrix);
-                    m_fullMatrix *= m_localTransform->GetMatrix();
+                    m_fullMatrix = m_localTransform->GetMatrix()*m_fullMatrix;
                     m_updated = true;
                 }
             }
@@ -308,7 +305,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                         if(m_parentBone->IsDynamic())
                         {
                             // Critical stuff, add inverse bone body offset later
-                            m_parentBone->GetDynamicBody()->getWorldTransform().getOpenGLMatrix(glm::value_ptr(m_fullMatrix));
+                            m_parentBone->GetDynamicBody()->getCenterOfMassTransform().getOpenGLMatrix(glm::value_ptr(m_fullMatrix));
                             m_fullMatrix *= m_localTransform->GetMatrix();
                         }
                         else
@@ -403,6 +400,20 @@ void ROC::Model::OnParentLinkDestroyed(Element *f_parent)
     }
 
     Element::OnParentLinkDestroyed(f_parent);
+}
+
+// ROC::Collidable
+void ROC::Model::GetRigidBodies(std::vector<btRigidBody*> &f_vec)
+{
+    if(m_skeleton)
+    {
+        for(auto l_skeletonCol : m_skeleton->GetCollision()) f_vec.push_back(l_skeletonCol->m_rigidBody);
+        for(auto l_joint : m_skeleton->GetJoints())
+        {
+            f_vec.push_back(l_joint->m_emptyBody);
+            for(auto l_jointPart : l_joint->m_parts) f_vec.push_back(l_jointPart->m_rigidBody);
+        }
+    }
 }
 
 // Interfaces reroute

@@ -5,10 +5,11 @@
 #include "Module/LuaModule.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
+#include "Lua/LuaDefs/LuaCollidableDef.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_AnimationPropertiesTable
+const std::vector<std::string> g_AnimationProperties
 {
     "speed", "progress", "blendTime"
 };
@@ -38,8 +39,8 @@ void LuaModelDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "setCollision", SetCollision);
     LuaUtils::AddClassMethod(f_vm, "getCollision", GetCollision);
     LuaUtils::AddClassMethod(f_vm, "removeCollision", RemoveCollision);
-    LuaUtils::AddClassMethod(f_vm, "setCollidable", SetCollidable);
     LuaElementDef::AddHierarchyMethods(f_vm);
+    LuaCollidableDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
 
@@ -332,7 +333,7 @@ int LuaModelDef::SetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_propertyString.empty())
     {
         bool l_result = false;
-        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationPropertiesTable);
+        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationProperties);
         if(l_enum != -1)
         {
             ROC::IModel::ModelAnimationProperty l_property = static_cast<ROC::IModel::ModelAnimationProperty>(l_enum);
@@ -355,7 +356,7 @@ int LuaModelDef::GetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_propertyString.empty())
     {
         bool l_result = false;
-        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationPropertiesTable);
+        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationProperties);
         if(l_enum != -1)
         {
             float l_value = 0.f;
@@ -411,24 +412,6 @@ int LuaModelDef::RemoveCollision(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         bool l_result = l_model->RemoveCollision();
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-
-int LuaModelDef::SetCollidable(lua_State *f_vm)
-{
-    // bool Model:setCollidable(element model, bool state)
-    ROC::IModel *l_model1, *l_model2;
-    bool l_state;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_model1);
-    argStream.ReadElement(l_model2);
-    argStream.ReadBoolean(l_state);
-    if(!argStream.HasErrors())
-    {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetPhysicsManager()->SetModelsCollidable(l_model1, l_model2, l_state);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

@@ -13,7 +13,7 @@ class Skeleton final
 {
     size_t m_bonesCount;
     std::vector<Bone*> m_bones;
-    std::vector<Bone*> m_bonesTree; // Sorted bones by hierarchy
+    std::vector<Bone*> m_sortedBones;
     std::vector<glm::mat4> m_poseMatrices;
 
     enum SkeletonCollisionType : unsigned char
@@ -36,7 +36,7 @@ class Skeleton final
         btRigidBody *m_rigidBody;
         size_t m_boneID;
     };
-    std::vector<SkeletonCollision*> m_collisionVector;
+    std::vector<SkeletonCollision*> m_collisions;
     bool m_hasStaticBoneCollision;
 
     struct SkeletonJointPart
@@ -51,9 +51,9 @@ class Skeleton final
         btAlignedObjectArray<btTransform> m_transform;
         btRigidBody *m_emptyBody;
         size_t m_boneID;
-        std::vector<SkeletonJointPart*> m_partsVector;
+        std::vector<SkeletonJointPart*> m_parts;
     };
-    std::vector<SkeletonJoint*> m_jointVector;
+    std::vector<SkeletonJoint*> m_joints;
     bool m_hasDynamicBoneCollision;
 
     static bool ms_physicsEnabled;
@@ -82,13 +82,12 @@ protected:
     inline const std::vector<glm::mat4>& GetPoseMatrices() const { return m_poseMatrices; }
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);
-    inline const std::vector<SkeletonCollision*>& GetCollision() const { return m_collisionVector; }
+    inline const std::vector<SkeletonCollision*>& GetCollision() const { return m_collisions; }
 
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
-    inline const std::vector<SkeletonJoint*>& GetJoints() const { return m_jointVector; }
+    inline const std::vector<SkeletonJoint*>& GetJoints() const { return m_joints; }
 
     void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model);
-    void SetCollisionIgnoring(btCollisionObject *f_obj, bool f_ignore);
 
     static void SetPhysicsEnabled(bool f_state);
 

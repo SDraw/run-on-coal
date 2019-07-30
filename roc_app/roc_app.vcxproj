@@ -129,7 +129,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-2-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win32;../vendor/bullet/lib/win32;../vendor/freetype2/lib/win32;../vendor/glew/lib/win32;../vendor/zlib/lib/win32;../vendor/RakNet/lib/win32;../vendor/openvr/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
@@ -154,7 +154,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-2-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win64;../vendor/bullet/lib/win64;../vendor/freetype2/lib/win64;../vendor/glew/lib/win64;../vendor/zlib/lib/win64;../vendor/RakNet/lib/win64;../vendor/openvr/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
@@ -183,6 +183,7 @@
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,7 +191,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win32;../vendor/bullet/lib/win32;../vendor/freetype2/lib/win32;../vendor/glew/lib/win32;../vendor/zlib/lib/win32;../vendor/RakNet/lib/win32;../vendor/openvr/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-2.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
@@ -220,6 +221,7 @@
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -227,7 +229,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win64;../vendor/bullet/lib/win64;../vendor/freetype2/lib/win64;../vendor/glew/lib/win64;../vendor/zlib/lib/win64;../vendor/RakNet/lib/win64;../vendor/openvr/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-2.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
@@ -244,6 +246,7 @@
     <ClInclude Include="Elements\Animation\Animation.h" />
     <ClInclude Include="Elements\Animation\BoneFrameData.h" />
     <ClInclude Include="Elements\Camera.h" />
+    <ClInclude Include="Elements\Collidable.h" />
     <ClInclude Include="Elements\Collision.h" />
     <ClInclude Include="Elements\Drawable.h" />
     <ClInclude Include="Elements\Element.h" />
@@ -268,6 +271,7 @@
     <ClInclude Include="Interfaces\IAnimation.h" />
     <ClInclude Include="Interfaces\IAsyncManager.h" />
     <ClInclude Include="Interfaces\ICamera.h" />
+    <ClInclude Include="Interfaces\ICollidable.h" />
     <ClInclude Include="Interfaces\ICollision.h" />
     <ClInclude Include="Interfaces\ICore.h" />
     <ClInclude Include="Interfaces\IDrawable.h" />
@@ -343,6 +347,7 @@
     <ClCompile Include="Elements\Animation\Animation.cpp" />
     <ClCompile Include="Elements\Animation\BoneFrameData.cpp" />
     <ClCompile Include="Elements\Camera.cpp" />
+    <ClCompile Include="Elements\Collidable.cpp" />
     <ClCompile Include="Elements\Collision.cpp" />
     <ClCompile Include="Elements\Drawable.cpp" />
     <ClCompile Include="Elements\Element.cpp" />

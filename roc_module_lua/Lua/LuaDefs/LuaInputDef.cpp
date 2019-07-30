@@ -7,7 +7,7 @@
 #include "Lua/LuaFunction.h"
 #include "Utils/EnumUtils.h"
 
-const std::vector<std::string> g_KeyNamesTable
+const std::vector<std::string> g_KeyNames
 {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
     "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
@@ -20,12 +20,12 @@ const std::vector<std::string> g_KeyNamesTable
     "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
     "pause"
 };
-const std::vector<std::string> g_MouseKeyNamesTable
+const std::vector<std::string> g_MouseKeyNames
 {
     "left", "right", "middle",
     "x1", "x2"
 };
-const std::vector<std::string> g_JoypadAxisNamesTable
+const std::vector<std::string> g_JoypadAxisNames
 {
     "X", "Y", "Z",
     "R", "U", "V",
@@ -151,7 +151,7 @@ int LuaInputDef::IsKeyPressed(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        int l_numKey = EnumUtils::ReadEnumVector(l_key, g_KeyNamesTable);
+        int l_numKey = EnumUtils::ReadEnumVector(l_key, g_KeyNames);
         if(l_numKey != -1)
         {
             bool l_result = LuaModule::GetModule()->GetEngineCore()->GetSfmlManager()->IsKeyPressed(l_numKey);
@@ -170,7 +170,7 @@ int LuaInputDef::IsMouseKeyPressed(lua_State *f_vm)
     argStream.ReadText(l_key);
     if(!argStream.HasErrors() && !l_key.empty())
     {
-        int l_numKey = EnumUtils::ReadEnumVector(l_key, g_MouseKeyNamesTable);
+        int l_numKey = EnumUtils::ReadEnumVector(l_key, g_MouseKeyNames);
         if(l_numKey != -1)
         {
             bool l_result = LuaModule::GetModule()->GetEngineCore()->GetSfmlManager()->IsMouseKeyPressed(l_numKey);
@@ -328,7 +328,7 @@ int LuaInputDef::JoypadHasAxis(lua_State *f_vm)
     argStream.ReadText(l_axis);
     if(!argStream.HasErrors() && !l_axis.empty())
     {
-        int l_axisID = EnumUtils::ReadEnumVector(l_axis, g_JoypadAxisNamesTable);
+        int l_axisID = EnumUtils::ReadEnumVector(l_axis, g_JoypadAxisNames);
         if(l_axisID != -1)
         {
             bool l_result = LuaModule::GetModule()->GetEngineCore()->GetSfmlManager()->CheckJoypadAxis(l_joypad, static_cast<unsigned int>(l_axisID));
@@ -349,7 +349,7 @@ int LuaInputDef::JoypadGetAxisValue(lua_State *f_vm)
     argStream.ReadText(l_axis);
     if(!argStream.HasErrors() && !l_axis.empty())
     {
-        int l_axisID = EnumUtils::ReadEnumVector(l_axis, g_JoypadAxisNamesTable);
+        int l_axisID = EnumUtils::ReadEnumVector(l_axis, g_JoypadAxisNames);
         if(l_axisID != -1)
         {
             float l_val = LuaModule::GetModule()->GetEngineCore()->GetSfmlManager()->GetJoypadAxisValue(l_joypad, static_cast<unsigned int>(l_axisID));

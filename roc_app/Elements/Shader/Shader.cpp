@@ -15,7 +15,7 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_DefaultUniformsTable
+const std::vector<std::string> g_DefaultUniforms
 {
     "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBoneMatrix",
     "gCameraPosition", "gCameraDirection",
@@ -41,7 +41,6 @@ int ROC::Shader::ms_drawableMaxCount = 0;
 ROC::Shader::Shader()
 {
     m_elementType = ET_Shader;
-    m_elementTypeName.assign("Shader");
 
     m_program = 0U;
     m_active = false;
@@ -273,7 +272,7 @@ void ROC::Shader::SetupUniformsAndLocations()
         glGetActiveUniform(m_program, static_cast<GLuint>(i), 256, &l_uniformNameSize, &l_uniformSize, &l_uniformType, l_uniformName.data());
 
         std::string l_uniformNameString(l_uniformName.data(), l_uniformNameSize);
-        if(EnumUtils::ReadEnumVector(l_uniformNameString, g_DefaultUniformsTable) == -1)
+        if(EnumUtils::ReadEnumVector(l_uniformNameString, g_DefaultUniforms) == -1)
         {
             GLint l_uniformLocation = glGetUniformLocation(m_program, l_uniformNameString.c_str());
             ShaderUniform *l_uniform = new ShaderUniform(l_uniformType, l_uniformLocation);

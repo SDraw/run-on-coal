@@ -25,7 +25,6 @@ bool ROC::Scene::RenderModelComparator_Distance(const RenderModel *f_modelA, con
 ROC::Scene::Scene()
 {
     m_elementType = ET_Scene;
-    m_elementTypeName.assign("Scene");
 
     m_camera = nullptr;
     m_renderTarget = nullptr;

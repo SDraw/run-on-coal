@@ -121,6 +121,7 @@ void ArgReader::ReadArgument(CustomArgument &f_data)
                 {
                     ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
                     if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element)) f_data = CustomArgument(l_element);
+                    f_data = CustomArgument(static_cast<void*>(l_element));
                 } break;
                 case LUA_TSTRING:
                 {
@@ -130,7 +131,7 @@ void ArgReader::ReadArgument(CustomArgument &f_data)
                     f_data = CustomArgument(l_string);
                 } break;
                 default:
-                    SetError("Invalid data type");
+                    SetError("Not nil/boolean/number/string/userdata");
                     break;
             }
             if(!m_hasErrors) m_argCurrent++;
@@ -304,14 +305,14 @@ void ArgReader::PushArgument(const CustomArgument &f_data)
         case CustomArgument::CAT_Element:
         {
             ROC::IElement *l_element = f_data.GetElement();
-            LuaUtils::PushElementInMetatable(m_vm, LM_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
+            LuaUtils::PushElementInMetatable(m_vm, LuaVM::ms_userdataMetatableName, l_element, l_element->GetElementTypeName().c_str());
         } break;
     }
     m_returnCount++;
 }
 void ArgReader::PushElement(ROC::IElement *f_element)
 {
-    LuaUtils::PushElementInMetatable(m_vm, LM_METATABLE_USERDATA, f_element, f_element->GetElementTypeName().c_str());
+    LuaUtils::PushElementInMetatable(m_vm, LuaVM::ms_userdataMetatableName, f_element, f_element->GetElementTypeName().c_str());
     m_returnCount++;
 }
 void ArgReader::PushQuat(const Quat &f_quat)
@@ -342,6 +343,7 @@ void ArgReader::ReadArguments(CustomArguments &f_args)
                 {
                     ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
                     if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element)) f_args.Push(l_element);
+                    else f_args.Push(static_cast<void*>(l_element));
                 } break;
                 case LUA_TSTRING:
                 {

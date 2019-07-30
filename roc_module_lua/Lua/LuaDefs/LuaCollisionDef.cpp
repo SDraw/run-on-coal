@@ -5,14 +5,15 @@
 #include "Module/LuaModule.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
+#include "Lua/LuaDefs/LuaCollidableDef.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_CollisionTypesTable
+const std::vector<std::string> g_CollisionTypes
 {
     "sphere", "box", "cylinder", "capsule", "cone"
 };
-const std::vector<std::string> g_CollisionMotionTypesTable
+const std::vector<std::string> g_CollisionMotionTypes
 {
     "default", "static", "kinematic"
 };
@@ -42,8 +43,8 @@ void LuaCollisionDef::Init(lua_State *f_vm)
     LuaUtils::AddClassMethod(f_vm, "applyTorque", ApplyTorque);
     LuaUtils::AddClassMethod(f_vm, "setMotionType", SetMotionType);
     LuaUtils::AddClassMethod(f_vm, "getMotionType", GetMotionType);
-    LuaUtils::AddClassMethod(f_vm, "setCollidable", SetCollidable);
     LuaElementDef::AddHierarchyMethods(f_vm);
+    LuaCollidableDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
 
@@ -59,7 +60,7 @@ int LuaCollisionDef::Create(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_CollisionTypesTable);
+        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_CollisionTypes);
         if(l_type != -1)
         {
             ROC::ICollision *l_col = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateCollision(l_type, l_size, l_mass);
@@ -403,7 +404,7 @@ int LuaCollisionDef::SetMotionType(lua_State *f_vm)
     argStream.ReadText(l_type);
     if(!argStream.HasErrors() && !l_type.empty())
     {
-        int l_idx = EnumUtils::ReadEnumVector(l_type, g_CollisionMotionTypesTable);
+        int l_idx = EnumUtils::ReadEnumVector(l_type, g_CollisionMotionTypes);
         if(l_idx != -1)
         {
             l_collision->SetMotionType(l_idx);
@@ -420,24 +421,6 @@ int LuaCollisionDef::GetMotionType(lua_State *f_vm)
     ROC::ICollision *l_collision;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_collision);
-    !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypesTable[static_cast<size_t>(l_collision->GetMotionType())]) : argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
-}
-
-int LuaCollisionDef::SetCollidable(lua_State *f_vm)
-{
-    // bool Collision:setCollidable(element collision, bool state)
-    ROC::ICollision *l_col1, *l_col2;
-    bool l_state;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_col1);
-    argStream.ReadElement(l_col2);
-    argStream.ReadBoolean(l_state);
-    if(!argStream.HasErrors())
-    {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetPhysicsManager()->SetCollisionsCollidable(l_col1, l_col2, l_state);
-        argStream.PushBoolean(l_result);
-    }
-    else argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypes[static_cast<size_t>(l_collision->GetMotionType())]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

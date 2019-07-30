@@ -7,11 +7,11 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_VRControllerHandsTable
+const std::vector<std::string> g_VRControllerHands
 {
     "none", "left", "right"
 };
-const std::vector<std::string> g_VREyesTable
+const std::vector<std::string> g_VREyes
 {
     "left", "right"
 };
@@ -119,7 +119,7 @@ int LuaVRDef::VRGetControllerHand(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         unsigned char l_hand = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerHandAssignment(l_id);
-        argStream.PushText(g_VRControllerHandsTable[static_cast<size_t>(l_hand)]);
+        argStream.PushText(g_VRControllerHands[static_cast<size_t>(l_hand)]);
     }
     return argStream.GetReturnValue();
 }
@@ -232,7 +232,7 @@ int LuaVRDef::VRDrawEyeImage(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
     if(!argStream.HasErrors() && !l_side.empty())
     {
-        int l_sideIndex = EnumUtils::ReadEnumVector(l_side, g_VREyesTable);
+        int l_sideIndex = EnumUtils::ReadEnumVector(l_side, g_VREyes);
         if(l_sideIndex != -1)
         {
             bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->DrawEyeImage(static_cast<unsigned char>(l_sideIndex), l_pos, l_size, l_rot, l_color);
@@ -258,7 +258,7 @@ int LuaVRDef::VRDrawEyeImage3D(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNextBoolean(l_params[i]);
     if(!argStream.HasErrors())
     {
-        int l_sideIndex = EnumUtils::ReadEnumVector(l_side, g_VREyesTable);
+        int l_sideIndex = EnumUtils::ReadEnumVector(l_side, g_VREyes);
         if(l_sideIndex != -1)
         {
             glm::quat l_rotQuat(l_rot);

@@ -7,7 +7,7 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_configAttributeTable
+const std::vector<std::string> g_ConfigAttributes
 {
     "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync", "vr", "module"
 };
@@ -48,7 +48,7 @@ ROC::ConfigManager::ConfigManager()
                     l_attrib = l_node.attribute("value");
                     if(l_attrib)
                     {
-                        switch(EnumUtils::ReadEnumVector(l_param, g_configAttributeTable))
+                        switch(EnumUtils::ReadEnumVector(l_param, g_ConfigAttributes))
                         {
                             case ROC_CONFIG_ATTRIB_ANTIALIASING:
                             {

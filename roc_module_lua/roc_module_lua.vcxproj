@@ -91,7 +91,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ROC_MODULE_LUA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>./;../roc_app;../vendor/lua/include;../vendor/luautf8;../vendor/base64;../vendor/glm;../vendor/pugixml/src;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -131,7 +131,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ROC_MODULE_LUA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>./;../roc_app;../vendor/lua/include;../vendor/luautf8;../vendor/base64;../vendor/glm;../vendor/pugixml/src;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -176,6 +176,7 @@
     <ClInclude Include="Lua\ArgReader.h" />
     <ClInclude Include="Lua\LuaDefs\LuaAnimationDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaCameraDef.h" />
+    <ClInclude Include="Lua\LuaDefs\LuaCollidableDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaCollisionDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaDrawableDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaElementDef.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="Lua\ArgReader.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaAnimationDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaCameraDef.cpp" />
+    <ClCompile Include="Lua\LuaDefs\LuaCollidableDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaCollisionDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaDrawableDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaElementDef.cpp" />

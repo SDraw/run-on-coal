@@ -1,11 +1,14 @@
 #pragma once
 #include "Interfaces/ICollision.h"
+#include "Elements/Collidable.h"
 #include "Elements/Element.h"
 
 namespace ROC
 {
 
-class Collision final : public Element, public virtual ICollision
+class Model;
+
+class Collision final : public Collidable, public virtual ICollision
 {
     btRigidBody *m_rigidBody;
     int m_motionType;
@@ -13,6 +16,8 @@ class Collision final : public Element, public virtual ICollision
 
     Collision(const Collision &that) = delete;
     Collision& operator=(const Collision &that) = delete;
+
+    void GetRigidBodies(std::vector<btRigidBody*> &f_vec);
 public:
     void SetPosition(const glm::vec3 &f_pos);
     void GetPosition(glm::vec3 &f_pos) const;
@@ -50,6 +55,9 @@ public:
     void SetMotionType(int f_type);
     int GetMotionType() const;
 
+    void SetCollidable(Collision *f_col, bool f_state);
+    void SetCollidable(Model *f_model, bool f_state);
+
     void GetMatrix(glm::mat4 &f_mat) const;
 protected:
     Collision();
@@ -65,7 +73,7 @@ protected:
 
     friend class ElementManager;
     friend class PhysicsManager;
-    friend class Model;
+    friend Model;
 };
 
 }

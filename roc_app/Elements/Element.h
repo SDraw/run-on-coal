@@ -29,7 +29,6 @@ public:
     const std::string& GetElementTypeName() const;
 protected:
     unsigned char m_elementType;
-    std::string m_elementTypeName;
 
     Element();
     virtual ~Element();

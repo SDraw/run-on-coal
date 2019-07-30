@@ -9,7 +9,6 @@
 ROC::Animation::Animation()
 {
     m_elementType = ET_Animation;
-    m_elementTypeName.assign("Animation");
 
     m_framesCount = 0U;
     m_duration = 0U;

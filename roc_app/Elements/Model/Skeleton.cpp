@@ -48,10 +48,10 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
 
             auto &l_boneChildren = l_bone->GetChildren();
             l_bonesStack.insert(l_bonesStack.end(), l_boneChildren.rbegin(), l_boneChildren.rend());
-            m_bonesTree.push_back(l_bone);
+            m_sortedBones.push_back(l_bone);
             l_bone->GenerateBindPose();
         }
-        m_bonesTree.shrink_to_fit();
+        m_sortedBones.shrink_to_fit();
     }
     m_poseMatrices.assign(m_bonesCount, g_IdentityMatrix);
     m_poseMatrices.shrink_to_fit();
@@ -67,21 +67,21 @@ ROC::Skeleton::~Skeleton()
 
     if(m_hasStaticBoneCollision)
     {
-        for(auto l_col : m_collisionVector)
+        for(auto l_col : m_collisions)
         {
             l_col->m_offset.clear();
             delete l_col->m_rigidBody->getMotionState();
             delete l_col->m_rigidBody;
             delete l_col;
         }
-        m_collisionVector.clear();
+        m_collisions.clear();
     }
 
     if(m_hasDynamicBoneCollision)
     {
-        for(auto l_joint : m_jointVector)
+        for(auto l_joint : m_joints)
         {
-            for(auto l_part = l_joint->m_partsVector.rbegin(); l_part != l_joint->m_partsVector.rend(); ++l_part)
+            for(auto l_part = l_joint->m_parts.rbegin(); l_part != l_joint->m_parts.rend(); ++l_part)
             {
                 SkeletonJointPart *l_jointPart = *l_part;
                 l_jointPart->m_offset.clear();
@@ -93,14 +93,14 @@ ROC::Skeleton::~Skeleton()
                 delete l_jointPart;
             }
             l_joint->m_transform.clear();
-            l_joint->m_partsVector.clear();
+            l_joint->m_parts.clear();
             delete l_joint->m_emptyBody->getMotionState();
             delete l_joint->m_emptyBody;
             delete l_joint;
         }
-        m_jointVector.clear();
+        m_joints.clear();
     }
-    m_bonesTree.clear();
+    m_sortedBones.clear();
 }
 
 void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model)
@@ -153,12 +153,12 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
 
             l_skeletonCol->m_boneID = static_cast<size_t>(l_colData->m_boneID);
 
-            m_collisionVector.push_back(l_skeletonCol);
+            m_collisions.push_back(l_skeletonCol);
         }
-        if(!m_collisionVector.empty())
+        if(!m_collisions.empty())
         {
             m_hasStaticBoneCollision = true;
-            m_collisionVector.shrink_to_fit();
+            m_collisions.shrink_to_fit();
         }
     }
 }
@@ -186,7 +186,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
             l_joint->m_emptyBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
             l_joint->m_emptyBody->setActivationState(DISABLE_DEACTIVATION);
             l_joint->m_emptyBody->setUserPointer(f_model);
-            m_jointVector.push_back(l_joint);
+            m_joints.push_back(l_joint);
 
             for(size_t i = 0, j = l_jointData->m_jointParts.size(); i < j; i++)
             {
@@ -253,7 +253,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 else
                 {
                     // Joint part is connected to previous joint part body
-                    btRigidBody *l_prevJointRigidBody = l_joint->m_partsVector.back()->m_rigidBody;
+                    btRigidBody *l_prevJointRigidBody = l_joint->m_parts.back()->m_rigidBody;
                     btTransform l_prevJointPartToBoneTransform;
                     l_prevJointPartToBoneTransform.mult(l_prevJointRigidBody->getCenterOfMassTransform().inverse(), l_boneTransform);
 
@@ -278,45 +278,19 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                         l_jointPart->m_constraint->setStiffness(k + 3, l_jointPartData.m_angularStiffness[k]);
                     }
                 }
-                l_joint->m_partsVector.push_back(l_jointPart);
+                l_joint->m_parts.push_back(l_jointPart);
 
                 // Set bone as dynamic
                 m_bones[l_jointPart->m_boneID]->SetDynamic(true);
                 m_bones[l_jointPart->m_boneID]->SetDynamicBody(l_jointPart->m_rigidBody);
             }
-            l_joint->m_partsVector.shrink_to_fit();
+            l_joint->m_parts.shrink_to_fit();
         }
 
-        if(!m_jointVector.empty())
+        if(!m_joints.empty())
         {
-            m_jointVector.shrink_to_fit();
+            m_joints.shrink_to_fit();
             m_hasDynamicBoneCollision = true;
-        }
-    }
-}
-
-void ROC::Skeleton::SetCollisionIgnoring(btCollisionObject *f_obj, bool f_ignore)
-{
-    if(m_hasStaticBoneCollision)
-    {
-        for(auto l_skeletonCol : m_collisionVector)
-        {
-            f_obj->setIgnoreCollisionCheck(l_skeletonCol->m_rigidBody, f_ignore);
-            l_skeletonCol->m_rigidBody->setIgnoreCollisionCheck(f_obj, f_ignore);
-        }
-    }
-    if(m_hasDynamicBoneCollision)
-    {
-        for(auto l_joint : m_jointVector)
-        {
-            for(auto l_jointPart : l_joint->m_partsVector)
-            {
-                f_obj->setIgnoreCollisionCheck(l_jointPart->m_rigidBody, f_ignore);
-                l_jointPart->m_rigidBody->setIgnoreCollisionCheck(f_obj, f_ignore);
-            }
-
-            l_joint->m_emptyBody->setIgnoreCollisionCheck(f_obj, f_ignore);
-            f_obj->setIgnoreCollisionCheck(l_joint->m_emptyBody, f_ignore);
         }
     }
 }
@@ -324,7 +298,7 @@ void ROC::Skeleton::SetCollisionIgnoring(btCollisionObject *f_obj, bool f_ignore
 void ROC::Skeleton::Update(Animation *f_anim, unsigned int f_tick, float f_blend)
 {
     f_anim->GetData(f_tick, m_bones, f_blend);
-    for(auto l_bone : m_bonesTree) l_bone->Update();
+    for(auto l_bone : m_sortedBones) l_bone->Update();
     for(size_t i = 0U; i < m_bonesCount; i++) std::memcpy(&m_poseMatrices[i], &m_bones[i]->GetPoseMatrix(), sizeof(glm::mat4));
 }
 
@@ -342,7 +316,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
 
                 if(m_hasStaticBoneCollision)
                 {
-                    for(auto l_skeletonCol : m_collisionVector)
+                    for(auto l_skeletonCol : m_collisions)
                     {
                         // BodyGlobal = Model * (Bone * BoneOffset)
                         l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_bones[l_skeletonCol->m_boneID]->GetFullMatrix()));
@@ -354,7 +328,7 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
 
                 if(m_hasDynamicBoneCollision)
                 {
-                    for(auto l_joint : m_jointVector)
+                    for(auto l_joint : m_joints)
                     {
                         if(m_bones[l_joint->m_boneID]->HasParent())
                         {
@@ -386,9 +360,9 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                     glm::mat4 l_invMat4 = glm::inverse(f_model);
                     l_modelInv.setFromOpenGLMatrix(glm::value_ptr(l_invMat4));
 
-                    for(auto l_joint : m_jointVector)
+                    for(auto l_joint : m_joints)
                     {
-                        for(auto l_jointPart : l_joint->m_partsVector)
+                        for(auto l_jointPart : l_joint->m_parts)
                         {
                             // BoneFull = ((ModelInverse * BodyGlobal) * BodyBoneOffsetInverse)
                             Bone *l_bone = m_bones[l_jointPart->m_boneID];
@@ -407,9 +381,9 @@ void ROC::Skeleton::UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4
                 {
                     btTransform l_model;
                     l_model.setFromOpenGLMatrix(glm::value_ptr(f_model));
-                    for(auto l_joint : m_jointVector)
+                    for(auto l_joint : m_joints)
                     {
-                        for(auto l_jointPart : l_joint->m_partsVector)
+                        for(auto l_jointPart : l_joint->m_parts)
                         {
                             // BodyGlobal = Model * (BoneMatrix * BodyBoneOffset)
                             l_transform1.setFromOpenGLMatrix(glm::value_ptr(m_bones[l_jointPart->m_boneID]->GetFullMatrix()));

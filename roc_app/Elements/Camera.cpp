@@ -18,7 +18,6 @@ const glm::vec3 g_CameraDefaultUpDirection(0.f, 1.f, 0.f);
 ROC::Camera::Camera(int f_type)
 {
     m_elementType = ET_Camera;
-    m_elementTypeName.assign("Camera");
 
     m_type = f_type;
     btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_VRRight));

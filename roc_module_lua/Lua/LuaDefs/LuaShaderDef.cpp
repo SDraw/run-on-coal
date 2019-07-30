@@ -222,6 +222,7 @@ int LuaShaderDef::SetUniformValue(lua_State *f_vm)
                 } break;
                 default:
                     argStream.PushBoolean(false);
+                    break;
             }
         }
     }

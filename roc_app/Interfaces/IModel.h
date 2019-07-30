@@ -1,5 +1,5 @@
 #pragma once
-#include "Interfaces/IElement.h"
+#include "Interfaces/ICollidable.h"
 
 namespace ROC
 {
@@ -8,7 +8,7 @@ class IAnimation;
 class ICollision;
 class IGeometry;
 
-class IModel : public virtual IElement
+class IModel : public virtual ICollidable
 {
 public:
     enum ModelAnimationProperty : unsigned char

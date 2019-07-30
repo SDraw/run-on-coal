@@ -30,6 +30,7 @@
 #include "Interfaces/ISoundManager.h"
 #include "Interfaces/IVRManager.h"
 #include "Interfaces/IElement.h"
+#include "Interfaces/ICollidable.h"
 #include "Interfaces/IDrawable.h"
 #include "Interfaces/IAnimation.h"
 #include "Interfaces/ICamera.h"

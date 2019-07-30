@@ -6,7 +6,7 @@
 #include "Lua/ArgReader.h"
 #include "Utils/LuaUtils.h"
 
-extern const std::vector<std::string> g_FilteringTypesTable
+extern const std::vector<std::string> g_FilteringTypes
 {
     "nearest", "linear"
 };
@@ -98,6 +98,6 @@ int LuaDrawableDef::GetFiltering(lua_State *f_vm)
     ROC::IDrawable *l_drawable;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_drawable);
-    !argStream.HasErrors() ? argStream.PushText(g_FilteringTypesTable[static_cast<size_t>(l_drawable->GetFiltering())]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_FilteringTypes[static_cast<size_t>(l_drawable->GetFiltering())]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

@@ -10,7 +10,6 @@ glm::ivec2 ROC::RenderTarget::ms_fallbackSize = glm::ivec2(0);
 ROC::RenderTarget::RenderTarget()
 {
     m_elementType = ET_RenderTarget;
-    m_elementTypeName.assign("RenderTarget");
 
     m_type = RTT_None;
     m_filtering = DFT_None;

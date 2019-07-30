@@ -8,7 +8,7 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-extern const std::vector<std::string> g_FilteringTypesTable; // defined in LuaDrawableDef
+extern const std::vector<std::string> g_FilteringTypes; // defined in LuaDrawableDef
 
 void LuaFontDef::Init(lua_State *f_vm)
 {
@@ -33,7 +33,7 @@ int LuaFontDef::Create(lua_State *f_vm)
     argStream.ReadNextText(l_filter);
     if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
-        int l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_FilteringTypesTable);
+        int l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_FilteringTypes);
         ROC::IFont *l_font = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, l_filteringType);
         l_font ? argStream.PushElement(l_font) : argStream.PushBoolean(false);
     }

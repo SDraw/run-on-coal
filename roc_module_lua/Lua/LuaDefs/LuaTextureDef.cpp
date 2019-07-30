@@ -10,11 +10,11 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_TextureTypesTable
+const std::vector<std::string> g_TextureTypes
 {
     "rgb", "rgba", "cube"
 };
-extern const std::vector<std::string> g_FilteringTypesTable; // Defined in LuaDrawableDef
+extern const std::vector<std::string> g_FilteringTypes; // Defined in LuaDrawableDef
 
 void LuaTextureDef::Init(lua_State *f_vm)
 {
@@ -35,7 +35,7 @@ int LuaTextureDef::Create(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_type.empty())
     {
         std::vector<std::string> l_path;
-        int l_textureType = EnumUtils::ReadEnumVector(l_type, g_TextureTypesTable);
+        int l_textureType = EnumUtils::ReadEnumVector(l_type, g_TextureTypes);
         switch(l_textureType)
         {
             case ROC::ITexture::TT_RGB: case ROC::ITexture::TT_RGBA:
@@ -58,7 +58,7 @@ int LuaTextureDef::Create(lua_State *f_vm)
             LuaFunction l_callback;
 
             argStream.ReadNextText(l_filtering);
-            int l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypesTable);
+            int l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypes);
             argStream.ReadNextBoolean(l_compress);
             argStream.ReadNextFunction(l_callback);
 

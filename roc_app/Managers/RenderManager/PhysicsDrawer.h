@@ -29,7 +29,7 @@ public:
     virtual void reportErrorWarning(const char* warningString) {};
     virtual void draw3dText(const btVector3& location, const char* textString) {};
     virtual void setDebugMode(int debugMode) {};
-    virtual int	getDebugMode() const { return (DBG_DrawWireframe | DBG_FastWireframe | DBG_DrawAabb | DBG_DrawConstraints | DBG_DrawConstraintLimits | DBG_DrawNormals | DBG_DrawContactPoints); };
+    virtual int	getDebugMode() const { return (DBG_DrawWireframe | DBG_FastWireframe | DBG_DrawConstraints | DBG_DrawConstraintLimits | DBG_DrawNormals | DBG_DrawContactPoints); };
 protected:
     void Draw(float f_width);
 

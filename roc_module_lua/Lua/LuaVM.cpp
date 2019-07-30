@@ -5,6 +5,7 @@
 
 #include "Lua/LuaDefs/LuaAnimationDef.h"
 #include "Lua/LuaDefs/LuaCameraDef.h"
+#include "Lua/LuaDefs/LuaCollidableDef.h"
 #include "Lua/LuaDefs/LuaCollisionDef.h"
 #include "Lua/LuaDefs/LuaDrawableDef.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
@@ -32,7 +33,7 @@
 #include "Utils/CustomArguments.h"
 #include "Utils/LuaUtils.h"
 
-#define LM_LUA_METATABLE "lm_mt"
+const char *LuaVM::ms_userdataMetatableName = "lm_ud";
 
 LuaVM::LuaVM(LuaModule *f_module)
 {
@@ -47,6 +48,7 @@ LuaVM::LuaVM(LuaModule *f_module)
     luaL_requiref(m_vm, "package", luaopen_package, 1);
 
     LuaElementDef::Init(m_vm);
+    LuaCollidableDef::Init(m_vm);
     LuaDrawableDef::Init(m_vm);
 
     LuaAnimationDef::Init(m_vm);
@@ -74,14 +76,14 @@ LuaVM::LuaVM(LuaModule *f_module)
     LuaUtilsDef::Init(m_vm);
 
     // Hidden metatable with weak values for elements
-    luaL_newmetatable(m_vm, LM_LUA_METATABLE);
+    luaL_newmetatable(m_vm, "lm_mt"); // Name
     lua_pushvalue(m_vm, -1);
     lua_setfield(m_vm, -2, "__index");
     lua_pushstring(m_vm, "v");
     lua_setfield(m_vm, -2, "__mode");
     lua_pushboolean(m_vm, 0);
     lua_setfield(m_vm, -2, "__metatable");
-    lua_setfield(m_vm, LUA_REGISTRYINDEX, LM_METATABLE_USERDATA);
+    lua_setfield(m_vm, LUA_REGISTRYINDEX, ms_userdataMetatableName);
     lua_pop(m_vm, 1);
 }
 LuaVM::~LuaVM()
@@ -109,7 +111,7 @@ void LuaVM::LoadScript(const std::string &f_file)
 void LuaVM::DoPulse()
 {
     // Lua GC can't keep up to clean custom userdata on high FPS by itself, let's help it
-    lua_gc(m_vm, LUA_GCSTEP, 0);
+    lua_gc(m_vm, LUA_GCSTEP, 0); // Does it even work?
 }
 
 void LuaVM::CallFunction(const LuaFunction &f_func, const CustomArguments &f_args)
@@ -145,8 +147,8 @@ void LuaVM::CallFunction(const LuaFunction &f_func, const CustomArguments &f_arg
                     break;
                 case CustomArgument::CAT_Element:
                 {
-                    ROC::IElement *l_element = iter.GetElement();
-                    LuaUtils::PushElementInMetatable(m_vm, LM_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
+                    ROC::IElement *l_element = reinterpret_cast<ROC::IElement*>(iter.GetElement());
+                    LuaUtils::PushElementInMetatable(m_vm, ms_userdataMetatableName, l_element, l_element->GetElementTypeName().c_str());
                 } break;
                 case CustomArgument::CAT_String:
                 {
@@ -155,7 +157,7 @@ void LuaVM::CallFunction(const LuaFunction &f_func, const CustomArguments &f_arg
                 } break;
             }
         }
-        if(lua_pcall(m_vm, f_args.GetArgumentsCount(), 0, 0))
+        if(lua_pcall(m_vm, static_cast<int>(f_args.GetArgumentsCount()), 0, 0))
         {
             std::string l_log(lua_tostring(m_vm, -1));
             m_luaModule->GetEngineCore()->GetLogManager()->Log(l_log);

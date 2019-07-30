@@ -8,7 +8,7 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_CameraTypesTable
+const std::vector<std::string> g_CameraTypes
 {
     "perspective", "orthogonal", "screen", "vr_left", "vr_right"
 };
@@ -47,7 +47,7 @@ int LuaCameraDef::Create(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypesTable);
+        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypes);
         if(l_type != -1)
         {
             ROC::ICamera *l_camera = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateCamera(l_type);
@@ -169,7 +169,7 @@ int LuaCameraDef::SetProjectionType(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypesTable);
+        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypes);
         if(l_type != -1)
         {
             l_camera->SetProjectionType(l_type);
@@ -186,7 +186,7 @@ int LuaCameraDef::GetProjectionType(lua_State *f_vm)
     ROC::ICamera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
-    !argStream.HasErrors() ? argStream.PushText(g_CameraTypesTable[static_cast<size_t>(l_camera->GetProjectionType())]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_CameraTypes[static_cast<size_t>(l_camera->GetProjectionType())]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

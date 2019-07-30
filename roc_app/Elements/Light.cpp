@@ -13,7 +13,6 @@ extern const glm::vec3 g_EmptyVec3;
 ROC::Light::Light(unsigned char f_type)
 {
     m_elementType = ET_Light;
-    m_elementTypeName.assign("Light");
 
     m_position = g_EmptyVec3;
     m_direction = glm::vec3(0.f, -1.f, 0.f);

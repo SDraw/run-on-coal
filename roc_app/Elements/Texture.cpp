@@ -22,7 +22,6 @@ const glm::ivec2 g_TextureDummySize(2, 2);
 ROC::Texture::Texture()
 {
     m_elementType = ET_Texture;
-    m_elementTypeName.assign("Texture");
 
     m_type = TT_None;
     m_filtering = DFT_None;

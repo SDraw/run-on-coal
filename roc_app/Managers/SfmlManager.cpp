@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+SFML_DEFINE_DISCRETE_GPU_PREFERENCE
+
 #include "Managers/SfmlManager.h"
 #include "Core/Core.h"
 
@@ -16,7 +18,7 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_KeyNamesTable
+const std::string g_KeyNames[]
 {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
     "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
@@ -29,12 +31,12 @@ const std::vector<std::string> g_KeyNamesTable
     "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
     "pause"
 };
-const std::vector<std::string> g_MouseKeyNamesTable
+const std::string g_MouseKeyNames[]
 {
     "left", "right", "middle",
     "x1", "x2"
 };
-const std::vector<std::string> g_JoypadAxisNamesTable
+const std::string g_JoypadAxisNames[]
 {
     "X", "Y", "Z",
     "R", "U", "V",
@@ -58,9 +60,9 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
     m_contextSettings.depthBits = 32U;
 #ifdef _DEBUG
-    m_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Debug;
+    m_contextSettings.attributeFlags = (sf::ContextSettings::Attribute::Core | sf::ContextSettings::Attribute::Debug);
 #else
-    m_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Default;
+    m_contextSettings.attributeFlags = sf::ContextSettings::Attribute::Core;
 #endif
     m_contextSettings.majorVersion = 0U;
     m_contextSettings.minorVersion = 0U;
@@ -79,7 +81,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         l_log.append(std::to_string(m_contextSettings.majorVersion));
         l_log.push_back('.');
         l_log.append(std::to_string(m_contextSettings.minorVersion));
-        l_log.append(" context. Check supported version for your videocard.");
+        l_log.append(" core context. Check GPU for OpenGL support.");
         m_core->GetLogManager()->Log(l_log);
 
         MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
@@ -90,8 +92,13 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         sf::ContextSettings l_createdContextSettings = m_window->getSettings();
         if(l_createdContextSettings.majorVersion * 10U + l_createdContextSettings.minorVersion < ROC_OPENGL_MIN_VERSION)
         {
-            l_log.assign("SFML: Minimal supported version of OpenGL is ");
+            l_log.assign("SFML: Minimal supported OpenGL version - ");
             l_log.append(ROC_OPENGL_MIN_VERSION_STRING);
+            l_log.push_back('\n');
+            l_log.append("System OpenGL version - ");
+            l_log.append(std::to_string(l_createdContextSettings.majorVersion));
+            l_log.push_back('.');
+            l_log.append(std::to_string(l_createdContextSettings.minorVersion));
             m_core->GetLogManager()->Log(l_log);
 
             MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
@@ -293,7 +300,7 @@ bool ROC::SfmlManager::DoPulse()
             {
                 if(m_event.key.code != -1)
                 {
-                    m_arguments.Push(g_KeyNamesTable[m_event.key.code]);
+                    m_arguments.Push(g_KeyNames[m_event.key.code]);
                     m_arguments.Push(m_event.type == sf::Event::KeyPressed ? 1 : 0);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnKeyPress, m_arguments);
                     m_arguments.Clear();
@@ -334,7 +341,7 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
-                m_arguments.Push(g_MouseKeyNamesTable[m_event.mouseButton.button]);
+                m_arguments.Push(g_MouseKeyNames[m_event.mouseButton.button]);
                 m_arguments.Push(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnMouseKeyPress, m_arguments);
                 m_arguments.Clear();
@@ -364,7 +371,7 @@ bool ROC::SfmlManager::DoPulse()
             case sf::Event::JoystickMoved:
             {
                 m_arguments.Push(static_cast<int>(m_event.joystickMove.joystickId));
-                m_arguments.Push(g_JoypadAxisNamesTable[m_event.joystickMove.axis]);
+                m_arguments.Push(g_JoypadAxisNames[m_event.joystickMove.axis]);
                 m_arguments.Push(m_event.joystickMove.position);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnJoypadAxis, m_arguments);
                 m_arguments.Clear();

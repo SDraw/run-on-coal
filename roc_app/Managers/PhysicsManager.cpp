@@ -10,7 +10,7 @@
 #include "Managers/ElementManager.h"
 #include "Elements/Model/Skeleton.h"
 
-#define ROC_PHYSICS_DEFAULT_TIMESTEP 1.f/60.f
+#define ROC_PHYSICS_DEFAULT_TIMESTEP 1.f/120.f
 #define ROC_PHYSICS_DEFAULT_SUBSTEPS 10
 
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
@@ -119,69 +119,6 @@ void ROC::PhysicsManager::SetCollisionScale(Collision *f_col, const glm::vec3 &f
     }
 }
 
-bool ROC::PhysicsManager::SetCollisionsCollidable(ICollision *f_col1, ICollision *f_col2, bool f_state)
-{
-    return SetCollisionsCollidable(dynamic_cast<Collision*>(f_col1), dynamic_cast<Collision*>(f_col2), f_state);
-}
-bool ROC::PhysicsManager::SetCollisionsCollidable(Collision *f_col1, Collision *f_col2, bool f_state)
-{
-    f_col1->GetRigidBody()->setIgnoreCollisionCheck(f_col2->GetRigidBody(), !f_state);
-    f_col2->GetRigidBody()->setIgnoreCollisionCheck(f_col1->GetRigidBody(), !f_state);
-    return true;
-}
-
-bool ROC::PhysicsManager::SetModelsCollidable(IModel *f_model1, IModel *f_model2, bool f_state)
-{
-    return SetModelsCollidable(dynamic_cast<Model*>(f_model1), dynamic_cast<Model*>(f_model2), f_state);
-}
-bool ROC::PhysicsManager::SetModelsCollidable(Model *f_model1, Model *f_model2, bool f_state)
-{
-    std::vector<btRigidBody*> l_bodiesA, l_bodiesB;
-    if(f_model1->HasCollision()) l_bodiesA.push_back(f_model1->GetCollsion()->GetRigidBody());
-    if(f_model1->HasSkeleton())
-    {
-        Skeleton *l_skeleton = f_model1->GetSkeleton();
-        if(l_skeleton->HasStaticBoneCollision())
-        {
-            for(auto l_skeletonCol : l_skeleton->GetCollision()) l_bodiesA.push_back(l_skeletonCol->m_rigidBody);
-        }
-        if(l_skeleton->HasDynamicBoneCollision())
-        {
-            for(auto l_joint : l_skeleton->GetJoints())
-            {
-                for(auto l_jointPart : l_joint->m_partsVector) l_bodiesA.push_back(l_jointPart->m_rigidBody);
-            }
-        }
-    }
-
-    if(f_model2->HasCollision()) l_bodiesB.push_back(f_model2->GetCollsion()->GetRigidBody());
-    if(f_model2->HasSkeleton())
-    {
-        Skeleton *l_skeleton = f_model2->GetSkeleton();
-        if(l_skeleton->HasStaticBoneCollision())
-        {
-            for(auto l_skeletonCol : l_skeleton->GetCollision()) l_bodiesB.push_back(l_skeletonCol->m_rigidBody);
-        }
-        if(l_skeleton->HasDynamicBoneCollision())
-        {
-            for(auto l_joint : l_skeleton->GetJoints())
-            {
-                for(auto l_jointPart : l_joint->m_partsVector) l_bodiesB.push_back(l_jointPart->m_rigidBody);
-            }
-        }
-    }
-
-    for(auto l_bodyA : l_bodiesA)
-    {
-        for(auto l_bodyB : l_bodiesB)
-        {
-            l_bodyA->setIgnoreCollisionCheck(l_bodyB, !f_state);
-            l_bodyB->setIgnoreCollisionCheck(l_bodyA, !f_state);
-        }
-    }
-    return (!l_bodiesA.empty() && !l_bodiesB.empty());
-}
-
 void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
 {
     m_timeStep = (f_fps == 0U) ? ROC_PHYSICS_DEFAULT_TIMESTEP : (1.f / static_cast<float>(f_fps));
@@ -201,7 +138,7 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
             for(auto l_joint : l_skeleton->GetJoints())
             {
                 m_dynamicWorld->addRigidBody(l_joint->m_emptyBody);
-                for(auto l_jointPart : l_joint->m_partsVector)
+                for(auto l_jointPart : l_joint->m_parts)
                 {
                     m_dynamicWorld->addRigidBody(l_jointPart->m_rigidBody);
                     m_dynamicWorld->addConstraint(l_jointPart->m_constraint, true);
@@ -224,7 +161,7 @@ void ROC::PhysicsManager::RemoveModel(Model *f_model)
             for(auto l_joint : l_skeleton->GetJoints())
             {
                 m_dynamicWorld->removeRigidBody(l_joint->m_emptyBody);
-                for(auto l_jointPart : l_joint->m_partsVector)
+                for(auto l_jointPart : l_joint->m_parts)
                 {
                     m_dynamicWorld->removeRigidBody(l_jointPart->m_rigidBody);
                     m_dynamicWorld->removeConstraint(l_jointPart->m_constraint);

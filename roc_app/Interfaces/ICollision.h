@@ -4,6 +4,8 @@
 namespace ROC
 {
 
+class IModel;
+
 class ICollision : public virtual IElement
 {
 public:

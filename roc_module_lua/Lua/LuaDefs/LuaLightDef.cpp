@@ -8,7 +8,7 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_LightTypesTable
+const std::vector<std::string> g_LightTypes
 {
     "directional", "point", "spotlight"
 };
@@ -40,7 +40,7 @@ int LuaLightDef::Create(lua_State *f_vm)
     argStream.ReadText(l_typeString);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypesTable);
+        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypes);
         if(l_type != -1)
         {
             ROC::ILight *l_light = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateLight(static_cast<unsigned char>(l_type));
@@ -216,7 +216,7 @@ int LuaLightDef::SetType(lua_State *f_vm)
     argStream.ReadText(l_typeString);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypesTable);
+        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypes);
         if(l_type != -1)
         {
             l_light->SetType(static_cast<unsigned char>(l_type));
@@ -231,6 +231,6 @@ int LuaLightDef::GetType(lua_State *f_vm)
     ROC::ILight *l_light;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_light);
-    !argStream.HasErrors() ? argStream.PushText(g_LightTypesTable[l_light->GetType()]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_LightTypes[l_light->GetType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

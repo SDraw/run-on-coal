@@ -1,5 +1,4 @@
 #pragma once
-#include "Interfaces/IModule.h"
 
 class EventHandler;
 class LuaVM;

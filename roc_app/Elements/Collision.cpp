@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Elements/Collision.h"
+#include "Elements/Model/Model.h"
 
 namespace ROC
 {
@@ -12,7 +13,6 @@ extern const glm::vec3 g_DefaultScale;
 ROC::Collision::Collision()
 {
     m_elementType = ET_Collision;
-    m_elementTypeName.assign("Collision");
 
     m_rigidBody = nullptr;
     m_motionType = CMT_Default;
@@ -287,6 +287,9 @@ void ROC::Collision::GetMatrix(glm::mat4 &f_mat) const
             case CMT_Kinematic:
                 m_rigidBody->getMotionState()->getWorldTransform(l_transform);
                 break;
+            default:
+                l_transform.setIdentity();
+                break;
         }
         l_transform.getOpenGLMatrix(glm::value_ptr(f_mat));
     }
@@ -321,4 +324,10 @@ void ROC::Collision::SetMotionType(int f_type)
 int ROC::Collision::GetMotionType() const
 {
     return m_motionType;
+}
+
+// ROC::Collidable
+void ROC::Collision::GetRigidBodies(std::vector<btRigidBody*> &f_vec)
+{
+    if(m_rigidBody) f_vec.push_back(m_rigidBody);
 }

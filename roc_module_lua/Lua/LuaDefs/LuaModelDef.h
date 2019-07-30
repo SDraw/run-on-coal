@@ -25,7 +25,6 @@ class LuaModelDef final
     static int SetCollision(lua_State *f_vm);
     static int GetCollision(lua_State *f_vm);
     static int RemoveCollision(lua_State *f_vm);
-    static int SetCollidable(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

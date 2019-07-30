@@ -12,7 +12,7 @@
 #include "Utils/CustomArguments.h"
 #include "Utils/LuaUtils.h"
 
-#define LM_LUA_METATABLE "lm_mt"
+const char *LuaVM::ms_userdataMetatableName = "lm_ud";
 
 LuaVM::LuaVM(LuaModule *f_module)
 {
@@ -34,14 +34,14 @@ LuaVM::LuaVM(LuaModule *f_module)
     LuaUtilsDef::Init(m_vm);
 
     // Hidden metatable with weak values for elements
-    luaL_newmetatable(m_vm, LM_LUA_METATABLE);
+    luaL_newmetatable(m_vm, "lm_mt");
     lua_pushvalue(m_vm, -1);
     lua_setfield(m_vm, -2, "__index");
     lua_pushstring(m_vm, "v");
     lua_setfield(m_vm, -2, "__mode");
     lua_pushboolean(m_vm, 0);
     lua_setfield(m_vm, -2, "__metatable");
-    lua_setfield(m_vm, LUA_REGISTRYINDEX, LM_METATABLE_USERDATA);
+    lua_setfield(m_vm, LUA_REGISTRYINDEX, ms_userdataMetatableName);
     lua_pop(m_vm, 1);
 }
 LuaVM::~LuaVM()
@@ -106,7 +106,7 @@ void LuaVM::CallFunction(const LuaFunction &f_func, const CustomArguments &f_arg
                 case CustomArgument::CAT_Element:
                 {
                     ROC::IElement *l_element = iter.GetElement();
-                    LuaUtils::PushElementInMetatable(m_vm, LM_METATABLE_USERDATA, l_element, l_element->GetElementTypeName().c_str());
+                    LuaUtils::PushElementInMetatable(m_vm, ms_userdataMetatableName, l_element, l_element->GetElementTypeName().c_str());
                 } break;
                 case CustomArgument::CAT_String:
                 {

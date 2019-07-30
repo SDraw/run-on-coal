@@ -23,6 +23,7 @@ class Animation final : public Element, public virtual IAnimation
         unsigned int m_startTime = 0U;
         unsigned int m_duration = 0U; // Duration between left and right keyframes in milliseconds
         bool m_static = false;
+        //unsigned char m_interpolationType; // TODO
     };
     std::vector<std::vector<keyframeData>> m_boneIntervals;
     BoneFrameData *m_tempFrameData;

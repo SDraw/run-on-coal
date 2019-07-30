@@ -8,7 +8,7 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_FileManageTypesTable
+const std::vector<std::string> g_FileManageTypes
 {
     "create", "open"
 };
@@ -48,7 +48,7 @@ int LuaFileDef::CreateOpen(lua_State *f_vm)
     {
 
         ROC::IFile *l_file = nullptr;
-        switch(EnumUtils::ReadEnumVector(l_manage, g_FileManageTypesTable))
+        switch(EnumUtils::ReadEnumVector(l_manage, g_FileManageTypes))
         {
             case FILE_MANAGE_CREATE:
                 l_file = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateFile_(l_path);

@@ -162,6 +162,9 @@
     <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Collidable.cpp">
+      <Filter>Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -392,6 +395,12 @@
     </ClInclude>
     <ClInclude Include="Utils\zlibUtils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Collidable.h">
+      <Filter>Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ICollidable.h">
+      <Filter>Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

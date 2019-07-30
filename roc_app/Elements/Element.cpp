@@ -4,6 +4,28 @@
 
 #define ROC_ELEMENT_CUSTOMDATA_KEYLENGTH 128U
 
+namespace ROC
+{
+
+const std::string g_ElementTypeName[] = {
+    "Geometry",
+    "Model",
+    "Animation",
+    "Scene",
+    "Camera",
+    "Light",
+    "RenderTarget",
+    "Shader",
+    "Sound",
+    "Texture",
+    "Font",
+    "File",
+    "Collision"
+};
+const std::string g_ElementInvalidName = "Invalid";
+
+}
+
 ROC::Element::Element()
 {
     m_elementType = 0xFF;
@@ -75,7 +97,7 @@ unsigned char ROC::Element::GetElementType() const
 }
 const std::string& ROC::Element::GetElementTypeName() const
 {
-    return m_elementTypeName;
+    return ((m_elementType != 0xFF) ? g_ElementTypeName[m_elementType] : g_ElementInvalidName);
 }
 
 void ROC::Element::AddChild(Element *f_child)

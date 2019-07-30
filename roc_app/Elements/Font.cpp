@@ -28,7 +28,6 @@ GLuint ROC::Font::ms_VAO = 0U;
 ROC::Font::Font()
 {
     m_elementType = ET_Font;
-    m_elementTypeName.assign("Font");
 
     m_loaded = false;
     m_face = FT_Face();

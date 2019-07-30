@@ -1,6 +1,6 @@
 #pragma once
 #include "Interfaces/IModel.h"
-#include "Elements/Element.h"
+#include "Elements/Collidable.h"
 #include "Elements/Collision.h"
 #include "Elements/Animation/Animation.h"
 #include "Elements/Geometry/Geometry.h"
@@ -13,7 +13,7 @@ class Bone;
 class Skeleton;
 class Transformation;
 
-class Model final : public Element, public virtual IModel
+class Model final : public Collidable, public virtual IModel
 {
     Geometry *m_geometry;
     float m_boundSphereRaduis;
@@ -31,6 +31,8 @@ class Model final : public Element, public virtual IModel
 
     Model(const Model &that) = delete;
     Model& operator=(const Model &that) = delete;
+
+    void GetRigidBodies(std::vector<btRigidBody*> &f_vec);
 
     // Interfaces reroute
     bool AttachTo(IModel *f_model, int f_bone = -1);
@@ -70,7 +72,7 @@ public:
 protected:
     enum ModelUpdateStage : unsigned char
     {
-        MUS_Matrix,
+        MUS_Matrix = 0U,
         MUS_Collision,
         MUS_Animation,
         MUS_SkeletonCollisionStatic,
@@ -79,9 +81,6 @@ protected:
 
     explicit Model(Geometry *f_geometry);
     ~Model();
-
-    inline bool HasAnimationController() const { return (m_animController != nullptr); }
-    inline AnimationController* GetAnimationController() const { return m_animController; }
 
     inline bool HasSkeleton() const { return (m_skeleton != nullptr); }
     inline Skeleton* GetSkeleton() const { return m_skeleton; }

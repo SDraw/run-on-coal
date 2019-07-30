@@ -7,7 +7,7 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-const std::vector<std::string> g_PolygonFillTable
+const std::vector<std::string> g_PolygonFilling
 {
     "point", "line", "fill"
 };
@@ -76,7 +76,7 @@ int LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
     argStream.ReadText(l_mode);
     if(!argStream.HasErrors() && !l_mode.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFillTable);
+        int l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFilling);
         if(l_type != -1)
         {
             bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->SetPolygonMode(l_type);

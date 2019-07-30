@@ -22,7 +22,8 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     ConfigManager *l_configManager = m_core->GetConfigManager();
     l_configManager->GetBindIP(l_string);
     RakNet::SocketDescriptor l_socketDescriptor(l_configManager->GetBindPort(), l_string.c_str());
-    if(m_networkInterface->Startup(l_configManager->GetMaxClients(), &l_socketDescriptor, 1) == RakNet::StartupResult::RAKNET_STARTED)
+    RakNet::StartupResult l_startupResult = m_networkInterface->Startup(l_configManager->GetMaxClients(), &l_socketDescriptor, 1);
+    if(l_startupResult == RakNet::RAKNET_STARTED)
     {
         std::string l_log("Network interface started at ");
         l_log.append(l_socketDescriptor.hostAddress);
@@ -39,12 +40,49 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     }
     else
     {
-        m_core->GetLogManager()->Log("Unable to start network interface. Check IP and port in configuration file");
+        std::string l_log("Unable to start network interface. Reason: ");
+        switch(l_startupResult)
+        {
+            case RakNet::RAKNET_ALREADY_STARTED:
+                l_log.append("Already started");
+                break;
+            case RakNet::INVALID_SOCKET_DESCRIPTORS:
+                l_log.append("Invaliid socket descriptors");
+                break;
+            case RakNet::INVALID_MAX_CONNECTIONS:
+                l_log.append("Invalid maximal connections");
+                break;
+            case RakNet::SOCKET_FAMILY_NOT_SUPPORTED:
+                l_log.append("Socket family isn't supported");
+                break;
+            case RakNet::SOCKET_PORT_ALREADY_IN_USE:
+                l_log.append("Socket port is already in use");
+                break;
+            case RakNet::SOCKET_FAILED_TO_BIND:
+                l_log.append("Socket failed to bind");
+                break;
+            case RakNet::SOCKET_FAILED_TEST_SEND:
+                l_log.append("Socket failed to perform test send");
+                break;
+            case RakNet::PORT_CANNOT_BE_ZERO:
+                l_log.append("Port is equal zero");
+                break;
+            case RakNet::FAILED_TO_CREATE_NETWORK_THREAD:
+                l_log.append("Failed to create network thread");
+                break;
+            case RakNet::COULD_NOT_GENERATE_GUID:
+                l_log.append("Failed to generate guid");
+                break;
+            case RakNet::STARTUP_OTHER_FAILURE: default:
+                l_log.append("Unknown reason");
+                break;
+        }
+        m_core->GetLogManager()->Log(l_log);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
         m_networkInterface = nullptr;
     }
 
-    m_clientVector.assign(l_configManager->GetMaxClients(), nullptr);
+    m_clients.assign(l_configManager->GetMaxClients(), nullptr);
 }
 ROC::NetworkManager::~NetworkManager()
 {
@@ -117,13 +155,13 @@ void ROC::NetworkManager::DoPulse()
             {
                 case ID_NEW_INCOMING_CONNECTION:
                 {
-                    std::string l_log("New client connected (");
+                    std::string l_log("Client connected (");
                     l_log.append(l_packet->systemAddress.ToString(true, ':'));
-                    l_log.append(") with ID ");
+                    l_log.push_back(':');
                     l_log.append(std::to_string(l_packet->guid.systemIndex));
 
                     Client *l_client = m_core->GetElementManager()->CreateClient(l_packet->systemAddress);
-                    m_clientVector[l_packet->guid.systemIndex] = l_client;
+                    m_clients[l_packet->guid.systemIndex] = l_client;
 
                     m_arguments.Push(l_client);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkClientConnect, m_arguments);
@@ -134,18 +172,18 @@ void ROC::NetworkManager::DoPulse()
                 {
                     std::string l_log("Client (");
                     l_log.append(l_packet->systemAddress.ToString(true, ':'));
-                    l_log.append(") with ID ");
+                    l_log.push_back(':');
                     l_log.append(std::to_string(l_packet->guid.systemIndex));
                     l_log.append(" disconnected");
 
-                    Client *l_client = m_clientVector[l_packet->guid.systemIndex];
+                    Client *l_client = m_clients[l_packet->guid.systemIndex];
 
                     m_arguments.Push(l_client);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkClientDisconnect, m_arguments);
                     m_arguments.Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
-                    m_clientVector[l_packet->guid.systemIndex] = nullptr;
+                    m_clients[l_packet->guid.systemIndex] = nullptr;
                     m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_ROC_DATA_PACKET:
@@ -159,7 +197,7 @@ void ROC::NetworkManager::DoPulse()
                         l_stringData.resize(static_cast<size_t>(l_textSize));
                         if(l_dataIn.Read(&l_stringData[0], l_textSize))
                         {
-                            Client *l_client = m_clientVector[l_packet->guid.systemIndex];
+                            Client *l_client = m_clients[l_packet->guid.systemIndex];
 
                             m_arguments.Push(l_client);
                             m_arguments.Push(l_stringData);

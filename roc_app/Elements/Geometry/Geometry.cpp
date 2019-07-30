@@ -12,7 +12,6 @@
 ROC::Geometry::Geometry()
 {
     m_elementType = ET_Geometry;
-    m_elementTypeName.assign("Geometry");
 
     m_materialCount = 0U;
     m_boundSphereRaduis = 0.f;

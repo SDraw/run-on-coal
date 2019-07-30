@@ -40,8 +40,9 @@ void ROC::LogManager::Log(const std::string &f_text)
     if(m_enabled)
     {
         std::time_t l_time = std::time(nullptr);
-        tm *l_tmTime = std::localtime(&l_time);
-        m_log << "[" << l_tmTime->tm_hour << ":" << l_tmTime->tm_min << ":" << l_tmTime->tm_sec << "] " << f_text << std::endl;
+        tm l_tmTime;
+        localtime_s(&l_tmTime, &l_time);
+        m_log << "[" << l_tmTime.tm_hour << ":" << l_tmTime.tm_min << ":" << l_tmTime.tm_sec << "] " << f_text << std::endl;
     }
 #endif
 }

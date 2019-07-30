@@ -6,7 +6,7 @@
 #include "Lua/LuaVM.h"
 #include "Utils/EnumUtils.h"
 
-const std::vector<std::string> g_DefaultEventsNames
+const std::vector<std::string> g_DefaultEvents
 {
     "onEngineStart", "onEngineStop",
     "onRender", "onVRRender", "onPreRender",
@@ -26,7 +26,7 @@ EventHandler::EventHandler(LuaModule *f_module)
 {
     m_luaModule = f_module;
 
-    for(auto &iter : g_DefaultEventsNames) m_eventMap.insert(std::make_pair(iter, new EventHeap()));
+    for(auto &iter : g_DefaultEvents) m_eventMap.insert(std::make_pair(iter, new EventHeap()));
     m_eventMapEnd = m_eventMap.end();
 }
 EventHandler::~EventHandler()
@@ -99,7 +99,7 @@ bool EventHandler::AddEventHandler(const std::string &f_event, const LuaFunction
 bool EventHandler::RemoveEvent(const std::string &f_event)
 {
     bool l_result = false;
-    if(EnumUtils::ReadEnumVector(f_event, g_DefaultEventsNames) == -1)
+    if(EnumUtils::ReadEnumVector(f_event, g_DefaultEvents) == -1)
     {
         auto iter = m_eventMap.find(f_event);
         if(iter != m_eventMapEnd)
@@ -150,7 +150,7 @@ bool EventHandler::RemoveEventHandler(const std::string &f_event, LuaFunction &f
 
 void EventHandler::CallEvent(EventHandlerEvent f_event, const CustomArguments &f_args)
 {
-    auto iter = m_eventMap.find(g_DefaultEventsNames[f_event]);
+    auto iter = m_eventMap.find(g_DefaultEvents[f_event]);
     if(iter != m_eventMapEnd)
     {
         EventHeap *l_heap = iter->second;
@@ -184,7 +184,7 @@ void EventHandler::CallEvent(EventHandlerEvent f_event, const CustomArguments &f
 
 void EventHandler::CallEvent(const std::string &f_event, const CustomArguments &f_args)
 {
-    if(std::find(g_DefaultEventsNames.begin(), g_DefaultEventsNames.end(), f_event) == g_DefaultEventsNames.end())
+    if(std::find(g_DefaultEvents.begin(), g_DefaultEvents.end(), f_event) == g_DefaultEvents.end())
     {
         auto iter = m_eventMap.find(f_event);
         if(iter != m_eventMapEnd)

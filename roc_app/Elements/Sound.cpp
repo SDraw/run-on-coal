@@ -13,7 +13,6 @@ extern const glm::vec3 g_EmptyVec3;
 ROC::Sound::Sound()
 {
     m_elementType = ET_Sound;
-    m_elementTypeName.assign("Sound");
 
     m_handle = nullptr;
     m_relative = false;
