@@ -4,7 +4,12 @@
 
 #include "Utils/GLBinder.h"
 
-#define ROC_PHYSICSDRAWER_MAX_LINES 65536
+namespace ROC
+{
+
+const size_t g_PhysicsDrawerMaxLinesCount = 65536U;
+
+}
 
 ROC::PhysicsDrawer::PhysicsDrawer()
 {
@@ -14,12 +19,12 @@ ROC::PhysicsDrawer::PhysicsDrawer()
     glGenBuffers(static_cast<int>(PDBI_BufferCount), m_VBO);
 
     GLBinder::BindArrayBuffer(m_VBO[PDBI_Vertex]);
-    glBufferData(GL_ARRAY_BUFFER, ROC_PHYSICSDRAWER_MAX_LINES*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(PDBI_Vertex);
     glVertexAttribPointer(PDBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     GLBinder::BindArrayBuffer(m_VBO[PDBI_Color]);
-    glBufferData(GL_ARRAY_BUFFER, ROC_PHYSICSDRAWER_MAX_LINES*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(PDBI_Color);
     glVertexAttribPointer(PDBI_Color, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
@@ -71,7 +76,7 @@ void ROC::PhysicsDrawer::Draw(float f_width)
         GLBinder::BindVertexArray(m_VAO);
         while(!m_lines.empty())
         {
-            size_t l_count = std::min(static_cast<size_t>(ROC_PHYSICSDRAWER_MAX_LINES), m_lines.size()); // Count is same for m_colors
+            size_t l_count = std::min(g_PhysicsDrawerMaxLinesCount, m_lines.size()); // Count is same for m_colors
 
             GLBinder::BindArrayBuffer(m_VBO[PDBI_Vertex]);
             glBufferSubData(GL_ARRAY_BUFFER, 0, l_count*sizeof(glm::vec3), m_lines.data());

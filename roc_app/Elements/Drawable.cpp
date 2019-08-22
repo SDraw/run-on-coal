@@ -10,7 +10,7 @@ ROC::Drawable::~Drawable()
 {
 }
 
-int ROC::Drawable::GetFiltering() const 
+unsigned char ROC::Drawable::GetFiltering() const 
 { 
     return m_filtering; 
 };

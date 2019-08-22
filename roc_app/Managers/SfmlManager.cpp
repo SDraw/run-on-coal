@@ -12,11 +12,11 @@ SFML_DEFINE_DISCRETE_GPU_PREFERENCE
 #include "Managers/RenderManager/RenderManager.h"
 #include "Interfaces/IModule.h"
 
-#define ROC_OPENGL_MIN_VERSION 31U
-#define ROC_OPENGL_MIN_VERSION_STRING "3.1"
-
 namespace ROC
 {
+
+const size_t g_GLMinimalVersion = 31U;
+const char g_GLMinimalVersionString[] = "3.1";
 
 const std::string g_KeyNames[]
 {
@@ -90,10 +90,10 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     else
     {
         sf::ContextSettings l_createdContextSettings = m_window->getSettings();
-        if(l_createdContextSettings.majorVersion * 10U + l_createdContextSettings.minorVersion < ROC_OPENGL_MIN_VERSION)
+        if(l_createdContextSettings.majorVersion * 10U + l_createdContextSettings.minorVersion < g_GLMinimalVersion)
         {
             l_log.assign("SFML: Minimal supported OpenGL version - ");
-            l_log.append(ROC_OPENGL_MIN_VERSION_STRING);
+            l_log.append(g_GLMinimalVersionString);
             l_log.push_back('\n');
             l_log.append("System OpenGL version - ");
             l_log.append(std::to_string(l_createdContextSettings.majorVersion));

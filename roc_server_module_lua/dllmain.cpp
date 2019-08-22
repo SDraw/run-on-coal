@@ -27,6 +27,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 extern "C" __declspec(dllexport) ROC::IModule* ServerModuleInit(ROC::ICore *f_core)
 {
-    if(!g_Module) g_Module = LuaModule::Init(f_core);
+    if(!g_Module)
+    {
+        if(LuaModule::Init(f_core)) g_Module = LuaModule::GetModule();
+    }
     return g_Module;
 }

@@ -10,8 +10,12 @@
 #include "Managers/ModuleManager.h"
 #include "Interfaces/IModule.h"
 
-#define ROC_NETWORK_MAX_CONNECTIONS 8
-#define ROC_NETWORK_DISCONNECT_DURATION 300U
+namespace ROC
+{
+
+const size_t g_NetworkDisconnectDuration = 300U;
+
+}
 
 ROC::NetworkManager::NetworkManager(Core *f_core)
 {
@@ -88,7 +92,7 @@ ROC::NetworkManager::~NetworkManager()
 {
     if(m_networkInterface)
     {
-        m_networkInterface->Shutdown(ROC_NETWORK_DISCONNECT_DURATION);
+        m_networkInterface->Shutdown(g_NetworkDisconnectDuration);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
 }

@@ -14,10 +14,9 @@ const unsigned char g_TextureDummyPattern[] = {
     0x7FU, 0x7FU, 0x7FU
 };
 const glm::ivec2 g_TextureDummySize(2, 2);
+const size_t g_TextureCubeSidesCount = 6U;
 
 }
-
-#define ROC_TEXTURE_CUBESIDES_COUNT 6
 
 ROC::Texture::Texture()
 {
@@ -37,7 +36,7 @@ ROC::Texture::~Texture()
     }
 }
 
-bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, bool f_compress)
+bool ROC::Texture::Load(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress)
 {
     if(m_texture == 0U)
     {
@@ -49,9 +48,9 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
             m_size.y = static_cast<int>(l_imageSize.y);
 
             m_type = f_type;
-            btClamp(m_type, static_cast<int>(TT_RGB), static_cast<int>(TT_RGBA));
+            btClamp<unsigned char>(m_type, TT_RGB,TT_RGBA);
             m_filtering = f_filter;
-            btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
+            btClamp<unsigned char>(m_filtering, DFT_Nearest, DFT_Linear);
             m_compressed = f_compress;
 
             const GLuint l_lastTexture2D = GLBinder::GetBindedTexture2D();
@@ -69,12 +68,12 @@ bool ROC::Texture::Load(const std::string &f_path, int f_type, int f_filter, boo
     }
     return (m_texture != 0U);
 }
-bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
+bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     if(m_texture == 0U)
     {
         m_type = TT_Cubemap;
-        btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
+        btClamp<unsigned char>(m_filtering, DFT_Nearest, DFT_Linear);
         m_compressed = f_compress;
 
         const GLuint l_lastTextureCubemap = GLBinder::GetBindedTextureCubemap();
@@ -86,7 +85,7 @@ bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, int f_fil
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
 
-        for(size_t i = 0U, j = std::min(static_cast<size_t>(ROC_TEXTURE_CUBESIDES_COUNT), f_path.size()); i < j; i++)
+        for(size_t i = 0U, j = std::min(g_TextureCubeSidesCount, f_path.size()); i < j; i++)
         {
             sf::Image l_image;
             if(l_image.loadFromFile(f_path[i]))

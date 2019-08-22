@@ -9,6 +9,17 @@
 #include "Utils/GLBinder.h"
 #include "Utils/zlibUtils.h"
 
+namespace ROC
+{
+
+enum GeometrySetByte : unsigned char
+{
+    GSB_Animated = 0x2U,
+    GSB_Collision = 0xCBU
+};
+
+}
+
 ROC::Geometry::Geometry()
 {
     m_elementType = ET_Geometry;
@@ -107,7 +118,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     l_material->LoadUVs(l_uvData);
                     l_uvData.clear();
 
-                    if(l_type == GSB_Animated)
+                    if(l_type == GeometrySetByte::GSB_Animated)
                     {
                         // Weight data
                         l_file.read(reinterpret_cast<char*>(&l_compressedSize), sizeof(unsigned int));
@@ -134,7 +145,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 }
 
                 // Skeleton
-                if(l_type == GSB_Animated)
+                if(l_type == GeometrySetByte::GSB_Animated)
                 {
                     unsigned int l_bonesCount;
                     l_file.read(reinterpret_cast<char*>(&l_bonesCount), sizeof(unsigned int));
@@ -186,13 +197,13 @@ bool ROC::Geometry::Load(const std::string &f_path)
         // Static and dynamic collision, only for animated geometry
         if(m_loaded)
         {
-            if(l_type == GSB_Animated)
+            if(l_type == GeometrySetByte::GSB_Animated)
             {
                 try
                 {
                     unsigned char l_physicsBlock = 0U;
                     l_file.read(reinterpret_cast<char*>(&l_physicsBlock), sizeof(unsigned char));
-                    if(l_physicsBlock == GSB_Collision)
+                    if(l_physicsBlock == GeometrySetByte::GSB_Collision)
                     {
                         unsigned int l_scbCount = 0U;
                         l_file.read(reinterpret_cast<char*>(&l_scbCount), sizeof(unsigned int));

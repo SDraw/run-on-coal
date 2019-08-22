@@ -7,15 +7,17 @@ namespace ROC
 
 class File final : public Element, public virtual IFile
 {
-    enum FileMode
+    enum FileMode : unsigned char
     {
-        FM_None = -1,
-        FM_Read,
-        FM_Write
+        FM_Read = 0U,
+        FM_Write,
+
+        FM_None = 0xFFU
     };
-    FileMode m_type = FM_None;
+
     std::fstream *m_file;
     std::string m_path;
+    FileMode m_type;
 
     File(const File &that) = delete;
     File& operator=(const File &that) = delete;

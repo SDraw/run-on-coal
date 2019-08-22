@@ -31,8 +31,8 @@ class AsyncManager final : public IAsyncManager
     AsyncManager& operator=(const AsyncManager &that) = delete;
 public:
     void* LoadGeometry(const std::string &f_path);
-    void* LoadTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress);
-    void* LoadTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
+    void* LoadTexture(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress);
+    void* LoadTexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
 protected:
     explicit AsyncManager(Core *f_core);
     ~AsyncManager();

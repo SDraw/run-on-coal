@@ -9,17 +9,17 @@ class IModel;
 class ICollision : public virtual IElement
 {
 public:
-    enum CollisionType : int
+    enum CollisionType : unsigned char
     {
-        CT_Sphere,
+        CT_Sphere = 0U,
         CT_Box,
         CT_Cylinder,
         CT_Capsule,
         CT_Cone
     };
-    enum CollisionMotionType : int
+    enum CollisionMotionType : unsigned char
     {
-        CMT_Default,
+        CMT_Default = 0U,
         CMT_Static,
         CMT_Kinematic
     };
@@ -57,8 +57,8 @@ public:
 
     virtual void ApplyTorque(const glm::vec3 &f_torque, bool f_impulse) = 0;
 
-    virtual void SetMotionType(int f_type) = 0;
-    virtual int GetMotionType() const = 0;
+    virtual void SetMotionType(unsigned char f_type) = 0;
+    virtual unsigned char GetMotionType() const = 0;
 
     virtual void GetMatrix(glm::mat4 &f_mat) const = 0;
 };

@@ -14,9 +14,9 @@ public:
     virtual bool IsCubic() const = 0;
 
     virtual const glm::ivec2& GetSize() const = 0;
-    int GetFiltering() const;
+    unsigned char GetFiltering() const;
 protected:
-    int m_filtering;
+    unsigned char m_filtering;
 
     Drawable();
     virtual ~Drawable();

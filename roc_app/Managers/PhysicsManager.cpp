@@ -10,8 +10,13 @@
 #include "Managers/ElementManager.h"
 #include "Elements/Model/Skeleton.h"
 
-#define ROC_PHYSICS_DEFAULT_TIMESTEP 1.f/120.f
-#define ROC_PHYSICS_DEFAULT_SUBSTEPS 10
+namespace ROC
+{
+
+const float g_PhysicsDefaultTimestep = 1.f / 120.f;
+const int g_PhysicsDefaultSubstepsCount = 10;
+
+}
 
 ROC::PhysicsManager::PhysicsManager(Core *f_core)
 {
@@ -30,7 +35,7 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
     m_enabled = false;
 
     unsigned int l_fpsLimit = m_core->GetConfigManager()->GetFPSLimit();
-    m_timeStep = (l_fpsLimit == 0U) ? ROC_PHYSICS_DEFAULT_TIMESTEP : (1.f / static_cast<float>(l_fpsLimit));
+    m_timeStep = (l_fpsLimit == 0U) ? g_PhysicsDefaultTimestep : (1.f / static_cast<float>(l_fpsLimit));
 }
 ROC::PhysicsManager::~PhysicsManager()
 {
@@ -121,7 +126,7 @@ void ROC::PhysicsManager::SetCollisionScale(Collision *f_col, const glm::vec3 &f
 
 void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
 {
-    m_timeStep = (f_fps == 0U) ? ROC_PHYSICS_DEFAULT_TIMESTEP : (1.f / static_cast<float>(f_fps));
+    m_timeStep = (f_fps == 0U) ? g_PhysicsDefaultTimestep : (1.f / static_cast<float>(f_fps));
 }
 
 void ROC::PhysicsManager::AddModel(Model *f_model)
@@ -218,5 +223,5 @@ void ROC::PhysicsManager::DrawDebugWorld()
 
 void ROC::PhysicsManager::DoPulse()
 {
-    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, ROC_PHYSICS_DEFAULT_SUBSTEPS, ROC_PHYSICS_DEFAULT_TIMESTEP);
+    if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, g_PhysicsDefaultSubstepsCount, g_PhysicsDefaultTimestep);
 }

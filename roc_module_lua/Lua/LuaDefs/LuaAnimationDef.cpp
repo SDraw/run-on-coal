@@ -37,7 +37,7 @@ int LuaAnimationDef::GetBonesCount(lua_State *f_vm)
     ROC::IAnimation *l_anim;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_anim);
-    !argStream.HasErrors() ? argStream.PushNumber(static_cast<lua_Number>(l_anim->GetBonesCount())) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushInteger(l_anim->GetBonesCount()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 int LuaAnimationDef::GetDuration(lua_State *f_vm)

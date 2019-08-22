@@ -7,7 +7,7 @@ namespace ROC
 
 class Camera final : public Element, public ICamera
 {
-    int m_type;
+    unsigned char m_type;
 
     glm::vec3 m_viewPosition;
     glm::vec3 m_viewDirection;
@@ -30,8 +30,8 @@ class Camera final : public Element, public ICamera
     Camera(const Camera &that) = delete;
     Camera& operator=(const Camera &that) = delete;
 public:
-    void SetProjectionType(int f_type);
-    int GetProjectionType() const;
+    void SetProjectionType(unsigned char f_type);
+    unsigned char GetProjectionType() const;
 
     void SetFOV(float f_fov);
     float GetFOV() const;
@@ -63,7 +63,7 @@ public:
     bool IsInFrustum(const glm::mat4 &f_mat, float f_radius);
 protected:
 
-    explicit Camera(int f_type);
+    explicit Camera(unsigned char f_type);
     ~Camera();
 
     static void SetVRSystem(vr::IVRSystem *f_system);

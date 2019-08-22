@@ -76,10 +76,10 @@ int LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
     argStream.ReadText(l_mode);
     if(!argStream.HasErrors() && !l_mode.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFilling);
-        if(l_type != -1)
+        size_t l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFilling);
+        if(l_type != std::numeric_limits<size_t>::max())
         {
-            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->SetPolygonMode(l_type);
+            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->SetPolygonMode(static_cast<int>(l_type));
             argStream.PushBoolean(l_result);
         }
         else argStream.PushBoolean(false);

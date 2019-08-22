@@ -40,20 +40,20 @@ class ElementManager final : public IElementManager
     bool DestroyElement(IElement *f_element);
 public:
     Scene* CreateScene();
-    Camera* CreateCamera(int f_type);
+    Camera* CreateCamera(unsigned char f_type);
     Light* CreateLight(unsigned char f_type);
     Geometry* CreateGeometry(const std::string &f_path);
     Model* CreateModel(Geometry *f_geometry);
     Shader* CreateShader(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
     Animation* CreateAnimation(const std::string &f_path);
     Sound* CreateSound(const std::string &f_path);
-    RenderTarget* CreateRenderTarget(int f_type, const glm::ivec2 &f_size, int f_filter);
-    Texture* CreateTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress);
-    Texture* CreateTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress);
-    Font* CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter);
+    RenderTarget* CreateRenderTarget(unsigned char f_type, const glm::ivec2 &f_size, unsigned char f_filter);
+    Texture* CreateTexture(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress);
+    Texture* CreateTexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
+    Font* CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter);
     File* CreateFile_(const std::string &f_path);
     File* OpenFile(const std::string &f_path, bool f_ro);
-    Collision* CreateCollision(int f_type, const glm::vec3 &f_size, float f_mass);
+    Collision* CreateCollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass);
 
     bool IsValidElement(Element *f_ptr) const;
     bool DestroyElement(Element *f_element);

@@ -2,8 +2,6 @@
 #include "Interfaces/IFont.h"
 #include "Elements/Element.h"
 
-#define ROC_FONT_ATLAS_SIZE 256
-
 namespace ROC
 {
 
@@ -46,7 +44,7 @@ class Font final : public Element, public virtual IFont
     static std::vector<glm::vec2> ms_uv;
     static GLuint ms_VAO;
 
-    int m_filteringType;
+    unsigned char m_filteringType;
 
     bool m_loaded;
 
@@ -55,7 +53,7 @@ class Font final : public Element, public virtual IFont
 
     bool LoadChar(unsigned int f_char);
 public:
-    int GetFiltering() const;
+    unsigned char GetFiltering() const;
     float GetGlyphSize() const;
 protected:
     Font();
@@ -65,7 +63,7 @@ protected:
     static void DestroyVAO();
     static void CreateLibrary();
     static void DestroyLibrary();
-    bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter = FFT_Nearest);
+    bool Load(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter);
 
     void Draw(const sf::String &f_text, const glm::vec2 &f_pos);
 

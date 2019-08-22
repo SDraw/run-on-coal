@@ -93,7 +93,7 @@ bool EventHandler::AddEventHandler(const std::string &f_event, const LuaFunction
 bool EventHandler::RemoveEvent(const std::string &f_event)
 {
     bool l_result = false;
-    if(EnumUtils::ReadEnumVector(f_event, g_DefaultEventsNames) == -1)
+    if(EnumUtils::ReadEnumVector(f_event, g_DefaultEventsNames) == std::numeric_limits<size_t>::max())
     {
         auto iter = m_eventMap.find(f_event);
         if(iter != m_eventMapEnd)

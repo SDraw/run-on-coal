@@ -7,7 +7,7 @@ namespace ROC
 
 class RenderTarget final : public Drawable, public virtual IRenderTarget
 {
-    int m_type;
+    unsigned char m_type;
 
     GLuint m_frameBuffer;
     GLuint m_renderBuffer;
@@ -32,7 +32,8 @@ public:
 protected:
     RenderTarget();
     ~RenderTarget();
-    bool Create(int f_type, const glm::ivec2 &f_size, int f_filter = DFT_Nearest);
+
+    bool Create(unsigned char f_type, const glm::ivec2 &f_size, unsigned char f_filter);
     inline const std::string& GetError() const { return m_error; }
 
     inline GLuint GetTextureID() const { return m_texture; };

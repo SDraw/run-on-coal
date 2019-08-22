@@ -12,12 +12,6 @@ struct BoneJointData;
 
 class Geometry final : public Element, public virtual IGeometry
 {
-    enum GeometrySetByte : unsigned char
-    {
-        GSB_Animated = 0x2U,
-        GSB_Collision = 0xCBU
-    };
-
     std::vector<Material*> m_materials;
     size_t m_materialCount;
     float m_boundSphereRaduis;

@@ -7,17 +7,17 @@ namespace ROC
 class ICamera : public virtual IElement
 {
 public:
-    enum CameraProjectionType
+    enum CameraProjectionType : unsigned char
     {
-        CPT_Perspective,
+        CPT_Perspective = 0U,
         CPT_Orthogonal,
         CPT_Screen,
         CPT_VRLeft,
         CPT_VRRight
     };
 
-    virtual void SetProjectionType(int f_type) = 0;
-    virtual int GetProjectionType() const = 0;
+    virtual void SetProjectionType(unsigned char f_type) = 0;
+    virtual unsigned char GetProjectionType() const = 0;
 
     virtual void SetFOV(float f_fov) = 0;
     virtual float GetFOV() const = 0;

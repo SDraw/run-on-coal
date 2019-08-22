@@ -1,5 +1,6 @@
 #pragma once
 #pragma warning (disable : 4250)
+#define NOMINMAX
 
 #include <iostream>
 #include <string>

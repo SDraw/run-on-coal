@@ -27,11 +27,11 @@ ROC::Collision::~Collision()
     }
 }
 
-bool ROC::Collision::Create(int f_type, const glm::vec3 &f_size, float f_mass)
+bool ROC::Collision::Create(unsigned char f_type, const glm::vec3 &f_size, float f_mass)
 {
     if(!m_rigidBody)
     {
-        btClamp(f_type, static_cast<int>(CT_Sphere), static_cast<int>(CT_Cone));
+        btClamp<unsigned char>(f_type, CT_Sphere, CT_Cone);
         btVector3 l_inertia;
         btCollisionShape *l_shape = nullptr;
         switch(f_type)
@@ -295,12 +295,12 @@ void ROC::Collision::GetMatrix(glm::mat4 &f_mat) const
     }
 }
 
-void ROC::Collision::SetMotionType(int f_type)
+void ROC::Collision::SetMotionType(unsigned char f_type)
 {
     if(m_rigidBody)
     {
         m_motionType = f_type;
-        btClamp(m_motionType, static_cast<int>(CMT_Default), static_cast<int>(CMT_Kinematic));
+        btClamp<unsigned char>(m_motionType, CMT_Default, CMT_Kinematic);
         switch(m_motionType)
         {
             case CMT_Default:
@@ -321,7 +321,7 @@ void ROC::Collision::SetMotionType(int f_type)
         }
     }
 }
-int ROC::Collision::GetMotionType() const
+unsigned char ROC::Collision::GetMotionType() const
 {
     return m_motionType;
 }

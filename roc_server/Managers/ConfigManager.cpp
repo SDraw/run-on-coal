@@ -4,19 +4,21 @@
 
 #include "Utils/EnumUtils.h"
 
-#define ROC_CONFIG_ATTRIB_LOGGING 0
-#define ROC_CONFIG_ATTRIB_IP 1
-#define ROC_CONFIG_ATTRIB_PORT 2
-#define ROC_CONFIG_ATTRIB_MAXCLIENTS 3
-#define ROC_CONFIG_ATTRIB_PULSETICK 4
-#define ROC_CONFIG_ATTRIB_MODULE 5
-
 namespace ROC
 {
 
 const std::vector<std::string> g_configAttributeTable
 {
     "logging", "ip", "port", "max_clients", "pulse_tick", "module"
+};
+enum ConfigAttribute : size_t
+{
+    CA_Logging = 0U,
+    CA_IP,
+    CA_Port,
+    CA_MaxClients,
+    CA_PulseTick,
+    CA_Module
 };
 
 }
@@ -47,22 +49,22 @@ ROC::ConfigManager::ConfigManager()
                     {
                         switch(EnumUtils::ReadEnumVector(l_param, g_configAttributeTable))
                         {
-                            case ROC_CONFIG_ATTRIB_LOGGING:
+                            case ConfigAttribute::CA_Logging:
                                 m_logging = l_attrib.as_bool(true);
                                 break;
-                            case ROC_CONFIG_ATTRIB_IP:
+                            case ConfigAttribute::CA_IP:
                                 m_bindIP.assign(l_attrib.as_string("0.0.0.0"));
                                 break;
-                            case ROC_CONFIG_ATTRIB_PORT:
+                            case ConfigAttribute::CA_Port:
                                 m_bindPort = static_cast<unsigned short>(l_attrib.as_uint(4200U));
                                 break;
-                            case ROC_CONFIG_ATTRIB_MAXCLIENTS:
+                            case ConfigAttribute::CA_MaxClients:
                                 m_maxClients = static_cast<unsigned short>(l_attrib.as_uint(10U));
                                 break;
-                            case ROC_CONFIG_ATTRIB_PULSETICK:
+                            case ConfigAttribute::CA_PulseTick:
                                 m_pulseTick = l_attrib.as_uint(10U);
                                 break;
-                            case ROC_CONFIG_ATTRIB_MODULE:
+                            case ConfigAttribute::CA_Module:
                             {
                                 std::string l_module = l_attrib.as_string();
                                 if(!l_module.empty()) m_modules.push_back(l_module);

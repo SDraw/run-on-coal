@@ -22,7 +22,9 @@ public:
         ET_Texture, 
         ET_Font, 
         ET_File, 
-        ET_Collision
+        ET_Collision,
+
+        ET_Invalid = 0xFFU
     };
 
     virtual bool SetData(const std::string &f_key, const CustomArgument &f_val) = 0;

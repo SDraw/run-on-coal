@@ -2,8 +2,6 @@
 
 #include "Elements/Element.h"
 
-#define ROC_ELEMENT_CUSTOMDATA_KEYLENGTH 128U
-
 namespace ROC
 {
 
@@ -24,11 +22,13 @@ const std::string g_ElementTypeName[] = {
 };
 const std::string g_ElementInvalidName = "Invalid";
 
+const size_t g_ElementKeyMaxLength = 128U;
+
 }
 
 ROC::Element::Element()
 {
-    m_elementType = 0xFF;
+    m_elementType = ET_Invalid;
     m_customDataMapEnd = m_customDataMap.end();
 }
 ROC::Element::~Element()
@@ -54,7 +54,7 @@ bool ROC::Element::HasParents() const
 bool ROC::Element::SetData(const std::string &f_key, const CustomArgument &f_val)
 {
     bool l_result = false;
-    if(f_key.length() <= ROC_ELEMENT_CUSTOMDATA_KEYLENGTH)
+    if(f_key.length() <= g_ElementKeyMaxLength)
     {
         auto iter = m_customDataMap.find(f_key);
         if(iter == m_customDataMapEnd)
@@ -97,7 +97,7 @@ unsigned char ROC::Element::GetElementType() const
 }
 const std::string& ROC::Element::GetElementTypeName() const
 {
-    return ((m_elementType != 0xFF) ? g_ElementTypeName[m_elementType] : g_ElementInvalidName);
+    return ((m_elementType != ET_Invalid) ? g_ElementTypeName[m_elementType] : g_ElementInvalidName);
 }
 
 void ROC::Element::AddChild(Element *f_child)

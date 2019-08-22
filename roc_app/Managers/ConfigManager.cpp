@@ -11,17 +11,19 @@ const std::vector<std::string> g_ConfigAttributes
 {
     "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync", "vr", "module"
 };
+enum ConfigAttribute : size_t
+{
+    CA_Antialiasing = 0U,
+    CA_Dimension,
+    CA_Fullscreen,
+    CA_Logging,
+    CA_FPSLimit,
+    CA_VSync,
+    CA_VR,
+    CA_Module
+};
 
 }
-
-#define ROC_CONFIG_ATTRIB_ANTIALIASING 0
-#define ROC_CONFIG_ATTRIB_DIMENSION 1
-#define ROC_CONFIG_ATTRIB_FULLSCREEN 2
-#define ROC_CONFIG_ATTRIB_LOGGING 3
-#define ROC_CONFIG_ATTRIB_FPSLIMIT 4
-#define ROC_CONFIG_ATTRIB_VSYNC 5
-#define ROC_CONFIG_ATTRIB_VR 6
-#define ROC_CONFIG_ATTRIB_MODULE 7
 
 ROC::ConfigManager::ConfigManager()
 {
@@ -50,36 +52,36 @@ ROC::ConfigManager::ConfigManager()
                     {
                         switch(EnumUtils::ReadEnumVector(l_param, g_ConfigAttributes))
                         {
-                            case ROC_CONFIG_ATTRIB_ANTIALIASING:
+                            case ConfigAttribute::CA_Antialiasing:
                             {
                                 m_antialiasing = l_attrib.as_int(0);
                                 if(m_antialiasing < 0) m_antialiasing = 0;
                             } break;
-                            case ROC_CONFIG_ATTRIB_DIMENSION:
+                            case ConfigAttribute::CA_Dimension:
                             {
                                 std::string l_size = l_attrib.as_string("854x480");
                                 std::replace(l_size.begin(), l_size.end(), 'x', ' ');
                                 std::stringstream l_sizeStream(l_size);
                                 l_sizeStream >> m_windowSize.x >> m_windowSize.y;
                             } break;
-                            case ROC_CONFIG_ATTRIB_FULLSCREEN:
+                            case ConfigAttribute::CA_Fullscreen:
                                 m_fullscreen = l_attrib.as_bool(false);
                                 break;
-                            case ROC_CONFIG_ATTRIB_LOGGING:
+                            case ConfigAttribute::CA_Logging:
                                 m_logging = l_attrib.as_bool(false);
                                 break;
-                            case ROC_CONFIG_ATTRIB_FPSLIMIT:
+                            case ConfigAttribute::CA_FPSLimit:
                             {
                                 m_fpsLimit = l_attrib.as_uint(60U);
                                 if(m_fpsLimit == 0U) m_fpsLimit = 60U;
                             } break;
-                            case ROC_CONFIG_ATTRIB_VSYNC:
+                            case ConfigAttribute::CA_VSync:
                                 m_vsync = l_attrib.as_bool(false);
                                 break;
-                            case ROC_CONFIG_ATTRIB_VR:
+                            case ConfigAttribute::CA_VR:
                                 m_vrMode = l_attrib.as_bool(false);
                                 break;
-                            case ROC_CONFIG_ATTRIB_MODULE:
+                            case ConfigAttribute::CA_Module:
                             {
                                 std::string l_module = l_attrib.as_string();
                                 if(!l_module.empty()) m_modules.push_back(l_module);

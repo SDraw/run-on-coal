@@ -333,13 +333,8 @@ int LuaModelDef::SetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_propertyString.empty())
     {
         bool l_result = false;
-        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationProperties);
-        if(l_enum != -1)
-        {
-            ROC::IModel::ModelAnimationProperty l_property = static_cast<ROC::IModel::ModelAnimationProperty>(l_enum);
-            l_result = l_model->SetAnimationProperty(l_property, l_value);
-
-        }
+        size_t l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationProperties);
+        if(l_enum != std::numeric_limits<size_t>::max()) l_result = l_model->SetAnimationProperty(static_cast<ROC::IModel::ModelAnimationProperty>(l_enum), l_value);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -356,12 +351,11 @@ int LuaModelDef::GetAnimationProperty(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_propertyString.empty())
     {
         bool l_result = false;
-        int l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationProperties);
-        if(l_enum != -1)
+        size_t l_enum = EnumUtils::ReadEnumVector(l_propertyString, g_AnimationProperties);
+        if(l_enum != std::numeric_limits<size_t>::max())
         {
             float l_value = 0.f;
-            ROC::IModel::ModelAnimationProperty l_property = static_cast<ROC::IModel::ModelAnimationProperty>(l_enum);
-            if(l_model->GetAnimationProperty(l_property, l_value))
+            if(l_model->GetAnimationProperty(static_cast<ROC::IModel::ModelAnimationProperty>(l_enum), l_value))
             {
                 argStream.PushNumber(l_value);
                 l_result = true;

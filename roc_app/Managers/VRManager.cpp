@@ -18,15 +18,18 @@ namespace ROC
 extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec3 g_EmptyVec3;
 extern const glm::quat g_DefaultRotation;
+
 const std::vector<std::string> g_VRRenderSide
 {
     "left", "right"
 };
+enum VRRenderSide : size_t
+{
+    VRRS_Left = 0U,
+    VRRS_Right
+};
 
 }
-
-#define ROC_VRRENDER_SIDE_LEFT 0U
-#define ROC_VRRENDER_SIDE_RIGHT 1U
 
 ROC::VRManager::VRManager(Core *f_core)
 {
@@ -162,7 +165,7 @@ bool ROC::VRManager::IsControllerActive(unsigned int f_id) const
 }
 unsigned char ROC::VRManager::GetControllerHandAssignment(unsigned int f_id) const
 {
-    unsigned char l_result = CHA_None;
+    unsigned char l_result = CHA_Unknown;
     for(auto l_controller : m_vrControllers)
     {
         if(l_controller->m_id == f_id)
@@ -289,7 +292,7 @@ void ROC::VRManager::Render()
         m_eyeRT[VRE_Left]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRE_Left]);
 
-        m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_LEFT]);
+        m_arguments.Push(g_VRRenderSide[VRRenderSide::VRRS_Left]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments.Clear();
 
@@ -297,7 +300,7 @@ void ROC::VRManager::Render()
         m_eyeRT[VRE_Right]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRS_Right]);
 
-        m_arguments.Push(g_VRRenderSide[ROC_VRRENDER_SIDE_RIGHT]);
+        m_arguments.Push(g_VRRenderSide[VRRenderSide::VRRS_Right]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments.Clear();
 
@@ -430,7 +433,7 @@ void ROC::VRManager::AddController(vr::TrackedDeviceIndex_t f_id)
             l_controller->m_hand = CHA_Right;
             break;
         default:
-            l_controller->m_hand = CHA_None;
+            l_controller->m_hand = CHA_Unknown;
             break;
     }
     l_controller->m_position = g_EmptyVec3;

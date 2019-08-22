@@ -6,6 +6,7 @@ ROC::File::File()
 {
     m_elementType = ET_File;
     m_file = nullptr;
+    m_type = FM_None;
 }
 ROC::File::~File()
 {

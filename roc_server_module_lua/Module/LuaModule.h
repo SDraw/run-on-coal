@@ -15,9 +15,9 @@ class LuaModule : public ROC::IModule
     explicit LuaModule(ROC::ICore *f_core);
     ~LuaModule();
 public:
-    static LuaModule* Init(ROC::ICore *f_core);
+    static bool Init(ROC::ICore *f_core);
     inline static LuaModule* GetModule() { return ms_instance; }
-    static void Terminate();
+    static bool Terminate();
 
     inline ROC::ICore* GetEngineCore() const { return m_core; }
     inline LuaVM* GetLuaVM() const { return m_luaVM; }

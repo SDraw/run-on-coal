@@ -46,8 +46,7 @@ int main(int argc, char *argv[])
 #endif
     if(ROC::Core::Init())
     {
-        ROC::Core *l_core = ROC::Core::GetCore();
-        while(!g_quitSetter) l_core->DoPulse();
+        while(!g_quitSetter) ROC::Core::GetCore()->DoPulse();
         ROC::Core::Terminate();
     }
     return EXIT_SUCCESS;

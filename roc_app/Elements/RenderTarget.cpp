@@ -22,14 +22,14 @@ ROC::RenderTarget::~RenderTarget()
     Clear();
 }
 
-bool ROC::RenderTarget::Create(int f_type, const glm::ivec2 &f_size, int f_filter)
+bool ROC::RenderTarget::Create(unsigned char f_type, const glm::ivec2 &f_size, unsigned char f_filter)
 {
     if(m_type == RTT_None)
     {
         m_type = f_type;
-        btClamp(m_type, static_cast<int>(RTT_Shadow), static_cast<int>(RTT_RGBAF));
+        btClamp<unsigned char>(m_type, RTT_Shadow, RTT_RGBAF);
         m_filtering = f_filter;
-        btClamp(m_filtering, static_cast<int>(DFT_Nearest), static_cast<int>(DFT_Linear));
+        btClamp<unsigned char>(m_filtering, DFT_Nearest, DFT_Linear);
 
         const GLuint l_lastFramebuffer = GLBinder::GetBindedFramebuffer();
 

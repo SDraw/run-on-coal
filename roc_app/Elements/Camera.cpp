@@ -15,12 +15,12 @@ const glm::vec3 g_CameraDefaultUpDirection(0.f, 1.f, 0.f);
 
 }
 
-ROC::Camera::Camera(int f_type)
+ROC::Camera::Camera(unsigned char f_type)
 {
     m_elementType = ET_Camera;
 
     m_type = f_type;
-    btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_VRRight));
+    btClamp<unsigned char>(m_type,CPT_Perspective, CPT_VRRight);
 
     m_viewPosition = g_EmptyVec3;
     m_viewDirection = g_CameraDefaultViewDirection;
@@ -41,16 +41,16 @@ ROC::Camera::~Camera()
 {
 }
 
-void ROC::Camera::SetProjectionType(int f_type)
+void ROC::Camera::SetProjectionType(unsigned char f_type)
 {
     if(m_type != f_type)
     {
         m_type = f_type;
-        btClamp(m_type, static_cast<int>(CPT_Perspective), static_cast<int>(CPT_VRRight));
+        btClamp<unsigned char>(m_type, CPT_Perspective, CPT_VRRight);
         m_rebuildProjection = true;
     }
 }
-int ROC::Camera::GetProjectionType() const
+unsigned char ROC::Camera::GetProjectionType() const
 {
     return m_type;
 }

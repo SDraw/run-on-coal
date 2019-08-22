@@ -13,10 +13,10 @@ extern const glm::vec3 g_EmptyVec3;
 extern const glm::quat g_DefaultRotation;
 
 extern const float g_QuadVertexUV[];
+const size_t g_Quad3DVerticesCount = 6U;
 
 }
 
-#define ROC_QUAD3D_VERTEX_COUNT 6
 
 ROC::Quad3D::Quad3D()
 {
@@ -32,18 +32,18 @@ ROC::Quad3D::Quad3D()
 
     glEnableVertexAttribArray(QBI_Vertex);
     GLBinder::BindArrayBuffer(m_VBO[QBI_Vertex]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * ROC_QUAD3D_VERTEX_COUNT, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * g_Quad3DVerticesCount, NULL, GL_DYNAMIC_DRAW);
     glVertexAttribPointer(QBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     glEnableVertexAttribArray(QBI_UV);
     GLBinder::BindArrayBuffer(m_VBO[QBI_UV]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2U * ROC_QUAD3D_VERTEX_COUNT, g_QuadVertexUV, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2U * g_Quad3DVerticesCount, g_QuadVertexUV, GL_STATIC_DRAW);
     glVertexAttribPointer(QBI_UV, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    std::vector<glm::vec3> l_normals(ROC_QUAD3D_VERTEX_COUNT, glm::vec3(0.f, 0.f, 1.f));
+    std::vector<glm::vec3> l_normals(g_Quad3DVerticesCount, glm::vec3(0.f, 0.f, 1.f));
     glEnableVertexAttribArray(QBI_Vertex);
     GLBinder::BindArrayBuffer(m_VBO[QBI_Vertex]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*ROC_QUAD3D_VERTEX_COUNT, l_normals.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*g_Quad3DVerticesCount, l_normals.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(QBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     for(auto &l_vertex : m_vertex) l_vertex.z = 0.f;
@@ -80,12 +80,12 @@ void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_r
         m_vertex[1].y = m_vertex[2].y = m_vertex[4].y = -m_size.y / 2.f;
 
         GLBinder::BindArrayBuffer(m_VBO[QBI_Vertex]);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3)*ROC_QUAD3D_VERTEX_COUNT, m_vertex);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3)*g_Quad3DVerticesCount, m_vertex);
     }
 }
 
 void ROC::Quad3D::Draw()
 {
     GLBinder::BindVertexArray(m_VAO);
-    glDrawArrays(GL_TRIANGLES, 0, ROC_QUAD3D_VERTEX_COUNT);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(g_Quad3DVerticesCount));
 }

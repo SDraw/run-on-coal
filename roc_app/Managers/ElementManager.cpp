@@ -44,7 +44,7 @@ ROC::Scene* ROC::ElementManager::CreateScene()
     return l_scene;
 }
 
-ROC::Camera* ROC::ElementManager::CreateCamera(int f_type)
+ROC::Camera* ROC::ElementManager::CreateCamera(unsigned char f_type)
 {
     Camera *l_camera = new Camera(f_type);
     AddElementToSet(l_camera);
@@ -143,7 +143,7 @@ ROC::Sound* ROC::ElementManager::CreateSound(const std::string &f_path)
     return l_sound;
 }
 
-ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(int f_type, const glm::ivec2 &f_size, int f_filter)
+ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(unsigned char f_type, const glm::ivec2 &f_size, unsigned char f_filter)
 {
     RenderTarget *l_rt = new RenderTarget();
 
@@ -157,7 +157,7 @@ ROC::RenderTarget* ROC::ElementManager::CreateRenderTarget(int f_type, const glm
     return l_rt;
 }
 
-ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress)
 {
     Texture *l_texture = new Texture();
 
@@ -170,7 +170,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::string &f_path, int 
     return l_texture;
 }
 
-ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
+ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     Texture *l_texture = new Texture();
 
@@ -183,7 +183,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     return l_texture;
 }
 
-ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, int f_filter)
+ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter)
 {
     Font *l_font = new Font();
 
@@ -222,7 +222,7 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     return l_file;
 }
 
-ROC::Collision* ROC::ElementManager::CreateCollision(int f_type, const glm::vec3 &f_size, float f_mass)
+ROC::Collision* ROC::ElementManager::CreateCollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass)
 {
     Collision *l_col = new Collision();
 

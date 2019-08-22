@@ -115,7 +115,7 @@ void LuaVM::CallFunction(const LuaFunction &f_func, const CustomArguments &f_arg
                 } break;
             }
         }
-        if(lua_pcall(m_vm, f_args.GetArgumentsCount(), 0, 0))
+        if(lua_pcall(m_vm, static_cast<int>(f_args.GetArgumentsCount()), 0, 0))
         {
             std::string l_log(lua_tostring(m_vm, -1));
             m_luaModule->GetEngineCore()->GetLogManager()->Log(l_log);

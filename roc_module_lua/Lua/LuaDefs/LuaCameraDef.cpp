@@ -47,10 +47,10 @@ int LuaCameraDef::Create(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypes);
-        if(l_type != -1)
+        size_t l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypes);
+        if(l_type != std::numeric_limits<size_t>::max())
         {
-            ROC::ICamera *l_camera = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateCamera(l_type);
+            ROC::ICamera *l_camera = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateCamera(static_cast<unsigned char>(l_type));
             l_camera ? argStream.PushElement(l_camera) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
@@ -169,10 +169,10 @@ int LuaCameraDef::SetProjectionType(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypes);
-        if(l_type != -1)
+        size_t l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypes);
+        if(l_type != std::numeric_limits<size_t>::max())
         {
-            l_camera->SetProjectionType(l_type);
+            l_camera->SetProjectionType(static_cast<unsigned char>(l_type));
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);
@@ -186,7 +186,7 @@ int LuaCameraDef::GetProjectionType(lua_State *f_vm)
     ROC::ICamera *l_camera;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_camera);
-    !argStream.HasErrors() ? argStream.PushText(g_CameraTypes[static_cast<size_t>(l_camera->GetProjectionType())]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_CameraTypes[l_camera->GetProjectionType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 

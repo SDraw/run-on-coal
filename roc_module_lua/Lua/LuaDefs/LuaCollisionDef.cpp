@@ -60,10 +60,10 @@ int LuaCollisionDef::Create(lua_State *f_vm)
     for(int i = 0; i < 3; i++) argStream.ReadNextNumber(l_size[i]);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_CollisionTypes);
-        if(l_type != -1)
+        size_t l_type = EnumUtils::ReadEnumVector(l_typeString, g_CollisionTypes);
+        if(l_type != std::numeric_limits<size_t>::max())
         {
-            ROC::ICollision *l_col = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateCollision(l_type, l_size, l_mass);
+            ROC::ICollision *l_col = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateCollision(static_cast<unsigned char>(l_type), l_size, l_mass);
             l_col ? argStream.PushElement(l_col) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);
@@ -404,10 +404,10 @@ int LuaCollisionDef::SetMotionType(lua_State *f_vm)
     argStream.ReadText(l_type);
     if(!argStream.HasErrors() && !l_type.empty())
     {
-        int l_idx = EnumUtils::ReadEnumVector(l_type, g_CollisionMotionTypes);
-        if(l_idx != -1)
+        size_t l_idx = EnumUtils::ReadEnumVector(l_type, g_CollisionMotionTypes);
+        if(l_idx != std::numeric_limits<size_t>::max())
         {
-            l_collision->SetMotionType(l_idx);
+            l_collision->SetMotionType(static_cast<unsigned char>(l_idx));
             argStream.PushBoolean(true);
         }
         else argStream.PushBoolean(false);
@@ -421,6 +421,6 @@ int LuaCollisionDef::GetMotionType(lua_State *f_vm)
     ROC::ICollision *l_collision;
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_collision);
-    !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypes[static_cast<size_t>(l_collision->GetMotionType())]) : argStream.PushBoolean(false);
+    !argStream.HasErrors() ? argStream.PushText(g_CollisionMotionTypes[l_collision->GetMotionType()]) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }

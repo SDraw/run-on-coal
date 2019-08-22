@@ -13,7 +13,10 @@ class NetworkManager final : public INetworkManager
     Core *m_core;
 
     RakNet::RakPeerInterface *m_networkInterface;
-    enum NetworkIdentifier : unsigned char { ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1 };
+    enum NetworkIdentifier : unsigned char
+    { 
+        ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1
+    };
 
     std::vector<Client*> m_clients;
 

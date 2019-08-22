@@ -11,7 +11,9 @@ public:
     enum ElementType : unsigned char
     { 
         ET_Client = 0U, 
-        ET_File
+        ET_File,
+
+        ET_Invalid = 0xFFU
     };
 
     virtual bool SetData(const std::string &f_key, const CustomArgument &f_val) = 0;

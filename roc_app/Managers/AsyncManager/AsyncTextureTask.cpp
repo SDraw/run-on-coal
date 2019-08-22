@@ -4,14 +4,14 @@
 
 #include "Elements/Texture.h"
 
-ROC::AsyncTextureTask::AsyncTextureTask(const std::string &f_path, int f_type, int f_filter, bool f_compress)
+ROC::AsyncTextureTask::AsyncTextureTask(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress)
 {
     m_path.push_back(f_path);
     m_type = f_type;
     m_filter = f_filter;
     m_compress = f_compress;
 }
-ROC::AsyncTextureTask::AsyncTextureTask(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
+ROC::AsyncTextureTask::AsyncTextureTask(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     m_path.assign(f_path.begin(), f_path.end());
     m_filter = f_filter;

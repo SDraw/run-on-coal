@@ -40,8 +40,8 @@ int LuaLightDef::Create(lua_State *f_vm)
     argStream.ReadText(l_typeString);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypes);
-        if(l_type != -1)
+        size_t l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypes);
+        if(l_type != std::numeric_limits<size_t>::max())
         {
             ROC::ILight *l_light = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateLight(static_cast<unsigned char>(l_type));
             l_light ? argStream.PushElement(l_light) : argStream.PushBoolean(false);
@@ -216,8 +216,8 @@ int LuaLightDef::SetType(lua_State *f_vm)
     argStream.ReadText(l_typeString);
     if(!argStream.HasErrors() && !l_typeString.empty())
     {
-        int l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypes);
-        if(l_type != -1)
+        size_t l_type = EnumUtils::ReadEnumVector(l_typeString, g_LightTypes);
+        if(l_type != std::numeric_limits<size_t>::max())
         {
             l_light->SetType(static_cast<unsigned char>(l_type));
             argStream.PushBoolean(true);

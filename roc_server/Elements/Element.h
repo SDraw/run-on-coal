@@ -13,12 +13,6 @@ class Element : public virtual IElement
     Element(const Element &that) = delete;
     Element& operator=(const Element &that) = delete;
 public:
-    enum ElementType : unsigned char
-    { 
-        ET_Client = 0U, 
-        ET_File
-    };
-
     bool SetData(const std::string &f_key, const CustomArgument &f_val);
     bool GetData(const std::string &f_key, CustomArgument &f_val);
     bool RemoveData(const std::string &f_key);

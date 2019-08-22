@@ -2,11 +2,22 @@
 
 #include "Elements/Element.h"
 
-#define ROC_ELEMENT_CUSTOMDATA_KEYLENGTH 128U
+namespace ROC
+{
+
+const std::string g_ElementTypeName[] = {
+    "Client",
+    "File"
+};
+const std::string g_ElementInvalidName = "Invalid";
+
+const size_t g_ElementKeyMaxLength = 128U;
+
+}
 
 ROC::Element::Element()
 {
-    m_elementType = 0xFF;
+    m_elementType = ET_Invalid;
 }
 ROC::Element::~Element()
 {
@@ -19,14 +30,14 @@ unsigned char ROC::Element::GetElementType() const
 }
 const std::string& ROC::Element::GetElementTypeName() const 
 { 
-    return m_elementTypeName; 
+    return ((m_elementType != ET_Invalid) ? g_ElementTypeName[m_elementType] : g_ElementInvalidName);
 }
 
 
 bool ROC::Element::SetData(const std::string &f_key, const CustomArgument &f_val)
 {
     bool l_result = false;
-    if(f_key.size() <= ROC_ELEMENT_CUSTOMDATA_KEYLENGTH)
+    if(f_key.size() <= g_ElementKeyMaxLength)
     {
         auto iter = m_customDataMap.find(f_key);
         if(iter == m_customDataMapEnd)

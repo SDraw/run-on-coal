@@ -7,7 +7,7 @@ namespace ROC
 
 class Texture final : public Drawable, public virtual ITexture
 {
-    int m_type;
+    unsigned char m_type;
     glm::ivec2 m_size;
     bool m_compressed;
     GLuint m_texture;
@@ -24,8 +24,8 @@ protected:
     Texture();
     ~Texture();
 
-    bool Load(const std::string &f_path, int f_type, int f_filter = DFT_Nearest, bool f_compress = false);
-    bool LoadCubemap(const std::vector<std::string> &f_path, int f_filter = DFT_Nearest, bool f_compress = false);
+    bool Load(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress);
+    bool LoadCubemap(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
     bool LoadDummy();
 
     inline GLuint GetTextureID() const { return m_texture; };

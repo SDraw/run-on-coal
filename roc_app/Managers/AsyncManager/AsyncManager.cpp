@@ -39,7 +39,7 @@ void* ROC::AsyncManager::LoadGeometry(const std::string &f_path)
     return l_task;
 }
 
-void* ROC::AsyncManager::LoadTexture(const std::string &f_path, int f_type, int f_filter, bool f_compress)
+void* ROC::AsyncManager::LoadTexture(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress)
 {
     AsyncTask *l_task = new AsyncTextureTask(f_path, f_type, f_filter, f_compress);
 
@@ -49,7 +49,7 @@ void* ROC::AsyncManager::LoadTexture(const std::string &f_path, int f_type, int 
 
     return l_task;
 }
-void* ROC::AsyncManager::LoadTexture(const std::vector<std::string> &f_path, int f_filter, bool f_compress)
+void* ROC::AsyncManager::LoadTexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     AsyncTask *l_task = new AsyncTextureTask(f_path, f_filter, f_compress);
 

@@ -14,7 +14,10 @@ class NetworkManager final : public INetworkManager
     RakNet::RakPeerInterface *m_networkInterface;
     RakNet::SocketDescriptor m_socketDescriptor;
     RakNet::SystemAddress m_serverAddress;
-    enum NetworkIdentifier : unsigned char { ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1 };
+    enum NetworkIdentifier : unsigned char
+    {
+        ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1
+    };
 
     enum NetworkState : unsigned char 
     { 

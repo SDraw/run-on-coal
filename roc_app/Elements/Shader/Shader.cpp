@@ -9,9 +9,6 @@
 #include "Utils/EnumUtils.h"
 #include "Utils/GLBinder.h"
 
-#define ROC_SHADER_BONES_COUNT 227
-#define ROC_SHADER_LIGHTS_COUNT 4
-
 namespace ROC
 {
 
@@ -25,10 +22,13 @@ const std::vector<std::string> g_DefaultUniforms
     "gTime"
 };
 
+const size_t g_ShaderMaxBonesCount = 227U;
+const size_t g_ShaderMaxLightsCount = 4U;
+
 const std::string g_DefaultShaderDefines = (std::string() +
     "#version 330 core\n" +
-    "#define MAX_BONES " + std::to_string(ROC_SHADER_BONES_COUNT) + '\n' +
-    "#define MAX_LIGHTS " + std::to_string(ROC_SHADER_LIGHTS_COUNT) + '\n' +
+    "#define MAX_BONES " + std::to_string(g_ShaderMaxBonesCount) + '\n' +
+    "#define MAX_LIGHTS " + std::to_string(g_ShaderMaxLightsCount) + '\n' +
     "#define LIGHT_DIRECTIONAL " + std::to_string(ROC::Light::LT_Directional) + '\n' +
     "#define LIGHT_POINT " + std::to_string(ROC::Light::LT_Point) + '\n' +
     "#define LIGHT_SPOTLIGHT " + std::to_string(ROC::Light::LT_Spotlight) + '\n'
@@ -272,7 +272,7 @@ void ROC::Shader::SetupUniformsAndLocations()
         glGetActiveUniform(m_program, static_cast<GLuint>(i), 256, &l_uniformNameSize, &l_uniformSize, &l_uniformType, l_uniformName.data());
 
         std::string l_uniformNameString(l_uniformName.data(), l_uniformNameSize);
-        if(EnumUtils::ReadEnumVector(l_uniformNameString, g_DefaultUniforms) == -1)
+        if(EnumUtils::ReadEnumVector(l_uniformNameString, g_DefaultUniforms) == std::numeric_limits<size_t>::max())
         {
             GLint l_uniformLocation = glGetUniformLocation(m_program, l_uniformNameString.c_str());
             ShaderUniform *l_uniform = new ShaderUniform(l_uniformType, l_uniformLocation);
@@ -321,12 +321,12 @@ void ROC::Shader::SetCameraDirection(const glm::vec3 &f_value)
 }
 void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
 {
-    size_t l_count = std::min(f_data.size(), static_cast<size_t>(ROC_SHADER_LIGHTS_COUNT));
+    size_t l_count = std::min(f_data.size(), g_ShaderMaxLightsCount);
     if(m_defaultUniforms[SDU_LightsCount]) m_defaultUniforms[SDU_LightsCount]->SetValue(static_cast<int>(l_count));
     if(m_defaultUniforms[SDU_LightData])
     {
         // Forced data fill
-        glm::mat4 l_data[ROC_SHADER_LIGHTS_COUNT];
+        glm::mat4 l_data[g_ShaderMaxLightsCount];
         for(size_t i = 0U; i < l_count; i++)
         {
             Light *l_light = f_data[i];
@@ -362,7 +362,7 @@ void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
         if(m_defaultUniforms[SDU_BoneMatrices]->IsActive())
         {
             // Forced set of uniform value
-            size_t l_size = std::min(f_value.size(), static_cast<size_t>(ROC_SHADER_BONES_COUNT));
+            size_t l_size = std::min(f_value.size(), g_ShaderMaxBonesCount);
             glUniformMatrix4fv(m_defaultUniforms[SDU_BoneMatrices]->GetUniform(), static_cast<int>(l_size), GL_FALSE, reinterpret_cast<const float*>(f_value.data()));
         }
     }

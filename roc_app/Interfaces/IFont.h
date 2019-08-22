@@ -7,14 +7,15 @@ namespace ROC
 class IFont : public virtual IElement
 {
 public:
-    enum FontFilteringType
+    enum FontFilteringType : unsigned char
     {
-        FFT_None = -1,
-        FFT_Nearest,
-        FFT_Linear
+        FFT_Nearest = 0U,
+        FFT_Linear,
+
+        FFT_None = 0xFFU
     };
 
-    virtual int GetFiltering() const = 0;
+    virtual unsigned char GetFiltering() const = 0;
     virtual float GetGlyphSize() const = 0;
 };
 

@@ -12,8 +12,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 #endif
     if(ROC::Core::Init())
     {
-        ROC::Core *l_core = ROC::Core::GetCore();
-        while(l_core->DoPulse());
+        while(ROC::Core::GetCore()->DoPulse());
         ROC::Core::Terminate();
     }
 

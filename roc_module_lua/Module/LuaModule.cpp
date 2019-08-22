@@ -22,7 +22,7 @@ LuaModule::~LuaModule()
     delete m_luaVM;
 }
 
-LuaModule* LuaModule::Init(ROC::ICore *f_core)
+bool LuaModule::Init(ROC::ICore *f_core)
 {
     if(!ms_instance)
     {
@@ -43,15 +43,16 @@ LuaModule* LuaModule::Init(ROC::ICore *f_core)
         }
         delete l_configFile;
     }
-    return ms_instance;
+    return (ms_instance != nullptr);
 }
-void LuaModule::Terminate()
+bool LuaModule::Terminate()
 {
     if(ms_instance)
     {
         delete ms_instance;
         ms_instance = nullptr;
     }
+    return (ms_instance == nullptr);
 }
 
 void LuaModule::RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args)

@@ -13,15 +13,18 @@ const std::string g_NetworkStates[]
 {
     "connected", "disconnected"
 };
+enum NetworkState : size_t
+{
+    NS_Connected = 0U,
+    NS_Disconnected
+};
+
+const size_t g_NetworkMaxConnections = 8U;
+const size_t g_NetworkTryTime = 500U;
+const size_t g_NetworkTriesCount = 5U;
+const size_t g_NetworkShutdownDuration = 300U;
 
 }
-
-#define ROC_NETWORK_STATESTRING_CONNECTED 0U
-#define ROC_NETWORK_STATESTRING_DISCONNECTED 1U
-#define ROC_NETWORK_CONNECTION_TRIES 5U
-#define ROC_NETWORK_CONNECTION_TRYTIME 500U
-#define ROC_NETWORK_MAX_CONNECTIONS 8U
-#define ROC_NETWORK_SHUTDOWN_DURATION 300U
 
 ROC::NetworkManager::NetworkManager(Core *f_core)
 {
@@ -33,7 +36,7 @@ ROC::NetworkManager::~NetworkManager()
 {
     if(m_networkInterface)
     {
-        m_networkInterface->Shutdown(ROC_NETWORK_SHUTDOWN_DURATION);
+        m_networkInterface->Shutdown(g_NetworkShutdownDuration);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
 }
@@ -58,9 +61,9 @@ bool ROC::NetworkManager::Connect(const std::string &f_ip, unsigned short f_port
     if(m_networkState == NS_Disconnected)
     {
         m_networkInterface = RakNet::RakPeerInterface::GetInstance();
-        if(m_networkInterface->Startup(ROC_NETWORK_MAX_CONNECTIONS, &m_socketDescriptor, 1) == RakNet::StartupResult::RAKNET_STARTED)
+        if(m_networkInterface->Startup(g_NetworkMaxConnections, &m_socketDescriptor, 1) == RakNet::StartupResult::RAKNET_STARTED)
         {
-            if(m_networkInterface->Connect(f_ip.c_str(), f_port, nullptr, 0, nullptr, 0, ROC_NETWORK_CONNECTION_TRIES, ROC_NETWORK_CONNECTION_TRYTIME) == RakNet::CONNECTION_ATTEMPT_STARTED)
+            if(m_networkInterface->Connect(f_ip.c_str(), f_port, nullptr, 0, nullptr, 0, g_NetworkTriesCount, g_NetworkTryTime) == RakNet::CONNECTION_ATTEMPT_STARTED)
             {
                 m_networkState = NS_Connecting;
             }
@@ -120,7 +123,7 @@ void ROC::NetworkManager::DoPulse()
                 {
                     m_networkState = NS_Disconnected;
 
-                    m_arguments.Push(g_NetworkStates[ROC_NETWORK_STATESTRING_DISCONNECTED]);
+                    m_arguments.Push(g_NetworkStates[NetworkState::NS_Disconnected]);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkStateChange, m_arguments);
                     m_arguments.Clear();
                 } break;
@@ -130,7 +133,7 @@ void ROC::NetworkManager::DoPulse()
                     m_networkState = NS_Connected;
                     m_networkInterface->SetOccasionalPing(true);
 
-                    m_arguments.Push(g_NetworkStates[ROC_NETWORK_STATESTRING_CONNECTED]);
+                    m_arguments.Push(g_NetworkStates[NetworkState::NS_Connected]);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkStateChange, m_arguments);
                     m_arguments.Clear();
                 } break;
@@ -155,7 +158,7 @@ void ROC::NetworkManager::DoPulse()
         }
         if(m_networkState == NS_Disconnected)
         {
-            m_networkInterface->Shutdown(ROC_NETWORK_SHUTDOWN_DURATION);
+            m_networkInterface->Shutdown(g_NetworkShutdownDuration);
             RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
             m_networkInterface = nullptr;
         }

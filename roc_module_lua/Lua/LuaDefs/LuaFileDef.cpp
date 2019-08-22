@@ -13,8 +13,11 @@ const std::vector<std::string> g_FileManageTypes
     "create", "open"
 };
 
-#define FILE_MANAGE_CREATE 0
-#define FILE_MANAGE_OPEN 1
+enum FileManageMode : size_t
+{
+    FMM_Create = 0U,
+    FMM_Open
+};
 
 void LuaFileDef::Init(lua_State *f_vm)
 {
@@ -46,14 +49,13 @@ int LuaFileDef::CreateOpen(lua_State *f_vm)
     argStream.ReadNextBoolean(l_readOnly);
     if(!argStream.HasErrors() && !l_path.empty() && !l_manage.empty())
     {
-
         ROC::IFile *l_file = nullptr;
         switch(EnumUtils::ReadEnumVector(l_manage, g_FileManageTypes))
         {
-            case FILE_MANAGE_CREATE:
+            case FileManageMode::FMM_Create:
                 l_file = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateFile_(l_path);
                 break;
-            case FILE_MANAGE_OPEN:
+            case FileManageMode::FMM_Open:
                 l_file = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->OpenFile(l_path, l_readOnly);
                 break;
         }

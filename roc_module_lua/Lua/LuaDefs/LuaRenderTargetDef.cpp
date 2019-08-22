@@ -35,11 +35,11 @@ int LuaRenderTargetDef::Create(lua_State *f_vm)
     argStream.ReadNextText(l_filtering);
     if(!argStream.HasErrors() && (l_size.x > 0) && (l_size.y > 0) && !l_type.empty())
     {
-        int l_rtType = EnumUtils::ReadEnumVector(l_type, g_RenderTargetTypes);
-        if(l_rtType != -1)
+        size_t l_rtType = EnumUtils::ReadEnumVector(l_type, g_RenderTargetTypes);
+        if(l_rtType != std::numeric_limits<size_t>::max())
         {
-            int l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypes);
-            ROC::IRenderTarget *l_rt = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateRenderTarget(l_rtType, l_size, l_filteringType);
+            size_t l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypes);
+            ROC::IRenderTarget *l_rt = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateRenderTarget(static_cast<unsigned char>(l_rtType), l_size, static_cast<unsigned char>(l_filteringType));
             l_rt ? argStream.PushElement(l_rt) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

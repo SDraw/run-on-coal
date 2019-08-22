@@ -8,9 +8,9 @@ class IVRManager
 public:
     enum ControllerHandAssigment : unsigned char
     {
-        CHA_None = 0U,
-        CHA_Left,
-        CHA_Right
+        CHA_Left = 0U,
+        CHA_Right,
+        CHA_Unknown
     };
     enum VREye : unsigned char
     {

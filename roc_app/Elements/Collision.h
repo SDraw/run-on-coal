@@ -9,8 +9,8 @@ namespace ROC
 class Collision final : public Collidable, public virtual ICollision
 {
     btRigidBody *m_rigidBody;
-    int m_motionType;
     glm::vec3 m_scale;
+    unsigned char m_motionType;
 
     Collision(const Collision &that) = delete;
     Collision& operator=(const Collision &that) = delete;
@@ -50,15 +50,15 @@ public:
 
     void ApplyTorque(const glm::vec3 &f_torque, bool f_impulse);
 
-    void SetMotionType(int f_type);
-    int GetMotionType() const;
+    void SetMotionType(unsigned char f_type);
+    unsigned char GetMotionType() const;
 
     void GetMatrix(glm::mat4 &f_mat) const;
 protected:
     Collision();
     ~Collision();
 
-    bool Create(int f_type, const glm::vec3 &f_size, float f_mass);
+    bool Create(unsigned char f_type, const glm::vec3 &f_size, float f_mass);
 
     inline bool IsActive() const { return m_rigidBody->isActive(); }
 

@@ -43,9 +43,7 @@ int LuaUtilsDef::GetTick(lua_State *f_vm)
 {
     // int getTickCount()
     ArgReader argStream(f_vm);
-    lua_Integer l_tick = 0;
-    l_tick = static_cast<lua_Integer>(GetTickCount64());
-    argStream.PushInteger(l_tick);
+    argStream.PushInteger(GetTickCount64());
     return argStream.GetReturnValue();
 }
 int LuaUtilsDef::GetTime(lua_State *f_vm)
