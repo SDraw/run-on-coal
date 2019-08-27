@@ -54,20 +54,20 @@ ROC::VRManager::VRManager(Core *f_core)
 
         m_vrSystem->GetRecommendedRenderTargetSize(&m_targetSize.x, &m_targetSize.y);
         m_eyeRT[VRE_Left] = new RenderTarget();
-        if(!m_eyeRT[VRE_Left]->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
+        if(!m_eyeRT[VRE_Left]->Create(RenderTarget::RTT_RGBA, m_targetSize, Drawable::DFT_Linear))
         {
             MessageBoxA(NULL, "OpenVR: Unable to create render target for left eye", NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
         }
         m_eyeRT[VRE_Right] = new RenderTarget();
-        if(!m_eyeRT[VRE_Right]->Create(RenderTarget::RTT_RGB, m_targetSize, Drawable::DFT_Linear))
+        if(!m_eyeRT[VRE_Right]->Create(RenderTarget::RTT_RGBA, m_targetSize, Drawable::DFT_Linear))
         {
             MessageBoxA(NULL, "OpenVR: Unable to create render target for right eye", NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
         }
 
-        m_vrTexture[0] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_eyeRT[VRE_Left]->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
-        m_vrTexture[1] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_eyeRT[VRE_Right]->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+        m_vrTexture[0U] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_eyeRT[VRE_Left]->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
+        m_vrTexture[1U] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_eyeRT[VRE_Right]->GetTextureID())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
         UpdateEyesPosition();
 
