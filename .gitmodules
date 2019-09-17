@@ -1,9 +1,6 @@
 [submodule "vendor/base64"]
 	path = vendor/base64
 	url = git://github.com/tkislan/base64.git
-[submodule "vendor/glm"]
-	path = vendor/glm
-	url = git://github.com/g-truc/glm.git
 [submodule "vendor/IntervalTree"]
 	path = vendor/IntervalTree
 	url = git://github.com/ekg/intervaltree.git
@@ -19,3 +16,6 @@
 [submodule "vendor/pugixml"]
 	path = vendor/pugixml
 	url = https://github.com/zeux/pugixml.git
+[submodule "vendor/glm"]
+	path = vendor/glm
+	url = https://github.com/g-truc/glm.git
