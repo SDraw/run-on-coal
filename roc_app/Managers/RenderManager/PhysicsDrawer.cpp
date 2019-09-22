@@ -71,7 +71,7 @@ void ROC::PhysicsDrawer::Draw(float f_width)
 {
     if(!m_lines.empty())
     {
-        if(f_width != 1.f) glLineWidth(f_width);
+        //if(f_width != 1.f) glLineWidth(f_width);
 
         GLBinder::BindVertexArray(m_VAO);
         while(!m_lines.empty())

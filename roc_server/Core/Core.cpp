@@ -1,8 +1,11 @@
 #include "stdafx.h"
 
 #include "Core/Core.h"
+#include "Managers/ElementManager.h"
 #include "Managers/ConfigManager.h"
+#include "Managers/LogManager.h"
 #include "Managers/ModuleManager.h"
+#include "Managers/NetworkManager.h"
 
 #include "Interfaces/IModule.h"
 
@@ -37,7 +40,7 @@ bool ROC::Core::Init()
     }
     return (ms_instance != nullptr);
 }
-bool ROC::Core::Terminate()
+void ROC::Core::Terminate()
 {
     if(ms_instance)
     {
@@ -49,22 +52,7 @@ bool ROC::Core::Terminate()
         delete ms_instance;
         ms_instance = nullptr;
     }
-    return (ms_instance == nullptr);
 }
-
-ROC::ElementManager* ROC::Core::GetElementManager() const
-{
-    return m_elementManager;
-}
-ROC::LogManager* ROC::Core::GetLogManager() const
-{
-    return m_logManager;
-}
-ROC::NetworkManager* ROC::Core::GetNetworkManager() const
-{
-    return m_networkManager;
-}
-
 
 void ROC::Core::DoPulse()
 {
@@ -72,4 +60,18 @@ void ROC::Core::DoPulse()
     m_moduleManager->DoPulse();
 
     std::this_thread::sleep_for(m_pulseTick);
+}
+
+// ROC::ICore
+ROC::IElementManager* ROC::Core::GetIElementManager() const
+{
+    return m_elementManager;
+}
+ROC::ILogManager* ROC::Core::GetILogManager() const
+{
+    return m_logManager;
+}
+ROC::INetworkManager* ROC::Core::GetINetworkManager() const
+{
+    return m_networkManager;
 }

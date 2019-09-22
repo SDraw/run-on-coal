@@ -3,6 +3,8 @@
 #include "Lua/LuaDefs/LuaVRDef.h"
 
 #include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IVRManager.h"
 #include "Lua/ArgReader.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
@@ -39,7 +41,7 @@ int LuaVRDef::IsVREnabled(lua_State *f_vm)
 {
     // bool isVREnabled()
     ArgReader argStream(f_vm);
-    argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->IsVREnabled());
+    argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->IsVREnabled());
     return argStream.GetReturnValue();
 }
 
@@ -47,7 +49,7 @@ int LuaVRDef::VRGetHeadPosition(lua_State *f_vm)
 {
     // float float float vrGetHeadPosition()
     ArgReader argStream(f_vm);
-    const glm::vec3 &l_pos = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetHeadPosition();
+    const glm::vec3 &l_pos = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetHeadPosition();
     for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
     return argStream.GetReturnValue();
 }
@@ -56,7 +58,7 @@ int LuaVRDef::VRGetHeadRotation(lua_State *f_vm)
 {
     // float float float float vrGetHeadRotation()
     ArgReader argStream(f_vm);
-    const glm::quat &l_rot = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetHeadRotation();
+    const glm::quat &l_rot = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetHeadRotation();
     for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
     return argStream.GetReturnValue();
 }
@@ -65,7 +67,7 @@ int LuaVRDef::VRGetEyesPosition(lua_State *f_vm)
 {
     // float float float float float float vrGetEyesPosition()
     ArgReader argStream(f_vm);
-    ROC::IVRManager *l_vrManager = LuaModule::GetModule()->GetEngineCore()->GetVRManager();
+    ROC::IVRManager *l_vrManager = LuaModule::GetModule()->GetEngineCore()->GetIVRManager();
     const glm::vec3& l_leftEye = l_vrManager->GetLeftEyePosition();
     const glm::vec3& l_rightEye = l_vrManager->GetRightEyePosition();
     for(int i = 0; i < 3; i++) argStream.PushNumber(l_leftEye[i]);
@@ -77,7 +79,7 @@ int LuaVRDef::VRGetEyesImageSize(lua_State *f_vm)
 {
     // float float vrGetEyesPosition()
     ArgReader argStream(f_vm);
-    glm::uvec2 l_size = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetTargetsSize();
+    glm::uvec2 l_size = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetTargetsSize();
     for(int i = 0; i < 2; i++) argStream.PushNumber(l_size[i]);
     return argStream.GetReturnValue();
 }
@@ -90,7 +92,7 @@ int LuaVRDef::VRIsControllerConnected(lua_State *f_vm)
     argStream.ReadInteger(l_id);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->IsControllerConnected(l_id);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->IsControllerConnected(l_id);
         argStream.PushBoolean(l_result);
     }
     return argStream.GetReturnValue();
@@ -104,7 +106,7 @@ int LuaVRDef::VRIsControllerActive(lua_State *f_vm)
     argStream.ReadInteger(l_id);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->IsControllerActive(l_id);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->IsControllerActive(l_id);
         argStream.PushBoolean(l_result);
     }
     return argStream.GetReturnValue();
@@ -118,7 +120,7 @@ int LuaVRDef::VRGetControllerHand(lua_State *f_vm)
     argStream.ReadInteger(l_id);
     if(!argStream.HasErrors())
     {
-        unsigned char l_hand = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerHandAssignment(l_id);
+        unsigned char l_hand = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetControllerHandAssignment(l_id);
         argStream.PushText(g_VRControllerHands[l_hand]);
     }
     return argStream.GetReturnValue();
@@ -133,7 +135,7 @@ int LuaVRDef::VRGetControllerPosition(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         glm::vec3 l_pos;
-        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerPosition(l_id, l_pos))
+        if(LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetControllerPosition(l_id, l_pos))
         {
             for(int i = 0; i < 3; i++) argStream.PushNumber(l_pos[i]);
         }
@@ -152,7 +154,7 @@ int LuaVRDef::VRGetControllerRotation(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         glm::quat l_rot;
-        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerRotation(l_id, l_rot))
+        if(LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetControllerRotation(l_id, l_rot))
         {
             for(int i = 0; i < 4; i++) argStream.PushNumber(l_rot[i]);
         }
@@ -171,7 +173,7 @@ int LuaVRDef::VRGetControllerVelocity(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         glm::vec3 l_val;
-        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerVelocity(l_id, l_val))
+        if(LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetControllerVelocity(l_id, l_val))
         {
             for(int i = 0; i < 3; i++) argStream.PushNumber(l_val[i]);
         }
@@ -190,7 +192,7 @@ int LuaVRDef::VRGetControllerAngularVelocity(lua_State *f_vm)
     if(!argStream.HasErrors())
     {
         glm::vec3 l_val;
-        if(LuaModule::GetModule()->GetEngineCore()->GetVRManager()->GetControllerAngularVelocity(l_id, l_val))
+        if(LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->GetControllerAngularVelocity(l_id, l_val))
         {
             for(int i = 0; i < 3; i++) argStream.PushNumber(l_val[i]);
         }
@@ -211,7 +213,7 @@ int LuaVRDef::VRShowNotification(lua_State *f_vm)
     argStream.ReadInteger(l_time);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->ShowNotification(l_title, l_text, l_time);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->ShowNotification(l_title, l_text, l_time);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -224,18 +226,20 @@ int LuaVRDef::VRDrawEyeImage(lua_State *f_vm)
     glm::vec2 l_pos, l_size;
     float l_rot = 0.f;
     glm::vec4 l_color(1.f);
+    std::string l_layer("screen");
     ArgReader argStream(f_vm);
     argStream.ReadText(l_side);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
     argStream.ReadNextNumber(l_rot);
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
+    argStream.ReadNextText(l_layer);
     if(!argStream.HasErrors() && !l_side.empty())
     {
         size_t l_sideIndex = EnumUtils::ReadEnumVector(l_side, g_VREyes);
         if(l_sideIndex != std::numeric_limits<size_t>::max())
         {
-            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->DrawEyeImage(static_cast<unsigned char>(l_sideIndex), l_pos, l_size, l_rot, l_color);
+            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->DrawEyeImage(static_cast<unsigned char>(l_sideIndex), l_pos, l_size, l_rot, l_color, l_layer);
             argStream.PushBoolean(l_result);
         }
         else argStream.PushBoolean(false);
@@ -249,12 +253,14 @@ int LuaVRDef::VRDrawEyeImage3D(lua_State *f_vm)
     glm::vec3 l_pos;
     glm::vec3 l_rot;
     glm::vec2 l_size;
+    std::string l_layer("default");
     glm::bvec4 l_params(true, true, false, false);
     ArgReader argStream(f_vm);
     argStream.ReadText(l_side);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
+    argStream.ReadNextText(l_layer);
     for(int i = 0; i < 4; i++) argStream.ReadNextBoolean(l_params[i]);
     if(!argStream.HasErrors())
     {
@@ -262,7 +268,7 @@ int LuaVRDef::VRDrawEyeImage3D(lua_State *f_vm)
         if(l_sideIndex != std::numeric_limits<size_t>::max())
         {
             glm::quat l_rotQuat(l_rot);
-            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetVRManager()->DrawEyeImage(static_cast<unsigned char>(l_sideIndex), l_pos, l_rot, l_size, l_params);
+            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIVRManager()->DrawEyeImage(static_cast<unsigned char>(l_sideIndex), l_pos, l_rot, l_size, l_layer, l_params);
             argStream.PushBoolean(l_result);
         }
         else argStream.PushBoolean(false);

@@ -121,6 +121,8 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         exit(EXIT_FAILURE);
     }
 
+    glFinish(); // Wait for something
+
     l_log.assign("OpenGL ");
     l_log.append(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
     l_log.append(", ");
@@ -131,6 +133,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_core->GetLogManager()->Log(l_log);
 
     m_inputState = false;
+    std::memset(&m_event, 0, sizeof(sf::Event));
 }
 ROC::SfmlManager::~SfmlManager()
 {

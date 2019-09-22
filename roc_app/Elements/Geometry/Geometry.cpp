@@ -56,7 +56,7 @@ bool ROC::Geometry::Load(const std::string &f_path)
 
                 unsigned int l_materialCount = 0U;
                 l_file.read(reinterpret_cast<char*>(&l_materialCount), sizeof(unsigned int));
-                m_materialCount = l_materialCount;
+                m_materialCount = static_cast<size_t>(l_materialCount);
 
                 // Materials
                 for(size_t i = 0U; i < m_materialCount; i++)

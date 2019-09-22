@@ -537,6 +537,10 @@ void ROC::Shader::OnChildLinkDestroyed(Element *f_child)
 }
 
 // Interfaces reroute
+ROC::IShaderUniform* ROC::Shader::GetIUniform(const std::string &f_uniform)
+{
+    return GetUniform(f_uniform);
+}
 bool ROC::Shader::Attach(IDrawable *f_drawable, const std::string &f_uniform)
 {
     return Attach(dynamic_cast<Drawable*>(f_drawable), f_uniform);

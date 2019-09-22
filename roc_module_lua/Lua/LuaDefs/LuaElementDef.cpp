@@ -2,8 +2,11 @@
 
 #include "Lua/LuaDefs/LuaElementDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IElement.h"
 #include "Lua/ArgReader.h"
+#include "Module/LuaModule.h"
 #include "Utils/CustomArgument.h"
 #include "Utils/LuaUtils.h"
 
@@ -105,7 +108,7 @@ int LuaElementDef::Destroy(lua_State *f_vm)
     argStream.ReadElement(l_element);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->DestroyElement(l_element);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->DestroyIElement(l_element);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

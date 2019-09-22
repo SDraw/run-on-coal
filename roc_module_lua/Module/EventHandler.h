@@ -2,6 +2,7 @@
 #include "Lua/LuaFunction.h"
 
 class LuaModule;
+class CustomArguments;
 
 class EventHandler
 {

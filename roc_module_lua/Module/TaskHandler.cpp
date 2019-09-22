@@ -2,9 +2,11 @@
 
 #include "TaskHandler.h"
 #include "Module/LuaModule.h"
+#include "Utils/CustomArguments.h"
 
 #include "Lua/LuaVM.h"
-#include "Utils/CustomArguments.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IAsyncManager.h"
 
 TaskHandler::TaskHandler(LuaModule *f_module)
 {
@@ -23,19 +25,19 @@ bool TaskHandler::IsTask(void *f_task)
 
 void* TaskHandler::CreateGeometryTask(const std::string &f_path, const LuaFunction &f_func)
 {
-    void* l_task = m_luaModule->GetEngineCore()->GetAsyncManager()->LoadGeometry(f_path);
+    void* l_task = m_luaModule->GetEngineCore()->GetIAsyncManager()->LoadGeometry(f_path);
     m_taskMap.emplace(l_task, f_func);
     return l_task;
 }
 void* TaskHandler::CreateTextureTask(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress, const LuaFunction &f_func)
 {
-    void* l_task = m_luaModule->GetEngineCore()->GetAsyncManager()->LoadTexture(f_path,f_type,f_filter,f_compress);
+    void* l_task = m_luaModule->GetEngineCore()->GetIAsyncManager()->LoadTexture(f_path,f_type,f_filter,f_compress);
     m_taskMap.emplace(l_task, f_func);
     return l_task;
 }
 void* TaskHandler::CreateTextureTask(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress, const LuaFunction &f_func)
 {
-    void* l_task = m_luaModule->GetEngineCore()->GetAsyncManager()->LoadTexture(f_path,f_filter,f_compress);
+    void* l_task = m_luaModule->GetEngineCore()->GetIAsyncManager()->LoadTexture(f_path,f_filter,f_compress);
     m_taskMap.emplace(l_task, f_func);
     return l_task;
 }

@@ -2,9 +2,14 @@
 
 #include "Lua/LuaDefs/LuaShaderDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IDrawable.h"
+#include "Interfaces/IShader.h"
+#include "Interfaces/IShaderUniform.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
+#include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
 void LuaShaderDef::Init(lua_State *f_vm)
@@ -27,7 +32,7 @@ int LuaShaderDef::Create(lua_State *f_vm)
     argStream.ReadNextText(l_gsp);
     if(!argStream.HasErrors() && !l_vsp.empty() && !l_fsp.empty())
     {
-        ROC::IShader *l_shader = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateShader(l_vsp, l_fsp, l_gsp);
+        ROC::IShader *l_shader = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIShader(l_vsp, l_fsp, l_gsp);
         l_shader ? argStream.PushElement(l_shader) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -44,7 +49,7 @@ int LuaShaderDef::SetUniformValue(lua_State *f_vm)
     argStream.ReadText(l_uniform);
     if(!argStream.HasErrors() && !l_uniform.empty())
     {
-        ROC::IShaderUniform *l_shaderUniform = l_shader->GetUniform(l_uniform);
+        ROC::IShaderUniform *l_shaderUniform = l_shader->GetIUniform(l_uniform);
         if(l_shaderUniform)
         {
             switch(l_shaderUniform->GetType())

@@ -5,6 +5,7 @@
 
 #include "Lua/LuaVM.h"
 #include "Utils/EnumUtils.h"
+#include "Utils/CustomArguments.h"
 
 const std::vector<std::string> g_DefaultEventsNames
 {

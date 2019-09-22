@@ -51,9 +51,6 @@
     <ClCompile Include="Elements\RenderTarget.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\Scene.cpp">
-      <Filter>Elements</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\Sound.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
@@ -165,6 +162,12 @@
     <ClCompile Include="Elements\Collidable.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
+    <ClCompile Include="Elements\Scene\Scene.cpp">
+      <Filter>Elements\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Scene\SceneLayer.cpp">
+      <Filter>Elements\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -214,9 +217,6 @@
       <Filter>Elements</Filter>
     </ClInclude>
     <ClInclude Include="Elements\RenderTarget.h">
-      <Filter>Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="Elements\Scene.h">
       <Filter>Elements</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Sound.h">
@@ -402,6 +402,12 @@
     <ClInclude Include="Interfaces\ICollidable.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="Elements\Scene\Scene.h">
+      <Filter>Elements\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Scene\SceneLayer.h">
+      <Filter>Elements\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Managers">
@@ -451,6 +457,9 @@
     </Filter>
     <Filter Include="shared\Utils">
       <UniqueIdentifier>{1e1caf18-59fc-451c-a21f-b737b4503784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Elements\Scene">
+      <UniqueIdentifier>{2044d392-55dc-45a1-b02c-5c27702939c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

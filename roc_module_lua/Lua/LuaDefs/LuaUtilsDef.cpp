@@ -2,6 +2,9 @@
 
 #include "Lua/LuaDefs/LuaUtilsDef.h"
 
+#include "Interfaces/ICore.h"
+#include "Interfaces/ILogManager.h"
+#include "Interfaces/ISfmlManager.h"
 #include "Module/LuaModule.h"
 #include "Module/TaskHandler.h"
 #include "Lua/ArgReader.h"
@@ -32,7 +35,7 @@ int LuaUtilsDef::LogPrint(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetLogManager()->Log(l_text);
+        LuaModule::GetModule()->GetEngineCore()->GetILogManager()->Log(l_text);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);
@@ -50,7 +53,7 @@ int LuaUtilsDef::GetTime(lua_State *f_vm)
 {
     // float getTime()
     ArgReader argStream(f_vm);
-    argStream.PushNumber(LuaModule::GetModule()->GetEngineCore()->GetSfmlManager()->GetTime());
+    argStream.PushNumber(LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetTime());
     return argStream.GetReturnValue();
 }
 

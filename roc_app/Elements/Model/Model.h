@@ -1,15 +1,15 @@
 #pragma once
 #include "Interfaces/IModel.h"
 #include "Elements/Collidable.h"
-#include "Elements/Collision.h"
-#include "Elements/Animation/Animation.h"
-#include "Elements/Geometry/Geometry.h"
 
 namespace ROC
 {
 
+class Animation;
 class AnimationController;
 class Bone;
+class Collision;
+class Geometry;
 class Skeleton;
 class Transformation;
 
@@ -32,15 +32,20 @@ class Model final : public Collidable, public virtual IModel
     Model(const Model &that) = delete;
     Model& operator=(const Model &that) = delete;
 
+    // ROC::Collidable
     void GetRigidBodies(std::vector<btRigidBody*> &f_vec);
 
-    // Interfaces reroute
+    // ROC::IModel
+    IGeometry* GetIGeometry() const;
     bool AttachTo(IModel *f_model, int f_bone = -1);
-    bool SetCollision(ICollision *f_col);
-    bool SetAnimation(IAnimation *f_anim);
+    IModel* GetParentIModel() const;
+    bool SetICollision(ICollision *f_col);
+    ICollision* GetICollsion() const;
+    bool SetIAnimation(IAnimation *f_anim);
+    IAnimation* GetIAnimation() const;
 public:
     inline bool HasGeometry() const { return (m_geometry != nullptr); }
-    Geometry* GetGeometry() const;
+    inline Geometry* GetGeometry() const { return m_geometry; }
     float GetBoundSphereRadius() const;
 
     void SetPosition(const glm::vec3 &f_pos);
@@ -53,13 +58,13 @@ public:
 
     bool AttachTo(Model *f_model, int f_bone = -1);
     bool Dettach();
-    Model* GetParentModel() const;
     inline bool HasParentModel() const { return (m_parentModel != nullptr); }
+    inline Model* GetParentModel() const { return m_parentModel; }
 
     bool SetCollision(Collision *f_col);
     bool RemoveCollision();
-    Collision* GetCollsion() const;
     inline bool HasCollision() const { return (m_collision != nullptr); }
+    inline Collision* GetCollsion() const { return m_collision; }
 
     bool SetAnimation(Animation *f_anim);
     bool RemoveAnimation();

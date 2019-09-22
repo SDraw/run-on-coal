@@ -6,7 +6,9 @@
 #include "Core/Core.h"
 #include "Managers/AsyncManager/AsyncGeometryTask.h"
 #include "Managers/AsyncManager/AsyncTextureTask.h"
+#include "Managers/ElementManager.h"
 #include "Managers/ModuleManager.h"
+#include "Elements/Element.h"
 #include "Interfaces/IModule.h"
 
 ROC::AsyncManager::AsyncManager(Core *f_core)

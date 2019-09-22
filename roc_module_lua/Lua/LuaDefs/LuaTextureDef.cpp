@@ -2,11 +2,14 @@
 
 #include "Lua/LuaDefs/LuaTextureDef.h"
 
-#include "Module/LuaModule.h"
-#include "Module/TaskHandler.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/ITexture.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaDrawableDef.h"
+#include "Module/LuaModule.h"
+#include "Module/TaskHandler.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -47,7 +50,7 @@ int LuaTextureDef::Create(lua_State *f_vm)
             case ROC::ITexture::TT_Cubemap:
             {
                 l_path.resize(6U);
-                for(size_t i = 0U; i < 6U; i++) argStream.ReadText(l_path[6]);
+                for(size_t i = 0U; i < 6U; i++) argStream.ReadText(l_path[i]);
                 if(argStream.HasErrors()) l_path.clear();
             } break;
         }
@@ -73,7 +76,7 @@ int LuaTextureDef::Create(lua_State *f_vm)
                     }
                     else
                     {
-                        ROC::ITexture *l_texture = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateTexture(l_path[0U], static_cast<unsigned char>(l_textureType), static_cast<unsigned char>(l_filteringType), l_compress);
+                        ROC::ITexture *l_texture = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateITexture(l_path[0U], static_cast<unsigned char>(l_textureType), static_cast<unsigned char>(l_filteringType), l_compress);
                         l_texture ? argStream.PushElement(l_texture) : argStream.PushBoolean(false);
                     }
                 } break;
@@ -86,7 +89,7 @@ int LuaTextureDef::Create(lua_State *f_vm)
                     }
                     else
                     {
-                        ROC::ITexture *l_texture = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateTexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
+                        ROC::ITexture *l_texture = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateITexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
                         l_texture ? argStream.PushElement(l_texture) : argStream.PushBoolean(false);
                     }
                 } break;

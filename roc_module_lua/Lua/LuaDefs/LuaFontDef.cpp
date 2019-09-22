@@ -2,9 +2,13 @@
 
 #include "Lua/LuaDefs/LuaFontDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IRenderManager.h"
+#include "Interfaces/IFont.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
+#include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -34,7 +38,7 @@ int LuaFontDef::Create(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
         size_t l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_FilteringTypes);
-        ROC::IFont *l_font = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateFont_(l_path, l_size, l_atlasSize, static_cast<unsigned char>(l_filteringType));
+        ROC::IFont *l_font = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIFont(l_path, l_size, l_atlasSize, static_cast<unsigned char>(l_filteringType));
         l_font ? argStream.PushElement(l_font) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -42,19 +46,21 @@ int LuaFontDef::Create(lua_State *f_vm)
 }
 int LuaFontDef::Draw(lua_State *f_vm)
 {
-    // bool Font:draw(float x, float y, str text [, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1])
+    // bool Font:draw(float x, float y, str text [, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1, str layer = "screen"])
     ROC::IFont *l_font;
     glm::vec2 l_pos;
     std::string l_text;
     glm::vec4 l_color(1.f);
+    std::string l_layer("screen");
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_font);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     argStream.ReadText(l_text);
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
+    argStream.ReadNextText(l_layer);
     if(!argStream.HasErrors() && !l_text.empty())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->Render(l_font, l_pos, l_text, l_color);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->Render(l_font, l_pos, l_text, l_color, l_layer);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

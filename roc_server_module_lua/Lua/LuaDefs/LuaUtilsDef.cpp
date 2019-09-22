@@ -2,8 +2,10 @@
 
 #include "Lua/LuaDefs/LuaUtilsDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/ILogManager.h"
 #include "Lua/ArgReader.h"
+#include "Module/LuaModule.h"
 
 void LuaUtilsDef::Init(lua_State *f_vm)
 {
@@ -29,7 +31,7 @@ int LuaUtilsDef::LogPrint(lua_State *f_vm)
     argStream.ReadText(l_text);
     if(!argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetLogManager()->Log(l_text);
+        LuaModule::GetModule()->GetEngineCore()->GetILogManager()->Log(l_text);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

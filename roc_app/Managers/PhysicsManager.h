@@ -26,7 +26,7 @@ class PhysicsManager final : public IPhysicsManager
     PhysicsManager(const PhysicsManager &that) = delete;
     PhysicsManager& operator=(const PhysicsManager &that) = delete;
 
-    // Interfaces reroute
+    // ROC::IPhysicsManager
     void SetCollisionScale(ICollision *f_col, const glm::vec3 &f_scale);
     bool RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, IElement *&f_element);
 public:

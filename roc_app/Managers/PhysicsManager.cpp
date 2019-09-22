@@ -109,10 +109,6 @@ void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav) const
     std::memcpy(&f_grav, m_dynamicWorld->getGravity().m_floats, sizeof(glm::vec3));
 }
 
-void ROC::PhysicsManager::SetCollisionScale(ICollision *f_col, const glm::vec3 &f_scale)
-{
-    SetCollisionScale(dynamic_cast<Collision*>(f_col), f_scale);
-}
 void ROC::PhysicsManager::SetCollisionScale(Collision *f_col, const glm::vec3 &f_scale)
 {
     btRigidBody *l_body = f_col->GetRigidBody();
@@ -185,10 +181,6 @@ void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
     m_dynamicWorld->removeRigidBody(f_col->GetRigidBody());
 }
 
-bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, IElement *&f_element)
-{
-    return RayCast(f_start, f_end, f_normal, reinterpret_cast<Element*&>(f_element));
-}
 bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, Element *&f_element)
 {
     bool l_result = false;
@@ -224,4 +216,14 @@ void ROC::PhysicsManager::DrawDebugWorld()
 void ROC::PhysicsManager::DoPulse()
 {
     if(m_enabled) m_dynamicWorld->stepSimulation(m_timeStep, g_PhysicsDefaultSubstepsCount, g_PhysicsDefaultTimestep);
+}
+
+// ROC::IPhysicsManager
+void ROC::PhysicsManager::SetCollisionScale(ICollision *f_col, const glm::vec3 &f_scale)
+{
+    SetCollisionScale(dynamic_cast<Collision*>(f_col), f_scale);
+}
+bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, IElement *&f_element)
+{
+    return RayCast(f_start, f_end, f_normal, reinterpret_cast<Element*&>(f_element));
 }

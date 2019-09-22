@@ -2,9 +2,12 @@
 
 #include "Lua/LuaDefs/LuaCameraDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/ICamera.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
+#include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -50,7 +53,7 @@ int LuaCameraDef::Create(lua_State *f_vm)
         size_t l_type = EnumUtils::ReadEnumVector(l_text, g_CameraTypes);
         if(l_type != std::numeric_limits<size_t>::max())
         {
-            ROC::ICamera *l_camera = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateCamera(static_cast<unsigned char>(l_type));
+            ROC::ICamera *l_camera = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateICamera(static_cast<unsigned char>(l_type));
             l_camera ? argStream.PushElement(l_camera) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

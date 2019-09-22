@@ -2,9 +2,9 @@
 
 #include "Lua/LuaDefs/LuaEventsDef.h"
 
+#include "Lua/ArgReader.h"
 #include "Module/LuaModule.h"
 #include "Module/EventHandler.h"
-#include "Lua/ArgReader.h"
 #include "Utils/CustomArguments.h"
 #include "Utils/LuaUtils.h"
 

@@ -18,7 +18,7 @@ public:
         Map_BlendTime
     };
 
-    virtual IGeometry* GetGeometry() const = 0;
+    virtual IGeometry* GetIGeometry() const = 0;
     virtual float GetBoundSphereRadius() const = 0;
 
     virtual void SetPosition(const glm::vec3 &f_pos) = 0;
@@ -31,15 +31,15 @@ public:
 
     virtual bool AttachTo(IModel *f_model, int f_bone = -1) = 0;
     virtual bool Dettach() = 0;
-    virtual IModel* GetParentModel() const = 0;
+    virtual IModel* GetParentIModel() const = 0;
 
-    virtual bool SetCollision(ICollision *f_col) = 0;
+    virtual bool SetICollision(ICollision *f_col) = 0;
     virtual bool RemoveCollision() = 0;
-    virtual ICollision* GetCollsion() const = 0;
+    virtual ICollision* GetICollsion() const = 0;
 
-    virtual bool SetAnimation(IAnimation *f_anim) = 0;
+    virtual bool SetIAnimation(IAnimation *f_anim) = 0;
     virtual bool RemoveAnimation() = 0;
-    virtual IAnimation* GetAnimation() const = 0;
+    virtual IAnimation* GetIAnimation() const = 0;
     virtual bool PlayAnimation(bool f_loop) = 0;
     virtual bool PauseAnimation() = 0;
     virtual bool ResetAnimation() = 0;

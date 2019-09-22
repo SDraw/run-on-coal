@@ -19,13 +19,6 @@ class NetworkManager final : public INetworkManager
         ID_ROC_DATA_PACKET = ID_USER_PACKET_ENUM + 1
     };
 
-    enum NetworkState : unsigned char 
-    { 
-        NS_Disconnected = 0U, 
-        NS_Connecting, 
-        NS_Connected, 
-        NS_Disconnecting 
-    };
     NetworkState m_networkState;
 
     CustomArguments m_arguments;

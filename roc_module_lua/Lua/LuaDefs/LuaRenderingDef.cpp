@@ -2,8 +2,10 @@
 
 #include "Lua/LuaDefs/LuaRenderingDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IRenderManager.h"
 #include "Lua/ArgReader.h"
+#include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -31,7 +33,7 @@ int LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
     argStream.ReadNextBoolean(l_color);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->ClearRenderArea(l_depth, l_color);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->ClearRenderArea(l_depth, l_color);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -46,7 +48,7 @@ int LuaRenderingDef::SetClearColor(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->SetClearColour(l_color);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->SetClearColour(l_color);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -61,7 +63,7 @@ int LuaRenderingDef::SetRenderArea(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadInteger(l_area[i]);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->SetViewport(l_area);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->SetViewport(l_area);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -79,7 +81,7 @@ int LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
         size_t l_type = EnumUtils::ReadEnumVector(l_mode, g_PolygonFilling);
         if(l_type != std::numeric_limits<size_t>::max())
         {
-            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->SetPolygonMode(static_cast<int>(l_type));
+            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->SetPolygonMode(static_cast<int>(l_type));
             argStream.PushBoolean(l_result);
         }
         else argStream.PushBoolean(false);
@@ -90,11 +92,13 @@ int LuaRenderingDef::SetPolygonMode(lua_State *f_vm)
 
 int LuaRenderingDef::DrawPhysics(lua_State *f_vm)
 {
-    // bool drawPhysics()
+    // bool drawPhysics([float width = 1.0, str layer = "physics"])
     float l_width = 1.f;
+    std::string l_layer("physics");
     ArgReader argStream(f_vm);
     argStream.ReadNextNumber(l_width);
-    bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->DrawPhysics(l_width);
+    argStream.ReadNextText(l_layer);
+    bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->DrawPhysics(l_width, l_layer);
     argStream.PushBoolean(l_result);
     return argStream.GetReturnValue();
 }

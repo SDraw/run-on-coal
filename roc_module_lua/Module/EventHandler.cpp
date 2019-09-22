@@ -2,6 +2,7 @@
 
 #include "Module/EventHandler.h"
 #include "Module/LuaModule.h"
+#include "Utils/CustomArguments.h"
 
 #include "Lua/LuaVM.h"
 #include "Utils/EnumUtils.h"

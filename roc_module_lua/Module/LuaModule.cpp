@@ -45,14 +45,13 @@ bool LuaModule::Init(ROC::ICore *f_core)
     }
     return (ms_instance != nullptr);
 }
-bool LuaModule::Terminate()
+void LuaModule::Terminate()
 {
     if(ms_instance)
     {
         delete ms_instance;
         ms_instance = nullptr;
     }
-    return (ms_instance == nullptr);
 }
 
 void LuaModule::RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args)

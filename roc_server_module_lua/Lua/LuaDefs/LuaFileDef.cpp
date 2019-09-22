@@ -3,8 +3,11 @@
 #include "Lua/LuaDefs/LuaFileDef.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IFile.h"
 #include "Lua/ArgReader.h"
+#include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -54,10 +57,10 @@ int LuaFileDef::CreateOpen(lua_State *f_vm)
         switch(EnumUtils::ReadEnumVector(l_manage, g_FileManageTypesTable))
         {
             case FileManageMode::FMM_Create:
-                l_file = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateFile_(l_path);
+                l_file = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIFile(l_path);
                 break;
             case FileManageMode::FMM_Open:
-                l_file = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->OpenFile(l_path, l_readOnly);
+                l_file = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->OpenIFile(l_path, l_readOnly);
                 break;
         }
         l_file ? argStream.PushElement(l_file) : argStream.PushBoolean(false);

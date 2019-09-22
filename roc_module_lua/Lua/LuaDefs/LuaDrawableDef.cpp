@@ -2,8 +2,12 @@
 
 #include "Lua/LuaDefs/LuaDrawableDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IRenderManager.h"
+#include "Interfaces/IDrawable.h"
 #include "Lua/ArgReader.h"
+#include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
 extern const std::vector<std::string> g_FilteringTypes
@@ -34,20 +38,22 @@ int LuaDrawableDef::IsDrawable(lua_State *f_vm)
 }
 int LuaDrawableDef::Draw(lua_State *f_vm)
 {
-    // bool Drawable:draw(float x, float y, float sizeX, float sizeY [, float rotation = 0, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1])
+    // bool Drawable:draw(float x, float y, float sizeX, float sizeY [, float rotation = 0, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1, str layer = "screen"])
     ROC::IDrawable *l_drawable;
     glm::vec2 l_pos, l_size;
     float l_rot = 0.f;
     glm::vec4 l_color(1.f);
+    std::string l_layer("screen");
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_drawable);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
     argStream.ReadNextNumber(l_rot);
     for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
+    argStream.ReadNextText(l_layer);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->Render(l_drawable, l_pos, l_size, l_rot, l_color);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->Render(l_drawable, l_pos, l_size, l_rot, l_color, l_layer);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -55,22 +61,24 @@ int LuaDrawableDef::Draw(lua_State *f_vm)
 }
 int LuaDrawableDef::Draw3D(lua_State *f_vm)
 {
-    // bool Drawable:draw3D(float x, float y, float z, float rotX, float rotY, float rotZ, float width, float height [, bool shading = true, bool depth = true, bool transparency = false, bool doubleSided = false])
+    // bool Drawable:draw3D(float x, float y, float z, float rotX, float rotY, float rotZ, float width, float height [, str layer = "default", bool shading = true, bool depth = true, bool transparency = false, bool doubleSided = false])
     ROC::IDrawable *l_drawable;
     glm::vec3 l_pos;
     glm::vec3 l_rot;
     glm::vec2 l_size;
+    std::string l_layer("default");
     glm::bvec4 l_params(true, true, false, false);
     ArgReader argStream(f_vm);
     argStream.ReadElement(l_drawable);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
     for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
     for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
+    argStream.ReadNextText(l_layer);
     for(int i = 0; i < 4; i++) argStream.ReadNextBoolean(l_params[i]);
     if(!argStream.HasErrors())
     {
         glm::quat l_rotQuat(l_rot);
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetRenderManager()->Render(l_drawable, l_pos, l_rot, l_size, l_params);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->Render(l_drawable, l_pos, l_rot, l_size, l_layer, l_params);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

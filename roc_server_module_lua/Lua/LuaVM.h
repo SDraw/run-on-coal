@@ -1,5 +1,6 @@
 #pragma once
 
+class CustomArguments;
 class LuaModule;
 class LuaFunction;
 

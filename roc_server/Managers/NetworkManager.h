@@ -6,7 +6,7 @@ namespace ROC
 {
 
 class Core;
-class IClient; class Client;
+class Client;
 
 class NetworkManager final : public INetworkManager
 {
@@ -27,7 +27,7 @@ class NetworkManager final : public INetworkManager
     NetworkManager(const NetworkManager &that) = delete;
     NetworkManager& operator=(const NetworkManager &that) = delete;
 
-    // Interfaces reroute
+    // ROC::INetworkManager
     bool Disconnect(IClient *f_client);
     bool SendData(IClient *f_client, const std::string &f_data);
     int GetPing(IClient *f_client) const;

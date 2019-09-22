@@ -148,7 +148,7 @@ void ROC::Element::OnParentLinkDestroyed(Element *f_parent)
 {
     for(auto l_searchIter = m_parents.begin(), l_end = m_parents.end(); l_searchIter != l_end; ++l_searchIter)
     {
-        if(*l_searchIter == f_parent)
+        if((*l_searchIter) == f_parent)
         {
             m_parents.erase(l_searchIter);
             break;
@@ -159,7 +159,7 @@ void ROC::Element::OnChildLinkDestroyed(Element *f_child)
 {
     for(auto l_searchIter = m_children.begin(), l_end = m_children.end(); l_searchIter != l_end; ++l_searchIter)
     {
-        if(*l_searchIter == f_child)
+        if((*l_searchIter) == f_child)
         {
             m_children.erase(l_searchIter);
             break;

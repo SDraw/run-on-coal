@@ -1,12 +1,16 @@
 #include "stdafx.h"
 
 #include "ArgReader.h"
-
-#include "Module/LuaModule.h"
+#include "Interfaces/IElement.h"
 #include "Lua/LuaFunction.h"
-#include "Lua/LuaVM.h"
 #include "Utils/CustomArgument.h"
 #include "Utils/CustomArguments.h"
+
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/ILogManager.h"
+#include "Module/LuaModule.h"
+#include "Lua/LuaVM.h"
 #include "Utils/LuaUtils.h"
 
 ArgReader::ArgReader(lua_State *f_vm)
@@ -120,7 +124,7 @@ void ArgReader::ReadArgument(CustomArgument &f_data)
                 case LUA_TUSERDATA:
                 {
                     ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element)) f_data = CustomArgument(l_element);
+                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element)) f_data = CustomArgument(l_element);
                     f_data = CustomArgument(static_cast<void*>(l_element));
                 } break;
                 case LUA_TSTRING:
@@ -342,7 +346,7 @@ void ArgReader::ReadArguments(CustomArguments &f_args)
                 case LUA_TUSERDATA:
                 {
                     ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element)) f_args.Push(l_element);
+                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element)) f_args.Push(l_element);
                     else f_args.Push(static_cast<void*>(l_element));
                 } break;
                 case LUA_TSTRING:
@@ -372,7 +376,7 @@ bool ArgReader::HasErrors()
         l_log.append(m_error);
         l_log.append(" at argument ");
         l_log.append(std::to_string(m_argCurrent));
-        LuaModule::GetModule()->GetEngineCore()->GetLogManager()->Log(l_log);
+        LuaModule::GetModule()->GetEngineCore()->GetILogManager()->Log(l_log);
     }
     return m_hasErrors;
 }

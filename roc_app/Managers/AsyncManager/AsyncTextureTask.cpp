@@ -15,6 +15,7 @@ ROC::AsyncTextureTask::AsyncTextureTask(const std::vector<std::string> &f_path, 
 {
     m_path.assign(f_path.begin(), f_path.end());
     m_filter = f_filter;
+    m_type = 0U;
     m_compress = f_compress;
 }
 ROC::AsyncTextureTask::~AsyncTextureTask()
@@ -40,6 +41,9 @@ void ROC::AsyncTextureTask::Execute()
                 if(l_texture->LoadCubemap(m_path, m_filter, m_compress)) m_taskElement = l_texture;
                 else delete l_texture;
             } break;
+            default:
+                delete l_texture;
+                break;
         }
 
         m_taskState = ATS_Executed;

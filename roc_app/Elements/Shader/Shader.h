@@ -1,7 +1,6 @@
 #pragma once
 #include "Interfaces/IShader.h"
 #include "Elements/Element.h"
-#include "Elements/Shader/ShaderUniform.h"
 
 namespace ROC
 {
@@ -9,6 +8,7 @@ namespace ROC
 class Drawable;
 class Light;
 class Pool;
+class ShaderUniform;
 
 class Shader final : public Element, public virtual IShader
 {
@@ -59,11 +59,6 @@ class Shader final : public Element, public virtual IShader
 
     void SetupUniformsAndLocations();
     void FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_name, unsigned int f_type);
-
-    // Interfaces reroute
-    bool Attach(IDrawable *f_drawable, const std::string &f_uniform);
-    bool Detach(IDrawable *f_drawable);
-    bool HasAttached(IDrawable *f_drawable) const;
 public:
     ShaderUniform* GetUniform(const std::string &f_uniform);
 
@@ -93,6 +88,7 @@ protected:
 
     void Enable();
     void Disable();
+    inline bool IsActive() const { return m_active; }
 
     static void UpdateDrawableMaxCount();
 
@@ -103,6 +99,11 @@ protected:
     friend class RenderManager;
     friend class SfmlManager;
     friend class Scene;
+private:
+    IShaderUniform* GetIUniform(const std::string &f_uniform);
+    bool Attach(IDrawable *f_drawable, const std::string &f_uniform);
+    bool Detach(IDrawable *f_drawable);
+    bool HasAttached(IDrawable *f_drawable) const;
 };
 
 }

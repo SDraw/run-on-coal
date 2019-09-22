@@ -1,12 +1,14 @@
 #include "stdafx.h"
 
 #include "Elements/Model/Model.h"
+#include "Elements/Animation/Animation.h"
+#include "Elements/Collision.h"
+#include "Elements/Geometry/Geometry.h"
+#include "Elements/Model/AnimationController.h"
+#include "Elements/Model/Skeleton.h"
 #include "Utils/Transformation.h"
 
-#include "Elements/Animation/Animation.h"
-#include "Elements/Model/AnimationController.h"
 #include "Elements/Model/Bone.h"
-#include "Elements/Model/Skeleton.h"
 
 namespace ROC
 {
@@ -54,11 +56,6 @@ ROC::Model::~Model()
     delete m_localTransform;
     delete m_animController;
     delete m_skeleton;
-}
-
-ROC::Geometry* ROC::Model::GetGeometry() const
-{
-    return m_geometry;
 }
 
 float ROC::Model::GetBoundSphereRadius() const
@@ -133,10 +130,6 @@ bool ROC::Model::Dettach()
     }
     return l_result;
 }
-ROC::Model* ROC::Model::GetParentModel() const
-{
-    return m_parentModel;
-}
 
 bool ROC::Model::SetCollision(Collision *f_col)
 {
@@ -163,10 +156,6 @@ bool ROC::Model::RemoveCollision()
         l_result = true;
     }
     return l_result;
-}
-ROC::Collision* ROC::Model::GetCollsion() const
-{
-    return m_collision;
 }
 
 bool ROC::Model::SetAnimation(Animation *f_anim)
@@ -285,7 +274,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 if(m_collision->IsActive() || m_localTransform->IsUpdated())
                 {
                     m_collision->GetMatrix(m_fullMatrix);
-                    m_fullMatrix = m_localTransform->GetMatrix()*m_fullMatrix;
+                    m_fullMatrix *= m_localTransform->GetMatrix();
                     m_updated = true;
                 }
             }
@@ -416,16 +405,32 @@ void ROC::Model::GetRigidBodies(std::vector<btRigidBody*> &f_vec)
     }
 }
 
-// Interfaces reroute
+// ROC::IModel
+ROC::IGeometry* ROC::Model::GetIGeometry() const
+{
+    return m_geometry;
+}
 bool ROC::Model::AttachTo(IModel *f_model, int f_bone)
 {
     return AttachTo(dynamic_cast<Model*>(f_model), f_bone);
 }
-bool ROC::Model::SetCollision(ICollision *f_col)
+ROC::IModel* ROC::Model::GetParentIModel() const
+{
+    return m_parentModel;
+}
+bool ROC::Model::SetICollision(ICollision *f_col)
 {
     return SetCollision(dynamic_cast<Collision*>(f_col));
 }
-bool ROC::Model::SetAnimation(IAnimation *f_anim)
+ROC::ICollision* ROC::Model::GetICollsion() const
+{
+    return m_collision;
+}
+bool ROC::Model::SetIAnimation(IAnimation *f_anim)
 {
     return SetAnimation(dynamic_cast<Animation*>(f_anim));
+}
+ROC::IAnimation* ROC::Model::GetIAnimation() const
+{
+    return GetAnimation();
 }

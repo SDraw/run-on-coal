@@ -34,7 +34,7 @@ bool ROC::Collidable::SetCollidableWith(Collidable *f_col, bool f_state)
     return l_result;
 }
 
-// Interfaces reroute
+// ROC::ICollidable
 bool ROC::Collidable::SetCollidableWith(ICollidable *f_col, bool f_state)
 {
     return SetCollidableWith(dynamic_cast<Collidable*>(f_col), f_state);

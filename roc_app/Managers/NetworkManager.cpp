@@ -11,12 +11,7 @@ namespace ROC
 
 const std::string g_NetworkStates[]
 {
-    "connected", "disconnected"
-};
-enum NetworkState : size_t
-{
-    NS_Connected = 0U,
-    NS_Disconnected
+    "disconnected", "connecting", "connected", "disconnecting"
 };
 
 const size_t g_NetworkMaxConnections = 8U;

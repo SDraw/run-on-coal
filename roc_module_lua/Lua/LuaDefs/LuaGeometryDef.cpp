@@ -2,11 +2,14 @@
 
 #include "Lua/LuaDefs/LuaGeometryDef.h"
 
-#include "Module/LuaModule.h"
-#include "Module/TaskHandler.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IGeometry.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaFunction.h"
+#include "Module/LuaModule.h"
+#include "Module/TaskHandler.h"
 #include "Utils/LuaUtils.h"
 
 void LuaGeometryDef::Init(lua_State *f_vm)
@@ -34,7 +37,7 @@ int LuaGeometryDef::Create(lua_State *f_vm)
         }
         else
         {
-            ROC::IGeometry *l_geometry = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateGeometry(l_path);
+            ROC::IGeometry *l_geometry = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIGeometry(l_path);
             l_geometry ? argStream.PushElement(l_geometry) : argStream.PushBoolean(false);
         }
     }

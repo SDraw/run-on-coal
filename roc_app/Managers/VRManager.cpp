@@ -8,8 +8,8 @@
 #include "Managers/ConfigManager.h"
 #include "Managers/ModuleManager.h"
 #include "Managers/RenderManager/RenderManager.h"
+#include "Elements/Camera.h"
 #include "Interfaces/IModule.h"
-#include "Elements/Scene.h"
 #include "Utils/MathUtils.h"
 
 namespace ROC
@@ -41,7 +41,7 @@ ROC::VRManager::VRManager(Core *f_core)
         m_vrSystem = vr::VR_Init(&l_hmdError, vr::EVRApplicationType::VRApplication_Scene);
         if(l_hmdError != vr::EVRInitError::VRInitError_None)
         {
-            std::string l_errorString("OpenVR: Unable to start application in VR mode\n");
+            std::string l_errorString("Unable to start application in VR mode\nOpenVR: ");
             l_errorString.append(vr::VR_GetVRInitErrorAsEnglishDescription(l_hmdError));
             MessageBoxA(NULL, l_errorString.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
             exit(EXIT_FAILURE);
@@ -251,35 +251,23 @@ bool ROC::VRManager::ShowNotification(const std::string &f_title, const std::str
     return l_result;
 }
 
-bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)
+bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color, const std::string &f_layer)
 {
     bool l_result = false;
     if(m_vrStage == VRS_None)
     {
-        RenderTarget *l_rt = nullptr;
-        switch(f_side)
-        {
-            case VRE_Left: case VRE_Right:
-                l_rt = m_eyeRT[f_side];
-                break;
-        }
-        if(l_rt) m_core->GetRenderManager()->Render(l_rt, f_pos, f_size, f_rot, f_color);
+        btClamp<unsigned char>(f_side, VRE_Left, VRE_Right);
+        l_result = m_core->GetRenderManager()->Render(m_eyeRT[f_side], f_pos, f_size, f_rot, f_color, f_layer);
     }
     return l_result;
 }
-bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
+bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const std::string &f_layer, const glm::bvec4 &f_params)
 {
     bool l_result = false;
     if(m_vrStage == VRS_None)
     {
-        RenderTarget *l_rt = nullptr;
-        switch(f_side)
-        {
-            case VRE_Left: case VRE_Right:
-                l_rt = m_eyeRT[f_side];
-                break;
-        }
-        if(l_rt) l_result = m_core->GetRenderManager()->Render(l_rt, f_pos, f_rot, f_size, f_params);
+        btClamp<unsigned char>(f_side, VRE_Left, VRE_Right);
+        l_result = m_core->GetRenderManager()->Render(m_eyeRT[f_side], f_pos, f_rot, f_size, f_layer, f_params);
     }
     return l_result;
 }
@@ -298,7 +286,7 @@ void ROC::VRManager::Render()
 
         m_vrStage = VRS_Right;
         m_eyeRT[VRE_Right]->Enable();
-        RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRS_Right]);
+        RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRE_Right]);
 
         m_arguments.Push(g_VRRenderSide[VRRenderSide::VRRS_Right]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);

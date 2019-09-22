@@ -2,8 +2,10 @@
 
 #include "Lua/LuaDefs/LuaNetworkDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/INetworkManager.h"
 #include "Lua/ArgReader.h"
+#include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
 const std::string g_NetworkStatesTable[]
@@ -30,7 +32,7 @@ int LuaNetworkDef::Connect(lua_State *f_vm)
     argStream.ReadNextInteger(l_port);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->Connect(l_ip, l_port);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->Connect(l_ip, l_port);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -40,7 +42,7 @@ int LuaNetworkDef::Disconnect(lua_State *f_vm)
 {
     // bool networkDisconnect
     ArgReader argStream(f_vm);
-    bool l_result = LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->Disconnect();
+    bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->Disconnect();
     argStream.PushBoolean(l_result);
     return argStream.GetReturnValue();
 }
@@ -52,7 +54,7 @@ int LuaNetworkDef::SendData(lua_State *f_vm)
     argStream.ReadText(l_data);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->SendData(l_data);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->SendData(l_data);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -62,13 +64,13 @@ int LuaNetworkDef::GetState(lua_State *f_vm)
 {
     // str networkGetState()
     ArgReader argStream(f_vm);
-    argStream.PushText(g_NetworkStatesTable[LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->GetNetworkState()]);
+    argStream.PushText(g_NetworkStatesTable[LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetNetworkState()]);
     return argStream.GetReturnValue();
 }
 int LuaNetworkDef::GetPing(lua_State *f_vm)
 {
     // int networkGetPing()
     ArgReader argStream(f_vm);
-    argStream.PushInteger(LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->GetPing());
+    argStream.PushInteger(LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetPing());
     return argStream.GetReturnValue();
 }

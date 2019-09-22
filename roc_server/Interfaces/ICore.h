@@ -10,9 +10,9 @@ class INetworkManager;
 class ICore
 {
 public:
-    virtual IElementManager* GetElementManager() const = 0;
-    virtual ILogManager* GetLogManager() const = 0;
-    virtual INetworkManager* GetNetworkManager() const = 0;
+    virtual IElementManager* GetIElementManager() const = 0;
+    virtual ILogManager* GetILogManager() const = 0;
+    virtual INetworkManager* GetINetworkManager() const = 0;
 };
 
 }

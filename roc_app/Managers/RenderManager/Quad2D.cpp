@@ -26,7 +26,7 @@ ROC::Quad2D::Quad2D()
 
     glEnableVertexAttribArray(QBA_UV);
     GLBinder::BindArrayBuffer(m_VBO[QBI_UV]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 2U * g_Quad2DVerticesCount, g_QuadVertexUV, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * g_Quad2DVerticesCount, g_QuadVertexUV, GL_STATIC_DRAW);
     glVertexAttribPointer(QBA_UV, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
     for(auto &l_vertex : m_vertex) l_vertex = glm::vec3(0.f, 0.f, 1.0f);

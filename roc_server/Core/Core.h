@@ -1,15 +1,15 @@
 #pragma once
 #include "Interfaces/ICore.h"
-#include "Managers/ElementManager.h"
-#include "Managers/LogManager.h"
-#include "Managers/NetworkManager.h"
 #include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class ConfigManager;
+class ElementManager;
+class LogManager;
 class ModuleManager;
+class NetworkManager;
 
 class Core final : public ICore
 {
@@ -28,16 +28,21 @@ class Core final : public ICore
     Core(const Core &that) = delete;
     Core& operator=(const Core &that) = delete;
     ~Core();
+
+    // ROC::ICore
+    ROC::IElementManager* GetIElementManager() const;
+    ROC::ILogManager* GetILogManager() const;
+    ROC::INetworkManager* GetINetworkManager() const;
 public:
     static bool Init();
     inline static Core* GetCore() { return ms_instance; }
-    static bool Terminate();
+    static void Terminate();
 
     inline ConfigManager* GetConfigManager() const { return m_configManager; }
-    ElementManager* GetElementManager() const;
-    LogManager* GetLogManager() const;
+    inline ElementManager* GetElementManager() const { return m_elementManager; }
+    inline LogManager* GetLogManager() const { return m_logManager; }
     inline ModuleManager* GetModuleManager() const { return m_moduleManager; }
-    NetworkManager* GetNetworkManager() const;
+    inline NetworkManager* GetNetworkManager() const { return m_networkManager; }
 
     void DoPulse();
 };

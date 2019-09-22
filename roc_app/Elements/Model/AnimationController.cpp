@@ -16,6 +16,7 @@ ROC::AnimationController::AnimationController()
     m_blendTime = 500U;
     m_blendTimeTick = 0U;
     m_blendValue = 1.f;
+    m_loop = false;
 }
 ROC::AnimationController::~AnimationController()
 {

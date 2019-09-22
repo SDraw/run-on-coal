@@ -3,12 +3,15 @@
 #include "Lua/LuaVM.h"
 #include "Module/LuaModule.h"
 
+#include "Interfaces/ICore.h"
+#include "Interfaces/ILogManager.h"
+#include "Interfaces/IElement.h"
+#include "Lua/LuaFunction.h"
 #include "LuaDefs/LuaClientDef.h"
 #include "LuaDefs/LuaElementDef.h"
 #include "LuaDefs/LuaEventsDef.h"
 #include "LuaDefs/LuaFileDef.h"
 #include "LuaDefs/LuaUtilsDef.h"
-#include "Lua/LuaFunction.h"
 #include "Utils/CustomArguments.h"
 #include "Utils/LuaUtils.h"
 
@@ -63,7 +66,7 @@ void LuaVM::LoadScript(const std::string &f_file)
         l_log.append(f_file);
         l_log.append("' is loaded");
     }
-    m_luaModule->GetEngineCore()->GetLogManager()->Log(l_log);
+    m_luaModule->GetEngineCore()->GetILogManager()->Log(l_log);
 }
 
 void LuaVM::DoPulse()
@@ -118,7 +121,7 @@ void LuaVM::CallFunction(const LuaFunction &f_func, const CustomArguments &f_arg
         if(lua_pcall(m_vm, static_cast<int>(f_args.GetArgumentsCount()), 0, 0))
         {
             std::string l_log(lua_tostring(m_vm, -1));
-            m_luaModule->GetEngineCore()->GetLogManager()->Log(l_log);
+            m_luaModule->GetEngineCore()->GetILogManager()->Log(l_log);
             lua_pop(m_vm, 1);
         }
     }

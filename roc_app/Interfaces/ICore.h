@@ -16,15 +16,15 @@ class IVRManager;
 class ICore
 {
 public:
-    virtual IAsyncManager* GetAsyncManager() const = 0;
-    virtual IElementManager* GetElementManager() const = 0;
-    virtual ILogManager* GetLogManager() const = 0;
-    virtual INetworkManager* GetNetworkManager() const = 0;
-    virtual IPhysicsManager* GetPhysicsManager() const = 0;
-    virtual IRenderManager* GetRenderManager() const = 0;
-    virtual ISfmlManager* GetSfmlManager() const = 0;
-    virtual ISoundManager* GetSoundManager() const = 0;
-    virtual IVRManager* GetVRManager() const = 0;
+    virtual IAsyncManager* GetIAsyncManager() const = 0;
+    virtual IElementManager* GetIElementManager() const = 0;
+    virtual ILogManager* GetILogManager() const = 0;
+    virtual INetworkManager* GetINetworkManager() const = 0;
+    virtual IPhysicsManager* GetIPhysicsManager() const = 0;
+    virtual IRenderManager* GetIRenderManager() const = 0;
+    virtual ISfmlManager* GetISfmlManager() const = 0;
+    virtual ISoundManager* GetISoundManager() const = 0;
+    virtual IVRManager* GetIVRManager() const = 0;
 };
 
 }

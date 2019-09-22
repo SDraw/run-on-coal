@@ -1,5 +1,14 @@
 #pragma once
 
+namespace ROC
+{
+
+class IElement;
+
+}
+
+class CustomArgument;
+class CustomArguments;
 class LuaFunction;
 
 typedef glm::quat Quat;
@@ -107,7 +116,7 @@ template<class T> void ArgReader::ReadElement(T *&f_element)
             if(lua_isuserdata(m_vm, m_argCurrent))
             {
                 ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
-                if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element))
+                if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
                 {
                     f_element = dynamic_cast<T*>(l_element);
                     if(f_element != nullptr) m_argCurrent++;
@@ -150,7 +159,7 @@ template<class T> void ArgReader::ReadNextElement(T *&f_element)
         if(lua_isuserdata(m_vm, m_argCurrent))
         {
             ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
-            if(LuaModule::GetModule()->GetEngineCore()->GetElementManager()->IsValidElement(l_element))
+            if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
             {
                 f_element = dynamic_cast<T*>(l_element);
                 if(f_element != nullptr) m_argCurrent++;

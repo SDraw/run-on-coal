@@ -263,7 +263,8 @@
     <ClInclude Include="Elements\Model\Model.h" />
     <ClInclude Include="Elements\Model\Skeleton.h" />
     <ClInclude Include="Elements\RenderTarget.h" />
-    <ClInclude Include="Elements\Scene.h" />
+    <ClInclude Include="Elements\Scene\Scene.h" />
+    <ClInclude Include="Elements\Scene\SceneLayer.h" />
     <ClInclude Include="Elements\Shader\Shader.h" />
     <ClInclude Include="Elements\Shader\ShaderUniform.h" />
     <ClInclude Include="Elements\Sound.h" />
@@ -361,7 +362,8 @@
     <ClCompile Include="Elements\Model\Model.cpp" />
     <ClCompile Include="Elements\Model\Skeleton.cpp" />
     <ClCompile Include="Elements\RenderTarget.cpp" />
-    <ClCompile Include="Elements\Scene.cpp" />
+    <ClCompile Include="Elements\Scene\Scene.cpp" />
+    <ClCompile Include="Elements\Scene\SceneLayer.cpp" />
     <ClCompile Include="Elements\Shader\Shader.cpp" />
     <ClCompile Include="Elements\Shader\ShaderUniform.cpp" />
     <ClCompile Include="Elements\Sound.cpp" />

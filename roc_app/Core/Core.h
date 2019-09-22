@@ -1,22 +1,22 @@
 #pragma once
 #include "Interfaces/ICore.h"
-#include "Managers/ElementManager.h"
-#include "Managers/AsyncManager/AsyncManager.h"
-#include "Managers/LogManager.h"
-#include "Managers/NetworkManager.h"
-#include "Managers/PhysicsManager.h"
-#include "Managers/RenderManager/RenderManager.h"
-#include "Managers/SfmlManager.h"
-#include "Managers/SoundManager.h"
-#include "Managers/VRManager.h"
 #include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
+class AsyncManager;
 class ConfigManager;
+class ElementManager;
+class LogManager;
 class ModuleManager;
+class NetworkManager;
+class PhysicsManager;
 class PreRenderManager;
+class RenderManager;
+class SfmlManager;
+class SoundManager;
+class VRManager;
 
 class Core final : public ICore
 {
@@ -42,23 +42,34 @@ class Core final : public ICore
     Core(const Core &that) = delete;
     Core& operator=(const Core &that) = delete;
     ~Core();
+
+    // ROC::ICore
+    IAsyncManager* GetIAsyncManager() const;
+    IElementManager* GetIElementManager() const;
+    ILogManager* GetILogManager() const;
+    INetworkManager* GetINetworkManager() const;
+    IPhysicsManager* GetIPhysicsManager() const;
+    IRenderManager* GetIRenderManager() const;
+    ISfmlManager* GetISfmlManager() const;
+    ISoundManager* GetISoundManager() const;
+    IVRManager* GetIVRManager() const;
 public:
     static bool Init();
     static Core* GetCore();
-    static bool Terminate();
+    static void Terminate();
 
     inline ConfigManager* GetConfigManager() const { return m_configManager; }
-    ElementManager* GetElementManager() const;
-    AsyncManager* GetAsyncManager() const;
-    LogManager* GetLogManager() const;
+    inline ElementManager* GetElementManager() const { return m_elementManager; }
+    inline AsyncManager* GetAsyncManager() const { return m_asyncManager; }
+    inline LogManager* GetLogManager() const { return m_logManager; }
     inline ModuleManager* GetModuleManager() const { return m_moduleManager; }
-    NetworkManager* GetNetworkManager() const;
-    PhysicsManager* GetPhysicsManager() const;
-    RenderManager* GetRenderManager() const;
+    inline NetworkManager* GetNetworkManager() const { return m_networkManager; }
+    inline PhysicsManager* GetPhysicsManager() const { return m_physicsManager; }
+    inline RenderManager* GetRenderManager() const { return m_renderManager; }
     inline PreRenderManager* GetPreRenderManager() const { return m_preRenderManager; }
-    SfmlManager* GetSfmlManager() const;
-    SoundManager* GetSoundManager() const;
-    VRManager* GetVRManager() const;
+    inline SfmlManager* GetSfmlManager() const { return m_sfmlManager; }
+    inline SoundManager* GetSoundManager() const { return m_soundManager; }
+    inline VRManager* GetVRManager() const { return m_vrManager; }
 
     bool DoPulse();
 };

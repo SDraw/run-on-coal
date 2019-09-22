@@ -3,8 +3,12 @@
 #include "Lua/LuaDefs/LuaClientDef.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/INetworkManager.h"
+#include "Interfaces/IClient.h"
 #include "Lua/ArgReader.h"
+#include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
 void LuaClientDef::Init(lua_State *f_vm)
@@ -27,7 +31,7 @@ int LuaClientDef::Disconnect(lua_State *f_vm)
     argStream.ReadElement(l_client);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->Disconnect(l_client);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->Disconnect(l_client);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -43,7 +47,7 @@ int LuaClientDef::SendData(lua_State *f_vm)
     argStream.ReadText(l_data);
     if(!argStream.HasErrors() && !l_data.empty())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->SendData(l_client, l_data);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->SendData(l_client, l_data);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -83,7 +87,7 @@ int LuaClientDef::GetPing(lua_State *f_vm)
     argStream.ReadElement(l_client);
     if(!argStream.HasErrors())
     {
-        int l_ping = LuaModule::GetModule()->GetEngineCore()->GetNetworkManager()->GetPing(l_client);
+        int l_ping = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetPing(l_client);
         argStream.PushNumber(l_ping);
     }
     else argStream.PushBoolean(false);

@@ -3,6 +3,7 @@
 #include "Managers/ElementManager.h"
 #include "Core/Core.h"
 #include "Elements/Client.h"
+#include "Elements/File.h"
 
 #include "Managers/LogManager.h"
 #include "Managers/NetworkManager.h"
@@ -73,24 +74,12 @@ ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
     return l_file;
 }
 
-bool ROC::ElementManager::IsValidElement(IElement *f_ptr)
-{
-    auto l_checkIterator = m_interfaces.find(f_ptr);
-    return (l_checkIterator != m_interfacesEnd);
-}
 bool ROC::ElementManager::IsValidElement(Element *f_ptr)
 {
     auto iter = m_elements.find(f_ptr);
     return (iter != m_elementsEnd);
 }
 
-bool ROC::ElementManager::DestroyElement(IElement *f_element)
-{
-    bool l_result = false;
-    auto l_checkIterator = m_interfaces.find(f_element);
-    if(l_checkIterator != m_interfacesEnd) l_result = DestroyElement(dynamic_cast<Element*>(f_element));
-    return l_result;
-}
 bool ROC::ElementManager::DestroyElement(Element *f_element)
 {
     bool l_result = false;
@@ -106,5 +95,27 @@ bool ROC::ElementManager::DestroyElement(Element *f_element)
             } break;
         }
     }
+    return l_result;
+}
+
+// ROC::IElementManager
+ROC::IFile* ROC::ElementManager::CreateIFile(const std::string &f_path)
+{
+    return CreateFile_(f_path);
+}
+ROC::IFile* ROC::ElementManager::OpenIFile(const std::string &f_path, bool f_ro)
+{
+    return OpenFile(f_path, f_ro);
+}
+bool ROC::ElementManager::IsValidIElement(IElement *f_ptr)
+{
+    auto l_checkIterator = m_interfaces.find(f_ptr);
+    return (l_checkIterator != m_interfacesEnd);
+}
+bool ROC::ElementManager::DestroyIElement(IElement *f_element)
+{
+    bool l_result = false;
+    auto l_checkIterator = m_interfaces.find(f_element);
+    if(l_checkIterator != m_interfacesEnd) l_result = DestroyElement(dynamic_cast<Element*>(f_element));
     return l_result;
 }

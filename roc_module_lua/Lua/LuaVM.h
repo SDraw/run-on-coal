@@ -2,6 +2,7 @@
 
 class LuaModule;
 class LuaFunction;
+class CustomArguments;
 
 class LuaVM
 {

@@ -2,10 +2,13 @@
 
 #include "Lua/LuaDefs/LuaRenderTargetDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IRenderTarget.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaDrawableDef.h"
+#include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -39,7 +42,7 @@ int LuaRenderTargetDef::Create(lua_State *f_vm)
         if(l_rtType != std::numeric_limits<size_t>::max())
         {
             size_t l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_FilteringTypes);
-            ROC::IRenderTarget *l_rt = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateRenderTarget(static_cast<unsigned char>(l_rtType), l_size, static_cast<unsigned char>(l_filteringType));
+            ROC::IRenderTarget *l_rt = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIRenderTarget(static_cast<unsigned char>(l_rtType), l_size, static_cast<unsigned char>(l_filteringType));
             l_rt ? argStream.PushElement(l_rt) : argStream.PushBoolean(false);
         }
         else argStream.PushBoolean(false);

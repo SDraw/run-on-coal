@@ -2,10 +2,16 @@
 
 #include "Lua/LuaDefs/LuaModelDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IAnimation.h"
+#include "Interfaces/ICollision.h"
+#include "Interfaces/IGeometry.h"
+#include "Interfaces/IModel.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaCollidableDef.h"
+#include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -53,7 +59,7 @@ int LuaModelDef::Create(lua_State *f_vm)
     argStream.ReadNextElement(l_geometry);
     if(!argStream.HasErrors())
     {
-        ROC::IModel *l_model = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateModel(l_geometry);
+        ROC::IModel *l_model = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIModel(l_geometry);
         l_model ? argStream.PushElement(l_model) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -68,7 +74,7 @@ int LuaModelDef::GetGeometry(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        ROC::IGeometry *l_geometry = l_model->GetGeometry();
+        ROC::IGeometry *l_geometry = l_model->GetIGeometry();
         l_geometry ? argStream.PushElement(l_geometry) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -225,7 +231,7 @@ int LuaModelDef::GetParent(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        ROC::IModel *l_parent = l_model->GetParentModel();
+        ROC::IModel *l_parent = l_model->GetParentIModel();
         l_parent ? argStream.PushElement(l_parent) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -242,7 +248,7 @@ int LuaModelDef::SetAnimation(lua_State *f_vm)
     argStream.ReadElement(l_anim);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->SetAnimation(l_anim);
+        bool l_result = l_model->SetIAnimation(l_anim);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -256,7 +262,7 @@ int LuaModelDef::GetAnimation(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        ROC::IAnimation *l_anim = l_model->GetAnimation();
+        ROC::IAnimation *l_anim = l_model->GetIAnimation();
         l_anim ? argStream.PushElement(l_anim) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -375,7 +381,7 @@ int LuaModelDef::GetCollision(lua_State *f_vm)
     argStream.ReadElement(l_model);
     if(!argStream.HasErrors())
     {
-        ROC::ICollision *l_col = l_model->GetCollsion();
+        ROC::ICollision *l_col = l_model->GetICollsion();
         l_col ? argStream.PushElement(l_col) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);
@@ -391,7 +397,7 @@ int LuaModelDef::SetCollision(lua_State *f_vm)
     argStream.ReadElement(l_col);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_model->SetCollision(l_col);
+        bool l_result = l_model->SetICollision(l_col);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);

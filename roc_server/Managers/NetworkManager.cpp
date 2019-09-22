@@ -112,20 +112,12 @@ unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
     return l_result;
 }
 
-bool ROC::NetworkManager::Disconnect(IClient *f_client)
-{
-    return Disconnect(dynamic_cast<Client*>(f_client));
-}
 bool ROC::NetworkManager::Disconnect(Client *f_client)
 {
     if(m_networkInterface) m_networkInterface->CloseConnection(f_client->GetAddress(), true);
     return (m_networkInterface != nullptr);
 }
 
-bool ROC::NetworkManager::SendData(IClient *f_client, const std::string &f_data)
-{
-    return SendData(dynamic_cast<Client*>(f_client), f_data);
-}
 bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
 {
     if(m_networkInterface)
@@ -140,10 +132,6 @@ bool ROC::NetworkManager::SendData(Client *f_client, const std::string &f_data)
     return (m_networkInterface != nullptr);
 }
 
-int ROC::NetworkManager::GetPing(IClient *f_client) const
-{
-    return GetPing(dynamic_cast<Client*>(f_client));
-}
 int ROC::NetworkManager::GetPing(Client *f_client) const
 {
     return (m_networkInterface->GetLastPing(f_client->GetAddress()));
@@ -213,4 +201,18 @@ void ROC::NetworkManager::DoPulse()
             }
         }
     }
+}
+
+// ROC::INetworkManager
+bool ROC::NetworkManager::Disconnect(IClient *f_client)
+{
+    return Disconnect(dynamic_cast<Client*>(f_client));
+}
+bool ROC::NetworkManager::SendData(IClient *f_client, const std::string &f_data)
+{
+    return SendData(dynamic_cast<Client*>(f_client), f_data);
+}
+int ROC::NetworkManager::GetPing(IClient *f_client) const
+{
+    return GetPing(dynamic_cast<Client*>(f_client));
 }

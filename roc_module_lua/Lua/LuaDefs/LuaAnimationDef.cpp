@@ -2,9 +2,12 @@
 
 #include "Lua/LuaDefs/LuaAnimationDef.h"
 
-#include "Module/LuaModule.h"
+#include "Interfaces/ICore.h"
+#include "Interfaces/IElementManager.h"
+#include "Interfaces/IAnimation.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
+#include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
 void LuaAnimationDef::Init(lua_State *f_vm)
@@ -24,7 +27,7 @@ int LuaAnimationDef::Create(lua_State *f_vm)
     argStream.ReadText(l_path);
     if(!argStream.HasErrors() && !l_path.empty())
     {
-        ROC::IAnimation *l_anim = LuaModule::GetModule()->GetEngineCore()->GetElementManager()->CreateAnimation(l_path);
+        ROC::IAnimation *l_anim = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIAnimation(l_path);
         l_anim ? argStream.PushElement(l_anim) : argStream.PushBoolean(false);
     }
     else argStream.PushBoolean(false);

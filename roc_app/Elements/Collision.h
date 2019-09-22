@@ -1,7 +1,6 @@
 #pragma once
 #include "Interfaces/ICollision.h"
 #include "Elements/Collidable.h"
-#include "Elements/Element.h"
 
 namespace ROC
 {
@@ -15,6 +14,7 @@ class Collision final : public Collidable, public virtual ICollision
     Collision(const Collision &that) = delete;
     Collision& operator=(const Collision &that) = delete;
 
+    // ROC::Collidable
     void GetRigidBodies(std::vector<btRigidBody*> &f_vec);
 public:
     void SetPosition(const glm::vec3 &f_pos);
