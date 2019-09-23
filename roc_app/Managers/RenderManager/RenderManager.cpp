@@ -70,7 +70,6 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_depthEnabled = true;
     m_blendEnabled = false;
     m_cullEnabled = true;
-    m_skipNoDepthMaterials = false;
     m_time = 0.f;
     m_lastFillMode = GL_FILL;
 
@@ -98,11 +97,8 @@ bool ROC::RenderManager::SetActiveScene(Scene *f_scene)
         if(m_activeScene)
         {
             m_activeScene->Enable();
-            if(m_activeScene->HasRenderTarget()) m_skipNoDepthMaterials = m_activeScene->GetRenderTarget()->IsShadowType();
-            else
+            if(!m_activeScene->HasRenderTarget())
             {
-                m_skipNoDepthMaterials = false;
-
                 if(m_vrActive) m_vrManager->RestoreRenderTarget();
                 else GLBinder::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
             }
@@ -133,7 +129,7 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
     {
         if(m_activeScene->HasCamera())
         {
-            bool l_skipTextures = (m_activeScene->HasRenderTarget() ? m_activeScene->GetRenderTarget()->IsShadowType() : false);
+            bool l_onShadowRT = (m_activeScene->HasRenderTarget() ? m_activeScene->GetRenderTarget()->IsShadowType() : false);
 
             for(const auto l_layer : m_activeScene->GetLayers())
             {
@@ -154,7 +150,7 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
                         l_shader->SetCameraDirection(l_camera->GetDirection());
                         l_shader->SetLightsData(m_activeScene->GetLights());
 
-                        if(l_skipTextures) m_dummyTexture->Bind();
+                        if(l_onShadowRT) m_dummyTexture->Bind();
 
                         for(const auto l_renderModel : l_layer->GetRenderModels())
                         {
@@ -180,13 +176,13 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
                                         if(l_material->HasDepth()) EnableDepth();
                                         else
                                         {
-                                            if(m_skipNoDepthMaterials) continue;
+                                            if(l_onShadowRT) continue;
                                             else DisableDepth();
                                         }
                                         l_material->IsTransparent() ? EnableBlending() : DisableBlending();
                                         l_material->IsDoubleSided() ? DisableCulling() : EnableCulling();
 
-                                        if(!l_skipTextures)
+                                        if(!l_onShadowRT)
                                         {
                                             Texture *l_texture = (l_material->HasTexture() ? l_material->GetTexture() : m_dummyTexture);
                                             l_texture->Bind();

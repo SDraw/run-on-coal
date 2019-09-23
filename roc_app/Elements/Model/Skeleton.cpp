@@ -107,7 +107,7 @@ void ROC::Skeleton::InitStaticBoneCollision(const std::vector<BoneCollisionData*
 {
     if(!m_hasStaticBoneCollision)
     {
-        for(auto l_colData : f_vec)
+        for(const auto l_colData : f_vec)
         {
             if(l_colData->m_boneID >= m_bonesCount) continue; // Invalid bone id
 

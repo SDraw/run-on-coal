@@ -121,28 +121,49 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones, f
 {
     if(m_loaded)
     {
-        bool l_enableBlending = (f_blend == 1.f);
+        bool l_enableBlending = (f_blend != 1.f);
         f_tick = f_tick%m_duration;
 
         for(size_t i = 0U; i < static_cast<size_t>(m_bonesCount); i++)
         {
-            for(size_t ii = 0U, jj = m_boneIntervals[i].size(); ii < jj; ii++)
+            // Binary search
+            if(!m_boneIntervals[i].empty())
             {
-                auto &l_keyframeData = m_boneIntervals[i][ii];
-                if(l_keyframeData.m_startTime + l_keyframeData.m_duration >= f_tick)
+                size_t l_left = 0U;
+                size_t l_right = m_boneIntervals[i].size() - 1U;
+                while(l_right - l_left > 0U)
                 {
-                    if(l_keyframeData.m_static)
+                    const auto &l_leftFrame = m_boneIntervals[i][l_left];
+                    if(l_leftFrame.m_startTime + l_leftFrame.m_duration >= f_tick)
                     {
-                        f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
-                        l_enableBlending ? f_bones[i]->SetFrameData(l_keyframeData.m_leftData) : f_bones[i]->SetFrameData(l_keyframeData.m_leftData, f_blend);
+                        l_right = l_left;
+                        break;
                     }
-                    else
+
+                    const auto &l_rightFrame = m_boneIntervals[i][l_right];
+                    if(l_rightFrame.m_startTime <= f_tick)
                     {
-                        float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
-                        m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
-                        l_enableBlending ? f_bones[i]->SetFrameData(m_tempFrameData) : f_bones[i]->SetFrameData(m_tempFrameData, f_blend);
+                        l_left = l_right;
+                        break;
                     }
-                    break;
+
+                    size_t l_mid = l_left + (l_right - l_left) / 2U;
+                    const auto &l_midFrame = m_boneIntervals[i][l_mid];
+                    if(l_midFrame.m_startTime <= f_tick) l_left = l_mid;
+                    else l_right = l_mid;
+                }
+
+                const auto &l_keyframeData = m_boneIntervals[i][l_left];
+                if(l_keyframeData.m_static)
+                {
+                    f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
+                    l_enableBlending ? f_bones[i]->SetFrameData(l_keyframeData.m_leftData, f_blend) : f_bones[i]->SetFrameData(l_keyframeData.m_leftData);
+                }
+                else
+                {
+                    float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
+                    m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
+                    l_enableBlending ? f_bones[i]->SetFrameData(m_tempFrameData, f_blend) : f_bones[i]->SetFrameData(m_tempFrameData);
                 }
             }
         }
