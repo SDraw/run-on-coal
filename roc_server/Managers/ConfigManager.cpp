@@ -7,7 +7,7 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_configAttributeTable
+const std::vector<std::string> g_configAttributes
 {
     "logging", "ip", "port", "max_clients", "pulse_tick", "module"
 };
@@ -40,36 +40,32 @@ ROC::ConfigManager::ConfigManager()
         {
             for(pugi::xml_node l_node = l_metaRoot.child("param"); l_node; l_node = l_node.next_sibling("param"))
             {
-                pugi::xml_attribute l_attrib = l_node.attribute("name");
-                if(l_attrib)
+                pugi::xml_attribute l_attribName = l_node.attribute("name");
+                pugi::xml_attribute l_attribValue = l_node.attribute("value");
+                if(l_attribName && l_attribValue)
                 {
-                    std::string l_param = l_attrib.as_string();
-                    l_attrib = l_node.attribute("value");
-                    if(l_attrib)
+                    switch(EnumUtils::ReadEnumVector(l_attribName.as_string(), g_configAttributes))
                     {
-                        switch(EnumUtils::ReadEnumVector(l_param, g_configAttributeTable))
+                        case ConfigAttribute::CA_Logging:
+                            m_logging = l_attribValue.as_bool(true);
+                            break;
+                        case ConfigAttribute::CA_IP:
+                            m_bindIP.assign(l_attribValue.as_string("0.0.0.0"));
+                            break;
+                        case ConfigAttribute::CA_Port:
+                            m_bindPort = static_cast<unsigned short>(l_attribValue.as_uint(4200U));
+                            break;
+                        case ConfigAttribute::CA_MaxClients:
+                            m_maxClients = static_cast<unsigned short>(l_attribValue.as_uint(10U));
+                            break;
+                        case ConfigAttribute::CA_PulseTick:
+                            m_pulseTick = l_attribValue.as_uint(10U);
+                            break;
+                        case ConfigAttribute::CA_Module:
                         {
-                            case ConfigAttribute::CA_Logging:
-                                m_logging = l_attrib.as_bool(true);
-                                break;
-                            case ConfigAttribute::CA_IP:
-                                m_bindIP.assign(l_attrib.as_string("0.0.0.0"));
-                                break;
-                            case ConfigAttribute::CA_Port:
-                                m_bindPort = static_cast<unsigned short>(l_attrib.as_uint(4200U));
-                                break;
-                            case ConfigAttribute::CA_MaxClients:
-                                m_maxClients = static_cast<unsigned short>(l_attrib.as_uint(10U));
-                                break;
-                            case ConfigAttribute::CA_PulseTick:
-                                m_pulseTick = l_attrib.as_uint(10U);
-                                break;
-                            case ConfigAttribute::CA_Module:
-                            {
-                                std::string l_module = l_attrib.as_string();
-                                if(!l_module.empty()) m_modules.push_back(l_module);
-                            } break;
-                        }
+                            std::string l_module(l_attribValue.as_string());
+                            if(!l_module.empty()) m_modules.push_back(l_module);
+                        } break;
                     }
                 }
             }

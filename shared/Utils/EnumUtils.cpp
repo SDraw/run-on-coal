@@ -5,14 +5,27 @@
 namespace EnumUtils
 {
 
-int ReadEnumVector(const std::string &f_val, const std::vector<std::string> &f_vec)
+size_t ReadEnumVector(const std::string &f_val, const std::vector<std::string> &f_vec)
 {
-    int l_result = -1;
+    size_t l_result = std::numeric_limits<size_t>::max();
     for(auto l_searchIter = f_vec.begin(), l_searchEnd = f_vec.end(); l_searchIter != l_searchEnd; ++l_searchIter)
     {
         if(!l_searchIter->compare(f_val))
         {
-            l_result = static_cast<int>(std::distance(f_vec.begin(),l_searchIter));
+            l_result = std::distance(f_vec.begin(),l_searchIter);
+            break;
+        }
+    }
+    return l_result;
+}
+size_t ReadEnumVector(const char *f_val, const std::vector<std::string> &f_vec)
+{
+    size_t l_result = std::numeric_limits<size_t>::max();
+    for(auto l_searchIter = f_vec.begin(), l_searchEnd = f_vec.end(); l_searchIter != l_searchEnd; ++l_searchIter)
+    {
+        if(!l_searchIter->compare(f_val))
+        {
+            l_result = std::distance(f_vec.begin(),l_searchIter);
             break;
         }
     }

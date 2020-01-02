@@ -43,50 +43,49 @@ ROC::ConfigManager::ConfigManager()
         {
             for(pugi::xml_node l_node = l_metaRoot.child("param"); l_node; l_node = l_node.next_sibling("param"))
             {
-                pugi::xml_attribute l_attrib = l_node.attribute("name");
-                if(l_attrib)
+                pugi::xml_attribute l_attribName = l_node.attribute("name");
+                pugi::xml_attribute l_attribValue = l_node.attribute("value");
+                if(l_attribName && l_attribValue)
                 {
-                    std::string l_param = l_attrib.as_string();
-                    l_attrib = l_node.attribute("value");
-                    if(l_attrib)
+                    switch(EnumUtils::ReadEnumVector(l_attribName.as_string(), g_ConfigAttributes))
                     {
-                        switch(EnumUtils::ReadEnumVector(l_param, g_ConfigAttributes))
+                        case ConfigAttribute::CA_Antialiasing:
+                            m_antialiasing = glm::clamp(l_attribValue.as_int(0), 0, std::numeric_limits<int>::max());
+                            break;
+                        case ConfigAttribute::CA_Dimension:
                         {
-                            case ConfigAttribute::CA_Antialiasing:
+                            std::string l_size(l_attribValue.as_string("854x480"));
+                            std::replace(l_size.begin(), l_size.end(), 'x', ' ');
+                            std::stringstream l_sizeStream(l_size);
+                            l_sizeStream >> m_windowSize.x >> m_windowSize.y;
+                            if(l_sizeStream.fail())
                             {
-                                m_antialiasing = l_attrib.as_int(0);
-                                if(m_antialiasing < 0) m_antialiasing = 0;
-                            } break;
-                            case ConfigAttribute::CA_Dimension:
-                            {
-                                std::string l_size = l_attrib.as_string("854x480");
-                                std::replace(l_size.begin(), l_size.end(), 'x', ' ');
-                                std::stringstream l_sizeStream(l_size);
-                                l_sizeStream >> m_windowSize.x >> m_windowSize.y;
-                            } break;
-                            case ConfigAttribute::CA_Fullscreen:
-                                m_fullscreen = l_attrib.as_bool(false);
-                                break;
-                            case ConfigAttribute::CA_Logging:
-                                m_logging = l_attrib.as_bool(false);
-                                break;
-                            case ConfigAttribute::CA_FPSLimit:
-                            {
-                                m_fpsLimit = l_attrib.as_uint(60U);
-                                if(m_fpsLimit == 0U) m_fpsLimit = 60U;
-                            } break;
-                            case ConfigAttribute::CA_VSync:
-                                m_vsync = l_attrib.as_bool(false);
-                                break;
-                            case ConfigAttribute::CA_VR:
-                                m_vrMode = l_attrib.as_bool(false);
-                                break;
-                            case ConfigAttribute::CA_Module:
-                            {
-                                std::string l_module = l_attrib.as_string();
-                                if(!l_module.empty()) m_modules.push_back(l_module);
-                            } break;
-                        }
+                                m_windowSize.x = 854;
+                                m_windowSize.y = 480;
+                            }
+                        } break;
+                        case ConfigAttribute::CA_Fullscreen:
+                            m_fullscreen = l_attribValue.as_bool(false);
+                            break;
+                        case ConfigAttribute::CA_Logging:
+                            m_logging = l_attribValue.as_bool(false);
+                            break;
+                        case ConfigAttribute::CA_FPSLimit:
+                        {
+                            m_fpsLimit = l_attribValue.as_uint(60U);
+                            if(m_fpsLimit == 0U) m_fpsLimit = 60U;
+                        } break;
+                        case ConfigAttribute::CA_VSync:
+                            m_vsync = l_attribValue.as_bool(false);
+                            break;
+                        case ConfigAttribute::CA_VR:
+                            m_vrMode = l_attribValue.as_bool(false);
+                            break;
+                        case ConfigAttribute::CA_Module:
+                        {
+                            std::string l_module(l_attribValue.as_string());
+                            if(!l_module.empty()) m_modules.push_back(l_module);
+                        } break;
                     }
                 }
             }
