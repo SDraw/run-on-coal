@@ -1,18 +1,18 @@
 [submodule "vendor/base64"]
 	path = vendor/base64
-	url = git://github.com/tkislan/base64.git
+	url = https://github.com/tkislan/base64.git
 [submodule "vendor/IntervalTree"]
 	path = vendor/IntervalTree
-	url = git://github.com/ekg/intervaltree.git
+	url = https://github.com/ekg/intervaltree.git
 [submodule "vendor/luautf8"]
 	path = vendor/luautf8
-	url = git://github.com/starwing/luautf8.git
+	url = https://github.com/starwing/luautf8.git
 [submodule "vendor/openvr"]
 	path = vendor/openvr
-	url = git://github.com/ValveSoftware/openvr.git
+	url = https://github.com/ValveSoftware/openvr.git
 [submodule "vendor/sajson"]
 	path = vendor/sajson
-	url = git://github.com/chadaustin/sajson.git
+	url = https://github.com/chadaustin/sajson.git
 [submodule "vendor/pugixml"]
 	path = vendor/pugixml
 	url = https://github.com/zeux/pugixml.git
