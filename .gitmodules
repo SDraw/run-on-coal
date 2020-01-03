@@ -1,9 +1,6 @@
 [submodule "vendor/base64"]
 	path = vendor/base64
 	url = https://github.com/tkislan/base64.git
-[submodule "vendor/IntervalTree"]
-	path = vendor/IntervalTree
-	url = https://github.com/ekg/intervaltree.git
 [submodule "vendor/luautf8"]
 	path = vendor/luautf8
 	url = https://github.com/starwing/luautf8.git
