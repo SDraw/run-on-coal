@@ -3,10 +3,6 @@
 #include "Lua/LuaDefs/LuaClientDef.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/INetworkManager.h"
-#include "Interfaces/IClient.h"
 #include "Lua/ArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"

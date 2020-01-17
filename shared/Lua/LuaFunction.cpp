@@ -1,6 +1,9 @@
-#include "stdafx.h"
+#include <map>
+#include <unordered_map>
 
-#include "Lua/LuaFunction.h"
+#include "lua.hpp"
+
+#include "LuaFunction.h"
 
 std::map<lua_State*, LuaFunction::LuaFunctionMap*> LuaFunction::ms_vmFuncMap;
 

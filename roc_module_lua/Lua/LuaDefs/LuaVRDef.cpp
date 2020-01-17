@@ -3,8 +3,6 @@
 #include "Lua/LuaDefs/LuaVRDef.h"
 
 #include "Module/LuaModule.h"
-#include "Interfaces/ICore.h"
-#include "Interfaces/IVRManager.h"
 #include "Lua/ArgReader.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"

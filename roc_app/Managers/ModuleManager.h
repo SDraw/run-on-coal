@@ -1,12 +1,12 @@
 #pragma once
 
-class CustomArguments;
 
 namespace ROC
 {
 
 class ICore; class Core;
 class IModule;
+class CustomArguments;
 
 typedef IModule*(*ModuleInitFunc)(ICore*);
 
@@ -23,7 +23,7 @@ protected:
     void LoadModules();
     void UnloadModules();
 
-    void SignalGlobalEvent(unsigned char f_event, const CustomArguments &f_args);
+    void SignalGlobalEvent(unsigned char f_event, const CustomArguments *f_args);
 
     void DoPulse();
 

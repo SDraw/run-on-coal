@@ -1,11 +1,11 @@
 #pragma once
 #include "Interfaces/INetworkManager.h"
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
+class CustomArguments;
 
 class NetworkManager final : public INetworkManager
 {
@@ -21,7 +21,7 @@ class NetworkManager final : public INetworkManager
 
     NetworkState m_networkState;
 
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     static unsigned char GetPacketIdentifier(RakNet::Packet *f_packet);
 

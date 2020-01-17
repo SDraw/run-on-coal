@@ -2,9 +2,6 @@
 
 #include "Lua/LuaDefs/LuaCollidableDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/ICollidable.h"
 #include "Lua/ArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"

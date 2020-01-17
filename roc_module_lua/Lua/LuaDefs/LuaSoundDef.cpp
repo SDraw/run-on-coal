@@ -2,10 +2,6 @@
 
 #include "Lua/LuaDefs/LuaSoundDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/ISoundManager.h"
-#include "Interfaces/ISound.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Module/LuaModule.h"

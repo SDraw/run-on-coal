@@ -2,9 +2,6 @@
 
 #include "Lua/LuaDefs/LuaRenderTargetDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/IRenderTarget.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaDrawableDef.h"

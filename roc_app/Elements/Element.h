@@ -1,17 +1,15 @@
 #pragma once
 #include "Interfaces/IElement.h"
-#include "Utils/CustomArgument.h"
 
 namespace ROC
 {
+
+class CustomArgument;
 
 class Element : public virtual IElement
 {
     std::vector<Element*> m_children;
     std::vector<Element*> m_parents;
-
-    std::unordered_map<std::string, CustomArgument> m_customDataMap;
-    std::unordered_map<std::string, CustomArgument>::iterator m_customDataMapEnd;
 
     Element(const Element &that) = delete;
     Element& operator=(const Element &that) = delete;
@@ -20,10 +18,6 @@ public:
     const std::vector<Element*>& GetChildren() const { return m_children; }
     bool HasParents() const;
     const std::vector<Element*>& GetParents() const { return m_parents; }
-
-    bool SetData(const std::string &f_key, const CustomArgument &f_val);
-    bool GetData(const std::string &f_key, CustomArgument &f_val);
-    bool RemoveData(const std::string &f_key);
 
     unsigned char GetElementType() const;
     const std::string& GetElementTypeName() const;
@@ -42,6 +36,7 @@ protected:
     bool HasParent(Element *f_parent);
     void RemoveParent(Element *f_parent);
 
+    // Must call methods from derived classes
     virtual void OnParentLinkDestroyed(Element *f_parent);
     virtual void OnChildLinkDestroyed(Element *f_child);
 

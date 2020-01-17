@@ -1,12 +1,12 @@
 #pragma once
 #include "Interfaces/INetworkManager.h"
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
 class Client;
+class CustomArguments;
 
 class NetworkManager final : public INetworkManager
 {
@@ -20,7 +20,7 @@ class NetworkManager final : public INetworkManager
 
     std::vector<Client*> m_clients;
 
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     static unsigned char GetPacketIdentifier(RakNet::Packet *f_packet);
 

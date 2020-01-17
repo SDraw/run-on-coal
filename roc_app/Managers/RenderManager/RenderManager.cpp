@@ -8,6 +8,7 @@
 #include "Elements/Font.h"
 #include "Elements/Scene/Scene.h"
 #include "Elements/Texture.h"
+#include "Utils/CustomArguments.h"
 
 #include "Managers/ConfigManager.h"
 #include "Managers/LogManager.h"
@@ -76,6 +77,8 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_clearColor = g_DefaultClearColor;
     m_core->GetSfmlManager()->GetWindowSize(m_viewportSize);
     m_screenProjection = glm::ortho(0.f, static_cast<float>(m_viewportSize.x), 0.f, static_cast<float>(m_viewportSize.y));
+
+    m_arguments = new CustomArguments();
 }
 ROC::RenderManager::~RenderManager()
 {
@@ -85,6 +88,7 @@ ROC::RenderManager::~RenderManager()
     delete m_physicsDrawer;
     Font::DestroyVAO();
     Font::DestroyLibrary();
+    delete m_arguments;
 }
 
 bool ROC::RenderManager::SetActiveScene(Scene *f_scene)

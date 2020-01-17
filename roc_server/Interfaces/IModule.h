@@ -1,11 +1,10 @@
 #pragma once
 
-class CustomArguments;
-
 namespace ROC
 {
 
 class ICore;
+class ICustomArguments;
 
 class IModule
 {
@@ -20,7 +19,7 @@ public:
         ME_OnNetworkDataRecieve
     };
 
-    virtual void RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args) = 0;
+    virtual void RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args) = 0;
     virtual void DoPulse() = 0;
 };
 

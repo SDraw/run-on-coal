@@ -5,7 +5,7 @@
 #include "Module/LuaModule.h"
 #include "Module/EventHandler.h"
 #include "Lua/ArgReader.h"
-#include "Utils/CustomArguments.h"
+#include "Lua/LuaArgument.h"
 #include "Utils/LuaUtils.h"
 
 void LuaEventsDef::Init(lua_State *f_vm)
@@ -82,13 +82,13 @@ int LuaEventsDef::Call(lua_State *f_vm)
 {
     // bool callEvent(str eventName, var value1, ...)
     std::string l_event;
+    std::vector<LuaArgument> l_arguments;
     ArgReader argStream(f_vm);
-    CustomArguments l_arguments;
     argStream.ReadText(l_event);
     if(!argStream.HasErrors() && !l_event.empty())
     {
         argStream.ReadArguments(l_arguments);
-        LuaModule::GetModule()->GetEventHandler()->CallEvent(l_event, l_arguments);
+        LuaModule::GetModule()->GetEventHandler()->CallEvent(l_event,l_arguments);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

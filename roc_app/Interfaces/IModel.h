@@ -1,5 +1,5 @@
 #pragma once
-#include "Interfaces/ICollidable.h"
+#include "ICollidable.h"
 
 namespace ROC
 {

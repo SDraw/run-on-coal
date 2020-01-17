@@ -51,7 +51,7 @@ void LuaModule::Terminate()
     }
 }
 
-void LuaModule::RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args)
+void LuaModule::RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args)
 {
     switch(f_event)
     {

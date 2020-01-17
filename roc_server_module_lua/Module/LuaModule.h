@@ -1,5 +1,4 @@
 #pragma once
-#include "Interfaces/IModule.h"
 
 class EventHandler;
 class LuaVM;
@@ -23,7 +22,7 @@ public:
     inline LuaVM* GetLuaVM() const { return m_luaVM; }
     inline EventHandler* GetEventHandler() const { return m_eventHandler; }
 protected:
-    void RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args);
+    void RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args);
     void DoPulse();
 };
 

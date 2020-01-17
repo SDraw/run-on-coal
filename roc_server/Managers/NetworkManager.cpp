@@ -3,6 +3,7 @@
 #include "Managers/NetworkManager.h"
 #include "Core/Core.h"
 #include "Elements/Client.h"
+#include "Utils/CustomArguments.h"
 
 #include "Managers/ConfigManager.h"
 #include "Managers/ElementManager.h"
@@ -87,6 +88,8 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     }
 
     m_clients.assign(l_configManager->GetMaxClients(), nullptr);
+
+    m_arguments = new CustomArguments();
 }
 ROC::NetworkManager::~NetworkManager()
 {
@@ -95,6 +98,7 @@ ROC::NetworkManager::~NetworkManager()
         m_networkInterface->Shutdown(g_NetworkDisconnectDuration);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
+    delete m_arguments;
 }
 
 unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
@@ -155,9 +159,9 @@ void ROC::NetworkManager::DoPulse()
                     Client *l_client = m_core->GetElementManager()->CreateClient(l_packet->systemAddress);
                     m_clients[l_packet->guid.systemIndex] = l_client;
 
-                    m_arguments.Push(l_client);
+                    m_arguments->Push(l_client);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkClientConnect, m_arguments);
-                    m_arguments.Clear();
+                    m_arguments->Clear();
                     m_core->GetLogManager()->Log(l_log);
                 } break;
                 case ID_DISCONNECTION_NOTIFICATION: case ID_CONNECTION_LOST:
@@ -170,9 +174,9 @@ void ROC::NetworkManager::DoPulse()
 
                     Client *l_client = m_clients[l_packet->guid.systemIndex];
 
-                    m_arguments.Push(l_client);
+                    m_arguments->Push(l_client);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkClientDisconnect, m_arguments);
-                    m_arguments.Clear();
+                    m_arguments->Clear();
 
                     m_core->GetElementManager()->DestroyClient(l_client);
                     m_clients[l_packet->guid.systemIndex] = nullptr;
@@ -191,10 +195,10 @@ void ROC::NetworkManager::DoPulse()
                         {
                             Client *l_client = m_clients[l_packet->guid.systemIndex];
 
-                            m_arguments.Push(l_client);
-                            m_arguments.Push(l_stringData);
+                            m_arguments->Push(l_client);
+                            m_arguments->Push(l_stringData);
                             m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkDataRecieve, m_arguments);
-                            m_arguments.Clear();
+                            m_arguments->Clear();
                         }
                     }
                 } break;

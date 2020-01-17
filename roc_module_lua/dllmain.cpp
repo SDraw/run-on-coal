@@ -1,8 +1,6 @@
 #include "stdafx.h"
 
 #include "Module/LuaModule.h"
-#include "Interfaces/ICore.h"
-#include "Interfaces/IModule.h"
 
 LuaModule *g_Module = nullptr;
 

@@ -2,11 +2,6 @@
 
 #include "Lua/LuaDefs/LuaShaderDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/IDrawable.h"
-#include "Interfaces/IShader.h"
-#include "Interfaces/IShaderUniform.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Module/LuaModule.h"

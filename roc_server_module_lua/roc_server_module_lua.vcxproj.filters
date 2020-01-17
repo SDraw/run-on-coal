@@ -9,12 +9,6 @@
     <ClCompile Include="Lua\LuaVM.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\Utils\CustomArgument.cpp">
-      <Filter>shared\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared\Utils\CustomArguments.cpp">
-      <Filter>shared\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\shared\Utils\EnumUtils.cpp">
       <Filter>shared\Utils</Filter>
     </ClCompile>
@@ -50,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Lua\LuaArgument.cpp">
+      <Filter>shared\Lua</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

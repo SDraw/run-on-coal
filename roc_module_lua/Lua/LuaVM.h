@@ -2,7 +2,7 @@
 
 class LuaModule;
 class LuaFunction;
-class CustomArguments;
+class LuaArgument;
 
 class LuaVM
 {
@@ -19,7 +19,8 @@ protected:
 
     void DoPulse();
 
-    void CallFunction(const LuaFunction &f_func, const CustomArguments &f_args);
+    void CallFunction(const LuaFunction &f_func, const ROC::ICustomArguments *f_args);
+    void CallFunction(const LuaFunction &f_func, const std::vector<LuaArgument> &f_args);
 
     friend class LuaModule;
     friend class EventHandler;

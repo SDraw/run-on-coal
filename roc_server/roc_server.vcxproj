@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -105,6 +105,9 @@
       <AdditionalLibraryDirectories>../vendor/RakNet/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\server\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -121,6 +124,9 @@
       <AdditionalLibraryDirectories>../vendor/RakNet/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\server\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -141,6 +147,9 @@
       <AdditionalLibraryDirectories>../vendor/RakNet/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\server\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -161,6 +170,9 @@
       <AdditionalLibraryDirectories>../vendor/RakNet/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RakNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\server\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.h" />
@@ -169,6 +181,8 @@
     <ClInclude Include="Elements\File.h" />
     <ClInclude Include="Interfaces\IClient.h" />
     <ClInclude Include="Interfaces\ICore.h" />
+    <ClInclude Include="Interfaces\ICustomArgument.h" />
+    <ClInclude Include="Interfaces\ICustomArguments.h" />
     <ClInclude Include="Interfaces\IElement.h" />
     <ClInclude Include="Interfaces\IElementManager.h" />
     <ClInclude Include="Interfaces\IFile.h" />
@@ -181,11 +195,16 @@
     <ClInclude Include="Managers\ModuleManager.h" />
     <ClInclude Include="Managers\NetworkManager.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utils\CustomArgument.h" />
+    <ClInclude Include="Utils\CustomArguments.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared\Utils\CustomArgument.cpp" />
-    <ClCompile Include="..\shared\Utils\CustomArguments.cpp" />
-    <ClCompile Include="..\shared\Utils\EnumUtils.cpp" />
+    <ClCompile Include="..\shared\Utils\EnumUtils.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -208,6 +227,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Utils\CustomArgument.cpp" />
+    <ClCompile Include="Utils\CustomArguments.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

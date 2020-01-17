@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Elements/Element.h"
+#include "Utils/CustomArgument.h"
 
 namespace ROC
 {
@@ -29,7 +30,6 @@ const size_t g_ElementKeyMaxLength = 128U;
 ROC::Element::Element()
 {
     m_elementType = ET_Invalid;
-    m_customDataMapEnd = m_customDataMap.end();
 }
 ROC::Element::~Element()
 {
@@ -38,8 +38,6 @@ ROC::Element::~Element()
 
     for(auto l_parent : m_parents) l_parent->OnChildLinkDestroyed(this);
     m_parents.clear();
-
-    m_customDataMap.clear();
 }
 
 bool ROC::Element::HasChildren() const
@@ -49,46 +47,6 @@ bool ROC::Element::HasChildren() const
 bool ROC::Element::HasParents() const
 {
     return m_parents.empty();
-}
-
-bool ROC::Element::SetData(const std::string &f_key, const CustomArgument &f_val)
-{
-    bool l_result = false;
-    if(f_key.length() <= g_ElementKeyMaxLength)
-    {
-        auto iter = m_customDataMap.find(f_key);
-        if(iter == m_customDataMapEnd)
-        {
-            m_customDataMap.emplace(f_key, f_val);
-            m_customDataMapEnd = m_customDataMap.end();
-        }
-        else iter->second = f_val;
-        l_result = true;
-    }
-    return l_result;
-}
-bool ROC::Element::GetData(const std::string &f_key, CustomArgument &f_val)
-{
-    bool l_result = false;
-    auto iter = m_customDataMap.find(f_key);
-    if(iter != m_customDataMapEnd)
-    {
-        f_val = iter->second;
-        l_result = true;
-    }
-    return l_result;
-}
-bool ROC::Element::RemoveData(const std::string &f_key)
-{
-    bool l_result = false;
-    auto iter = m_customDataMap.find(f_key);
-    if(iter != m_customDataMapEnd)
-    {
-        m_customDataMap.erase(iter);
-        m_customDataMapEnd = m_customDataMap.end();
-        l_result = true;
-    }
-    return l_result;
 }
 
 unsigned char ROC::Element::GetElementType() const

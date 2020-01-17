@@ -2,8 +2,6 @@
 
 #include "Lua/LuaDefs/LuaUtilsDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/ILogManager.h"
 #include "Lua/ArgReader.h"
 #include "Module/LuaModule.h"
 

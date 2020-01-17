@@ -3,6 +3,7 @@
 #include "Managers/PreRenderManager.h"
 #include "Core/Core.h"
 #include "Elements/Model/Model.h"
+#include "Utils/CustomArguments.h"
 
 #include "Managers/ModuleManager.h"
 #include "Interfaces/IModule.h"
@@ -11,10 +12,12 @@ ROC::PreRenderManager::PreRenderManager(Core *f_core)
 {
     m_core = f_core;
     m_modelsEnd = m_models.end();
+    m_arguments = new CustomArguments();
 }
 ROC::PreRenderManager::~PreRenderManager()
 {
     m_models.clear();
+    delete m_arguments;
 }
 
 void ROC::PreRenderManager::AddModel(Model *f_model)

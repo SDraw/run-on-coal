@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -75,7 +75,7 @@
     <OutDir>../bin_win32/</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <GenerateManifest>false</GenerateManifest>
@@ -84,7 +84,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)_d</TargetName>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <GenerateManifest>false</GenerateManifest>
@@ -100,7 +100,7 @@
     <TargetName>$(ProjectName)</TargetName>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
     <GenerateManifest>false</GenerateManifest>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -108,7 +108,7 @@
     <TargetName>$(ProjectName)</TargetName>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
     <GenerateManifest>false</GenerateManifest>
     <LinkIncremental>false</LinkIncremental>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -135,8 +135,7 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,8 +159,7 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -196,8 +194,7 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -234,8 +231,7 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -275,6 +271,8 @@
     <ClInclude Include="Interfaces\ICollidable.h" />
     <ClInclude Include="Interfaces\ICollision.h" />
     <ClInclude Include="Interfaces\ICore.h" />
+    <ClInclude Include="Interfaces\ICustomArgument.h" />
+    <ClInclude Include="Interfaces\ICustomArguments.h" />
     <ClInclude Include="Interfaces\IDrawable.h" />
     <ClInclude Include="Interfaces\IElement.h" />
     <ClInclude Include="Interfaces\IElementManager.h" />
@@ -315,6 +313,8 @@
     <ClInclude Include="Managers\VRManager.h" />
     <ClInclude Include="Managers\SoundManager.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utils\CustomArgument.h" />
+    <ClInclude Include="Utils\CustomArguments.h" />
     <ClInclude Include="Utils\GLBinder.h" />
     <ClInclude Include="Utils\MathUtils.h" />
     <ClInclude Include="Utils\Pool.h" />
@@ -323,9 +323,12 @@
     <ClInclude Include="Utils\zlibUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared\Utils\CustomArgument.cpp" />
-    <ClCompile Include="..\shared\Utils\CustomArguments.cpp" />
-    <ClCompile Include="..\shared\Utils\EnumUtils.cpp" />
+    <ClCompile Include="..\shared\Utils\EnumUtils.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -368,6 +371,8 @@
     <ClCompile Include="Elements\Shader\ShaderUniform.cpp" />
     <ClCompile Include="Elements\Sound.cpp" />
     <ClCompile Include="Elements\Texture.cpp" />
+    <ClCompile Include="Utils\CustomArgument.cpp" />
+    <ClCompile Include="Utils\CustomArguments.cpp" />
     <ClCompile Include="Utils\zlibUtils.cpp" />
     <ClInclude Include="Interfaces\ILight.h">
       <FileType>CppHeader</FileType>

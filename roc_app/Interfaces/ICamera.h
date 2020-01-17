@@ -1,5 +1,5 @@
 #pragma once
-#include "Interfaces/IElement.h"
+#include "IElement.h"
 
 namespace ROC
 {

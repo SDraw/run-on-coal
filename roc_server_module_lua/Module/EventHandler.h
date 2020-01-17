@@ -2,7 +2,7 @@
 #include "Lua/LuaFunction.h"
 
 class LuaModule;
-class CustomArguments;
+class LuaArgument;
 
 class EventHandler
 {
@@ -39,12 +39,12 @@ public:
     bool RemoveEvent(const std::string &f_event);
     bool RemoveEventHandler(const std::string &f_event, LuaFunction &f_func);
 
-    void CallEvent(const std::string &f_event, const CustomArguments &f_args); // Only custom events
+    void CallEvent(const std::string &f_event, const std::vector<LuaArgument> &f_args); // Only custom events
 protected:
     explicit EventHandler(LuaModule *f_module);
     ~EventHandler();
 
-    void CallEvent(EventHandlerEvent f_event, const CustomArguments &f_args); // Only default events
+    void CallEvent(EventHandlerEvent f_event, const ROC::ICustomArguments *f_args); // Only default events
 
     friend class LuaModule;
 };

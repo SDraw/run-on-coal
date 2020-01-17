@@ -30,17 +30,17 @@
     <ClCompile Include="Managers\ModuleManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\Utils\CustomArgument.cpp">
-      <Filter>shared\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared\Utils\CustomArguments.cpp">
-      <Filter>shared\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\shared\Utils\EnumUtils.cpp">
       <Filter>shared\Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CustomArgument.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CustomArguments.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +96,18 @@
     <ClInclude Include="Interfaces\INetworkManager.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\CustomArgument.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CustomArguments.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ICustomArgument.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ICustomArguments.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -121,6 +133,9 @@
     </Filter>
     <Filter Include="shared\Utils">
       <UniqueIdentifier>{bac191f1-f2c1-4074-8f68-b35f546fd867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{3e5788b5-1332-42a7-affd-05f96072002e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

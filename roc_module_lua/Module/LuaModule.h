@@ -1,12 +1,4 @@
 #pragma once
-#include "Interfaces/IModule.h"
-
-namespace ROC
-{
-
-class ICore;
-
-}
 
 class EventHandler;
 class LuaVM;
@@ -33,7 +25,7 @@ public:
     inline EventHandler* GetEventHandler() const { return m_eventHandler; }
     inline TaskHandler* GetTaskHandler() const { return m_taskHandler; }
 protected:
-    void RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args);
+    void RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args);
     void DoPulse();
 };
 

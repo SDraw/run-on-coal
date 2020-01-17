@@ -54,7 +54,7 @@ void LuaModule::Terminate()
     }
 }
 
-void LuaModule::RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args)
+void LuaModule::RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args)
 {
     switch(f_event)
     {
@@ -125,7 +125,7 @@ void LuaModule::RecieveGlobalEvent(unsigned char f_event, const CustomArguments 
             m_eventHandler->CallEvent(EventHandler::EHE_onNetworkDataRecieve, f_args);
             break;
         case ME_OnAsyncTask:
-            m_taskHandler->ProceedTask(f_args);
+            m_taskHandler->ProcessTask(f_args);
             break;
     }
 }

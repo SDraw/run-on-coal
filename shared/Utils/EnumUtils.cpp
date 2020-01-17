@@ -1,6 +1,7 @@
-#include "stdafx.h"
+#include <vector>
+#include <string>
 
-#include "Utils/EnumUtils.h"
+#include "EnumUtils.h"
 
 namespace EnumUtils
 {

@@ -1,9 +1,9 @@
 #pragma once
 
-class CustomArguments;
-
 namespace ROC
 {
+
+class ICustomArguments;
 
 class IModule
 {
@@ -35,7 +35,7 @@ public:
         ME_OnAsyncTask
     };
 
-    virtual void RecieveGlobalEvent(unsigned char f_event, const CustomArguments &f_args) = 0;
+    virtual void RecieveGlobalEvent(unsigned char f_event, const ICustomArguments *f_args) = 0;
     virtual void DoPulse() = 0;
 };
 

@@ -3,6 +3,7 @@
 #include "Managers/ModuleManager.h"
 #include "Core/Core.h"
 #include "Interfaces/IModule.h"
+#include "Utils/CustomArguments.h"
 
 #include "Managers/ConfigManager.h"
 #include "Managers/LogManager.h"
@@ -70,7 +71,7 @@ void ROC::ModuleManager::UnloadModules()
     for(auto iter : m_libraries) FreeLibrary(iter);
 }
 
-void ROC::ModuleManager::SignalGlobalEvent(unsigned char f_event, const CustomArguments &f_args)
+void ROC::ModuleManager::SignalGlobalEvent(unsigned char f_event, const CustomArguments *f_args)
 {
     for(auto iter : m_modules) iter->RecieveGlobalEvent(f_event, f_args);
 }

@@ -1,22 +1,18 @@
 #include "stdafx.h"
 
 #include "ArgReader.h"
-
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/ILogManager.h"
-#include "Interfaces/IElement.h"
+#include "Lua/LuaArgument.h"
 #include "Lua/LuaFunction.h"
-#include "Lua/LuaVM.h"
+
 #include "Module/LuaModule.h"
-#include "Utils/CustomArguments.h"
+#include "Lua/LuaVM.h"
 #include "Utils/LuaUtils.h"
 
 ArgReader::ArgReader(lua_State *f_vm)
 {
     m_vm = f_vm;
-    m_argCurrent = 1;
-    m_argCount = lua_gettop(m_vm);
+    m_currentArgument = 1;
+    m_argumentsCount = lua_gettop(m_vm);
     m_returnCount = 0;
     m_hasErrors = false;
 }
@@ -34,12 +30,12 @@ void ArgReader::ReadBoolean(bool &f_val)
 {
     if(!m_hasErrors)
     {
-        if(m_argCurrent <= m_argCount)
+        if(m_currentArgument <= m_argumentsCount)
         {
-            if(lua_isboolean(m_vm, m_argCurrent))
+            if(lua_isboolean(m_vm, m_currentArgument))
             {
-                f_val = (lua_toboolean(m_vm, m_argCurrent) == 1);
-                m_argCurrent++;
+                f_val = (lua_toboolean(m_vm, m_currentArgument) == 1);
+                m_currentArgument++;
             }
             else SetError("Expected boolean");
         }
@@ -51,30 +47,14 @@ void ArgReader::ReadText(std::string &f_val)
 {
     if(!m_hasErrors)
     {
-        if(m_argCurrent <= m_argCount)
+        if(m_currentArgument <= m_argumentsCount)
         {
-            if(lua_isstring(m_vm, m_argCurrent))
+            if(lua_isstring(m_vm, m_currentArgument))
             {
                 size_t l_size;
-                const char *l_string = lua_tolstring(m_vm, m_argCurrent, &l_size);
+                const char *l_string = lua_tolstring(m_vm, m_currentArgument, &l_size);
                 f_val.assign(l_string, l_size);
-                m_argCurrent++;
-            }
-            else SetError("Expected string");
-        }
-        else SetError("Not enough arguments");
-    }
-}
-void ArgReader::ReadPointer(void *&f_val)
-{
-    if(!m_hasErrors)
-    {
-        if(m_argCurrent <= m_argCount)
-        {
-            if(lua_isuserdata(m_vm, m_argCurrent))
-            {
-                f_val = const_cast<void*>(lua_topointer(m_vm, m_argCurrent));
-                m_argCurrent++;
+                m_currentArgument++;
             }
             else SetError("Expected string");
         }
@@ -85,147 +65,130 @@ void ArgReader::ReadFunction(LuaFunction &f_func)
 {
     if(!m_hasErrors)
     {
-        if(m_argCurrent <= m_argCount)
+        if(m_currentArgument <= m_argumentsCount)
         {
-            if(lua_isfunction(m_vm, m_argCurrent))
+            if(lua_isfunction(m_vm, m_currentArgument))
             {
-                void *l_ptr = const_cast<void*>(lua_topointer(m_vm, m_argCurrent));
-                lua_settop(m_vm, m_argCurrent);
+                void *l_ptr = const_cast<void*>(lua_topointer(m_vm, m_currentArgument));
+                lua_settop(m_vm, m_currentArgument);
                 f_func.Retrieve(m_vm, l_ptr);
-                lua_insert(m_vm, m_argCurrent);
-                m_argCurrent++;
+                lua_insert(m_vm, m_currentArgument);
+                m_currentArgument++;
             }
             else SetError("Expected function");
         }
         else SetError("Not enough arguments");
     }
 }
-void ArgReader::ReadArgument(CustomArgument &f_data)
+void ArgReader::ReadArgument(LuaArgument &f_argument)
 {
     if(!m_hasErrors)
     {
-        if(m_argCurrent <= m_argCount)
+        if(m_currentArgument <= m_argumentsCount)
         {
-            switch(lua_type(m_vm, m_argCurrent))
+            switch(lua_type(m_vm, m_currentArgument))
             {
                 case LUA_TNIL:
-                    f_data = CustomArgument();
-                    break;
-                case LUA_TBOOLEAN:
-                    f_data = CustomArgument(lua_toboolean(m_vm, m_argCurrent) == 1);
+                    f_argument = LuaArgument();
                     break;
                 case LUA_TNUMBER:
-                    f_data = CustomArgument(lua_tonumber(m_vm, m_argCurrent));
+                {
+                    if(lua_isinteger(m_vm, m_currentArgument)) f_argument = LuaArgument(lua_tointeger(m_vm, m_currentArgument));
+                    else f_argument = LuaArgument(lua_tonumber(m_vm, m_currentArgument));
+                    m_currentArgument++;
+                } break;
+                case LUA_TBOOLEAN:
+                    f_argument = LuaArgument(lua_toboolean(m_vm, m_currentArgument) == 1);
                     break;
                 case LUA_TLIGHTUSERDATA:
-                    f_data = CustomArgument(lua_touserdata(m_vm, m_argCurrent));
+                    f_argument = LuaArgument(lua_touserdata(m_vm, m_currentArgument));
                     break;
                 case LUA_TUSERDATA:
                 {
-                    ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element)) f_data = CustomArgument(l_element);
-                    f_data = CustomArgument(static_cast<void*>(l_element));
+                    ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_currentArgument));
+                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
+                    {
+                        f_argument = LuaArgument(l_element, l_element->GetElementTypeName());
+                    }
+                    else f_argument = LuaArgument(lua_touserdata(m_vm, m_currentArgument));
                 } break;
-                case LUA_TSTRING:
-                {
-                    size_t l_len;
-                    const char *l_text = lua_tolstring(m_vm, m_argCurrent, &l_len);
-                    std::string l_string(l_text, l_len);
-                    f_data = CustomArgument(l_string);
-                } break;
-                default:
-                    SetError("Not nil/boolean/number/string/userdata");
-                    break;
             }
-            if(!m_hasErrors) m_argCurrent++;
+            m_currentArgument++;
         }
-        else SetError("Not enough arguments");
     }
 }
-
-bool ArgReader::IsNextBoolean()
+void ArgReader::ReadArguments(std::vector<LuaArgument> &f_arguments)
 {
-    bool l_result = false;
-    if(!m_hasErrors && (m_argCurrent <= m_argCount)) l_result = lua_isboolean(m_vm, m_argCurrent);
-    return l_result;
-}
-bool ArgReader::IsNextNumber()
-{
-    bool l_result = false;
-    if(!m_hasErrors && (m_argCurrent <= m_argCount)) l_result = (lua_isnumber(m_vm, m_argCurrent) == 1);
-    return l_result;
-}
-bool ArgReader::IsNextInteger()
-{
-    bool l_result = false;
-    if(!m_hasErrors && (m_argCurrent <= m_argCount)) l_result = (lua_isinteger(m_vm, m_argCurrent) == 1);
-    return l_result;
-}
-bool ArgReader::IsNextText()
-{
-    bool l_result = false;
-    if(!m_hasErrors && (m_argCurrent <= m_argCount)) l_result = (lua_isstring(m_vm, m_argCurrent) == 1);
-    return l_result;
-}
-bool ArgReader::IsNextFunction()
-{
-    bool l_result = false;
-    if(!m_hasErrors && (m_argCurrent <= m_argCount)) l_result = lua_isfunction(m_vm, m_argCurrent);
-    return l_result;
-}
-bool ArgReader::IsNextUserdata()
-{
-    bool l_result = false;
-    if(!m_hasErrors && (m_argCurrent <= m_argCount)) l_result = (lua_isuserdata(m_vm, m_argCurrent) == 1);
-    return l_result;
+    if(!m_hasErrors)
+    {
+        while(m_currentArgument <= m_argumentsCount)
+        {
+            switch(lua_type(m_vm, m_currentArgument))
+            {
+                case LUA_TNIL:
+                    f_arguments.emplace_back();
+                    break;
+                case LUA_TNUMBER:
+                {
+                    if(lua_isinteger(m_vm, m_currentArgument)) f_arguments.emplace_back(lua_tointeger(m_vm, m_currentArgument));
+                    else f_arguments.emplace_back(lua_tonumber(m_vm, m_currentArgument));
+                } break;
+                case LUA_TBOOLEAN:
+                    f_arguments.emplace_back(lua_toboolean(m_vm, m_currentArgument) == 1);
+                    break;
+                case LUA_TLIGHTUSERDATA:
+                    f_arguments.emplace_back(lua_touserdata(m_vm, m_currentArgument));
+                    break;
+                case LUA_TUSERDATA:
+                {
+                    ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_currentArgument));
+                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
+                    {
+                        f_arguments.emplace_back(l_element, l_element->GetElementTypeName());
+                    }
+                    else f_arguments.emplace_back(lua_touserdata(m_vm, m_currentArgument));
+                } break;
+            }
+            m_currentArgument++;
+        }
+    }
 }
 
 void ArgReader::ReadNextBoolean(bool &f_val)
 {
-    if(!m_hasErrors && (m_argCurrent <= m_argCount))
+    if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
-        if(lua_isboolean(m_vm, m_argCurrent))
+        if(lua_isboolean(m_vm, m_currentArgument))
         {
-            f_val = (lua_toboolean(m_vm, m_argCurrent) == 1);
-            m_argCurrent++;
+            f_val = (lua_toboolean(m_vm, m_currentArgument) == 1);
+            m_currentArgument++;
         }
     }
 }
 void ArgReader::ReadNextText(std::string &f_val)
 {
-    if(!m_hasErrors && (m_argCurrent <= m_argCount))
+    if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
-        if(lua_isstring(m_vm, m_argCurrent))
+        if(lua_isstring(m_vm, m_currentArgument))
         {
             size_t l_size;
-            const char *l_string = lua_tolstring(m_vm, m_argCurrent, &l_size);
+            const char *l_string = lua_tolstring(m_vm, m_currentArgument, &l_size);
             f_val.assign(l_string, l_size);
-            m_argCurrent++;
-        }
-    }
-}
-void ArgReader::ReadNextPointer(void *&f_val)
-{
-    if(!m_hasErrors && (m_argCurrent <= m_argCount))
-    {
-        if(lua_isuserdata(m_vm, m_argCurrent))
-        {
-            f_val = const_cast<void*>(lua_topointer(m_vm, m_argCurrent));
-            m_argCurrent++;
+            m_currentArgument++;
         }
     }
 }
 void ArgReader::ReadNextFunction(LuaFunction &f_func)
 {
-    if(!m_hasErrors && (m_argCurrent <= m_argCount))
+    if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
-        if(lua_isfunction(m_vm, m_argCurrent))
+        if(lua_isfunction(m_vm, m_currentArgument))
         {
-            void *l_ptr = const_cast<void*>(lua_topointer(m_vm, m_argCurrent));
-            lua_settop(m_vm, m_argCurrent);
+            void *l_ptr = const_cast<void*>(lua_topointer(m_vm, m_currentArgument));
+            lua_settop(m_vm, m_currentArgument);
             f_func.Retrieve(m_vm, l_ptr);
-            lua_insert(m_vm, m_argCurrent);
-            m_argCurrent++;
+            lua_insert(m_vm, m_currentArgument);
+            m_currentArgument++;
         }
     }
 }
@@ -250,91 +213,15 @@ void ArgReader::PushInteger(lua_Integer f_val)
     lua_pushinteger(m_vm, f_val);
     m_returnCount++;
 }
-void ArgReader::PushPointer(void *f_val)
-{
-    lua_pushlightuserdata(m_vm, f_val);
-    m_returnCount++;
-}
 void ArgReader::PushText(const std::string &f_val)
 {
     lua_pushlstring(m_vm, f_val.data(), f_val.size());
     m_returnCount++;
 }
-void ArgReader::PushArgument(const CustomArgument &f_data)
-{
-    switch(f_data.GetType())
-    {
-        case CustomArgument::CAT_Nil:
-            PushNil();
-            break;
-        case CustomArgument::CAT_Boolean:
-            PushBoolean(f_data.GetBoolean());
-            break;
-        case CustomArgument::CAT_Integer:
-            PushInteger(f_data.GetInteger());
-            break;
-        case CustomArgument::CAT_UInteger:
-            PushInteger(f_data.GetUInteger());
-            break;
-        case CustomArgument::CAT_Double:
-            PushNumber(f_data.GetDouble());
-            break;
-        case CustomArgument::CAT_Float:
-            PushNumber(f_data.GetFloat());
-            break;
-        case CustomArgument::CAT_String:
-            PushText(f_data.GetString());
-            break;
-        case CustomArgument::CAT_Pointer:
-            PushPointer(f_data.GetPointer());
-            break;
-        case CustomArgument::CAT_Element:
-        {
-            ROC::IElement *l_element = f_data.GetElement();
-            LuaUtils::PushElementInMetatable(m_vm, LuaVM::ms_userdataMetatableName, l_element, l_element->GetElementTypeName().c_str());
-        } break;
-    }
-    m_returnCount++;
-}
 void ArgReader::PushElement(ROC::IElement *f_element)
 {
-    LuaUtils::PushElementInMetatable(m_vm, LuaVM::ms_userdataMetatableName, f_element, f_element->GetElementTypeName().c_str());
+    LuaUtils::PushElementWithMetatable(m_vm, LuaVM::ms_userdataMetatableName, f_element, f_element->GetElementTypeName().c_str());
     m_returnCount++;
-}
-
-void ArgReader::ReadArguments(CustomArguments &f_args)
-{
-    if(!m_hasErrors)
-    {
-        for(; m_argCurrent <= m_argCount; m_argCurrent++)
-        {
-            switch(lua_type(m_vm, m_argCurrent))
-            {
-                case LUA_TBOOLEAN:
-                    f_args.Push(lua_toboolean(m_vm, m_argCurrent) == 1);
-                    break;
-                case LUA_TNUMBER:
-                    f_args.Push(lua_tonumber(m_vm, m_argCurrent));
-                    break;
-                case LUA_TLIGHTUSERDATA:
-                    f_args.Push(lua_touserdata(m_vm, m_argCurrent));
-                    break;
-                case LUA_TUSERDATA:
-                {
-                    ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_argCurrent));
-                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element)) f_args.Push(l_element);
-                    else f_args.Push(static_cast<void*>(l_element));
-                } break;
-                case LUA_TSTRING:
-                {
-                    size_t l_len;
-                    const char *l_text = lua_tolstring(m_vm, m_argCurrent, &l_len);
-                    std::string l_string(l_text, l_len);
-                    f_args.Push(l_string);
-                } break;
-            }
-        }
-    }
 }
 
 bool ArgReader::HasErrors()
@@ -351,7 +238,7 @@ bool ArgReader::HasErrors()
         l_log.append(": ");
         l_log.append(m_error);
         l_log.append(" at argument ");
-        l_log.append(std::to_string(m_argCurrent));
+        l_log.append(std::to_string(m_currentArgument));
         LuaModule::GetModule()->GetEngineCore()->GetILogManager()->Log(l_log);
     }
     return m_hasErrors;

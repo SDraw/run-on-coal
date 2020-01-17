@@ -4,6 +4,7 @@ SFML_DEFINE_DISCRETE_GPU_PREFERENCE
 
 #include "Managers/SfmlManager.h"
 #include "Core/Core.h"
+#include "Utils/CustomArguments.h"
 
 #include "Managers/ConfigManager.h"
 #include "Managers/LogManager.h"
@@ -51,14 +52,12 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_time = 0.f;
 
-    std::string l_log;
-
     ConfigManager *l_configManager = m_core->GetConfigManager();
     const glm::ivec2 &l_windowSize = l_configManager->GetWindowSize();
     m_windowVideoMode = sf::VideoMode(l_windowSize.x, l_windowSize.y);
 
     m_contextSettings.antialiasingLevel = static_cast<unsigned int>(l_configManager->GetAntialiasing());
-    m_contextSettings.depthBits = 32U;
+    m_contextSettings.depthBits = 24U;
 #ifdef _DEBUG
     m_contextSettings.attributeFlags = (sf::ContextSettings::Attribute::Core | sf::ContextSettings::Attribute::Debug);
 #else
@@ -75,6 +74,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_window->setActive(true);
     m_active = true;
 
+    std::string l_log;
     if(glGetString(GL_VERSION) == NULL)
     {
         l_log.assign("SFML: Unable to create OpenGL ");
@@ -134,12 +134,15 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_inputState = false;
     std::memset(&m_event, 0, sizeof(sf::Event));
+    
+    m_arguments = new CustomArguments();
 }
 ROC::SfmlManager::~SfmlManager()
 {
     m_window->setActive(false);
     m_window->close();
     delete m_window;
+    delete m_arguments;
 }
 
 void ROC::SfmlManager::GetWindowPosition(glm::ivec2 &f_pos) const
@@ -288,25 +291,25 @@ bool ROC::SfmlManager::DoPulse()
                 glm::ivec2 l_size(static_cast<int>(m_event.size.width), static_cast<int>(m_event.size.height));
                 m_core->GetRenderManager()->UpdateViewportSize(l_size);
 
-                m_arguments.Push(l_size.x);
-                m_arguments.Push(l_size.y);
+                m_arguments->Push(l_size.x);
+                m_arguments->Push(l_size.y);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnWindowResize, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
             case sf::Event::GainedFocus: case sf::Event::LostFocus:
             {
-                m_arguments.Push(m_event.type == sf::Event::GainedFocus ? 1 : 0);
+                m_arguments->Push(m_event.type == sf::Event::GainedFocus ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnWindowFocus, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
             case sf::Event::KeyPressed: case sf::Event::KeyReleased:
             {
                 if(m_event.key.code != -1)
                 {
-                    m_arguments.Push(g_KeyNames[m_event.key.code]);
-                    m_arguments.Push(m_event.type == sf::Event::KeyPressed ? 1 : 0);
+                    m_arguments->Push(g_KeyNames[m_event.key.code]);
+                    m_arguments->Push(m_event.type == sf::Event::KeyPressed ? 1 : 0);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnKeyPress, m_arguments);
-                    m_arguments.Clear();
+                    m_arguments->Clear();
                 }
             } break;
             case sf::Event::TextEntered:
@@ -319,9 +322,9 @@ bool ROC::SfmlManager::DoPulse()
                         std::basic_string<unsigned char> l_utf8 = l_text.toUtf8();
                         std::string l_input(l_utf8.begin(), l_utf8.end());
 
-                        m_arguments.Push(l_input);
+                        m_arguments->Push(l_input);
                         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnTextInput, m_arguments);
-                        m_arguments.Clear();
+                        m_arguments->Clear();
                     }
                 }
             } break;
@@ -329,55 +332,55 @@ bool ROC::SfmlManager::DoPulse()
             {
                 if(!l_mouseFix) // Prevent loop if cursor position is changed in onCursorMove event
                 {
-                    m_arguments.Push(m_event.mouseMove.x);
-                    m_arguments.Push(m_event.mouseMove.y);
+                    m_arguments->Push(m_event.mouseMove.x);
+                    m_arguments->Push(m_event.mouseMove.y);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnCursorMove, m_arguments);
-                    m_arguments.Clear();
+                    m_arguments->Clear();
                     l_mouseFix = true;
                 }
             } break;
             case sf::Event::MouseEntered: case sf::Event::MouseLeft:
             {
-                m_arguments.Push(m_event.type == sf::Event::MouseEntered ? 1 : 0);
+                m_arguments->Push(m_event.type == sf::Event::MouseEntered ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnCursorEnter, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
-                m_arguments.Push(g_MouseKeyNames[m_event.mouseButton.button]);
-                m_arguments.Push(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
+                m_arguments->Push(g_MouseKeyNames[m_event.mouseButton.button]);
+                m_arguments->Push(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnMouseKeyPress, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
             case sf::Event::MouseWheelScrolled:
             {
-                m_arguments.Push(m_event.mouseWheelScroll.wheel);
-                m_arguments.Push(m_event.mouseWheelScroll.delta);
+                m_arguments->Push(m_event.mouseWheelScroll.wheel);
+                m_arguments->Push(m_event.mouseWheelScroll.delta);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnMouseScroll, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
             case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
             {
-                m_arguments.Push(static_cast<int>(m_event.joystickConnect.joystickId));
-                m_arguments.Push(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
+                m_arguments->Push(static_cast<int>(m_event.joystickConnect.joystickId));
+                m_arguments->Push(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnJoypadStateChange, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
             case sf::Event::JoystickButtonPressed: case sf::Event::JoystickButtonReleased:
             {
-                m_arguments.Push(static_cast<int>(m_event.joystickButton.joystickId));
-                m_arguments.Push(static_cast<int>(m_event.joystickButton.button));
-                m_arguments.Push(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
+                m_arguments->Push(static_cast<int>(m_event.joystickButton.joystickId));
+                m_arguments->Push(static_cast<int>(m_event.joystickButton.button));
+                m_arguments->Push(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnJoypadButton, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
             case sf::Event::JoystickMoved:
             {
-                m_arguments.Push(static_cast<int>(m_event.joystickMove.joystickId));
-                m_arguments.Push(g_JoypadAxisNames[m_event.joystickMove.axis]);
-                m_arguments.Push(m_event.joystickMove.position);
+                m_arguments->Push(static_cast<int>(m_event.joystickMove.joystickId));
+                m_arguments->Push(g_JoypadAxisNames[m_event.joystickMove.axis]);
+                m_arguments->Push(m_event.joystickMove.position);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnJoypadAxis, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
             } break;
         }
     }

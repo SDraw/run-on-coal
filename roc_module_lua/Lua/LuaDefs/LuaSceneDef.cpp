@@ -2,15 +2,6 @@
 
 #include "Lua/LuaDefs/LuaSceneDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/IRenderManager.h"
-#include "Interfaces/ICamera.h"
-#include "Interfaces/ILight.h"
-#include "Interfaces/IModel.h"
-#include "Interfaces/IRenderTarget.h"
-#include "Interfaces/IScene.h"
-#include "Interfaces/IShader.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Module/LuaModule.h"

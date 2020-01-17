@@ -2,9 +2,6 @@
 
 #include "Lua/LuaDefs/LuaGeometryDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/IGeometry.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaFunction.h"

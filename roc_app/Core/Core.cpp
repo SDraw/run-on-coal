@@ -13,6 +13,7 @@
 #include "Managers/SfmlManager.h"
 #include "Managers/SoundManager.h"
 #include "Managers/VRManager.h"
+#include "Utils/CustomArguments.h"
 
 #include "Interfaces/IModule.h"
 #include "Utils/SystemTick.h"
@@ -35,6 +36,7 @@ ROC::Core::Core()
     m_moduleManager = new ModuleManager(this);
 
     m_state = true;
+    m_arguments = new CustomArguments();
 }
 ROC::Core::~Core()
 {
@@ -50,6 +52,7 @@ ROC::Core::~Core()
     delete m_sfmlManager;
     delete m_logManager;
     delete m_configManager;
+    delete m_arguments;
 }
 
 bool ROC::Core::Init()

@@ -4,6 +4,7 @@
 
 #include "Core/Core.h"
 #include "Elements/RenderTarget.h"
+#include "Utils/CustomArguments.h"
 
 #include "Managers/ConfigManager.h"
 #include "Managers/ModuleManager.h"
@@ -99,6 +100,8 @@ ROC::VRManager::VRManager(Core *f_core)
     m_headRotation = g_DefaultRotation;
     m_leftEyePosition = g_EmptyVec3;
     m_rightEyePosition = g_EmptyVec3;
+
+    m_arguments = new CustomArguments();
 }
 ROC::VRManager::~VRManager()
 {
@@ -106,6 +109,7 @@ ROC::VRManager::~VRManager()
     //if(m_vrSystem) vr::VR_Shutdown(); // Somehow it starts home app. If home app is disabled, it brings to void space
     for(auto l_controller : m_vrControllers) delete l_controller;
     for(auto l_rt : m_eyeRT) delete l_rt;
+    delete m_arguments;
 }
 
 bool ROC::VRManager::IsVREnabled() const
@@ -280,17 +284,17 @@ void ROC::VRManager::Render()
         m_eyeRT[VRE_Left]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRE_Left]);
 
-        m_arguments.Push(g_VRRenderSide[VRRenderSide::VRRS_Left]);
+        m_arguments->Push(g_VRRenderSide[VRRenderSide::VRRS_Left]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
-        m_arguments.Clear();
+        m_arguments->Clear();
 
         m_vrStage = VRS_Right;
         m_eyeRT[VRE_Right]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_eyeRT[VRE_Right]);
 
-        m_arguments.Push(g_VRRenderSide[VRRenderSide::VRRS_Right]);
+        m_arguments->Push(g_VRRenderSide[VRRenderSide::VRRS_Right]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
-        m_arguments.Clear();
+        m_arguments->Clear();
 
         m_vrStage = VRS_None;
         m_eyeRT[VRE_Right]->Disable();
@@ -462,21 +466,21 @@ void ROC::VRManager::UpdateControllerInput(VRController *f_controller)
         // Update buttons press
         if((l_buttonBit & l_newState.ulButtonPressed) != (l_buttonBit & l_oldState.ulButtonPressed))
         {
-            m_arguments.Push(f_controller->m_id);
-            m_arguments.Push(i);
-            m_arguments.Push(((l_buttonBit & l_newState.ulButtonPressed) != 0U) ? 1 : 0);
+            m_arguments->Push(f_controller->m_id);
+            m_arguments->Push(i);
+            m_arguments->Push(((l_buttonBit & l_newState.ulButtonPressed) != 0U) ? 1 : 0);
             m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRControllerKeyPress, m_arguments);
-            m_arguments.Clear();
+            m_arguments->Clear();
         }
 
         // Update buttons touch
         if((l_buttonBit & l_newState.ulButtonTouched) != (l_buttonBit & l_oldState.ulButtonTouched))
         {
-            m_arguments.Push(f_controller->m_id);
-            m_arguments.Push(i);
-            m_arguments.Push(((l_buttonBit & l_newState.ulButtonTouched) != 0U) ? 1 : 0);
+            m_arguments->Push(f_controller->m_id);
+            m_arguments->Push(i);
+            m_arguments->Push(((l_buttonBit & l_newState.ulButtonTouched) != 0U) ? 1 : 0);
             m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRControllerKeyTouch, m_arguments);
-            m_arguments.Clear();
+            m_arguments->Clear();
         }
     }
 
@@ -487,12 +491,12 @@ void ROC::VRManager::UpdateControllerInput(VRController *f_controller)
         const vr::VRControllerAxis_t &l_oldAxis = l_oldState.rAxis[i];
         if((l_newAxis.x != l_oldAxis.x) || (l_newAxis.y != l_oldAxis.y))
         {
-            m_arguments.Push(f_controller->m_id);
-            m_arguments.Push(i);
-            m_arguments.Push(l_newAxis.x);
-            m_arguments.Push(l_newAxis.y);
+            m_arguments->Push(f_controller->m_id);
+            m_arguments->Push(i);
+            m_arguments->Push(l_newAxis.x);
+            m_arguments->Push(l_newAxis.y);
             m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRControllerAxis, m_arguments);
-            m_arguments.Clear();
+            m_arguments->Clear();
         }
     }
 

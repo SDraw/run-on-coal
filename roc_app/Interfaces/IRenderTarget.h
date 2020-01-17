@@ -1,5 +1,5 @@
 #pragma once
-#include "Interfaces/IDrawable.h"
+#include "IDrawable.h"
 
 namespace ROC
 {

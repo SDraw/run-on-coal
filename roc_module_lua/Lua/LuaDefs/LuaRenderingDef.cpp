@@ -2,8 +2,6 @@
 
 #include "Lua/LuaDefs/LuaRenderingDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IRenderManager.h"
 #include "Lua/ArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"

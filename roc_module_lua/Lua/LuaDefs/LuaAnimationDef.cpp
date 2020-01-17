@@ -2,9 +2,6 @@
 
 #include "Lua/LuaDefs/LuaAnimationDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/IAnimation.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Module/LuaModule.h"

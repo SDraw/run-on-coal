@@ -2,8 +2,6 @@
 
 #include "Lua/LuaDefs/LuaPhysicsDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IPhysicsManager.h"
 #include "Lua/ArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"

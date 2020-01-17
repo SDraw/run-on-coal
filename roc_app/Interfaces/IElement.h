@@ -1,9 +1,9 @@
 #pragma once
 
-class CustomArgument;
-
 namespace ROC
 {
+
+class ICustomArgument;
 
 class IElement
 {
@@ -26,10 +26,6 @@ public:
 
         ET_Invalid = 0xFFU
     };
-
-    virtual bool SetData(const std::string &f_key, const CustomArgument &f_val) = 0;
-    virtual bool GetData(const std::string &f_key, CustomArgument &f_val) = 0;
-    virtual bool RemoveData(const std::string &f_key) = 0;
 
     virtual unsigned char GetElementType() const = 0;
     virtual const std::string& GetElementTypeName() const = 0;

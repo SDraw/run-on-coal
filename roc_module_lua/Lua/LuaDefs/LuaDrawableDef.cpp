@@ -2,10 +2,6 @@
 
 #include "Lua/LuaDefs/LuaDrawableDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/IRenderManager.h"
-#include "Interfaces/IDrawable.h"
 #include "Lua/ArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"

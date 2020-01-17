@@ -2,6 +2,7 @@
 
 #include "Managers/AsyncManager/AsyncManager.h"
 #include "Managers/AsyncManager/AsyncTask.h"
+#include "Utils/CustomArguments.h"
 
 #include "Core/Core.h"
 #include "Managers/AsyncManager/AsyncGeometryTask.h"
@@ -17,6 +18,8 @@ ROC::AsyncManager::AsyncManager(Core *f_core)
 
     m_threadSwitch = true;
     m_loadThread = new std::thread(&ROC::AsyncManager::ExecutionThread, this);
+
+    m_arguments = new CustomArguments();
 }
 ROC::AsyncManager::~AsyncManager()
 {
@@ -28,6 +31,8 @@ ROC::AsyncManager::~AsyncManager()
 
     for(auto l_task : m_executedTasks) delete l_task;
     m_executedTasks.clear();
+
+    delete m_arguments;
 }
 
 void* ROC::AsyncManager::LoadGeometry(const std::string &f_path)
@@ -101,10 +106,10 @@ void ROC::AsyncManager::DoPulse()
                 Element *l_element = reinterpret_cast<Element*>(l_task->GetElement());
                 if(l_element) m_core->GetElementManager()->AddElementToSet(l_element);
 
-                m_arguments.Push(l_task);
-                l_element ? m_arguments.Push(l_element) : m_arguments.Push(false);
+                m_arguments->Push(l_task);
+                l_element ? m_arguments->Push(l_element) : m_arguments->Push(false);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnAsyncTask, m_arguments);
-                m_arguments.Clear();
+                m_arguments->Clear();
 
                 delete l_task;
             }

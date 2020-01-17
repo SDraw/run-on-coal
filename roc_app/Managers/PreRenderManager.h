@@ -1,11 +1,11 @@
 #pragma once
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
 class Model;
+class CustomArguments;
 
 class PreRenderManager final
 {
@@ -15,7 +15,7 @@ class PreRenderManager final
     std::vector<Model*>::iterator m_modelsEnd;
     std::stack<Model*> m_modelsStack;
 
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     PreRenderManager(const PreRenderManager &that) = delete;
     PreRenderManager& operator=(const PreRenderManager &that) = delete;

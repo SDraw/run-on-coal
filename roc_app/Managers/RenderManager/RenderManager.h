@@ -1,6 +1,5 @@
 #pragma once
 #include "Interfaces/IRenderManager.h"
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
@@ -14,6 +13,7 @@ class Texture;
 class PhysicsDrawer;
 class Quad2D;
 class Quad3D;
+class CustomArguments;
 
 class RenderManager final : public IRenderManager
 {
@@ -35,7 +35,7 @@ class RenderManager final : public IRenderManager
     PhysicsDrawer *m_physicsDrawer;
     Texture *m_lastTexture;
 
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     float m_time;
 

@@ -2,7 +2,6 @@
 #include "Lua/LuaFunction.h"
 
 class LuaModule;
-class CustomArguments;
 
 class TaskHandler
 {
@@ -19,7 +18,7 @@ protected:
     explicit TaskHandler(LuaModule *f_module);
     ~TaskHandler();
 
-    void ProceedTask(const CustomArguments &f_args);
+    void ProcessTask(const ROC::ICustomArguments *f_args);
 
     friend class LuaModule;
 

@@ -144,12 +144,6 @@
     <ClCompile Include="Managers\ModuleManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\Utils\CustomArgument.cpp">
-      <Filter>shared\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared\Utils\CustomArguments.cpp">
-      <Filter>shared\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\shared\Utils\EnumUtils.cpp">
       <Filter>shared\Utils</Filter>
     </ClCompile>
@@ -167,6 +161,12 @@
     </ClCompile>
     <ClCompile Include="Elements\Scene\SceneLayer.cpp">
       <Filter>Elements\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CustomArgument.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CustomArguments.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -407,6 +407,18 @@
     </ClInclude>
     <ClInclude Include="Elements\Scene\SceneLayer.h">
       <Filter>Elements\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ICustomArgument.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ICustomArguments.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CustomArgument.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CustomArguments.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

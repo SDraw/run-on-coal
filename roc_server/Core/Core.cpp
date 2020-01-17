@@ -6,6 +6,7 @@
 #include "Managers/LogManager.h"
 #include "Managers/ModuleManager.h"
 #include "Managers/NetworkManager.h"
+#include "Utils/CustomArguments.h"
 
 #include "Interfaces/IModule.h"
 
@@ -19,6 +20,7 @@ ROC::Core::Core()
     m_elementManager = new ElementManager(this);
     m_moduleManager = new ModuleManager(this);
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());
+    m_arguments = new CustomArguments();
 }
 ROC::Core::~Core()
 {
@@ -27,6 +29,7 @@ ROC::Core::~Core()
     delete m_elementManager;
     delete m_logManager;
     delete m_configManager;
+    delete m_arguments;
 }
 
 bool ROC::Core::Init()

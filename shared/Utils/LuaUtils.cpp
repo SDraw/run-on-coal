@@ -1,6 +1,6 @@
-#include "stdafx.h"
+#include "lua.hpp"
 
-#include "Utils/LuaUtils.h"
+#include "LuaUtils.h"
 
 namespace LuaUtils
 {
@@ -19,7 +19,7 @@ void AddClassMethod(lua_State *f_vm, const char *f_name, lua_CFunction f_func)
     lua_pushcfunction(f_vm, f_func);
     lua_setfield(f_vm, -2, f_name);
 }
-void PushElementInMetatable(lua_State *f_vm, const char *f_mt, void *f_ptr, const char *f_class)
+void PushElementWithMetatable(lua_State *f_vm, const char *f_mt, void *f_ptr, const char *f_class)
 {
     luaL_getmetatable(f_vm, f_mt);
     lua_pushlightuserdata(f_vm, f_ptr);

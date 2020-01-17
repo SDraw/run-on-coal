@@ -1,12 +1,12 @@
 #pragma once
 #include "Interfaces/IAsyncManager.h"
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
 class AsyncTask;
+class CustomArguments;
 
 class AsyncManager final : public IAsyncManager
 {
@@ -23,7 +23,7 @@ class AsyncManager final : public IAsyncManager
     std::vector<AsyncTask*> m_executedTasks;
     std::mutex m_executedTasksMutex;
 
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     void ExecutionThread();
 

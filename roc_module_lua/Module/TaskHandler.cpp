@@ -2,11 +2,8 @@
 
 #include "TaskHandler.h"
 #include "Module/LuaModule.h"
-#include "Utils/CustomArguments.h"
 
 #include "Lua/LuaVM.h"
-#include "Interfaces/ICore.h"
-#include "Interfaces/IAsyncManager.h"
 
 TaskHandler::TaskHandler(LuaModule *f_module)
 {
@@ -42,11 +39,11 @@ void* TaskHandler::CreateTextureTask(const std::vector<std::string> &f_path, uns
     return l_task;
 }
 
-void TaskHandler::ProceedTask(const CustomArguments &f_args)
+void TaskHandler::ProcessTask(const ROC::ICustomArguments *f_args)
 {
-    if(f_args.GetArgumentsCount() > 0U) 
+    if(f_args->GetArgumentsCount() > 0U) 
     {
-        void *l_task = f_args.GetArgumentsVectorRef()[0U].GetPointer();
+        void *l_task = f_args->GetArgument(0U)->GetPointer();
         auto iter = m_taskMap.find(l_task);
         if(iter != m_taskMap.end())
         {

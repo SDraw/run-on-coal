@@ -2,12 +2,6 @@
 
 #include "Lua/LuaDefs/LuaModelDef.h"
 
-#include "Interfaces/ICore.h"
-#include "Interfaces/IElementManager.h"
-#include "Interfaces/IAnimation.h"
-#include "Interfaces/ICollision.h"
-#include "Interfaces/IGeometry.h"
-#include "Interfaces/IModel.h"
 #include "Lua/ArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaCollidableDef.h"

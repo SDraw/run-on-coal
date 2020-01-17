@@ -1,14 +1,13 @@
 #pragma once
+#include "Interfaces/ICustomArgument.h"
 
 namespace ROC
 {
 
-class IElement;
-
-}
-
-class CustomArgument final
+class CustomArgument final : public ICustomArgument
 {
+    unsigned char m_type;
+
     union
     {
         bool m_bool;
@@ -18,27 +17,12 @@ class CustomArgument final
         double m_double;
         void *m_ptr;
     };
-    unsigned char m_type;
     std::string m_string;
 public:
-    enum CustomArgumentType : unsigned char
-    {
-        CAT_Nil = 0U,
-        CAT_Boolean,
-        CAT_Integer,
-        CAT_UInteger,
-        CAT_Float,
-        CAT_Double,
-        CAT_Pointer,
-        CAT_String,
-        CAT_Element
-    };
-
-    CustomArgument(); // Nil
+    CustomArgument();
     explicit CustomArgument(bool f_val);
     explicit CustomArgument(int f_val);
     explicit CustomArgument(unsigned int f_val);
-    explicit CustomArgument(long f_val);
     explicit CustomArgument(float f_val);
     explicit CustomArgument(double f_val);
     explicit CustomArgument(void *f_val);
@@ -60,3 +44,5 @@ public:
 
     CustomArgument& operator=(const CustomArgument &f_data);
 };
+
+}

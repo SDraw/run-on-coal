@@ -1,6 +1,5 @@
 #pragma once
 #include "Interfaces/ICore.h"
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
@@ -10,6 +9,7 @@ class ElementManager;
 class LogManager;
 class ModuleManager;
 class NetworkManager;
+class CustomArguments;
 
 class Core final : public ICore
 {
@@ -22,7 +22,7 @@ class Core final : public ICore
     NetworkManager *m_networkManager;
 
     std::chrono::milliseconds m_pulseTick;
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     Core();
     Core(const Core &that) = delete;

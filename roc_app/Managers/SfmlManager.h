@@ -1,11 +1,11 @@
 #pragma once
 #include "Interfaces/ISfmlManager.h"
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
 
 class Core;
+class CustomArguments;
 
 class SfmlManager final : public ISfmlManager
 {
@@ -24,7 +24,7 @@ class SfmlManager final : public ISfmlManager
 
     bool m_inputState;
 
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     SfmlManager(const SfmlManager &that) = delete;
     SfmlManager& operator=(const SfmlManager &that) = delete;

@@ -1,6 +1,5 @@
 #pragma once
 #include "Interfaces/ICore.h"
-#include "Utils/CustomArguments.h"
 
 namespace ROC
 {
@@ -17,6 +16,7 @@ class RenderManager;
 class SfmlManager;
 class SoundManager;
 class VRManager;
+class CustomArguments;
 
 class Core final : public ICore
 {
@@ -36,7 +36,7 @@ class Core final : public ICore
     VRManager *m_vrManager;
 
     bool m_state;
-    CustomArguments m_arguments;
+    CustomArguments *m_arguments;
 
     Core();
     Core(const Core &that) = delete;

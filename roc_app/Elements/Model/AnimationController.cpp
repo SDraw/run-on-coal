@@ -41,7 +41,7 @@ bool ROC::AnimationController::Play(bool f_loop)
     if(m_animation)
     {
         m_loop = f_loop;
-        if(m_state != ACS_Playing) m_state = ACS_Playing;
+        m_state = ACS_Playing;
     }
     return (m_animation != nullptr);
 }

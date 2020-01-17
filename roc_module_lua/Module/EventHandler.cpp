@@ -2,7 +2,6 @@
 
 #include "Module/EventHandler.h"
 #include "Module/LuaModule.h"
-#include "Utils/CustomArguments.h"
 
 #include "Lua/LuaVM.h"
 #include "Utils/EnumUtils.h"
@@ -149,7 +148,7 @@ bool EventHandler::RemoveEventHandler(const std::string &f_event, LuaFunction &f
     return l_result;
 }
 
-void EventHandler::CallEvent(EventHandlerEvent f_event, const CustomArguments &f_args)
+void EventHandler::CallEvent(EventHandlerEvent f_event, const ROC::ICustomArguments *f_args)
 {
     auto iter = m_eventMap.find(g_DefaultEvents[f_event]);
     if(iter != m_eventMapEnd)
@@ -183,7 +182,7 @@ void EventHandler::CallEvent(EventHandlerEvent f_event, const CustomArguments &f
     }
 }
 
-void EventHandler::CallEvent(const std::string &f_event, const CustomArguments &f_args)
+void EventHandler::CallEvent(const std::string &f_event, const std::vector<LuaArgument> &f_args)
 {
     if(std::find(g_DefaultEvents.begin(), g_DefaultEvents.end(), f_event) == g_DefaultEvents.end())
     {

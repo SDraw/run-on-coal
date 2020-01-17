@@ -2,6 +2,7 @@
 
 #include "Managers/NetworkManager.h"
 #include "Core/Core.h"
+#include "Utils/CustomArguments.h"
 
 #include "Managers/ModuleManager.h"
 #include "Interfaces/IModule.h"
@@ -26,6 +27,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     m_core = f_core;
     m_networkInterface = nullptr;
     m_networkState = NS_Disconnected;
+    m_arguments = new CustomArguments();
 }
 ROC::NetworkManager::~NetworkManager()
 {
@@ -34,6 +36,7 @@ ROC::NetworkManager::~NetworkManager()
         m_networkInterface->Shutdown(g_NetworkShutdownDuration);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
+    delete m_arguments;
 }
 
 unsigned char ROC::NetworkManager::GetPacketIdentifier(RakNet::Packet *f_packet)
@@ -118,9 +121,9 @@ void ROC::NetworkManager::DoPulse()
                 {
                     m_networkState = NS_Disconnected;
 
-                    m_arguments.Push(g_NetworkStates[NetworkState::NS_Disconnected]);
+                    m_arguments->Push(g_NetworkStates[NetworkState::NS_Disconnected]);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkStateChange, m_arguments);
-                    m_arguments.Clear();
+                    m_arguments->Clear();
                 } break;
                 case ID_CONNECTION_REQUEST_ACCEPTED:
                 {
@@ -128,9 +131,9 @@ void ROC::NetworkManager::DoPulse()
                     m_networkState = NS_Connected;
                     m_networkInterface->SetOccasionalPing(true);
 
-                    m_arguments.Push(g_NetworkStates[NetworkState::NS_Connected]);
+                    m_arguments->Push(g_NetworkStates[NetworkState::NS_Connected]);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkStateChange, m_arguments);
-                    m_arguments.Clear();
+                    m_arguments->Clear();
                 } break;
                 case ID_ROC_DATA_PACKET:
                 {
@@ -143,9 +146,9 @@ void ROC::NetworkManager::DoPulse()
                         l_stringData.resize(static_cast<size_t>(l_textSize));
                         if(l_dataIn.Read(&l_stringData[0], l_textSize))
                         {
-                            m_arguments.Push(l_stringData);
+                            m_arguments->Push(l_stringData);
                             m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkDataRecieve, m_arguments);
-                            m_arguments.Clear();
+                            m_arguments->Clear();
                         }
                     }
                 } break;

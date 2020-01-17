@@ -2,10 +2,10 @@
 
 #include "Module/EventHandler.h"
 #include "Module/LuaModule.h"
+#include "Lua/LuaArgument.h"
 
 #include "Lua/LuaVM.h"
 #include "Utils/EnumUtils.h"
-#include "Utils/CustomArguments.h"
 
 const std::vector<std::string> g_DefaultEventsNames
 {
@@ -143,7 +143,7 @@ bool EventHandler::RemoveEventHandler(const std::string &f_event, LuaFunction &f
     return l_result;
 }
 
-void EventHandler::CallEvent(EventHandlerEvent f_event, const CustomArguments &f_args)
+void EventHandler::CallEvent(EventHandlerEvent f_event, const ROC::ICustomArguments *f_args)
 {
     auto iter = m_eventMap.find(g_DefaultEventsNames[f_event]);
     if(iter != m_eventMapEnd)
@@ -177,7 +177,7 @@ void EventHandler::CallEvent(EventHandlerEvent f_event, const CustomArguments &f
     }
 }
 
-void EventHandler::CallEvent(const std::string &f_event, const CustomArguments &f_args)
+void EventHandler::CallEvent(const std::string &f_event, const std::vector<LuaArgument> &f_args)
 {
     if(std::find(g_DefaultEventsNames.begin(), g_DefaultEventsNames.end(), f_event) == g_DefaultEventsNames.end())
     {
