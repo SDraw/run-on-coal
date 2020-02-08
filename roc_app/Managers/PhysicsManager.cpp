@@ -60,8 +60,8 @@ void ROC::PhysicsManager::SetPhysicsEnabled(bool f_value)
         ROC::Skeleton::SetPhysicsEnabled(m_enabled);
     }
 }
-bool ROC::PhysicsManager::GetPhysicsEnabled() const 
-{ 
+bool ROC::PhysicsManager::GetPhysicsEnabled() const
+{
     return m_enabled;
 }
 
@@ -83,8 +83,8 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
         m_floorBody = nullptr;
     }
 }
-bool ROC::PhysicsManager::GetFloorEnabled() const 
-{ 
+bool ROC::PhysicsManager::GetFloorEnabled() const
+{
     return (m_floorBody != nullptr);
 }
 

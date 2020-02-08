@@ -22,26 +22,26 @@ const char g_GLMinimalVersionString[] = "3.1";
 const std::string g_KeyNames[]
 {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-    "esc", "lctrl", "lshift", "lalt", "lsys", "rctrl", "rshift", "ralt", "rsys", "menu",
-    "lbracket", "rbracket", "semicolon", "comma", "period", "quote", "slash", "backslash", "tilde", "equal", "dash",
-    "space", "return", "backspace", "tab", "pgup", "pgdn", "end", "home", "insert", "delete",
-    "num+", "num-", "num*", "num/",
-    "arrow_l", "arrow_r", "arrow_u", "arrow_d",
-    "num0", "num1", "num2", "num3", "num4", "num5", "num6", "num7", "num8", "num9",
-    "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
-    "pause"
+        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+        "esc", "lctrl", "lshift", "lalt", "lsys", "rctrl", "rshift", "ralt", "rsys", "menu",
+        "lbracket", "rbracket", "semicolon", "comma", "period", "quote", "slash", "backslash", "tilde", "equal", "dash",
+        "space", "return", "backspace", "tab", "pgup", "pgdn", "end", "home", "insert", "delete",
+        "num+", "num-", "num*", "num/",
+        "arrow_l", "arrow_r", "arrow_u", "arrow_d",
+        "num0", "num1", "num2", "num3", "num4", "num5", "num6", "num7", "num8", "num9",
+        "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
+        "pause"
 };
 const std::string g_MouseKeyNames[]
 {
     "left", "right", "middle",
-    "x1", "x2"
+        "x1", "x2"
 };
 const std::string g_JoypadAxisNames[]
 {
     "X", "Y", "Z",
-    "R", "U", "V",
-    "PovX", "PovY"
+        "R", "U", "V",
+        "PovX", "PovY"
 };
 
 }
@@ -134,7 +134,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
 
     m_inputState = false;
     std::memset(&m_event, 0, sizeof(sf::Event));
-    
+
     m_arguments = new CustomArguments();
 }
 ROC::SfmlManager::~SfmlManager()

@@ -7,8 +7,8 @@ class IElement
 {
 public:
     enum ElementType : unsigned char
-    { 
-        ET_Client = 0U, 
+    {
+        ET_Client = 0U,
         ET_File,
 
         ET_Invalid = 0xFFU

@@ -4,7 +4,7 @@ class LuaModule;
 class LuaFunction;
 class LuaArgument;
 
-class LuaVM
+class LuaVM final
 {
     LuaModule *m_luaModule;
 

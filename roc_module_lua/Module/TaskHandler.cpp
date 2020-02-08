@@ -28,20 +28,20 @@ void* TaskHandler::CreateGeometryTask(const std::string &f_path, const LuaFuncti
 }
 void* TaskHandler::CreateTextureTask(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress, const LuaFunction &f_func)
 {
-    void* l_task = m_luaModule->GetEngineCore()->GetIAsyncManager()->LoadTexture(f_path,f_type,f_filter,f_compress);
+    void* l_task = m_luaModule->GetEngineCore()->GetIAsyncManager()->LoadTexture(f_path, f_type, f_filter, f_compress);
     m_taskMap.emplace(l_task, f_func);
     return l_task;
 }
 void* TaskHandler::CreateTextureTask(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress, const LuaFunction &f_func)
 {
-    void* l_task = m_luaModule->GetEngineCore()->GetIAsyncManager()->LoadTexture(f_path,f_filter,f_compress);
+    void* l_task = m_luaModule->GetEngineCore()->GetIAsyncManager()->LoadTexture(f_path, f_filter, f_compress);
     m_taskMap.emplace(l_task, f_func);
     return l_task;
 }
 
 void TaskHandler::ProcessTask(const ROC::ICustomArguments *f_args)
 {
-    if(f_args->GetArgumentsCount() > 0U) 
+    if(f_args->GetArgumentsCount() > 0U)
     {
         void *l_task = f_args->GetArgument(0U)->GetPointer();
         auto iter = m_taskMap.find(l_task);

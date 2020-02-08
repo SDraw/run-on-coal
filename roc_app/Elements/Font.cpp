@@ -154,7 +154,7 @@ bool ROC::Font::LoadChar(unsigned int f_char)
     bool l_result = false;
     if(!FT_Load_Char(m_face, f_char, FT_LOAD_RENDER))
     {
-        charData *l_charData = new charData();
+        FontCharacterData *l_charData = new FontCharacterData();
         l_charData->m_size.x = m_face->glyph->bitmap.width;
         l_charData->m_size.y = m_face->glyph->bitmap.rows;
         l_charData->m_advance = static_cast<float>(m_face->glyph->advance.x >> 6);
@@ -183,8 +183,8 @@ bool ROC::Font::LoadChar(unsigned int f_char)
 }
 
 unsigned char ROC::Font::GetFiltering() const
-{ 
-    return m_filteringType; 
+{
+    return m_filteringType;
 }
 float ROC::Font::GetGlyphSize() const
 {
@@ -223,7 +223,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
                     if(!LoadChar(l_character)) continue;
                 }
 
-                charData *l_charData = m_charIter->second;
+                FontCharacterData *l_charData = m_charIter->second;
                 if(l_charData->m_size.x > 0 && l_charData->m_size.y > 0)
                 {
                     size_t l_charVertexIndex = static_cast<size_t>(l_charCount * g_FontCharacterVerticesCount);

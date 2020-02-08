@@ -16,16 +16,16 @@ class Font final : public Element, public virtual IFont
     glm::vec2 m_atlasOffset;
     glm::ivec2 m_atlasSize;
 
-    struct charData
+    struct FontCharacterData
     {
         glm::vec4 m_atlasPosition;
         glm::ivec2 m_size;
         glm::ivec2 m_bearing;
         float m_advance;
     };
-    std::unordered_map<unsigned int, charData*> m_charMap;
-    std::unordered_map<unsigned int, charData*>::iterator m_charIter;
-    std::unordered_map<unsigned int, charData*>::iterator m_charMapEnd;
+    std::unordered_map<unsigned int, FontCharacterData*> m_charMap;
+    std::unordered_map<unsigned int, FontCharacterData*>::iterator m_charIter;
+    std::unordered_map<unsigned int, FontCharacterData*>::iterator m_charMapEnd;
 
     enum FontBufferIndex : size_t
     {

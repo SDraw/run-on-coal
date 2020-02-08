@@ -1,6 +1,6 @@
 #pragma once
 
-class Model
+class Model final
 {
     enum ModelType : unsigned char
     {

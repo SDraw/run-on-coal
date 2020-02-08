@@ -14,8 +14,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "roc_app", "roc_app\roc_app.vcxproj", "{15AAC079-9287-4A08-B4EE-686B7CAFA03D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "roc_module_lua", "roc_module_lua\roc_module_lua.vcxproj", "{DDE74B41-1091-46C5-A54A-4EBE4E82929A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15AAC079-9287-4A08-B4EE-686B7CAFA03D} = {15AAC079-9287-4A08-B4EE-686B7CAFA03D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "roc_server_module_lua", "roc_server_module_lua\roc_server_module_lua.vcxproj", "{0BE92F69-1A86-40A8-92C7-CE169E78D5CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BDB7A68D-6EDE-486E-B8CF-6A64104189B8} = {BDB7A68D-6EDE-486E-B8CF-6A64104189B8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

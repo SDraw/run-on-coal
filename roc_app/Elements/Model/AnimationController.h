@@ -11,7 +11,7 @@ class AnimationController final
     Animation *m_animation;
     unsigned int m_tick;
     enum AnimationControllerState
-    { 
+    {
         ACS_None = 0U,
         ACS_Paused,
         ACS_Playing

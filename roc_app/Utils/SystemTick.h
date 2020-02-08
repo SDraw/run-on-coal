@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class SystemTick
+class SystemTick final
 {
     static unsigned long long ms_tick;
     static unsigned long long ms_delta;

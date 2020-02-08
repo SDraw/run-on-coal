@@ -7,8 +7,8 @@
 #include "Utils/LuaUtils.h"
 
 const std::string g_NetworkStatesTable[]
-{ 
-    "disconnected", "connecting", "connected", "disconnecting" 
+{
+    "disconnected", "connecting", "connected", "disconnecting"
 };
 
 void LuaNetworkDef::Init(lua_State *f_vm)

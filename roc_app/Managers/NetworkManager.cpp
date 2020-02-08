@@ -96,7 +96,7 @@ bool ROC::NetworkManager::SendData(const std::string &f_data)
         unsigned int l_dataSize = static_cast<unsigned int>(f_data.size());
         l_data.Write(static_cast<unsigned char>(ID_ROC_DATA_PACKET));
         l_data.Write(l_dataSize);
-        l_data.Write(f_data.data(),l_dataSize);
+        l_data.Write(f_data.data(), l_dataSize);
         m_networkInterface->Send(&l_data, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, m_serverAddress, false);
     }
     return (m_networkState == NS_Connected);

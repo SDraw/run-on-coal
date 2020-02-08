@@ -20,7 +20,7 @@ ROC::Camera::Camera(unsigned char f_type)
     m_elementType = ET_Camera;
 
     m_type = f_type;
-    btClamp<unsigned char>(m_type,CPT_Perspective, CPT_VRRight);
+    btClamp<unsigned char>(m_type, CPT_Perspective, CPT_VRRight);
 
     m_viewPosition = g_EmptyVec3;
     m_viewDirection = g_CameraDefaultViewDirection;

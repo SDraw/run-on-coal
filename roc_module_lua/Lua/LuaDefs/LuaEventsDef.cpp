@@ -72,7 +72,7 @@ int LuaEventsDef::RemoveHandler(lua_State *f_vm)
     argStream.ReadFunction(l_func);
     if(!argStream.HasErrors() && !l_event.empty())
     {
-        bool l_result = LuaModule::GetModule()->GetEventHandler()->RemoveEventHandler(l_event,l_func);
+        bool l_result = LuaModule::GetModule()->GetEventHandler()->RemoveEventHandler(l_event, l_func);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -88,7 +88,7 @@ int LuaEventsDef::Call(lua_State *f_vm)
     if(!argStream.HasErrors() && !l_event.empty())
     {
         argStream.ReadArguments(l_arguments);
-        LuaModule::GetModule()->GetEventHandler()->CallEvent(l_event,l_arguments);
+        LuaModule::GetModule()->GetEventHandler()->CallEvent(l_event, l_arguments);
         argStream.PushBoolean(true);
     }
     else argStream.PushBoolean(false);

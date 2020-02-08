@@ -48,7 +48,7 @@ bool ROC::Texture::Load(const std::string &f_path, unsigned char f_type, unsigne
             m_size.y = static_cast<int>(l_imageSize.y);
 
             m_type = f_type;
-            btClamp<unsigned char>(m_type, TT_RGB,TT_RGBA);
+            btClamp<unsigned char>(m_type, TT_RGB, TT_RGBA);
             m_filtering = f_filter;
             btClamp<unsigned char>(m_filtering, DFT_Nearest, DFT_Linear);
             m_compressed = f_compress;
@@ -123,13 +123,13 @@ bool ROC::Texture::LoadDummy()
     return (m_texture != 0U);
 }
 
-bool ROC::Texture::IsTransparent() const 
-{ 
-    return (m_type == TT_RGBA); 
+bool ROC::Texture::IsTransparent() const
+{
+    return (m_type == TT_RGBA);
 }
-bool ROC::Texture::IsCubic() const 
-{ 
-    return (m_type == TT_Cubemap); 
+bool ROC::Texture::IsCubic() const
+{
+    return (m_type == TT_Cubemap);
 }
 bool ROC::Texture::IsCompressed() const
 {

@@ -13,9 +13,12 @@ const std::vector<std::string> g_DefaultEventsNames
     "onNetworkClientConnect", "onNetworkClientDisconnect", "onNetworkDataRecieve"
 };
 
-#define EVENT_MISSING 0U
-#define EVENT_DELETED 1U
-#define EVENT_EXISTS 2U
+enum EventSearch : unsigned char
+{
+    EventSearch_Missing = 0U,
+    EventSearch_Deleted,
+    EventSearch_Exists,
+};
 
 EventHandler::EventHandler(LuaModule *f_module)
 {
@@ -63,21 +66,21 @@ bool EventHandler::AddEventHandler(const std::string &f_event, const LuaFunction
         if(!l_heap->m_deleted)
         {
             auto &l_eventVector = l_heap->m_eventVector;
-            unsigned char l_check = EVENT_MISSING;
+            EventSearch l_check = EventSearch::EventSearch_Missing;
             for(auto &l_event : l_eventVector)
             {
                 if(l_event.m_function == f_func)
                 {
-                    if(!l_event.m_deleted) l_check = EVENT_EXISTS;
+                    if(!l_event.m_deleted) l_check = EventSearch::EventSearch_Exists;
                     else
                     {
                         l_event.m_deleted = false;
-                        l_check = EVENT_DELETED;
+                        l_check = EventSearch::EventSearch_Deleted;
                     }
                     break;
                 }
             }
-            if(l_check == EVENT_MISSING)
+            if(l_check == EventSearch::EventSearch_Missing)
             {
                 Event l_eventObj;
                 l_eventObj.m_function = f_func;
@@ -85,7 +88,7 @@ bool EventHandler::AddEventHandler(const std::string &f_event, const LuaFunction
                 if(l_heap->m_active) l_heap->m_eventVectorIter = l_eventVector.insert(l_heap->m_eventVectorIter, l_eventObj) + 1;
                 else l_eventVector.push_back(l_eventObj);
             }
-            l_result = (l_check != EVENT_EXISTS);
+            l_result = (l_check != EventSearch::EventSearch_Exists);
         }
     }
     return l_result;

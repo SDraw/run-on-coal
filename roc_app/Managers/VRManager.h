@@ -94,7 +94,7 @@ protected:
     void RestoreRenderTarget();
 
     bool DoPulse();
-    
+
     friend class Core;
     friend class RenderManager;
 };

@@ -1,0 +1,10 @@
+<settings>
+  <setting name="vr" value="false"/>
+  <setting name="antialiasing" value="0"/>
+  <setting name="dimension" value="960x480"/>
+  <setting name="fullscreen" value="false"/>
+  <setting name="fpslimit" value="60"/>
+  <setting name="vsync" value="false"/>
+  <setting name="logging" value="true"/>
+  <setting name="module" value="roc_module_lua.dll"/>
+</settings>

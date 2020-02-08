@@ -4,7 +4,7 @@
 class LuaModule;
 class LuaArgument;
 
-class EventHandler
+class EventHandler final
 {
     LuaModule *m_luaModule;
 

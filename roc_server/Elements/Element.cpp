@@ -24,11 +24,11 @@ ROC::Element::~Element()
 {
 }
 
-unsigned char ROC::Element::GetElementType() const 
-{ 
-    return m_elementType; 
+unsigned char ROC::Element::GetElementType() const
+{
+    return m_elementType;
 }
-const std::string& ROC::Element::GetElementTypeName() const 
-{ 
+const std::string& ROC::Element::GetElementTypeName() const
+{
     return ((m_elementType != ET_Invalid) ? g_ElementTypeName[m_elementType] : g_ElementInvalidName);
 }

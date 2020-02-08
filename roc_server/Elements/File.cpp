@@ -121,9 +121,9 @@ bool ROC::File::SetPosition(size_t f_pos)
     return l_result;
 }
 
-bool ROC::File::IsEOF() const 
-{ 
-    return (m_file ? m_file->eof() : false); 
+bool ROC::File::IsEOF() const
+{
+    return (m_file ? m_file->eof() : false);
 }
 
 void ROC::File::Flush()
@@ -131,7 +131,7 @@ void ROC::File::Flush()
     if(m_file) m_file->flush();
 }
 
-const std::string& ROC::File::GetPath() const 
-{ 
-    return m_path; 
+const std::string& ROC::File::GetPath() const
+{
+    return m_path;
 }

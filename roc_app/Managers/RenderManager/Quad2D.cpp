@@ -35,7 +35,7 @@ ROC::Quad2D::~Quad2D()
 {
     for(size_t i = 0U; i < QBI_BufferCount; i++) GLBinder::ResetArrayBuffer(m_VBO[i]);
     glDeleteBuffers(static_cast<int>(QBI_BufferCount), m_VBO);
-    
+
     GLBinder::ResetVertexArray(m_VAO);
     glDeleteVertexArrays(1, &m_VAO);
 }

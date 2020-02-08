@@ -400,7 +400,7 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
                     size_t l_slot = m_bindPool->Allocate();
                     if(l_slot != Pool::ms_invalid)
                     {
-                        DrawableBindData l_bind{ f_drawable, static_cast<int>(l_slot) + 1, l_uniform };
+                        DrawableBindData l_bind{ f_drawable, static_cast<int>(l_slot)+1, l_uniform };
                         m_drawableBind.push_back(l_bind);
                         l_uniform->SetSampler(l_bind.m_slot);
 

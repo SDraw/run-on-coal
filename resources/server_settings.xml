@@ -1,0 +1,8 @@
+<settings>
+  <setting name="logging" value="true"/>
+  <setting name="ip" value="0.0.0.0"/>
+  <setting name="port" value="42000"/>
+  <setting name="max_clients" value="10"/>
+  <setting name="pulse_tick" value="10"/>
+  <setting name="module" value="roc_server_module_lua.dll"/>
+</settings>

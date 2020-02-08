@@ -31,7 +31,7 @@ bool LuaModule::Init(ROC::ICore *f_core)
         pugi::xml_document *l_configFile = new pugi::xml_document();
         if(l_configFile->load_file("module_lua.xml"))
         {
-            pugi::xml_node l_root = l_configFile->child("module");
+            pugi::xml_node l_root = l_configFile->child("scripts");
             if(l_root)
             {
                 for(pugi::xml_node l_node = l_root.child("script"); l_node; l_node = l_node.next_sibling("script"))

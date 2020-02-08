@@ -108,7 +108,7 @@ bool ROC::Model::AttachTo(Model *f_model, int f_bone)
 
         if((f_bone > -1) && m_parentModel->HasSkeleton())
         {
-            size_t l_bone = std::min(static_cast<size_t>(f_bone), m_parentModel->GetSkeleton()->GetBonesCount()-1U);
+            size_t l_bone = std::min(static_cast<size_t>(f_bone), m_parentModel->GetSkeleton()->GetBonesCount() - 1U);
             m_parentBone = m_parentModel->GetSkeleton()->GetBones()[l_bone];
         }
         else m_parentBone = nullptr;

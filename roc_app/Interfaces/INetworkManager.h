@@ -6,12 +6,12 @@ namespace ROC
 class INetworkManager
 {
 public:
-    enum NetworkState : unsigned char 
-    { 
-        NS_Disconnected = 0U, 
-        NS_Connecting, 
-        NS_Connected, 
-        NS_Disconnecting 
+    enum NetworkState : unsigned char
+    {
+        NS_Disconnected = 0U,
+        NS_Connecting,
+        NS_Connected,
+        NS_Disconnecting
     };
 
     virtual bool Connect(const std::string &f_ip, unsigned short f_port) = 0;

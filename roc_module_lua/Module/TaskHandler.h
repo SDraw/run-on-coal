@@ -3,7 +3,7 @@
 
 class LuaModule;
 
-class TaskHandler
+class TaskHandler final
 {
     LuaModule* m_luaModule;
 
@@ -24,6 +24,3 @@ protected:
 
 
 };
-
-
-

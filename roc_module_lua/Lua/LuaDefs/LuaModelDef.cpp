@@ -196,7 +196,7 @@ int LuaModelDef::AttachTo(lua_State *f_vm)
     argStream.ReadNextInteger(l_bone);
     if(!argStream.HasErrors())
     {
-        l_bone = std::max(-1, std::min(l_bone,std::numeric_limits<int>::max()));
+        l_bone = std::max(-1, std::min(l_bone, std::numeric_limits<int>::max()));
         bool l_result = l_model->AttachTo(l_parent, l_bone);
         argStream.PushBoolean(l_result);
     }

@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class Pool
+class Pool final
 {
     size_t m_size;
     std::vector<unsigned char> m_poolData;

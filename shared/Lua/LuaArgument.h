@@ -1,4 +1,5 @@
 #pragma once
+
 class LuaArgument
 {
     unsigned char m_type;
@@ -39,4 +40,3 @@ public:
     inline const std::string& GetString() const { return m_string; }
     inline void* GetLightUserdata() const { return m_userdata; }
 };
-

@@ -13,7 +13,7 @@ size_t ReadEnumVector(const std::string &f_val, const std::vector<std::string> &
     {
         if(!l_searchIter->compare(f_val))
         {
-            l_result = std::distance(f_vec.begin(),l_searchIter);
+            l_result = std::distance(f_vec.begin(), l_searchIter);
             break;
         }
     }
@@ -26,7 +26,7 @@ size_t ReadEnumVector(const char *f_val, const std::vector<std::string> &f_vec)
     {
         if(!l_searchIter->compare(f_val))
         {
-            l_result = std::distance(f_vec.begin(),l_searchIter);
+            l_result = std::distance(f_vec.begin(), l_searchIter);
             break;
         }
     }

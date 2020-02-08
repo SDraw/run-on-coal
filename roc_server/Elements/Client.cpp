@@ -11,9 +11,9 @@ ROC::Client::~Client()
 {
 }
 
-unsigned int ROC::Client::GetID() const 
-{ 
-    return m_address.systemIndex; 
+unsigned int ROC::Client::GetID() const
+{
+    return m_address.systemIndex;
 }
 void ROC::Client::GetAddress(std::string &f_ip, unsigned short &f_port) const
 {

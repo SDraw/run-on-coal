@@ -38,10 +38,10 @@ ROC::ConfigManager::ConfigManager()
     pugi::xml_document *l_settings = new pugi::xml_document();
     if(l_settings->load_file("settings.xml"))
     {
-        pugi::xml_node l_metaRoot = l_settings->child("settings");
-        if(l_metaRoot)
+        pugi::xml_node l_root = l_settings->child("settings");
+        if(l_root)
         {
-            for(pugi::xml_node l_node = l_metaRoot.child("param"); l_node; l_node = l_node.next_sibling("param"))
+            for(pugi::xml_node l_node = l_root.child("setting"); l_node; l_node = l_node.next_sibling("setting"))
             {
                 pugi::xml_attribute l_attribName = l_node.attribute("name");
                 pugi::xml_attribute l_attribValue = l_node.attribute("value");

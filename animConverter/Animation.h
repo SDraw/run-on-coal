@@ -1,6 +1,6 @@
 #pragma once
 
-class Animation
+class Animation final
 {
     struct keyframeData
     {

@@ -127,7 +127,7 @@ bool Animation::Load(const std::string &f_path)
                 if(l_dataNode.get_type() != sajson::TYPE_ARRAY) throw std::exception("Bone keys node isn't an array");
 
                 size_t l_dataNodeLength = l_dataNode.get_length();
-                std::cout <<  l_dataNodeLength << " keyframes " << std::endl;
+                std::cout << l_dataNodeLength << " keyframes " << std::endl;
                 if(l_dataNodeLength < 2U) throw std::exception("Bone has less than 2 keyframes");
 
                 keyframeData l_previousKeyframe;

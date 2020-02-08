@@ -12,4 +12,3 @@ protected:
     friend class LuaCollisionDef;
     friend class LuaModelDef;
 };
-

@@ -4,9 +4,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class GLBinder
+class GLBinder final
 {
     __declspec(thread) static GLuint ms_arrayBuffer;
     __declspec(thread) static GLuint ms_vertexArray;

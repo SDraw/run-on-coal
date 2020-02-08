@@ -41,7 +41,7 @@ size_t ROC::Pool::Allocate()
     }
     if(l_allocated != ms_invalid)
     {
-        for(size_t i = l_allocated+1U; i < m_size; i++)
+        for(size_t i = l_allocated + 1U; i < m_size; i++)
         {
             if(m_poolData[i] == 0U)
             {

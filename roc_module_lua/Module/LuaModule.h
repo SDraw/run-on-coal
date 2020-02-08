@@ -4,7 +4,7 @@ class EventHandler;
 class LuaVM;
 class TaskHandler;
 
-class LuaModule : public ROC::IModule
+class LuaModule final : public ROC::IModule
 {
     static LuaModule *ms_instance;
 
@@ -28,4 +28,3 @@ protected:
     void RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args);
     void DoPulse();
 };
-

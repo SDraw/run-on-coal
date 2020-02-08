@@ -41,7 +41,7 @@ protected:
     void Bind();
     void Enable();
     void Disable();
-    
+
     static inline void SetFallbackRenderTarget(RenderTarget *f_rt) { ms_fallbackRT = f_rt; }
     static inline void SetFallbackSize(const glm::ivec2 &f_size) { std::memcpy(&ms_fallbackSize, &f_size, sizeof(glm::ivec2)); }
     static void Fallback();

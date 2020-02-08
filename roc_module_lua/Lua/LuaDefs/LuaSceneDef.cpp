@@ -50,7 +50,7 @@ int LuaSceneDef::AddModel(lua_State *f_vm)
     argStream.ReadNextText(l_group);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_scene->AddIModel(l_model,l_group);
+        bool l_result = l_scene->AddIModel(l_model, l_group);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -84,7 +84,7 @@ int LuaSceneDef::SetModelLayer(lua_State *f_vm)
     argStream.ReadText(l_layer);
     if(!argStream.HasErrors() && !l_layer.empty())
     {
-        bool l_result = l_scene->SetIModelLayer(l_model,l_layer);
+        bool l_result = l_scene->SetIModelLayer(l_model, l_layer);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -228,7 +228,7 @@ int LuaSceneDef::AddShader(lua_State *f_vm)
     argStream.ReadNextInteger(l_priority);
     if(!argStream.HasErrors())
     {
-        bool l_result = l_scene->AddIShader(l_shader,l_layer,l_priority);
+        bool l_result = l_scene->AddIShader(l_shader, l_layer, l_priority);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
