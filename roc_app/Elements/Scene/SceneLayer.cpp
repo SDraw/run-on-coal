@@ -71,7 +71,7 @@ bool ROC::SceneLayer::HasModels() const
 
 void ROC::SceneLayer::Update(Camera *f_camera)
 {
-    size_t l_size = m_renderModels.size();
+    const size_t l_size = m_renderModels.size();
     if(l_size > 1U)
     {
         std::sort(m_renderModels.begin(), m_renderModels.end(), RenderModelComparator_Geometry);

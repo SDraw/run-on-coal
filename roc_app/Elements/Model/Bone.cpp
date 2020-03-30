@@ -53,13 +53,13 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data)
 }
 void ROC::Bone::SetFrameData(BoneFrameData *f_data, float f_blend)
 {
-    glm::vec3 l_pos = glm::mix(m_localTransform->GetPosition(), f_data->m_position, f_blend);
+    const glm::vec3 l_pos = glm::mix(m_localTransform->GetPosition(), f_data->m_position, f_blend);
     m_localTransform->SetPosition(l_pos);
 
-    glm::quat l_rot = glm::slerp(m_localTransform->GetRotation(), f_data->m_rotation, f_blend);
+    const glm::quat l_rot = glm::slerp(m_localTransform->GetRotation(), f_data->m_rotation, f_blend);
     m_localTransform->SetRotation(l_rot);
 
-    glm::vec3 l_scl = glm::mix(m_localTransform->GetScale(), f_data->m_scale, f_blend);
+    const glm::vec3 l_scl = glm::mix(m_localTransform->GetScale(), f_data->m_scale, f_blend);
     m_localTransform->SetScale(l_scl);
 }
 

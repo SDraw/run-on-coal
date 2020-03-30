@@ -37,8 +37,8 @@ bool ROC::Geometry::Load(const std::string &f_path)
 {
     if(!m_loaded)
     {
-        GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
-        GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
+        const GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
+        const GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
 
         unsigned char l_type;
         std::ifstream l_file;
@@ -306,8 +306,8 @@ void ROC::Geometry::GenerateVAOs()
 {
     if(m_loaded)
     {
-        GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
-        GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
+        const GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
+        const GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
 
         for(auto l_mat : m_materials) l_mat->GenerateVAO();
 

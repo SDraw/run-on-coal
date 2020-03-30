@@ -247,7 +247,7 @@ void ROC::Skeleton::InitDynamicBoneCollision(const std::vector<BoneJointData*> &
                 if(i == 0U)
                 {
                     // First joint part is connected to joint empty body
-                    btTransform l_jointConstraintOffset = btTransform::getIdentity();
+                    const btTransform l_jointConstraintOffset = btTransform::getIdentity();
                     l_jointPart->m_constraint = new btGeneric6DofSpringConstraint(*l_joint->m_emptyBody, *l_jointPart->m_rigidBody, l_jointConstraintOffset, l_jointPart->m_offset[STT_Inverse], false);
                 }
                 else

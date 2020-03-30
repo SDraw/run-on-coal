@@ -32,9 +32,9 @@ ROC::BoneFrameData::~BoneFrameData()
 
 bool ROC::BoneFrameData::IsEqual(const BoneFrameData *f_data) const
 {
-    bool l_positionResult = (m_position == f_data->m_position);
-    bool l_rotationResult = (m_rotation == f_data->m_rotation);
-    bool l_scaleResult = (m_scale == f_data->m_scale);
+    const bool l_positionResult = (m_position == f_data->m_position);
+    const bool l_rotationResult = (m_rotation == f_data->m_rotation);
+    const bool l_scaleResult = (m_scale == f_data->m_scale);
     return (l_positionResult && l_rotationResult && l_scaleResult);
 }
 

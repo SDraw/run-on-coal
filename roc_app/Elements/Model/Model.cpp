@@ -330,8 +330,8 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
                 {
                     if(m_parentModel)
                     {
-                        glm::vec4 l_boundNormal(m_geometry->GetBoundSphereRadius(), 0.f, 0.f, 0.f);
-                        glm::vec4 l_boundNormalGlobal = m_fullMatrix*l_boundNormal;
+                        const glm::vec4 l_boundNormal(m_geometry->GetBoundSphereRadius(), 0.f, 0.f, 0.f);
+                        const glm::vec4 l_boundNormalGlobal = m_fullMatrix*l_boundNormal;
                         m_boundSphereRaduis = glm::length(l_boundNormalGlobal);
                     }
                     else

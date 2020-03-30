@@ -121,7 +121,7 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones, f
 {
     if(m_loaded)
     {
-        bool l_enableBlending = (f_blend != 1.f);
+        const bool l_enableBlending = glm::epsilonEqual(f_blend,1.f,0.000001f);
         f_tick = f_tick%m_duration;
 
         for(size_t i = 0U; i < static_cast<size_t>(m_bonesCount); i++)
@@ -161,7 +161,7 @@ void ROC::Animation::GetData(unsigned int f_tick, std::vector<Bone*> &f_bones, f
                 }
                 else
                 {
-                    float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
+                    const float l_blend = MathUtils::EaseInOut(static_cast<float>(f_tick - l_keyframeData.m_startTime) / static_cast<float>(l_keyframeData.m_duration));
                     m_tempFrameData->SetInterpolated(l_keyframeData.m_leftData, l_keyframeData.m_rightData, l_blend);
                     l_enableBlending ? f_bones[i]->SetFrameData(m_tempFrameData, f_blend) : f_bones[i]->SetFrameData(m_tempFrameData);
                 }

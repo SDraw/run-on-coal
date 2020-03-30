@@ -124,7 +124,7 @@ bool ROC::Scene::AddShader(Shader *f_shader, const std::string &f_layer, unsigne
 
     if(!HasShader(f_shader))
     {
-        size_t l_hash = g_StringHash(f_layer);
+        const size_t l_hash = g_StringHash(f_layer);
         for(auto l_layer : m_layers)
         {
             if(l_layer->GetHash() == l_hash)
@@ -284,7 +284,7 @@ bool ROC::Scene::SetModelLayer(Model *f_model, const std::string &f_layer)
 {
     bool l_result = false;
 
-    size_t l_hash = g_StringHash(f_layer);
+    const size_t l_hash = g_StringHash(f_layer);
     for(auto l_layerTo : m_layers)
     {
         if(l_layerTo->GetHash() == l_hash)
@@ -314,7 +314,7 @@ bool ROC::Scene::IsActive() const
 const ROC::SceneLayer* ROC::Scene::GetLayer(const std::string &f_layer) const
 {
     SceneLayer *l_result = nullptr;
-    size_t l_hash = g_StringHash(f_layer);
+    const size_t l_hash = g_StringHash(f_layer);
     for(auto l_layer : m_layers)
     {
         if(l_layer->GetHash() == l_hash)
