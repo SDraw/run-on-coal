@@ -75,6 +75,7 @@ int LuaCameraDef::SetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetPosition(lua_State *f_vm)
 {
     // float float float Camera:getPosition()
@@ -113,6 +114,7 @@ int LuaCameraDef::SetDirection(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetDirection(lua_State *f_vm)
 {
     // float float float Camera:getDirection()
@@ -144,6 +146,7 @@ int LuaCameraDef::SetUpDirection(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetUpDirection(lua_State *f_vm)
 {
     // float float float Camera:getUpDirection()
@@ -180,6 +183,7 @@ int LuaCameraDef::SetProjectionType(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetProjectionType(lua_State *f_vm)
 {
     // str Camera:getProjectionType()
@@ -206,6 +210,7 @@ int LuaCameraDef::SetFOV(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetFOV(lua_State *f_vm)
 {
     // float Camera:getFOV()
@@ -232,6 +237,7 @@ int LuaCameraDef::SetAspectRatio(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetAspectRatio(lua_State *f_vm)
 {
     // float Camera:getAspectRation()
@@ -258,6 +264,7 @@ int LuaCameraDef::SetOrthoParams(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetOrthoParams(lua_State *f_vm)
 {
     // float float float float Camera:getOrthoParams()
@@ -289,6 +296,7 @@ int LuaCameraDef::SetDepth(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaCameraDef::GetDepth(lua_State *f_vm)
 {
     // float float Camera:getDepth()

@@ -22,6 +22,7 @@ ROC::Core::Core()
     m_pulseTick = std::chrono::milliseconds(m_configManager->GetPulseTick());
     m_arguments = new CustomArguments();
 }
+
 ROC::Core::~Core()
 {
     delete m_moduleManager;
@@ -43,6 +44,7 @@ bool ROC::Core::Init()
     }
     return (ms_instance != nullptr);
 }
+
 void ROC::Core::Terminate()
 {
     if(ms_instance)
@@ -70,10 +72,12 @@ ROC::IElementManager* ROC::Core::GetIElementManager() const
 {
     return m_elementManager;
 }
+
 ROC::ILogManager* ROC::Core::GetILogManager() const
 {
     return m_logManager;
 }
+
 ROC::INetworkManager* ROC::Core::GetINetworkManager() const
 {
     return m_networkManager;

@@ -20,7 +20,6 @@ public:
 
     virtual IGeometry* GetIGeometry() const = 0;
     virtual float GetBoundSphereRadius() const = 0;
-
     virtual void SetPosition(const glm::vec3 &f_pos) = 0;
     virtual const glm::vec3& GetPosition() const = 0;
     virtual void SetRotation(const glm::quat &f_rot) = 0;
@@ -28,15 +27,12 @@ public:
     virtual void SetScale(const glm::vec3 &f_scl) = 0;
     virtual const glm::vec3& GetScale() const = 0;
     virtual const glm::mat4& GetFullMatrix() const = 0;
-
     virtual bool AttachTo(IModel *f_model, int f_bone = -1) = 0;
     virtual bool Dettach() = 0;
     virtual IModel* GetParentIModel() const = 0;
-
     virtual bool SetICollision(ICollision *f_col) = 0;
     virtual bool RemoveCollision() = 0;
     virtual ICollision* GetICollsion() const = 0;
-
     virtual bool SetIAnimation(IAnimation *f_anim) = 0;
     virtual bool RemoveAnimation() = 0;
     virtual IAnimation* GetIAnimation() const = 0;

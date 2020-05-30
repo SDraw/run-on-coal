@@ -26,6 +26,7 @@ class SceneLayer
     Shader *m_shader;
     unsigned char m_priority;
     std::vector<RenderModel*> m_renderModels;
+    bool m_resortGeometry;
 
     static bool RenderModelComparator_Geometry(const RenderModel *f_modelA, const RenderModel *f_modelB);
     static bool RenderModelComparator_Distance(const RenderModel *f_modelA, const RenderModel *f_modelB);

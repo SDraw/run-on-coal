@@ -68,6 +68,7 @@ template<typename T> void ArgReader::ReadNumber(T &f_val)
         else SetError("Not enough arguments");
     }
 };
+
 template<typename T> void ArgReader::ReadInteger(T &f_val)
 {
     if(!m_hasErrors)
@@ -84,6 +85,7 @@ template<typename T> void ArgReader::ReadInteger(T &f_val)
         else SetError("Not enough arguments");
     }
 };
+
 template<class T> void ArgReader::ReadElement(T *&f_element)
 {
     if(!m_hasErrors)
@@ -118,6 +120,7 @@ template<typename T> void ArgReader::ReadNextNumber(T &f_val)
         }
     }
 };
+
 template<typename T> void ArgReader::ReadNextInteger(T &f_val)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
@@ -129,6 +132,7 @@ template<typename T> void ArgReader::ReadNextInteger(T &f_val)
         }
     }
 };
+
 template<class T> void ArgReader::ReadNextElement(T *&f_element)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))

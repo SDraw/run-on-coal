@@ -11,6 +11,7 @@
 #include "Managers/ModuleManager.h"
 #include "Elements/Element.h"
 #include "Interfaces/IModule.h"
+#include "GL/GLSetting.h"
 
 ROC::AsyncManager::AsyncManager(Core *f_core)
 {
@@ -21,6 +22,7 @@ ROC::AsyncManager::AsyncManager(Core *f_core)
 
     m_arguments = new CustomArguments();
 }
+
 ROC::AsyncManager::~AsyncManager()
 {
     m_threadSwitch = false;
@@ -56,6 +58,7 @@ void* ROC::AsyncManager::LoadTexture(const std::string &f_path, unsigned char f_
 
     return l_task;
 }
+
 void* ROC::AsyncManager::LoadTexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     AsyncTask *l_task = new AsyncTextureTask(f_path, f_filter, f_compress);
@@ -71,7 +74,7 @@ void ROC::AsyncManager::ExecutionThread()
 {
     sf::Context l_context;
     l_context.setActive(true);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    GLSetting::SetPixelUnpackAlignment(1);
 
     std::chrono::milliseconds l_sleepTime(10U);
     while(m_threadSwitch)
@@ -91,6 +94,8 @@ void ROC::AsyncManager::ExecutionThread()
         }
         std::this_thread::sleep_for(l_sleepTime);
     }
+
+    GLSetting::MemoryCleanup();
 }
 
 void ROC::AsyncManager::DoPulse()

@@ -59,6 +59,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
     m_hasStaticBoneCollision = false;
     m_hasDynamicBoneCollision = false;
 }
+
 ROC::Skeleton::~Skeleton()
 {
     for(auto l_bone : m_bones) delete l_bone;

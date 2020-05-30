@@ -71,6 +71,7 @@ LuaFunction::LuaFunction()
     m_ptr = nullptr;
     m_ref = 0;
 }
+
 LuaFunction::LuaFunction(const LuaFunction &f_func)
 {
     if(f_func.IsValid())
@@ -102,6 +103,7 @@ LuaFunction& LuaFunction::operator=(const LuaFunction& f_func)
     }
     return *this;
 }
+
 bool LuaFunction::operator==(const LuaFunction& f_func) const
 {
     return ((m_vm == f_func.m_vm) && (m_ref == f_func.m_ref));

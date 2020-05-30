@@ -6,6 +6,7 @@ ROC::Drawable::Drawable()
 {
     m_filtering = DFT_None;
 }
+
 ROC::Drawable::~Drawable()
 {
 }

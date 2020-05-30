@@ -36,9 +36,9 @@ protected:
     bool HasParent(Element *f_parent);
     void RemoveParent(Element *f_parent);
 
-    // Must call methods from derived classes
-    virtual void OnParentLinkDestroyed(Element *f_parent);
-    virtual void OnChildLinkDestroyed(Element *f_child);
+    // Must-call methods from derived classes
+    virtual void OnParentRemoved(Element *f_parent);
+    virtual void OnChildRemoved(Element *f_child);
 
     friend class ElementManager;
 };

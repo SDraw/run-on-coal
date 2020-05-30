@@ -37,6 +37,7 @@ ROC::PhysicsManager::PhysicsManager(Core *f_core)
     unsigned int l_fpsLimit = m_core->GetConfigManager()->GetFPSLimit();
     m_timeStep = (l_fpsLimit == 0U) ? g_PhysicsDefaultTimestep : (1.f / static_cast<float>(l_fpsLimit));
 }
+
 ROC::PhysicsManager::~PhysicsManager()
 {
     if(m_floorBody)
@@ -60,6 +61,7 @@ void ROC::PhysicsManager::SetPhysicsEnabled(bool f_value)
         ROC::Skeleton::SetPhysicsEnabled(m_enabled);
     }
 }
+
 bool ROC::PhysicsManager::GetPhysicsEnabled() const
 {
     return m_enabled;
@@ -83,6 +85,7 @@ void ROC::PhysicsManager::SetFloorEnabled(bool f_value)
         m_floorBody = nullptr;
     }
 }
+
 bool ROC::PhysicsManager::GetFloorEnabled() const
 {
     return (m_floorBody != nullptr);
@@ -104,6 +107,7 @@ void ROC::PhysicsManager::SetGravity(const glm::vec3 &f_grav)
         }
     }
 }
+
 void ROC::PhysicsManager::GetGravity(glm::vec3 &f_grav) const
 {
     std::memcpy(&f_grav, m_dynamicWorld->getGravity().m_floats, sizeof(glm::vec3));
@@ -148,6 +152,7 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
         }
     }
 }
+
 void ROC::PhysicsManager::RemoveModel(Model *f_model)
 {
     if(f_model->HasSkeleton())
@@ -176,6 +181,7 @@ void ROC::PhysicsManager::AddCollision(Collision *f_col)
 {
     m_dynamicWorld->addRigidBody(f_col->GetRigidBody());
 }
+
 void ROC::PhysicsManager::RemoveCollision(Collision *f_col)
 {
     m_dynamicWorld->removeRigidBody(f_col->GetRigidBody());
@@ -208,6 +214,7 @@ void ROC::PhysicsManager::SetDebugDrawer(btIDebugDraw *f_drawer)
 {
     m_dynamicWorld->setDebugDrawer(f_drawer);
 }
+
 void ROC::PhysicsManager::DrawDebugWorld()
 {
     m_dynamicWorld->debugDrawWorld();
@@ -223,6 +230,7 @@ void ROC::PhysicsManager::SetCollisionScale(ICollision *f_col, const glm::vec3 &
 {
     SetCollisionScale(dynamic_cast<Collision*>(f_col), f_scale);
 }
+
 bool ROC::PhysicsManager::RayCast(const glm::vec3 &f_start, glm::vec3 &f_end, glm::vec3 &f_normal, IElement *&f_element)
 {
     return RayCast(f_start, f_end, f_normal, reinterpret_cast<Element*&>(f_element));

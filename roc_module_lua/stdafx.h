@@ -39,7 +39,6 @@
 #include "client/IRenderTarget.h"
 #include "client/IScene.h"
 #include "client/IShader.h"
-#include "client/IShaderUniform.h"
 #include "client/ISound.h"
 #include "client/ITexture.h"
 #include "client/ICustomArgument.h"

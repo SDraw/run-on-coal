@@ -91,6 +91,7 @@ int LuaModelDef::SetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::GetPosition(lua_State *f_vm)
 {
     // float float float Model:getPosition()
@@ -122,6 +123,7 @@ int LuaModelDef::SetRotation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::GetRotation(lua_State *f_vm)
 {
     // float float float float Model:getRotation()
@@ -153,6 +155,7 @@ int LuaModelDef::SetScale(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::GetScale(lua_State *f_vm)
 {
     // float float float Model:getScale()
@@ -203,6 +206,7 @@ int LuaModelDef::AttachTo(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::Detach(lua_State *f_vm)
 {
     // bool Model:detach()
@@ -217,6 +221,7 @@ int LuaModelDef::Detach(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::GetParent(lua_State *f_vm)
 {
     // element Model:getParent()
@@ -248,6 +253,7 @@ int LuaModelDef::SetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::GetAnimation(lua_State *f_vm)
 {
     // element Model:getAnimation()
@@ -262,6 +268,7 @@ int LuaModelDef::GetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::RemoveAnimation(lua_State *f_vm)
 {
     // bool Model:removeAnimation()
@@ -276,6 +283,7 @@ int LuaModelDef::RemoveAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::PlayAnimation(lua_State *f_vm)
 {
     // bool Model:playAnimation()
@@ -292,6 +300,7 @@ int LuaModelDef::PlayAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::PauseAnimation(lua_State *f_vm)
 {
     // bool Model:pauseAnimation()
@@ -306,6 +315,7 @@ int LuaModelDef::PauseAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::ResetAnimation(lua_State *f_vm)
 {
     // bool Model:resetAnimation()
@@ -320,6 +330,7 @@ int LuaModelDef::ResetAnimation(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::SetAnimationProperty(lua_State *f_vm)
 {
     // bool Model:setAnimationProperty(str property, float value)
@@ -340,6 +351,7 @@ int LuaModelDef::SetAnimationProperty(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::GetAnimationProperty(lua_State *f_vm)
 {
     // float Model:getAnimationProperty(str property)
@@ -381,6 +393,7 @@ int LuaModelDef::GetCollision(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::SetCollision(lua_State *f_vm)
 {
     // bool Model:setCollision(element col)
@@ -397,6 +410,7 @@ int LuaModelDef::SetCollision(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaModelDef::RemoveCollision(lua_State *f_vm)
 {
     // bool Model:removeCollision()

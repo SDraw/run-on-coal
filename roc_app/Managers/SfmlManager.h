@@ -22,7 +22,7 @@ class SfmlManager final : public ISfmlManager
     sf::Clock m_clock;
     float m_time;
 
-    bool m_inputState;
+    bool m_inputEnabled;
 
     CustomArguments *m_arguments;
 

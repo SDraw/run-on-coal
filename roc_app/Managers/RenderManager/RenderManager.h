@@ -9,7 +9,6 @@ class VRManager;
 class Drawable;
 class Font;
 class Scene;
-class Texture;
 class PhysicsDrawer;
 class Quad2D;
 class Quad3D;
@@ -17,39 +16,29 @@ class CustomArguments;
 
 class RenderManager final : public IRenderManager
 {
+    enum RenderStage : unsigned char
+    {
+        RS_None = 0U,
+        RS_Main,
+        RS_VR
+    };
+
     Core *m_core;
     VRManager *m_vrManager;
 
-    bool m_active;
-    bool m_vrActive;
+    RenderStage m_renderStage;
+    bool m_clearFrame;
 
-    glm::vec4 m_clearColor;
+    float m_time;
     glm::ivec2 m_viewportSize;
     glm::mat4 m_screenProjection;
-    int m_lastFillMode;
 
     Scene *m_activeScene;
     Quad2D *m_quad2D;
     Quad3D *m_quad3D;
-    Texture *m_dummyTexture;
     PhysicsDrawer *m_physicsDrawer;
-    Texture *m_lastTexture;
 
     CustomArguments *m_arguments;
-
-    float m_time;
-
-    bool m_depthEnabled;
-    bool m_blendEnabled;
-    bool m_cullEnabled;
-    void DisableDepth();
-    void EnableDepth();
-    void DisableBlending();
-    void EnableBlending();
-    void DisableCulling();
-    void EnableCulling();
-
-    void PrepareActiveScene();
 
     RenderManager(const RenderManager &that) = delete;
     RenderManager& operator=(const RenderManager &that) = delete;
@@ -69,9 +58,9 @@ public:
     bool DrawScene(Scene *f_scene);
     bool DrawPhysics(float f_width, const std::string &f_layer);
 
-    bool ClearRenderArea(bool f_depth = true, bool f_color = true);
-    bool SetClearColour(const glm::vec4 &f_color);
     bool SetViewport(const glm::ivec4 &f_area);
+    bool ClearViewport(bool f_depth = true, bool f_color = true);
+    bool SetClearColor(const glm::vec4 &f_color);
     bool SetPolygonMode(int f_mode);
 protected:
     explicit RenderManager(Core *f_core);

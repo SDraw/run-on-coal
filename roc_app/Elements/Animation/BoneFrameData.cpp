@@ -19,6 +19,7 @@ ROC::BoneFrameData::BoneFrameData()
     m_scale = g_DefaultScale;
     m_useScale = false;
 }
+
 ROC::BoneFrameData::BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec3 &f_scl)
 {
     m_position = f_pos;
@@ -26,6 +27,7 @@ ROC::BoneFrameData::BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot
     m_scale = f_scl;
     m_useScale = glm::all(glm::epsilonNotEqual(m_scale, g_DefaultScale, g_Epsilon));
 }
+
 ROC::BoneFrameData::~BoneFrameData()
 {
 }
@@ -45,6 +47,7 @@ void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_data, float f_blend)
     m_scale = glm::mix(m_scale, f_data->m_scale, f_blend);
     m_useScale = (m_useScale || f_data->m_useScale);
 }
+
 void ROC::BoneFrameData::SetInterpolated(BoneFrameData *f_leftData, BoneFrameData *f_rightData, float f_blend)
 {
     m_position = glm::mix(f_leftData->m_position, f_rightData->m_position, f_blend);

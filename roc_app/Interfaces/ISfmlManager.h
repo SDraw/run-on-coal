@@ -18,23 +18,18 @@ public:
     virtual void RequestFocus() = 0;
     virtual bool GetFocusState() const = 0;
     virtual void SetInputEnabled(bool f_state) = 0;
-
     virtual void SetCursorMode(bool f_visible, bool f_lock) = 0;
     virtual void GetCursorPosition(glm::ivec2 &f_pos) const = 0;
     virtual void SetCursorPosition(const glm::ivec2 &f_pos) = 0;
-
     virtual void GetClipboardString(std::string &f_str) const = 0;
     virtual void SetClipboardString(const std::string &f_str) = 0;
-
     virtual bool IsKeyPressed(int f_key) = 0;
     virtual bool IsMouseKeyPressed(int f_key) = 0;
-
     virtual bool IsJoypadConnected(unsigned int f_jp) = 0;
     virtual bool GetJoypadButtonState(unsigned int f_jp, unsigned int f_button) = 0;
     virtual unsigned int GetJoypadButtonCount(unsigned int f_jp) = 0;
     virtual bool CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis) = 0;
     virtual float GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis) = 0;
-
     virtual float GetTime() const = 0;
 };
 

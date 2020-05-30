@@ -33,6 +33,7 @@ int LuaClientDef::Disconnect(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaClientDef::SendData(lua_State *f_vm)
 {
     // bool Client:sendData(str data)
@@ -49,6 +50,7 @@ int LuaClientDef::SendData(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaClientDef::GetID(lua_State *f_vm)
 {
     // int Client:getID()
@@ -58,6 +60,7 @@ int LuaClientDef::GetID(lua_State *f_vm)
     !argStream.HasErrors() ? argStream.PushInteger(l_client->GetID()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaClientDef::GetAddress(lua_State *f_vm)
 {
     // str int Client:getAddress()
@@ -75,6 +78,7 @@ int LuaClientDef::GetAddress(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaClientDef::GetPing(lua_State *f_vm)
 {
     // int Client:getPing()

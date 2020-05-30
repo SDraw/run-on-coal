@@ -10,6 +10,7 @@ ROC::Pool::Pool(size_t f_size)
     m_poolData.assign(m_size, 0U);
     m_minimal = 0U;
 }
+
 ROC::Pool::~Pool()
 {
     m_poolData.clear();
@@ -52,6 +53,7 @@ size_t ROC::Pool::Allocate()
     }
     return l_allocated;
 }
+
 void ROC::Pool::Reset(size_t f_id)
 {
     if(f_id < m_size)

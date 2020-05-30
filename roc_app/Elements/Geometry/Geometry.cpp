@@ -6,7 +6,6 @@
 #include "Elements/Geometry/BoneJointData.hpp"
 #include "Elements/Geometry/Material.h"
 
-#include "Utils/GLBinder.h"
 #include "Utils/zlibUtils.h"
 
 namespace ROC
@@ -28,6 +27,7 @@ ROC::Geometry::Geometry()
     m_boundSphereRaduis = 0.f;
     m_loaded = false;
 }
+
 ROC::Geometry::~Geometry()
 {
     Clear();
@@ -37,9 +37,6 @@ bool ROC::Geometry::Load(const std::string &f_path)
 {
     if(!m_loaded)
     {
-        const GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
-        const GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
-
         unsigned char l_type;
         std::ifstream l_file;
         l_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -170,7 +167,6 @@ bool ROC::Geometry::Load(const std::string &f_path)
                     m_bonesData.shrink_to_fit();
                 }
 
-
                 // Sort materials
                 if(m_materialCount > 0U)
                 {
@@ -275,9 +271,6 @@ bool ROC::Geometry::Load(const std::string &f_path)
                 }
             }
         }
-
-        GLBinder::BindArrayBuffer(l_lastArrayBuffer);
-        GLBinder::BindVertexArray(l_lastVertexArray);
     }
     return m_loaded;
 }
@@ -302,17 +295,11 @@ void ROC::Geometry::Clear()
     m_loaded = false;
 }
 
-void ROC::Geometry::GenerateVAOs()
+void ROC::Geometry::GenerateMaterials()
 {
     if(m_loaded)
     {
-        const GLint l_lastArrayBuffer = GLBinder::GetBindedArrayBuffer();
-        const GLint l_lastVertexArray = GLBinder::GetBindedVertexArray();
-
-        for(auto l_mat : m_materials) l_mat->GenerateVAO();
-
-        GLBinder::BindArrayBuffer(l_lastArrayBuffer);
-        GLBinder::BindVertexArray(l_lastVertexArray);
+        for(auto l_mat : m_materials) l_mat->Generate();
     }
 }
 
@@ -320,6 +307,7 @@ float ROC::Geometry::GetBoundSphereRadius() const
 {
     return m_boundSphereRaduis;
 }
+
 size_t ROC::Geometry::GetMaterialsCount() const
 {
     return m_materialCount;

@@ -21,6 +21,7 @@ ROC::Sound::Sound()
     m_v3DPosition = g_EmptyVec3;
     m_v3DDistance = g_EmptyVec2;
 }
+
 ROC::Sound::~Sound()
 {
     delete m_handle;
@@ -45,10 +46,12 @@ void ROC::Sound::Play()
 {
     if(m_handle) m_handle->play();
 }
+
 void ROC::Sound::Pause()
 {
     if(m_handle) m_handle->pause();
 }
+
 void ROC::Sound::Stop()
 {
     if(m_handle) m_handle->stop();
@@ -58,6 +61,7 @@ bool  ROC::Sound::IsLooped() const
 {
     return m_looped;
 }
+
 bool ROC::Sound::SetLoop(bool f_loop)
 {
     if(m_handle)
@@ -86,6 +90,7 @@ void ROC::Sound::SetSpeed(float f_speed)
         m_handle->setPitch(f_speed);
     }
 }
+
 float ROC::Sound::GetSpeed()
 {
     float l_speed = -1.f;
@@ -101,6 +106,7 @@ void ROC::Sound::SetVolume(float f_volume)
         m_handle->setVolume(f_volume);
     }
 }
+
 float ROC::Sound::GetVolume()
 {
     float l_volume = -1.f;
@@ -117,6 +123,7 @@ void ROC::Sound::SetTime(float f_time)
         m_handle->setPlayingOffset(l_time);
     }
 }
+
 float ROC::Sound::GetTime()
 {
     float l_time = -1.f;
@@ -150,6 +157,7 @@ bool ROC::Sound::Set3DPositionEnabled(bool f_state)
     }
     return m_mono;
 }
+
 bool ROC::Sound::Get3DPositionEnabled() const
 {
     return m_relative;
@@ -167,6 +175,7 @@ bool ROC::Sound::Set3DPosition(const glm::vec3 &f_pos)
     }
     return m_relative;
 }
+
 const glm::vec3& ROC::Sound::Get3DPosition(glm::vec3 &f_pos) const
 {
     return m_v3DPosition;
@@ -185,6 +194,7 @@ bool ROC::Sound::Set3DDistance(const glm::vec2 &f_dist)
     }
     return m_relative;
 }
+
 const glm::vec2& ROC::Sound::Get3DDistance(glm::vec2 &f_dist) const
 {
     return m_v3DDistance;

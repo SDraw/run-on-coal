@@ -60,6 +60,7 @@ int LuaUtilsDef::Base64Encode(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaUtilsDef::Base64Decode(lua_State *f_vm)
 {
     // str base64Decode(str data)

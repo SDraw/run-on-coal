@@ -2,6 +2,8 @@
 #include "Interfaces/ITexture.h"
 #include "Elements/Drawable.h"
 
+class GLTexture;
+
 namespace ROC
 {
 
@@ -10,7 +12,8 @@ class Texture final : public Drawable, public virtual ITexture
     unsigned char m_type;
     glm::ivec2 m_size;
     bool m_compressed;
-    GLuint m_texture;
+
+    GLTexture *m_texture;
 
     Texture(const Texture &that) = delete;
     Texture& operator=(const Texture &that) = delete;
@@ -28,9 +31,7 @@ protected:
     bool LoadCubemap(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
     bool LoadDummy();
 
-    inline GLuint GetTextureID() const { return m_texture; };
-
-    void Bind();
+    void Bind(size_t f_slot = 0U);
 
     friend class ElementManager;
     friend class RenderManager;

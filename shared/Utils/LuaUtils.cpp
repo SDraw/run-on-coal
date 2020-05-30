@@ -14,11 +14,13 @@ void AddClass(lua_State *f_vm, const char *f_name, lua_CFunction f_func)
     lua_pushboolean(f_vm, 0);
     lua_setfield(f_vm, -2, "__metatable");
 }
+
 void AddClassMethod(lua_State *f_vm, const char *f_name, lua_CFunction f_func)
 {
     lua_pushcfunction(f_vm, f_func);
     lua_setfield(f_vm, -2, f_name);
 }
+
 void PushElementWithMetatable(lua_State *f_vm, const char *f_mt, void *f_ptr, const char *f_class)
 {
     luaL_getmetatable(f_vm, f_mt);

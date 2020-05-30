@@ -2,6 +2,7 @@
 #include "Interfaces/IDrawable.h"
 #include "Elements/Element.h"
 
+
 namespace ROC
 {
 
@@ -21,7 +22,7 @@ protected:
     Drawable();
     virtual ~Drawable();
 
-    virtual void Bind() = 0;
+    virtual void Bind(size_t f_slot = 0U) = 0;
 
     friend class RenderManager;
     friend class VRManager;

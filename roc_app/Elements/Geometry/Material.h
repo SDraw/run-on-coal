@@ -1,5 +1,8 @@
 #pragma once
 
+class GLArrayBuffer;
+class GLVertexArray;
+
 namespace ROC
 {
 
@@ -18,12 +21,14 @@ class Material final
 
         MBI_BufferCount
     };
-    GLuint m_VBO[MBI_BufferCount];
-    GLuint m_VAO;
+    GLArrayBuffer *m_arrayBuffers[MBI_BufferCount];
+    GLVertexArray *m_vertexArray;
 
     unsigned char m_type;
     glm::vec4 m_params;
     Texture *m_texture;
+
+    static Texture *ms_dummyTexture;
 
     Material(const Material &that) = delete;
     Material& operator=(const Material &that) = delete;
@@ -58,7 +63,7 @@ protected:
     void LoadWeights(const std::vector<glm::vec4> &f_vector);
     void LoadIndices(const std::vector<glm::ivec4> &f_vector);
     void LoadTexture(const std::string &f_path);
-    void GenerateVAO();
+    void Generate();
 
     inline void SetType(unsigned char f_type) { m_type = f_type; }
 
@@ -66,7 +71,10 @@ protected:
 
     inline Texture* GetTexture() const { return m_texture; }
 
-    void Draw();
+    void Draw(bool f_useTexture = true);
+
+    static void InitStaticResources();
+    static void ReleaseStaticResources();
 
     friend class RenderManager;
     friend class Geometry;

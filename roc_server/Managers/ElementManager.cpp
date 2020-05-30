@@ -14,6 +14,7 @@ ROC::ElementManager::ElementManager(Core *f_core)
     m_elementsEnd = m_elements.end();
     m_interfacesEnd = m_interfaces.end();
 }
+
 ROC::ElementManager::~ElementManager()
 {
     for(auto iter : m_elements) delete reinterpret_cast<Element*>(iter);
@@ -26,6 +27,7 @@ void ROC::ElementManager::AddElementToSet(Element *f_ptr)
     m_elementsEnd = m_elements.end();
     m_interfacesEnd = m_interfaces.end();
 }
+
 void ROC::ElementManager::RemoveElementFromSet(Element *f_ptr)
 {
     m_elements.erase(f_ptr);
@@ -40,6 +42,7 @@ ROC::Client* ROC::ElementManager::CreateClient(const RakNet::SystemAddress &f_ad
     AddElementToSet(l_client);
     return l_client;
 }
+
 void ROC::ElementManager::DestroyClient(Client *f_client)
 {
     if(IsValidElement(f_client))
@@ -61,6 +64,7 @@ ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
     }
     return l_file;
 }
+
 ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
 {
     File *l_file = new File();
@@ -103,15 +107,18 @@ ROC::IFile* ROC::ElementManager::CreateIFile(const std::string &f_path)
 {
     return CreateFile_(f_path);
 }
+
 ROC::IFile* ROC::ElementManager::OpenIFile(const std::string &f_path, bool f_ro)
 {
     return OpenFile(f_path, f_ro);
 }
+
 bool ROC::ElementManager::IsValidIElement(IElement *f_ptr)
 {
     auto l_checkIterator = m_interfaces.find(f_ptr);
     return (l_checkIterator != m_interfacesEnd);
 }
+
 bool ROC::ElementManager::DestroyIElement(IElement *f_element)
 {
     bool l_result = false;

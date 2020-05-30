@@ -7,46 +7,55 @@ ROC::CustomArgument::CustomArgument()
     m_type = CAT_None;
     m_ptr = nullptr;
 }
+
 ROC::CustomArgument::CustomArgument(bool f_val)
 {
     m_type = CAT_Boolean;
     m_bool = f_val;
 }
+
 ROC::CustomArgument::CustomArgument(int f_val)
 {
     m_type = CAT_Integer;
     m_int = f_val;
 }
+
 ROC::CustomArgument::CustomArgument(unsigned int f_val)
 {
     m_type = CAT_UInteger;
     m_uint = f_val;
 }
+
 ROC::CustomArgument::CustomArgument(float f_val)
 {
     m_type = CAT_Float;
     m_float = f_val;
 }
+
 ROC::CustomArgument::CustomArgument(double f_val)
 {
     m_type = CAT_Double;
     m_double = f_val;
 }
+
 ROC::CustomArgument::CustomArgument(void *f_val)
 {
     m_type = CAT_Pointer;
     m_ptr = f_val;
 }
+
 ROC::CustomArgument::CustomArgument(const std::string &f_val)
 {
     m_string.assign(f_val);
     m_type = CAT_String;
 }
+
 ROC::CustomArgument::CustomArgument(ROC::IElement *f_element)
 {
     m_ptr = f_element;
     m_type = CAT_Element;
 }
+
 ROC::CustomArgument::CustomArgument(const CustomArgument& f_data)
 {
     m_type = f_data.m_type;
@@ -76,6 +85,7 @@ ROC::CustomArgument::CustomArgument(const CustomArgument& f_data)
             break;
     }
 }
+
 ROC::CustomArgument::~CustomArgument()
 {
 }

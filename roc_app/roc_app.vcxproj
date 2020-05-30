@@ -267,6 +267,17 @@
     <ClInclude Include="Elements\Shader\ShaderUniform.h" />
     <ClInclude Include="Elements\Sound.h" />
     <ClInclude Include="Elements\Texture.h" />
+    <ClInclude Include="GL\GLArrayBuffer.h" />
+    <ClInclude Include="GL\GLFramebuffer.h" />
+    <ClInclude Include="GL\GLRenderbuffer.h" />
+    <ClInclude Include="GL\GLSetting.h" />
+    <ClInclude Include="GL\GLShader.h" />
+    <ClInclude Include="GL\GLState.h" />
+    <ClInclude Include="GL\GLTexture.h" />
+    <ClInclude Include="GL\GLTexture2D.h" />
+    <ClInclude Include="GL\GLTextureCubemap.h" />
+    <ClInclude Include="GL\GLVertexArray.h" />
+    <ClInclude Include="GL\GLViewport.h" />
     <ClInclude Include="Interfaces\IAnimation.h" />
     <ClInclude Include="Interfaces\IAsyncManager.h" />
     <ClInclude Include="Interfaces\ICamera.h" />
@@ -291,7 +302,6 @@
     <ClInclude Include="Interfaces\IScene.h" />
     <ClInclude Include="Interfaces\ISfmlManager.h" />
     <ClInclude Include="Interfaces\IShader.h" />
-    <ClInclude Include="Interfaces\IShaderUniform.h" />
     <ClInclude Include="Interfaces\ISound.h" />
     <ClInclude Include="Interfaces\ISoundManager.h" />
     <ClInclude Include="Interfaces\ITexture.h" />
@@ -317,7 +327,6 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Utils\CustomArgument.h" />
     <ClInclude Include="Utils\CustomArguments.h" />
-    <ClInclude Include="Utils\GLBinder.h" />
     <ClInclude Include="Utils\MathUtils.h" />
     <ClInclude Include="Utils\Pool.h" />
     <ClInclude Include="Utils\SystemTick.h" />
@@ -373,6 +382,17 @@
     <ClCompile Include="Elements\Shader\ShaderUniform.cpp" />
     <ClCompile Include="Elements\Sound.cpp" />
     <ClCompile Include="Elements\Texture.cpp" />
+    <ClCompile Include="GL\GLArrayBuffer.cpp" />
+    <ClCompile Include="GL\GLFramebuffer.cpp" />
+    <ClCompile Include="GL\GLRenderbuffer.cpp" />
+    <ClCompile Include="GL\GLSetting.cpp" />
+    <ClCompile Include="GL\GLShader.cpp" />
+    <ClCompile Include="GL\GLState.cpp" />
+    <ClCompile Include="GL\GLTexture.cpp" />
+    <ClCompile Include="GL\GLTexture2D.cpp" />
+    <ClCompile Include="GL\GLTextureCubemap.cpp" />
+    <ClCompile Include="GL\GLVertexArray.cpp" />
+    <ClCompile Include="GL\GLViewport.cpp" />
     <ClCompile Include="Utils\CustomArgument.cpp" />
     <ClCompile Include="Utils\CustomArguments.cpp" />
     <ClCompile Include="Utils\zlibUtils.cpp" />
@@ -411,7 +431,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Utils\GLBinder.cpp" />
     <ClCompile Include="Utils\GlobalConstants.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>

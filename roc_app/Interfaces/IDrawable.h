@@ -17,7 +17,6 @@ public:
 
     virtual bool IsTransparent() const = 0;
     virtual bool IsCubic() const = 0;
-
     virtual const glm::ivec2& GetSize() const = 0;
     virtual unsigned char GetFiltering() const = 0;
 };

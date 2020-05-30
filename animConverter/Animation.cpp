@@ -9,6 +9,7 @@ Animation::Animation()
     m_bonesCount = 0U;
     m_loaded = false;
 }
+
 Animation::~Animation()
 {
     m_bones.clear();
@@ -150,7 +151,7 @@ bool Animation::Load(const std::string &f_path)
                             sajson::value l_valueNode = l_node1.get_array_element(k);
                             size_t l_nodeType = l_valueNode.get_type();
                             if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("Bone frame position node value isn't a number");
-                            l_keyframeData.m_position[k] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
+                            l_keyframeData.m_position[static_cast<int>(k)] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
                         }
                     }
                     else
@@ -170,7 +171,7 @@ bool Animation::Load(const std::string &f_path)
                             sajson::value l_valueNode = l_node2.get_array_element(k);
                             size_t l_nodeType = l_valueNode.get_type();
                             if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("Bone frame rotation node value isn't a number");
-                            l_keyframeData.m_rotation[k] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
+                            l_keyframeData.m_rotation[static_cast<int>(k)] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
                         }
                     }
                     else
@@ -190,7 +191,7 @@ bool Animation::Load(const std::string &f_path)
                             sajson::value l_valueNode = l_node3.get_array_element(k);
                             size_t l_nodeType = l_valueNode.get_type();
                             if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("Bone frame scale node value isn't a number");
-                            l_keyframeData.m_scale[k] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
+                            l_keyframeData.m_scale[static_cast<int>(k)] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_valueNode.get_integer_value() : l_valueNode.get_double_value());
                         }
                     }
                     else

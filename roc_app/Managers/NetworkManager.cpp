@@ -29,6 +29,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
     m_networkState = NS_Disconnected;
     m_arguments = new CustomArguments();
 }
+
 ROC::NetworkManager::~NetworkManager()
 {
     if(m_networkInterface)
@@ -79,6 +80,7 @@ bool ROC::NetworkManager::Connect(const std::string &f_ip, unsigned short f_port
     }
     return (m_networkState == NS_Connecting);
 }
+
 bool ROC::NetworkManager::Disconnect()
 {
     if(m_networkState == NS_Connected)
@@ -88,6 +90,7 @@ bool ROC::NetworkManager::Disconnect()
     }
     return (m_networkState == NS_Disconnecting);
 }
+
 bool ROC::NetworkManager::SendData(const std::string &f_data)
 {
     if(m_networkState == NS_Connected)
@@ -101,6 +104,7 @@ bool ROC::NetworkManager::SendData(const std::string &f_data)
     }
     return (m_networkState == NS_Connected);
 }
+
 int ROC::NetworkManager::GetPing() const
 {
     int l_result = -1;

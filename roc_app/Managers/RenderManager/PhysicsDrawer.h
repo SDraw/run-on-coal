@@ -1,5 +1,8 @@
 #pragma once
 
+class GLArrayBuffer;
+class GLVertexArray;
+
 namespace ROC
 {
 
@@ -12,8 +15,8 @@ class PhysicsDrawer final : public btIDebugDraw
 
         PDBI_BufferCount
     };
-    GLuint m_VBO[PDBI_BufferCount];
-    GLuint m_VAO;
+    GLArrayBuffer *m_arrayBuffers[PDBI_BufferCount];
+    GLVertexArray *m_vertexArray;
 
     std::vector<glm::vec3> m_lines;
     std::vector<glm::vec3> m_colors;

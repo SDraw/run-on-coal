@@ -51,6 +51,7 @@ ROC::Model::Model(Geometry *f_geometry)
 
     m_collision = nullptr;
 }
+
 ROC::Model::~Model()
 {
     delete m_localTransform;
@@ -67,6 +68,7 @@ void ROC::Model::SetPosition(const glm::vec3 &f_pos)
 {
     m_localTransform->SetPosition(f_pos);
 }
+
 const glm::vec3& ROC::Model::GetPosition() const
 {
     return m_localTransform->GetPosition();
@@ -76,6 +78,7 @@ void ROC::Model::SetRotation(const glm::quat &f_rot)
 {
     m_localTransform->SetRotation(f_rot);
 }
+
 const glm::quat& ROC::Model::GetRotation() const
 {
     return m_localTransform->GetRotation();
@@ -85,6 +88,7 @@ void ROC::Model::SetScale(const glm::vec3 &f_scl)
 {
     m_localTransform->SetScale(f_scl);
 }
+
 const glm::vec3& ROC::Model::GetScale() const
 {
     return m_localTransform->GetScale();
@@ -117,6 +121,7 @@ bool ROC::Model::AttachTo(Model *f_model, int f_bone)
     }
     return l_result;
 }
+
 bool ROC::Model::Dettach()
 {
     bool l_result = false;
@@ -146,6 +151,7 @@ bool ROC::Model::SetCollision(Collision *f_col)
     }
     return l_result;
 }
+
 bool ROC::Model::RemoveCollision()
 {
     bool l_result = false;
@@ -181,6 +187,7 @@ bool ROC::Model::SetAnimation(Animation *f_anim)
     }
     return l_result;
 }
+
 bool ROC::Model::RemoveAnimation()
 {
     bool l_result = false;
@@ -197,30 +204,35 @@ bool ROC::Model::RemoveAnimation()
     }
     return l_result;
 }
+
 ROC::Animation* ROC::Model::GetAnimation() const
 {
     Animation *l_anim = nullptr;
     if(m_animController) l_anim = m_animController->GetAnimation();
     return l_anim;
 }
+
 bool ROC::Model::PlayAnimation(bool f_loop)
 {
     bool l_result = false;
     if(m_animController) l_result = m_animController->Play(f_loop);
     return l_result;
 }
+
 bool ROC::Model::PauseAnimation()
 {
     bool l_result = false;
     if(m_animController) l_result = m_animController->Pause();
     return l_result;
 }
+
 bool ROC::Model::ResetAnimation()
 {
     bool l_result = false;
     if(m_animController) l_result = m_animController->Reset();
     return l_result;
 }
+
 bool ROC::Model::GetAnimationProperty(ModelAnimationProperty f_prop, float &f_value)
 {
     if(m_animController)
@@ -240,6 +252,7 @@ bool ROC::Model::GetAnimationProperty(ModelAnimationProperty f_prop, float &f_va
     }
     return (m_animController != nullptr);
 }
+
 bool ROC::Model::SetAnimationProperty(ModelAnimationProperty f_prop, float f_value)
 {
     if(m_animController)
@@ -368,7 +381,7 @@ void ROC::Model::Update(ModelUpdateStage f_stage)
     }
 }
 
-void ROC::Model::OnParentLinkDestroyed(Element *f_parent)
+void ROC::Model::OnParentRemoved(Element *f_parent)
 {
     switch(f_parent->GetElementType())
     {
@@ -388,7 +401,7 @@ void ROC::Model::OnParentLinkDestroyed(Element *f_parent)
             break;
     }
 
-    Element::OnParentLinkDestroyed(f_parent);
+    Element::OnParentRemoved(f_parent);
 }
 
 // ROC::Collidable
@@ -410,26 +423,32 @@ ROC::IGeometry* ROC::Model::GetIGeometry() const
 {
     return m_geometry;
 }
+
 bool ROC::Model::AttachTo(IModel *f_model, int f_bone)
 {
     return AttachTo(dynamic_cast<Model*>(f_model), f_bone);
 }
+
 ROC::IModel* ROC::Model::GetParentIModel() const
 {
     return m_parentModel;
 }
+
 bool ROC::Model::SetICollision(ICollision *f_col)
 {
     return SetCollision(dynamic_cast<Collision*>(f_col));
 }
+
 ROC::ICollision* ROC::Model::GetICollsion() const
 {
     return m_collision;
 }
+
 bool ROC::Model::SetIAnimation(IAnimation *f_anim)
 {
     return SetAnimation(dynamic_cast<Animation*>(f_anim));
 }
+
 ROC::IAnimation* ROC::Model::GetIAnimation() const
 {
     return GetAnimation();

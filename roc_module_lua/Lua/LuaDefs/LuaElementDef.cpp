@@ -10,6 +10,7 @@ void LuaElementDef::Init(lua_State *f_vm)
 {
     lua_register(f_vm, "isElement", IsElement);
 }
+
 void LuaElementDef::AddHierarchyMethods(lua_State *f_vm)
 {
     LuaUtils::AddClassMethod(f_vm, "getType", GetType);

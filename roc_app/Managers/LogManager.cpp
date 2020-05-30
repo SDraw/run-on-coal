@@ -18,6 +18,7 @@ ROC::LogManager::LogManager(Core *f_core)
         }
     }
 }
+
 ROC::LogManager::~LogManager()
 {
     if(m_enabled)

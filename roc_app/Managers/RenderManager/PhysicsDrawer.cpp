@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
 #include "Managers/RenderManager/PhysicsDrawer.h"
-
-#include "Utils/GLBinder.h"
+#include "GL/GLArrayBuffer.h"
+#include "GL/GLVertexArray.h"
+#include "GL/GLSetting.h"
+#include "GL/GLViewport.h"
 
 namespace ROC
 {
@@ -13,30 +15,33 @@ const size_t g_PhysicsDrawerMaxLinesCount = 65536U;
 
 ROC::PhysicsDrawer::PhysicsDrawer()
 {
-    glGenVertexArrays(1, &m_VAO);
-    GLBinder::BindVertexArray(m_VAO);
+    m_vertexArray = new GLVertexArray();
+    m_vertexArray->Create();
+    m_vertexArray->Bind();
 
-    glGenBuffers(static_cast<int>(PDBI_BufferCount), m_VBO);
+    for(size_t i = 0U; i < PDBI_BufferCount; i++) m_arrayBuffers[i] = new GLArrayBuffer();
 
-    GLBinder::BindArrayBuffer(m_VBO[PDBI_Vertex]);
-    glBufferData(GL_ARRAY_BUFFER, g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(PDBI_Vertex);
-    glVertexAttribPointer(PDBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    m_arrayBuffers[PDBI_Vertex]->Create(g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), nullptr, GL_DYNAMIC_DRAW);
+    m_arrayBuffers[PDBI_Vertex]->Bind();
+    m_vertexArray->EnableAttribute(PDBI_Vertex, 3, GL_FLOAT);
 
-    GLBinder::BindArrayBuffer(m_VBO[PDBI_Color]);
-    glBufferData(GL_ARRAY_BUFFER, g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(PDBI_Color);
-    glVertexAttribPointer(PDBI_Color, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    m_arrayBuffers[PDBI_Color]->Create(g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), nullptr, GL_DYNAMIC_DRAW);
+    m_arrayBuffers[PDBI_Color]->Bind();
+    m_vertexArray->EnableAttribute(PDBI_Color, 3, GL_FLOAT);
 }
+
 ROC::PhysicsDrawer::~PhysicsDrawer()
 {
-    for(size_t i = 0U; i < PDBI_BufferCount; i++) GLBinder::ResetArrayBuffer(m_VBO[i]);
-    glDeleteBuffers(static_cast<int>(PDBI_BufferCount), m_VBO);
-
-    if(m_VAO != 0U)
+    for(size_t i = 0U; i < PDBI_BufferCount; i++)
     {
-        GLBinder::ResetVertexArray(m_VAO);
-        glDeleteVertexArrays(1, &m_VAO);
+        m_arrayBuffers[i]->Destroy();
+        delete m_arrayBuffers[i];
+    }
+
+    if(m_vertexArray)
+    {
+        m_vertexArray->Destroy();
+        delete m_vertexArray;
     }
 }
 
@@ -52,6 +57,7 @@ void ROC::PhysicsDrawer::drawLine(const btVector3& from, const btVector3& to, co
     std::memcpy(&l_vec, color.m_floats, sizeof(glm::vec3));
     m_colors.insert(m_colors.end(), 2U, l_vec);
 }
+
 void ROC::PhysicsDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color)
 {
     glm::vec3 l_vec;
@@ -71,25 +77,27 @@ void ROC::PhysicsDrawer::Draw(float f_width)
 {
     if(!m_lines.empty())
     {
-        //if(f_width != 1.f) glLineWidth(f_width);
+        GLSetting::Set(GL_CULL_FACE, false);
+        GLSetting::SetDepthMask(true);
+        GLSetting::Set(GL_BLEND, false);
+        GLViewport::SetLineWidth(f_width);
 
-        GLBinder::BindVertexArray(m_VAO);
+        m_vertexArray->Bind();
         while(!m_lines.empty())
         {
-            size_t l_count = std::min(g_PhysicsDrawerMaxLinesCount, m_lines.size()); // Count is same for m_colors
+            const size_t l_count = std::min(g_PhysicsDrawerMaxLinesCount, m_lines.size()); // Count is same for m_colors
+            const size_t l_dataSize = l_count*sizeof(glm::vec3);
 
-            GLBinder::BindArrayBuffer(m_VBO[PDBI_Vertex]);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, l_count*sizeof(glm::vec3), m_lines.data());
+            m_arrayBuffers[PDBI_Vertex]->Bind();
+            m_arrayBuffers[PDBI_Vertex]->Update(0, l_dataSize, m_lines.data());
 
-            GLBinder::BindArrayBuffer(m_VBO[PDBI_Color]);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, l_count*sizeof(glm::vec3), m_colors.data());
+            m_arrayBuffers[PDBI_Color]->Bind();
+            m_arrayBuffers[PDBI_Color]->Update(0, l_dataSize, m_colors.data());
 
-            glDrawArrays(GL_LINES, 0, static_cast<int>(l_count));
+            m_vertexArray->Draw(GL_LINES, static_cast<GLsizei>(l_count));
 
             m_lines.erase(m_lines.begin(), m_lines.begin() + l_count);
             m_colors.erase(m_colors.begin(), m_colors.begin() + l_count);
         }
-
-        if(f_width != 1.f) glLineWidth(1.f);
     }
 }

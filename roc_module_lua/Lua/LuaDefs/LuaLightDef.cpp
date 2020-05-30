@@ -67,6 +67,7 @@ int LuaLightDef::SetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaLightDef::GetPosition(lua_State *f_vm)
 {
     // float float float Light:getPosition()
@@ -98,6 +99,7 @@ int LuaLightDef::SetDirection(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaLightDef::GetDirection(lua_State *f_vm)
 {
     // float float float Light:getDirection()
@@ -129,6 +131,7 @@ int LuaLightDef::SetColor(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaLightDef::GetColor(lua_State *f_vm)
 {
     // float float float float Light:getColor()
@@ -160,6 +163,7 @@ int LuaLightDef::SetCutoff(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaLightDef::GetCutoff(lua_State *f_vm)
 {
     // float float float Light:getFalloff()
@@ -191,6 +195,7 @@ int LuaLightDef::SetFalloff(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaLightDef::GetFalloff(lua_State *f_vm)
 {
     // float float float Light:getFalloff()
@@ -226,6 +231,7 @@ int LuaLightDef::SetType(lua_State *f_vm)
     }
     return argStream.GetReturnValue();
 }
+
 int LuaLightDef::GetType(lua_State *f_vm)
 {
     ROC::ILight *l_light;

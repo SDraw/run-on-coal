@@ -1,8 +1,20 @@
 #include "stdafx.h"
 
 #include "Elements/RenderTarget.h"
+#include "GL/GLTexture2D.h"
+#include "GL/GLFramebuffer.h"
+#include "GL/GLRenderbuffer.h"
 
-#include "Utils/GLBinder.h"
+#include "GL/GLSetting.h"
+#include "GL/GLViewport.h"
+
+namespace ROC
+{
+
+const glm::vec4 g_DefaultClearColor(0.f, 0.f, 0.f, 0.f);
+const glm::bvec2 g_DefaultClearBuffer(true, true);
+
+}
 
 ROC::RenderTarget *ROC::RenderTarget::ms_fallbackRT = nullptr;
 glm::ivec2 ROC::RenderTarget::ms_fallbackSize = glm::ivec2(0);
@@ -13,10 +25,14 @@ ROC::RenderTarget::RenderTarget()
 
     m_type = RTT_None;
     m_filtering = DFT_None;
-    m_frameBuffer = 0U;
-    m_renderBuffer = 0U;
-    m_texture = 0U;
+    m_framebuffer = nullptr;
+    m_renderbuffer = nullptr;
+    m_texture = nullptr;
+
+    m_clearColor = g_DefaultClearColor;
+    m_clearBuffer = g_DefaultClearBuffer;
 }
+
 ROC::RenderTarget::~RenderTarget()
 {
     Clear();
@@ -27,76 +43,61 @@ bool ROC::RenderTarget::Create(unsigned char f_type, const glm::ivec2 &f_size, u
     if(m_type == RTT_None)
     {
         m_type = f_type;
+        std::memcpy(&m_size, &f_size, sizeof(glm::ivec2));
         btClamp<unsigned char>(m_type, RTT_Shadow, RTT_RGBAF);
         m_filtering = f_filter;
         btClamp<unsigned char>(m_filtering, DFT_Nearest, DFT_Linear);
 
-        const GLuint l_lastFramebuffer = GLBinder::GetBindedFramebuffer();
+        m_framebuffer = new GLFramebuffer();
+        m_framebuffer->Create();
+        m_framebuffer->Bind();
 
-        glGenFramebuffers(1, &m_frameBuffer);
-        GLBinder::BindFramebuffer(m_frameBuffer);
-
-        const GLuint l_lastTexture2D = GLBinder::GetBindedTexture2D();
-
-        glGenTextures(1, &m_texture);
-        GLBinder::BindTexture2D(m_texture);
+        m_texture = new GLTexture2D();
         switch(m_type)
         {
             case RTT_Shadow:
             {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, f_size.x, f_size.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-                //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+                m_texture->Create(f_size.x, f_size.y, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, nullptr, GL_NEAREST + m_filtering);
+                m_texture->SetCompareFunc(GL_LESS);
+                m_texture->SetCompareMode(GL_COMPARE_REF_TO_TEXTURE);
+                m_texture->SetWrap(GL_CLAMP_TO_EDGE);
             } break;
             case RTT_RGB:
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, f_size.x, f_size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+                m_texture->Create(f_size.x, f_size.y, GL_RGB, GL_RGB, nullptr, GL_NEAREST + m_filtering);
                 break;
             case RTT_RGBA:
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, f_size.x, f_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+                m_texture->Create(f_size.x, f_size.y, GL_RGBA, GL_RGBA, nullptr, GL_NEAREST + m_filtering);
                 break;
             case RTT_RGBF:
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, f_size.x, f_size.y, 0, GL_RGB, GL_FLOAT, NULL);
+                m_texture->Create(f_size.x, f_size.y, GL_RGB32F, GL_RGB, nullptr, GL_NEAREST + m_filtering);
                 break;
             case RTT_RGBAF:
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, f_size.x, f_size.y, 0, GL_RGBA, GL_FLOAT, NULL);
+                m_texture->Create(f_size.x, f_size.y, GL_RGBA32F, GL_RGBA, nullptr, GL_NEAREST + m_filtering);
                 break;
         }
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
 
         if(m_type > RTT_Shadow)
         {
-            GLuint l_lastRenderbuffer = GLBinder::GetBindedRenderbuffer();
+            m_renderbuffer = new GLRenderbuffer();
+            m_renderbuffer->Create(GL_DEPTH_COMPONENT, f_size.x, f_size.y);
+            m_renderbuffer->Bind();
 
-            glGenRenderbuffers(1, &m_renderBuffer);
-            GLBinder::BindRenderbuffer(m_renderBuffer);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, f_size.x, f_size.y);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_renderBuffer);
+            m_framebuffer->SetRenderbuffer(GL_DEPTH_ATTACHMENT, m_renderbuffer->GetName());
+            m_framebuffer->SetTexture2D(GL_COLOR_ATTACHMENT0, m_texture->GetName());
+            m_framebuffer->SetDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-            glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
-            glDrawBuffer(GL_COLOR_ATTACHMENT0);
-
-            GLBinder::BindRenderbuffer(l_lastRenderbuffer);
+            GLRenderbuffer::Reset();
         }
         else
         {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_texture, 0);
-            glDrawBuffer(GL_NONE);
+            m_framebuffer->SetTexture2D(GL_DEPTH_ATTACHMENT, m_texture->GetName());
+            m_framebuffer->SetDrawBuffer(GL_NONE);
         }
-        glReadBuffer(GL_NONE);
+        m_framebuffer->SetReadBuffer(GL_NONE);
 
-        if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        {
-            m_error.assign("Unable to create RT, framebuffer status ");
-            m_error.append(std::to_string(glCheckFramebufferStatus(GL_FRAMEBUFFER)));
-            Clear();
-        }
-        else std::memcpy(&m_size, &f_size, sizeof(glm::ivec2));
+        if(GLFramebuffer::CheckStatus() != GL_FRAMEBUFFER_COMPLETE) Clear();
 
-        GLBinder::BindFramebuffer(l_lastFramebuffer);
-        GLBinder::BindTexture2D(l_lastTexture2D);
+        GLFramebuffer::Reset();
     }
     return (m_type != RTT_None);
 }
@@ -110,62 +111,92 @@ bool ROC::RenderTarget::IsTransparent() const
 {
     return ((m_type == RTT_RGBA) || (m_type == RTT_RGBAF));
 }
+
 bool ROC::RenderTarget::IsCubic() const
 {
     return false;
 }
+
 bool ROC::RenderTarget::IsShadowType() const
 {
     return (m_type == RTT_Shadow);
 }
 
-void ROC::RenderTarget::Bind()
+bool ROC::RenderTarget::SetProperty(RenderTargetProperty f_prop, const void *f_val)
 {
-    if(m_texture != 0U) GLBinder::BindTexture2D(m_texture);
-}
-void ROC::RenderTarget::Enable()
-{
-    if(m_frameBuffer != 0U)
+    if(m_framebuffer)
     {
-        GLBinder::BindFramebuffer(m_frameBuffer);
-        GLBinder::SetViewport(0, 0, m_size.x, m_size.y);
+        switch(f_prop)
+        {
+            case RTP_ClearColor:
+                std::memcpy(&m_clearColor, f_val, sizeof(glm::vec4));
+                break;
+            case RTP_Depth:
+                m_clearBuffer[0] = *reinterpret_cast<const bool*>(f_val);
+                break;
+            case RTP_Color:
+                m_clearBuffer[1] = *reinterpret_cast<const bool*>(f_val);
+                break;
+        }
+    }
+    return (m_framebuffer != nullptr);
+}
+
+void ROC::RenderTarget::Bind(size_t f_slot)
+{
+    if(m_texture != 0U) m_texture->Bind(static_cast<GLenum>(f_slot));
+}
+
+void ROC::RenderTarget::Enable(bool f_clear)
+{
+    if(m_framebuffer)
+    {
+        m_framebuffer->Bind();
+        GLViewport::SetViewport(0, 0, m_size.x, m_size.y);
+        if(f_clear)
+        {
+            if(m_clearBuffer[1] && (m_type > RTT_Shadow)) GLViewport::SetClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+            if(m_clearBuffer[0]) GLSetting::SetDepthMask(true);
+            GLViewport::Clear(m_clearBuffer[0], (m_type > RTT_Shadow) ? m_clearBuffer[1] : false);
+        }
     }
 }
+
 void ROC::RenderTarget::Disable()
 {
-    if(m_frameBuffer != 0U) GLBinder::BindFramebuffer(0U);
+    GLFramebuffer::Reset();
 }
 
 void ROC::RenderTarget::Clear()
 {
     m_type = RTT_None;
     m_filtering = DFT_None;
-    if(m_texture != 0U)
+    if(m_texture)
     {
-        GLBinder::ResetTexture2D(m_texture);
-        glDeleteTextures(1, &m_texture);
-        m_texture = 0U;
+        m_texture->Destroy();
+        delete m_texture;
+        m_texture = nullptr;
     }
-    if(m_renderBuffer != 0U)
+    if(m_renderbuffer)
     {
-        GLBinder::ResetRenderbuffer(m_renderBuffer);
-        glDeleteRenderbuffers(1, &m_renderBuffer);
-        m_renderBuffer = 0U;
+        m_renderbuffer->Destroy();
+        delete m_renderbuffer;
+        m_renderbuffer = nullptr;
     }
-    if(m_frameBuffer != 0U)
+    if(m_framebuffer)
     {
-        GLBinder::ResetFramebuffer(m_frameBuffer);
-        glDeleteFramebuffers(1, &m_frameBuffer);
-        m_frameBuffer = 0U;
+        m_framebuffer->Destroy();
+        delete m_framebuffer;
+        m_framebuffer = nullptr;
     }
 }
 
 void ROC::RenderTarget::Fallback()
 {
-    if(ms_fallbackRT) ms_fallbackRT->Enable();
+    if(ms_fallbackRT) ms_fallbackRT->Enable(false);
     else
     {
-        GLBinder::BindFramebuffer(0U);
-        GLBinder::SetViewport(0, 0, ms_fallbackSize.x, ms_fallbackSize.y);
+        GLFramebuffer::Reset();
+        GLViewport::SetViewport(0, 0, ms_fallbackSize.x, ms_fallbackSize.y);
     }
 }

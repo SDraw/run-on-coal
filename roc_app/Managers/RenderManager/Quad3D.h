@@ -1,5 +1,8 @@
 #pragma once
 
+class GLArrayBuffer;
+class GLVertexArray;
+
 namespace ROC
 {
 
@@ -19,8 +22,8 @@ class Quad3D final
         QBI_BufferCount
     };
     glm::vec3 m_vertex[6];
-    GLuint m_VBO[QBI_BufferCount];
-    GLuint m_VAO;
+    GLArrayBuffer *m_arrayBuffers[QBI_BufferCount];
+    GLVertexArray *m_vertexArray;
 
     Quad3D(const Quad3D &that) = delete;
     Quad3D& operator=(const Quad3D &that) = delete;

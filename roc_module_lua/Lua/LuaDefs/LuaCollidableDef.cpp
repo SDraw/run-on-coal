@@ -10,6 +10,7 @@ void LuaCollidableDef::Init(lua_State *f_vm)
 {
     lua_register(f_vm, "isCollidable", IsCollidable);
 }
+
 void LuaCollidableDef::AddHierarchyMethods(lua_State *f_vm)
 {
     LuaUtils::AddClassMethod(f_vm, "setCollidableWith", SetCollidableWith);

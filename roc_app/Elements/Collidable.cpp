@@ -5,6 +5,7 @@
 ROC::Collidable::Collidable()
 {
 }
+
 ROC::Collidable::~Collidable()
 {
 }

@@ -12,6 +12,7 @@ ROC::ModuleManager::ModuleManager(Core *f_core)
 {
     m_core = f_core;
 }
+
 ROC::ModuleManager::~ModuleManager()
 {
 }
@@ -66,6 +67,7 @@ void ROC::ModuleManager::LoadModules()
         m_core->GetLogManager()->Log(l_log);
     }
 }
+
 void ROC::ModuleManager::UnloadModules()
 {
     for(auto iter : m_libraries) FreeLibrary(iter);

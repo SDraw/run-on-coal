@@ -18,6 +18,7 @@ ROC::Collision::Collision()
     m_motionType = CMT_Default;
     m_scale = g_DefaultScale;
 }
+
 ROC::Collision::~Collision()
 {
     if(m_rigidBody)
@@ -83,6 +84,7 @@ void ROC::Collision::GetPosition(glm::vec3 &f_pos) const
         std::memcpy(&f_pos, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
     }
 }
+
 void ROC::Collision::SetPosition(const glm::vec3 &f_pos)
 {
     if(m_rigidBody)
@@ -111,6 +113,7 @@ void ROC::Collision::SetPosition(const glm::vec3 &f_pos)
         m_rigidBody->activate(true);
     }
 }
+
 void ROC::Collision::GetRotation(glm::quat &f_rot) const
 {
     if(m_rigidBody)
@@ -129,6 +132,7 @@ void ROC::Collision::GetRotation(glm::quat &f_rot) const
         for(int i = 0; i < 4; i++) f_rot[i] = l_rotation[i];
     }
 }
+
 void ROC::Collision::SetRotation(const glm::quat &f_rot)
 {
     if(m_rigidBody)
@@ -166,6 +170,7 @@ void ROC::Collision::SetScale(const glm::vec3 &f_val)
         m_rigidBody->getCollisionShape()->setLocalScaling(btVector3(m_scale.x, m_scale.y, m_scale.z));
     }
 }
+
 void ROC::Collision::GetScale(glm::vec3 &f_val) const
 {
     std::memcpy(&f_val, &m_scale, sizeof(glm::vec3));
@@ -179,6 +184,7 @@ void ROC::Collision::SetVelocity(const glm::vec3 &f_val)
         m_rigidBody->activate(true);
     }
 }
+
 void ROC::Collision::GetVelocity(glm::vec3 &f_val) const
 {
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getLinearVelocity().m_floats, sizeof(glm::vec3));
@@ -192,6 +198,7 @@ void ROC::Collision::SetAngularVelocity(const glm::vec3 &f_val)
         m_rigidBody->activate(true);
     }
 }
+
 void ROC::Collision::GetAngularVelocity(glm::vec3 &f_val) const
 {
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getAngularVelocity().m_floats, sizeof(glm::vec3));
@@ -201,6 +208,7 @@ void ROC::Collision::SetLinearFactor(const glm::vec3 &f_val)
 {
     if(m_rigidBody) m_rigidBody->setLinearFactor(btVector3(f_val.x, f_val.y, f_val.z));
 }
+
 void ROC::Collision::GetLinearFactor(glm::vec3 &f_val) const
 {
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getLinearFactor().m_floats, sizeof(glm::vec3));
@@ -210,6 +218,7 @@ void ROC::Collision::SetAngularFactor(const glm::vec3 &f_val)
 {
     if(m_rigidBody) m_rigidBody->setAngularFactor(btVector3(f_val.x, f_val.y, f_val.z));
 }
+
 void ROC::Collision::GetAngularFactor(glm::vec3 &f_val) const
 {
     if(m_rigidBody) std::memcpy(&f_val, m_rigidBody->getAngularFactor().m_floats, sizeof(glm::vec3));
@@ -230,11 +239,22 @@ void ROC::Collision::SetFriction(float f_val)
         m_rigidBody->activate(true);
     }
 }
+
 float ROC::Collision::GetFriction() const
 {
     float l_result = -1.f;
     if(m_rigidBody) l_result = m_rigidBody->getFriction();
     return l_result;
+}
+
+void ROC::Collision::SetRestitution(float f_val)
+{
+    if(m_rigidBody) m_rigidBody->setRestitution(f_val);
+}
+
+float ROC::Collision::GetRestitution() const
+{
+    return (m_rigidBody ? m_rigidBody->getRestitution() : -1.f);
 }
 
 void ROC::Collision::ApplyForce(const glm::vec3 &f_force, const glm::vec3 &f_rp)
@@ -246,6 +266,7 @@ void ROC::Collision::ApplyForce(const glm::vec3 &f_force, const glm::vec3 &f_rp)
         m_rigidBody->applyForce(l_force, l_relPos);
     }
 }
+
 void ROC::Collision::ApplyCentralForce(const glm::vec3 &f_force)
 {
     if(m_rigidBody) m_rigidBody->applyCentralForce(btVector3(f_force.x, f_force.y, f_force.z));
@@ -260,6 +281,7 @@ void ROC::Collision::ApplyImpulse(const glm::vec3 &f_impulse, const glm::vec3 &f
         m_rigidBody->applyImpulse(l_impulse, l_relPos);
     }
 }
+
 void ROC::Collision::ApplyCentralImpulse(const glm::vec3 &f_impulse)
 {
     if(m_rigidBody) m_rigidBody->applyCentralImpulse(btVector3(f_impulse.x, f_impulse.y, f_impulse.z));
@@ -321,6 +343,7 @@ void ROC::Collision::SetMotionType(unsigned char f_type)
         }
     }
 }
+
 unsigned char ROC::Collision::GetMotionType() const
 {
     return m_motionType;

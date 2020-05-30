@@ -14,12 +14,10 @@ class VRManager final : public IVRManager
 
     vr::IVRSystem *m_vrSystem;
     vr::IVRCompositor *m_vrCompositor;
-    vr::IVROverlay *m_vrOverlay;
-    vr::IVRNotifications *m_vrNotifications;
 
-    RenderTarget *m_eyeRT[2U];
+    RenderTarget *m_renderTargets[2U];
     glm::uvec2 m_targetSize;
-    vr::Texture_t m_vrTexture[2U];
+    vr::Texture_t m_vrTextures[2U];
     vr::VREvent_t m_event;
     vr::VROverlayHandle_t m_overlayHandle;
     vr::VRNotificationId m_notificationID;
@@ -37,7 +35,7 @@ class VRManager final : public IVRManager
     struct VRController
     {
         vr::TrackedDeviceIndex_t m_id;
-        unsigned char m_hand;
+        ControllerHandAssigment m_hand;
         glm::vec3 m_position;
         glm::quat m_rotation;
         glm::vec3 m_velocity;
@@ -46,20 +44,19 @@ class VRManager final : public IVRManager
         vr::VRControllerState_t m_newState;
         bool m_active;
     };
-    std::vector<VRController*> m_vrControllers;
+    std::map<vr::TrackedDeviceIndex_t, VRController*> m_controllers;
 
     glm::mat4 m_transform;
-    glm::vec3 m_headPosition;
-    glm::quat m_headRotation;
-    glm::vec3 m_leftEyePosition;
-    glm::vec3 m_rightEyePosition;
+    glm::vec3 m_hmdPosition;
+    glm::quat m_hmdRotation;
+
+    float m_hmdFramePrediction;
 
     CustomArguments *m_arguments;
 
     VRManager(const VRManager &that) = delete;
     VRManager& operator=(const VRManager &that) = delete;
 
-    void UpdateEyesPosition();
     void AddController(vr::TrackedDeviceIndex_t f_id);
     void UpdateControllerPose(VRController *f_controller);
     void UpdateControllerInput(VRController *f_controller);
@@ -68,21 +65,17 @@ public:
 
     const glm::uvec2& GetTargetsSize() const;
 
-    const glm::vec3& GetHeadPosition() const;
-    const glm::quat& GetHeadRotation() const;
-
-    const glm::vec3& GetLeftEyePosition() const;
-    const glm::vec3& GetRightEyePosition() const;
+    const glm::vec3& GetHmdPosition() const;
+    const glm::quat& GetHmdRotation() const;
 
     bool IsControllerConnected(unsigned int f_id) const;
     bool IsControllerActive(unsigned int f_id) const;
-    unsigned char GetControllerHandAssignment(unsigned int f_id) const;
+    unsigned char GetControllerHand(unsigned int f_id) const;
+    unsigned int GetControllerFromHand(unsigned char f_hand);
     bool GetControllerPosition(unsigned int f_id, glm::vec3 &f_pos) const;
     bool GetControllerRotation(unsigned int f_id, glm::quat &f_rot) const;
     bool GetControllerVelocity(unsigned int f_id, glm::vec3 &f_val) const;
     bool GetControllerAngularVelocity(unsigned int f_id, glm::vec3 &f_val) const;
-
-    bool ShowNotification(const std::string &f_title, const std::string &f_text, unsigned int f_time);
 
     bool DrawEyeImage(unsigned char f_side, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color, const std::string &f_layer);
     bool DrawEyeImage(unsigned char f_side, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const std::string &f_layer, const glm::bvec4 &f_params);

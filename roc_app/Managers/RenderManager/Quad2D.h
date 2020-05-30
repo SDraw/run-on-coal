@@ -1,5 +1,8 @@
 #pragma once
 
+class GLArrayBuffer;
+class GLVertexArray;
+
 namespace ROC
 {
 
@@ -20,8 +23,8 @@ class Quad2D final
         QBA_Vertex = 0U,
         QBA_UV = 2U
     };
-    GLuint m_VBO[QBI_BufferCount];
-    GLuint m_VAO;
+    GLArrayBuffer *m_arrayBuffers[QBI_BufferCount];
+    GLVertexArray *m_vertexArray;
 
     Quad2D(const Quad2D &that) = delete;
     Quad2D& operator=(const Quad2D &that) = delete;

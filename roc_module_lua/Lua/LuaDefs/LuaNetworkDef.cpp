@@ -36,6 +36,7 @@ int LuaNetworkDef::Connect(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaNetworkDef::Disconnect(lua_State *f_vm)
 {
     // bool networkDisconnect
@@ -44,6 +45,7 @@ int LuaNetworkDef::Disconnect(lua_State *f_vm)
     argStream.PushBoolean(l_result);
     return argStream.GetReturnValue();
 }
+
 int LuaNetworkDef::SendData(lua_State *f_vm)
 {
     // bool networkSendData(str data)
@@ -58,6 +60,7 @@ int LuaNetworkDef::SendData(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaNetworkDef::GetState(lua_State *f_vm)
 {
     // str networkGetState()
@@ -65,6 +68,7 @@ int LuaNetworkDef::GetState(lua_State *f_vm)
     argStream.PushText(g_NetworkStatesTable[LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetNetworkState()]);
     return argStream.GetReturnValue();
 }
+
 int LuaNetworkDef::GetPing(lua_State *f_vm)
 {
     // int networkGetPing()

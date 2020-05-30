@@ -6,22 +6,14 @@
 #include "Elements/Camera.h"
 #include "Elements/Geometry/Geometry.h"
 
-bool ROC::SceneLayer::RenderModelComparator_Geometry(const RenderModel *f_modelA, const RenderModel *f_modelB)
-{
-    // Not an elegant way to compare by pointers, but groups are made anyway
-    return (f_modelA->m_model->GetGeometry() < f_modelB->m_model->GetGeometry());
-}
-bool ROC::SceneLayer::RenderModelComparator_Distance(const RenderModel *f_modelA, const RenderModel *f_modelB)
-{
-    return (f_modelA->m_distance < f_modelB->m_distance);
-}
-
 ROC::SceneLayer::SceneLayer(size_t f_hash, Shader *f_shader, unsigned char f_priority)
 {
     m_hash = f_hash;
     m_shader = f_shader;
     m_priority = f_priority;
+    m_resortGeometry = false;
 }
+
 ROC::SceneLayer::~SceneLayer()
 {
     for(auto l_renderModel : m_renderModels) delete l_renderModel;
@@ -32,7 +24,9 @@ void ROC::SceneLayer::AddModel(Model *f_model)
 {
     RenderModel *l_renderModel = new RenderModel(f_model);
     m_renderModels.push_back(l_renderModel);
+    m_resortGeometry = true;
 }
+
 bool ROC::SceneLayer::RemoveModel(Model *f_model)
 {
     bool l_result = false;
@@ -50,6 +44,7 @@ bool ROC::SceneLayer::RemoveModel(Model *f_model)
     }
     return l_result;
 }
+
 bool ROC::SceneLayer::HasModel(Model *f_model) const
 {
     bool l_result = false;
@@ -64,6 +59,7 @@ bool ROC::SceneLayer::HasModel(Model *f_model) const
     }
     return l_result;
 }
+
 bool ROC::SceneLayer::HasModels() const
 {
     return !m_renderModels.empty();
@@ -74,7 +70,11 @@ void ROC::SceneLayer::Update(Camera *f_camera)
     const size_t l_size = m_renderModels.size();
     if(l_size > 1U)
     {
-        std::sort(m_renderModels.begin(), m_renderModels.end(), RenderModelComparator_Geometry);
+        if(m_resortGeometry)
+        {
+            std::sort(m_renderModels.begin(), m_renderModels.end(), RenderModelComparator_Geometry);
+            m_resortGeometry = false;
+        }
 
         const glm::vec3 &l_cameraPos = f_camera->GetPosition();
         glm::vec3 l_distModelPos(0.f);
@@ -101,4 +101,15 @@ void ROC::SceneLayer::Update(Camera *f_camera)
             if(i == (l_size - 1U)) std::sort(m_renderModels.begin() + j, m_renderModels.end(), RenderModelComparator_Distance);
         }
     }
+}
+
+bool ROC::SceneLayer::RenderModelComparator_Geometry(const RenderModel *f_modelA, const RenderModel *f_modelB)
+{
+    // Not an elegant way to compare by pointers, but groups are made anyway
+    return (f_modelA->m_model->GetGeometry() < f_modelB->m_model->GetGeometry());
+}
+
+bool ROC::SceneLayer::RenderModelComparator_Distance(const RenderModel *f_modelA, const RenderModel *f_modelB)
+{
+    return (f_modelA->m_distance < f_modelB->m_distance);
 }

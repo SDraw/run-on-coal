@@ -3,11 +3,13 @@
 #include "Managers/AsyncManager/AsyncGeometryTask.h"
 
 #include "Elements/Geometry/Geometry.h"
+#include "GL/GLState.h"
 
 ROC::AsyncGeometryTask::AsyncGeometryTask(const std::string &f_path)
 {
     m_filePath.assign(f_path);
 }
+
 ROC::AsyncGeometryTask::~AsyncGeometryTask()
 {
 }
@@ -23,7 +25,7 @@ void ROC::AsyncGeometryTask::Execute()
             m_taskElement = l_geometry;
             m_taskState = ATS_PostExecuting;
 
-            glFinish();
+            GLState::Finish();
         }
         else m_taskState = ATS_Executed;
     }
@@ -34,7 +36,7 @@ void ROC::AsyncGeometryTask::PostExecute()
     if(m_taskState == ATS_PostExecuting)
     {
         Geometry *l_geometry = reinterpret_cast<Geometry*>(m_taskElement);
-        l_geometry->GenerateVAOs();
+        l_geometry->GenerateMaterials();
         m_taskState = ATS_Executed;
     }
 }

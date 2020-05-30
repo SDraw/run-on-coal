@@ -10,14 +10,14 @@
 
 void LuaEventsDef::Init(lua_State *f_vm)
 {
-    lua_register(f_vm, "addEvent", Add);
-    lua_register(f_vm, "addEventHandler", AddHandler);
-    lua_register(f_vm, "removeEvent", Remove);
-    lua_register(f_vm, "removeEventHandler", RemoveHandler);
-    lua_register(f_vm, "callEvent", Call);
+    lua_register(f_vm, "addEvent", AddEvent);
+    lua_register(f_vm, "addEventHandler", AddEventHandler);
+    lua_register(f_vm, "removeEvent", RemoveEvent);
+    lua_register(f_vm, "removeEventHandler", RemoveEventHandler);
+    lua_register(f_vm, "callEvent", CallEvent);
 }
 
-int LuaEventsDef::Add(lua_State *f_vm)
+int LuaEventsDef::AddEvent(lua_State *f_vm)
 {
     // bool addEvent(str eventName)
     std::string l_event;
@@ -32,7 +32,7 @@ int LuaEventsDef::Add(lua_State *f_vm)
     return argStream.GetReturnValue();
 }
 
-int LuaEventsDef::AddHandler(lua_State *f_vm)
+int LuaEventsDef::AddEventHandler(lua_State *f_vm)
 {
     // bool addEventHandler(str eventName, func callback)
     std::string l_event;
@@ -48,7 +48,8 @@ int LuaEventsDef::AddHandler(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int LuaEventsDef::Remove(lua_State *f_vm)
+
+int LuaEventsDef::RemoveEvent(lua_State *f_vm)
 {
     // bool removeEvent(str eventName)
     std::string l_event;
@@ -62,7 +63,8 @@ int LuaEventsDef::Remove(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int LuaEventsDef::RemoveHandler(lua_State *f_vm)
+
+int LuaEventsDef::RemoveEventHandler(lua_State *f_vm)
 {
     // bool removeEventHandler(str eventName, func callback)
     std::string l_event;
@@ -78,7 +80,8 @@ int LuaEventsDef::RemoveHandler(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
-int LuaEventsDef::Call(lua_State *f_vm)
+
+int LuaEventsDef::CallEvent(lua_State *f_vm)
 {
     // bool callEvent(str eventName, var value1, ...)
     std::string l_event;

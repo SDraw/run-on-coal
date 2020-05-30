@@ -46,6 +46,7 @@ int LuaUtilsDef::GetTick(lua_State *f_vm)
     argStream.PushInteger(GetTickCount64());
     return argStream.GetReturnValue();
 }
+
 int LuaUtilsDef::GetTime(lua_State *f_vm)
 {
     // float getTime()
@@ -78,6 +79,7 @@ int LuaUtilsDef::Base64Encode(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaUtilsDef::Base64Decode(lua_State *f_vm)
 {
     // str base64Decode(str data)

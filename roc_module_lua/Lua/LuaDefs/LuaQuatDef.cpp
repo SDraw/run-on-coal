@@ -52,6 +52,7 @@ int LuaQuatDef::Create(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaQuatDef::Destroy(lua_State *f_vm)
 {
     // GC only
@@ -81,6 +82,7 @@ int LuaQuatDef::GetXYZW(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaQuatDef::SetXYZW(lua_State *f_vm)
 {
     // bool Quat:setXYZW(float x, float y, float z, float w)
@@ -97,6 +99,7 @@ int LuaQuatDef::SetXYZW(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaQuatDef::SetEuler(lua_State *f_vm)
 {
     // bool Quat:setEuler(float x, float y, float z)
@@ -298,6 +301,7 @@ int LuaQuatDef::Lerp(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaQuatDef::Slerp(lua_State *f_vm)
 {
     // userdata Quat:slerp(userdata quat, float slerp)

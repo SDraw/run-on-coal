@@ -28,6 +28,9 @@ class Scene final : public Element, public virtual IScene
 
     static bool SceneLayerSorter(const SceneLayer *f_layerA, const SceneLayer *f_layerB);
 
+    // ROC::Element
+    void OnChildRemoved(Element *f_child) override;
+
     // ROC::IScene
     bool SetICamera(ICamera *f_cam);
     ICamera* GetICamera() const;
@@ -79,8 +82,6 @@ protected:
 
     void Enable();
     void Disable();
-
-    void OnChildLinkDestroyed(Element *f_child);
 
     friend class ElementManager;
     friend class RenderManager;

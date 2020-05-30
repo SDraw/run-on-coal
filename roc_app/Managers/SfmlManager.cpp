@@ -12,12 +12,16 @@ SFML_DEFINE_DISCRETE_GPU_PREFERENCE
 #include "Managers/PhysicsManager.h"
 #include "Managers/RenderManager/RenderManager.h"
 #include "Interfaces/IModule.h"
+#include "GL/GLSetting.h"
+#include "GL/GLState.h"
 
 namespace ROC
 {
 
 const size_t g_GLMinimalVersion = 31U;
 const char g_GLMinimalVersionString[] = "3.1";
+
+const std::string g_DefaultIconPath("icons/coal.png");
 
 const std::string g_KeyNames[]
 {
@@ -75,7 +79,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_active = true;
 
     std::string l_log;
-    if(glGetString(GL_VERSION) == NULL)
+    if(GLSetting::GetString(GL_VERSION) == NULL)
     {
         l_log.assign("SFML: Unable to create OpenGL ");
         l_log.append(std::to_string(m_contextSettings.majorVersion));
@@ -109,6 +113,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_window->setFramerateLimit(m_frameLimit);
     m_window->setVerticalSyncEnabled(l_configManager->GetVSync());
     m_window->setKeyRepeatEnabled(false);
+    SetIcon(g_DefaultIconPath);
 
     GLenum l_error = glewInit();
     if(l_error != GLEW_OK)
@@ -121,24 +126,26 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         exit(EXIT_FAILURE);
     }
 
-    glFinish(); // Wait for something
+    GLState::Finish(); // Wait for something
 
     l_log.assign("OpenGL ");
-    l_log.append(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    l_log.append(reinterpret_cast<const char*>(GLSetting::GetString(GL_VERSION)));
     l_log.append(", ");
-    l_log.append(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+    l_log.append(reinterpret_cast<const char*>(GLSetting::GetString(GL_RENDERER)));
     l_log.append(", ");
     l_log.append("GLEW ");
     l_log.append(reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
     m_core->GetLogManager()->Log(l_log);
 
-    m_inputState = false;
+    m_inputEnabled = false;
     std::memset(&m_event, 0, sizeof(sf::Event));
 
     m_arguments = new CustomArguments();
 }
+
 ROC::SfmlManager::~SfmlManager()
 {
+    GLSetting::MemoryCleanup();
     m_window->setActive(false);
     m_window->close();
     delete m_window;
@@ -151,25 +158,30 @@ void ROC::SfmlManager::GetWindowPosition(glm::ivec2 &f_pos) const
     f_pos.x = l_position.x;
     f_pos.y = l_position.y;
 }
+
 void ROC::SfmlManager::SetWindowPosition(const glm::ivec2 &f_pos)
 {
     sf::Vector2i l_position(f_pos.x, f_pos.y);
     m_window->setPosition(l_position);
 }
+
 void ROC::SfmlManager::GetWindowSize(glm::ivec2 &f_size) const
 {
     sf::Vector2u l_size = m_window->getSize();
     f_size.x = static_cast<int>(l_size.x);
     f_size.y = static_cast<int>(l_size.y);
 }
+
 void ROC::SfmlManager::CloseWindow()
 {
     m_active = false;
 }
+
 void ROC::SfmlManager::SetVSync(bool f_sync)
 {
     m_window->setVerticalSyncEnabled(f_sync);
 }
+
 void ROC::SfmlManager::SetFramelimit(unsigned int f_fps)
 {
     if(f_fps != m_frameLimit)
@@ -179,15 +191,18 @@ void ROC::SfmlManager::SetFramelimit(unsigned int f_fps)
         m_core->GetPhysicsManager()->UpdateWorldSteps(m_frameLimit);
     }
 }
+
 unsigned int ROC::SfmlManager::GetFramelimit() const
 {
     return m_frameLimit;
 }
+
 void ROC::SfmlManager::SetTitle(const std::string &f_title)
 {
     sf::String l_title = sf::String::fromUtf8(f_title.begin(), f_title.end());
     m_window->setTitle(l_title);
 }
+
 bool ROC::SfmlManager::SetIcon(const std::string &f_path)
 {
     bool l_result = false;
@@ -201,17 +216,20 @@ bool ROC::SfmlManager::SetIcon(const std::string &f_path)
     }
     return l_result;
 }
+
 void ROC::SfmlManager::RequestFocus()
 {
     m_window->requestFocus();
 }
+
 bool ROC::SfmlManager::GetFocusState() const
 {
     return m_window->hasFocus();
 }
+
 void ROC::SfmlManager::SetInputEnabled(bool f_state)
 {
-    m_inputState = f_state;
+    m_inputEnabled = f_state;
 }
 
 void ROC::SfmlManager::SetCursorMode(bool f_visible, bool f_lock)
@@ -219,11 +237,13 @@ void ROC::SfmlManager::SetCursorMode(bool f_visible, bool f_lock)
     m_window->setMouseCursorGrabbed(f_lock);
     m_window->setMouseCursorVisible(f_visible);
 }
+
 void ROC::SfmlManager::GetCursorPosition(glm::ivec2 &f_pos) const
 {
     sf::Vector2i l_position = sf::Mouse::getPosition(*m_window);
     std::memcpy(&f_pos, &l_position, sizeof(glm::ivec2));
 }
+
 void ROC::SfmlManager::SetCursorPosition(const glm::ivec2 &f_pos)
 {
     sf::Mouse::setPosition((sf::Vector2i&)f_pos, *m_window);
@@ -234,6 +254,7 @@ void ROC::SfmlManager::GetClipboardString(std::string &f_str) const
     sf::String l_string = sf::Clipboard::getString();
     f_str.assign(l_string);
 }
+
 void ROC::SfmlManager::SetClipboardString(const std::string &f_str)
 {
     sf::Clipboard::setString(f_str);
@@ -243,6 +264,7 @@ bool ROC::SfmlManager::IsKeyPressed(int f_key)
 {
     return sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(f_key));
 }
+
 bool ROC::SfmlManager::IsMouseKeyPressed(int f_key)
 {
     return sf::Mouse::isButtonPressed(static_cast<sf::Mouse::Button>(f_key));
@@ -252,18 +274,22 @@ bool ROC::SfmlManager::IsJoypadConnected(unsigned int f_jp)
 {
     return sf::Joystick::isConnected(f_jp);
 }
+
 bool ROC::SfmlManager::GetJoypadButtonState(unsigned int f_jp, unsigned int f_button)
 {
     return sf::Joystick::isButtonPressed(f_jp, f_button);
 }
+
 unsigned int ROC::SfmlManager::GetJoypadButtonCount(unsigned int f_jp)
 {
     return sf::Joystick::getButtonCount(f_jp);
 }
+
 bool ROC::SfmlManager::CheckJoypadAxis(unsigned int f_jp, unsigned int f_axis)
 {
     return sf::Joystick::hasAxis(f_jp, static_cast<sf::Joystick::Axis>(f_axis));
 }
+
 float ROC::SfmlManager::GetJoypadAxisValue(unsigned int f_jp, unsigned int f_axis)
 {
     return sf::Joystick::getAxisPosition(f_jp, static_cast<sf::Joystick::Axis>(f_axis));
@@ -278,7 +304,7 @@ bool ROC::SfmlManager::DoPulse()
 {
     m_time = m_clock.getElapsedTime().asSeconds();
 
-    bool l_mouseFix = false;
+    bool l_ignoreCursorEvent = false;
     while(m_window->pollEvent(m_event))
     {
         switch(m_event.type)
@@ -314,7 +340,7 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::TextEntered:
             {
-                if(m_inputState)
+                if(m_inputEnabled)
                 {
                     if(m_event.text.unicode > 31 && !(m_event.text.unicode >= 127 && m_event.text.unicode <= 160))
                     {
@@ -330,13 +356,13 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseMoved:
             {
-                if(!l_mouseFix) // Prevent loop if cursor position is changed in onCursorMove event
+                if(!l_ignoreCursorEvent) // Prevent loop if cursor position is changed in onCursorMove event
                 {
                     m_arguments->Push(m_event.mouseMove.x);
                     m_arguments->Push(m_event.mouseMove.y);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnCursorMove, m_arguments);
                     m_arguments->Clear();
-                    l_mouseFix = true;
+                    l_ignoreCursorEvent = true;
                 }
             } break;
             case sf::Event::MouseEntered: case sf::Event::MouseLeft:

@@ -38,6 +38,7 @@ ROC::Core::Core()
     m_state = true;
     m_arguments = new CustomArguments();
 }
+
 ROC::Core::~Core()
 {
     delete m_moduleManager;
@@ -67,6 +68,7 @@ bool ROC::Core::Init()
     }
     return (ms_instance != nullptr);
 }
+
 void ROC::Core::Terminate()
 {
     if(ms_instance)
@@ -78,6 +80,7 @@ void ROC::Core::Terminate()
         ms_instance = nullptr;
     }
 }
+
 ROC::Core* ROC::Core::GetCore()
 {
     return ms_instance;
@@ -103,34 +106,42 @@ ROC::IAsyncManager* ROC::Core::GetIAsyncManager() const
 {
     return m_asyncManager;
 }
+
 ROC::IElementManager* ROC::Core::GetIElementManager() const
 {
     return m_elementManager;
 }
+
 ROC::ILogManager* ROC::Core::GetILogManager() const
 {
     return m_logManager;
 }
+
 ROC::INetworkManager* ROC::Core::GetINetworkManager() const
 {
     return m_networkManager;
 }
+
 ROC::IPhysicsManager* ROC::Core::GetIPhysicsManager() const
 {
     return m_physicsManager;
 }
+
 ROC::IRenderManager* ROC::Core::GetIRenderManager() const
 {
     return m_renderManager;
 }
+
 ROC::ISfmlManager* ROC::Core::GetISfmlManager() const
 {
     return m_sfmlManager;
 }
+
 ROC::ISoundManager* ROC::Core::GetISoundManager() const
 {
     return m_soundManager;
 }
+
 ROC::IVRManager* ROC::Core::GetIVRManager() const
 {
     return m_vrManager;

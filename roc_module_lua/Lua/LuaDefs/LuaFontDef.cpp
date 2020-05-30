@@ -40,6 +40,7 @@ int LuaFontDef::Create(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFontDef::Draw(lua_State *f_vm)
 {
     // bool Font:draw(float x, float y, str text [, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1, str layer = "screen"])

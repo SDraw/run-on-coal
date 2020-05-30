@@ -74,6 +74,7 @@ ROC::ConfigManager::ConfigManager()
     }
     delete l_settings;
 }
+
 ROC::ConfigManager::~ConfigManager()
 {
 }

@@ -20,6 +20,7 @@ ROC::LogManager::LogManager(Core *f_core)
     Log("Server is starting...");
     if(!f_core->GetConfigManager()->IsConfigParsed()) Log("Unable to parse 'server_settings.xml'. Default configuration is used.");
 }
+
 ROC::LogManager::~LogManager()
 {
     if(m_enabled) m_log.close();

@@ -40,6 +40,7 @@ int LuaAnimationDef::GetBonesCount(lua_State *f_vm)
     !argStream.HasErrors() ? argStream.PushInteger(l_anim->GetBonesCount()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaAnimationDef::GetDuration(lua_State *f_vm)
 {
     // int Animation:getDuration()

@@ -32,6 +32,7 @@ EventHandler::EventHandler(LuaModule *f_module)
     for(auto &iter : g_DefaultEvents) m_eventMap.insert(std::make_pair(iter, new EventHeap()));
     m_eventMapEnd = m_eventMap.end();
 }
+
 EventHandler::~EventHandler()
 {
     for(auto iter : m_eventMap) delete iter.second;
@@ -61,6 +62,7 @@ bool EventHandler::AddEvent(const std::string &f_event)
     }
     return l_result;
 }
+
 bool EventHandler::AddEventHandler(const std::string &f_event, const LuaFunction &f_func)
 {
     bool l_result = false;
@@ -127,6 +129,7 @@ bool EventHandler::RemoveEvent(const std::string &f_event)
     }
     return l_result;
 }
+
 bool EventHandler::RemoveEventHandler(const std::string &f_event, LuaFunction &f_func)
 {
     bool l_result = false;

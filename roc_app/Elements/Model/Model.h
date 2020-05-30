@@ -32,6 +32,9 @@ class Model final : public Collidable, public virtual IModel
     Model(const Model &that) = delete;
     Model& operator=(const Model &that) = delete;
 
+    // ROC::Element
+    void OnParentRemoved(Element *f_parent) override;
+
     // ROC::Collidable
     void GetRigidBodies(std::vector<btRigidBody*> &f_vec);
 
@@ -92,8 +95,6 @@ protected:
 
     void Update(ModelUpdateStage f_stage);
     inline bool IsUpdated() const { return m_updated; }
-
-    void OnParentLinkDestroyed(Element *f_parent);
 
     friend class ElementManager;
     friend class PhysicsManager;

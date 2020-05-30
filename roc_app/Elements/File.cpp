@@ -8,6 +8,7 @@ ROC::File::File()
     m_file = nullptr;
     m_type = FM_None;
 }
+
 ROC::File::~File()
 {
     if(m_file)
@@ -35,6 +36,7 @@ bool ROC::File::Create(const std::string &f_path)
     }
     return (m_file != nullptr);
 }
+
 bool ROC::File::Open(const std::string &f_path, bool f_ro)
 {
     if(!m_file)
@@ -66,6 +68,7 @@ size_t ROC::File::Read(std::string &f_data, size_t f_lenght)
     }
     return l_read;
 }
+
 size_t ROC::File::Write(const std::string &f_data)
 {
     size_t l_written = 0U;
@@ -103,12 +106,14 @@ size_t ROC::File::GetSize()
     }
     return l_size;
 }
+
 size_t ROC::File::GetPosition()
 {
     size_t l_pos = 0U;
     if(m_file) l_pos = static_cast<size_t>((m_type == FM_Read) ? m_file->tellg() : m_file->tellp());
     return l_pos;
 }
+
 bool ROC::File::SetPosition(size_t f_pos)
 {
     bool l_result = false;

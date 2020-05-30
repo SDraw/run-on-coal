@@ -8,6 +8,7 @@ Model::Model()
     m_type = MT_Static;
     m_loaded = false;
 }
+
 Model::~Model()
 {
     Clean();
@@ -67,7 +68,7 @@ bool Model::LoadJSON(const std::string &f_path)
                     sajson::value l_node = l_vertexNode.get_array_element(i + j);
                     sajson::type l_nodeType = l_node.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("One vertex value isn't a number");
-                    l_vertexPos[j] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
+                    l_vertexPos[static_cast<int>(j)] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
                 }
                 m_vertexData.push_back(l_vertexPos);
             }
@@ -91,8 +92,8 @@ bool Model::LoadJSON(const std::string &f_path)
                     sajson::value l_node = l_uvNode.get_array_element(i + j);
                     sajson::type l_nodeType = l_node.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("One UV value isn't a number");
-                    l_uvPos[j] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
-                    if(j == 1U) l_uvPos[j] = 1.f - l_uvPos[j]; // Inverse V value
+                    l_uvPos[static_cast<int>(j)] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
+                    if(j == 1U) l_uvPos[static_cast<int>(j)] = 1.f - l_uvPos[static_cast<int>(j)]; // Inverse V value
                 }
                 m_uvData.push_back(l_uvPos);
             }
@@ -114,7 +115,7 @@ bool Model::LoadJSON(const std::string &f_path)
                     sajson::value l_node = l_normalNode.get_array_element(i + j);
                     sajson::type l_nodeType = l_node.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("One normal value isn't a number");
-                    l_normal[j] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
+                    l_normal[static_cast<int>(j)] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
                 }
                 m_normalData.push_back(l_normal);
             }
@@ -136,7 +137,7 @@ bool Model::LoadJSON(const std::string &f_path)
                     sajson::value l_node = l_weightNode.get_array_element(i + j);
                     sajson::type l_nodeType = l_node.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("One weight value isn't a number");
-                    l_weight[j] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
+                    l_weight[static_cast<int>(j)] = static_cast<float>((l_nodeType == sajson::TYPE_INTEGER) ? l_node.get_integer_value() : l_node.get_double_value());
                 }
                 m_weightData.push_back(l_weight);
             }
@@ -157,7 +158,7 @@ bool Model::LoadJSON(const std::string &f_path)
                 {
                     sajson::value l_node = l_indexNode.get_array_element(i + j);
                     if(l_node.get_type() != sajson::TYPE_INTEGER) throw std::exception("One weight index value isn't an integer number");
-                    l_index[j] = l_node.get_integer_value();
+                    l_index[static_cast<int>(j)] = l_node.get_integer_value();
                 }
                 m_indexData.push_back(l_index);
             }
@@ -307,7 +308,7 @@ bool Model::LoadJSON(const std::string &f_path)
                     sajson::value l_node = l_posNode.get_array_element(j);
                     size_t l_nodeType = l_node.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("One bone position value isn't a number");
-                    l_bone.m_position[j] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_node.get_integer_value() : l_node.get_double_value());
+                    l_bone.m_position[static_cast<int>(j)] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_node.get_integer_value() : l_node.get_double_value());
                 }
 
                 // Rotation
@@ -321,7 +322,7 @@ bool Model::LoadJSON(const std::string &f_path)
                     sajson::value l_node = l_rotNode.get_array_element(j);
                     size_t l_nodeType = l_node.get_type();
                     if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("One bone rotation value isn't a number");
-                    l_bone.m_rotation[j] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_node.get_integer_value() : l_node.get_double_value());
+                    l_bone.m_rotation[static_cast<int>(j)] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_node.get_integer_value() : l_node.get_double_value());
                 }
 
                 // Scale
@@ -336,7 +337,7 @@ bool Model::LoadJSON(const std::string &f_path)
                         sajson::value l_node = l_sclNode.get_array_element(j);
                         size_t l_nodeType = l_node.get_type();
                         if(l_nodeType != sajson::TYPE_INTEGER && l_nodeType != sajson::TYPE_DOUBLE) throw std::exception("One scale value isn't a number");
-                        l_bone.m_scale[j] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_node.get_integer_value() : l_node.get_double_value());
+                        l_bone.m_scale[static_cast<int>(j)] = static_cast<float>(l_nodeType == sajson::TYPE_INTEGER ? l_node.get_integer_value() : l_node.get_double_value());
                     }
                 }
                 else l_bone.m_scale = glm::vec3(1.f);

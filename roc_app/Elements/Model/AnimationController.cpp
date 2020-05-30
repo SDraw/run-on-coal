@@ -18,6 +18,7 @@ ROC::AnimationController::AnimationController()
     m_blendValue = 1.f;
     m_loop = false;
 }
+
 ROC::AnimationController::~AnimationController()
 {
 }
@@ -50,6 +51,7 @@ bool ROC::AnimationController::Pause()
     if(m_animation) m_state = ACS_Paused;
     return (m_animation != nullptr);
 }
+
 bool ROC::AnimationController::Reset()
 {
     if(m_animation) m_tick = 0U;
@@ -75,6 +77,7 @@ bool ROC::AnimationController::SetProgress(float f_val)
     }
     return (m_animation != nullptr);
 }
+
 float ROC::AnimationController::GetProgress() const
 {
     float l_result = 0.f;

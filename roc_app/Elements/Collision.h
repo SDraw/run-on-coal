@@ -42,6 +42,9 @@ public:
     void SetFriction(float f_val);
     float GetFriction() const;
 
+    void SetRestitution(float f_val);
+    float GetRestitution() const;
+
     void ApplyForce(const glm::vec3 &f_force, const glm::vec3 &f_rp);
     void ApplyCentralForce(const glm::vec3 &f_force);
 

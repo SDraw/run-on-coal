@@ -56,6 +56,7 @@ int LuaSceneDef::AddModel(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::RemoveModel(lua_State *f_vm)
 {
     // bool Scene:removeModel(element model)
@@ -72,6 +73,7 @@ int LuaSceneDef::RemoveModel(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::SetModelLayer(lua_State *f_vm)
 {
     // bool Scene:setModelLayer(element model, str layer)
@@ -107,6 +109,7 @@ int LuaSceneDef::SetCamera(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::GetCamera(lua_State *f_vm)
 {
     // element Scene:getCamera()
@@ -121,6 +124,7 @@ int LuaSceneDef::GetCamera(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::RemoveCamera(lua_State *f_vm)
 {
     // bool Scene:removeCamera()
@@ -152,6 +156,7 @@ int LuaSceneDef::AddLight(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::RemoveLight(lua_State *f_vm)
 {
     // bool Scene:removeLight()
@@ -185,6 +190,7 @@ int LuaSceneDef::SetRenderTarget(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::GetRenderTarget(lua_State *f_vm)
 {
     // element Scene:getRenderTarget()
@@ -199,6 +205,7 @@ int LuaSceneDef::GetRenderTarget(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::RemoveRenderTarget(lua_State *f_vm)
 {
     // bool Scene:removeRenderTarget()
@@ -234,6 +241,7 @@ int LuaSceneDef::AddShader(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSceneDef::RemoveShader(lua_State *f_vm)
 {
     // bool Scene:removeShader(element shader)

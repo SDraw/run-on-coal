@@ -75,6 +75,7 @@ int LuaInputDef::SetCursorMode(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::GetCursorPosition(lua_State *f_vm)
 {
     // int int getCursorPosition()
@@ -85,6 +86,7 @@ int LuaInputDef::GetCursorPosition(lua_State *f_vm)
     argStream.PushInteger(l_pos.y);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::SetCursorPosition(lua_State *f_vm)
 {
     // bool setCursorPosition(int x, int y)
@@ -114,6 +116,7 @@ int LuaInputDef::SetWindowPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::GetWindowPosition(lua_State *f_vm)
 {
     // int int getWindowPosition()
@@ -124,6 +127,7 @@ int LuaInputDef::GetWindowPosition(lua_State *f_vm)
     argStream.PushInteger(l_pos.y);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::GetWindowSize(lua_State *f_vm)
 {
     // int getWindowSize()
@@ -134,6 +138,7 @@ int LuaInputDef::GetWindowSize(lua_State *f_vm)
     argStream.PushInteger(l_size.y);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::CloseWindow(lua_State *f_vm)
 {
     // bool closeWindow()
@@ -162,6 +167,7 @@ int LuaInputDef::IsKeyPressed(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::IsMouseKeyPressed(lua_State *f_vm)
 {
     // bool isMouseKeyPressed(str keyName)
@@ -196,6 +202,7 @@ int LuaInputDef::SetWindowVSync(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::SetWindowFramelimit(lua_State *f_vm)
 {
     // bool setWindowFramelimit(int limit)
@@ -210,6 +217,7 @@ int LuaInputDef::SetWindowFramelimit(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::GetWindowFramelimit(lua_State *f_vm)
 {
     // int getWindowFramelimit()
@@ -217,6 +225,7 @@ int LuaInputDef::GetWindowFramelimit(lua_State *f_vm)
     argStream.PushInteger(LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetFramelimit());
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::SetWindowTitle(lua_State *f_vm)
 {
     // bool setWindowTitle(str title)
@@ -231,6 +240,7 @@ int LuaInputDef::SetWindowTitle(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::SetWindowIcon(lua_State *f_vm)
 {
     // bool setWindowIcon(str path)
@@ -245,6 +255,7 @@ int LuaInputDef::SetWindowIcon(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::RequestWindowFocus(lua_State *f_vm)
 {
     // bool requestWindowFocus()
@@ -253,6 +264,7 @@ int LuaInputDef::RequestWindowFocus(lua_State *f_vm)
     argStream.PushBoolean(true);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::GetWindowFocus(lua_State *f_vm)
 {
     // bool getWindowFocus()
@@ -260,6 +272,7 @@ int LuaInputDef::GetWindowFocus(lua_State *f_vm)
     argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetFocusState());
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::SetWindowInputEnabled(lua_State *f_vm)
 {
     // bool setWindowInputEnabled(bool state)
@@ -289,6 +302,7 @@ int LuaInputDef::IsJoypadConnected(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::JoypadGetButtonCount(lua_State *f_vm)
 {
     // int joypadGetButtonCount(int index)
@@ -303,6 +317,7 @@ int LuaInputDef::JoypadGetButtonCount(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::JoypadGetButtonState(lua_State *f_vm)
 {
     // bool joypadGetButtonState(int index, int buttonIndex)
@@ -318,6 +333,7 @@ int LuaInputDef::JoypadGetButtonState(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return 1;
 }
+
 int LuaInputDef::JoypadHasAxis(lua_State *f_vm)
 {
     // bool joypadHasAxis(int index, int axisIndex)
@@ -339,6 +355,7 @@ int LuaInputDef::JoypadHasAxis(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::JoypadGetAxisValue(lua_State *f_vm)
 {
     // float joypadGetAxisValue(int index, int axisIndex)
@@ -369,6 +386,7 @@ int LuaInputDef::GetClipboard(lua_State *f_vm)
     argStream.PushText(l_clipboard);
     return argStream.GetReturnValue();
 }
+
 int LuaInputDef::SetClipboard(lua_State *f_vm)
 {
     ArgReader argStream(f_vm);

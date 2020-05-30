@@ -18,6 +18,7 @@ ROC::Animation::Animation()
     m_bonesCount = 0U;
     m_loaded = false;
 }
+
 ROC::Animation::~Animation()
 {
     Clean();
@@ -112,6 +113,7 @@ size_t ROC::Animation::GetBonesCount() const
 {
     return static_cast<size_t>(m_bonesCount);
 }
+
 unsigned int ROC::Animation::GetDuration() const
 {
     return m_duration;

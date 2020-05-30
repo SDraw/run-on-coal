@@ -31,6 +31,7 @@ int LuaPhysicsDef::SetEnabled(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaPhysicsDef::GetEnabled(lua_State *f_vm)
 {
     // bool physicsGetEnabled()
@@ -53,6 +54,7 @@ int LuaPhysicsDef::SetFloorEnabled(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaPhysicsDef::GetFloorEnabled(lua_State *f_vm)
 {
     // bool physicsGetFloorEnabled()
@@ -75,6 +77,7 @@ int LuaPhysicsDef::SetGravity(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaPhysicsDef::GetGravity(lua_State *f_vm)
 {
     // float float float physicsGetGravity()

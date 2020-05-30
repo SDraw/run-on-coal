@@ -13,6 +13,7 @@ LuaModule::LuaModule(ROC::ICore *f_core)
     m_luaVM = new LuaVM(this);
     m_eventHandler = new EventHandler(this);
 }
+
 LuaModule::~LuaModule()
 {
     delete m_eventHandler;
@@ -42,6 +43,7 @@ bool LuaModule::Init(ROC::ICore *f_core)
     }
     return (ms_instance != nullptr);
 }
+
 void LuaModule::Terminate()
 {
     if(ms_instance)

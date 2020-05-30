@@ -36,7 +36,6 @@ public:
     virtual IFile* CreateIFile(const std::string &f_path) = 0;
     virtual IFile* OpenIFile(const std::string &f_path, bool f_ro) = 0;
     virtual ICollision* CreateICollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass) = 0;
-
     virtual bool IsValidIElement(IElement *f_ptr) const = 0;
     virtual bool DestroyIElement(IElement *f_element) = 0;
 };

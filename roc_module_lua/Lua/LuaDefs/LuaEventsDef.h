@@ -2,11 +2,11 @@
 
 class LuaEventsDef final
 {
-    static int Add(lua_State *f_vm);
-    static int AddHandler(lua_State *f_vm);
-    static int Remove(lua_State *f_vm);
-    static int RemoveHandler(lua_State *f_vm);
-    static int Call(lua_State *f_vm);
+    static int AddEvent(lua_State *f_vm);
+    static int AddEventHandler(lua_State *f_vm);
+    static int RemoveEvent(lua_State *f_vm);
+    static int RemoveEventHandler(lua_State *f_vm);
+    static int CallEvent(lua_State *f_vm);
 protected:
     static void Init(lua_State *f_vm);
 

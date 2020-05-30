@@ -15,6 +15,7 @@ LuaModule::LuaModule(ROC::ICore *f_core)
     m_eventHandler = new EventHandler(this);
     m_taskHandler = new TaskHandler(this);
 }
+
 LuaModule::~LuaModule()
 {
     delete m_taskHandler;
@@ -45,6 +46,7 @@ bool LuaModule::Init(ROC::ICore *f_core)
     }
     return (ms_instance != nullptr);
 }
+
 void LuaModule::Terminate()
 {
     if(ms_instance)

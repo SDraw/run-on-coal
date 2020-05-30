@@ -72,6 +72,7 @@ int LuaSoundDef::Play(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::Pause(lua_State *f_vm)
 {
     // bool Sound:pause()
@@ -86,6 +87,7 @@ int LuaSoundDef::Pause(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::Stop(lua_State *f_vm)
 {
     // bool Sound:stop()
@@ -110,6 +112,7 @@ int LuaSoundDef::IsLooped(lua_State *f_vm)
     argStream.PushBoolean(!argStream.HasErrors() ? l_sound->IsLooped() : false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::SetLoop(lua_State *f_vm)
 {
     // bool Sound:setLoop(bool loop)
@@ -158,6 +161,7 @@ int LuaSoundDef::SetSpeed(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::GetSpeed(lua_State *f_vm)
 {
     // float Sound:getSpeed()
@@ -189,6 +193,7 @@ int LuaSoundDef::SetVolume(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::GetVolume(lua_State *f_vm)
 {
     // float Sound:getVolume()
@@ -220,6 +225,7 @@ int LuaSoundDef::SetTime(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::GetTime(lua_State *f_vm)
 {
     // float Sound:getTime()
@@ -234,6 +240,7 @@ int LuaSoundDef::GetTime(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::GetDuration(lua_State *f_vm)
 {
     // float Sound:getDuration()
@@ -265,6 +272,7 @@ int LuaSoundDef::Set3DEnabled(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::Get3DEnabled(lua_State *f_vm)
 {
     // bool Sound:get3DEnabled()
@@ -291,6 +299,7 @@ int LuaSoundDef::Set3DPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::Get3DPosition(lua_State *f_vm)
 {
     // float float float Sound:get3DPosition()
@@ -325,6 +334,7 @@ int LuaSoundDef::Set3DDistance(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaSoundDef::Get3DDistance(lua_State *f_vm)
 {
     // float float Sound:get3DDistance()

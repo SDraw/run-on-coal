@@ -14,6 +14,7 @@ ROC::PreRenderManager::PreRenderManager(Core *f_core)
     m_modelsEnd = m_models.end();
     m_arguments = new CustomArguments();
 }
+
 ROC::PreRenderManager::~PreRenderManager()
 {
     m_models.clear();
@@ -25,6 +26,7 @@ void ROC::PreRenderManager::AddModel(Model *f_model)
     m_models.push_back(f_model);
     m_modelsEnd = m_models.end();
 }
+
 void ROC::PreRenderManager::RemoveModel(Model *f_model)
 {
     for(auto l_searchIter = m_models.begin(); l_searchIter != m_modelsEnd; ++l_searchIter)
@@ -62,6 +64,7 @@ void ROC::PreRenderManager::DoPulse_S1()
         }
     }
 }
+
 void ROC::PreRenderManager::DoPulse_S2()
 {
     for(auto l_model : m_models)

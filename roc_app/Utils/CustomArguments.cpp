@@ -6,6 +6,7 @@ ROC::CustomArguments::CustomArguments()
 {
     m_argumentsCount = 0U;
 }
+
 ROC::CustomArguments::~CustomArguments()
 {
     m_arguments.clear();

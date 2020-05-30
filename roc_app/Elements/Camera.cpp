@@ -37,6 +37,7 @@ ROC::Camera::Camera(unsigned char f_type)
     m_rebuildView = false;
     m_rebuildProjection = false;
 }
+
 ROC::Camera::~Camera()
 {
 }
@@ -50,6 +51,7 @@ void ROC::Camera::SetProjectionType(unsigned char f_type)
         m_rebuildProjection = true;
     }
 }
+
 unsigned char ROC::Camera::GetProjectionType() const
 {
     return m_type;
@@ -63,6 +65,7 @@ void ROC::Camera::SetPosition(const glm::vec3& f_pos)
         m_rebuildView = true;
     }
 }
+
 const glm::vec3& ROC::Camera::GetPosition() const
 {
     return m_viewPosition;
@@ -76,6 +79,7 @@ void ROC::Camera::SetDirection(const glm::vec3& f_dir)
         m_rebuildView = true;
     }
 }
+
 void ROC::Camera::SetDirection(const glm::quat &f_dir)
 {
     glm::vec3 l_dir = f_dir*g_CameraDefaultViewDirection;
@@ -92,6 +96,7 @@ void ROC::Camera::SetDirection(const glm::quat &f_dir)
         m_rebuildView = true;
     }
 }
+
 const glm::vec3& ROC::Camera::GetDirection() const
 {
     return m_viewDirection;
@@ -105,6 +110,7 @@ void ROC::Camera::SetUpDirection(const glm::vec3 &f_dir)
         m_rebuildView = true;
     }
 }
+
 const glm::vec3& ROC::Camera::GetUpDirection() const
 {
     return m_upDirection;
@@ -118,6 +124,7 @@ void ROC::Camera::SetFOV(float f_fov)
         m_rebuildProjection = true;
     }
 }
+
 float ROC::Camera::GetFOV() const
 {
     return m_fov;
@@ -131,6 +138,7 @@ void ROC::Camera::SetAspectRatio(float f_ratio)
         m_rebuildProjection = true;
     }
 }
+
 float ROC::Camera::GetAspectRatio() const
 {
     return m_aspectRatio;
@@ -144,6 +152,7 @@ void ROC::Camera::SetOrthoParams(const glm::vec4 &f_size)
         m_rebuildProjection = true;
     }
 }
+
 const glm::vec4& ROC::Camera::GetOrthoParams() const
 {
     return m_orthoParams;
@@ -157,6 +166,7 @@ void ROC::Camera::SetDepth(const glm::vec2 &f_depth)
         m_rebuildProjection = true;
     }
 }
+
 const glm::vec2& ROC::Camera::GetDepth() const
 {
     return m_depth;
@@ -166,10 +176,12 @@ const glm::mat4& ROC::Camera::GetViewMatrix() const
 {
     return m_viewMatrix;
 }
+
 const glm::mat4& ROC::Camera::GetProjectionMatrix() const
 {
     return m_projectionMatrix;
 }
+
 const glm::mat4& ROC::Camera::GetViewProjectionMatrix() const
 {
     return m_viewProjectionMatrix;
@@ -246,6 +258,7 @@ bool ROC::Camera::IsInFrustum(const glm::vec3 &f_pos, float f_radius)
     }
     return l_result;
 }
+
 bool ROC::Camera::IsInFrustum(const glm::mat4 &f_mat, float f_radius)
 {
     bool l_result = true;

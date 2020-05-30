@@ -91,6 +91,7 @@ ROC::NetworkManager::NetworkManager(Core *f_core)
 
     m_arguments = new CustomArguments();
 }
+
 ROC::NetworkManager::~NetworkManager()
 {
     if(m_networkInterface)
@@ -212,10 +213,12 @@ bool ROC::NetworkManager::Disconnect(IClient *f_client)
 {
     return Disconnect(dynamic_cast<Client*>(f_client));
 }
+
 bool ROC::NetworkManager::SendData(IClient *f_client, const std::string &f_data)
 {
     return SendData(dynamic_cast<Client*>(f_client), f_data);
 }
+
 int ROC::NetworkManager::GetPing(IClient *f_client) const
 {
     return GetPing(dynamic_cast<Client*>(f_client));

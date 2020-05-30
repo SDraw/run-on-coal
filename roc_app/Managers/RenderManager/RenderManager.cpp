@@ -26,7 +26,8 @@
 #include "Elements/Scene/SceneLayer.h"
 #include "Elements/Shader/Shader.h"
 #include "Interfaces/IModule.h"
-#include "Utils/GLBinder.h"
+#include "GL/GLViewport.h"
+#include "GL/GLSetting.h"
 
 namespace ROC
 {
@@ -35,7 +36,6 @@ extern const glm::mat4 g_IdentityMatrix;
 extern const glm::vec4 g_EmptyVec4;
 
 const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
-const glm::vec4 g_DefaultClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
 
 }
 
@@ -44,56 +44,49 @@ ROC::RenderManager::RenderManager(Core *f_core)
     m_core = f_core;
     m_vrManager = m_core->GetVRManager();
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    GLSetting::Set(GL_DEPTH_TEST, true);
+    GLSetting::Set(GL_TEXTURE_CUBE_MAP_SEAMLESS, true);
+    GLSetting::Set(GL_CULL_FACE, true); // default culling
+    GLSetting::SetDepthMask(true);
+    GLSetting::SetPixelUnpackAlignment(1);
+    if(m_core->GetConfigManager()->GetAntialiasing() > 0) GLSetting::Set(GL_LINE_SMOOTH, true);
 
-    glEnable(GL_CULL_FACE); // default culling
+    GLViewport::SetClearColor(0.223529f, 0.223529f, 0.223529f, 0.f);
+    GLViewport::SetBlendFunctions(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glClearColor(g_DefaultClearColor.r, g_DefaultClearColor.g, g_DefaultClearColor.b, g_DefaultClearColor.a);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Font::InitStaticResources();
+    Shader::InitStaticResources();
+    Material::InitStaticResources();
 
-    Font::CreateLibrary();
-    Font::CreateVAO();
-    Shader::UpdateDrawableMaxCount();
-
-    m_active = false;
-    m_vrActive = false;
+    m_renderStage = RS_None;
+    m_clearFrame = false;
     m_activeScene = nullptr;
     m_quad2D = new Quad2D();
     m_quad3D = new Quad3D();
     m_physicsDrawer = new PhysicsDrawer();
     m_core->GetPhysicsManager()->SetDebugDrawer(m_physicsDrawer);
 
-    m_dummyTexture = new Texture();
-    m_dummyTexture->LoadDummy();
-
-    m_depthEnabled = true;
-    m_blendEnabled = false;
-    m_cullEnabled = true;
     m_time = 0.f;
-    m_lastFillMode = GL_FILL;
 
-    m_clearColor = g_DefaultClearColor;
     m_core->GetSfmlManager()->GetWindowSize(m_viewportSize);
     m_screenProjection = glm::ortho(0.f, static_cast<float>(m_viewportSize.x), 0.f, static_cast<float>(m_viewportSize.y));
 
     m_arguments = new CustomArguments();
 }
+
 ROC::RenderManager::~RenderManager()
 {
     delete m_quad2D;
     delete m_quad3D;
-    delete m_dummyTexture;
     delete m_physicsDrawer;
-    Font::DestroyVAO();
-    Font::DestroyLibrary();
+    Font::ReleaseStaticResources();
+    Material::ReleaseStaticResources();
     delete m_arguments;
 }
 
 bool ROC::RenderManager::SetActiveScene(Scene *f_scene)
 {
-    if(m_active)
+    if(m_renderStage != RS_None)
     {
         if(m_activeScene) m_activeScene->Disable();
         m_activeScene = f_scene;
@@ -103,13 +96,22 @@ bool ROC::RenderManager::SetActiveScene(Scene *f_scene)
             m_activeScene->Enable();
             if(!m_activeScene->HasRenderTarget())
             {
-                if(m_vrActive) m_vrManager->RestoreRenderTarget();
-                else GLBinder::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+                if(m_renderStage == RS_VR) m_vrManager->RestoreRenderTarget();
+                else
+                {
+                    GLViewport::SetViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+                    if(m_clearFrame)
+                    {
+                        ClearViewport();
+                        m_clearFrame = false;
+                    }
+                }
             }
         }
     }
-    return m_active;
+    return (m_renderStage != RS_None);
 }
+
 void ROC::RenderManager::RemoveAsActiveScene(Scene *f_scene)
 {
     if(m_activeScene == f_scene)
@@ -129,7 +131,7 @@ void ROC::RenderManager::UpdateViewportSize(const glm::ivec2 &f_size)
 bool ROC::RenderManager::DrawScene(Scene *f_scene)
 {
     bool l_result = false;
-    if(m_active && (m_activeScene == f_scene))
+    if((m_renderStage != RS_None) && (m_activeScene == f_scene))
     {
         if(m_activeScene->HasCamera())
         {
@@ -154,9 +156,7 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
                         l_shader->SetCameraDirection(l_camera->GetDirection());
                         l_shader->SetLightsData(m_activeScene->GetLights());
 
-                        if(l_onShadowRT) m_dummyTexture->Bind();
-
-                        for(const auto l_renderModel : l_layer->GetRenderModels())
+                        for(const auto &l_renderModel : l_layer->GetRenderModels())
                         {
                             if(l_renderModel->m_visible)
                             {
@@ -174,24 +174,11 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
 
                                     for(const auto l_material : l_model->GetGeometry()->GetMaterials())
                                     {
+                                        if(!l_material->HasDepth() && l_onShadowRT) continue;
+
                                         l_shader->SetMaterialType(static_cast<int>(l_material->GetType()));
                                         l_shader->SetMaterialParam(l_material->GetParams());
-
-                                        if(l_material->HasDepth()) EnableDepth();
-                                        else
-                                        {
-                                            if(l_onShadowRT) continue;
-                                            else DisableDepth();
-                                        }
-                                        l_material->IsTransparent() ? EnableBlending() : DisableBlending();
-                                        l_material->IsDoubleSided() ? DisableCulling() : EnableCulling();
-
-                                        if(!l_onShadowRT)
-                                        {
-                                            Texture *l_texture = (l_material->HasTexture() ? l_material->GetTexture() : m_dummyTexture);
-                                            l_texture->Bind();
-                                        }
-                                        l_material->Draw();
+                                        l_material->Draw(!l_onShadowRT);
                                     }
                                 }
                             }
@@ -210,7 +197,7 @@ bool ROC::RenderManager::DrawScene(Scene *f_scene)
 bool ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const std::string &f_text, const glm::vec4 &f_color, const std::string &f_layer)
 {
     bool l_result = false;
-    if(m_active && m_activeScene)
+    if((m_renderStage != RS_None) && m_activeScene)
     {
         const ROC::SceneLayer *l_layer = m_activeScene->GetLayer(f_layer);
         if(l_layer)
@@ -220,9 +207,6 @@ bool ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const std:
             {
                 l_shader->Enable();
                 l_shader->SetTime(m_time);
-
-                EnableBlending();
-                DisableDepth();
 
                 l_shader->SetProjectionMatrix(m_screenProjection);
                 l_shader->SetModelMatrix(g_IdentityMatrix);
@@ -243,7 +227,7 @@ bool ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const std:
 bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color, const std::string &f_layer)
 {
     bool l_result = false;
-    if(m_active && m_activeScene)
+    if((m_renderStage != RS_None) && m_activeScene)
     {
         const ROC::SceneLayer *l_layer = m_activeScene->GetLayer(f_layer);
         if(l_layer)
@@ -251,9 +235,6 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
             Shader *l_shader = l_layer->GetShader();
             if(l_shader)
             {
-                f_drawable->Bind();
-                m_quad2D->SetTransformation(f_size);
-
                 l_shader->Enable();
                 l_shader->SetTime(m_time);
                 l_shader->SetProjectionMatrix(m_screenProjection);
@@ -273,10 +254,9 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
                 l_shader->SetModelMatrix(l_textureMatrix);
                 l_shader->SetColor(f_color);
 
-                DisableCulling();
-                DisableDepth();
-                f_drawable->IsTransparent() ? EnableBlending() : DisableBlending();
-
+                GLSetting::Set(GL_BLEND, f_drawable->IsTransparent());
+                f_drawable->Bind();
+                m_quad2D->SetTransformation(f_size);
                 m_quad2D->Draw();
 
                 l_shader->Disable();
@@ -291,7 +271,7 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
 bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const std::string &f_layer, const glm::bvec4 &f_params)
 {
     bool l_result = false;
-    if(m_active && m_activeScene)
+    if((m_renderStage != RS_None) && m_activeScene)
     {
         if(m_activeScene->HasCamera())
         {
@@ -305,9 +285,6 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
                     float l_radius = glm::length(l_halfSize);
                     if(m_activeScene->GetCamera()->IsInFrustum(f_pos, l_radius))
                     {
-                        f_drawable->Bind();
-                        m_quad3D->SetTransformation(f_pos, f_rot, f_size);
-
                         l_shader->Enable();
                         l_shader->SetTime(m_time);
 
@@ -322,9 +299,11 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
                         if(f_params.w) l_materialType |= Material::MPB_Doubleside;
                         l_shader->SetMaterialType(l_materialType);
 
-                        f_params.w ? DisableCulling() : EnableCulling();
-                        f_params.y ? EnableDepth() : DisableDepth();
-                        (f_drawable->IsTransparent() && f_params.z) ? EnableBlending() : DisableBlending();
+                        GLSetting::Set(GL_CULL_FACE, !f_params.w);
+                        GLSetting::SetDepthMask(f_params.y);
+                        GLSetting::Set(GL_BLEND, (f_drawable->IsTransparent() && f_params.z));
+                        f_drawable->Bind();
+                        m_quad3D->SetTransformation(f_pos, f_rot, f_size);
                         m_quad3D->Draw();
 
                         l_shader->Disable();
@@ -341,7 +320,7 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
 bool ROC::RenderManager::DrawPhysics(float f_width, const std::string &f_layer)
 {
     bool l_result = false;
-    if(m_active && m_activeScene)
+    if((m_renderStage != RS_None) && m_activeScene)
     {
         if(m_activeScene->HasCamera())
         {
@@ -365,12 +344,6 @@ bool ROC::RenderManager::DrawPhysics(float f_width, const std::string &f_layer)
                     l_shader->SetMaterialType((Material::MPB_Depth | Material::MPB_Doubleside));
                     l_shader->SetMaterialParam(g_EmptyVec4);
 
-                    DisableCulling();
-                    EnableDepth();
-                    DisableBlending();
-
-                    m_dummyTexture->Bind();
-
                     m_core->GetPhysicsManager()->DrawDebugWorld();
                     m_physicsDrawer->Draw(f_width);
 
@@ -384,118 +357,51 @@ bool ROC::RenderManager::DrawPhysics(float f_width, const std::string &f_layer)
     return l_result;
 }
 
-bool ROC::RenderManager::ClearRenderArea(bool f_depth, bool f_color)
-{
-    if(m_active)
-    {
-        int l_params = 0;
-        if(f_depth)
-        {
-            l_params |= GL_DEPTH_BUFFER_BIT;
-            EnableDepth();
-        }
-        if(f_color) l_params |= GL_COLOR_BUFFER_BIT;
-        if(l_params != 0) glClear(l_params);
-    }
-    return m_active;
-}
-bool ROC::RenderManager::SetClearColour(const glm::vec4 &f_color)
-{
-    if(m_active)
-    {
-        if(m_clearColor != f_color)
-        {
-            std::memcpy(&m_clearColor, &f_color, sizeof(glm::vec4));
-            glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
-        }
-    }
-    return m_active;
-}
 bool ROC::RenderManager::SetViewport(const glm::ivec4 &f_area)
 {
-    if(m_active) GLBinder::SetViewport(f_area.x, f_area.y, f_area.z, f_area.w);
-    return m_active;
-}
-bool ROC::RenderManager::SetPolygonMode(int f_mode)
-{
-    if(m_active)
-    {
-        int l_fillMode = GL_POINT + f_mode;
-        btClamp(l_fillMode, GL_POINT, GL_FILL);
-        if(m_lastFillMode != l_fillMode)
-        {
-            m_lastFillMode = l_fillMode;
-            glPolygonMode(GL_FRONT_AND_BACK, m_lastFillMode);
-        }
-    }
-    return m_active;
+    if(m_renderStage != RS_None) GLViewport::SetViewport(f_area.x, f_area.y, f_area.z, f_area.w);
+    return (m_renderStage != RS_None);
 }
 
-void ROC::RenderManager::DisableDepth()
+bool ROC::RenderManager::ClearViewport(bool f_depth, bool f_color)
 {
-    if(m_depthEnabled)
+    if(m_renderStage != RS_None)
     {
-        glDepthMask(GL_FALSE);
-        m_depthEnabled = false;
+        if(f_depth) GLSetting::SetDepthMask(true);
+        GLViewport::Clear(f_depth, f_color);
     }
+    return (m_renderStage != RS_None);
 }
-void ROC::RenderManager::EnableDepth()
+
+bool ROC::RenderManager::SetClearColor(const glm::vec4 &f_color)
 {
-    if(!m_depthEnabled)
-    {
-        glDepthMask(GL_TRUE);
-        m_depthEnabled = true;
-    }
+    if(m_renderStage != RS_None) GLViewport::SetClearColor(f_color.r, f_color.g, f_color.b, f_color.a);
+    return (m_renderStage != RS_None);
 }
-void ROC::RenderManager::DisableBlending()
+
+bool ROC::RenderManager::SetPolygonMode(int f_mode)
 {
-    if(m_blendEnabled)
-    {
-        glDisable(GL_BLEND);
-        m_blendEnabled = false;
-    }
-}
-void ROC::RenderManager::EnableBlending()
-{
-    if(!m_blendEnabled)
-    {
-        glEnable(GL_BLEND);
-        m_blendEnabled = true;
-    }
-}
-void ROC::RenderManager::DisableCulling()
-{
-    if(m_cullEnabled)
-    {
-        glDisable(GL_CULL_FACE);
-        m_cullEnabled = false;
-    }
-}
-void ROC::RenderManager::EnableCulling()
-{
-    if(!m_cullEnabled)
-    {
-        glEnable(GL_CULL_FACE);
-        m_cullEnabled = true;
-    }
+    if(m_renderStage != RS_None) GLSetting::SetFillMode(GL_POINT + f_mode);
+    return (m_renderStage != RS_None);
 }
 
 void ROC::RenderManager::DoPulse()
 {
-    m_active = true;
     m_time = m_core->GetSfmlManager()->GetTime();
+
+    m_renderStage = RS_Main;
+    m_clearFrame = true;
+    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnRender, m_arguments);
+    m_clearFrame = false;
 
     if(m_vrManager->IsVREnabled())
     {
-        m_vrActive = true;
+        m_renderStage = RS_VR;
         m_vrManager->Render();
-        m_vrActive = false;
     }
 
-    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnRender, m_arguments);
-
     m_core->GetSfmlManager()->SwapBuffers();
-    m_active = false;
+    m_renderStage = RS_None;
 }
 
 // ROC::IRenderManager
@@ -503,18 +409,22 @@ bool ROC::RenderManager::SetActiveScene(IScene *f_scene)
 {
     return SetActiveScene(dynamic_cast<Scene*>(f_scene));
 }
+
 bool ROC::RenderManager::DrawScene(IScene *f_scene)
 {
     return DrawScene(dynamic_cast<Scene*>(f_scene));
 }
+
 bool ROC::RenderManager::Render(IFont *f_font, const glm::vec2 &f_pos, const std::string &f_text, const glm::vec4 &f_color, const std::string &f_layer)
 {
     return Render(dynamic_cast<Font*>(f_font), f_pos, f_text, f_color, f_layer);
 }
+
 bool ROC::RenderManager::Render(IDrawable *f_drawable, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color, const std::string &f_layer)
 {
     return Render(dynamic_cast<Drawable*>(f_drawable), f_pos, f_size, f_rot, f_color, f_layer);
 }
+
 bool ROC::RenderManager::Render(IDrawable *f_drawable, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const std::string &f_layer, const glm::bvec4 &f_params)
 {
     return Render(dynamic_cast<Drawable*>(f_drawable), f_pos, f_rot, f_size, f_layer, f_params);

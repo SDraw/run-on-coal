@@ -11,6 +11,7 @@ ROC::AsyncTextureTask::AsyncTextureTask(const std::string &f_path, unsigned char
     m_filter = f_filter;
     m_compress = f_compress;
 }
+
 ROC::AsyncTextureTask::AsyncTextureTask(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
     m_path.assign(f_path.begin(), f_path.end());
@@ -18,6 +19,7 @@ ROC::AsyncTextureTask::AsyncTextureTask(const std::vector<std::string> &f_path, 
     m_type = 0U;
     m_compress = f_compress;
 }
+
 ROC::AsyncTextureTask::~AsyncTextureTask()
 {
 }

@@ -15,6 +15,7 @@ void LuaDrawableDef::Init(lua_State *f_vm)
 {
     lua_register(f_vm, "isDrawable", IsDrawable);
 }
+
 void LuaDrawableDef::AddHierarchyMethods(lua_State *f_vm)
 {
     LuaUtils::AddClassMethod(f_vm, "getSize", GetSize);
@@ -32,6 +33,7 @@ int LuaDrawableDef::IsDrawable(lua_State *f_vm)
     argStream.PushBoolean(l_drawable != nullptr);
     return argStream.GetReturnValue();
 }
+
 int LuaDrawableDef::Draw(lua_State *f_vm)
 {
     // bool Drawable:draw(float x, float y, float sizeX, float sizeY [, float rotation = 0, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1, str layer = "screen"])
@@ -55,6 +57,7 @@ int LuaDrawableDef::Draw(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaDrawableDef::Draw3D(lua_State *f_vm)
 {
     // bool Drawable:draw3D(float x, float y, float z, float rotX, float rotY, float rotZ, float width, float height [, str layer = "default", bool shading = true, bool depth = true, bool transparency = false, bool doubleSided = false])

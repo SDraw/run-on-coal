@@ -17,8 +17,15 @@ public:
 
         RTT_None = 0xFFU
     };
+    enum RenderTargetProperty : unsigned char
+    {
+        RTP_ClearColor = 0U,
+        RTP_Depth,
+        RTP_Color
+    };
 
     virtual bool IsShadowType() const = 0;
+    virtual bool SetProperty(RenderTargetProperty f_prop, const void *f_val) = 0;
 };
 
 }

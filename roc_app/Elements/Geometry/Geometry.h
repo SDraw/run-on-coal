@@ -38,7 +38,7 @@ protected:
     ~Geometry();
 
     bool Load(const std::string &f_path);
-    void GenerateVAOs();
+    void GenerateMaterials();
 
     inline const std::vector<Material*>& GetMaterials() const { return m_materials; }
     inline const std::vector<BoneData*>& GetBonesData() const { return m_bonesData; };

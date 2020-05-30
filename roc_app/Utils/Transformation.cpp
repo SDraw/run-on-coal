@@ -22,6 +22,7 @@ ROC::Transformation::Transformation()
     m_update = false;
     m_updated = false;
 }
+
 ROC::Transformation::~Transformation()
 {
 }

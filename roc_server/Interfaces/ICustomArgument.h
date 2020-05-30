@@ -22,7 +22,6 @@ public:
     };
 
     virtual unsigned char GetType() const = 0;
-
     virtual bool GetBoolean() const = 0;
     virtual int GetInteger() const = 0;
     virtual int GetUInteger() const = 0;

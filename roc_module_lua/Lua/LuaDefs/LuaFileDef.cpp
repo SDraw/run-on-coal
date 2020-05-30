@@ -64,6 +64,7 @@ int LuaFileDef::CreateOpen(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::Read(lua_State *f_vm)
 {
     // str int File:read(int length)
@@ -86,6 +87,7 @@ int LuaFileDef::Read(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::Write(lua_State *f_vm)
 {
     // int File:write(str data)
@@ -102,6 +104,7 @@ int LuaFileDef::Write(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::GetSize(lua_State *f_vm)
 {
     // int File:getSize()
@@ -116,6 +119,7 @@ int LuaFileDef::GetSize(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::SetPosition(lua_State *f_vm)
 {
     // bool File:setPosition(int position)
@@ -132,6 +136,7 @@ int LuaFileDef::SetPosition(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::GetPosition(lua_State *f_vm)
 {
     // int File:getPosition()
@@ -141,6 +146,7 @@ int LuaFileDef::GetPosition(lua_State *f_vm)
     !argStream.HasErrors() ? argStream.PushInteger(l_file->GetPosition()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::Flush(lua_State *f_vm)
 {
     // bool File:flush()
@@ -155,6 +161,7 @@ int LuaFileDef::Flush(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::GetPath(lua_State *f_vm)
 {
     // str File:getPath()
@@ -164,6 +171,7 @@ int LuaFileDef::GetPath(lua_State *f_vm)
     !argStream.HasErrors() ? argStream.PushText(l_file->GetPath()) : argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::IsEOF(lua_State *f_vm)
 {
     // bool File:isEOF()
@@ -173,6 +181,7 @@ int LuaFileDef::IsEOF(lua_State *f_vm)
     argStream.PushBoolean(!argStream.HasErrors() ? l_file->IsEOF() : false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::Delete(lua_State *f_vm)
 {
     // bool fileDelete(str path)
@@ -187,6 +196,7 @@ int LuaFileDef::Delete(lua_State *f_vm)
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
+
 int LuaFileDef::Rename(lua_State *f_vm)
 {
     // bool fileRename(str oldName, str newName)

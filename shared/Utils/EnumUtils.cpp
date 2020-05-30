@@ -19,6 +19,7 @@ size_t ReadEnumVector(const std::string &f_val, const std::vector<std::string> &
     }
     return l_result;
 }
+
 size_t ReadEnumVector(const char *f_val, const std::vector<std::string> &f_vec)
 {
     size_t l_result = std::numeric_limits<size_t>::max();

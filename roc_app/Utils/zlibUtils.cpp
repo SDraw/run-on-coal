@@ -20,6 +20,7 @@ unsigned int CompressData(const void *f_src, unsigned int f_srcLen, void *f_dest
     deflateEnd(&zInfo);
     return l_ret;
 }
+
 unsigned int UncompressData(const void *f_src, unsigned int f_srcLen, void *f_dest, unsigned int f_destLen)
 {
     z_stream zInfo = { 0 };
@@ -39,6 +40,7 @@ unsigned int UncompressData(const void *f_src, unsigned int f_srcLen, void *f_de
     inflateEnd(&zInfo);
     return l_ret;
 }
+
 unsigned int GetMaxCompressedLen(unsigned int nLenSrc)
 {
     return (nLenSrc + 6U + ((nLenSrc + 16383U) / 16384U * 5U));

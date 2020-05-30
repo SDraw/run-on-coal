@@ -14,16 +14,16 @@ const std::vector<std::string> g_PolygonFilling
 
 void LuaRenderingDef::Init(lua_State *f_vm)
 {
-    lua_register(f_vm, "clearRenderArea", ClearRenderArea);
+    lua_register(f_vm, "setViewport", SetViewport);
+    lua_register(f_vm, "clearViewport", ClearViewport);
     lua_register(f_vm, "setClearColor", SetClearColor);
-    lua_register(f_vm, "setRenderArea", SetRenderArea);
     lua_register(f_vm, "setPolygonMode", SetPolygonMode);
     lua_register(f_vm, "drawPhysics", DrawPhysics);
 }
 
-int LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
+int LuaRenderingDef::ClearViewport(lua_State *f_vm)
 {
-    // bool clearRenderArea( [bool depth = true, bool color = true] )
+    // bool clearViewport( [bool depth = true, bool color = true] )
     bool l_depth = true;
     bool l_color = true;
     ArgReader argStream(f_vm);
@@ -31,7 +31,7 @@ int LuaRenderingDef::ClearRenderArea(lua_State *f_vm)
     argStream.ReadNextBoolean(l_color);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->ClearRenderArea(l_depth, l_color);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->ClearViewport(l_depth, l_color);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
@@ -46,16 +46,16 @@ int LuaRenderingDef::SetClearColor(lua_State *f_vm)
     for(int i = 0; i < 4; i++) argStream.ReadNumber(l_color[i]);
     if(!argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->SetClearColour(l_color);
+        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->SetClearColor(l_color);
         argStream.PushBoolean(l_result);
     }
     else argStream.PushBoolean(false);
     return argStream.GetReturnValue();
 }
 
-int LuaRenderingDef::SetRenderArea(lua_State *f_vm)
+int LuaRenderingDef::SetViewport(lua_State *f_vm)
 {
-    // bool setRenderArea(int x, int y, int width, int height)
+    // bool setViewport(int x, int y, int width, int height)
     glm::ivec4 l_area;
     ArgReader argStream(f_vm);
     for(int i = 0; i < 4; i++) argStream.ReadInteger(l_area[i]);

@@ -16,6 +16,8 @@ class LuaCollisionDef final
     static int GetAngularVelocity(lua_State *f_vm);
     static int SetFriction(lua_State *f_vm);
     static int GetFriction(lua_State *f_vm);
+    static int SetRestitution(lua_State *f_vm);
+    static int GetRestitution(lua_State *f_vm);
     static int SetLinearFactor(lua_State *f_vm);
     static int GetLinearFactor(lua_State *f_vm);
     static int SetAngularFactor(lua_State *f_vm);

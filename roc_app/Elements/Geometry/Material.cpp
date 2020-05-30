@@ -2,15 +2,19 @@
 
 #include "Elements/Geometry/Material.h"
 #include "Elements/Texture.h"
+#include "GL/GLArrayBuffer.h"
+#include "GL/GLVertexArray.h"
 
-#include "Utils/GLBinder.h"
+#include "GL/GLSetting.h"
+
+ROC::Texture *ROC::Material::ms_dummyTexture = nullptr;
 
 ROC::Material::Material()
 {
     m_verticesCount = 0;
 
-    for(size_t i = 0U; i < MBI_BufferCount; i++) m_VBO[i] = 0U;
-    m_VAO = 0U;
+    for(size_t i = 0U; i < MBI_BufferCount; i++) m_arrayBuffers[i] = nullptr;
+    m_vertexArray = nullptr;
 
     m_params = glm::vec4(1.f);
     m_type = 0;
@@ -22,106 +26,103 @@ ROC::Material::~Material()
 {
     for(size_t i = 0U; i < MBI_BufferCount; i++)
     {
-        if(m_VBO[i] != 0U)
+        if(m_arrayBuffers[i])
         {
-            GLBinder::ResetArrayBuffer(m_VBO[i]);
-            glDeleteBuffers(1, &m_VBO[i]);
+            m_arrayBuffers[i]->Destroy();
+            delete m_arrayBuffers[i];
         }
     }
-    if(m_VAO != 0U)
+    if(m_vertexArray)
     {
-        GLBinder::ResetVertexArray(m_VAO);
-        glDeleteVertexArrays(1, &m_VAO);
+        m_vertexArray->Destroy();
+        delete m_vertexArray;
     }
     delete m_texture;
 }
 
 void ROC::Material::LoadVertices(const std::vector<glm::vec3> &f_vector)
 {
-    if(m_VBO[MBI_Vertex] == 0U)
+    if(!m_arrayBuffers[MBI_Vertex])
     {
         m_verticesCount = static_cast<int>(f_vector.size());
-        glGenBuffers(1, &m_VBO[MBI_Vertex]);
-        GLBinder::BindArrayBuffer(m_VBO[MBI_Vertex]);
-        glBufferData(GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec3), f_vector.data(), GL_STATIC_DRAW);
+
+        m_arrayBuffers[MBI_Vertex] = new GLArrayBuffer();
+        m_arrayBuffers[MBI_Vertex]->Create(f_vector.size()*sizeof(glm::vec3), f_vector.data(), GL_STATIC_DRAW);
     }
 }
-void ROC::Material::LoadUVs(const std::vector<glm::vec2> &f_vector)
-{
-    if(m_VBO[MBI_UV] == 0U)
-    {
-        glGenBuffers(1, &m_VBO[MBI_UV]);
-        GLBinder::BindArrayBuffer(m_VBO[MBI_UV]);
-        glBufferData(GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec2), f_vector.data(), GL_STATIC_DRAW);
-    }
-}
+
 void ROC::Material::LoadNormals(const std::vector<glm::vec3> &f_vector)
 {
-    if(m_VBO[MBI_Normal] == 0U)
+    if(!m_arrayBuffers[MBI_Normal])
     {
-        glGenBuffers(1, &m_VBO[MBI_Normal]);
-        GLBinder::BindArrayBuffer(m_VBO[MBI_Normal]);
-        glBufferData(GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec3), f_vector.data(), GL_STATIC_DRAW);
+        m_arrayBuffers[MBI_Normal] = new GLArrayBuffer();
+        m_arrayBuffers[MBI_Normal]->Create(f_vector.size()*sizeof(glm::vec3), f_vector.data(), GL_STATIC_DRAW);
     }
 }
+
+void ROC::Material::LoadUVs(const std::vector<glm::vec2> &f_vector)
+{
+    if(!m_arrayBuffers[MBI_UV])
+    {
+        m_arrayBuffers[MBI_UV] = new GLArrayBuffer();
+        m_arrayBuffers[MBI_UV]->Create(f_vector.size()*sizeof(glm::vec2), f_vector.data(), GL_STATIC_DRAW);
+    }
+}
+
 void ROC::Material::LoadWeights(const std::vector<glm::vec4> &f_vector)
 {
-    if(m_VBO[MBI_Weight] == 0U)
+    if(!m_arrayBuffers[MBI_Weight])
     {
-        glGenBuffers(1, &m_VBO[MBI_Weight]);
-        GLBinder::BindArrayBuffer(m_VBO[MBI_Weight]);
-        glBufferData(GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::vec4), f_vector.data(), GL_STATIC_DRAW);
+        m_arrayBuffers[MBI_Weight] = new GLArrayBuffer();
+        m_arrayBuffers[MBI_Weight]->Create(f_vector.size()*sizeof(glm::vec4), f_vector.data(), GL_STATIC_DRAW);
     }
 }
+
 void ROC::Material::LoadIndices(const std::vector<glm::ivec4> &f_vector)
 {
-    if(m_VBO[MBI_WeightIndex] == 0U)
+    if(!m_arrayBuffers[MBI_WeightIndex])
     {
-        glGenBuffers(1, &m_VBO[MBI_WeightIndex]);
-        GLBinder::BindArrayBuffer(m_VBO[MBI_WeightIndex]);
-        glBufferData(GL_ARRAY_BUFFER, f_vector.size()*sizeof(glm::ivec4), f_vector.data(), GL_STATIC_DRAW);
+        m_arrayBuffers[MBI_WeightIndex] = new GLArrayBuffer();
+        m_arrayBuffers[MBI_WeightIndex]->Create(f_vector.size()*sizeof(glm::ivec4), f_vector.data(), GL_STATIC_DRAW);
     }
 }
 
-void ROC::Material::GenerateVAO()
+void ROC::Material::Generate()
 {
-    if(m_VAO == 0U)
+    if(!m_vertexArray)
     {
-        glGenVertexArrays(1, &m_VAO);
-        GLBinder::BindVertexArray(m_VAO);
+        m_vertexArray = new GLVertexArray();
+        m_vertexArray->Create();
+        m_vertexArray->Bind();
 
-        if(m_VBO[MBI_Vertex] != 0U)
+        if(m_arrayBuffers[MBI_Vertex])
         {
-            glEnableVertexAttribArray(MBI_Vertex);
-            GLBinder::BindArrayBuffer(m_VBO[MBI_Vertex]);
-            glVertexAttribPointer(MBI_Vertex, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+            m_arrayBuffers[MBI_Vertex]->Bind();
+            m_vertexArray->EnableAttribute(MBI_Vertex, 3, GL_FLOAT);
         }
-        if(m_VBO[MBI_UV] != 0U)
+        if(m_arrayBuffers[MBI_Normal])
         {
-            glEnableVertexAttribArray(MBI_UV);
-            GLBinder::BindArrayBuffer(m_VBO[MBI_UV]);
-            glVertexAttribPointer(MBI_UV, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+            m_arrayBuffers[MBI_Normal]->Bind();
+            m_vertexArray->EnableAttribute(MBI_Normal, 3, GL_FLOAT);
         }
-        if(m_VBO[MBI_Normal] != 0U)
+        if(m_arrayBuffers[MBI_UV])
         {
-            glEnableVertexAttribArray(MBI_Normal);
-            GLBinder::BindArrayBuffer(m_VBO[MBI_Normal]);
-            glVertexAttribPointer(MBI_Normal, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+            m_arrayBuffers[MBI_UV]->Bind();
+            m_vertexArray->EnableAttribute(MBI_UV, 2, GL_FLOAT);
         }
-        if(m_VBO[MBI_Weight] != 0U)
+        if(m_arrayBuffers[MBI_Weight])
         {
-            glEnableVertexAttribArray(MBI_Weight);
-            GLBinder::BindArrayBuffer(m_VBO[MBI_Weight]);
-            glVertexAttribPointer(MBI_Weight, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+            m_arrayBuffers[MBI_Weight]->Bind();
+            m_vertexArray->EnableAttribute(MBI_Weight, 4, GL_FLOAT);
         }
-        if(m_VBO[MBI_WeightIndex] != 0U)
+        if(m_arrayBuffers[MBI_WeightIndex])
         {
-            glEnableVertexAttribArray(MBI_WeightIndex);
-            GLBinder::BindArrayBuffer(m_VBO[MBI_WeightIndex]);
-            glVertexAttribIPointer(MBI_WeightIndex, 4, GL_INT, 0, NULL);
+            m_arrayBuffers[MBI_WeightIndex]->Bind();
+            m_vertexArray->EnableAttribute(MBI_WeightIndex, 4, GL_INT);
         }
     }
 }
+
 void ROC::Material::LoadTexture(const std::string &f_path)
 {
     if(!m_texture)
@@ -135,11 +136,37 @@ void ROC::Material::LoadTexture(const std::string &f_path)
     }
 }
 
-void ROC::Material::Draw()
+void ROC::Material::Draw(bool f_useTexture)
 {
-    if(m_VAO != 0U)
+    if(m_vertexArray)
     {
-        GLBinder::BindVertexArray(m_VAO);
-        glDrawArrays(GL_TRIANGLES, 0, m_verticesCount);
+        GLSetting::Set(GL_BLEND, IsTransparent());
+        GLSetting::Set(GL_CULL_FACE, !IsDoubleSided());
+        GLSetting::SetDepthMask(HasDepth());
+
+        if(f_useTexture && m_texture) m_texture->Bind();
+        else ms_dummyTexture->Bind();
+
+        m_vertexArray->Bind();
+        m_vertexArray->Draw(GL_TRIANGLES, m_verticesCount);
+    }
+}
+
+// Static
+void ROC::Material::InitStaticResources()
+{
+    if(!ms_dummyTexture)
+    {
+        ms_dummyTexture = new Texture();
+        ms_dummyTexture->LoadDummy();
+    }
+}
+
+void ROC::Material::ReleaseStaticResources()
+{
+    if(ms_dummyTexture)
+    {
+        delete ms_dummyTexture;
+        ms_dummyTexture = nullptr;
     }
 }

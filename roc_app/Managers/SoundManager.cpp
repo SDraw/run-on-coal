@@ -16,6 +16,7 @@ ROC::SoundManager::SoundManager()
     m_listenerUp = glm::vec3(0.f, 1.f, 0.f);
     m_globalVolume = 100.f;
 }
+
 ROC::SoundManager::~SoundManager()
 {
 }
@@ -28,6 +29,7 @@ void ROC::SoundManager::SetListenerPosition(const glm::vec3 &f_pos)
         sf::Listener::setPosition(m_listenerPosition.x, m_listenerPosition.y, m_listenerPosition.z);
     }
 }
+
 const glm::vec3& ROC::SoundManager::GetListenerPosition() const
 {
     return m_listenerPosition;
@@ -41,6 +43,7 @@ void ROC::SoundManager::SetListenerDirection(const glm::vec3 &f_dir)
         sf::Listener::setDirection(m_listenerDirection.x, m_listenerDirection.y, m_listenerDirection.z);
     }
 }
+
 const glm::vec3& ROC::SoundManager::GetListenerDirection() const
 {
     return m_listenerDirection;
@@ -54,6 +57,7 @@ void ROC::SoundManager::SetListenerUp(const glm::vec3 &f_up)
         sf::Listener::setUpVector(m_listenerUp.x, m_listenerUp.y, m_listenerUp.z);
     }
 }
+
 const glm::vec3& ROC::SoundManager::GetListenerUp() const
 {
     return m_listenerUp;
@@ -68,6 +72,7 @@ void ROC::SoundManager::SetGlobalVolume(float f_val)
         sf::Listener::setGlobalVolume(m_globalVolume);
     }
 }
+
 float ROC::SoundManager::GetGlobalVolume() const
 {
     return m_globalVolume;

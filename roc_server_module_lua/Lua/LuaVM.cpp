@@ -44,6 +44,7 @@ LuaVM::LuaVM(LuaModule *f_module)
     lua_setfield(m_vm, LUA_REGISTRYINDEX, ms_userdataMetatableName);
     lua_pop(m_vm, 1);
 }
+
 LuaVM::~LuaVM()
 {
     lua_close(m_vm);

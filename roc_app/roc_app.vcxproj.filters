@@ -111,14 +111,8 @@
     <ClCompile Include="Elements\Shader\Shader.cpp">
       <Filter>Elements\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\Shader\ShaderUniform.cpp">
-      <Filter>Elements\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Managers\RenderManager\Quad2D.cpp">
       <Filter>Managers\RenderManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils\GLBinder.cpp">
-      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="Managers\VRManager.cpp">
       <Filter>Managers</Filter>
@@ -167,6 +161,42 @@
     </ClCompile>
     <ClCompile Include="Utils\CustomArguments.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLTexture2D.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLTexture.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLTextureCubemap.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLVertexArray.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLArrayBuffer.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLFramebuffer.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLRenderbuffer.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLShader.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements\Shader\ShaderUniform.cpp">
+      <Filter>Elements\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLViewport.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLSetting.cpp">
+      <Filter>GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GL\GLState.cpp">
+      <Filter>GL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -279,14 +309,8 @@
     <ClInclude Include="Elements\Shader\Shader.h">
       <Filter>Elements\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Elements\Shader\ShaderUniform.h">
-      <Filter>Elements\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Managers\RenderManager\Quad2D.h">
       <Filter>Managers\RenderManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\GLBinder.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Managers\VRManager.h">
       <Filter>Managers</Filter>
@@ -366,9 +390,6 @@
     <ClInclude Include="Interfaces\IShader.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Interfaces\IShaderUniform.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="Interfaces\ISound.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
@@ -419,6 +440,42 @@
     </ClInclude>
     <ClInclude Include="Utils\CustomArguments.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLTexture2D.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLTexture.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLTextureCubemap.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLVertexArray.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLArrayBuffer.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLFramebuffer.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLRenderbuffer.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLShader.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="Elements\Shader\ShaderUniform.h">
+      <Filter>Elements\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLViewport.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLSetting.h">
+      <Filter>GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\GLState.h">
+      <Filter>GL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -472,6 +529,9 @@
     </Filter>
     <Filter Include="Elements\Scene">
       <UniqueIdentifier>{2044d392-55dc-45a1-b02c-5c27702939c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GL">
+      <UniqueIdentifier>{f9eba9d3-e104-4a94-87ed-81f6a82909a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

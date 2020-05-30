@@ -2,6 +2,8 @@
 #include "Interfaces/IShader.h"
 #include "Elements/Element.h"
 
+class GLShader;
+
 namespace ROC
 {
 
@@ -12,7 +14,7 @@ class ShaderUniform;
 
 class Shader final : public Element, public virtual IShader
 {
-    GLuint m_program;
+    GLShader *m_shader;
     bool m_active;
 
     enum ShaderDefaultUniform : size_t
@@ -45,7 +47,7 @@ class Shader final : public Element, public virtual IShader
     {
         Drawable *m_element;
         int m_slot;
-        ShaderUniform *m_uniform;
+        GLint m_uniform;
     };
     std::vector<DrawableBindData> m_drawableBind;
     static int ms_drawableMaxCount;
@@ -58,13 +60,23 @@ class Shader final : public Element, public virtual IShader
     Shader& operator=(const Shader &that) = delete;
 
     void SetupUniformsAndLocations();
-    void FindDefaultUniform(ShaderDefaultUniform f_sud, const char *f_name, unsigned int f_type);
-public:
-    ShaderUniform* GetUniform(const std::string &f_uniform);
+    void FindDefaultUniform(ShaderDefaultUniform f_sud, unsigned char f_type, const char *f_name, size_t f_dataSize, size_t f_count = 1U);
 
+    ShaderUniform* GetUniform(const std::string &f_name);
+    void UpdateShaderFromUniform(ShaderUniform *l_uniform);
+
+    static size_t GetSizeFromGLType(GLenum f_type);
+    static unsigned char GetTypeFromGLType(GLenum f_type);
+
+    // ROC::Element
+    void OnParentRemoved(Element *f_parent) override;
+    void OnChildRemoved(Element *f_child) override;
+public:
     bool Attach(Drawable *f_drawable, const std::string &f_uniform);
     bool Detach(Drawable *f_drawable);
     bool HasAttached(Drawable *f_drawable) const;
+
+    bool SetUniformValue(const std::string &f_name, ShaderUniformType f_type, const void *f_data, size_t f_size);
 protected:
     Shader();
     ~Shader();
@@ -90,17 +102,13 @@ protected:
     void Disable();
     inline bool IsActive() const { return m_active; }
 
-    static void UpdateDrawableMaxCount();
-
-    void OnParentLinkDestroyed(Element *f_parent);
-    void OnChildLinkDestroyed(Element *f_child);
+    static void InitStaticResources();
 
     friend class ElementManager;
     friend class RenderManager;
     friend class SfmlManager;
     friend class Scene;
 private:
-    IShaderUniform* GetIUniform(const std::string &f_uniform);
     bool Attach(IDrawable *f_drawable, const std::string &f_uniform);
     bool Detach(IDrawable *f_drawable);
     bool HasAttached(IDrawable *f_drawable) const;

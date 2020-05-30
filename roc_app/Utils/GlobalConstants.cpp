@@ -16,5 +16,9 @@ extern const float g_QuadVertexUV[] = {
     0.f, 0.f, 0.f, 1.f, 1.f, 1.f,
     0.f, 0.f, 1.f, 1.f, 1.f, 0.f
 };
+extern const float g_QuadVertexNormals[] = {
+    0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f,
+    0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f
+};
 
 }

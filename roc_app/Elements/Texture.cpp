@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Elements/Texture.h"
-
-#include "Utils/GLBinder.h"
+#include "GL/GLTexture2D.h"
+#include "GL/GLTextureCubemap.h"
 
 namespace ROC
 {
@@ -25,20 +25,22 @@ ROC::Texture::Texture()
     m_type = TT_None;
     m_filtering = DFT_None;
     m_compressed = false;
-    m_texture = 0U;
+    m_texture = nullptr;
 }
+
 ROC::Texture::~Texture()
 {
     if(m_texture != 0U)
     {
-        IsCubic() ? GLBinder::ResetTextureCubemap(m_texture) : GLBinder::ResetTexture2D(m_texture);
-        glDeleteTextures(1, &m_texture);
+        m_texture->Destroy();
+        delete m_texture;
+        m_texture = nullptr;
     }
 }
 
 bool ROC::Texture::Load(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress)
 {
-    if(m_texture == 0U)
+    if(!m_texture)
     {
         sf::Image l_image;
         if(l_image.loadFromFile(f_path))
@@ -53,101 +55,79 @@ bool ROC::Texture::Load(const std::string &f_path, unsigned char f_type, unsigne
             btClamp<unsigned char>(m_filtering, DFT_Nearest, DFT_Linear);
             m_compressed = f_compress;
 
-            const GLuint l_lastTexture2D = GLBinder::GetBindedTexture2D();
-
-            glGenTextures(1, &m_texture);
-            GLBinder::BindTexture2D(m_texture);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
-            glTexImage2D(GL_TEXTURE_2D, 0, (f_type == TT_RGB) ? (m_compressed ? GL_COMPRESSED_RGB : GL_RGB) : (m_compressed ? GL_COMPRESSED_RGBA : GL_RGBA), m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
-
-            GLBinder::BindTexture2D(l_lastTexture2D);
+            m_texture = new GLTexture2D();
+            dynamic_cast<GLTexture2D*>(m_texture)->Create(m_size.x, m_size.y, (f_type == TT_RGB) ? (m_compressed ? GL_COMPRESSED_RGB : GL_RGB) : (m_compressed ? GL_COMPRESSED_RGBA : GL_RGBA), GL_RGBA, l_image.getPixelsPtr(), GL_NEAREST + m_filtering);
         }
     }
-    return (m_texture != 0U);
+    return (m_texture != nullptr);
 }
+
 bool ROC::Texture::LoadCubemap(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress)
 {
-    if(m_texture == 0U)
+    if(!m_texture && (f_path.size() >= 6U))
     {
         m_type = TT_Cubemap;
         btClamp<unsigned char>(m_filtering, DFT_Nearest, DFT_Linear);
         m_compressed = f_compress;
 
-        const GLuint l_lastTextureCubemap = GLBinder::GetBindedTextureCubemap();
+        sf::Image l_images[6U];
+        for(size_t i = 0U; i < 6U; i++) l_images[i].loadFromFile(f_path[i]);
 
-        glGenTextures(1, &m_texture);
-        GLBinder::BindTextureCubemap(m_texture);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST + m_filtering);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST + m_filtering);
+        sf::Vector2u l_size = l_images[0U].getSize();
+        bool l_valid = true;
 
-        for(size_t i = 0U, j = std::min(g_TextureCubeSidesCount, f_path.size()); i < j; i++)
+        for(size_t i = 1U; i < 6U; i++)
         {
-            sf::Image l_image;
-            if(l_image.loadFromFile(f_path[i]))
+            if(l_size != l_images[i].getSize())
             {
-                sf::Vector2u l_imageSize = l_image.getSize();
-                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<int>(i), 0, m_compressed ? GL_COMPRESSED_RGB : GL_RGB, l_imageSize.x, l_imageSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_image.getPixelsPtr());
+                l_valid = false;
+                break;
             }
         }
 
-        GLBinder::BindTextureCubemap(l_lastTextureCubemap);
+        if(l_valid)
+        {
+            std::vector<const void*> l_data;
+            for(size_t i = 0U; i < 6U; i++) l_data.push_back(l_images[i].getPixelsPtr());
+
+            m_texture = new GLTextureCubemap();
+            dynamic_cast<GLTextureCubemap*>(m_texture)->Create(l_size.x, l_size.y, m_compressed ? GL_COMPRESSED_RGB : GL_RGB, GL_RGBA, l_data, GL_NEAREST + m_filtering);
+        }
     }
-    return (m_texture != 0U);
+    return (m_texture != nullptr);
 }
+
 bool ROC::Texture::LoadDummy()
 {
-    if(m_texture == 0U)
+    if(!m_texture)
     {
         std::memcpy(&m_size, &g_TextureDummySize, sizeof(glm::ivec2));
         m_filtering = DFT_Nearest;
         m_type = TT_RGB;
         m_compressed = false;
 
-        const GLuint l_lastTexture2D = GLBinder::GetBindedTexture2D();
-
-        glGenTextures(1, &m_texture);
-        GLBinder::BindTexture2D(m_texture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB, g_TextureDummySize.x, g_TextureDummySize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, g_TextureDummyPattern);
-
-        GLBinder::BindTexture2D(l_lastTexture2D);
+        m_texture = new GLTexture2D();
+        dynamic_cast<GLTexture2D*>(m_texture)->Create(m_size.x, m_size.y, GL_COMPRESSED_RGB, GL_RGB, g_TextureDummyPattern, GL_NEAREST);
     }
-    return (m_texture != 0U);
+    return (m_texture != nullptr);
 }
 
 bool ROC::Texture::IsTransparent() const
 {
     return (m_type == TT_RGBA);
 }
+
 bool ROC::Texture::IsCubic() const
 {
     return (m_type == TT_Cubemap);
 }
+
 bool ROC::Texture::IsCompressed() const
 {
     return m_compressed;
 }
 
-void ROC::Texture::Bind()
+void ROC::Texture::Bind(size_t f_slot)
 {
-    if(m_texture != 0U)
-    {
-        switch(m_type)
-        {
-            case TT_RGB: case TT_RGBA:
-                GLBinder::BindTexture2D(m_texture);
-                break;
-            case TT_Cubemap:
-                GLBinder::BindTextureCubemap(m_texture);
-                break;
-        }
-    }
+    if(m_texture) m_texture->Bind(static_cast<GLenum>(f_slot));
 }

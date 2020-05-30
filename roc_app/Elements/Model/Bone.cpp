@@ -31,6 +31,7 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_dynamic = false;
     m_dynamicBody = nullptr;
 }
+
 ROC::Bone::~Bone()
 {
     m_children.clear();
@@ -51,6 +52,7 @@ void ROC::Bone::SetFrameData(BoneFrameData *f_data)
     m_localTransform->SetRotation(f_data->m_rotation);
     m_localTransform->SetScale(f_data->m_scale);
 }
+
 void ROC::Bone::SetFrameData(BoneFrameData *f_data, float f_blend)
 {
     const glm::vec3 l_pos = glm::mix(m_localTransform->GetPosition(), f_data->m_position, f_blend);
@@ -68,6 +70,7 @@ void ROC::Bone::SetFullMatrix(const btTransform &f_transform)
     f_transform.getOpenGLMatrix(glm::value_ptr(m_fullMatrix));
     m_updated = true;
 }
+
 void ROC::Bone::SetPoseMatrix(const btTransform &f_transform)
 {
     f_transform.getOpenGLMatrix(glm::value_ptr(m_poseMatrix));
