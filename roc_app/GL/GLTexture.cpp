@@ -3,6 +3,8 @@
 #include "GL/GLTexture.h"
 
 GLuint GLTexture::ms_activeSlot = 0U;
+GLuint GLTexture::ms_activeName[] = { 0U };
+GLenum GLTexture::ms_activeNameType[] = { GL_NONE };
 
 GLTexture::GLTexture()
 {

@@ -3,8 +3,6 @@
 
 class GLTexture2D : public GLTexture
 {
-    __declspec(thread) static GLuint ms_active[16U];
-
     GLTexture2D(const GLTexture2D &that) = delete;
     GLTexture2D& operator=(const GLTexture2D &that) = delete;
 public:

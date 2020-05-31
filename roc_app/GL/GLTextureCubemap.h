@@ -3,8 +3,6 @@
 
 class GLTextureCubemap : public GLTexture
 {
-    __declspec(thread) static GLuint ms_active[16U];
-
     GLTextureCubemap(const GLTextureCubemap &that) = delete;
     GLTextureCubemap& operator=(const GLTextureCubemap &that) = delete;
 public:

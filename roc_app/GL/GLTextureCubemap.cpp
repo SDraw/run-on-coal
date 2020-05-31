@@ -2,8 +2,6 @@
 
 #include "GL/GLTextureCubemap.h"
 
-GLuint GLTextureCubemap::ms_active[] = { 0U };
-
 GLTextureCubemap::GLTextureCubemap()
 {
 }
@@ -27,7 +25,7 @@ bool GLTextureCubemap::Create(GLsizei f_width, GLsizei f_height, GLint f_format,
 
             for(size_t i = 0U; i < 6U; i++) glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(i), 0, f_format, f_width, f_height, 0, f_dataFormat, GL_UNSIGNED_BYTE, f_data[i]);
 
-            if(ms_active[ms_activeSlot] != 0U) glBindTexture(GL_TEXTURE_CUBE_MAP, ms_active[ms_activeSlot]);
+            if(ms_activeName[ms_activeSlot] != 0U) glBindTexture(ms_activeNameType[ms_activeSlot], ms_activeName[ms_activeSlot]);
         }
     }
     return (m_name != 0U);
@@ -39,9 +37,10 @@ bool GLTextureCubemap::Destroy()
     {
         for(size_t i = 0U; i < 16U; i++)
         {
-            if(ms_active[i] == m_name)
+            if(ms_activeName[i] == m_name)
             {
-                ms_active[i] = 0U;
+                ms_activeName[i] = 0U;
+                ms_activeNameType[i] = GL_NONE;
                 break;
             }
         }
@@ -62,9 +61,10 @@ bool GLTextureCubemap::Bind(GLenum f_slot)
             ms_activeSlot = f_slot;
         }
 
-        if(ms_active[ms_activeSlot] != m_name)
+        if(ms_activeName[ms_activeSlot] != m_name)
         {
-            ms_active[ms_activeSlot] = m_name;
+            ms_activeName[ms_activeSlot] = m_name;
+            ms_activeNameType[ms_activeSlot] = GL_TEXTURE_CUBE_MAP;
             glBindTexture(GL_TEXTURE_CUBE_MAP, m_name);
         }
     }

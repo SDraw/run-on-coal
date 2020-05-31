@@ -15,6 +15,8 @@ protected:
     GLuint m_name;
 
     __declspec(thread) static GLuint ms_activeSlot;
+    __declspec(thread) static GLuint ms_activeName[16U];
+    __declspec(thread) static GLenum ms_activeNameType[16U];
 
     GLTexture();
 };
