@@ -47,7 +47,7 @@ ROC::VRManager::VRManager(Core *f_core)
             std::string l_errorString("Unable to start application in VR mode\nOpenVR: ");
             l_errorString.append(vr::VR_GetVRInitErrorAsEnglishDescription(l_hmdError));
             MessageBoxA(NULL, l_errorString.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
-            exit(EXIT_FAILURE);
+            std::terminate();
         }
         Camera::SetVRSystem(m_vrSystem);
 
@@ -58,13 +58,13 @@ ROC::VRManager::VRManager(Core *f_core)
         if(!m_renderTargets[VRE_Left]->Create(RenderTarget::RTT_RGBA, m_targetSize, Drawable::DFT_Linear))
         {
             MessageBoxA(NULL, "OpenVR: Unable to create render target for left eye", NULL, MB_OK | MB_ICONEXCLAMATION);
-            exit(EXIT_FAILURE);
+            std::terminate();
         }
         m_renderTargets[VRE_Right] = new RenderTarget();
         if(!m_renderTargets[VRE_Right]->Create(RenderTarget::RTT_RGBA, m_targetSize, Drawable::DFT_Linear))
         {
             MessageBoxA(NULL, "OpenVR: Unable to create render target for right eye", NULL, MB_OK | MB_ICONEXCLAMATION);
-            exit(EXIT_FAILURE);
+            std::terminate();
         }
 
         m_vrTextures[0U] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_renderTargets[VRE_Left]->GetGLTexture()->GetName())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };

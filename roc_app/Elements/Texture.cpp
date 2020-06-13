@@ -7,7 +7,8 @@
 namespace ROC
 {
 
-const unsigned char g_TextureDummyPattern[] = {
+const unsigned char g_TextureDummyPattern[]
+{
     0x7FU, 0x7FU, 0x7FU,
     0xF7U, 0x94U, 0x1DU,
     0xF7U, 0x94U, 0x1DU,

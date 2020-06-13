@@ -89,7 +89,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         m_core->GetLogManager()->Log(l_log);
 
         MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
-        exit(EXIT_FAILURE);
+        std::terminate();
     }
     else
     {
@@ -106,7 +106,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
             m_core->GetLogManager()->Log(l_log);
 
             MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
-            exit(EXIT_FAILURE);
+            std::terminate();
         }
     }
     m_frameLimit = l_configManager->GetFPSLimit();
@@ -123,7 +123,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
         m_core->GetLogManager()->Log(l_log);
 
         MessageBoxA(m_window->getSystemHandle(), l_log.c_str(), NULL, MB_OK | MB_ICONEXCLAMATION);
-        exit(EXIT_FAILURE);
+        std::terminate();
     }
 
     GLState::Finish(); // Wait for something

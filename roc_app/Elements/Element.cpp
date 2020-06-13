@@ -6,7 +6,8 @@
 namespace ROC
 {
 
-const std::string g_ElementTypeName[] = {
+const std::string g_ElementTypeName[]
+{
     "Geometry",
     "Model",
     "Animation",
