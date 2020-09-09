@@ -13,7 +13,6 @@ class VRManager final : public IVRManager
     Core *m_core;
 
     vr::IVRSystem *m_vrSystem;
-    vr::IVRCompositor *m_vrCompositor;
 
     RenderTarget *m_renderTargets[2U];
     glm::uvec2 m_targetSize;

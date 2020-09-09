@@ -51,8 +51,6 @@ ROC::VRManager::VRManager(Core *f_core)
         }
         Camera::SetVRSystem(m_vrSystem);
 
-        m_vrCompositor = vr::VRCompositor();
-
         m_vrSystem->GetRecommendedRenderTargetSize(&m_targetSize.x, &m_targetSize.y);
         m_renderTargets[VRE_Left] = new RenderTarget();
         if(!m_renderTargets[VRE_Left]->Create(RenderTarget::RTT_RGBA, m_targetSize, Drawable::DFT_Linear))
@@ -82,7 +80,6 @@ ROC::VRManager::VRManager(Core *f_core)
     else
     {
         m_vrSystem = nullptr;
-        m_vrCompositor = nullptr;
         m_overlayHandle = vr::k_ulOverlayHandleInvalid;
         for(auto &l_rt : m_renderTargets) l_rt = nullptr;
         m_hmdFramePrediction = 0.f;
@@ -295,13 +292,10 @@ void ROC::VRManager::Render()
         m_renderTargets[VRE_Right]->Disable();
         RenderTarget::SetFallbackRenderTarget(nullptr);
 
-        if(m_vrCompositor)
-        {
-            m_vrCompositor->WaitGetPoses(m_trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-            m_vrCompositor->Submit(vr::Eye_Left, &m_vrTextures[0U]);
-            m_vrCompositor->Submit(vr::Eye_Right, &m_vrTextures[1U]);
-            GLState::Flush();
-        }
+        vr::VRCompositor()->WaitGetPoses(m_trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+        vr::VRCompositor()->Submit(vr::Eye_Left, &m_vrTextures[0U]);
+        vr::VRCompositor()->Submit(vr::Eye_Right, &m_vrTextures[1U]);
+        GLState::Flush();
     }
 }
 
