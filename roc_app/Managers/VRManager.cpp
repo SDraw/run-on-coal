@@ -18,11 +18,11 @@
 namespace ROC
 {
 
-extern const glm::mat4 g_IdentityMatrix;
-extern const glm::vec3 g_EmptyVec3;
-extern const glm::quat g_DefaultRotation;
+extern const glm::mat4 g_identityMatrix;
+extern const glm::vec3 g_emptyVec3;
+extern const glm::quat g_defaultRotation;
 
-const std::vector<std::string> g_VRRenderSide
+const std::vector<std::string> g_vrRenderSide
 {
     "left", "right"
 };
@@ -90,9 +90,9 @@ ROC::VRManager::VRManager(Core *f_core)
     m_event = { 0 };
     m_state = true;
 
-    m_transform = g_IdentityMatrix;
-    m_hmdPosition = g_EmptyVec3;
-    m_hmdRotation = g_DefaultRotation;
+    m_transform = g_identityMatrix;
+    m_hmdPosition = g_emptyVec3;
+    m_hmdRotation = g_defaultRotation;
 
     m_arguments = new CustomArguments();
 }
@@ -276,7 +276,7 @@ void ROC::VRManager::Render()
         m_renderTargets[VRE_Left]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_renderTargets[VRE_Left]);
 
-        m_arguments->Push(g_VRRenderSide[VRRenderSide::VRRS_Left]);
+        m_arguments->Push(g_vrRenderSide[VRRenderSide::VRRS_Left]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments->Clear();
 
@@ -284,7 +284,7 @@ void ROC::VRManager::Render()
         m_renderTargets[VRE_Right]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_renderTargets[VRE_Right]);
 
-        m_arguments->Push(g_VRRenderSide[VRRenderSide::VRRS_Right]);
+        m_arguments->Push(g_vrRenderSide[VRRenderSide::VRRS_Right]);
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments->Clear();
 
@@ -402,10 +402,10 @@ void ROC::VRManager::AddController(vr::TrackedDeviceIndex_t f_id)
                 l_controller->m_hand = CHA_Any;
                 break;
         }
-        l_controller->m_position = g_EmptyVec3;
-        l_controller->m_rotation = g_DefaultRotation;
-        l_controller->m_velocity = g_EmptyVec3;
-        l_controller->m_angularVelocity = g_EmptyVec3;
+        l_controller->m_position = g_emptyVec3;
+        l_controller->m_rotation = g_defaultRotation;
+        l_controller->m_velocity = g_emptyVec3;
+        l_controller->m_angularVelocity = g_emptyVec3;
         l_controller->m_oldState = { 0 };
         l_controller->m_newState = { 0 };
         l_controller->m_active = true;

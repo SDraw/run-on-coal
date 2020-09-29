@@ -4,20 +4,20 @@
 namespace ROC
 {
 
-extern const glm::vec3 g_EmptyVec3;
-extern const glm::vec3 g_DefaultScale;
-extern const glm::quat g_DefaultRotation;
-extern const glm::mat4 g_IdentityMatrix;
-extern const float g_Epsilon;
+extern const glm::vec3 g_emptyVec3;
+extern const glm::vec3 g_defaultScale;
+extern const glm::quat g_defaultRotation;
+extern const glm::mat4 g_identityMatrix;
+extern const float g_epsilon;
 
 }
 
 ROC::Transformation::Transformation()
 {
-    m_position = g_EmptyVec3;
-    m_rotation = g_DefaultRotation;
-    m_scale = g_DefaultScale;
-    m_matrix = g_IdentityMatrix;
+    m_position = g_emptyVec3;
+    m_rotation = g_defaultRotation;
+    m_scale = g_defaultScale;
+    m_matrix = g_identityMatrix;
     m_useScale = false;
     m_update = false;
     m_updated = false;
@@ -52,7 +52,7 @@ void ROC::Transformation::SetScale(const glm::vec3 &f_scl)
         std::memcpy(&m_scale, &f_scl, sizeof(glm::vec3));
         for(int i = 0; i < 3; i++)
         {
-            if(glm::epsilonNotEqual(m_scale[i], g_DefaultScale[i], g_Epsilon))
+            if(glm::epsilonNotEqual(m_scale[i], g_defaultScale[i], g_epsilon))
             {
                 m_useScale = true;
                 break;
@@ -76,7 +76,7 @@ void ROC::Transformation::UpdateMatrix()
         l_transform.setOrigin(btVector3(m_position.x, m_position.y, m_position.z));
         l_transform.setRotation(btQuaternion(m_rotation.x, m_rotation.y, m_rotation.z, m_rotation.w));
         l_transform.getOpenGLMatrix(glm::value_ptr(m_matrix));
-        if(m_useScale) m_matrix *= glm::scale(g_IdentityMatrix, m_scale);
+        if(m_useScale) m_matrix *= glm::scale(g_identityMatrix, m_scale);
         m_update = false;
         m_updated = true;
     }

@@ -7,7 +7,7 @@
 namespace ROC
 {
 
-extern const glm::mat4 g_IdentityMatrix;
+extern const glm::mat4 g_identityMatrix;
 
 }
 
@@ -24,9 +24,9 @@ ROC::Bone::Bone(const std::string &f_name, const glm::quat &f_rot, const glm::ve
     m_localTransform->SetScale(f_scl);
     m_localTransform->UpdateMatrix();
 
-    m_fullMatrix = g_IdentityMatrix;
-    m_bindMatrix = g_IdentityMatrix;
-    m_poseMatrix = g_IdentityMatrix;
+    m_fullMatrix = g_identityMatrix;
+    m_bindMatrix = g_identityMatrix;
+    m_poseMatrix = g_identityMatrix;
     m_updated = true;
     m_dynamic = false;
     m_dynamicBody = nullptr;

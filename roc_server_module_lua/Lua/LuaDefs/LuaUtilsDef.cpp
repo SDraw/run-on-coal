@@ -2,7 +2,7 @@
 
 #include "Lua/LuaDefs/LuaUtilsDef.h"
 
-#include "Lua/ArgReader.h"
+#include "Lua/LuaArgReader.h"
 #include "Module/LuaModule.h"
 
 void LuaUtilsDef::Init(lua_State *f_vm)
@@ -25,53 +25,53 @@ int LuaUtilsDef::LogPrint(lua_State *f_vm)
 {
     // bool logPrint(str text)
     std::string l_text;
-    ArgReader argStream(f_vm);
-    argStream.ReadText(l_text);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadText(l_text);
+    if(!l_argStream.HasErrors())
     {
         LuaModule::GetModule()->GetEngineCore()->GetILogManager()->Log(l_text);
-        argStream.PushBoolean(true);
+        l_argStream.PushBoolean(true);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaUtilsDef::GetTick(lua_State *f_vm)
 {
     // int getTickCount()
-    ArgReader argStream(f_vm);
+    LuaArgReader l_argStream(f_vm);
     lua_Integer l_tick = 0;
     l_tick = static_cast<lua_Integer>(GetTickCount());
-    argStream.PushInteger(l_tick);
-    return argStream.GetReturnValue();
+    l_argStream.PushInteger(l_tick);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaUtilsDef::Base64Encode(lua_State *f_vm)
 {
     // std base64Encode(str data)
     std::string l_data;
-    ArgReader argStream(f_vm);
-    argStream.ReadText(l_data);
-    if(!argStream.HasErrors() && !l_data.empty())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadText(l_data);
+    if(!l_argStream.HasErrors() && !l_data.empty())
     {
         std::string l_encoded;
-        Base64::Encode(l_data, &l_encoded) ? argStream.PushText(l_encoded) : argStream.PushBoolean(false);
+        Base64::Encode(l_data, &l_encoded) ? l_argStream.PushText(l_encoded) : l_argStream.PushBoolean(false);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaUtilsDef::Base64Decode(lua_State *f_vm)
 {
     // str base64Decode(str data)
     std::string l_data;
-    ArgReader argStream(f_vm);
-    argStream.ReadText(l_data);
-    if(!argStream.HasErrors() && !l_data.empty())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadText(l_data);
+    if(!l_argStream.HasErrors() && !l_data.empty())
     {
         std::string l_decoded;
-        Base64::Decode(l_data, &l_decoded) ? argStream.PushText(l_decoded) : argStream.PushBoolean(false);
+        Base64::Decode(l_data, &l_decoded) ? l_argStream.PushText(l_decoded) : l_argStream.PushBoolean(false);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }

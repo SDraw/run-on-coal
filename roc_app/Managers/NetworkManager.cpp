@@ -10,7 +10,7 @@
 namespace ROC
 {
 
-const std::string g_NetworkStates[]
+const std::string g_networkStates[]
 {
     "disconnected", "connecting", "connected", "disconnecting"
 };
@@ -125,7 +125,7 @@ void ROC::NetworkManager::DoPulse()
                 {
                     m_networkState = NS_Disconnected;
 
-                    m_arguments->Push(g_NetworkStates[NetworkState::NS_Disconnected]);
+                    m_arguments->Push(g_networkStates[NetworkState::NS_Disconnected]);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkStateChange, m_arguments);
                     m_arguments->Clear();
                 } break;
@@ -135,7 +135,7 @@ void ROC::NetworkManager::DoPulse()
                     m_networkState = NS_Connected;
                     m_networkInterface->SetOccasionalPing(true);
 
-                    m_arguments->Push(g_NetworkStates[NetworkState::NS_Connected]);
+                    m_arguments->Push(g_networkStates[NetworkState::NS_Connected]);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnNetworkStateChange, m_arguments);
                     m_arguments->Clear();
                 } break;

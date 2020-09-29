@@ -7,24 +7,24 @@
 namespace ROC
 {
 
-extern const glm::mat4 g_IdentityMatrix;
-extern const glm::vec2 g_EmptyVec2;
-extern const glm::vec3 g_EmptyVec3;
-extern const glm::quat g_DefaultRotation;
+extern const glm::mat4 g_identityMatrix;
+extern const glm::vec2 g_emptyVec2;
+extern const glm::vec3 g_emptyVec3;
+extern const glm::quat g_defaultRotation;
 
-extern const float g_QuadVertexUV[];
-extern const float g_QuadVertexNormals[];
-const size_t g_Quad3DVerticesCount = 6U;
+extern const float g_quadVertexUV[];
+extern const float g_quadVertexNormals[];
+const size_t g_quad3DVerticesCount = 6U;
 
 }
 
 
 ROC::Quad3D::Quad3D()
 {
-    m_position = g_EmptyVec3;
-    m_rotation = g_DefaultRotation;
-    m_size = g_EmptyVec2;
-    m_matrix = g_IdentityMatrix;
+    m_position = g_emptyVec3;
+    m_rotation = g_defaultRotation;
+    m_size = g_emptyVec2;
+    m_matrix = g_identityMatrix;
 
     m_vertexArray = new GLVertexArray();
     m_vertexArray->Create();
@@ -32,15 +32,15 @@ ROC::Quad3D::Quad3D()
 
     for(size_t i = 0U; i < QBI_BufferCount; i++) m_arrayBuffers[i] = new GLArrayBuffer();
 
-    m_arrayBuffers[QBI_Vertex]->Create(sizeof(glm::vec3) * g_Quad3DVerticesCount, NULL, GL_DYNAMIC_DRAW);
+    m_arrayBuffers[QBI_Vertex]->Create(sizeof(glm::vec3) * g_quad3DVerticesCount, NULL, GL_DYNAMIC_DRAW);
     m_arrayBuffers[QBI_Vertex]->Bind();
     m_vertexArray->EnableAttribute(QBI_Vertex, 3, GL_FLOAT);
 
-    m_arrayBuffers[QBI_Normal]->Create(sizeof(glm::vec3) * g_Quad3DVerticesCount, g_QuadVertexNormals, GL_STATIC_DRAW);
+    m_arrayBuffers[QBI_Normal]->Create(sizeof(glm::vec3) * g_quad3DVerticesCount, g_quadVertexNormals, GL_STATIC_DRAW);
     m_arrayBuffers[QBI_Normal]->Bind();
     m_vertexArray->EnableAttribute(QBI_Normal, 3, GL_FLOAT);
 
-    m_arrayBuffers[QBI_UV]->Create(sizeof(glm::vec2) * g_Quad3DVerticesCount, g_QuadVertexUV, GL_STATIC_DRAW);
+    m_arrayBuffers[QBI_UV]->Create(sizeof(glm::vec2) * g_quad3DVerticesCount, g_quadVertexUV, GL_STATIC_DRAW);
     m_arrayBuffers[QBI_UV]->Bind();
     m_vertexArray->EnableAttribute(QBI_UV, 2, GL_FLOAT);
 
@@ -82,12 +82,12 @@ void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_r
         m_vertex[1].y = m_vertex[2].y = m_vertex[4].y = -m_size.y / 2.f;
 
         m_arrayBuffers[QBI_Vertex]->Bind();
-        m_arrayBuffers[QBI_Vertex]->Update(0, sizeof(glm::vec3)*g_Quad3DVerticesCount, m_vertex);
+        m_arrayBuffers[QBI_Vertex]->Update(0, sizeof(glm::vec3)*g_quad3DVerticesCount, m_vertex);
     }
 }
 
 void ROC::Quad3D::Draw()
 {
     m_vertexArray->Bind();
-    m_vertexArray->Draw(GL_TRIANGLES, g_Quad3DVerticesCount);
+    m_vertexArray->Draw(GL_TRIANGLES, g_quad3DVerticesCount);
 }

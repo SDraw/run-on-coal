@@ -13,10 +13,7 @@
 namespace ROC
 {
 
-extern const glm::vec3 g_EmptyVec3;
-extern const glm::vec4 g_EmptyVec4;
-extern const glm::mat4 g_EmptyMat4;
-const std::hash<std::string> g_StringHash;
+const std::hash<std::string> g_stringHash;
 
 }
 
@@ -129,7 +126,7 @@ bool ROC::Scene::AddShader(Shader *f_shader, const std::string &f_layer, unsigne
 
     if(!HasShader(f_shader))
     {
-        const size_t l_hash = g_StringHash(f_layer);
+        const size_t l_hash = g_stringHash(f_layer);
         for(auto l_layer : m_layers)
         {
             if(l_layer->GetHash() == l_hash)
@@ -239,7 +236,7 @@ bool ROC::Scene::AddModel(Model *f_model, const std::string &f_shaderGroup)
     bool l_result = false;
     if(!HasModel(f_model))
     {
-        size_t l_hash = g_StringHash(f_shaderGroup);
+        size_t l_hash = g_stringHash(f_shaderGroup);
         for(auto l_layer : m_layers)
         {
             if(l_layer->GetHash() == l_hash)
@@ -297,7 +294,7 @@ bool ROC::Scene::SetModelLayer(Model *f_model, const std::string &f_layer)
 {
     bool l_result = false;
 
-    const size_t l_hash = g_StringHash(f_layer);
+    const size_t l_hash = g_stringHash(f_layer);
     for(auto l_layerTo : m_layers)
     {
         if(l_layerTo->GetHash() == l_hash)
@@ -328,7 +325,7 @@ bool ROC::Scene::IsActive() const
 const ROC::SceneLayer* ROC::Scene::GetLayer(const std::string &f_layer) const
 {
     SceneLayer *l_result = nullptr;
-    const size_t l_hash = g_StringHash(f_layer);
+    const size_t l_hash = g_stringHash(f_layer);
     for(auto l_layer : m_layers)
     {
         if(l_layer->GetHash() == l_hash)

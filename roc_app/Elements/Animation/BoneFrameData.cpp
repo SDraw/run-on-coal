@@ -5,18 +5,18 @@
 namespace ROC
 {
 
-extern const glm::vec3 g_EmptyVec3;
-extern const glm::quat g_DefaultRotation;
-extern const glm::vec3 g_DefaultScale;
-extern const float g_Epsilon;
+extern const glm::vec3 g_emptyVec3;
+extern const glm::quat g_defaultRotation;
+extern const glm::vec3 g_defaultScale;
+extern const float g_epsilon;
 
 }
 
 ROC::BoneFrameData::BoneFrameData()
 {
-    m_position = g_EmptyVec3;
-    m_rotation = g_DefaultRotation;
-    m_scale = g_DefaultScale;
+    m_position = g_emptyVec3;
+    m_rotation = g_defaultRotation;
+    m_scale = g_defaultScale;
     m_useScale = false;
 }
 
@@ -25,7 +25,7 @@ ROC::BoneFrameData::BoneFrameData(const glm::vec3 &f_pos, const glm::quat &f_rot
     m_position = f_pos;
     m_rotation = f_rot;
     m_scale = f_scl;
-    m_useScale = glm::all(glm::epsilonNotEqual(m_scale, g_DefaultScale, g_Epsilon));
+    m_useScale = glm::all(glm::epsilonNotEqual(m_scale, g_defaultScale, g_epsilon));
 }
 
 ROC::BoneFrameData::~BoneFrameData()

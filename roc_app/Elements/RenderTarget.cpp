@@ -11,8 +11,8 @@
 namespace ROC
 {
 
-const glm::vec4 g_DefaultClearColor(0.f, 0.f, 0.f, 0.f);
-const glm::bvec2 g_DefaultClearBuffer(true, true);
+const glm::vec4 g_defaultClearColor(0.f, 0.f, 0.f, 0.f);
+const glm::bvec2 g_defaultClearBuffer(true, true);
 
 }
 
@@ -29,8 +29,8 @@ ROC::RenderTarget::RenderTarget()
     m_renderbuffer = nullptr;
     m_texture = nullptr;
 
-    m_clearColor = g_DefaultClearColor;
-    m_clearBuffer = g_DefaultClearBuffer;
+    m_clearColor = g_defaultClearColor;
+    m_clearBuffer = g_defaultClearBuffer;
 }
 
 ROC::RenderTarget::~RenderTarget()

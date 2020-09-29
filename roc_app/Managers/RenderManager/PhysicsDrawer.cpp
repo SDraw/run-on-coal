@@ -9,7 +9,7 @@
 namespace ROC
 {
 
-const size_t g_PhysicsDrawerMaxLinesCount = 65536U;
+const size_t g_physicsDrawerMaxLinesCount = 65536U;
 
 }
 
@@ -21,11 +21,11 @@ ROC::PhysicsDrawer::PhysicsDrawer()
 
     for(size_t i = 0U; i < PDBI_BufferCount; i++) m_arrayBuffers[i] = new GLArrayBuffer();
 
-    m_arrayBuffers[PDBI_Vertex]->Create(g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), nullptr, GL_DYNAMIC_DRAW);
+    m_arrayBuffers[PDBI_Vertex]->Create(g_physicsDrawerMaxLinesCount*sizeof(glm::vec3), nullptr, GL_DYNAMIC_DRAW);
     m_arrayBuffers[PDBI_Vertex]->Bind();
     m_vertexArray->EnableAttribute(PDBI_Vertex, 3, GL_FLOAT);
 
-    m_arrayBuffers[PDBI_Color]->Create(g_PhysicsDrawerMaxLinesCount*sizeof(glm::vec3), nullptr, GL_DYNAMIC_DRAW);
+    m_arrayBuffers[PDBI_Color]->Create(g_physicsDrawerMaxLinesCount*sizeof(glm::vec3), nullptr, GL_DYNAMIC_DRAW);
     m_arrayBuffers[PDBI_Color]->Bind();
     m_vertexArray->EnableAttribute(PDBI_Color, 3, GL_FLOAT);
 }
@@ -85,7 +85,7 @@ void ROC::PhysicsDrawer::Draw(float f_width)
         m_vertexArray->Bind();
         while(!m_lines.empty())
         {
-            const size_t l_count = std::min(g_PhysicsDrawerMaxLinesCount, m_lines.size()); // Count is same for m_colors
+            const size_t l_count = std::min(g_physicsDrawerMaxLinesCount, m_lines.size()); // Count is same for m_colors
             const size_t l_dataSize = l_count*sizeof(glm::vec3);
 
             m_arrayBuffers[PDBI_Vertex]->Bind();

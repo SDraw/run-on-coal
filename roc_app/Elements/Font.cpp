@@ -11,12 +11,12 @@
 namespace ROC
 {
 
-extern const glm::vec2 g_EmptyVec2;
-const int g_FontDefaultAtlasSize = 256;
-const float g_FontDefaultAtlasOffset = 1.f / static_cast<float>(g_FontDefaultAtlasSize);
-const GLint g_FontSwizzleMask[] = { GL_ONE, GL_ONE, GL_ONE, GL_RED };
-const size_t g_FontCharacterVerticesCount = 6U;
-const size_t g_FontTextBlockSize = 512U;
+extern const glm::vec2 g_emptyVec2;
+const int g_fontDefaultAtlasSize = 256;
+const float g_fontDefaultAtlasOffset = 1.f / static_cast<float>(g_fontDefaultAtlasSize);
+const GLint g_fontSwizzleMask[] = { GL_ONE, GL_ONE, GL_ONE, GL_RED };
+const size_t g_fontCharacterVerticesCount = 6U;
+const size_t g_fontTextBlockSize = 512U;
 
 }
 
@@ -37,7 +37,7 @@ ROC::Font::Font()
     m_size = 0.f;
 
     m_atlasTexture = nullptr;
-    m_atlasOffset = g_EmptyVec2;
+    m_atlasOffset = g_emptyVec2;
     m_atlasSize = glm::ivec2(0);
     m_atlasPack = nullptr;
 
@@ -71,15 +71,15 @@ void ROC::Font::InitStaticResources()
 
     for(size_t i = 0U; i < FBI_BufferCount; i++) ms_arrayBuffers[i] = new GLArrayBuffer();
 
-    ms_arrayBuffers[FBI_Vertex]->Create(sizeof(glm::vec3) * g_FontCharacterVerticesCount * g_FontTextBlockSize, nullptr, GL_DYNAMIC_DRAW);
+    ms_arrayBuffers[FBI_Vertex]->Create(sizeof(glm::vec3) * g_fontCharacterVerticesCount * g_fontTextBlockSize, nullptr, GL_DYNAMIC_DRAW);
     ms_arrayBuffers[FBI_Vertex]->Bind();
     ms_vertexArray->EnableAttribute(FBA_Vertex, 3, GL_FLOAT);
-    ms_vertices.assign(g_FontCharacterVerticesCount * g_FontTextBlockSize, glm::vec3(0.f, 0.f, 1.f));
+    ms_vertices.assign(g_fontCharacterVerticesCount * g_fontTextBlockSize, glm::vec3(0.f, 0.f, 1.f));
 
-    ms_arrayBuffers[FBI_UV]->Create(sizeof(glm::vec2) * g_FontCharacterVerticesCount * g_FontTextBlockSize, nullptr, GL_DYNAMIC_DRAW);
+    ms_arrayBuffers[FBI_UV]->Create(sizeof(glm::vec2) * g_fontCharacterVerticesCount * g_fontTextBlockSize, nullptr, GL_DYNAMIC_DRAW);
     ms_arrayBuffers[FBI_UV]->Bind();
     ms_vertexArray->EnableAttribute(FBA_UV, 2, GL_FLOAT);
-    ms_uv.assign(g_FontCharacterVerticesCount * g_FontTextBlockSize, g_EmptyVec2);
+    ms_uv.assign(g_fontCharacterVerticesCount * g_fontTextBlockSize, g_emptyVec2);
 }
 
 void ROC::Font::ReleaseStaticResources()
@@ -118,8 +118,8 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             }
             else
             {
-                m_atlasSize.x = g_FontDefaultAtlasSize;
-                m_atlasOffset.x = g_FontDefaultAtlasOffset;
+                m_atlasSize.x = g_fontDefaultAtlasSize;
+                m_atlasOffset.x = g_fontDefaultAtlasOffset;
             }
             if(MathUtils::IsPowerOfTwo(f_atlas.y))
             {
@@ -128,14 +128,14 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             }
             else
             {
-                m_atlasSize.y = g_FontDefaultAtlasSize;
-                m_atlasOffset.y = g_FontDefaultAtlasOffset;
+                m_atlasSize.y = g_fontDefaultAtlasSize;
+                m_atlasOffset.y = g_fontDefaultAtlasOffset;
             }
 
             // Generate atlas texture
             m_atlasTexture = new GLTexture2D();
             m_atlasTexture->Create(m_atlasSize.x, m_atlasSize.y, GL_RED, GL_RED, nullptr, GL_NEAREST + m_filteringType);
-            m_atlasTexture->SetSwizzle(GL_TEXTURE_SWIZZLE_RGBA, g_FontSwizzleMask);
+            m_atlasTexture->SetSwizzle(GL_TEXTURE_SWIZZLE_RGBA, g_fontSwizzleMask);
 
             // Generate atlas
             m_atlasPack = new rbp::MaxRectsBinPack();
@@ -207,7 +207,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
         while(l_textRange.x < l_stringLength)
         {
             size_t l_charCount = 0;
-            l_textRange.y = glm::min((l_textRange.z + 1U)*g_FontTextBlockSize, l_stringLength);
+            l_textRange.y = glm::min((l_textRange.z + 1U)*g_fontTextBlockSize, l_stringLength);
 
             for(size_t i = l_textRange.x; i < l_textRange.y; i++)
             {
@@ -228,7 +228,7 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
                 FontCharacterData *l_charData = m_charIter->second;
                 if(l_charData->m_size.x > 0 && l_charData->m_size.y > 0)
                 {
-                    size_t l_charVertexIndex = static_cast<size_t>(l_charCount * g_FontCharacterVerticesCount);
+                    size_t l_charVertexIndex = static_cast<size_t>(l_charCount * g_fontCharacterVerticesCount);
 
                     l_linePos.z = l_linePos.x + l_charData->m_bearing.x;
                     l_linePos.w = l_linePos.y - (l_charData->m_size.y - l_charData->m_bearing.y);
@@ -251,14 +251,14 @@ void ROC::Font::Draw(const sf::String &f_text, const glm::vec2 &f_pos)
             if(l_charCount > 0)
             {
                 ms_arrayBuffers[FBI_Vertex]->Bind();
-                ms_arrayBuffers[FBI_Vertex]->Update(0, sizeof(glm::vec3) * g_FontCharacterVerticesCount * l_charCount, ms_vertices.data());
+                ms_arrayBuffers[FBI_Vertex]->Update(0, sizeof(glm::vec3) * g_fontCharacterVerticesCount * l_charCount, ms_vertices.data());
 
                 ms_arrayBuffers[FBI_UV]->Bind();
-                ms_arrayBuffers[FBI_UV]->Update(0, sizeof(glm::vec2) * g_FontCharacterVerticesCount * l_charCount, ms_uv.data());
+                ms_arrayBuffers[FBI_UV]->Update(0, sizeof(glm::vec2) * g_fontCharacterVerticesCount * l_charCount, ms_uv.data());
 
-                ms_vertexArray->Draw(GL_TRIANGLES, static_cast<int>(g_FontCharacterVerticesCount * l_charCount));
+                ms_vertexArray->Draw(GL_TRIANGLES, static_cast<int>(g_fontCharacterVerticesCount * l_charCount));
             }
-            l_textRange.x = ++l_textRange.z * g_FontTextBlockSize;
+            l_textRange.x = ++l_textRange.z * g_fontTextBlockSize;
         }
     }
 }

@@ -34,6 +34,6 @@ protected:
 
     inline int GetReference() const { return m_ref; }
 
-    friend class ArgReader;
+    friend class LuaArgReader;
     friend class LuaVM;
 };

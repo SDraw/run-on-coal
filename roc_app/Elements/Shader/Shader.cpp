@@ -13,7 +13,7 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_DefaultUniforms
+const std::vector<std::string> g_defaultUniforms
 {
     "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBoneMatrix",
     "gCameraPosition", "gCameraDirection",
@@ -23,13 +23,13 @@ const std::vector<std::string> g_DefaultUniforms
     "gTime"
 };
 
-const size_t g_ShaderMaxBonesCount = 227U;
-const size_t g_ShaderMaxLightsCount = 4U;
+const size_t g_shaderMaxBonesCount = 227U;
+const size_t g_shaderMaxLightsCount = 4U;
 
-const std::string g_DefaultShaderDefines = (std::string() +
+const std::string g_defaultShaderDefines = (std::string() +
     "#version 330 core\n" +
-    "#define MAX_BONES " + std::to_string(g_ShaderMaxBonesCount) + '\n' +
-    "#define MAX_LIGHTS " + std::to_string(g_ShaderMaxLightsCount) + '\n' +
+    "#define MAX_BONES " + std::to_string(g_shaderMaxBonesCount) + '\n' +
+    "#define MAX_LIGHTS " + std::to_string(g_shaderMaxLightsCount) + '\n' +
     "#define LIGHT_DIRECTIONAL " + std::to_string(ROC::Light::LT_Directional) + '\n' +
     "#define LIGHT_POINT " + std::to_string(ROC::Light::LT_Point) + '\n' +
     "#define LIGHT_SPOTLIGHT " + std::to_string(ROC::Light::LT_Spotlight) + '\n'
@@ -80,7 +80,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             l_shaderData[0U].assign((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_shaderData[0U].insert(l_shaderData[0U].begin(), g_DefaultShaderDefines.begin(), g_DefaultShaderDefines.end());
+            l_shaderData[0U].insert(l_shaderData[0U].begin(), g_defaultShaderDefines.begin(), g_defaultShaderDefines.end());
         }
         else m_error.assign("Unable to load vertex shader");
         l_file.clear();
@@ -91,7 +91,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
             l_shaderData[1U].assign((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
             l_file.close();
 
-            l_shaderData[1U].insert(l_shaderData[1U].begin(), g_DefaultShaderDefines.begin(), g_DefaultShaderDefines.end());
+            l_shaderData[1U].insert(l_shaderData[1U].begin(), g_defaultShaderDefines.begin(), g_defaultShaderDefines.end());
         }
         else m_error.assign("Unable to load fragment shader");
         l_file.clear();
@@ -104,7 +104,7 @@ bool ROC::Shader::Load(const std::string &f_vpath, const std::string &f_fpath, c
                 l_shaderData[2U].assign((std::istreambuf_iterator<char>(l_file)), std::istreambuf_iterator<char>());
                 l_file.close();
 
-                l_shaderData[2U].insert(l_shaderData[2U].begin(), g_DefaultShaderDefines.begin(), g_DefaultShaderDefines.end());
+                l_shaderData[2U].insert(l_shaderData[2U].begin(), g_defaultShaderDefines.begin(), g_defaultShaderDefines.end());
             }
             l_file.clear();
         }
@@ -144,7 +144,7 @@ void ROC::Shader::SetupUniformsAndLocations()
     FindDefaultUniform(SDU_CameraPosition, SUT_Float3, "gCameraPosition", sizeof(glm::vec3));
     FindDefaultUniform(SDU_CameraDirection, SUT_Float3, "gCameraDirection", sizeof(glm::vec3));
     // Light
-    FindDefaultUniform(SDU_LightData, SUT_FloatMat4, "gLightData", sizeof(glm::mat4) * g_ShaderMaxLightsCount, g_ShaderMaxLightsCount); // Array
+    FindDefaultUniform(SDU_LightData, SUT_FloatMat4, "gLightData", sizeof(glm::mat4) * g_shaderMaxLightsCount, g_shaderMaxLightsCount); // Array
     FindDefaultUniform(SDU_LightsCount, SUT_Int, "gLightsCount", sizeof(int));
     // Material
     FindDefaultUniform(SDU_MaterialParam, SUT_Float4, "gMaterialParam", sizeof(glm::vec4));
@@ -168,7 +168,7 @@ void ROC::Shader::SetupUniformsAndLocations()
         const size_t l_dataSize = GetSizeFromGLType(l_uniformType);
         if(l_dataSize > 0U)
         {
-            if(EnumUtils::ReadEnumVector(l_uniformName, g_DefaultUniforms) == std::numeric_limits<size_t>::max())
+            if(EnumUtils::ReadEnumVector(l_uniformName, g_defaultUniforms) == std::numeric_limits<size_t>::max())
             {
                 const unsigned char l_internalType = Shader::GetTypeFromGLType(l_uniformType);
                 GLint l_uniformLocation = m_shader->GetUniformLocation(l_uniformName.c_str());
@@ -359,7 +359,7 @@ void ROC::Shader::SetCameraDirection(const glm::vec3 &f_value)
 
 void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
 {
-    const int l_count = static_cast<int>(std::min(f_data.size(), g_ShaderMaxLightsCount));
+    const int l_count = static_cast<int>(std::min(f_data.size(), g_shaderMaxLightsCount));
     if(m_defaultUniforms[SDU_LightsCount])
     {
         m_defaultUniforms[SDU_LightsCount]->SetData(&l_count, sizeof(int));
@@ -371,8 +371,8 @@ void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
     }
     if(m_defaultUniforms[SDU_LightData])
     {
-        glm::mat4 l_data[g_ShaderMaxLightsCount];
-        for(size_t i = 0U, j = std::min(f_data.size(), g_ShaderMaxLightsCount); i < j; i++)
+        glm::mat4 l_data[g_shaderMaxLightsCount];
+        for(size_t i = 0U, j = std::min(f_data.size(), g_shaderMaxLightsCount); i < j; i++)
         {
             Light *l_light = f_data[i];
             const glm::vec2 &l_cutoff = l_light->GetCutoff();
@@ -386,7 +386,7 @@ void ROC::Shader::SetLightsData(const std::vector<Light*> &f_data)
             l_data[i][3][3] = static_cast<float>(l_light->GetType());
         }
 
-        m_defaultUniforms[SDU_LightData]->SetData(&l_data, sizeof(glm::mat4)*g_ShaderMaxLightsCount);
+        m_defaultUniforms[SDU_LightData]->SetData(&l_data, sizeof(glm::mat4)*g_shaderMaxLightsCount);
         if(m_active && m_defaultUniforms[SDU_LightData]->IsUpdated())
         {
             m_shader->SetUniform(m_defaultUniforms[SDU_LightData]->GetUniformName(), 4U, glm::value_ptr(l_data[0]), l_count);
@@ -439,7 +439,7 @@ void ROC::Shader::SetBoneMatrices(const std::vector<glm::mat4> &f_value)
 {
     if(m_defaultUniforms[SDU_BoneMatrices] && m_active)
     {
-        size_t l_size = std::min(f_value.size(), g_ShaderMaxBonesCount);
+        size_t l_size = std::min(f_value.size(), g_shaderMaxBonesCount);
         m_shader->SetUniform(m_defaultUniforms[SDU_BoneMatrices]->GetUniformName(), 4U, glm::value_ptr(f_value[0U]), l_size);
     }
 }

@@ -13,7 +13,7 @@
 namespace ROC
 {
 
-extern const glm::mat4 g_IdentityMatrix;
+extern const glm::mat4 g_identityMatrix;
 
 }
 
@@ -53,7 +53,7 @@ ROC::Skeleton::Skeleton(const std::vector<BoneData*> &f_data)
         }
         m_sortedBones.shrink_to_fit();
     }
-    m_poseMatrices.assign(m_bonesCount, g_IdentityMatrix);
+    m_poseMatrices.assign(m_bonesCount, g_identityMatrix);
     m_poseMatrices.shrink_to_fit();
 
     m_hasStaticBoneCollision = false;

@@ -175,7 +175,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Lua\ArgReader.h" />
+    <ClInclude Include="Lua\LuaArgReader.h" />
     <ClInclude Include="Lua\LuaDefs\LuaAnimationDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaCameraDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaCollidableDef.h" />
@@ -257,7 +257,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Lua\ArgReader.cpp" />
+    <ClCompile Include="Lua\LuaArgReader.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaAnimationDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaCameraDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaCollidableDef.cpp" />

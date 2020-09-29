@@ -18,12 +18,12 @@ SFML_DEFINE_DISCRETE_GPU_PREFERENCE
 namespace ROC
 {
 
-const size_t g_GLMinimalVersion = 31U;
-const char g_GLMinimalVersionString[] = "3.1";
+const size_t g_glMinimalVersion = 31U;
+const char g_glMinimalVersionString[] = "3.1";
 
-const std::string g_DefaultIconPath("icons/coal.png");
+const std::string g_defaultIconPath("icons/coal.png");
 
-const std::string g_KeyNames[]
+const std::string g_keyNames[]
 {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
@@ -36,12 +36,12 @@ const std::string g_KeyNames[]
         "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "f13", "f14", "f15",
         "pause"
 };
-const std::string g_MouseKeyNames[]
+const std::string g_mouseKeyNames[]
 {
     "left", "right", "middle",
         "x1", "x2"
 };
-const std::string g_JoypadAxisNames[]
+const std::string g_joypadAxisNames[]
 {
     "X", "Y", "Z",
         "R", "U", "V",
@@ -94,10 +94,10 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     else
     {
         sf::ContextSettings l_createdContextSettings = m_window->getSettings();
-        if(l_createdContextSettings.majorVersion * 10U + l_createdContextSettings.minorVersion < g_GLMinimalVersion)
+        if(l_createdContextSettings.majorVersion * 10U + l_createdContextSettings.minorVersion < g_glMinimalVersion)
         {
             l_log.assign("SFML: Minimal supported OpenGL version - ");
-            l_log.append(g_GLMinimalVersionString);
+            l_log.append(g_glMinimalVersionString);
             l_log.push_back('\n');
             l_log.append("System OpenGL version - ");
             l_log.append(std::to_string(l_createdContextSettings.majorVersion));
@@ -113,7 +113,7 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     m_window->setFramerateLimit(m_frameLimit);
     m_window->setVerticalSyncEnabled(l_configManager->GetVSync());
     m_window->setKeyRepeatEnabled(false);
-    SetIcon(g_DefaultIconPath);
+    SetIcon(g_defaultIconPath);
 
     GLenum l_error = glewInit();
     if(l_error != GLEW_OK)
@@ -332,7 +332,7 @@ bool ROC::SfmlManager::DoPulse()
             {
                 if(m_event.key.code != -1)
                 {
-                    m_arguments->Push(g_KeyNames[m_event.key.code]);
+                    m_arguments->Push(g_keyNames[m_event.key.code]);
                     m_arguments->Push(m_event.type == sf::Event::KeyPressed ? 1 : 0);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnKeyPress, m_arguments);
                     m_arguments->Clear();
@@ -373,7 +373,7 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
-                m_arguments->Push(g_MouseKeyNames[m_event.mouseButton.button]);
+                m_arguments->Push(g_mouseKeyNames[m_event.mouseButton.button]);
                 m_arguments->Push(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnMouseKeyPress, m_arguments);
                 m_arguments->Clear();
@@ -403,7 +403,7 @@ bool ROC::SfmlManager::DoPulse()
             case sf::Event::JoystickMoved:
             {
                 m_arguments->Push(static_cast<int>(m_event.joystickMove.joystickId));
-                m_arguments->Push(g_JoypadAxisNames[m_event.joystickMove.axis]);
+                m_arguments->Push(g_joypadAxisNames[m_event.joystickMove.axis]);
                 m_arguments->Push(m_event.joystickMove.position);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnJoypadAxis, m_arguments);
                 m_arguments->Clear();

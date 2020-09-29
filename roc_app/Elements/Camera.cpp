@@ -9,9 +9,9 @@ vr::IVRSystem *ROC::Camera::ms_vrSystem = nullptr;
 namespace ROC
 {
 
-extern const glm::vec3 g_EmptyVec3;
-const glm::vec3 g_CameraDefaultViewDirection(0.f, 0.f, -1.f);
-const glm::vec3 g_CameraDefaultUpDirection(0.f, 1.f, 0.f);
+extern const glm::vec3 g_emptyVec3;
+const glm::vec3 g_cameraDefaultViewDirection(0.f, 0.f, -1.f);
+const glm::vec3 g_cameraDefaultUpDirection(0.f, 1.f, 0.f);
 
 }
 
@@ -22,10 +22,10 @@ ROC::Camera::Camera(unsigned char f_type)
     m_type = f_type;
     btClamp<unsigned char>(m_type, CPT_Perspective, CPT_VRRight);
 
-    m_viewPosition = g_EmptyVec3;
-    m_viewDirection = g_CameraDefaultViewDirection;
-    m_upDirection = g_CameraDefaultUpDirection;
-    m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, g_CameraDefaultUpDirection);
+    m_viewPosition = g_emptyVec3;
+    m_viewDirection = g_cameraDefaultViewDirection;
+    m_upDirection = g_cameraDefaultUpDirection;
+    m_viewMatrix = glm::lookAt(m_viewPosition, m_viewPosition + m_viewDirection, g_cameraDefaultUpDirection);
 
     m_fov = glm::pi<float>() / 4.0f;
     m_aspectRatio = 640.f / 480.f;
@@ -82,14 +82,14 @@ void ROC::Camera::SetDirection(const glm::vec3& f_dir)
 
 void ROC::Camera::SetDirection(const glm::quat &f_dir)
 {
-    glm::vec3 l_dir = f_dir*g_CameraDefaultViewDirection;
+    glm::vec3 l_dir = f_dir*g_cameraDefaultViewDirection;
     if(m_viewDirection != l_dir)
     {
         std::memcpy(&m_viewDirection, &l_dir, sizeof(glm::vec3));
         m_rebuildView = true;
     }
 
-    glm::vec3 l_upDir = f_dir*g_CameraDefaultUpDirection;
+    glm::vec3 l_upDir = f_dir*g_cameraDefaultUpDirection;
     if(m_upDirection != l_upDir)
     {
         std::memcpy(&m_upDirection, &l_upDir, sizeof(glm::vec3));

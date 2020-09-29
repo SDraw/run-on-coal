@@ -2,11 +2,11 @@
 
 #include "Lua/LuaDefs/LuaNetworkDef.h"
 
-#include "Lua/ArgReader.h"
+#include "Lua/LuaArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
-const std::string g_NetworkStatesTable[]
+const std::string g_networkStates[]
 {
     "disconnected", "connecting", "connected", "disconnecting"
 };
@@ -25,54 +25,54 @@ int LuaNetworkDef::Connect(lua_State *f_vm)
     // bool networkConnect(str ip, int port)
     std::string l_ip;
     unsigned short l_port = 42000;
-    ArgReader argStream(f_vm);
-    argStream.ReadText(l_ip);
-    argStream.ReadNextInteger(l_port);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadText(l_ip);
+    l_argStream.ReadNextInteger(l_port);
+    if(!l_argStream.HasErrors())
     {
         bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->Connect(l_ip, l_port);
-        argStream.PushBoolean(l_result);
+        l_argStream.PushBoolean(l_result);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaNetworkDef::Disconnect(lua_State *f_vm)
 {
     // bool networkDisconnect
-    ArgReader argStream(f_vm);
+    LuaArgReader l_argStream(f_vm);
     bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->Disconnect();
-    argStream.PushBoolean(l_result);
-    return argStream.GetReturnValue();
+    l_argStream.PushBoolean(l_result);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaNetworkDef::SendData(lua_State *f_vm)
 {
     // bool networkSendData(str data)
     std::string l_data;
-    ArgReader argStream(f_vm);
-    argStream.ReadText(l_data);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadText(l_data);
+    if(!l_argStream.HasErrors())
     {
         bool l_result = LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->SendData(l_data);
-        argStream.PushBoolean(l_result);
+        l_argStream.PushBoolean(l_result);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaNetworkDef::GetState(lua_State *f_vm)
 {
     // str networkGetState()
-    ArgReader argStream(f_vm);
-    argStream.PushText(g_NetworkStatesTable[LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetNetworkState()]);
-    return argStream.GetReturnValue();
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.PushText(g_networkStates[LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetNetworkState()]);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaNetworkDef::GetPing(lua_State *f_vm)
 {
     // int networkGetPing()
-    ArgReader argStream(f_vm);
-    argStream.PushInteger(LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetPing());
-    return argStream.GetReturnValue();
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.PushInteger(LuaModule::GetModule()->GetEngineCore()->GetINetworkManager()->GetPing());
+    return l_argStream.GetReturnValue();
 }

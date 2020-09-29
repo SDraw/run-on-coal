@@ -2,13 +2,13 @@
 
 #include "Lua/LuaDefs/LuaFontDef.h"
 
-#include "Lua/ArgReader.h"
+#include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Module/LuaModule.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
-extern const std::vector<std::string> g_FilteringTypes; // defined in LuaDrawableDef
+extern const std::vector<std::string> g_filteringTypes; // defined in LuaDrawableDef
 
 void LuaFontDef::Init(lua_State *f_vm)
 {
@@ -25,20 +25,20 @@ int LuaFontDef::Create(lua_State *f_vm)
     int l_size;
     glm::ivec2 l_atlasSize(256);
     std::string l_filter("nearest");
-    ArgReader argStream(f_vm);
-    argStream.ReadText(l_path);
-    argStream.ReadInteger(l_size);
-    argStream.ReadNextInteger(l_atlasSize.x);
-    argStream.ReadNextInteger(l_atlasSize.y);
-    argStream.ReadNextText(l_filter);
-    if(!argStream.HasErrors() && !l_path.empty() && l_size > 0)
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadText(l_path);
+    l_argStream.ReadInteger(l_size);
+    l_argStream.ReadNextInteger(l_atlasSize.x);
+    l_argStream.ReadNextInteger(l_atlasSize.y);
+    l_argStream.ReadNextText(l_filter);
+    if(!l_argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
-        size_t l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_FilteringTypes);
+        size_t l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_filteringTypes);
         ROC::IFont *l_font = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIFont(l_path, l_size, l_atlasSize, static_cast<unsigned char>(l_filteringType));
-        l_font ? argStream.PushElement(l_font) : argStream.PushBoolean(false);
+        l_font ? l_argStream.PushElement(l_font) : l_argStream.PushBoolean(false);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaFontDef::Draw(lua_State *f_vm)
@@ -49,17 +49,17 @@ int LuaFontDef::Draw(lua_State *f_vm)
     std::string l_text;
     glm::vec4 l_color(1.f);
     std::string l_layer("screen");
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_font);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
-    argStream.ReadText(l_text);
-    for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
-    argStream.ReadNextText(l_layer);
-    if(!argStream.HasErrors() && !l_text.empty())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadElement(l_font);
+    for(int i = 0; i < 2; i++) l_argStream.ReadNumber(l_pos[i]);
+    l_argStream.ReadText(l_text);
+    for(int i = 0; i < 4; i++) l_argStream.ReadNextNumber(l_color[i]);
+    l_argStream.ReadNextText(l_layer);
+    if(!l_argStream.HasErrors() && !l_text.empty())
     {
         bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->Render(l_font, l_pos, l_text, l_color, l_layer);
-        argStream.PushBoolean(l_result);
+        l_argStream.PushBoolean(l_result);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }

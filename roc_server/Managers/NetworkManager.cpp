@@ -14,7 +14,7 @@
 namespace ROC
 {
 
-const size_t g_NetworkDisconnectDuration = 300U;
+const size_t g_networkDisconnectDuration = 300U;
 
 }
 
@@ -96,7 +96,7 @@ ROC::NetworkManager::~NetworkManager()
 {
     if(m_networkInterface)
     {
-        m_networkInterface->Shutdown(g_NetworkDisconnectDuration);
+        m_networkInterface->Shutdown(g_networkDisconnectDuration);
         RakNet::RakPeerInterface::DestroyInstance(m_networkInterface);
     }
     delete m_arguments;

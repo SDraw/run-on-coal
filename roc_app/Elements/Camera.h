@@ -62,7 +62,6 @@ public:
     bool IsInFrustum(const glm::vec3 &f_pos, float f_radius);
     bool IsInFrustum(const glm::mat4 &f_mat, float f_radius);
 protected:
-
     explicit Camera(unsigned char f_type);
     ~Camera();
 

@@ -32,10 +32,10 @@
 namespace ROC
 {
 
-extern const glm::mat4 g_IdentityMatrix;
-extern const glm::vec4 g_EmptyVec4;
+extern const glm::mat4 g_identityMatrix;
+extern const glm::vec4 g_emptyVec4;
 
-const btVector3 g_TextureZAxis(0.f, 0.f, 1.f);
+const btVector3 g_textureZAxis(0.f, 0.f, 1.f);
 
 }
 
@@ -209,7 +209,7 @@ bool ROC::RenderManager::Render(Font *f_font, const glm::vec2 &f_pos, const std:
                 l_shader->SetTime(m_time);
 
                 l_shader->SetProjectionMatrix(m_screenProjection);
-                l_shader->SetModelMatrix(g_IdentityMatrix);
+                l_shader->SetModelMatrix(g_identityMatrix);
                 l_shader->SetColor(f_color);
 
                 sf::String l_textUtf8 = sf::String::fromUtf8(f_text.begin(), f_text.end());
@@ -246,7 +246,7 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec2 &f_pos, co
                 if(f_rot != 0.f)
                 {
                     btQuaternion l_textureRotation;
-                    l_textureRotation.setRotation(g_TextureZAxis, f_rot);
+                    l_textureRotation.setRotation(g_textureZAxis, f_rot);
                     l_textureTransform.setRotation(l_textureRotation);
                 }
                 glm::mat4 l_textureMatrix;
@@ -290,7 +290,7 @@ bool ROC::RenderManager::Render(Drawable *f_drawable, const glm::vec3 &f_pos, co
 
                         l_shader->SetAnimated(false);
                         l_shader->SetModelMatrix(m_quad3D->GetMatrix());
-                        l_shader->SetMaterialParam(g_EmptyVec4);
+                        l_shader->SetMaterialParam(g_emptyVec4);
 
                         int l_materialType = 0;
                         if(f_params.x) l_materialType |= Material::MPB_Shading;
@@ -338,11 +338,11 @@ bool ROC::RenderManager::DrawPhysics(float f_width, const std::string &f_layer)
                     l_shader->SetViewProjectionMatrix(l_camera->GetViewProjectionMatrix());
                     l_shader->SetCameraPosition(l_camera->GetPosition());
                     l_shader->SetCameraDirection(l_camera->GetDirection());
-                    l_shader->SetModelMatrix(g_IdentityMatrix);
+                    l_shader->SetModelMatrix(g_identityMatrix);
 
                     l_shader->SetAnimated(false);
                     l_shader->SetMaterialType((Material::MPB_Depth | Material::MPB_Doubleside));
-                    l_shader->SetMaterialParam(g_EmptyVec4);
+                    l_shader->SetMaterialParam(g_emptyVec4);
 
                     m_core->GetPhysicsManager()->DrawDebugWorld();
                     m_physicsDrawer->Draw(f_width);

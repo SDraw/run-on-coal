@@ -7,7 +7,7 @@
 namespace ROC
 {
 
-const std::vector<std::string> g_ConfigAttributes
+const std::vector<std::string> g_configAttributes
 {
     "antialiasing", "dimension", "fullscreen", "logging", "fpslimit", "vsync", "vr", "module"
 };
@@ -47,7 +47,7 @@ ROC::ConfigManager::ConfigManager()
                 pugi::xml_attribute l_attribValue = l_node.attribute("value");
                 if(l_attribName && l_attribValue)
                 {
-                    switch(EnumUtils::ReadEnumVector(l_attribName.as_string(), g_ConfigAttributes))
+                    switch(EnumUtils::ReadEnumVector(l_attribName.as_string(), g_configAttributes))
                     {
                         case ConfigAttribute::CA_Antialiasing:
                             m_antialiasing = glm::clamp(l_attribValue.as_int(0), 0, std::numeric_limits<int>::max());

@@ -2,7 +2,7 @@
 
 #include "Lua/LuaDefs/LuaCollidableDef.h"
 
-#include "Lua/ArgReader.h"
+#include "Lua/LuaArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
@@ -19,10 +19,10 @@ void LuaCollidableDef::AddHierarchyMethods(lua_State *f_vm)
 int LuaCollidableDef::IsCollidable(lua_State *f_vm)
 {
     ROC::ICollidable *l_col = nullptr;
-    ArgReader argStream(f_vm);
-    argStream.ReadNextElement(l_col);
-    argStream.PushBoolean(l_col != nullptr);
-    return argStream.GetReturnValue();
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadNextElement(l_col);
+    l_argStream.PushBoolean(l_col != nullptr);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaCollidableDef::SetCollidableWith(lua_State *f_vm)
@@ -30,15 +30,15 @@ int LuaCollidableDef::SetCollidableWith(lua_State *f_vm)
     ROC::ICollidable *l_colA;
     ROC::ICollidable *l_colB;
     bool l_state;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_colA);
-    argStream.ReadElement(l_colB);
-    argStream.ReadBoolean(l_state);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadElement(l_colA);
+    l_argStream.ReadElement(l_colB);
+    l_argStream.ReadBoolean(l_state);
+    if(!l_argStream.HasErrors())
     {
         bool l_result = l_colA->SetCollidableWith(l_colB, l_state);
-        argStream.PushBoolean(l_result);
+        l_argStream.PushBoolean(l_result);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }

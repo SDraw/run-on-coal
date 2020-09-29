@@ -6,14 +6,12 @@
 namespace ROC
 {
 
-const std::string g_ElementTypeName[]
+const std::string g_elementTypeNames[]
 {
     "Client",
     "File"
 };
 const std::string g_ElementInvalidName = "Invalid";
-
-const size_t g_ElementKeyMaxLength = 128U;
 
 }
 
@@ -33,5 +31,5 @@ unsigned char ROC::Element::GetElementType() const
 
 const std::string& ROC::Element::GetElementTypeName() const
 {
-    return ((m_elementType != ET_Invalid) ? g_ElementTypeName[m_elementType] : g_ElementInvalidName);
+    return ((m_elementType != ET_Invalid) ? g_elementTypeNames[m_elementType] : g_ElementInvalidName);
 }

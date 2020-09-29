@@ -2,7 +2,7 @@
 
 #include "Module/LuaModule.h"
 
-LuaModule *g_Module = nullptr;
+LuaModule *g_module = nullptr;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
@@ -14,10 +14,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
             break;
         case DLL_PROCESS_DETACH:
         {
-            if(g_Module)
+            if(g_module)
             {
                 LuaModule::Terminate();
-                g_Module = nullptr;
+                g_module = nullptr;
             }
             l_result = TRUE;
         } break;
@@ -27,9 +27,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 extern "C" __declspec(dllexport) ROC::IModule* ModuleInit(ROC::ICore *f_core)
 {
-    if(!g_Module)
+    if(!g_module)
     {
-        if(LuaModule::Init(f_core)) g_Module = LuaModule::GetModule();
+        if(LuaModule::Init(f_core)) g_module = LuaModule::GetModule();
     }
-    return g_Module;
+    return g_module;
 }

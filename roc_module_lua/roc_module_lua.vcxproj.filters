@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Lua\ArgReader.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaVM.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
@@ -108,12 +105,12 @@
     <ClCompile Include="..\shared\Lua\LuaArgument.cpp">
       <Filter>shared\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="Lua\LuaArgReader.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Lua\ArgReader.h">
-      <Filter>Lua</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaVM.h">
       <Filter>Lua</Filter>
     </ClInclude>
@@ -197,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaCollidableDef.h">
       <Filter>Lua\LuaDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Lua\LuaArgReader.h">
+      <Filter>Lua</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

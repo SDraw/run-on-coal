@@ -7,15 +7,14 @@
 namespace ROC
 {
 
-const unsigned char g_TextureDummyPattern[]
+const unsigned char g_textureDummyPattern[]
 {
     0x7FU, 0x7FU, 0x7FU,
     0xF7U, 0x94U, 0x1DU,
     0xF7U, 0x94U, 0x1DU,
     0x7FU, 0x7FU, 0x7FU
 };
-const glm::ivec2 g_TextureDummySize(2, 2);
-const size_t g_TextureCubeSidesCount = 6U;
+const glm::ivec2 g_textureDummySize(2, 2);
 
 }
 
@@ -102,13 +101,13 @@ bool ROC::Texture::LoadDummy()
 {
     if(!m_texture)
     {
-        std::memcpy(&m_size, &g_TextureDummySize, sizeof(glm::ivec2));
+        std::memcpy(&m_size, &g_textureDummySize, sizeof(glm::ivec2));
         m_filtering = DFT_Nearest;
         m_type = TT_RGB;
         m_compressed = false;
 
         m_texture = new GLTexture2D();
-        dynamic_cast<GLTexture2D*>(m_texture)->Create(m_size.x, m_size.y, GL_COMPRESSED_RGB, GL_RGB, g_TextureDummyPattern, GL_NEAREST);
+        dynamic_cast<GLTexture2D*>(m_texture)->Create(m_size.x, m_size.y, GL_COMPRESSED_RGB, GL_RGB, g_textureDummyPattern, GL_NEAREST);
     }
     return (m_texture != nullptr);
 }

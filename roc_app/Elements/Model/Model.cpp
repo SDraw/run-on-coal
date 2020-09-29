@@ -13,8 +13,7 @@
 namespace ROC
 {
 
-extern const glm::mat4 g_IdentityMatrix;
-extern const glm::vec3 g_EmptyVec3;
+extern const glm::mat4 g_identityMatrix;
 
 }
 
@@ -23,7 +22,7 @@ ROC::Model::Model(Geometry *f_geometry)
     m_elementType = ET_Model;
 
     m_localTransform = new Transformation();
-    m_fullMatrix = g_IdentityMatrix;
+    m_fullMatrix = g_identityMatrix;
     m_boundSphereRaduis = 0.f;
     m_updated = false;
 

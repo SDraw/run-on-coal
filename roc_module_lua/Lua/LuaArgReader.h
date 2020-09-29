@@ -5,7 +5,7 @@ class LuaFunction;
 
 typedef glm::quat Quat;
 
-class ArgReader final
+class LuaArgReader final
 {
     lua_State *m_vm;
     int m_currentArgument;
@@ -14,13 +14,13 @@ class ArgReader final
     std::string m_error;
     bool m_hasErrors;
 
-    ArgReader(const ArgReader &that) = delete;
-    ArgReader& operator=(const ArgReader &that) = delete;
+    LuaArgReader(const LuaArgReader &that) = delete;
+    LuaArgReader& operator=(const LuaArgReader &that) = delete;
 
     void SetError(const char *f_str);
 public:
-    explicit ArgReader(lua_State *f_vm);
-    ~ArgReader();
+    explicit LuaArgReader(lua_State *f_vm);
+    ~LuaArgReader();
 
     void ReadBoolean(bool &f_val);
     template<typename T> void ReadNumber(T &f_val);
@@ -54,7 +54,7 @@ public:
     inline int GetReturnValue() const { return m_returnCount; }
 };
 
-template<typename T> void ArgReader::ReadNumber(T &f_val)
+template<typename T> void LuaArgReader::ReadNumber(T &f_val)
 {
     if(!m_hasErrors)
     {
@@ -75,7 +75,7 @@ template<typename T> void ArgReader::ReadNumber(T &f_val)
         else SetError("Not enough arguments");
     }
 };
-template<typename T> void ArgReader::ReadInteger(T &f_val)
+template<typename T> void LuaArgReader::ReadInteger(T &f_val)
 {
     if(!m_hasErrors)
     {
@@ -91,7 +91,7 @@ template<typename T> void ArgReader::ReadInteger(T &f_val)
         else SetError("Not enough arguments");
     }
 };
-template<class T> void ArgReader::ReadElement(T *&f_element)
+template<class T> void LuaArgReader::ReadElement(T *&f_element)
 {
     if(!m_hasErrors)
     {
@@ -114,7 +114,7 @@ template<class T> void ArgReader::ReadElement(T *&f_element)
     }
 }
 
-template<typename T> void ArgReader::ReadNextNumber(T &f_val)
+template<typename T> void LuaArgReader::ReadNextNumber(T &f_val)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
@@ -125,7 +125,7 @@ template<typename T> void ArgReader::ReadNextNumber(T &f_val)
         }
     }
 };
-template<typename T> void ArgReader::ReadNextInteger(T &f_val)
+template<typename T> void LuaArgReader::ReadNextInteger(T &f_val)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
@@ -136,7 +136,7 @@ template<typename T> void ArgReader::ReadNextInteger(T &f_val)
         }
     }
 };
-template<class T> void ArgReader::ReadNextElement(T *&f_element)
+template<class T> void LuaArgReader::ReadNextElement(T *&f_element)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {

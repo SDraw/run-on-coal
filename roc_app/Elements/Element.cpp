@@ -6,7 +6,7 @@
 namespace ROC
 {
 
-const std::string g_ElementTypeName[]
+const std::string g_elementTypeName[]
 {
     "Geometry",
     "Model",
@@ -22,8 +22,7 @@ const std::string g_ElementTypeName[]
     "File",
     "Collision"
 };
-const std::string g_ElementInvalidName = "Invalid";
-const size_t g_ElementKeyMaxLength = 128U;
+const std::string g_elementInvalidName = "Invalid";
 
 }
 
@@ -58,7 +57,7 @@ unsigned char ROC::Element::GetElementType() const
 
 const std::string& ROC::Element::GetElementTypeName() const
 {
-    return ((m_elementType != ET_Invalid) ? g_ElementTypeName[m_elementType] : g_ElementInvalidName);
+    return ((m_elementType != ET_Invalid) ? g_elementTypeName[m_elementType] : g_elementInvalidName);
 }
 
 void ROC::Element::AddChild(Element *f_child)

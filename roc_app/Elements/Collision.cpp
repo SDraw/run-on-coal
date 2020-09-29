@@ -6,7 +6,7 @@
 namespace ROC
 {
 
-extern const glm::vec3 g_DefaultScale;
+extern const glm::vec3 g_defaultScale;
 
 }
 
@@ -16,7 +16,7 @@ ROC::Collision::Collision()
 
     m_rigidBody = nullptr;
     m_motionType = CMT_Default;
-    m_scale = g_DefaultScale;
+    m_scale = g_defaultScale;
 }
 
 ROC::Collision::~Collision()

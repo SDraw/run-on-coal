@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "ArgReader.h"
+#include "LuaArgReader.h"
 #include "Lua/LuaArgument.h"
 #include "Lua/LuaFunction.h"
 
@@ -8,7 +8,7 @@
 #include "Lua/LuaVM.h"
 #include "Utils/LuaUtils.h"
 
-ArgReader::ArgReader(lua_State *f_vm)
+LuaArgReader::LuaArgReader(lua_State *f_vm)
 {
     m_vm = f_vm;
     m_currentArgument = 1;
@@ -17,17 +17,17 @@ ArgReader::ArgReader(lua_State *f_vm)
     m_hasErrors = false;
 }
 
-ArgReader::~ArgReader()
+LuaArgReader::~LuaArgReader()
 {
 }
 
-void ArgReader::SetError(const char *f_str)
+void LuaArgReader::SetError(const char *f_str)
 {
     m_hasErrors = true;
     m_error.assign(f_str);
 }
 
-void ArgReader::ReadBoolean(bool &f_val)
+void LuaArgReader::ReadBoolean(bool &f_val)
 {
     if(!m_hasErrors)
     {
@@ -44,7 +44,7 @@ void ArgReader::ReadBoolean(bool &f_val)
     }
 }
 
-void ArgReader::ReadText(std::string &f_val)
+void LuaArgReader::ReadText(std::string &f_val)
 {
     if(!m_hasErrors)
     {
@@ -63,7 +63,7 @@ void ArgReader::ReadText(std::string &f_val)
     }
 }
 
-void ArgReader::ReadPointer(void *&f_val)
+void LuaArgReader::ReadPointer(void *&f_val)
 {
     if(!m_hasErrors)
     {
@@ -80,7 +80,7 @@ void ArgReader::ReadPointer(void *&f_val)
     }
 }
 
-void ArgReader::ReadFunction(LuaFunction &f_func)
+void LuaArgReader::ReadFunction(LuaFunction &f_func)
 {
     if(!m_hasErrors)
     {
@@ -100,7 +100,7 @@ void ArgReader::ReadFunction(LuaFunction &f_func)
     }
 }
 
-void ArgReader::ReadQuat(Quat *&f_quat)
+void LuaArgReader::ReadQuat(Quat *&f_quat)
 {
     if(!m_hasErrors)
     {
@@ -118,7 +118,7 @@ void ArgReader::ReadQuat(Quat *&f_quat)
     }
 }
 
-void ArgReader::ReadArgument(LuaArgument &f_argument)
+void LuaArgReader::ReadArgument(LuaArgument &f_argument)
 {
     if(!m_hasErrors)
     {
@@ -160,7 +160,7 @@ void ArgReader::ReadArgument(LuaArgument &f_argument)
     }
 }
 
-void ArgReader::ReadArguments(std::vector<LuaArgument> &f_arguments)
+void LuaArgReader::ReadArguments(std::vector<LuaArgument> &f_arguments)
 {
     if(!m_hasErrors)
     {
@@ -200,7 +200,7 @@ void ArgReader::ReadArguments(std::vector<LuaArgument> &f_arguments)
     }
 }
 
-void ArgReader::ReadNextBoolean(bool &f_val)
+void LuaArgReader::ReadNextBoolean(bool &f_val)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
@@ -212,7 +212,7 @@ void ArgReader::ReadNextBoolean(bool &f_val)
     }
 }
 
-void ArgReader::ReadNextText(std::string &f_val)
+void LuaArgReader::ReadNextText(std::string &f_val)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
@@ -226,7 +226,7 @@ void ArgReader::ReadNextText(std::string &f_val)
     }
 }
 
-void ArgReader::ReadNextPointer(void *&f_val)
+void LuaArgReader::ReadNextPointer(void *&f_val)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
@@ -238,7 +238,7 @@ void ArgReader::ReadNextPointer(void *&f_val)
     }
 }
 
-void ArgReader::ReadNextFunction(LuaFunction &f_func)
+void LuaArgReader::ReadNextFunction(LuaFunction &f_func)
 {
     if(!m_hasErrors && (m_currentArgument <= m_argumentsCount))
     {
@@ -253,56 +253,56 @@ void ArgReader::ReadNextFunction(LuaFunction &f_func)
     }
 }
 
-void ArgReader::PushNil()
+void LuaArgReader::PushNil()
 {
     lua_pushnil(m_vm);
     m_returnCount++;
 }
 
-void ArgReader::PushBoolean(bool f_val)
+void LuaArgReader::PushBoolean(bool f_val)
 {
     lua_pushboolean(m_vm, f_val);
     m_returnCount++;
 }
 
-void ArgReader::PushNumber(lua_Number f_val)
+void LuaArgReader::PushNumber(lua_Number f_val)
 {
     lua_pushnumber(m_vm, f_val);
     m_returnCount++;
 }
 
-void ArgReader::PushInteger(lua_Integer f_val)
+void LuaArgReader::PushInteger(lua_Integer f_val)
 {
     lua_pushinteger(m_vm, f_val);
     m_returnCount++;
 }
 
-void ArgReader::PushPointer(void *f_val)
+void LuaArgReader::PushPointer(void *f_val)
 {
     lua_pushlightuserdata(m_vm, f_val);
     m_returnCount++;
 }
 
-void ArgReader::PushText(const std::string &f_val)
+void LuaArgReader::PushText(const std::string &f_val)
 {
     lua_pushlstring(m_vm, f_val.data(), f_val.size());
     m_returnCount++;
 }
 
-void ArgReader::PushElement(ROC::IElement *f_element)
+void LuaArgReader::PushElement(ROC::IElement *f_element)
 {
     LuaUtils::PushElementWithMetatable(m_vm, LuaVM::ms_userdataMetatableName, f_element, f_element->GetElementTypeName().c_str());
     m_returnCount++;
 }
 
-void ArgReader::PushQuat(const Quat &f_quat)
+void LuaArgReader::PushQuat(const Quat &f_quat)
 {
     *reinterpret_cast<void**>(lua_newuserdata(m_vm, sizeof(void*))) = new Quat(f_quat);
     luaL_setmetatable(m_vm, "Quat");
     m_returnCount++;
 }
 
-bool ArgReader::HasErrors()
+bool LuaArgReader::HasErrors()
 {
     if(m_hasErrors)
     {

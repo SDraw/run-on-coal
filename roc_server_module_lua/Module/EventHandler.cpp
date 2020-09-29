@@ -7,7 +7,7 @@
 #include "Lua/LuaVM.h"
 #include "Utils/EnumUtils.h"
 
-const std::vector<std::string> g_DefaultEventsNames
+const std::vector<std::string> g_defaultEventsNames
 {
     "onServerStart", "onServerStop", "onServerPulse",
     "onNetworkClientConnect", "onNetworkClientDisconnect", "onNetworkDataRecieve"
@@ -24,7 +24,7 @@ EventHandler::EventHandler(LuaModule *f_module)
 {
     m_luaModule = f_module;
 
-    for(auto &iter : g_DefaultEventsNames) m_eventMap.insert(std::make_pair(iter, new EventHeap()));
+    for(auto &iter : g_defaultEventsNames) m_eventMap.insert(std::make_pair(iter, new EventHeap()));
     m_eventMapEnd = m_eventMap.end();
 }
 
@@ -99,7 +99,7 @@ bool EventHandler::AddEventHandler(const std::string &f_event, const LuaFunction
 bool EventHandler::RemoveEvent(const std::string &f_event)
 {
     bool l_result = false;
-    if(EnumUtils::ReadEnumVector(f_event, g_DefaultEventsNames) == std::numeric_limits<size_t>::max())
+    if(EnumUtils::ReadEnumVector(f_event, g_defaultEventsNames) == std::numeric_limits<size_t>::max())
     {
         auto iter = m_eventMap.find(f_event);
         if(iter != m_eventMapEnd)
@@ -151,7 +151,7 @@ bool EventHandler::RemoveEventHandler(const std::string &f_event, LuaFunction &f
 
 void EventHandler::CallEvent(EventHandlerEvent f_event, const ROC::ICustomArguments *f_args)
 {
-    auto iter = m_eventMap.find(g_DefaultEventsNames[f_event]);
+    auto iter = m_eventMap.find(g_defaultEventsNames[f_event]);
     if(iter != m_eventMapEnd)
     {
         EventHeap *l_heap = iter->second;
@@ -185,7 +185,7 @@ void EventHandler::CallEvent(EventHandlerEvent f_event, const ROC::ICustomArgume
 
 void EventHandler::CallEvent(const std::string &f_event, const std::vector<LuaArgument> &f_args)
 {
-    if(std::find(g_DefaultEventsNames.begin(), g_DefaultEventsNames.end(), f_event) == g_DefaultEventsNames.end())
+    if(std::find(g_defaultEventsNames.begin(), g_defaultEventsNames.end(), f_event) == g_defaultEventsNames.end())
     {
         auto iter = m_eventMap.find(f_event);
         if(iter != m_eventMapEnd)

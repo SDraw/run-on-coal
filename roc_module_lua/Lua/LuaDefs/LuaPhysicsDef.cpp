@@ -2,7 +2,7 @@
 
 #include "Lua/LuaDefs/LuaPhysicsDef.h"
 
-#include "Lua/ArgReader.h"
+#include "Lua/LuaArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
@@ -21,98 +21,98 @@ int LuaPhysicsDef::SetEnabled(lua_State *f_vm)
 {
     // bool physicsSetEnabled(bool state)
     bool l_val;
-    ArgReader argStream(f_vm);
-    argStream.ReadBoolean(l_val);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadBoolean(l_val);
+    if(!l_argStream.HasErrors())
     {
         LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->SetPhysicsEnabled(l_val);
-        argStream.PushBoolean(true);
+        l_argStream.PushBoolean(true);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaPhysicsDef::GetEnabled(lua_State *f_vm)
 {
     // bool physicsGetEnabled()
-    ArgReader argStream(f_vm);
-    argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetPhysicsEnabled());
-    return argStream.GetReturnValue();
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetPhysicsEnabled());
+    return l_argStream.GetReturnValue();
 }
 
 int LuaPhysicsDef::SetFloorEnabled(lua_State *f_vm)
 {
     // bool physicsSetFloorEnabled(bool state)
     bool l_val;
-    ArgReader argStream(f_vm);
-    argStream.ReadBoolean(l_val);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadBoolean(l_val);
+    if(!l_argStream.HasErrors())
     {
         LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->SetFloorEnabled(l_val);
-        argStream.PushBoolean(true);
+        l_argStream.PushBoolean(true);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaPhysicsDef::GetFloorEnabled(lua_State *f_vm)
 {
     // bool physicsGetFloorEnabled()
-    ArgReader argStream(f_vm);
-    argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetFloorEnabled());
-    return argStream.GetReturnValue();
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetFloorEnabled());
+    return l_argStream.GetReturnValue();
 }
 
 int LuaPhysicsDef::SetGravity(lua_State *f_vm)
 {
     // bool physicsSetGravity(float x, float y, float z)
     glm::vec3 l_gravity;
-    ArgReader argStream(f_vm);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_gravity[i]);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_gravity[i]);
+    if(!l_argStream.HasErrors())
     {
         LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->SetGravity(l_gravity);
-        argStream.PushBoolean(true);
+        l_argStream.PushBoolean(true);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaPhysicsDef::GetGravity(lua_State *f_vm)
 {
     // float float float physicsGetGravity()
-    ArgReader argStream(f_vm);
+    LuaArgReader l_argStream(f_vm);
     glm::vec3 l_grav;
     LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetGravity(l_grav);
-    argStream.PushNumber(l_grav.x);
-    argStream.PushNumber(l_grav.y);
-    argStream.PushNumber(l_grav.z);
-    return argStream.GetReturnValue();
+    l_argStream.PushNumber(l_grav.x);
+    l_argStream.PushNumber(l_grav.y);
+    l_argStream.PushNumber(l_grav.z);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaPhysicsDef::RayCast(lua_State *f_vm)
 {
     // float float float float float float element physicsRayCast(float startX, float startY, float startZ, float endX, float endY, float endZ)
     glm::vec3 l_start, l_end;
-    ArgReader argStream(f_vm);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_start[i]);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_end[i]);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_start[i]);
+    for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_end[i]);
+    if(!l_argStream.HasErrors())
     {
         glm::vec3 l_hitNormal;
         ROC::IElement *l_hitElement = nullptr;
         if(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, l_hitElement))
         {
-            argStream.PushNumber(l_end.x);
-            argStream.PushNumber(l_end.y);
-            argStream.PushNumber(l_end.z);
-            argStream.PushNumber(l_hitNormal.x);
-            argStream.PushNumber(l_hitNormal.y);
-            argStream.PushNumber(l_hitNormal.z);
-            l_hitElement ? argStream.PushElement(l_hitElement) : argStream.PushBoolean(false);
+            l_argStream.PushNumber(l_end.x);
+            l_argStream.PushNumber(l_end.y);
+            l_argStream.PushNumber(l_end.z);
+            l_argStream.PushNumber(l_hitNormal.x);
+            l_argStream.PushNumber(l_hitNormal.y);
+            l_argStream.PushNumber(l_hitNormal.z);
+            l_hitElement ? l_argStream.PushElement(l_hitElement) : l_argStream.PushBoolean(false);
         }
-        else argStream.PushBoolean(false);
+        else l_argStream.PushBoolean(false);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }

@@ -2,11 +2,11 @@
 
 #include "Lua/LuaDefs/LuaDrawableDef.h"
 
-#include "Lua/ArgReader.h"
+#include "Lua/LuaArgReader.h"
 #include "Module/LuaModule.h"
 #include "Utils/LuaUtils.h"
 
-extern const std::vector<std::string> g_FilteringTypes
+extern const std::vector<std::string> g_filteringTypes
 {
     "nearest", "linear"
 };
@@ -28,10 +28,10 @@ int LuaDrawableDef::IsDrawable(lua_State *f_vm)
 {
     // bool isDrawable(element drawable)
     ROC::IDrawable *l_drawable = nullptr;
-    ArgReader argStream(f_vm);
-    argStream.ReadNextElement(l_drawable);
-    argStream.PushBoolean(l_drawable != nullptr);
-    return argStream.GetReturnValue();
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadNextElement(l_drawable);
+    l_argStream.PushBoolean(l_drawable != nullptr);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaDrawableDef::Draw(lua_State *f_vm)
@@ -42,20 +42,20 @@ int LuaDrawableDef::Draw(lua_State *f_vm)
     float l_rot = 0.f;
     glm::vec4 l_color(1.f);
     std::string l_layer("screen");
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_drawable);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_pos[i]);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
-    argStream.ReadNextNumber(l_rot);
-    for(int i = 0; i < 4; i++) argStream.ReadNextNumber(l_color[i]);
-    argStream.ReadNextText(l_layer);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadElement(l_drawable);
+    for(int i = 0; i < 2; i++) l_argStream.ReadNumber(l_pos[i]);
+    for(int i = 0; i < 2; i++) l_argStream.ReadNumber(l_size[i]);
+    l_argStream.ReadNextNumber(l_rot);
+    for(int i = 0; i < 4; i++) l_argStream.ReadNextNumber(l_color[i]);
+    l_argStream.ReadNextText(l_layer);
+    if(!l_argStream.HasErrors())
     {
         bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->Render(l_drawable, l_pos, l_size, l_rot, l_color, l_layer);
-        argStream.PushBoolean(l_result);
+        l_argStream.PushBoolean(l_result);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaDrawableDef::Draw3D(lua_State *f_vm)
@@ -67,44 +67,44 @@ int LuaDrawableDef::Draw3D(lua_State *f_vm)
     glm::vec2 l_size;
     std::string l_layer("default");
     glm::bvec4 l_params(true, true, false, false);
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_drawable);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_pos[i]);
-    for(int i = 0; i < 3; i++) argStream.ReadNumber(l_rot[i]);
-    for(int i = 0; i < 2; i++) argStream.ReadNumber(l_size[i]);
-    argStream.ReadNextText(l_layer);
-    for(int i = 0; i < 4; i++) argStream.ReadNextBoolean(l_params[i]);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadElement(l_drawable);
+    for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_pos[i]);
+    for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_rot[i]);
+    for(int i = 0; i < 2; i++) l_argStream.ReadNumber(l_size[i]);
+    l_argStream.ReadNextText(l_layer);
+    for(int i = 0; i < 4; i++) l_argStream.ReadNextBoolean(l_params[i]);
+    if(!l_argStream.HasErrors())
     {
         glm::quat l_rotQuat(l_rot);
         bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->Render(l_drawable, l_pos, l_rot, l_size, l_layer, l_params);
-        argStream.PushBoolean(l_result);
+        l_argStream.PushBoolean(l_result);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaDrawableDef::GetSize(lua_State *f_vm)
 {
     // int int Drawable:getSize()
     ROC::IDrawable *l_drawable;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_drawable);
-    if(!argStream.HasErrors())
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadElement(l_drawable);
+    if(!l_argStream.HasErrors())
     {
         const glm::ivec2 &l_size = l_drawable->GetSize();
-        for(int i = 0; i < 2; i++) argStream.PushInteger(l_size[i]);
+        for(int i = 0; i < 2; i++) l_argStream.PushInteger(l_size[i]);
     }
-    else argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    else l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
 
 int LuaDrawableDef::GetFiltering(lua_State *f_vm)
 {
     // str Drawable:getFiltering()
     ROC::IDrawable *l_drawable;
-    ArgReader argStream(f_vm);
-    argStream.ReadElement(l_drawable);
-    !argStream.HasErrors() ? argStream.PushText(g_FilteringTypes[l_drawable->GetFiltering()]) : argStream.PushBoolean(false);
-    return argStream.GetReturnValue();
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadElement(l_drawable);
+    !l_argStream.HasErrors() ? l_argStream.PushText(g_filteringTypes[l_drawable->GetFiltering()]) : l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
 }
