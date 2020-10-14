@@ -5,22 +5,9 @@
 #include "Elements/Light.h"
 #include "Elements/Model/Model.h"
 #include "Elements/RenderTarget.h"
-#include "Elements/Scene/SceneLayer.h"
 #include "Elements/Shader/Shader.h"
 
 #include "Elements/Model/Model.h"
-
-namespace ROC
-{
-
-const std::hash<std::string> g_stringHash;
-
-}
-
-bool ROC::Scene::SceneLayerSorter(const SceneLayer *f_layerA, const SceneLayer *f_layerB)
-{
-    return (f_layerA->GetPriority() < f_layerB->GetPriority());
-}
 
 ROC::Scene::Scene()
 {
@@ -28,14 +15,13 @@ ROC::Scene::Scene()
 
     m_camera = nullptr;
     m_renderTarget = nullptr;
+    m_shader = nullptr;
 
     m_active = false;
 }
 
 ROC::Scene::~Scene()
 {
-    for(auto l_layer : m_layers) delete l_layer;
-    m_layers.clear();
 }
 
 bool ROC::Scene::SetCamera(Camera *f_cam)
@@ -50,11 +36,7 @@ bool ROC::Scene::SetCamera(Camera *f_cam)
         Element::AddChild(m_camera);
         m_camera->AddParent(this);
 
-        if(m_active)
-        {
-            m_camera->Update();
-            UpdateLayers();
-        }
+        if(m_active) m_camera->Update();
 
         l_result = true;
     }
@@ -120,75 +102,29 @@ ROC::RenderTarget* ROC::Scene::GetRenderTarget() const
     return m_renderTarget;
 }
 
-bool ROC::Scene::AddShader(Shader *f_shader, const std::string &f_layer, unsigned char f_priority)
+bool ROC::Scene::SetShader(Shader *f_shader)
 {
-    bool l_result = false;
+    if(m_shader) RemoveShader();
 
-    if(!HasShader(f_shader))
-    {
-        const size_t l_hash = g_stringHash(f_layer);
-        for(auto l_layer : m_layers)
-        {
-            if(l_layer->GetHash() == l_hash)
-            {
-                l_layer->SetShader(f_shader);
-                l_layer->SetPriority(f_priority);
-
-                l_result = true;
-                break;
-            }
-        }
-
-        if(!l_result)
-        {
-            SceneLayer *l_layer = new SceneLayer(l_hash, f_shader, f_priority);
-            m_layers.push_back(l_layer);
-            if(m_layers.size() > 1U) std::sort(m_layers.begin(), m_layers.end(), SceneLayerSorter);
-
-            l_result = true;
-        }
-    }
-
-    if(l_result)
-    {
-        Element::AddChild(f_shader);
-        f_shader->AddParent(this);
-    }
-
-    return l_result;
+    m_shader = f_shader;
+    Element::AddChild(f_shader);
+    f_shader->AddParent(this);
+    return (m_shader != nullptr);
 }
 
-bool ROC::Scene::RemoveShader(Shader *f_shader)
+bool ROC::Scene::RemoveShader()
 {
-    bool l_result = false;
-    for(auto l_layer : m_layers)
+    if(m_shader)
     {
-        if(l_layer->GetShader() == f_shader)
-        {
-            l_layer->SetShader(nullptr);
-
-            l_result = true;
-            break;
-        }
+        Element::RemoveChild(m_shader);
+        m_shader = nullptr;
     }
-
-    if(l_result) Element::RemoveChild(f_shader);
-
-    return l_result;
+    return (!m_shader);
 }
 
-bool ROC::Scene::HasShader(Shader *f_shader) const
+ROC::Shader* ROC::Scene::GetShader() const
 {
-    bool l_result = false;
-    for(auto l_layer : m_layers)
-    {
-        if(l_layer->GetShader() == f_shader)
-        {
-            l_result = true;
-            break;
-        }
-    }
-    return l_result;
+    return m_shader;
 }
 
 bool ROC::Scene::AddLight(Light *f_light)
@@ -214,13 +150,11 @@ bool ROC::Scene::HasLight(Light *f_light) const
 bool ROC::Scene::RemoveLight(Light *f_light)
 {
     bool l_result = false;
-    if(HasLight(f_light))
+    auto l_searchIter = std::find(m_lights.begin(), m_lights.end(), f_light);
+    if(l_searchIter != m_lights.end())
     {
-        auto l_searchIter = std::find(m_lights.begin(), m_lights.end(), f_light);
-        if(l_searchIter != m_lights.end()) m_lights.erase(l_searchIter);
-
+        m_lights.erase(l_searchIter);
         Element::RemoveChild(f_light);
-
         l_result = true;
     }
     return l_result;
@@ -231,118 +165,52 @@ size_t ROC::Scene::GetLightsCount() const
     return m_lights.size();
 }
 
-bool ROC::Scene::AddModel(Model *f_model, const std::string &f_shaderGroup)
+const std::vector<ROC::Light*>& ROC::Scene::GetLights() const
+{
+    return m_lights;
+}
+
+bool ROC::Scene::AddModel(Model *f_model)
 {
     bool l_result = false;
-    if(!HasModel(f_model))
+    auto l_searchIter = std::find(m_models.begin(), m_models.end(), f_model);
+    if(l_searchIter == m_models.end())
     {
-        size_t l_hash = g_stringHash(f_shaderGroup);
-        for(auto l_layer : m_layers)
-        {
-            if(l_layer->GetHash() == l_hash)
-            {
-                l_layer->AddModel(f_model);
-
-                l_result = true;
-                break;
-            }
-        }
-    }
-
-    if(l_result)
-    {
+        m_models.push_back(f_model);
         Element::AddChild(f_model);
         f_model->AddParent(this);
+        l_result = true;
     }
-
     return l_result;
 }
 
 bool ROC::Scene::RemoveModel(Model *f_model)
 {
     bool l_result = false;
-
-    for(auto l_layer : m_layers)
+    auto l_searchIter = std::find(m_models.begin(), m_models.end(), f_model);
+    if(l_searchIter != m_models.end())
     {
-        if(l_layer->RemoveModel(f_model))
-        {
-            l_result = true;
-            break;
-        }
+        m_models.erase(l_searchIter);
+        Element::RemoveChild(f_model);
+        l_result = true;
     }
-
-    if(l_result) Element::RemoveChild(f_model);
-
     return l_result;
 }
 
 bool ROC::Scene::HasModel(Model *f_model) const
 {
-    bool l_result = false;
-    for(auto l_layer : m_layers)
-    {
-        if(l_layer->HasModel(f_model))
-        {
-            l_result = true;
-            break;
-        }
-    }
-    return l_result;
+    auto l_searchIter = std::find(m_models.begin(), m_models.end(), f_model);
+    return (l_searchIter != m_models.end());
 }
 
-bool ROC::Scene::SetModelLayer(Model *f_model, const std::string &f_layer)
+const std::vector<ROC::Model*>& ROC::Scene::GetModels() const
 {
-    bool l_result = false;
-
-    const size_t l_hash = g_stringHash(f_layer);
-    for(auto l_layerTo : m_layers)
-    {
-        if(l_layerTo->GetHash() == l_hash)
-        {
-            for(auto l_layerFrom : m_layers)
-            {
-                if(l_layerFrom->RemoveModel(f_model))
-                {
-                    l_layerTo->AddModel(f_model);
-
-                    l_result = true;
-                    break;
-                }
-            }
-        }
-
-        if(l_result) break;
-    }
-
-    return l_result;
+    return m_models;
 }
 
-bool ROC::Scene::IsActive() const
+bool ROC::Scene::IsRenderValid() const
 {
-    return m_active;
-}
-
-const ROC::SceneLayer* ROC::Scene::GetLayer(const std::string &f_layer) const
-{
-    SceneLayer *l_result = nullptr;
-    const size_t l_hash = g_stringHash(f_layer);
-    for(auto l_layer : m_layers)
-    {
-        if(l_layer->GetHash() == l_hash)
-        {
-            l_result = l_layer;
-            break;
-        }
-    }
-    return l_result;
-}
-
-void ROC::Scene::UpdateLayers()
-{
-    if(m_camera)
-    {
-        for(auto l_layer : m_layers) l_layer->Update(m_camera);
-    }
+    return ((m_camera != nullptr) && (m_shader != nullptr));
 }
 
 void ROC::Scene::Enable()
@@ -352,7 +220,27 @@ void ROC::Scene::Enable()
         if(m_camera)
         {
             m_camera->Update();
-            UpdateLayers();
+
+            // Set visibilty for models
+            glm::vec3 l_pos;
+            btTransform l_transform = btTransform::getIdentity();
+            for(auto l_model : m_models)
+            {
+                l_transform.setFromOpenGLMatrix(glm::value_ptr(l_model->GetFullMatrix()));
+                const btVector3 &l_btPos = l_transform.getOrigin();
+                l_pos.x = l_btPos.x();
+                l_pos.y = l_btPos.y();
+                l_pos.z = l_btPos.z();
+
+                bool l_visible = m_camera->IsInFrustum(l_pos, l_model->GetBoundSphereRadius());
+                l_model->SetVisibility(l_visible);
+
+                float l_dist = glm::distance(m_camera->GetPosition(), l_pos);
+                l_model->SetVisibilityDistance(l_dist);
+            }
+
+            // Sort by geometry and distance to camera
+            std::sort(m_models.begin(), m_models.end(), SceneModelSorting);
         }
         if(m_renderTarget) m_renderTarget->Enable();
         else RenderTarget::Disable();
@@ -368,6 +256,20 @@ void ROC::Scene::Disable()
         if(m_renderTarget) m_renderTarget->Disable();
         m_active = false;
     }
+}
+
+bool ROC::Scene::IsActive() const
+{
+    return m_active;
+}
+
+bool ROC::Scene::SceneModelSorting(const Model *f_modelA, const Model *f_modelB)
+{
+    if(f_modelA->GetGeometry() != f_modelB->GetGeometry())
+    {
+        return (f_modelA->GetGeometry() < f_modelB->GetGeometry());
+    }
+    return (f_modelA->GetVisibilityDistance() < f_modelB->GetVisibilityDistance());
 }
 
 void ROC::Scene::OnChildRemoved(Element *f_child)
@@ -389,21 +291,12 @@ void ROC::Scene::OnChildRemoved(Element *f_child)
         } break;
         case ET_Model:
         {
-            for(auto l_layer : m_layers)
-            {
-                if(l_layer->RemoveModel(reinterpret_cast<Model*>(f_child))) break;
-            }
+            auto l_searchIter = std::find(m_models.begin(), m_models.end(), f_child);
+            if(l_searchIter != m_models.end()) m_models.erase(l_searchIter);
         } break;
         case ET_Shader:
         {
-            for(auto l_layer : m_layers)
-            {
-                if(l_layer->GetShader() == f_child)
-                {
-                    l_layer->SetShader(nullptr);
-                    break;
-                }
-            }
+            m_shader = nullptr;
         } break;
     }
 
@@ -430,19 +323,20 @@ ROC::IRenderTarget* ROC::Scene::GetIRenderTarget() const
 {
     return m_renderTarget;
 }
-bool ROC::Scene::AddIShader(IShader *f_shader, const std::string &f_layer, unsigned char f_priority)
+
+bool ROC::Scene::SetIShader(IShader *f_shader)
 {
-    return AddShader(dynamic_cast<Shader*>(f_shader), f_layer, f_priority);
+    return SetShader(dynamic_cast<Shader*>(f_shader));
 }
 
-bool ROC::Scene::RemoveIShader(IShader *f_shader)
+bool ROC::Scene::RemoveIShader()
 {
-    return RemoveShader(dynamic_cast<Shader*>(f_shader));
+    return RemoveShader();
 }
 
-bool ROC::Scene::HasIShader(IShader *f_shader) const
+ROC::IShader* ROC::Scene::GetIShader() const
 {
-    return HasShader(dynamic_cast<Shader*>(f_shader));
+    return GetShader();
 }
 bool ROC::Scene::AddILight(ILight *f_light)
 {
@@ -459,9 +353,9 @@ bool ROC::Scene::HasILight(ILight *f_light) const
     return HasLight(dynamic_cast<Light*>(f_light));
 }
 
-bool ROC::Scene::AddIModel(IModel *f_model, const std::string &f_layer)
+bool ROC::Scene::AddIModel(IModel *f_model)
 {
-    return AddModel(dynamic_cast<Model*>(f_model), f_layer);
+    return AddModel(dynamic_cast<Model*>(f_model));
 }
 
 bool ROC::Scene::RemoveIModel(IModel *f_model)
@@ -472,9 +366,4 @@ bool ROC::Scene::RemoveIModel(IModel *f_model)
 bool ROC::Scene::HasIModel(IModel *f_model) const
 {
     return HasModel(dynamic_cast<Model*>(f_model));
-}
-
-bool ROC::Scene::SetIModelLayer(IModel *f_model, const std::string &f_layer)
-{
-    return SetModelLayer(dynamic_cast<Model*>(f_model), f_layer);
 }

@@ -31,7 +31,7 @@ protected:
     Quad3D();
     ~Quad3D();
 
-    inline const glm::mat4& GetMatrix() const { return m_matrix; }
+    const glm::mat4& GetMatrix() const;
 
     void SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size);
     void Draw();

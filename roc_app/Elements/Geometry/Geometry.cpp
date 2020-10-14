@@ -312,3 +312,38 @@ size_t ROC::Geometry::GetMaterialsCount() const
 {
     return m_materialCount;
 }
+
+const std::vector<ROC::Material*>& ROC::Geometry::GetMaterials() const
+{
+    return m_materials;
+}
+
+bool ROC::Geometry::HasBonesData() const
+{
+    return !m_bonesData.empty();
+}
+
+const std::vector<ROC::BoneData*>& ROC::Geometry::GetBonesData() const
+{
+    return m_bonesData;
+}
+
+bool ROC::Geometry::HasBonesCollisionData() const
+{
+    return !m_collisionData.empty();
+}
+
+const std::vector<ROC::BoneCollisionData*>& ROC::Geometry::GetBonesCollisionData() const
+{
+    return m_collisionData;
+}
+
+bool ROC::Geometry::HasJointsData() const
+{
+    return !m_jointData.empty();
+}
+
+const std::vector<ROC::BoneJointData*>& ROC::Geometry::GetJointsData() const
+{
+    return m_jointData;
+}

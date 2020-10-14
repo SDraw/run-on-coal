@@ -36,6 +36,11 @@ void ROC::Transformation::SetPosition(const glm::vec3 &f_pos)
     }
 }
 
+const glm::vec3& ROC::Transformation::GetPosition() const
+{
+    return m_position;
+}
+
 void ROC::Transformation::SetRotation(const glm::quat &f_rot)
 {
     if(m_rotation != f_rot)
@@ -43,6 +48,11 @@ void ROC::Transformation::SetRotation(const glm::quat &f_rot)
         std::memcpy(&m_rotation, &f_rot, sizeof(glm::quat));
         m_update = true;
     }
+}
+
+const glm::quat& ROC::Transformation::GetRotation() const
+{
+    return m_rotation;
 }
 
 void ROC::Transformation::SetScale(const glm::vec3 &f_scl)
@@ -62,9 +72,29 @@ void ROC::Transformation::SetScale(const glm::vec3 &f_scl)
     }
 }
 
+const glm::vec3& ROC::Transformation::GetScale() const
+{
+    return m_scale;
+}
+
+bool ROC::Transformation::IsScaled() const
+{
+    return m_useScale;
+}
+
+bool ROC::Transformation::IsUpdated() const
+{
+    return m_updated;
+}
+
 void ROC::Transformation::GetMatrix(glm::mat4 &f_mat) const
 {
     std::memcpy(&f_mat, &m_matrix, sizeof(glm::mat4));
+}
+
+const glm::mat4& ROC::Transformation::GetMatrix() const
+{
+    return m_matrix;
 }
 
 void ROC::Transformation::UpdateMatrix()

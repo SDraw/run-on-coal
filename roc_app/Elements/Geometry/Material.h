@@ -43,16 +43,16 @@ public:
         MPB_Compression = (1U << 5)
     };
 
-    inline unsigned char GetType() const { return m_type; }
-    inline const glm::vec4& GetParams() const { return m_params; }
+    unsigned char GetType() const;
+    const glm::vec4& GetParams() const;
 
-    inline bool IsDoubleSided() const { return ((m_type&MPB_Doubleside) != 0U); }
-    inline bool IsTransparent() const { return ((m_type&MPB_Transparency) != 0U); }
-    inline bool IsShady() const { return ((m_type&MPB_Shading) != 0U); }
-    inline bool HasDepth() const { return ((m_type&MPB_Depth) != 0U); }
-    inline bool IsCompressed() const { return ((m_type&MPB_Compression) != 0U); }
-    inline unsigned char GetFilteringType() const { return ((m_type&MPB_Filtering) >> 4); }
-    inline bool HasTexture() const { return (m_texture != nullptr); }
+    bool IsDoubleSided() const;
+    bool IsTransparent() const;
+    bool IsShady() const;
+    bool HasDepth() const;
+    bool IsCompressed() const;
+    unsigned char GetFilteringType() const;
+    bool HasTexture() const;
 protected:
     Material();
     ~Material();
@@ -65,11 +65,11 @@ protected:
     void LoadTexture(const std::string &f_path);
     void Generate();
 
-    inline void SetType(unsigned char f_type) { m_type = f_type; }
+    void SetType(unsigned char f_type);
 
-    inline void SetParams(const glm::vec4 &f_params) { std::memcpy(&m_params, &f_params, sizeof(glm::vec4)); }
+    void SetParams(const glm::vec4 &f_params);
 
-    inline Texture* GetTexture() const { return m_texture; }
+    Texture* GetTexture() const;
 
     void Draw(bool f_useTexture = true);
 

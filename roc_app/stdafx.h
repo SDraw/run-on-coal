@@ -44,6 +44,6 @@
 #include "pugixml.hpp"
 #include "zlib.h"
 
-#include "MessageIdentifiers.h"
-#include "BitStream.h"
-#include "RakPeerInterface.h"
+#ifdef _DEBUG
+#define DEBUG_PRINT(T) std::cout << T << std::endl
+#endif

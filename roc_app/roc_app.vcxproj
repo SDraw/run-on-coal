@@ -122,7 +122,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./;../vendor/bullet/include;../vendor/pugixml/src;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml/src;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -131,13 +131,13 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-2-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-2-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win32;../vendor/bullet/lib/win32;../vendor/freetype2/lib/win32;../vendor/glew/lib/win32;../vendor/zlib/lib/win32;../vendor/RakNet/lib/win32;../vendor/openvr/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,7 +146,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./;../vendor/bullet/include;../vendor/pugixml/src;../vendor/freetype2/include;../vendor/glm;../vendor/glew/include;../vendor/SFML/include;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml/src;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -155,13 +155,13 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-2-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;sfml-2-d.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;freetype.lib;zlib.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win64;../vendor/bullet/lib/win64;../vendor/freetype2/lib/win64;../vendor/glew/lib/win64;../vendor/zlib/lib/win64;../vendor/RakNet/lib/win64;../vendor/openvr/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -172,7 +172,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml/src;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml/src;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -191,12 +191,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win32;../vendor/bullet/lib/win32;../vendor/freetype2/lib/win32;../vendor/glew/lib/win32;../vendor/zlib/lib/win32;../vendor/RakNet/lib/win32;../vendor/openvr/lib/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-2.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-2.lib;zlib.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -210,7 +210,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN64;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml/src;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RakNet/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../vendor/bullet/include;../vendor/pugixml/src;../vendor/SFML/include;../vendor/freetype2/include;../vendor/glew/include;../vendor/glm;../vendor/zlib/include;../vendor/RectangleBinPack;../vendor/openvr/headers;../shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OpenMPSupport>false</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -228,12 +228,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>../vendor/SFML/lib/win64;../vendor/bullet/lib/win64;../vendor/freetype2/lib/win64;../vendor/glew/lib/win64;../vendor/zlib/lib/win64;../vendor/RakNet/lib/win64;../vendor/openvr/lib/win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-2.lib;zlib.lib;RakNet.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;freetype.lib;sfml-2.lib;zlib.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include\client"</Command>
+      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -248,7 +248,6 @@
     <ClInclude Include="Elements\Collision.h" />
     <ClInclude Include="Elements\Drawable.h" />
     <ClInclude Include="Elements\Element.h" />
-    <ClInclude Include="Elements\File.h" />
     <ClInclude Include="Elements\Font.h" />
     <ClInclude Include="Elements\Geometry\BoneCollisionData.hpp" />
     <ClInclude Include="Elements\Geometry\BoneData.hpp" />
@@ -262,7 +261,6 @@
     <ClInclude Include="Elements\Model\Skeleton.h" />
     <ClInclude Include="Elements\RenderTarget.h" />
     <ClInclude Include="Elements\Scene\Scene.h" />
-    <ClInclude Include="Elements\Scene\SceneLayer.h" />
     <ClInclude Include="Elements\Shader\Shader.h" />
     <ClInclude Include="Elements\Shader\ShaderUniform.h" />
     <ClInclude Include="Elements\Sound.h" />
@@ -289,13 +287,11 @@
     <ClInclude Include="Interfaces\IDrawable.h" />
     <ClInclude Include="Interfaces\IElement.h" />
     <ClInclude Include="Interfaces\IElementManager.h" />
-    <ClInclude Include="Interfaces\IFile.h" />
     <ClInclude Include="Interfaces\IFont.h" />
     <ClInclude Include="Interfaces\IGeometry.h" />
     <ClInclude Include="Interfaces\ILogManager.h" />
     <ClInclude Include="Interfaces\IModel.h" />
     <ClInclude Include="Interfaces\IModule.h" />
-    <ClInclude Include="Interfaces\INetworkManager.h" />
     <ClInclude Include="Interfaces\IPhysicsManager.h" />
     <ClInclude Include="Interfaces\IRenderManager.h" />
     <ClInclude Include="Interfaces\IRenderTarget.h" />
@@ -314,7 +310,6 @@
     <ClInclude Include="Managers\ElementManager.h" />
     <ClInclude Include="Managers\LogManager.h" />
     <ClInclude Include="Managers\ModuleManager.h" />
-    <ClInclude Include="Managers\NetworkManager.h" />
     <ClInclude Include="Managers\RenderManager\PhysicsDrawer.h" />
     <ClInclude Include="Managers\RenderManager\Quad2D.h" />
     <ClInclude Include="Managers\RenderManager\Quad3D.h" />
@@ -366,7 +361,6 @@
     <ClCompile Include="Elements\Collision.cpp" />
     <ClCompile Include="Elements\Drawable.cpp" />
     <ClCompile Include="Elements\Element.cpp" />
-    <ClCompile Include="Elements\File.cpp" />
     <ClCompile Include="Elements\Font.cpp" />
     <ClCompile Include="Elements\Geometry\Geometry.cpp" />
     <ClCompile Include="Elements\Geometry\Material.cpp" />
@@ -377,7 +371,6 @@
     <ClCompile Include="Elements\Model\Skeleton.cpp" />
     <ClCompile Include="Elements\RenderTarget.cpp" />
     <ClCompile Include="Elements\Scene\Scene.cpp" />
-    <ClCompile Include="Elements\Scene\SceneLayer.cpp" />
     <ClCompile Include="Elements\Shader\Shader.cpp" />
     <ClCompile Include="Elements\Shader\ShaderUniform.cpp" />
     <ClCompile Include="Elements\Sound.cpp" />
@@ -415,7 +408,6 @@
     <ClCompile Include="Managers\ElementManager.cpp" />
     <ClCompile Include="Managers\LogManager.cpp" />
     <ClCompile Include="Managers\ModuleManager.cpp" />
-    <ClCompile Include="Managers\NetworkManager.cpp" />
     <ClCompile Include="Managers\RenderManager\PhysicsDrawer.cpp" />
     <ClCompile Include="Managers\RenderManager\Quad2D.cpp" />
     <ClCompile Include="Managers\RenderManager\Quad3D.cpp" />

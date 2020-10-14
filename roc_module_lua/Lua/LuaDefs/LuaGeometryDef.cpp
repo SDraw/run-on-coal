@@ -5,8 +5,8 @@
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaFunction.h"
-#include "Module/LuaModule.h"
-#include "Module/TaskHandler.h"
+#include "Core/Core.h"
+#include "Core/TaskHandler.h"
 #include "Utils/LuaUtils.h"
 
 void LuaGeometryDef::Init(lua_State *f_vm)
@@ -29,12 +29,12 @@ int LuaGeometryDef::Create(lua_State *f_vm)
     {
         if(l_callback.IsValid())
         {
-            void *l_task = LuaModule::GetModule()->GetTaskHandler()->CreateGeometryTask(l_path, l_callback);
+            void *l_task = Core::GetInstance()->GetTaskHandler()->CreateGeometryTask(l_path, l_callback);
             l_argStream.PushPointer(l_task);
         }
         else
         {
-            ROC::IGeometry *l_geometry = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIGeometry(l_path);
+            ROC::IGeometry *l_geometry = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateIGeometry(l_path);
             l_geometry ? l_argStream.PushElement(l_geometry) : l_argStream.PushBoolean(false);
         }
     }

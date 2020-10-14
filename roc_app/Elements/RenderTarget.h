@@ -42,14 +42,14 @@ protected:
 
     bool Create(unsigned char f_type, const glm::ivec2 &f_size, unsigned char f_filter);
 
-    inline GLTexture2D* GetGLTexture() { return m_texture; }
+    GLTexture2D* GetGLTexture() const;
 
     void Bind(size_t f_slot);
     void Enable(bool f_clear = true);
     static void Disable();
 
-    static inline void SetFallbackRenderTarget(RenderTarget *f_rt) { ms_fallbackRT = f_rt; }
-    static inline void SetFallbackSize(const glm::ivec2 &f_size) { std::memcpy(&ms_fallbackSize, &f_size, sizeof(glm::ivec2)); }
+    static void SetFallbackRenderTarget(RenderTarget *f_rt);
+    static void SetFallbackSize(const glm::ivec2 &f_size);
     static void Fallback();
 
     friend class ElementManager;

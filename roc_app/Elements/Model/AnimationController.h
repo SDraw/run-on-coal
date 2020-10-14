@@ -8,14 +8,16 @@ class Bone;
 
 class AnimationController final
 {
+    enum AnimationState : unsigned char
+    {
+        AS_None = 0U,
+        AS_Paused,
+        AS_Playing
+    };
+
     Animation *m_animation;
     unsigned int m_tick;
-    enum AnimationControllerState
-    {
-        ACS_None = 0U,
-        ACS_Paused,
-        ACS_Playing
-    } m_state;
+    AnimationState m_state;
     float m_speed;
     bool m_loop;
 
@@ -27,31 +29,31 @@ class AnimationController final
     AnimationController(const AnimationController &that) = delete;
     AnimationController& operator=(const AnimationController &that) = delete;
 public:
-    inline Animation* GetAnimation() const { return m_animation; };
+    Animation* GetAnimation() const;
 
     bool Play(bool f_loop);
     bool Pause();
     bool Reset();
 
-    inline bool IsPlaying() const { return (m_state == ACS_Playing); }
-    inline bool IsPaused() const { return (m_state == ACS_Paused); }
+    bool IsPlaying() const;
+    bool IsPaused() const;
 
     bool SetSpeed(float f_speed);
-    inline float GetSpeed() const { return m_speed; }
+    float GetSpeed() const;
 
     bool SetProgress(float f_val);
     float GetProgress() const;
 
     bool SetBlendTime(unsigned int f_val);
-    inline unsigned int GetBlendTime() const { return m_blendTime; }
+    unsigned int GetBlendTime() const;
 protected:
     AnimationController();
     ~AnimationController();
 
     void SetAnimation(Animation *f_anim);
 
-    inline unsigned int GetTick() const { return m_tick; }
-    inline float GetBlendValue() const { return m_blendValue; }
+    unsigned int GetTick() const;
+    float GetBlendValue() const;
 
     void Update();
 

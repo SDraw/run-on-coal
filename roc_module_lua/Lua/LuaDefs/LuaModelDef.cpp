@@ -5,7 +5,7 @@
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaCollidableDef.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -53,7 +53,7 @@ int LuaModelDef::Create(lua_State *f_vm)
     l_argStream.ReadNextElement(l_geometry);
     if(!l_argStream.HasErrors())
     {
-        ROC::IModel *l_model = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIModel(l_geometry);
+        ROC::IModel *l_model = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateIModel(l_geometry);
         l_model ? l_argStream.PushElement(l_model) : l_argStream.PushBoolean(false);
     }
     else l_argStream.PushBoolean(false);
@@ -173,16 +173,15 @@ int LuaModelDef::GetScale(lua_State *f_vm)
 
 int LuaModelDef::GetMatrix(lua_State *f_vm)
 {
+    // float float float float float float float float float float float float float float float float Model:getMatrix()
     ROC::IModel *l_model;
     LuaArgReader l_argStream(f_vm);
     l_argStream.ReadElement(l_model);
     if(!l_argStream.HasErrors())
     {
         const glm::mat4 &l_mat = l_model->GetFullMatrix();
-        for(int i = 0; i < 4; i++)
-        {
-            for(int j = 0; j < 4; j++) l_argStream.PushNumber(l_mat[i][j]);
-        }
+        const float *l_buffer = glm::value_ptr(l_mat);
+        for(size_t i = 0U; i < 16; i++) l_argStream.PushNumber(l_buffer[i]);
     }
     else l_argStream.PushBoolean(false);
     return l_argStream.GetReturnValue();

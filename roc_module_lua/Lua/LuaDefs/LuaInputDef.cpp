@@ -4,7 +4,7 @@
 
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaFunction.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 
 const std::vector<std::string> g_keyNames
@@ -69,7 +69,7 @@ int LuaInputDef::SetCursorMode(lua_State *f_vm)
     l_argStream.ReadBoolean(l_locked);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetCursorMode(l_visible, l_locked);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetCursorMode(l_visible, l_locked);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -81,7 +81,7 @@ int LuaInputDef::GetCursorPosition(lua_State *f_vm)
     // int int getCursorPosition()
     LuaArgReader l_argStream(f_vm);
     glm::ivec2 l_pos;
-    LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetCursorPosition(l_pos);
+    Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetCursorPosition(l_pos);
     l_argStream.PushInteger(l_pos.x);
     l_argStream.PushInteger(l_pos.y);
     return l_argStream.GetReturnValue();
@@ -95,7 +95,7 @@ int LuaInputDef::SetCursorPosition(lua_State *f_vm)
     for(int i = 0; i < 2; i++) l_argStream.ReadInteger(l_pos[i]);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetCursorPosition(l_pos);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetCursorPosition(l_pos);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -110,7 +110,7 @@ int LuaInputDef::SetWindowPosition(lua_State *f_vm)
     for(int i = 0; i < 2; i++) l_argStream.ReadInteger(l_pos[i]);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetWindowPosition(l_pos);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetWindowPosition(l_pos);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -122,7 +122,7 @@ int LuaInputDef::GetWindowPosition(lua_State *f_vm)
     // int int getWindowPosition()
     LuaArgReader l_argStream(f_vm);
     glm::ivec2 l_pos;
-    LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetWindowPosition(l_pos);
+    Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetWindowPosition(l_pos);
     l_argStream.PushInteger(l_pos.x);
     l_argStream.PushInteger(l_pos.y);
     return l_argStream.GetReturnValue();
@@ -133,7 +133,7 @@ int LuaInputDef::GetWindowSize(lua_State *f_vm)
     // int getWindowSize()
     LuaArgReader l_argStream(f_vm);
     glm::ivec2 l_size;
-    LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetWindowSize(l_size);
+    Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetWindowSize(l_size);
     l_argStream.PushInteger(l_size.x);
     l_argStream.PushInteger(l_size.y);
     return l_argStream.GetReturnValue();
@@ -143,7 +143,7 @@ int LuaInputDef::CloseWindow(lua_State *f_vm)
 {
     // bool closeWindow()
     LuaArgReader l_argStream(f_vm);
-    LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->CloseWindow();
+    Core::GetInstance()->GetEngineICore()->GetISfmlManager()->CloseWindow();
     l_argStream.PushBoolean(true);
     return l_argStream.GetReturnValue();
 }
@@ -159,7 +159,7 @@ int LuaInputDef::IsKeyPressed(lua_State *f_vm)
         size_t l_numKey = EnumUtils::ReadEnumVector(l_key, g_keyNames);
         if(l_numKey != std::numeric_limits<size_t>::max())
         {
-            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->IsKeyPressed(static_cast<int>(l_numKey));
+            bool l_result = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->IsKeyPressed(static_cast<int>(l_numKey));
             l_argStream.PushBoolean(l_result);
         }
         else l_argStream.PushBoolean(false);
@@ -179,7 +179,7 @@ int LuaInputDef::IsMouseKeyPressed(lua_State *f_vm)
         size_t l_numKey = EnumUtils::ReadEnumVector(l_key, g_mouseKeyNames);
         if(l_numKey != std::numeric_limits<size_t>::max())
         {
-            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->IsMouseKeyPressed(static_cast<int>(l_numKey));
+            bool l_result = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->IsMouseKeyPressed(static_cast<int>(l_numKey));
             l_argStream.PushBoolean(l_result);
         }
         else l_argStream.PushBoolean(false);
@@ -196,7 +196,7 @@ int LuaInputDef::SetWindowVSync(lua_State *f_vm)
     l_argStream.ReadBoolean(l_sync);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetVSync(l_sync);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetVSync(l_sync);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -211,7 +211,7 @@ int LuaInputDef::SetWindowFramelimit(lua_State *f_vm)
     l_argStream.ReadInteger(l_fps);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetFramelimit(l_fps);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetFramelimit(l_fps);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -222,7 +222,7 @@ int LuaInputDef::GetWindowFramelimit(lua_State *f_vm)
 {
     // int getWindowFramelimit()
     LuaArgReader l_argStream(f_vm);
-    l_argStream.PushInteger(LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetFramelimit());
+    l_argStream.PushInteger(Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetFramelimit());
     return l_argStream.GetReturnValue();
 }
 
@@ -234,7 +234,7 @@ int LuaInputDef::SetWindowTitle(lua_State *f_vm)
     l_argStream.ReadText(l_title);
     if(!l_argStream.HasErrors() && !l_title.empty())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetTitle(l_title);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetTitle(l_title);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -249,7 +249,7 @@ int LuaInputDef::SetWindowIcon(lua_State *f_vm)
     l_argStream.ReadText(l_path);
     if(!l_argStream.HasErrors() && !l_path.empty())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetIcon(l_path);
+        bool l_result = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetIcon(l_path);
         l_argStream.PushBoolean(l_result);
     }
     else l_argStream.PushBoolean(false);
@@ -260,7 +260,7 @@ int LuaInputDef::RequestWindowFocus(lua_State *f_vm)
 {
     // bool requestWindowFocus()
     LuaArgReader l_argStream(f_vm);
-    LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->RequestFocus();
+    Core::GetInstance()->GetEngineICore()->GetISfmlManager()->RequestFocus();
     l_argStream.PushBoolean(true);
     return l_argStream.GetReturnValue();
 }
@@ -269,7 +269,7 @@ int LuaInputDef::GetWindowFocus(lua_State *f_vm)
 {
     // bool getWindowFocus()
     LuaArgReader l_argStream(f_vm);
-    l_argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetFocusState());
+    l_argStream.PushBoolean(Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetFocusState());
     return l_argStream.GetReturnValue();
 }
 
@@ -281,7 +281,7 @@ int LuaInputDef::SetWindowInputEnabled(lua_State *f_vm)
     l_argStream.ReadBoolean(l_state);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetInputEnabled(l_state);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetInputEnabled(l_state);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -296,7 +296,7 @@ int LuaInputDef::IsJoypadConnected(lua_State *f_vm)
     l_argStream.ReadInteger(l_joypad);
     if(!l_argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->IsJoypadConnected(l_joypad);
+        bool l_result = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->IsJoypadConnected(l_joypad);
         l_argStream.PushBoolean(l_result);
     }
     else l_argStream.PushBoolean(false);
@@ -311,7 +311,7 @@ int LuaInputDef::JoypadGetButtonCount(lua_State *f_vm)
     l_argStream.ReadInteger(l_joypad);
     if(!l_argStream.HasErrors())
     {
-        unsigned int l_count = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetJoypadButtonCount(l_joypad);
+        unsigned int l_count = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetJoypadButtonCount(l_joypad);
         l_argStream.PushInteger(l_count);
     }
     else l_argStream.PushBoolean(false);
@@ -327,7 +327,7 @@ int LuaInputDef::JoypadGetButtonState(lua_State *f_vm)
     l_argStream.ReadInteger(l_button);
     if(!l_argStream.HasErrors())
     {
-        bool l_state = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetJoypadButtonState(l_joypad, l_button);
+        bool l_state = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetJoypadButtonState(l_joypad, l_button);
         l_argStream.PushBoolean(l_state);
     }
     else l_argStream.PushBoolean(false);
@@ -347,7 +347,7 @@ int LuaInputDef::JoypadHasAxis(lua_State *f_vm)
         size_t l_axisID = EnumUtils::ReadEnumVector(l_axis, g_joypadAxisNames);
         if(l_axisID != std::numeric_limits<size_t>::max())
         {
-            bool l_result = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->CheckJoypadAxis(l_joypad, static_cast<unsigned int>(l_axisID));
+            bool l_result = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->CheckJoypadAxis(l_joypad, static_cast<unsigned int>(l_axisID));
             l_argStream.PushBoolean(l_result);
         }
         else l_argStream.PushBoolean(false);
@@ -369,7 +369,7 @@ int LuaInputDef::JoypadGetAxisValue(lua_State *f_vm)
         size_t l_axisID = EnumUtils::ReadEnumVector(l_axis, g_joypadAxisNames);
         if(l_axisID != std::numeric_limits<size_t>::max())
         {
-            float l_val = LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetJoypadAxisValue(l_joypad, static_cast<unsigned int>(l_axisID));
+            float l_val = Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetJoypadAxisValue(l_joypad, static_cast<unsigned int>(l_axisID));
             l_argStream.PushNumber(l_val);
         }
         else l_argStream.PushBoolean(false);
@@ -380,21 +380,23 @@ int LuaInputDef::JoypadGetAxisValue(lua_State *f_vm)
 
 int LuaInputDef::GetClipboard(lua_State *f_vm)
 {
+    // str getClipboard()
     LuaArgReader l_argStream(f_vm);
     std::string l_clipboard;
-    LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetClipboardString(l_clipboard);
+    Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetClipboardString(l_clipboard);
     l_argStream.PushText(l_clipboard);
     return l_argStream.GetReturnValue();
 }
 
 int LuaInputDef::SetClipboard(lua_State *f_vm)
 {
+    // bool setClipboard(str text)
     LuaArgReader l_argStream(f_vm);
     std::string l_clipboard;
     l_argStream.ReadText(l_clipboard);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->SetClipboardString(l_clipboard);
+        Core::GetInstance()->GetEngineICore()->GetISfmlManager()->SetClipboardString(l_clipboard);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);

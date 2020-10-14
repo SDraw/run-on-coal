@@ -21,6 +21,7 @@ namespace ROC
 extern const glm::mat4 g_identityMatrix;
 extern const glm::vec3 g_emptyVec3;
 extern const glm::quat g_defaultRotation;
+extern const glm::vec4 g_zeroPoint;
 
 const std::vector<std::string> g_vrRenderSide
 {
@@ -31,6 +32,8 @@ enum VRRenderSide : size_t
     VRRS_Left = 0U,
     VRRS_Right
 };
+
+const unsigned int g_deviceAxesCount = vr::k_EButton_Axis4 - vr::k_EButton_Axis0;
 
 }
 
@@ -68,11 +71,6 @@ ROC::VRManager::VRManager(Core *f_core)
         m_vrTextures[0U] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_renderTargets[VRE_Left]->GetGLTexture()->GetName())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         m_vrTextures[1U] = { reinterpret_cast<void*>(static_cast<uintptr_t>(m_renderTargets[VRE_Right]->GetGLTexture()->GetName())), vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
 
-        // Add controllers
-        vr::TrackedDeviceIndex_t l_controllers[vr::k_unMaxTrackedDeviceCount];
-        uint32_t l_controllersCount = m_vrSystem->GetSortedTrackedDeviceIndicesOfClass(vr::TrackedDeviceClass_Controller, l_controllers, vr::k_unMaxTrackedDeviceCount);
-        for(vr::TrackedDeviceIndex_t i = 0U; i < l_controllersCount; i++) AddController(l_controllers[i]);
-
         const float l_frameTime = 1.f / m_vrSystem->GetFloatTrackedDeviceProperty(vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_DisplayFrequency_Float);
         const float l_vsyncToPhotons = m_vrSystem->GetFloatTrackedDeviceProperty(vr::k_unTrackedDeviceIndex_Hmd, vr::Prop_SecondsFromVsyncToPhotons_Float);
         m_hmdFramePrediction = l_frameTime + l_vsyncToPhotons;
@@ -90,17 +88,12 @@ ROC::VRManager::VRManager(Core *f_core)
     m_event = { 0 };
     m_state = true;
 
-    m_transform = g_identityMatrix;
-    m_hmdPosition = g_emptyVec3;
-    m_hmdRotation = g_defaultRotation;
-
     m_arguments = new CustomArguments();
 }
 
 ROC::VRManager::~VRManager()
 {
     if(m_vrSystem) vr::VR_Shutdown();
-    for(auto l_controller : m_controllers) delete l_controller.second;
     for(auto l_rt : m_renderTargets) delete l_rt;
     delete m_arguments;
 }
@@ -115,155 +108,131 @@ const glm::uvec2& ROC::VRManager::GetTargetsSize()  const
     return m_targetSize;
 }
 
-const glm::vec3& ROC::VRManager::GetHmdPosition() const
+bool ROC::VRManager::IsDeviceActive(unsigned int f_id) const
 {
-    return m_hmdPosition;
+    unsigned int l_id = glm::clamp(f_id, 0U, vr::k_unMaxTrackedDeviceCount);
+    return m_trackedPoses[l_id].bPoseIsValid;
 }
 
-const glm::quat& ROC::VRManager::GetHmdRotation() const
+bool ROC::VRManager::IsDeviceConnected(unsigned int f_id) const
 {
-    return m_hmdRotation;
+    unsigned int l_id = glm::clamp(f_id, 0U, vr::k_unMaxTrackedDeviceCount);
+    return m_trackedPoses[l_id].bDeviceIsConnected; 
 }
 
-bool ROC::VRManager::IsControllerConnected(unsigned int f_id) const
-{
-    bool l_result = (m_controllers.find(f_id) != m_controllers.end());
-    return l_result;
-}
-
-bool ROC::VRManager::IsControllerActive(unsigned int f_id) const
+bool ROC::VRManager::GetDeviceType(unsigned int f_id, unsigned char &f_type) const
 {
     bool l_result = false;
-    auto l_searchIter = m_controllers.find(f_id);
-    if(l_searchIter != m_controllers.end()) l_result = l_searchIter->second->m_active;
-    return l_result;
-}
-
-unsigned char ROC::VRManager::GetControllerHand(unsigned int f_id) const
-{
-    ControllerHandAssigment l_hand = CHA_Any;
-    auto l_searchIter = m_controllers.find(f_id);
-    if(l_searchIter != m_controllers.end()) l_hand = l_searchIter->second->m_hand;
-    return l_hand;
-}
-
-unsigned int ROC::VRManager::GetControllerFromHand(unsigned char f_hand)
-{
-    unsigned int l_result = 0xFFU;
-
-    // Search through stored
-    for(auto l_iter : m_controllers)
+    if(m_vrSystem)
     {
-        if(l_iter.second->m_hand == f_hand)
+        vr::ETrackedDeviceClass l_class = m_vrSystem->GetTrackedDeviceClass(f_id);
+        if(l_class != vr::TrackedDeviceClass_Invalid)
         {
-            l_result = l_iter.second->m_id;
-            break;
+            f_type = l_class - 1U;
+            l_result = true;
         }
     }
+    return l_result;
+}
 
-    // No stored controller, try to retrieve it
-    if((l_result == 0xFFU) && m_vrSystem)
+bool ROC::VRManager::GetDevicePosition(unsigned int f_id, glm::vec3 &f_pos) const
+{
+    unsigned int l_id = glm::clamp(f_id, 0U, vr::k_unMaxTrackedDeviceCount);
+    glm::mat4 l_matrix(1.f);
+    MathUtils::ConvertMatrix(m_trackedPoses[l_id].mDeviceToAbsoluteTracking,l_matrix);
+    f_pos = l_matrix*g_zeroPoint;
+    return m_trackedPoses[l_id].bDeviceIsConnected;
+}
+
+bool ROC::VRManager::GetDeviceRotation(unsigned int f_id, glm::quat &f_rot) const
+{
+    unsigned int l_id = glm::clamp(f_id, 0U, vr::k_unMaxTrackedDeviceCount);
+    glm::mat4 l_matrix(1.f);
+    MathUtils::ConvertMatrix(m_trackedPoses[l_id].mDeviceToAbsoluteTracking,l_matrix);
+    f_rot = glm::quat_cast(l_matrix);
+    return m_trackedPoses[l_id].bDeviceIsConnected;
+}
+
+bool ROC::VRManager::GetDeviceVelocity(unsigned int f_id, glm::vec3 &f_val) const
+{
+    unsigned int l_id = glm::clamp(f_id, 0U, vr::k_unMaxTrackedDeviceCount);
+    for(int i = 0; i < 3; i++) f_val[i] = m_trackedPoses[l_id].vVelocity.v[i];
+    return m_trackedPoses[l_id].bDeviceIsConnected;
+}
+
+bool ROC::VRManager::GetDeviceAngularVelocity(unsigned int f_id, glm::vec3 &f_val) const
+{
+    unsigned int l_id = glm::clamp(f_id, 0U, vr::k_unMaxTrackedDeviceCount);
+    for(int i = 0; i < 3; i++) f_val[i] = m_trackedPoses[l_id].vAngularVelocity.v[i];
+    return m_trackedPoses[l_id].bDeviceIsConnected;
+}
+
+bool ROC::VRManager::GetDeviceHandRole(unsigned int f_id, unsigned char &f_role) const
+{
+    bool l_result = false;
+    if(m_vrSystem)
     {
-        // Try left hand
-        vr::TrackedDeviceIndex_t l_controllerIndex = m_vrSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
-        if(l_controllerIndex != vr::k_unTrackedDeviceIndexInvalid)
+        vr::ETrackedControllerRole l_role = m_vrSystem->GetControllerRoleForTrackedDeviceIndex(f_id);
+        if(l_role != vr::TrackedControllerRole_Invalid)
         {
-            auto l_searchIter = m_controllers.find(l_controllerIndex);
-            if(l_searchIter != m_controllers.end())
-            {
-                l_searchIter->second->m_hand = CHA_Left; // Reassign hand
-            }
-            else AddController(l_controllerIndex);
-            l_result = l_controllerIndex;
+            f_role = l_role - 1U;
+            l_result = true;
         }
+    }
+    return l_result;
+}
 
-        // Try right hand
-        if(l_controllerIndex == vr::k_unTrackedDeviceIndexInvalid)
+bool ROC::VRManager::GetDeviceByHandRole(unsigned char f_role, unsigned int &f_id) const
+{
+    bool l_result = false;
+    if(m_vrSystem)
+    {
+        vr::TrackedDeviceIndex_t l_device = m_vrSystem->GetTrackedDeviceIndexForControllerRole(static_cast<vr::ETrackedControllerRole>(f_role+1U));
+        if(l_device != vr::k_unTrackedDeviceIndexInvalid)
         {
-            l_controllerIndex = m_vrSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
-            if(l_controllerIndex != vr::k_unTrackedDeviceIndexInvalid)
-            {
-                auto l_searchIter = m_controllers.find(l_controllerIndex);
-                if(l_searchIter != m_controllers.end())
-                {
-                    l_searchIter->second->m_hand = CHA_Right; // Reassign hand
-                    l_result = l_controllerIndex;
-                }
-            }
-            else AddController(l_controllerIndex);
-            l_result = l_controllerIndex;
+            f_id = l_device;
+            l_result = true;
         }
     }
-
     return l_result;
 }
 
-bool ROC::VRManager::GetControllerPosition(unsigned int f_id, glm::vec3 &f_pos) const
+bool ROC::VRManager::GetDeviceAxisValues(unsigned int f_id, unsigned int f_axis, glm::vec2 &f_val) const
 {
     bool l_result = false;
-    auto l_searchIter = m_controllers.find(f_id);
-    if(l_searchIter != m_controllers.end())
+    if(m_vrSystem)
     {
-        std::memcpy(&f_pos, &l_searchIter->second->m_position, sizeof(glm::vec3));
-        l_result = true;
+        unsigned int l_id = glm::clamp(f_id, 0U, vr::k_unMaxTrackedDeviceCount);
+        vr::VRControllerState_t l_state;
+        if(m_vrSystem->GetControllerState(l_id, &l_state, sizeof(vr::VRControllerState_t)))
+        {
+            unsigned int l_axis = glm::clamp(f_axis, 0U, g_deviceAxesCount);
+            f_val.x = l_state.rAxis[l_axis].x;
+            f_val.y = l_state.rAxis[l_axis].y;
+            l_result = true;
+        }
     }
     return l_result;
 }
 
-bool ROC::VRManager::GetControllerRotation(unsigned int f_id, glm::quat &f_rot) const
-{
-    bool l_result = false;
-    auto l_searchIter = m_controllers.find(f_id);
-    if(l_searchIter != m_controllers.end())
-    {
-        std::memcpy(&f_rot, &l_searchIter->second->m_rotation, sizeof(glm::quat));
-        l_result = true;
-    }
-    return l_result;
-}
-
-bool ROC::VRManager::GetControllerVelocity(unsigned int f_id, glm::vec3 &f_val) const
-{
-    bool l_result = false;
-    auto l_searchIter = m_controllers.find(f_id);
-    if(l_searchIter != m_controllers.end())
-    {
-        std::memcpy(&f_val, &l_searchIter->second->m_velocity, sizeof(glm::vec3));
-        l_result = true;
-    }
-    return l_result;
-}
-
-bool ROC::VRManager::GetControllerAngularVelocity(unsigned int f_id, glm::vec3 &f_val) const
-{
-    bool l_result = false;
-    auto l_searchIter = m_controllers.find(f_id);
-    if(l_searchIter != m_controllers.end())
-    {
-        std::memcpy(&f_val, &l_searchIter->second->m_angularVelocity, sizeof(glm::vec3));
-        l_result = true;
-    }
-    return l_result;
-}
-
-bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color, const std::string &f_layer)
+bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec2 &f_pos, const glm::vec2 &f_size, float f_rot, const glm::vec4 &f_color)
 {
     bool l_result = false;
     if(m_vrStage == VRS_None)
     {
         btClamp<unsigned char>(f_side, VRE_Left, VRE_Right);
-        l_result = m_core->GetRenderManager()->Render(m_renderTargets[f_side], f_pos, f_size, f_rot, f_color, f_layer);
+        l_result = m_core->GetRenderManager()->Draw(m_renderTargets[f_side], f_pos, f_size, f_rot, f_color);
     }
     return l_result;
 }
 
-bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const std::string &f_layer, const glm::bvec4 &f_params)
+bool ROC::VRManager::DrawEyeImage(unsigned char f_side, const glm::vec3 &f_pos, const glm::quat &f_rot, const glm::vec2 &f_size, const glm::bvec4 &f_params)
 {
     bool l_result = false;
     if(m_vrStage == VRS_None)
     {
         btClamp<unsigned char>(f_side, VRE_Left, VRE_Right);
-        l_result = m_core->GetRenderManager()->Render(m_renderTargets[f_side], f_pos, f_rot, f_size, f_layer, f_params);
+        l_result = m_core->GetRenderManager()->Draw(m_renderTargets[f_side], f_pos, f_rot, f_size, f_params);
     }
     return l_result;
 }
@@ -328,17 +297,47 @@ bool ROC::VRManager::DoPulse()
                 } break;
                 case vr::VREvent_TrackedDeviceActivated:
                 {
-                    if(m_vrSystem->GetTrackedDeviceClass(m_event.trackedDeviceIndex) == vr::TrackedDeviceClass_Controller) AddController(m_event.trackedDeviceIndex);
+                    m_arguments->Push(m_event.trackedDeviceIndex);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRDeviceActivated, m_arguments);
+                    m_arguments->Clear();
                 } break;
                 case vr::VREvent_TrackedDeviceDeactivated:
                 {
-                    // Search through stored controllers
-                    auto l_searchIter = m_controllers.find(m_event.trackedDeviceIndex);
-                    if(l_searchIter != m_controllers.end())
-                    {
-                        delete l_searchIter->second;
-                        m_controllers.erase(l_searchIter);
-                    }
+                    m_arguments->Push(m_event.trackedDeviceIndex);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRDeviceDeactivated, m_arguments);
+                    m_arguments->Clear();
+                } break;
+                case vr::VREvent_ButtonPress:
+                {
+                    m_arguments->Push(m_event.trackedDeviceIndex);
+                    m_arguments->Push(m_event.data.controller.button);
+                    m_arguments->Push(1);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRDeviceKeyPress, m_arguments);
+                    m_arguments->Clear();
+                } break;
+                case vr::VREvent_ButtonUnpress:
+                {
+                    m_arguments->Push(m_event.trackedDeviceIndex);
+                    m_arguments->Push(m_event.data.controller.button);
+                    m_arguments->Push(0);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRDeviceKeyPress, m_arguments);
+                    m_arguments->Clear();
+                } break;
+                case vr::VREvent_ButtonTouch:
+                {
+                    m_arguments->Push(m_event.trackedDeviceIndex);
+                    m_arguments->Push(m_event.data.controller.button);
+                    m_arguments->Push(1);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRDeviceKeyTouch, m_arguments);
+                    m_arguments->Clear();
+                } break;
+                case vr::VREvent_ButtonUntouch:
+                {
+                    m_arguments->Push(m_event.trackedDeviceIndex);
+                    m_arguments->Push(m_event.data.controller.button);
+                    m_arguments->Push(0);
+                    m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRDeviceKeyTouch, m_arguments);
+                    m_arguments->Clear();
                 } break;
             }
         }
@@ -348,133 +347,9 @@ bool ROC::VRManager::DoPulse()
             // Update poses
             float l_lastVSync;
             m_vrSystem->GetTimeSinceLastVsync(&l_lastVSync, NULL);
-            m_vrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, m_hmdFramePrediction - l_lastVSync, m_trackedPoses, vr::k_unMaxTrackedDeviceCount);
-
-            // Update HMD data
-            const vr::TrackedDevicePose_t &l_hmdPose = m_trackedPoses[vr::k_unTrackedDeviceIndex_Hmd];
-            if(l_hmdPose.bPoseIsValid)
-            {
-                MathUtils::ConvertMatrix(l_hmdPose.mDeviceToAbsoluteTracking, m_transform);
-                btTransform l_transform;
-                l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-
-                btVector3 &l_origin = l_transform.getOrigin();
-                std::memcpy(&m_hmdPosition, l_origin.m_floats, sizeof(glm::vec3));
-                btQuaternion l_rotation = l_transform.getRotation();
-                for(int i = 0; i < 4; i++) m_hmdRotation[i] = l_rotation[i];
-            }
-
-            // Update controllers
-            for(auto l_iter : m_controllers)
-            {
-                VRController *l_controller = l_iter.second;
-                if(m_trackedPoses[l_controller->m_id].bPoseIsValid)
-                {
-                    l_controller->m_active = true;
-
-                    m_vrSystem->GetControllerStateWithPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, l_controller->m_id, &l_controller->m_newState, sizeof(vr::VRControllerState_t), &m_trackedPoses[l_controller->m_id]);
-                    UpdateControllerPose(l_controller);
-                    UpdateControllerInput(l_controller);
-                }
-                else l_controller->m_active = false;
-            }
+            m_vrSystem->GetDeviceToAbsoluteTrackingPose(vr::TrackingUniverseRawAndUncalibrated, m_hmdFramePrediction - l_lastVSync, m_trackedPoses, vr::k_unMaxTrackedDeviceCount);
         }
     }
 
     return m_state;
-}
-
-void ROC::VRManager::AddController(vr::TrackedDeviceIndex_t f_id)
-{
-    if(m_controllers.find(f_id) == m_controllers.end())
-    {
-        VRController *l_controller = new VRController();
-        l_controller->m_id = f_id;
-        switch(m_vrSystem->GetControllerRoleForTrackedDeviceIndex(f_id))
-        {
-            case vr::TrackedControllerRole_LeftHand:
-                l_controller->m_hand = CHA_Left;
-                break;
-            case vr::TrackedControllerRole_RightHand:
-                l_controller->m_hand = CHA_Right;
-                break;
-            default:
-                l_controller->m_hand = CHA_Any;
-                break;
-        }
-        l_controller->m_position = g_emptyVec3;
-        l_controller->m_rotation = g_defaultRotation;
-        l_controller->m_velocity = g_emptyVec3;
-        l_controller->m_angularVelocity = g_emptyVec3;
-        l_controller->m_oldState = { 0 };
-        l_controller->m_newState = { 0 };
-        l_controller->m_active = true;
-
-        m_controllers.emplace(f_id, l_controller);
-    }
-}
-
-void ROC::VRManager::UpdateControllerPose(VRController *f_controller)
-{
-    btTransform l_transform;
-    MathUtils::ConvertMatrix(m_trackedPoses[f_controller->m_id].mDeviceToAbsoluteTracking, m_transform);
-    l_transform.setFromOpenGLMatrix(glm::value_ptr(m_transform));
-
-    std::memcpy(&f_controller->m_position, l_transform.getOrigin().m_floats, sizeof(glm::vec3));
-
-    btQuaternion l_rotation = l_transform.getRotation();
-
-    for(int i = 0; i < 4; i++) f_controller->m_rotation[i] = l_rotation[i];
-
-    std::memcpy(&f_controller->m_velocity, m_trackedPoses[f_controller->m_id].vVelocity.v, sizeof(glm::vec3));
-    std::memcpy(&f_controller->m_angularVelocity, m_trackedPoses[f_controller->m_id].vAngularVelocity.v, sizeof(glm::vec3));
-}
-
-void ROC::VRManager::UpdateControllerInput(VRController *f_controller)
-{
-    vr::VRControllerState_t &l_oldState = f_controller->m_oldState;
-    vr::VRControllerState_t &l_newState = f_controller->m_newState;
-
-    for(unsigned int i = 0U; i < vr::k_EButton_Max; i++)
-    {
-        uint64_t l_buttonBit = (1ull << i);
-
-        // Update buttons press
-        if((l_buttonBit & l_newState.ulButtonPressed) != (l_buttonBit & l_oldState.ulButtonPressed))
-        {
-            m_arguments->Push(f_controller->m_id);
-            m_arguments->Push(i);
-            m_arguments->Push(((l_buttonBit & l_newState.ulButtonPressed) != 0U) ? 1 : 0);
-            m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRControllerKeyPress, m_arguments);
-            m_arguments->Clear();
-        }
-
-        // Update buttons touch
-        if((l_buttonBit & l_newState.ulButtonTouched) != (l_buttonBit & l_oldState.ulButtonTouched))
-        {
-            m_arguments->Push(f_controller->m_id);
-            m_arguments->Push(i);
-            m_arguments->Push(((l_buttonBit & l_newState.ulButtonTouched) != 0U) ? 1 : 0);
-            m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRControllerKeyTouch, m_arguments);
-            m_arguments->Clear();
-        }
-    }
-
-    // Update axes
-    for(uint32_t i = 0; i < vr::k_unControllerStateAxisCount; i++)
-    {
-        const vr::VRControllerAxis_t &l_newAxis = l_newState.rAxis[i];
-        const vr::VRControllerAxis_t &l_oldAxis = l_oldState.rAxis[i];
-        if((l_newAxis.x != l_oldAxis.x) || (l_newAxis.y != l_oldAxis.y))
-        {
-            m_arguments->Push(f_controller->m_id);
-            m_arguments->Push(i);
-            m_arguments->Push(l_newAxis.x);
-            m_arguments->Push(l_newAxis.y);
-            m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRControllerAxis, m_arguments);
-            m_arguments->Clear();
-        }
-    }
-
-    std::memcpy(&l_oldState, &l_newState, sizeof(vr::VRControllerState_t));
 }

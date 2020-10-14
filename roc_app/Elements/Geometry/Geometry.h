@@ -30,9 +30,9 @@ public:
     float GetBoundSphereRadius() const;
     size_t GetMaterialsCount() const;
 
-    inline bool HasBonesData() const { return !m_bonesData.empty(); }
-    inline bool HasBonesCollisionData() const { return !m_collisionData.empty(); }
-    inline bool HasJointsData() const { return !m_jointData.empty(); }
+    bool HasBonesData() const;
+    bool HasBonesCollisionData() const;
+    bool HasJointsData() const;
 protected:
     explicit Geometry();
     ~Geometry();
@@ -40,10 +40,10 @@ protected:
     bool Load(const std::string &f_path);
     void GenerateMaterials();
 
-    inline const std::vector<Material*>& GetMaterials() const { return m_materials; }
-    inline const std::vector<BoneData*>& GetBonesData() const { return m_bonesData; };
-    inline const std::vector<BoneCollisionData*>& GetBonesCollisionData() const { return m_collisionData; }
-    inline const std::vector<BoneJointData*>& GetJointsData() const { return m_jointData; }
+    const std::vector<Material*>& GetMaterials() const;
+    const std::vector<BoneData*>& GetBonesData() const;
+    const std::vector<BoneCollisionData*>& GetBonesCollisionData() const;
+    const std::vector<BoneJointData*>& GetJointsData() const;
 
     friend class ElementManager;
     friend class RenderManager;

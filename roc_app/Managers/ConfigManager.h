@@ -17,14 +17,14 @@ class ConfigManager final
     ConfigManager(const ConfigManager &that) = delete;
     ConfigManager& operator=(const ConfigManager &that) = delete;
 public:
-    inline bool IsLogEnabled() const { return m_logging; }
-    inline bool IsFullscreenEnabled() const { return m_fullscreen; }
-    inline int GetAntialiasing() const { return m_antialiasing; }
-    inline const glm::ivec2& GetWindowSize() const { return m_windowSize; }
-    inline unsigned int GetFPSLimit() const { return m_fpsLimit; }
-    inline bool GetVSync() const { return m_vsync; }
-    inline bool IsVRModeEnabled() const { return m_vrMode; }
-    inline const std::vector<std::string>& GetModules() const { return m_modules; }
+    bool IsLogEnabled() const;
+    bool IsFullscreenEnabled() const;
+    int GetAntialiasing() const;
+    const glm::ivec2& GetWindowSize() const;
+    unsigned int GetFPSLimit() const;
+    bool GetVSync() const;
+    bool IsVRModeEnabled() const;
+    const std::vector<std::string>& GetModules() const;
 protected:
     ConfigManager();
     ~ConfigManager();

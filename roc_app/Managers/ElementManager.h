@@ -9,7 +9,6 @@ class Element;
 class Animation;
 class Camera;
 class Collision;
-class File;
 class Font;
 class Geometry;
 class Light;
@@ -47,8 +46,6 @@ class ElementManager final : public IElementManager
     ITexture* CreateITexture(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress);
     ITexture* CreateITexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
     IFont* CreateIFont(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter);
-    IFile* CreateIFile(const std::string &f_path);
-    IFile* OpenIFile(const std::string &f_path, bool f_ro);
     ICollision* CreateICollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass);
     bool IsValidIElement(IElement *f_ptr) const;
     bool DestroyIElement(IElement *f_element);
@@ -65,8 +62,6 @@ public:
     Texture* CreateTexture(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress);
     Texture* CreateTexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
     Font* CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter);
-    File* CreateFile_(const std::string &f_path);
-    File* OpenFile(const std::string &f_path, bool f_ro);
     Collision* CreateCollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass);
 
     bool IsValidElement(Element *f_ptr) const;

@@ -51,7 +51,7 @@ public:
     void PushQuat(const Quat &f_quat);
 
     bool HasErrors();
-    inline int GetReturnValue() const { return m_returnCount; }
+    int GetReturnValue() const;
 };
 
 template<typename T> void LuaArgReader::ReadNumber(T &f_val)
@@ -100,7 +100,7 @@ template<class T> void LuaArgReader::ReadElement(T *&f_element)
             if(lua_isuserdata(m_vm, m_currentArgument))
             {
                 ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_currentArgument));
-                if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
+                if(Core::GetInstance()->GetEngineICore()->GetIElementManager()->IsValidIElement(l_element))
                 {
                     f_element = dynamic_cast<T*>(l_element);
                     if(f_element != nullptr) m_currentArgument++;
@@ -143,7 +143,7 @@ template<class T> void LuaArgReader::ReadNextElement(T *&f_element)
         if(lua_isuserdata(m_vm, m_currentArgument))
         {
             ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_currentArgument));
-            if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
+            if(Core::GetInstance()->GetEngineICore()->GetIElementManager()->IsValidIElement(l_element))
             {
                 f_element = dynamic_cast<T*>(l_element);
                 if(f_element != nullptr) m_currentArgument++;

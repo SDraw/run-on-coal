@@ -5,7 +5,6 @@
 #include "Elements/Animation/Animation.h"
 #include "Elements/Camera.h"
 #include "Elements/Collision.h"
-#include "Elements/File.h"
 #include "Elements/Font.h"
 #include "Elements/Geometry/Geometry.h"
 #include "Elements/Light.h"
@@ -202,32 +201,6 @@ ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_siz
     return l_font;
 }
 
-ROC::File* ROC::ElementManager::CreateFile_(const std::string &f_path)
-{
-    File *l_file = new File();
-
-    if(l_file->Create(f_path)) AddElementToSet(l_file);
-    else
-    {
-        delete l_file;
-        l_file = nullptr;
-    }
-    return l_file;
-}
-
-ROC::File* ROC::ElementManager::OpenFile(const std::string &f_path, bool f_ro)
-{
-    File *l_file = new File();
-
-    if(l_file->Open(f_path, f_ro)) AddElementToSet(l_file);
-    else
-    {
-        delete l_file;
-        l_file = nullptr;
-    }
-    return l_file;
-}
-
 ROC::Collision* ROC::ElementManager::CreateCollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass)
 {
     Collision *l_col = new Collision();
@@ -348,16 +321,6 @@ ROC::ITexture* ROC::ElementManager::CreateITexture(const std::vector<std::string
 ROC::IFont* ROC::ElementManager::CreateIFont(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter)
 {
     return CreateFont_(f_path, f_size, f_atlas, f_filter);
-}
-
-ROC::IFile* ROC::ElementManager::CreateIFile(const std::string &f_path)
-{
-    return CreateFile_(f_path);
-}
-
-ROC::IFile* ROC::ElementManager::OpenIFile(const std::string &f_path, bool f_ro)
-{
-    return OpenFile(f_path, f_ro);
 }
 
 ROC::ICollision* ROC::ElementManager::CreateICollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass)

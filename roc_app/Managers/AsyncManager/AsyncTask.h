@@ -22,7 +22,7 @@ protected:
     AsyncTask();
     virtual ~AsyncTask();
 
-    inline void* GetElement() const { return m_taskElement; }
+    void* GetElement() const;
 
     virtual void Execute() = 0;
     virtual void PostExecute() = 0;

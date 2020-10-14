@@ -19,7 +19,6 @@ const std::string g_elementTypeName[]
     "Sound",
     "Texture",
     "Font",
-    "File",
     "Collision"
 };
 const std::string g_elementInvalidName = "Invalid";

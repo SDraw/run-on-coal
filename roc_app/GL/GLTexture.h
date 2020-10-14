@@ -7,7 +7,7 @@ class GLTexture
 public:
     virtual ~GLTexture();
 
-    inline GLuint GetName() const { return m_name; }
+    GLuint GetName() const;
 
     virtual bool Destroy() = 0;
     virtual bool Bind(GLenum f_slot = 0U) = 0;

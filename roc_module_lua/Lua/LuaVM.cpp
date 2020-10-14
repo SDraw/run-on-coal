@@ -3,7 +3,7 @@
 #include "Lua/LuaVM.h"
 #include "Lua/LuaFunction.h"
 #include "Lua/LuaArgument.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 
 #include "Lua/LuaDefs/LuaAnimationDef.h"
 #include "Lua/LuaDefs/LuaCameraDef.h"
@@ -12,13 +12,11 @@
 #include "Lua/LuaDefs/LuaDrawableDef.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaEventsDef.h"
-#include "Lua/LuaDefs/LuaFileDef.h"
 #include "Lua/LuaDefs/LuaFontDef.h"
 #include "Lua/LuaDefs/LuaGeometryDef.h"
 #include "Lua/LuaDefs/LuaInputDef.h"
 #include "Lua/LuaDefs/LuaLightDef.h"
 #include "Lua/LuaDefs/LuaModelDef.h"
-#include "Lua/LuaDefs/LuaNetworkDef.h"
 #include "Lua/LuaDefs/LuaPhysicsDef.h"
 #include "Lua/LuaDefs/LuaQuatDef.h"
 #include "Lua/LuaDefs/LuaRenderingDef.h"
@@ -33,7 +31,7 @@
 
 const char *LuaVM::ms_userdataMetatableName = "lm_ud";
 
-LuaVM::LuaVM(LuaModule *f_module)
+LuaVM::LuaVM(Core *f_module)
 {
     m_luaModule = f_module;
 
@@ -52,7 +50,6 @@ LuaVM::LuaVM(LuaModule *f_module)
     LuaAnimationDef::Init(m_vm);
     LuaCameraDef::Init(m_vm);
     LuaCollisionDef::Init(m_vm);
-    LuaFileDef::Init(m_vm);
     LuaFontDef::Init(m_vm);
     LuaGeometryDef::Init(m_vm);
     LuaLightDef::Init(m_vm);
@@ -65,7 +62,6 @@ LuaVM::LuaVM(LuaModule *f_module)
 
     LuaEventsDef::Init(m_vm);
     LuaInputDef::Init(m_vm);
-    LuaNetworkDef::Init(m_vm);
     LuaPhysicsDef::Init(m_vm);
     LuaRenderingDef::Init(m_vm);
     LuaVRDef::Init(m_vm);
@@ -104,7 +100,7 @@ void LuaVM::LoadScript(const std::string &f_file)
         l_log.append(f_file);
         l_log.append("' is loaded");
     }
-    m_luaModule->GetEngineCore()->GetILogManager()->Log(l_log);
+    m_luaModule->GetEngineICore()->GetILogManager()->Log(l_log);
 }
 
 void LuaVM::DoPulse()
@@ -160,7 +156,7 @@ void LuaVM::CallFunction(const LuaFunction &f_func, const ROC::ICustomArguments 
         if(lua_pcall(m_vm, static_cast<int>(f_args->GetArgumentsCount()), 0, 0))
         {
             std::string l_log(lua_tostring(m_vm, -1));
-            m_luaModule->GetEngineCore()->GetILogManager()->Log(l_log);
+            m_luaModule->GetEngineICore()->GetILogManager()->Log(l_log);
             lua_pop(m_vm, 1);
         }
     }
@@ -204,7 +200,7 @@ void LuaVM::CallFunction(const LuaFunction &f_func, const std::vector<LuaArgumen
         if(lua_pcall(m_vm, static_cast<int>(f_args.size()), 0, 0))
         {
             std::string l_log(lua_tostring(m_vm, -1));
-            m_luaModule->GetEngineCore()->GetILogManager()->Log(l_log);
+            m_luaModule->GetEngineICore()->GetILogManager()->Log(l_log);
             lua_pop(m_vm, 1);
         }
     }

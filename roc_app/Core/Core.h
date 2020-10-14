@@ -9,7 +9,6 @@ class ConfigManager;
 class ElementManager;
 class LogManager;
 class ModuleManager;
-class NetworkManager;
 class PhysicsManager;
 class PreRenderManager;
 class RenderManager;
@@ -27,7 +26,6 @@ class Core final : public ICore
     ElementManager *m_elementManager;
     LogManager *m_logManager;
     ModuleManager *m_moduleManager;
-    NetworkManager *m_networkManager;
     PhysicsManager *m_physicsManager;
     RenderManager *m_renderManager;
     PreRenderManager *m_preRenderManager;
@@ -47,7 +45,6 @@ class Core final : public ICore
     IAsyncManager* GetIAsyncManager() const;
     IElementManager* GetIElementManager() const;
     ILogManager* GetILogManager() const;
-    INetworkManager* GetINetworkManager() const;
     IPhysicsManager* GetIPhysicsManager() const;
     IRenderManager* GetIRenderManager() const;
     ISfmlManager* GetISfmlManager() const;
@@ -55,21 +52,20 @@ class Core final : public ICore
     IVRManager* GetIVRManager() const;
 public:
     static bool Init();
-    static Core* GetCore();
+    static Core* GetInstance();
     static void Terminate();
 
-    inline ConfigManager* GetConfigManager() const { return m_configManager; }
-    inline ElementManager* GetElementManager() const { return m_elementManager; }
-    inline AsyncManager* GetAsyncManager() const { return m_asyncManager; }
-    inline LogManager* GetLogManager() const { return m_logManager; }
-    inline ModuleManager* GetModuleManager() const { return m_moduleManager; }
-    inline NetworkManager* GetNetworkManager() const { return m_networkManager; }
-    inline PhysicsManager* GetPhysicsManager() const { return m_physicsManager; }
-    inline RenderManager* GetRenderManager() const { return m_renderManager; }
-    inline PreRenderManager* GetPreRenderManager() const { return m_preRenderManager; }
-    inline SfmlManager* GetSfmlManager() const { return m_sfmlManager; }
-    inline SoundManager* GetSoundManager() const { return m_soundManager; }
-    inline VRManager* GetVRManager() const { return m_vrManager; }
+    ConfigManager* GetConfigManager() const;
+    ElementManager* GetElementManager() const;
+    AsyncManager* GetAsyncManager() const;
+    LogManager* GetLogManager() const;
+    ModuleManager* GetModuleManager() const;
+    PhysicsManager* GetPhysicsManager() const;
+    RenderManager* GetRenderManager() const;
+    PreRenderManager* GetPreRenderManager() const;
+    SfmlManager* GetSfmlManager() const;
+    SoundManager* GetSoundManager() const;
+    VRManager* GetVRManager() const;
 
     bool DoPulse();
 };

@@ -3,7 +3,7 @@
 #include "Lua/LuaDefs/LuaPhysicsDef.h"
 
 #include "Lua/LuaArgReader.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/LuaUtils.h"
 
 void LuaPhysicsDef::Init(lua_State *f_vm)
@@ -25,7 +25,7 @@ int LuaPhysicsDef::SetEnabled(lua_State *f_vm)
     l_argStream.ReadBoolean(l_val);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->SetPhysicsEnabled(l_val);
+        Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->SetPhysicsEnabled(l_val);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -36,7 +36,7 @@ int LuaPhysicsDef::GetEnabled(lua_State *f_vm)
 {
     // bool physicsGetEnabled()
     LuaArgReader l_argStream(f_vm);
-    l_argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetPhysicsEnabled());
+    l_argStream.PushBoolean(Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->GetPhysicsEnabled());
     return l_argStream.GetReturnValue();
 }
 
@@ -48,7 +48,7 @@ int LuaPhysicsDef::SetFloorEnabled(lua_State *f_vm)
     l_argStream.ReadBoolean(l_val);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->SetFloorEnabled(l_val);
+        Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->SetFloorEnabled(l_val);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -59,7 +59,7 @@ int LuaPhysicsDef::GetFloorEnabled(lua_State *f_vm)
 {
     // bool physicsGetFloorEnabled()
     LuaArgReader l_argStream(f_vm);
-    l_argStream.PushBoolean(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetFloorEnabled());
+    l_argStream.PushBoolean(Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->GetFloorEnabled());
     return l_argStream.GetReturnValue();
 }
 
@@ -71,7 +71,7 @@ int LuaPhysicsDef::SetGravity(lua_State *f_vm)
     for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_gravity[i]);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->SetGravity(l_gravity);
+        Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->SetGravity(l_gravity);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -83,7 +83,7 @@ int LuaPhysicsDef::GetGravity(lua_State *f_vm)
     // float float float physicsGetGravity()
     LuaArgReader l_argStream(f_vm);
     glm::vec3 l_grav;
-    LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->GetGravity(l_grav);
+    Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->GetGravity(l_grav);
     l_argStream.PushNumber(l_grav.x);
     l_argStream.PushNumber(l_grav.y);
     l_argStream.PushNumber(l_grav.z);
@@ -101,7 +101,7 @@ int LuaPhysicsDef::RayCast(lua_State *f_vm)
     {
         glm::vec3 l_hitNormal;
         ROC::IElement *l_hitElement = nullptr;
-        if(LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, l_hitElement))
+        if(Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->RayCast(l_start, l_end, l_hitNormal, l_hitElement))
         {
             l_argStream.PushNumber(l_end.x);
             l_argStream.PushNumber(l_end.y);

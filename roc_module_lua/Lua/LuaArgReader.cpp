@@ -4,7 +4,7 @@
 #include "Lua/LuaArgument.h"
 #include "Lua/LuaFunction.h"
 
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Lua/LuaVM.h"
 #include "Utils/LuaUtils.h"
 
@@ -144,7 +144,7 @@ void LuaArgReader::ReadArgument(LuaArgument &f_argument)
                 case LUA_TUSERDATA:
                 {
                     ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_currentArgument));
-                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
+                    if(Core::GetInstance()->GetEngineICore()->GetIElementManager()->IsValidIElement(l_element))
                     {
                         f_argument = LuaArgument(l_element, l_element->GetElementTypeName());
                     }
@@ -185,7 +185,7 @@ void LuaArgReader::ReadArguments(std::vector<LuaArgument> &f_arguments)
                 case LUA_TUSERDATA:
                 {
                     ROC::IElement *l_element = *reinterpret_cast<ROC::IElement**>(lua_touserdata(m_vm, m_currentArgument));
-                    if(LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->IsValidIElement(l_element))
+                    if(Core::GetInstance()->GetEngineICore()->GetIElementManager()->IsValidIElement(l_element))
                     {
                         f_arguments.emplace_back(l_element, l_element->GetElementTypeName());
                     }
@@ -317,7 +317,12 @@ bool LuaArgReader::HasErrors()
         l_log.append(m_error);
         l_log.append(" at argument ");
         l_log.append(std::to_string(m_currentArgument));
-        LuaModule::GetModule()->GetEngineCore()->GetILogManager()->Log(l_log);
+        Core::GetInstance()->GetEngineICore()->GetILogManager()->Log(l_log);
     }
     return m_hasErrors;
+}
+
+int LuaArgReader::GetReturnValue() const
+{
+    return m_returnCount;
 }

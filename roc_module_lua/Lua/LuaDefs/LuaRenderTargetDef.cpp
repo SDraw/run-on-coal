@@ -5,7 +5,7 @@
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaDrawableDef.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -44,7 +44,7 @@ int LuaRenderTargetDef::Create(lua_State *f_vm)
         if(l_rtType != std::numeric_limits<size_t>::max())
         {
             size_t l_filteringType = EnumUtils::ReadEnumVector(l_filtering, g_filteringTypes);
-            ROC::IRenderTarget *l_rt = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIRenderTarget(static_cast<unsigned char>(l_rtType), l_size, static_cast<unsigned char>(l_filteringType));
+            ROC::IRenderTarget *l_rt = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateIRenderTarget(static_cast<unsigned char>(l_rtType), l_size, static_cast<unsigned char>(l_filteringType));
             l_rt ? l_argStream.PushElement(l_rt) : l_argStream.PushBoolean(false);
         }
         else l_argStream.PushBoolean(false);
@@ -55,6 +55,7 @@ int LuaRenderTargetDef::Create(lua_State *f_vm)
 
 int LuaRenderTargetDef::SetProperty(lua_State *f_vm)
 {
+    // bool RenderTarget:setProperty(str property, var values, ...)
     ROC::IRenderTarget *l_rt;
     std::string l_property;
     LuaArgReader l_argStream(f_vm);

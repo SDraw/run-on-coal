@@ -11,6 +11,16 @@ void ROC::SystemTick::Init()
     ms_delta = 0U;
 }
 
+unsigned long long ROC::SystemTick::GetTick()
+{
+    return ms_tick;
+}
+
+unsigned long long ROC::SystemTick::GetDelta()
+{
+    return ms_delta;
+}
+
 void ROC::SystemTick::UpdateTick()
 {
     unsigned long long l_tick = GetTickCount64();

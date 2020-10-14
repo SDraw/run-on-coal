@@ -6,7 +6,6 @@
 #include "Managers/ElementManager.h"
 #include "Managers/LogManager.h"
 #include "Managers/ModuleManager.h"
-#include "Managers/NetworkManager.h"
 #include "Managers/PhysicsManager.h"
 #include "Managers/PreRenderManager.h"
 #include "Managers/RenderManager/RenderManager.h"
@@ -32,7 +31,6 @@ ROC::Core::Core()
     m_preRenderManager = new PreRenderManager(this);
     m_vrManager = new VRManager(this);
     m_renderManager = new RenderManager(this);
-    m_networkManager = new NetworkManager(this);
     m_moduleManager = new ModuleManager(this);
 
     m_state = true;
@@ -42,7 +40,6 @@ ROC::Core::Core()
 ROC::Core::~Core()
 {
     delete m_moduleManager;
-    delete m_networkManager;
     delete m_soundManager;
     delete m_physicsManager;
     delete m_asyncManager;
@@ -81,15 +78,69 @@ void ROC::Core::Terminate()
     }
 }
 
-ROC::Core* ROC::Core::GetCore()
+ROC::Core* ROC::Core::GetInstance()
 {
     return ms_instance;
+}
+
+ROC::ConfigManager* ROC::Core::GetConfigManager() const
+{
+    return m_configManager;
+}
+
+ROC::ElementManager* ROC::Core::GetElementManager() const
+{
+    return m_elementManager;
+}
+
+ROC::AsyncManager* ROC::Core::GetAsyncManager() const
+{
+    return m_asyncManager;
+}
+
+ROC::LogManager* ROC::Core::GetLogManager() const
+{
+    return m_logManager;
+}
+
+ROC::ModuleManager* ROC::Core::GetModuleManager() const
+{
+    return m_moduleManager;
+}
+
+ROC::PhysicsManager* ROC::Core::GetPhysicsManager() const
+{
+    return m_physicsManager;
+}
+
+ROC::RenderManager* ROC::Core::GetRenderManager() const
+{
+    return m_renderManager;
+}
+
+ROC::PreRenderManager* ROC::Core::GetPreRenderManager() const
+{
+    return m_preRenderManager;
+}
+
+ROC::SfmlManager* ROC::Core::GetSfmlManager() const
+{
+    return m_sfmlManager;
+}
+
+ROC::SoundManager* ROC::Core::GetSoundManager() const
+{
+    return m_soundManager;
+}
+
+ROC::VRManager* ROC::Core::GetVRManager() const
+{
+    return m_vrManager;
 }
 
 bool ROC::Core::DoPulse()
 {
     SystemTick::UpdateTick();
-    m_networkManager->DoPulse();
     m_asyncManager->DoPulse();
     m_state = (m_state && m_vrManager->DoPulse());
     m_state = (m_state && m_sfmlManager->DoPulse());
@@ -115,11 +166,6 @@ ROC::IElementManager* ROC::Core::GetIElementManager() const
 ROC::ILogManager* ROC::Core::GetILogManager() const
 {
     return m_logManager;
-}
-
-ROC::INetworkManager* ROC::Core::GetINetworkManager() const
-{
-    return m_networkManager;
 }
 
 ROC::IPhysicsManager* ROC::Core::GetIPhysicsManager() const

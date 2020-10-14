@@ -28,3 +28,33 @@ void ROC::ShaderUniform::SetData(const void *f_data, size_t f_dataSize)
         }
     }
 }
+
+const void* ROC::ShaderUniform::GetData() const
+{
+    return m_data;
+}
+
+GLint ROC::ShaderUniform::GetUniformName() const
+{
+    return m_uniformName;
+}
+
+unsigned char ROC::ShaderUniform::GetType() const
+{
+    return m_type;
+}
+
+size_t ROC::ShaderUniform::GetCount() const
+{
+    return m_count;
+}
+
+bool ROC::ShaderUniform::IsUpdated() const
+{
+    return m_updated;
+}
+
+void ROC::ShaderUniform::ResetUpdate()
+{
+    m_updated = false;
+}

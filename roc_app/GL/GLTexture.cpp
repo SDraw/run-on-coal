@@ -14,3 +14,8 @@ GLTexture::GLTexture()
 GLTexture::~GLTexture()
 {
 }
+
+GLuint GLTexture::GetName() const
+{
+    return m_name;
+}

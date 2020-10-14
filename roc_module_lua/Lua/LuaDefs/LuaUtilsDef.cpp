@@ -2,8 +2,8 @@
 
 #include "Lua/LuaDefs/LuaUtilsDef.h"
 
-#include "Module/LuaModule.h"
-#include "Module/TaskHandler.h"
+#include "Core/Core.h"
+#include "Core/TaskHandler.h"
 #include "Lua/LuaArgReader.h"
 
 void LuaUtilsDef::Init(lua_State *f_vm)
@@ -32,7 +32,7 @@ int LuaUtilsDef::LogPrint(lua_State *f_vm)
     l_argStream.ReadText(l_text);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetILogManager()->Log(l_text);
+        Core::GetInstance()->GetEngineICore()->GetILogManager()->Log(l_text);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -51,16 +51,17 @@ int LuaUtilsDef::GetTime(lua_State *f_vm)
 {
     // float getTime()
     LuaArgReader l_argStream(f_vm);
-    l_argStream.PushNumber(LuaModule::GetModule()->GetEngineCore()->GetISfmlManager()->GetTime());
+    l_argStream.PushNumber(Core::GetInstance()->GetEngineICore()->GetISfmlManager()->GetTime());
     return l_argStream.GetReturnValue();
 }
 
 int LuaUtilsDef::IsTask(lua_State *f_vm)
 {
+    // bool isTask(userdata task)
     void *l_task = nullptr;
     LuaArgReader l_argStream(f_vm);
     l_argStream.ReadPointer(l_task);
-    bool l_result = LuaModule::GetModule()->GetTaskHandler()->IsTask(l_task);
+    bool l_result = Core::GetInstance()->GetTaskHandler()->IsTask(l_task);
     l_argStream.PushBoolean(l_result);
     return l_argStream.GetReturnValue();
 }

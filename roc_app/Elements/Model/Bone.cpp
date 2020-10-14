@@ -46,6 +46,67 @@ void ROC::Bone::GenerateBindPose()
     m_bindMatrix = glm::inverse(m_fullMatrix);
 }
 
+
+void ROC::Bone::SetDynamic(bool f_val)
+{
+    m_dynamic = f_val;
+}
+
+bool ROC::Bone::IsDynamic() const
+{
+    return m_dynamic;
+}
+
+void ROC::Bone::SetDynamicBody(btRigidBody *f_body)
+{
+    m_dynamicBody = f_body;
+}
+
+const btRigidBody* ROC::Bone::GetDynamicBody() const
+{
+    return m_dynamicBody;
+}
+
+void ROC::Bone::SetParent(Bone *f_bone)
+{
+    m_parent = f_bone;
+}
+
+ROC::Bone* ROC::Bone::GetParent() const
+{
+    return m_parent;
+}
+
+void ROC::Bone::AddChild(ROC::Bone *f_bone)
+{
+    m_children.push_back(f_bone);
+}
+
+const std::vector<ROC::Bone*>& ROC::Bone::GetChildren() const
+{
+    return m_children;
+}
+
+const ROC::Transformation* ROC::Bone::GetLocalTransformation() const
+{
+    return m_localTransform;
+}
+
+const glm::mat4& ROC::Bone::GetBindMatrix() const
+{
+    return m_bindMatrix;
+}
+
+const glm::mat4& ROC::Bone::GetFullMatrix() const
+{
+    return m_fullMatrix;
+}
+
+const glm::mat4& ROC::Bone::GetPoseMatrix() const
+{
+    return m_poseMatrix;
+}
+
 void ROC::Bone::SetFrameData(BoneFrameData *f_data)
 {
     m_localTransform->SetPosition(f_data->m_position);
@@ -75,6 +136,11 @@ void ROC::Bone::SetPoseMatrix(const btTransform &f_transform)
 {
     f_transform.getOpenGLMatrix(glm::value_ptr(m_poseMatrix));
     m_updated = true;
+}
+
+bool ROC::Bone::IsUpdated() const
+{
+    return m_updated;
 }
 
 void ROC::Bone::Update()

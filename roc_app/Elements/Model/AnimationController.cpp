@@ -10,7 +10,7 @@ ROC::AnimationController::AnimationController()
 {
     m_animation = nullptr;
     m_tick = 0U;
-    m_state = ACS_None;
+    m_state = AS_None;
     m_speed = 1.f;
     m_blend = true;
     m_blendTime = 500U;
@@ -31,10 +31,15 @@ void ROC::AnimationController::SetAnimation(Animation *f_anim)
         m_tick = 0U;
         m_blend = true;
         m_blendTimeTick = 0U;
-        if(m_state == ACS_None) m_state = ACS_Paused;
+        if(m_state == AS_None) m_state = AS_Paused;
         m_loop = false;
     }
-    else m_state = ACS_None;
+    else m_state = AS_None;
+}
+
+ROC::Animation* ROC::AnimationController::GetAnimation() const
+{
+    return m_animation;
 }
 
 bool ROC::AnimationController::Play(bool f_loop)
@@ -42,14 +47,25 @@ bool ROC::AnimationController::Play(bool f_loop)
     if(m_animation)
     {
         m_loop = f_loop;
-        m_state = ACS_Playing;
+        m_state = AS_Playing;
     }
     return (m_animation != nullptr);
 }
+
+bool ROC::AnimationController::IsPlaying() const
+{
+    return (m_state == AS_Playing);
+}
+
 bool ROC::AnimationController::Pause()
 {
-    if(m_animation) m_state = ACS_Paused;
+    if(m_animation) m_state = AS_Paused;
     return (m_animation != nullptr);
+}
+
+bool ROC::AnimationController::IsPaused() const
+{
+    return (m_state == AS_Paused);
 }
 
 bool ROC::AnimationController::Reset()
@@ -66,6 +82,11 @@ bool ROC::AnimationController::SetSpeed(float f_speed)
         btClamp(m_speed, 0.f, std::numeric_limits<float>::max());
     }
     return (m_animation != nullptr);
+}
+
+float ROC::AnimationController::GetSpeed() const
+{
+    return m_speed;
 }
 
 bool ROC::AnimationController::SetProgress(float f_val)
@@ -85,6 +106,11 @@ float ROC::AnimationController::GetProgress() const
     return l_result;
 }
 
+unsigned int ROC::AnimationController::GetTick() const
+{
+    return m_tick;
+}
+
 bool ROC::AnimationController::SetBlendTime(unsigned int f_val)
 {
     if(m_animation)
@@ -95,9 +121,19 @@ bool ROC::AnimationController::SetBlendTime(unsigned int f_val)
     return (m_animation != nullptr);
 }
 
+unsigned int ROC::AnimationController::GetBlendTime() const
+{
+    return m_blendTime;
+}
+
+float ROC::AnimationController::GetBlendValue() const
+{
+    return m_blendValue;
+}
+
 void ROC::AnimationController::Update()
 {
-    if(m_animation && (m_state == ACS_Playing))
+    if(m_animation && (m_state == AS_Playing))
     {
         m_tick += static_cast<unsigned int>(static_cast<float>(SystemTick::GetDelta())*m_speed);
         if(m_loop) m_tick %= m_animation->GetDuration();
@@ -106,7 +142,7 @@ void ROC::AnimationController::Update()
             if(m_tick >= m_animation->GetDuration())
             {
                 m_tick = m_animation->GetDuration();
-                m_state = ACS_Paused;
+                m_state = AS_Paused;
             }
         }
         if(m_blend)

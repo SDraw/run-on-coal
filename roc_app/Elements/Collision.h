@@ -63,11 +63,11 @@ protected:
 
     bool Create(unsigned char f_type, const glm::vec3 &f_size, float f_mass);
 
-    inline bool IsActive() const { return m_rigidBody->isActive(); }
+    btRigidBody* GetRigidBody() const;
+
+    bool IsActive() const;
 
     void SetScale(const glm::vec3 &f_val);
-
-    inline btRigidBody* GetRigidBody() const { return m_rigidBody; }
 
     friend class ElementManager;
     friend class PhysicsManager;

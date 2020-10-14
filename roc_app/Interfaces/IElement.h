@@ -21,7 +21,6 @@ public:
         ET_Sound,
         ET_Texture,
         ET_Font,
-        ET_File,
         ET_Collision,
 
         ET_Invalid = 0xFFU

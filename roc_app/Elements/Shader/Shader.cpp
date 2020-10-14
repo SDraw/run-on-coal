@@ -192,6 +192,11 @@ void ROC::Shader::FindDefaultUniform(ShaderDefaultUniform f_sud, unsigned char f
     if(l_uniform != -1) m_defaultUniforms[f_sud] = new ShaderUniform(l_uniform, f_type, f_dataSize, f_count);
 }
 
+const std::string& ROC::Shader::GetError() const
+{
+    return m_error;
+}
+
 ROC::ShaderUniform* ROC::Shader::GetUniform(const std::string &f_uniform)
 {
     ShaderUniform *l_uniform = nullptr;
@@ -576,7 +581,7 @@ void ROC::Shader::Enable()
         {
             if(l_uniform)
             {
-                if(l_uniform->IsUpdated() && l_uniform->HasData())
+                if(l_uniform->IsUpdated() && l_uniform->GetData())
                 {
                     UpdateShaderFromUniform(l_uniform);
                     l_uniform->ResetUpdate();
@@ -586,7 +591,7 @@ void ROC::Shader::Enable()
         for(auto &l_uniformPair : m_uniformMap)
         {
             ShaderUniform *l_uniform = l_uniformPair.second;
-            if(l_uniform->IsUpdated() && l_uniform->HasData())
+            if(l_uniform->IsUpdated() && l_uniform->GetData())
             {
                 UpdateShaderFromUniform(l_uniform);
                 l_uniform->ResetUpdate();
@@ -609,6 +614,11 @@ void ROC::Shader::Enable()
 void ROC::Shader::Disable()
 {
     if(m_active && m_shader) m_active = false;
+}
+
+bool ROC::Shader::IsActive() const
+{
+    return m_active;
 }
 
 void ROC::Shader::InitStaticResources()

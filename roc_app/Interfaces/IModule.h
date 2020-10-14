@@ -26,12 +26,11 @@ public:
         ME_OnJoypadStateChange,
         ME_OnJoypadButton,
         ME_OnJoypadAxis,
-        ME_OnVRControllerKeyPress,
-        ME_OnVRControllerKeyTouch,
-        ME_OnVRControllerAxis,
+        ME_OnVRDeviceActivated,
+        ME_OnVRDeviceDeactivated,
+        ME_OnVRDeviceKeyPress,
+        ME_OnVRDeviceKeyTouch,
         ME_OnTextInput,
-        ME_OnNetworkStateChange,
-        ME_OnNetworkDataRecieve,
         ME_OnAsyncTask
     };
 

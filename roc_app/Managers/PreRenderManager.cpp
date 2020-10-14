@@ -46,7 +46,7 @@ void ROC::PreRenderManager::DoPulse_S1()
 
     for(auto l_model : m_models)
     {
-        if(!l_model->HasParentModel()) m_modelsStack.push(l_model);
+        if(!l_model->GetParentModel()) m_modelsStack.push(l_model);
     }
 
     while(!m_modelsStack.empty())
@@ -54,7 +54,7 @@ void ROC::PreRenderManager::DoPulse_S1()
         Model *l_model = m_modelsStack.top();
         m_modelsStack.pop();
 
-        if(!l_model->HasCollision()) l_model->Update(Model::MUS_Matrix);
+        if(!l_model->GetCollision()) l_model->Update(Model::MUS_Matrix);
         l_model->Update(Model::MUS_Animation);
         l_model->Update(Model::MUS_SkeletonCollisionStatic);
 
@@ -69,7 +69,7 @@ void ROC::PreRenderManager::DoPulse_S2()
 {
     for(auto l_model : m_models)
     {
-        if(!l_model->HasParentModel()) m_modelsStack.push(l_model);
+        if(!l_model->GetParentModel()) m_modelsStack.push(l_model);
     }
 
     while(!m_modelsStack.empty())
@@ -77,7 +77,7 @@ void ROC::PreRenderManager::DoPulse_S2()
         Model *l_model = m_modelsStack.top();
         m_modelsStack.pop();
 
-        l_model->Update(l_model->HasCollision() ? Model::MUS_Collision : Model::MUS_Matrix);
+        l_model->Update(l_model->GetCollision() ? Model::MUS_Collision : Model::MUS_Matrix);
         l_model->Update(Model::MUS_SkeletonCollisionDynamic);
 
         for(auto l_childElement : l_model->GetChildren())

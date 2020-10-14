@@ -47,6 +47,11 @@ bool GLRenderbuffer::Destroy()
     return (m_name == 0U);
 }
 
+GLuint GLRenderbuffer::GetName() const
+{
+    return m_name;
+}
+
 bool GLRenderbuffer::Bind()
 {
     if(m_name != 0U)

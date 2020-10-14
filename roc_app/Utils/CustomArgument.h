@@ -31,16 +31,16 @@ public:
     CustomArgument(const CustomArgument &f_data);
     ~CustomArgument();
 
-    inline unsigned char GetType() const { return m_type; }
+    unsigned char GetType() const;
 
-    inline bool GetBoolean() const { return m_bool; }
-    inline int GetInteger() const { return m_int; }
-    inline int GetUInteger() const { return m_uint; }
-    inline float GetFloat() const { return m_float; }
-    inline double GetDouble() const { return m_double; }
-    inline void* GetPointer() const { return m_ptr; }
-    inline ROC::IElement* GetElement() const { return reinterpret_cast<ROC::IElement*>(m_ptr); };
-    inline const std::string& GetString() const { return m_string; }
+    bool GetBoolean() const;
+    int GetInteger() const;
+    int GetUInteger() const;
+    float GetFloat() const;
+    double GetDouble() const;
+    void* GetPointer() const;
+    ROC::IElement* GetElement() const;
+    const std::string& GetString() const;
 
     CustomArgument& operator=(const CustomArgument &f_data);
 };

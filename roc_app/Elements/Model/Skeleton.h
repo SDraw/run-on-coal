@@ -37,7 +37,6 @@ class Skeleton final
         size_t m_boneID;
     };
     std::vector<SkeletonCollision*> m_collisions;
-    bool m_hasStaticBoneCollision;
 
     struct SkeletonJointPart
     {
@@ -54,18 +53,17 @@ class Skeleton final
         std::vector<SkeletonJointPart*> m_parts;
     };
     std::vector<SkeletonJoint*> m_joints;
-    bool m_hasDynamicBoneCollision;
 
     static bool ms_physicsEnabled;
 
     Skeleton(const Skeleton &that) = delete;
     Skeleton& operator=(const Skeleton &that) = delete;
 public:
-    inline size_t GetBonesCount() const { return m_bonesCount; }
+    size_t GetBonesCount() const;
 
-    inline bool HasStaticBoneCollision() const { return m_hasStaticBoneCollision; }
-    inline bool HasDynamicBoneCollision() const { return m_hasDynamicBoneCollision; }
-    inline bool HasAnyCollision() const { return (m_hasStaticBoneCollision || m_hasDynamicBoneCollision); }
+    bool HasStaticBoneCollision() const;
+    bool HasDynamicBoneCollision() const;
+    bool HasAnyCollision() const;
 protected:
     enum SkeletonUpdateStage : unsigned char
     {
@@ -78,14 +76,14 @@ protected:
 
     void Update(Animation *f_anim, unsigned int f_tick, float f_blend);
 
-    inline const std::vector<Bone*>& GetBones() const { return m_bones; }
-    inline const std::vector<glm::mat4>& GetPoseMatrices() const { return m_poseMatrices; }
+    const std::vector<Bone*>& GetBones() const;
+    const std::vector<glm::mat4>& GetPoseMatrices() const;
 
     void InitStaticBoneCollision(const std::vector<BoneCollisionData*> &f_vec, void *f_model);
-    inline const std::vector<SkeletonCollision*>& GetCollision() const { return m_collisions; }
+    const std::vector<SkeletonCollision*>& GetCollision() const;
 
     void InitDynamicBoneCollision(const std::vector<BoneJointData*> &f_vec, void *f_model);
-    inline const std::vector<SkeletonJoint*>& GetJoints() const { return m_joints; }
+    const std::vector<SkeletonJoint*>& GetJoints() const;
 
     void UpdateCollision(SkeletonUpdateStage f_stage, const glm::mat4 &f_model);
 

@@ -166,6 +166,11 @@ bool GLShader::Destroy()
     return (m_program == 0U);
 }
 
+const std::string& GLShader::GetLog() const
+{
+    return m_log;
+}
+
 GLint GLShader::GetUniformLocation(const char *f_name)
 {
     int l_result = -1;

@@ -25,6 +25,8 @@ ROC::Model::Model(Geometry *f_geometry)
     m_fullMatrix = g_identityMatrix;
     m_boundSphereRaduis = 0.f;
     m_updated = false;
+    m_visibility = false;
+    m_visibilityDistance = 0.f;
 
     m_geometry = f_geometry;
 
@@ -56,6 +58,11 @@ ROC::Model::~Model()
     delete m_localTransform;
     delete m_animController;
     delete m_skeleton;
+}
+
+ROC::Geometry* ROC::Model::GetGeometry() const
+{
+    return m_geometry;
 }
 
 float ROC::Model::GetBoundSphereRadius() const
@@ -109,7 +116,7 @@ bool ROC::Model::AttachTo(Model *f_model, int f_bone)
         Element::AddParent(m_parentModel);
         m_parentModel->AddChild(this);
 
-        if((f_bone > -1) && m_parentModel->HasSkeleton())
+        if((f_bone > -1) && m_parentModel->GetSkeleton())
         {
             size_t l_bone = std::min(static_cast<size_t>(f_bone), m_parentModel->GetSkeleton()->GetBonesCount() - 1U);
             m_parentBone = m_parentModel->GetSkeleton()->GetBones()[l_bone];
@@ -133,6 +140,11 @@ bool ROC::Model::Dettach()
         l_result = true;
     }
     return l_result;
+}
+
+ROC::Model* ROC::Model::GetParentModel() const
+{
+    return m_parentModel;
 }
 
 bool ROC::Model::SetCollision(Collision *f_col)
@@ -161,6 +173,11 @@ bool ROC::Model::RemoveCollision()
         l_result = true;
     }
     return l_result;
+}
+
+ROC::Collision* ROC::Model::GetCollision() const
+{
+    return m_collision;
 }
 
 bool ROC::Model::SetAnimation(Animation *f_anim)
@@ -270,6 +287,37 @@ bool ROC::Model::SetAnimationProperty(ModelAnimationProperty f_prop, float f_val
         }
     }
     return (m_animController != nullptr);
+}
+
+ROC::Skeleton* ROC::Model::GetSkeleton() const
+{
+    return m_skeleton;
+}
+
+void ROC::Model::SetVisibility(bool f_state)
+{
+    m_visibility = f_state;
+
+}
+
+bool ROC::Model::IsVisible() const
+{
+    return m_visibility;
+}
+
+void ROC::Model::SetVisibilityDistance(float f_dist)
+{
+    m_visibilityDistance = f_dist;
+}
+
+float ROC::Model::GetVisibilityDistance() const
+{
+    return m_visibilityDistance;
+}
+
+bool ROC::Model::IsUpdated() const
+{
+    return m_updated;
 }
 
 void ROC::Model::Update(ModelUpdateStage f_stage)

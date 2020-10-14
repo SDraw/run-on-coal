@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 
-LuaModule *g_module = nullptr;
+Core *g_core = nullptr;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
@@ -14,10 +14,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
             break;
         case DLL_PROCESS_DETACH:
         {
-            if(g_module)
+            if(g_core)
             {
-                LuaModule::Terminate();
-                g_module = nullptr;
+                Core::Terminate();
+                g_core = nullptr;
             }
             l_result = TRUE;
         } break;
@@ -27,9 +27,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 extern "C" __declspec(dllexport) ROC::IModule* ModuleInit(ROC::ICore *f_core)
 {
-    if(!g_module)
+    if(!g_core)
     {
-        if(LuaModule::Init(f_core)) g_module = LuaModule::GetModule();
+        if(Core::Init(f_core)) g_core = Core::GetInstance();
     }
-    return g_module;
+    return g_core;
 }

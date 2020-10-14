@@ -136,6 +136,61 @@ void ROC::Material::LoadTexture(const std::string &f_path)
     }
 }
 
+void ROC::Material::SetType(unsigned char f_type)
+{
+    m_type = f_type;
+}
+
+unsigned char ROC::Material::GetType() const
+{
+    return m_type;
+}
+
+void ROC::Material::SetParams(const glm::vec4 &f_params)
+{
+    std::memcpy(&m_params, &f_params, sizeof(glm::vec4));
+}
+
+const glm::vec4& ROC::Material::GetParams() const
+{
+    return m_params;
+}
+
+bool ROC::Material::IsDoubleSided() const
+{
+    return ((m_type&MPB_Doubleside) != 0U);
+}
+
+bool ROC::Material::IsTransparent() const
+{
+    return ((m_type&MPB_Transparency) != 0U);
+}
+
+bool ROC::Material::IsShady() const
+{
+    return ((m_type&MPB_Shading) != 0U);
+}
+
+bool ROC::Material::HasDepth() const
+{
+    return ((m_type&MPB_Depth) != 0U);
+}
+
+bool ROC::Material::IsCompressed() const
+{
+    return ((m_type&MPB_Compression) != 0U);
+}
+
+unsigned char ROC::Material::GetFilteringType() const
+{
+    return ((m_type&MPB_Filtering) >> 4);
+}
+
+ROC::Texture* ROC::Material::GetTexture() const
+{
+    return m_texture;
+}
+
 void ROC::Material::Draw(bool f_useTexture)
 {
     if(m_vertexArray)

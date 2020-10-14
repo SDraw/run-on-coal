@@ -183,13 +183,11 @@
     <ClInclude Include="Lua\LuaDefs\LuaDrawableDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaElementDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h" />
-    <ClInclude Include="Lua\LuaDefs\LuaFileDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaFontDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaGeometryDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaInputDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaLightDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaModelDef.h" />
-    <ClInclude Include="Lua\LuaDefs\LuaNetworkDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaPhysicsDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaQuatDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaRenderingDef.h" />
@@ -201,19 +199,19 @@
     <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaVRDef.h" />
     <ClInclude Include="Lua\LuaVM.h" />
-    <ClInclude Include="Module\EventHandler.h" />
-    <ClInclude Include="Module\LuaModule.h" />
-    <ClInclude Include="Module\TaskHandler.h" />
+    <ClInclude Include="Core\EventHandler.h" />
+    <ClInclude Include="Core\Core.h" />
+    <ClInclude Include="Core\TaskHandler.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\shared\Lua\LuaArgument.cpp">
+    <ClCompile Include="Lua\LuaArgument.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\shared\Lua\LuaFunction.cpp">
+    <ClCompile Include="Lua\LuaFunction.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -225,7 +223,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\shared\Utils\LuaUtils.cpp">
+    <ClCompile Include="Utils\LuaUtils.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -265,13 +263,11 @@
     <ClCompile Include="Lua\LuaDefs\LuaDrawableDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaElementDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp" />
-    <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaFontDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaGeometryDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaInputDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaLightDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaModelDef.cpp" />
-    <ClCompile Include="Lua\LuaDefs\LuaNetworkDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaPhysicsDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaQuatDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaRenderingDef.cpp" />
@@ -283,9 +279,9 @@
     <ClCompile Include="Lua\LuaDefs\LuaUtilsDef.cpp" />
     <ClCompile Include="Lua\LuaDefs\LuaVRDef.cpp" />
     <ClCompile Include="Lua\LuaVM.cpp" />
-    <ClCompile Include="Module\EventHandler.cpp" />
-    <ClCompile Include="Module\LuaModule.cpp" />
-    <ClCompile Include="Module\TaskHandler.cpp" />
+    <ClCompile Include="Core\EventHandler.cpp" />
+    <ClCompile Include="Core\Core.cpp" />
+    <ClCompile Include="Core\TaskHandler.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

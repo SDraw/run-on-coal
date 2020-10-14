@@ -11,3 +11,8 @@ ROC::AsyncTask::AsyncTask()
 ROC::AsyncTask::~AsyncTask()
 {
 }
+
+void* ROC::AsyncTask::GetElement() const
+{
+    return m_taskElement;
+}

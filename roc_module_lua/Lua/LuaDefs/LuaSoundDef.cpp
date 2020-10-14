@@ -4,7 +4,7 @@
 
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/LuaUtils.h"
 
 const std::string g_soundStates[]
@@ -51,7 +51,7 @@ int LuaSoundDef::Create(lua_State *f_vm)
     l_argStream.ReadText(l_path);
     if(!l_argStream.HasErrors() && !l_path.empty())
     {
-        ROC::ISound *l_sound = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateISound(l_path);
+        ROC::ISound *l_sound = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateISound(l_path);
         l_sound ? l_argStream.PushElement(l_sound) : l_argStream.PushBoolean(false);
     }
     else l_argStream.PushBoolean(false);
@@ -362,7 +362,7 @@ int LuaSoundDef::SetListenerOrientation(lua_State *f_vm)
     for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_up[i]);
     if(!l_argStream.HasErrors())
     {
-        ROC::ISoundManager *l_soundManager = LuaModule::GetModule()->GetEngineCore()->GetISoundManager();
+        ROC::ISoundManager *l_soundManager = Core::GetInstance()->GetEngineICore()->GetISoundManager();
         l_soundManager->SetListenerPosition(l_pos);
         l_soundManager->SetListenerDirection(l_dir);
         l_soundManager->SetListenerUp(l_up);
@@ -376,7 +376,7 @@ int LuaSoundDef::GetListenerOrientation(lua_State *f_vm)
 {
     // float float float float float float float float float soundGetListenerOrientation()
     LuaArgReader l_argStream(f_vm);
-    ROC::ISoundManager *l_soundManager = LuaModule::GetModule()->GetEngineCore()->GetISoundManager();
+    ROC::ISoundManager *l_soundManager = Core::GetInstance()->GetEngineICore()->GetISoundManager();
 
     const glm::vec3 &l_pos = l_soundManager->GetListenerPosition();
     for(int i = 0; i < 3; i++) l_argStream.PushNumber(l_pos[i]);
@@ -398,7 +398,7 @@ int LuaSoundDef::SetGlobalVolume(lua_State *f_vm)
     l_argStream.ReadNumber(l_volume);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetISoundManager()->SetGlobalVolume(l_volume);
+        Core::GetInstance()->GetEngineICore()->GetISoundManager()->SetGlobalVolume(l_volume);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);
@@ -408,6 +408,6 @@ int LuaSoundDef::GetGlobalVolume(lua_State *f_vm)
 {
     // float soundGetGlobalVolume()
     LuaArgReader l_argStream(f_vm);
-    l_argStream.PushNumber(LuaModule::GetModule()->GetEngineCore()->GetISoundManager()->GetGlobalVolume());
+    l_argStream.PushNumber(Core::GetInstance()->GetEngineICore()->GetISoundManager()->GetGlobalVolume());
     return l_argStream.GetReturnValue();
 }

@@ -131,7 +131,7 @@ void ROC::PhysicsManager::UpdateWorldSteps(unsigned int f_fps)
 
 void ROC::PhysicsManager::AddModel(Model *f_model)
 {
-    if(f_model->HasSkeleton())
+    if(f_model->GetSkeleton())
     {
         Skeleton *l_skeleton = f_model->GetSkeleton();
         if(l_skeleton->HasStaticBoneCollision())
@@ -155,7 +155,7 @@ void ROC::PhysicsManager::AddModel(Model *f_model)
 
 void ROC::PhysicsManager::RemoveModel(Model *f_model)
 {
-    if(f_model->HasSkeleton())
+    if(f_model->GetSkeleton())
     {
         Skeleton *l_skeleton = f_model->GetSkeleton();
         if(l_skeleton->HasStaticBoneCollision())

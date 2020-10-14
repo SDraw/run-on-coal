@@ -3,7 +3,7 @@
 #include "Lua/LuaDefs/LuaElementDef.h"
 
 #include "Lua/LuaArgReader.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/LuaUtils.h"
 
 void LuaElementDef::Init(lua_State *f_vm)
@@ -19,7 +19,7 @@ void LuaElementDef::AddHierarchyMethods(lua_State *f_vm)
 
 int LuaElementDef::IsElement(lua_State *f_vm)
 {
-    // bool isElement(element element)
+    // bool isElement(element object)
     ROC::IElement *l_element = nullptr;
     LuaArgReader l_argStream(f_vm);
     l_argStream.ReadNextElement(l_element);
@@ -45,7 +45,7 @@ int LuaElementDef::Destroy(lua_State *f_vm)
     l_argStream.ReadElement(l_element);
     if(!l_argStream.HasErrors())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->DestroyIElement(l_element);
+        bool l_result = Core::GetInstance()->GetEngineICore()->GetIElementManager()->DestroyIElement(l_element);
         l_argStream.PushBoolean(l_result);
     }
     else l_argStream.PushBoolean(false);

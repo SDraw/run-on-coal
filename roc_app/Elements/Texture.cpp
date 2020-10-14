@@ -10,9 +10,9 @@ namespace ROC
 const unsigned char g_textureDummyPattern[]
 {
     0x7FU, 0x7FU, 0x7FU,
-    0xF7U, 0x94U, 0x1DU,
-    0xF7U, 0x94U, 0x1DU,
-    0x7FU, 0x7FU, 0x7FU
+        0xF7U, 0x94U, 0x1DU,
+        0xF7U, 0x94U, 0x1DU,
+        0x7FU, 0x7FU, 0x7FU
 };
 const glm::ivec2 g_textureDummySize(2, 2);
 
@@ -110,6 +110,11 @@ bool ROC::Texture::LoadDummy()
         dynamic_cast<GLTexture2D*>(m_texture)->Create(m_size.x, m_size.y, GL_COMPRESSED_RGB, GL_RGB, g_textureDummyPattern, GL_NEAREST);
     }
     return (m_texture != nullptr);
+}
+
+const glm::ivec2&ROC::Texture::GetSize() const
+{
+    return m_size;
 }
 
 bool ROC::Texture::IsTransparent() const

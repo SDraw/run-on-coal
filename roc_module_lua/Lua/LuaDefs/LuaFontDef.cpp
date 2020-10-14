@@ -4,7 +4,7 @@
 
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -34,7 +34,7 @@ int LuaFontDef::Create(lua_State *f_vm)
     if(!l_argStream.HasErrors() && !l_path.empty() && l_size > 0)
     {
         size_t l_filteringType = EnumUtils::ReadEnumVector(l_filter, g_filteringTypes);
-        ROC::IFont *l_font = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIFont(l_path, l_size, l_atlasSize, static_cast<unsigned char>(l_filteringType));
+        ROC::IFont *l_font = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateIFont(l_path, l_size, l_atlasSize, static_cast<unsigned char>(l_filteringType));
         l_font ? l_argStream.PushElement(l_font) : l_argStream.PushBoolean(false);
     }
     else l_argStream.PushBoolean(false);
@@ -43,21 +43,19 @@ int LuaFontDef::Create(lua_State *f_vm)
 
 int LuaFontDef::Draw(lua_State *f_vm)
 {
-    // bool Font:draw(float x, float y, str text [, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1, str layer = "screen"])
+    // bool Font:draw(float x, float y, str text [, float colorR = 1, float colorG = 1, float colorB = 1, float colorA = 1])
     ROC::IFont *l_font;
     glm::vec2 l_pos;
     std::string l_text;
     glm::vec4 l_color(1.f);
-    std::string l_layer("screen");
     LuaArgReader l_argStream(f_vm);
     l_argStream.ReadElement(l_font);
     for(int i = 0; i < 2; i++) l_argStream.ReadNumber(l_pos[i]);
     l_argStream.ReadText(l_text);
     for(int i = 0; i < 4; i++) l_argStream.ReadNextNumber(l_color[i]);
-    l_argStream.ReadNextText(l_layer);
     if(!l_argStream.HasErrors() && !l_text.empty())
     {
-        bool l_result = LuaModule::GetModule()->GetEngineCore()->GetIRenderManager()->Render(l_font, l_pos, l_text, l_color, l_layer);
+        bool l_result = Core::GetInstance()->GetEngineICore()->GetIRenderManager()->Draw(l_font, l_pos, l_text, l_color);
         l_argStream.PushBoolean(l_result);
     }
     else l_argStream.PushBoolean(false);

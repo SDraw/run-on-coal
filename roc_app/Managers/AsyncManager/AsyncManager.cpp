@@ -76,7 +76,7 @@ void ROC::AsyncManager::ExecutionThread()
     l_context.setActive(true);
     GLSetting::SetPixelUnpackAlignment(1);
 
-    std::chrono::milliseconds l_sleepTime(10U);
+    std::chrono::milliseconds l_threadDelay(10U);
     while(m_threadSwitch)
     {
         if(m_preparedTasksMutex.try_lock())
@@ -92,7 +92,7 @@ void ROC::AsyncManager::ExecutionThread()
             m_executionTasks.swap(m_executedTasks);
             m_executedTasksMutex.unlock();
         }
-        std::this_thread::sleep_for(l_sleepTime);
+        std::this_thread::sleep_for(l_threadDelay);
     }
 
     GLSetting::MemoryCleanup();

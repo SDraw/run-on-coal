@@ -300,6 +300,11 @@ float ROC::SfmlManager::GetTime() const
     return m_time;
 }
 
+void ROC::SfmlManager::UpdateWindow()
+{
+    m_window->display();
+}
+
 bool ROC::SfmlManager::DoPulse()
 {
     m_time = m_clock.getElapsedTime().asSeconds();
@@ -315,7 +320,7 @@ bool ROC::SfmlManager::DoPulse()
             case sf::Event::Resized:
             {
                 glm::ivec2 l_size(static_cast<int>(m_event.size.width), static_cast<int>(m_event.size.height));
-                m_core->GetRenderManager()->UpdateViewportSize(l_size);
+                m_core->GetRenderManager()->UpdateScreenSize(l_size);
 
                 m_arguments->Push(l_size.x);
                 m_arguments->Push(l_size.y);
@@ -324,7 +329,7 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::GainedFocus: case sf::Event::LostFocus:
             {
-                m_arguments->Push(m_event.type == sf::Event::GainedFocus ? 1 : 0);
+                m_arguments->Push((m_event.type == sf::Event::GainedFocus) ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnWindowFocus, m_arguments);
                 m_arguments->Clear();
             } break;
@@ -333,7 +338,7 @@ bool ROC::SfmlManager::DoPulse()
                 if(m_event.key.code != -1)
                 {
                     m_arguments->Push(g_keyNames[m_event.key.code]);
-                    m_arguments->Push(m_event.type == sf::Event::KeyPressed ? 1 : 0);
+                    m_arguments->Push((m_event.type == sf::Event::KeyPressed) ? 1 : 0);
                     m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnKeyPress, m_arguments);
                     m_arguments->Clear();
                 }
@@ -367,14 +372,14 @@ bool ROC::SfmlManager::DoPulse()
             } break;
             case sf::Event::MouseEntered: case sf::Event::MouseLeft:
             {
-                m_arguments->Push(m_event.type == sf::Event::MouseEntered ? 1 : 0);
+                m_arguments->Push((m_event.type == sf::Event::MouseEntered) ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnCursorEnter, m_arguments);
                 m_arguments->Clear();
             } break;
             case sf::Event::MouseButtonPressed: case sf::Event::MouseButtonReleased:
             {
                 m_arguments->Push(g_mouseKeyNames[m_event.mouseButton.button]);
-                m_arguments->Push(m_event.type == sf::Event::MouseButtonPressed ? 1 : 0);
+                m_arguments->Push((m_event.type == sf::Event::MouseButtonPressed) ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnMouseKeyPress, m_arguments);
                 m_arguments->Clear();
             } break;
@@ -388,7 +393,7 @@ bool ROC::SfmlManager::DoPulse()
             case sf::Event::JoystickConnected: case sf::Event::JoystickDisconnected:
             {
                 m_arguments->Push(static_cast<int>(m_event.joystickConnect.joystickId));
-                m_arguments->Push(m_event.type == sf::Event::JoystickConnected ? 1 : 0);
+                m_arguments->Push((m_event.type == sf::Event::JoystickConnected) ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnJoypadStateChange, m_arguments);
                 m_arguments->Clear();
             } break;
@@ -396,7 +401,7 @@ bool ROC::SfmlManager::DoPulse()
             {
                 m_arguments->Push(static_cast<int>(m_event.joystickButton.joystickId));
                 m_arguments->Push(static_cast<int>(m_event.joystickButton.button));
-                m_arguments->Push(m_event.type == sf::Event::JoystickButtonPressed ? 1 : 0);
+                m_arguments->Push((m_event.type == sf::Event::JoystickButtonPressed) ? 1 : 0);
                 m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnJoypadButton, m_arguments);
                 m_arguments->Clear();
             } break;

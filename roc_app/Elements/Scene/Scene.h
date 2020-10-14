@@ -10,23 +10,21 @@ class Light;
 class Model;
 class RenderTarget;
 class Shader;
-class SceneLayer;
 
 class Scene final : public Element, public virtual IScene
 {
     Camera *m_camera;
     RenderTarget *m_renderTarget;
+    Shader *m_shader;
     std::vector<Light*> m_lights;
-    std::vector<SceneLayer*> m_layers;
+    std::vector<Model*> m_models;
 
     bool m_active;
 
     Scene(const Scene &that) = delete;
     Scene& operator=(const Scene &that) = delete;
 
-    void UpdateLayers();
-
-    static bool SceneLayerSorter(const SceneLayer *f_layerA, const SceneLayer *f_layerB);
+    static bool SceneModelSorting(const Model *f_modelA, const Model *f_modelB);
 
     // ROC::Element
     void OnChildRemoved(Element *f_child) override;
@@ -36,49 +34,45 @@ class Scene final : public Element, public virtual IScene
     ICamera* GetICamera() const;
     bool SetIRenderTarget(IRenderTarget *f_rt);
     IRenderTarget* GetIRenderTarget() const;
-    bool AddIShader(IShader *f_shader, const std::string &f_layer, unsigned char f_priority);
-    bool RemoveIShader(IShader *f_shader);
-    bool HasIShader(IShader *f_shader) const;
+    bool SetIShader(IShader *f_shader);
+    bool RemoveIShader();
+    IShader* GetIShader() const;
     bool AddILight(ILight *f_light);
     bool RemoveILight(ILight *f_light);
     bool HasILight(ILight *f_light) const;
-    bool AddIModel(IModel *f_model, const std::string &f_layer);
+    bool AddIModel(IModel *f_model);
     bool RemoveIModel(IModel *f_model);
     bool HasIModel(IModel *f_model) const;
-    bool SetIModelLayer(IModel *f_model, const std::string &f_layer);
 public:
     bool SetCamera(Camera *f_cam);
     bool RemoveCamera();
     Camera* GetCamera() const;
-    inline bool HasCamera() const { return (m_camera != nullptr); }
 
     bool SetRenderTarget(RenderTarget *f_rt);
     bool RemoveRenderTarget();
     RenderTarget* GetRenderTarget() const;
-    inline bool HasRenderTarget() const { return (m_renderTarget != nullptr); }
 
     bool AddLight(Light *f_light);
     bool RemoveLight(Light *f_light);
     bool HasLight(Light *f_light) const;
     size_t GetLightsCount() const;
 
-    bool AddShader(Shader *f_shader, const std::string &f_layer, unsigned char f_priority);
-    bool RemoveShader(Shader *f_shader);
-    bool HasShader(Shader *f_shader) const;
+    bool SetShader(Shader *f_shader);
+    bool RemoveShader();
+    Shader* GetShader() const;
 
-    bool AddModel(Model *f_model, const std::string &f_layer);
+    bool AddModel(Model *f_model);
     bool RemoveModel(Model *f_model);
     bool HasModel(Model *f_model) const;
-    bool SetModelLayer(Model *f_model, const std::string &f_layer);
 
     bool IsActive() const;
+    bool IsRenderValid() const;
 protected:
     Scene();
     ~Scene();
 
-    inline const std::vector<SceneLayer*>& GetLayers() const { return m_layers; }
-    const SceneLayer* GetLayer(const std::string &f_layer) const;
-    inline const std::vector<Light*>& GetLights() const { return m_lights; }
+    const std::vector<Light*>& GetLights() const;
+    const std::vector<Model*>& GetModels() const;
 
     void Enable();
     void Disable();

@@ -5,7 +5,7 @@
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaCollidableDef.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -65,7 +65,7 @@ int LuaCollisionDef::Create(lua_State *f_vm)
         size_t l_type = EnumUtils::ReadEnumVector(l_typeString, g_collisionTypes);
         if(l_type != std::numeric_limits<size_t>::max())
         {
-            ROC::ICollision *l_col = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateICollision(static_cast<unsigned char>(l_type), l_size, l_mass);
+            ROC::ICollision *l_col = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateICollision(static_cast<unsigned char>(l_type), l_size, l_mass);
             l_col ? l_argStream.PushElement(l_col) : l_argStream.PushBoolean(false);
         }
         else l_argStream.PushBoolean(false);
@@ -150,7 +150,7 @@ int LuaCollisionDef::SetScale(lua_State *f_vm)
     for(int i = 0; i < 3; i++) l_argStream.ReadNumber(l_scale[i]);
     if(!l_argStream.HasErrors())
     {
-        LuaModule::GetModule()->GetEngineCore()->GetIPhysicsManager()->SetCollisionScale(l_col, l_scale);
+        Core::GetInstance()->GetEngineICore()->GetIPhysicsManager()->SetCollisionScale(l_col, l_scale);
         l_argStream.PushBoolean(true);
     }
     else l_argStream.PushBoolean(false);

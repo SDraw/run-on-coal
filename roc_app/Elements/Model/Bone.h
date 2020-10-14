@@ -24,13 +24,18 @@ class Bone final
     Bone(const Bone &that) = delete;
     Bone& operator=(const Bone &that) = delete;
 public:
-    inline bool IsUpdated() const { return m_updated; }
-    inline bool IsDynamic() const { return m_dynamic; }
-    inline const Transformation* GetLocalTransformation() const { return m_localTransform; }
-    inline const glm::mat4& GetBindMatrix() const { return m_bindMatrix; }
-    inline const glm::mat4& GetFullMatrix() const { return m_fullMatrix; }
-    inline const glm::mat4& GetPoseMatrix() const { return m_poseMatrix; }
-    inline const btRigidBody* GetDynamicBody() const { return m_dynamicBody; }
+    Bone* GetParent() const;
+    const std::vector<Bone*>& GetChildren() const;
+
+    const Transformation* GetLocalTransformation() const;
+    const glm::mat4& GetBindMatrix() const;
+    const glm::mat4& GetFullMatrix() const;
+    const glm::mat4& GetPoseMatrix() const;
+
+    bool IsDynamic() const;
+    const btRigidBody* GetDynamicBody() const;
+
+    bool IsUpdated() const;
 protected:
     Bone(const std::string &f_name, const glm::quat &f_rot, const glm::vec3 &f_pos, const glm::vec3 &f_scl);
     ~Bone();
@@ -38,18 +43,17 @@ protected:
     void GenerateBindPose();
     void SetFrameData(BoneFrameData *f_data);
     void SetFrameData(BoneFrameData *f_data, float f_blend);
-    void Update();
 
-    inline void SetParent(Bone *f_bone) { m_parent = f_bone; }
-    inline bool HasParent() const { return (m_parent != nullptr); }
-    inline Bone* GetParent() const { return m_parent; }
-    inline void AddChild(Bone *f_bone) { m_children.push_back(f_bone); }
-    inline const std::vector<Bone*>& GetChildren() const { return m_children; }
-    inline void SetDynamic(bool f_val) { m_dynamic = f_val; }
-    inline void SetDynamicBody(btRigidBody *f_body) { m_dynamicBody = f_body; }
+    void SetParent(Bone *f_bone);
+    void AddChild(Bone *f_bone);
+
+    void SetDynamic(bool f_val);
+    void SetDynamicBody(btRigidBody *f_body);
 
     void SetFullMatrix(const btTransform &f_transform);
     void SetPoseMatrix(const btTransform &f_transform);
+
+    void Update();
 
     friend class Animation;
     friend class Model;

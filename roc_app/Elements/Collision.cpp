@@ -67,6 +67,11 @@ bool ROC::Collision::Create(unsigned char f_type, const glm::vec3 &f_size, float
     return (m_rigidBody != nullptr);
 }
 
+btRigidBody* ROC::Collision::GetRigidBody() const
+{
+    return m_rigidBody;
+}
+
 void ROC::Collision::GetPosition(glm::vec3 &f_pos) const
 {
     if(m_rigidBody)
@@ -347,6 +352,11 @@ void ROC::Collision::SetMotionType(unsigned char f_type)
 unsigned char ROC::Collision::GetMotionType() const
 {
     return m_motionType;
+}
+
+bool ROC::Collision::IsActive() const
+{
+    return m_rigidBody->isActive();
 }
 
 // ROC::Collidable

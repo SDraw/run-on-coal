@@ -15,7 +15,7 @@ public:
     bool Create(GLenum f_format, GLsizei f_width, GLsizei f_height);
     bool Destroy();
 
-    inline GLuint GetName() const { return m_name; }
+    GLuint GetName() const;
     
     bool Bind();
     static void Reset();

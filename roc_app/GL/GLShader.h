@@ -20,7 +20,7 @@ public:
     bool Create(const char *f_vertex, size_t f_vertexSize, const char *f_fragment, size_t f_fragmentSize, const char *f_geometry, size_t f_geometrySize);
     bool Destroy();
 
-    inline const std::string& GetLog() const { return m_log; }
+    const std::string& GetLog() const;
     GLint GetUniformLocation(const char *f_name);
     bool GetUniformInfo(GLint f_index, GLenum &f_type, std::string &f_name);
     GLint GetUniformsCount();
@@ -36,4 +36,3 @@ public:
     bool Bind();
     static void Reset();
 };
-

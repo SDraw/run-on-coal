@@ -39,9 +39,6 @@
     <ClCompile Include="Elements\Collision.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
-    <ClCompile Include="Elements\File.cpp">
-      <Filter>Elements</Filter>
-    </ClCompile>
     <ClCompile Include="Elements\Font.cpp">
       <Filter>Elements</Filter>
     </ClCompile>
@@ -80,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="Managers\RenderManager\RenderManager.cpp">
       <Filter>Managers\RenderManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Managers\NetworkManager.cpp">
-      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Elements\Element.cpp">
       <Filter>Elements</Filter>
@@ -151,9 +145,6 @@
       <Filter>Elements</Filter>
     </ClCompile>
     <ClCompile Include="Elements\Scene\Scene.cpp">
-      <Filter>Elements\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Elements\Scene\SceneLayer.cpp">
       <Filter>Elements\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Utils\CustomArgument.cpp">
@@ -237,9 +228,6 @@
     <ClInclude Include="Elements\Collision.h">
       <Filter>Elements</Filter>
     </ClInclude>
-    <ClInclude Include="Elements\File.h">
-      <Filter>Elements</Filter>
-    </ClInclude>
     <ClInclude Include="Elements\Font.h">
       <Filter>Elements</Filter>
     </ClInclude>
@@ -278,9 +266,6 @@
     </ClInclude>
     <ClInclude Include="Managers\RenderManager\RenderManager.h">
       <Filter>Managers\RenderManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\NetworkManager.h">
-      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Element.h">
       <Filter>Elements</Filter>
@@ -342,9 +327,6 @@
     <ClInclude Include="Interfaces\ILogManager.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Interfaces\INetworkManager.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="Interfaces\ISfmlManager.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
@@ -399,9 +381,6 @@
     <ClInclude Include="Interfaces\IFont.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Interfaces\IFile.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="Interfaces\IPhysicsManager.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
@@ -424,9 +403,6 @@
       <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="Elements\Scene\Scene.h">
-      <Filter>Elements\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Elements\Scene\SceneLayer.h">
       <Filter>Elements\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Interfaces\ICustomArgument.h">

@@ -22,6 +22,9 @@ class Model final : public Collidable, public virtual IModel
     glm::mat4 m_fullMatrix;
     bool m_updated;
 
+    bool m_visibility;
+    float m_visibilityDistance;
+
     Model *m_parentModel;
     Bone *m_parentBone;
 
@@ -47,8 +50,7 @@ class Model final : public Collidable, public virtual IModel
     bool SetIAnimation(IAnimation *f_anim);
     IAnimation* GetIAnimation() const;
 public:
-    inline bool HasGeometry() const { return (m_geometry != nullptr); }
-    inline Geometry* GetGeometry() const { return m_geometry; }
+    Geometry* GetGeometry() const;
     float GetBoundSphereRadius() const;
 
     void SetPosition(const glm::vec3 &f_pos);
@@ -61,13 +63,11 @@ public:
 
     bool AttachTo(Model *f_model, int f_bone = -1);
     bool Dettach();
-    inline bool HasParentModel() const { return (m_parentModel != nullptr); }
-    inline Model* GetParentModel() const { return m_parentModel; }
+    Model* GetParentModel() const;
 
     bool SetCollision(Collision *f_col);
     bool RemoveCollision();
-    inline bool HasCollision() const { return (m_collision != nullptr); }
-    inline Collision* GetCollsion() const { return m_collision; }
+    Collision* GetCollision() const;
 
     bool SetAnimation(Animation *f_anim);
     bool RemoveAnimation();
@@ -90,11 +90,17 @@ protected:
     explicit Model(Geometry *f_geometry);
     ~Model();
 
-    inline bool HasSkeleton() const { return (m_skeleton != nullptr); }
-    inline Skeleton* GetSkeleton() const { return m_skeleton; }
+    Skeleton* GetSkeleton() const;
 
+    void SetVisibility(bool f_state);
+    bool IsVisible() const;
+
+    void SetVisibilityDistance(float f_dist);
+    float GetVisibilityDistance() const;
+
+    bool IsUpdated() const;
     void Update(ModelUpdateStage f_stage);
-    inline bool IsUpdated() const { return m_updated; }
+
 
     friend class ElementManager;
     friend class PhysicsManager;

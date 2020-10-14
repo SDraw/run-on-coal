@@ -22,7 +22,7 @@ public:
     bool IsCubic() const;
     bool IsCompressed() const;
 
-    inline const glm::ivec2& GetSize() const { return m_size; }
+    const glm::ivec2& GetSize() const;
 protected:
     Texture();
     ~Texture();

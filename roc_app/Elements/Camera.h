@@ -70,6 +70,7 @@ protected:
     void Update();
 
     friend class ElementManager;
+    friend class RenderManager;
     friend class VRManager;
     friend class Scene;
 };

@@ -2,7 +2,7 @@
 
 #include "Lua/LuaDefs/LuaQuatDef.h"
 
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Lua/LuaArgReader.h"
 #include "Utils/LuaUtils.h"
 
@@ -269,7 +269,7 @@ int LuaQuatDef::Rotate(lua_State *f_vm)
 
 int LuaQuatDef::RotateVector(lua_State *f_vm)
 {
-    // float float float Quat:rotateVector(float vecX, float vecY, float vecZ)
+    // float float float Quat:rotateVector(float x, float y, float z)
     Quat *l_quat;
     glm::vec3 l_vec;
     LuaArgReader l_argStream(f_vm);

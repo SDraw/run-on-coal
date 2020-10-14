@@ -97,3 +97,43 @@ ROC::ConfigManager::ConfigManager()
 ROC::ConfigManager::~ConfigManager()
 {
 }
+
+bool ROC::ConfigManager::IsLogEnabled() const
+{
+    return m_logging;
+}
+
+bool ROC::ConfigManager::IsFullscreenEnabled() const
+{
+    return m_fullscreen;
+}
+
+int ROC::ConfigManager::GetAntialiasing() const
+{
+    return m_antialiasing;
+}
+
+const glm::ivec2& ROC::ConfigManager::GetWindowSize() const
+{
+    return m_windowSize;
+}
+
+unsigned int ROC::ConfigManager::GetFPSLimit() const
+{
+    return m_fpsLimit;
+}
+
+bool ROC::ConfigManager::GetVSync() const
+{
+    return m_vsync;
+}
+
+bool ROC::ConfigManager::IsVRModeEnabled() const
+{
+    return m_vrMode;
+}
+
+const std::vector<std::string>& ROC::ConfigManager::GetModules() const
+{
+    return m_modules;
+}

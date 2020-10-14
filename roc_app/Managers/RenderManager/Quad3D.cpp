@@ -86,6 +86,11 @@ void ROC::Quad3D::SetTransformation(const glm::vec3 &f_pos, const glm::quat &f_r
     }
 }
 
+const glm::mat4& ROC::Quad3D::GetMatrix() const
+{
+    return m_matrix;
+}
+
 void ROC::Quad3D::Draw()
 {
     m_vertexArray->Bind();

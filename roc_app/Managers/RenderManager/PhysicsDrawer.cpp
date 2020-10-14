@@ -73,6 +73,23 @@ void ROC::PhysicsDrawer::drawContactPoint(const btVector3& PointOnB, const btVec
     m_colors.insert(m_colors.end(), 2U, l_vec);
 }
 
+void ROC::PhysicsDrawer::reportErrorWarning(const char* warningString)
+{
+}
+
+void ROC::PhysicsDrawer::draw3dText(const btVector3& location, const char* textString)
+{
+}
+
+void ROC::PhysicsDrawer::setDebugMode(int debugMode)
+{
+}
+
+int	ROC::PhysicsDrawer::getDebugMode() const
+{
+    return (DBG_DrawWireframe | DBG_FastWireframe | DBG_DrawConstraints | DBG_DrawConstraintLimits | DBG_DrawNormals | DBG_DrawContactPoints);
+}
+
 void ROC::PhysicsDrawer::Draw(float f_width)
 {
     if(!m_lines.empty())

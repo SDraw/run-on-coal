@@ -4,7 +4,7 @@
 
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -43,7 +43,7 @@ int LuaLightDef::Create(lua_State *f_vm)
         size_t l_type = EnumUtils::ReadEnumVector(l_typeString, g_lightTypes);
         if(l_type != std::numeric_limits<size_t>::max())
         {
-            ROC::ILight *l_light = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateILight(static_cast<unsigned char>(l_type));
+            ROC::ILight *l_light = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateILight(static_cast<unsigned char>(l_type));
             l_light ? l_argStream.PushElement(l_light) : l_argStream.PushBoolean(false);
         }
         else l_argStream.PushBoolean(false);
@@ -234,6 +234,7 @@ int LuaLightDef::SetType(lua_State *f_vm)
 
 int LuaLightDef::GetType(lua_State *f_vm)
 {
+    // str Light:getType()
     ROC::ILight *l_light;
     LuaArgReader l_argStream(f_vm);
     l_argStream.ReadElement(l_light);

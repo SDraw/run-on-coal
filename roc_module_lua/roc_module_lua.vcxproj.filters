@@ -24,9 +24,6 @@
     <ClCompile Include="Lua\LuaDefs\LuaEventsDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
-    <ClCompile Include="Lua\LuaDefs\LuaFileDef.cpp">
-      <Filter>Lua\LuaDefs</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaDefs\LuaFontDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
@@ -40,9 +37,6 @@
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefs\LuaModelDef.cpp">
-      <Filter>Lua\LuaDefs</Filter>
-    </ClCompile>
-    <ClCompile Include="Lua\LuaDefs\LuaNetworkDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefs\LuaPhysicsDef.cpp">
@@ -81,31 +75,31 @@
     <ClCompile Include="..\vendor\luautf8\lutf8lib.c">
       <Filter>vendor\luautf8</Filter>
     </ClCompile>
-    <ClCompile Include="Module\EventHandler.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Module\LuaModule.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Module\TaskHandler.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared\Utils\LuaUtils.cpp">
-      <Filter>shared\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared\Lua\LuaFunction.cpp">
-      <Filter>shared\Lua</Filter>
-    </ClCompile>
     <ClCompile Include="..\vendor\pugixml\src\pugixml.cpp">
       <Filter>vendor\pugixml</Filter>
     </ClCompile>
     <ClCompile Include="Lua\LuaDefs\LuaCollidableDef.cpp">
       <Filter>Lua\LuaDefs</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\Lua\LuaArgument.cpp">
-      <Filter>shared\Lua</Filter>
-    </ClCompile>
     <ClCompile Include="Lua\LuaArgReader.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\EventHandler.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TaskHandler.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Core.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\LuaUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaFunction.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Lua\LuaArgument.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,9 +126,6 @@
     <ClInclude Include="Lua\LuaDefs\LuaEventsDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
-    <ClInclude Include="Lua\LuaDefs\LuaFileDef.h">
-      <Filter>Lua\LuaDefs</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaFontDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
@@ -148,9 +139,6 @@
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaModelDef.h">
-      <Filter>Lua\LuaDefs</Filter>
-    </ClInclude>
-    <ClInclude Include="Lua\LuaDefs\LuaNetworkDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaPhysicsDef.h">
@@ -183,20 +171,20 @@
     <ClInclude Include="Lua\LuaDefs\LuaVRDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
-    <ClInclude Include="Module\EventHandler.h">
-      <Filter>Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Module\LuaModule.h">
-      <Filter>Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Module\TaskHandler.h">
-      <Filter>Module</Filter>
-    </ClInclude>
     <ClInclude Include="Lua\LuaDefs\LuaCollidableDef.h">
       <Filter>Lua\LuaDefs</Filter>
     </ClInclude>
     <ClInclude Include="Lua\LuaArgReader.h">
       <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\EventHandler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TaskHandler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Core.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -221,11 +209,11 @@
     <Filter Include="vendor\pugixml">
       <UniqueIdentifier>{881a7193-06fe-4eb1-b4fb-b435a237a794}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Module">
+    <Filter Include="Core">
       <UniqueIdentifier>{2de8f2d6-0f15-472e-9dac-2022011b3537}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shared\Lua">
-      <UniqueIdentifier>{2e3c2d80-04d9-455a-8f7a-267dfdcf11de}</UniqueIdentifier>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{dcf7da84-cdba-4d89-8fd7-dc09954a6d30}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -82,7 +82,7 @@ protected:
     ~Shader();
 
     bool Load(const std::string &f_vpath, const std::string &f_fpath, const std::string &f_gpath);
-    inline const std::string& GetError() const { return m_error; }
+    const std::string& GetError() const;
 
     void SetProjectionMatrix(const glm::mat4 &f_value);
     void SetViewMatrix(const glm::mat4 &f_value);
@@ -100,7 +100,7 @@ protected:
 
     void Enable();
     void Disable();
-    inline bool IsActive() const { return m_active; }
+    bool IsActive() const;
 
     static void InitStaticResources();
 

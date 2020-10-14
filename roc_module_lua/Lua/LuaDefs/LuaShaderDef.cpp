@@ -4,7 +4,7 @@
 
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
-#include "Module/LuaModule.h"
+#include "Core/Core.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -38,7 +38,7 @@ int LuaShaderDef::Create(lua_State *f_vm)
     l_argStream.ReadNextText(l_gsp);
     if(!l_argStream.HasErrors() && !l_vsp.empty() && !l_fsp.empty())
     {
-        ROC::IShader *l_shader = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateIShader(l_vsp, l_fsp, l_gsp);
+        ROC::IShader *l_shader = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateIShader(l_vsp, l_fsp, l_gsp);
         l_shader ? l_argStream.PushElement(l_shader) : l_argStream.PushBoolean(false);
     }
     else l_argStream.PushBoolean(false);

@@ -89,6 +89,48 @@ ROC::CustomArgument::~CustomArgument()
 {
 }
 
+unsigned char ROC::CustomArgument::GetType() const { return m_type; }
+
+bool ROC::CustomArgument::GetBoolean() const
+{
+    return m_bool;
+}
+
+int ROC::CustomArgument::GetInteger() const
+{
+    return m_int;
+}
+
+int ROC::CustomArgument::GetUInteger() const
+{
+    return m_uint;
+}
+
+float ROC::CustomArgument::GetFloat() const
+{
+    return m_float;
+}
+
+double ROC::CustomArgument::GetDouble() const
+{
+    return m_double;
+}
+
+void* ROC::CustomArgument::GetPointer() const
+{
+    return m_ptr;
+}
+
+ROC::IElement* ROC::CustomArgument::GetElement() const
+{
+    return reinterpret_cast<ROC::IElement*>(m_ptr);
+};
+
+const std::string& ROC::CustomArgument::GetString() const
+{
+    return m_string;
+}
+
 ROC::CustomArgument& ROC::CustomArgument::operator=(const ROC::CustomArgument &f_data)
 {
     m_type = f_data.m_type;

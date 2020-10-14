@@ -63,7 +63,7 @@ protected:
     explicit SfmlManager(Core *f_core);
     ~SfmlManager();
 
-    inline void SwapBuffers() { m_window->display(); }
+    void UpdateWindow();
 
     bool DoPulse();
 

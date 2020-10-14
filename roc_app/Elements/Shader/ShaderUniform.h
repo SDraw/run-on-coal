@@ -16,15 +16,14 @@ protected:
     ~ShaderUniform();
 
     void SetData(const void *f_data, size_t f_dataSize);
-    inline const void* GetData() const { return m_data; }
-    inline bool HasData() const { return (m_data != nullptr); }
+    const void* GetData() const;
 
-    inline GLint GetUniformName() const { return m_uniformName; }
-    inline unsigned char GetType() const { return m_type; }
-    inline size_t GetCount() const { return m_count; }
+    GLint GetUniformName() const;
+    unsigned char GetType() const;
+    size_t GetCount() const;
 
-    inline bool IsUpdated() const { return m_updated; }
-    inline void ResetUpdate() { m_updated = false; }
+    bool IsUpdated() const;
+    void ResetUpdate();
 
     friend class Shader;
 };

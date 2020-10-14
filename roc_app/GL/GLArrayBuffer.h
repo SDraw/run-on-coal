@@ -1,4 +1,5 @@
 #pragma once
+
 class GLArrayBuffer
 {
     GLuint m_name;
@@ -17,4 +18,3 @@ public:
     bool Bind();
     bool Update(GLintptr f_offset, GLsizeiptr f_size, const void *f_data);
 };
-

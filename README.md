@@ -13,7 +13,6 @@ Simple and light-weight 3D game engine.
 * Physics using [Bullet Physics](../../../../bulletphysics/bullet3)
 * Audio playback with spatialization (Ogg, WAV, FLAC)
 * TrueType font rendering with Unicode characters support
-* Networking using [RakNet library](../../../../OculusVR/RakNet)
 * VR support
 * Modules support
 

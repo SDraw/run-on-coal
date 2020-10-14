@@ -5,8 +5,8 @@
 #include "Lua/LuaArgReader.h"
 #include "Lua/LuaDefs/LuaElementDef.h"
 #include "Lua/LuaDefs/LuaDrawableDef.h"
-#include "Module/LuaModule.h"
-#include "Module/TaskHandler.h"
+#include "Core/Core.h"
+#include "Core/TaskHandler.h"
 #include "Utils/EnumUtils.h"
 #include "Utils/LuaUtils.h"
 
@@ -27,8 +27,7 @@ void LuaTextureDef::Init(lua_State *f_vm)
 int LuaTextureDef::Create(lua_State *f_vm)
 {
     // element Texture(str type, str path [, str filtering, function callback ])
-    // element Texture(str type = "cube", str path1, ... , str path6 [, str filtering)
-    // element Texture(str type = "cube", str path1, ... , str path6, str filtering, function callback)
+    // element Texture(str type = "cube", str path1, ... , str path6 [, str filtering, function callback])
     std::string l_type;
     LuaArgReader l_argStream(f_vm);
     l_argStream.ReadText(l_type);
@@ -68,12 +67,12 @@ int LuaTextureDef::Create(lua_State *f_vm)
                 {
                     if(l_callback.IsValid())
                     {
-                        void *l_task = LuaModule::GetModule()->GetTaskHandler()->CreateTextureTask(l_path[0U], static_cast<unsigned char>(l_textureType), static_cast<unsigned char>(l_filteringType), l_compress, l_callback);
+                        void *l_task = Core::GetInstance()->GetTaskHandler()->CreateTextureTask(l_path[0U], static_cast<unsigned char>(l_textureType), static_cast<unsigned char>(l_filteringType), l_compress, l_callback);
                         l_argStream.PushPointer(l_task);
                     }
                     else
                     {
-                        ROC::ITexture *l_texture = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateITexture(l_path[0U], static_cast<unsigned char>(l_textureType), static_cast<unsigned char>(l_filteringType), l_compress);
+                        ROC::ITexture *l_texture = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateITexture(l_path[0U], static_cast<unsigned char>(l_textureType), static_cast<unsigned char>(l_filteringType), l_compress);
                         l_texture ? l_argStream.PushElement(l_texture) : l_argStream.PushBoolean(false);
                     }
                 } break;
@@ -81,12 +80,12 @@ int LuaTextureDef::Create(lua_State *f_vm)
                 {
                     if(l_callback.IsValid())
                     {
-                        void *l_task = LuaModule::GetModule()->GetTaskHandler()->CreateTextureTask(l_path, static_cast<unsigned char>(l_filteringType), l_compress, l_callback);
+                        void *l_task = Core::GetInstance()->GetTaskHandler()->CreateTextureTask(l_path, static_cast<unsigned char>(l_filteringType), l_compress, l_callback);
                         l_argStream.PushPointer(l_task);
                     }
                     else
                     {
-                        ROC::ITexture *l_texture = LuaModule::GetModule()->GetEngineCore()->GetIElementManager()->CreateITexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
+                        ROC::ITexture *l_texture = Core::GetInstance()->GetEngineICore()->GetIElementManager()->CreateITexture(l_path, static_cast<unsigned char>(l_filteringType), l_compress);
                         l_texture ? l_argStream.PushElement(l_texture) : l_argStream.PushBoolean(false);
                     }
                 } break;

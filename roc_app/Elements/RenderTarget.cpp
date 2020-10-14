@@ -102,6 +102,11 @@ bool ROC::RenderTarget::Create(unsigned char f_type, const glm::ivec2 &f_size, u
     return (m_type != RTT_None);
 }
 
+GLTexture2D* ROC::RenderTarget::GetGLTexture() const
+{
+    return m_texture;
+}
+
 const glm::ivec2& ROC::RenderTarget::GetSize() const
 {
     return m_size;
@@ -189,6 +194,16 @@ void ROC::RenderTarget::Clear()
         delete m_framebuffer;
         m_framebuffer = nullptr;
     }
+}
+
+void ROC::RenderTarget::SetFallbackRenderTarget(ROC::RenderTarget *f_rt)
+{
+    ms_fallbackRT = f_rt;
+}
+
+void ROC::RenderTarget::SetFallbackSize(const glm::ivec2 &f_size)
+{
+    std::memcpy(&ms_fallbackSize, &f_size, sizeof(glm::ivec2));
 }
 
 void ROC::RenderTarget::Fallback()
