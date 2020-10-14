@@ -8,20 +8,12 @@
 
 void LuaUtilsDef::Init(lua_State *f_vm)
 {
-    lua_register(f_vm, "dofile", DisabledFunction);
-    lua_register(f_vm, "loadfile", DisabledFunction);
     lua_register(f_vm, "logPrint", LogPrint);
     lua_register(f_vm, "getTickCount", GetTick);
     lua_register(f_vm, "getTime", GetTime);
     lua_register(f_vm, "isTask", IsTask);
     lua_register(f_vm, "base64Encode", Base64Encode);
     lua_register(f_vm, "base64Decode", Base64Decode);
-}
-
-int LuaUtilsDef::DisabledFunction(lua_State *f_vm)
-{
-    lua_pushboolean(f_vm, 0);
-    return 1;
 }
 
 int LuaUtilsDef::LogPrint(lua_State *f_vm)

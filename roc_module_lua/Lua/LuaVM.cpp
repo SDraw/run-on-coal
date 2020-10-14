@@ -37,11 +37,15 @@ LuaVM::LuaVM(Core *f_module)
 
     m_vm = luaL_newstate();
     luaL_requiref(m_vm, "_G", luaopen_base, 1);
-    luaL_requiref(m_vm, "math", luaopen_math, 1);
-    luaL_requiref(m_vm, "string", luaopen_string, 1);
-    luaL_requiref(m_vm, "table", luaopen_table, 1);
-    luaL_requiref(m_vm, "utf8", luaopen_utf8, 1);
-    luaL_requiref(m_vm, "package", luaopen_package, 1);
+    luaL_requiref(m_vm, LUA_COLIBNAME, luaopen_coroutine, 1);
+    luaL_requiref(m_vm, LUA_TABLIBNAME, luaopen_table, 1);
+    luaL_requiref(m_vm, LUA_IOLIBNAME, luaopen_io, 1);
+    luaL_requiref(m_vm, LUA_OSLIBNAME, luaopen_os, 1);
+    luaL_requiref(m_vm, LUA_STRLIBNAME, luaopen_string, 1);
+    luaL_requiref(m_vm, LUA_UTF8LIBNAME, luaopen_utf8, 1); // vendor library is loaded
+    luaL_requiref(m_vm, LUA_MATHLIBNAME, luaopen_math, 1);
+    luaL_requiref(m_vm, LUA_DBLIBNAME, luaopen_debug, 1);
+    luaL_requiref(m_vm, LUA_LOADLIBNAME, luaopen_package, 1);
 
     LuaElementDef::Init(m_vm);
     LuaCollidableDef::Init(m_vm);

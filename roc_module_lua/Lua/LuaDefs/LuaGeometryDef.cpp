@@ -13,6 +13,7 @@ void LuaGeometryDef::Init(lua_State *f_vm)
 {
     LuaUtils::AddClass(f_vm, "Geometry", Create);
     LuaUtils::AddClassMethod(f_vm, "getBoundSphereRadius", GetBoundSphereRadius);
+    LuaUtils::AddClassMethod(f_vm, "getMaterialsCount", GetMaterialsCount);
     LuaElementDef::AddHierarchyMethods(f_vm);
     LuaUtils::AddClassFinish(f_vm);
 }
@@ -49,5 +50,15 @@ int LuaGeometryDef::GetBoundSphereRadius(lua_State *f_vm)
     LuaArgReader l_argStream(f_vm);
     l_argStream.ReadElement(l_geometry);
     !l_argStream.HasErrors() ? l_argStream.PushNumber(l_geometry->GetBoundSphereRadius()) : l_argStream.PushBoolean(false);
+    return l_argStream.GetReturnValue();
+}
+
+int LuaGeometryDef::GetMaterialsCount(lua_State *f_vm)
+{
+    // int Geometry:getMaterialsCount()
+    ROC::IGeometry *l_geometry;
+    LuaArgReader l_argStream(f_vm);
+    l_argStream.ReadElement(l_geometry);
+    !l_argStream.HasErrors() ? l_argStream.PushInteger(l_geometry->GetMaterialsCount()) : l_argStream.PushBoolean(false);
     return l_argStream.GetReturnValue();
 }
