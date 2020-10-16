@@ -141,6 +141,14 @@ ROC::SfmlManager::SfmlManager(Core *f_core)
     std::memset(&m_event, 0, sizeof(sf::Event));
 
     m_arguments = new CustomArguments();
+
+    // Set default icon
+    sf::Image l_image;
+    if(l_image.loadFromFile("roc_icon.png"))
+    {
+        sf::Vector2u l_size = l_image.getSize();
+        m_window->setIcon(l_size.x, l_size.y, l_image.getPixelsPtr());
+    }
 }
 
 ROC::SfmlManager::~SfmlManager()

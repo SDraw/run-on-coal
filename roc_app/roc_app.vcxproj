@@ -436,7 +436,7 @@
     <ResourceCompile Include="main_resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
+    <Image Include="roc_icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

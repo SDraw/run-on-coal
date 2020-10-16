@@ -514,6 +514,6 @@
     <ResourceCompile Include="main_resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.ico" />
+    <Image Include="roc_icon.ico" />
   </ItemGroup>
 </Project>

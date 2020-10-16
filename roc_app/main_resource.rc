@@ -1,4 +1,4 @@
-SFML_ICON ICON "icon.ico"
+SFML_ICON ICON "roc_icon.ico"
 
 1 VERSIONINFO
 FILEVERSION 1, 0, 0, 0
@@ -16,7 +16,7 @@ BLOCK "StringFileInfo"
 BEGIN
 BLOCK "040904B0"
 BEGIN
-VALUE "FileDescription", "RunOnCoal Engine Application"
+VALUE "FileDescription", "ROC Engine Application"
 VALUE "FileVersion", "1.0"
 VALUE "ProductName", "ROC"
 VALUE "ProductVersion", "1.0"
