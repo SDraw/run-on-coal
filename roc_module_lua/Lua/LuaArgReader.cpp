@@ -133,7 +133,6 @@ void LuaArgReader::ReadArgument(LuaArgument &f_argument)
                 {
                     if(lua_isinteger(m_vm, m_currentArgument)) f_argument = LuaArgument(lua_tointeger(m_vm, m_currentArgument));
                     else f_argument = LuaArgument(lua_tonumber(m_vm, m_currentArgument));
-                    m_currentArgument++;
                 } break;
                 case LUA_TBOOLEAN:
                     f_argument = LuaArgument(lua_toboolean(m_vm, m_currentArgument) == 1);
