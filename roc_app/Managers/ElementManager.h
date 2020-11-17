@@ -1,6 +1,10 @@
 #pragma once
 #include "Interfaces/IElementManager.h"
 
+#ifdef CreateFont
+#undef CreateFont
+#endif
+
 namespace ROC
 {
 
@@ -61,7 +65,7 @@ public:
     RenderTarget* CreateRenderTarget(unsigned char f_type, const glm::ivec2 &f_size, unsigned char f_filter);
     Texture* CreateTexture(const std::string &f_path, unsigned char f_type, unsigned char f_filter, bool f_compress);
     Texture* CreateTexture(const std::vector<std::string> &f_path, unsigned char f_filter, bool f_compress);
-    Font* CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter);
+    Font* CreateFont(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter);
     Collision* CreateCollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass);
 
     bool IsValidElement(Element *f_ptr) const;

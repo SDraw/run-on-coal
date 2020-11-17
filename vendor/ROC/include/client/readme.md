@@ -1,1 +1,0 @@
-Interfaces for client modules that will be placed here after 'roc_app' building.

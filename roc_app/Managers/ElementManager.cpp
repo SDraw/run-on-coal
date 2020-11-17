@@ -188,7 +188,7 @@ ROC::Texture* ROC::ElementManager::CreateTexture(const std::vector<std::string> 
     return l_texture;
 }
 
-ROC::Font* ROC::ElementManager::CreateFont_(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter)
+ROC::Font* ROC::ElementManager::CreateFont(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter)
 {
     Font *l_font = new Font();
 
@@ -320,7 +320,7 @@ ROC::ITexture* ROC::ElementManager::CreateITexture(const std::vector<std::string
 
 ROC::IFont* ROC::ElementManager::CreateIFont(const std::string &f_path, int f_size, const glm::ivec2 &f_atlas, unsigned char f_filter)
 {
-    return CreateFont_(f_path, f_size, f_atlas, f_filter);
+    return CreateFont(f_path, f_size, f_atlas, f_filter);
 }
 
 ROC::ICollision* ROC::ElementManager::CreateICollision(unsigned char f_type, const glm::vec3 &f_size, float f_mass)

@@ -75,7 +75,7 @@
     <OutDir>$(SolutionDir)bin\win32\</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <GenerateManifest>false</GenerateManifest>
@@ -84,7 +84,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)_d</TargetName>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <GenerateManifest>false</GenerateManifest>
@@ -101,7 +101,7 @@
     <TargetName>$(ProjectName)</TargetName>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
     <GenerateManifest>false</GenerateManifest>
     <IntDir>$(SolutionDir)objs\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -109,7 +109,7 @@
     <TargetName>$(ProjectName)</TargetName>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
     <GenerateManifest>false</GenerateManifest>
     <LinkIncremental>false</LinkIncremental>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -137,7 +137,8 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -161,7 +162,8 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -196,7 +198,8 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -233,7 +236,8 @@
       <Profile>false</Profile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "Interfaces\*.*" "..\vendor\ROC\include"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <ResourceCompile>
       <Culture>0x0409</Culture>

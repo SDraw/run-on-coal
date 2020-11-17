@@ -138,8 +138,7 @@ bool ROC::Font::Load(const std::string &f_path, int f_size, const glm::ivec2 &f_
             m_atlasTexture->SetSwizzle(GL_TEXTURE_SWIZZLE_RGBA, g_fontSwizzleMask);
 
             // Generate atlas
-            m_atlasPack = new rbp::MaxRectsBinPack();
-            m_atlasPack->Init(m_atlasSize.x, m_atlasSize.y, false);
+            m_atlasPack = new rbp::MaxRectsBinPack(m_atlasSize.x, m_atlasSize.y, false);
 
             m_loaded = true;
         }
