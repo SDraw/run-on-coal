@@ -15,6 +15,10 @@ class Core final : public ROC::IModule
 
     explicit Core(ROC::ICore *f_core);
     ~Core();
+
+    // ROC::IModule
+    void RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args);
+    void DoPulse();
 public:
     static bool Init(ROC::ICore *f_core);
     static Core* GetInstance();
@@ -24,7 +28,4 @@ public:
     LuaVM* GetLuaVM() const;
     EventHandler* GetEventHandler() const;
     TaskHandler* GetTaskHandler() const;
-protected:
-    void RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args);
-    void DoPulse();
 };

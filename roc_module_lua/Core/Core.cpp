@@ -81,6 +81,7 @@ TaskHandler* Core::GetTaskHandler() const
     return m_taskHandler;
 }
 
+// ROC::IModule
 void Core::RecieveGlobalEvent(unsigned char f_event, const ROC::ICustomArguments *f_args)
 {
     switch(f_event)

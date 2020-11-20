@@ -1,6 +1,7 @@
 #pragma once
 
 #define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 #include <string>
 #include <vector>
@@ -8,11 +9,13 @@
 #include <unordered_map>
 #include <algorithm>
 
-#include <Windows.h>
-
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
+#include "lua.hpp"
+#include "pugixml.hpp"
+#include "base64.h"
 
 #include "IModule.h"
 #include "ICore.h"
@@ -41,7 +44,3 @@
 #include "ITexture.h"
 #include "ICustomArgument.h"
 #include "ICustomArguments.h"
-
-#include "lua.hpp"
-#include "pugixml.hpp"
-#include "base64.h"
