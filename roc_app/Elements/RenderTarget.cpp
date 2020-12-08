@@ -149,7 +149,7 @@ bool ROC::RenderTarget::SetProperty(RenderTargetProperty f_prop, const void *f_v
 
 void ROC::RenderTarget::Bind(size_t f_slot)
 {
-    if(m_texture != 0U) m_texture->Bind(static_cast<GLenum>(f_slot));
+    if(m_texture) m_texture->Bind(static_cast<GLenum>(f_slot));
 }
 
 void ROC::RenderTarget::Enable(bool f_clear)

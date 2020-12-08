@@ -1,29 +1,17 @@
-#include <map>
-#include <unordered_map>
+#include "stdafx.h"
 
-#include "lua.hpp"
+#include "Lua/LuaFunction.h"
 
-#include "LuaFunction.h"
-
-std::map<lua_State*, LuaFunction::LuaFunctionMap*> LuaFunction::ms_vmFuncMap;
+std::unordered_map<void*, LuaFunction::LuaFunctionData> LuaFunction::ms_funcMap;
 
 int LuaFunction::RetrieveGlobalReference(lua_State *f_vm, void *f_ptr)
 {
     int l_ref = 0;
-    LuaFunctionMap *l_funcMap = nullptr;
 
-    auto l_funcMapIter = ms_vmFuncMap.find(f_vm);
-    if(l_funcMapIter != ms_vmFuncMap.end()) l_funcMap = l_funcMapIter->second;
-    else
+    auto l_iter = ms_funcMap.find(f_ptr);
+    if(l_iter != ms_funcMap.end())
     {
-        l_funcMap = new LuaFunctionMap();
-        ms_vmFuncMap.insert(std::make_pair(f_vm, l_funcMap));
-    }
-
-    auto l_funcDataMapIter = l_funcMap->find(f_ptr);
-    if(l_funcDataMapIter != l_funcMap->end())
-    {
-        LuaFunctionData &l_funcData = l_funcDataMapIter->second;
+        LuaFunctionData &l_funcData = l_iter->second;
         l_funcData.m_refCount++;
 
         l_ref = l_funcData.m_ref;
@@ -32,10 +20,10 @@ int LuaFunction::RetrieveGlobalReference(lua_State *f_vm, void *f_ptr)
     {
         LuaFunctionData l_funcData;
         l_funcData.m_ref = luaL_ref(f_vm, LUA_REGISTRYINDEX);
-        lua_rawgeti(f_vm, LUA_REGISTRYINDEX, l_funcData.m_ref); // Restore function in stack
+        lua_rawgeti(f_vm, LUA_REGISTRYINDEX, l_funcData.m_ref);
         l_funcData.m_refCount++;
 
-        l_funcMap->emplace(f_ptr, l_funcData);
+        ms_funcMap.emplace(f_ptr, l_funcData);
         l_ref = l_funcData.m_ref;
     }
 
@@ -44,22 +32,17 @@ int LuaFunction::RetrieveGlobalReference(lua_State *f_vm, void *f_ptr)
 
 void LuaFunction::RemoveGlobalReference(lua_State *f_vm, void *f_ptr, int f_ref)
 {
-    auto l_funcMapIter = ms_vmFuncMap.find(f_vm);
-    if(l_funcMapIter != ms_vmFuncMap.end())
+    auto l_iter = ms_funcMap.find(f_ptr);
+    if(l_iter != ms_funcMap.end())
     {
-        LuaFunctionMap *l_funcMap = l_funcMapIter->second;
-        auto l_funcDataMapIter = l_funcMap->find(f_ptr);
-        if(l_funcDataMapIter != l_funcMap->end())
+        LuaFunctionData &l_funcData = l_iter->second;
+        if(l_funcData.m_ref == f_ref)
         {
-            LuaFunctionData &l_funcData = l_funcDataMapIter->second;
-            if(l_funcData.m_ref == f_ref)
+            l_funcData.m_refCount--;
+            if(l_funcData.m_refCount == 0U)
             {
-                l_funcData.m_refCount--;
-                if(l_funcData.m_refCount == 0U)
-                {
-                    luaL_unref(f_vm, LUA_REGISTRYINDEX, l_funcData.m_ref);
-                    l_funcMap->erase(l_funcDataMapIter);
-                }
+                luaL_unref(f_vm, LUA_REGISTRYINDEX, l_funcData.m_ref);
+                ms_funcMap.erase(l_iter);
             }
         }
     }
@@ -91,6 +74,21 @@ LuaFunction::LuaFunction(const LuaFunction &f_func)
 LuaFunction::~LuaFunction()
 {
     if(IsValid()) RemoveGlobalReference(m_vm, m_ptr, m_ref);
+}
+
+lua_State* LuaFunction::GetVM() const
+{
+    return m_vm;
+}
+
+int LuaFunction::GetReference() const
+{
+    return m_ref;
+}
+
+bool LuaFunction::IsValid() const
+{
+    return ((m_vm != nullptr) && (m_ptr != nullptr) && (m_ref != 0));
 }
 
 LuaFunction& LuaFunction::operator=(const LuaFunction& f_func)

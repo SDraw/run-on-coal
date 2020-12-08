@@ -50,7 +50,7 @@ class Shader final : public Element, public virtual IShader
         GLint m_uniform;
     };
     std::vector<DrawableBindData> m_drawableBind;
-    static int ms_drawableMaxCount;
+    static size_t ms_drawableMaxCount;
 
     std::string m_error;
 

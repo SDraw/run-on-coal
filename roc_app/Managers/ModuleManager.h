@@ -10,7 +10,7 @@ class CustomArguments;
 
 typedef IModule*(*ModuleInitFunc)(ICore*);
 
-class ModuleManager
+class ModuleManager final
 {
     Core *m_core;
 

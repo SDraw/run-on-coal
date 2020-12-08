@@ -9,10 +9,13 @@ public:
 
     GLuint GetName() const;
 
-    virtual bool Destroy() = 0;
-    virtual bool Bind(GLenum f_slot = 0U) = 0;
+    bool Destroy();
+    bool Bind(GLenum f_slot = 0U);
+
+    static void Rebind();
 protected:
     GLuint m_name;
+    GLenum m_internalType;
 
     __declspec(thread) static GLuint ms_activeSlot;
     __declspec(thread) static GLuint ms_activeName[16U];

@@ -15,9 +15,9 @@ namespace ROC
 
 const std::vector<std::string> g_defaultUniforms
 {
-    "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBoneMatrix",
+    "gProjectionMatrix", "gViewMatrix", "gViewProjectionMatrix", "gModelMatrix", "gAnimated", "gBoneMatrix", "gBoneMatrix[0]",
     "gCameraPosition", "gCameraDirection",
-    "gLightData", "gLightsCount",
+    "gLightData", "gLightData[0]", "gLightsCount",
     "gMaterialType", "gMaterialParam",
     "gTexture0", "gColor",
     "gTime"
@@ -25,6 +25,8 @@ const std::vector<std::string> g_defaultUniforms
 
 const size_t g_shaderMaxBonesCount = 227U;
 const size_t g_shaderMaxLightsCount = 4U;
+const size_t g_shaderSlotCount = 16U;
+const size_t g_shaderSlotStart = 1U; // Reserved slots: 0 - diffuse texture
 
 const std::string g_defaultShaderDefines = (std::string() +
     "#version 330 core\n" +
@@ -37,7 +39,7 @@ const std::string g_defaultShaderDefines = (std::string() +
 
 }
 
-int ROC::Shader::ms_drawableMaxCount = 0;
+size_t ROC::Shader::ms_drawableMaxCount = 0U;
 
 ROC::Shader::Shader()
 {
@@ -50,7 +52,7 @@ ROC::Shader::Shader()
 
     m_uniformMapEnd = m_uniformMap.end();
 
-    m_bindPool = new Pool(static_cast<size_t>(ms_drawableMaxCount));
+    m_bindPool = new Pool(ms_drawableMaxCount);
 }
 
 ROC::Shader::~Shader()
@@ -518,7 +520,7 @@ bool ROC::Shader::Attach(Drawable *f_drawable, const std::string &f_uniform)
                 size_t l_slot = m_bindPool->Allocate();
                 if(l_slot != Pool::ms_invalid)
                 {
-                    DrawableBindData l_bind{ f_drawable, static_cast<int>(l_slot)+1, l_uniform->GetUniformName() };
+                    DrawableBindData l_bind{ f_drawable, static_cast<int>(l_slot+g_shaderSlotStart), l_uniform->GetUniformName() };
                     m_drawableBind.push_back(l_bind);
                     l_uniform->SetData(&l_bind.m_slot, sizeof(int));
 
@@ -546,7 +548,7 @@ bool ROC::Shader::Detach(Drawable *f_drawable)
     {
         if(l_bindData->m_element == f_drawable)
         {
-            m_bindPool->Reset(static_cast<size_t>(l_bindData->m_slot - 1));
+            m_bindPool->Reset(static_cast<size_t>(l_bindData->m_slot - g_shaderSlotStart));
             m_drawableBind.erase(l_bindData);
 
             Element::RemoveChild(f_drawable);
@@ -597,15 +599,7 @@ void ROC::Shader::Enable()
                 l_uniform->ResetUpdate();
             }
         }
-        if(!m_drawableBind.empty())
-        {
-            unsigned int l_slot = 1U;
-            for(auto &l_bindData : m_drawableBind)
-            {
-                l_bindData.m_element->Bind(l_slot);
-                l_slot++;
-            }
-        }
+        for(auto &l_bindData : m_drawableBind) l_bindData.m_element->Bind(l_bindData.m_slot);
 
         m_active = true;
     }
@@ -623,8 +617,10 @@ bool ROC::Shader::IsActive() const
 
 void ROC::Shader::InitStaticResources()
 {
-    GLSetting::GetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &ms_drawableMaxCount);
-    ms_drawableMaxCount--; // Slot 0 is reserved for texture of drawn material
+    int l_unitsCount = 0;
+    GLSetting::GetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &l_unitsCount);
+    ms_drawableMaxCount = std::min(static_cast<size_t>(l_unitsCount), g_shaderSlotCount);
+    ms_drawableMaxCount -= g_shaderSlotStart;
 }
 
 size_t ROC::Shader::GetSizeFromGLType(GLenum f_type)

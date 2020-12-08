@@ -41,12 +41,12 @@ ROC::Element::~Element()
 
 bool ROC::Element::HasChildren() const
 {
-    return m_children.empty();
+    return !m_children.empty();
 }
 
 bool ROC::Element::HasParents() const
 {
-    return m_parents.empty();
+    return !m_parents.empty();
 }
 
 unsigned char ROC::Element::GetElementType() const

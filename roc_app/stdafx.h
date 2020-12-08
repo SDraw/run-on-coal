@@ -1,6 +1,8 @@
 #pragma once
 #pragma warning (disable : 4250)
+
 #define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 #include <iostream>
 #include <string>
@@ -16,8 +18,6 @@
 #include <thread>
 #include <mutex>
 #include <ctime>
-
-#include <Windows.h>
 
 #include "GL/glew.h"
 

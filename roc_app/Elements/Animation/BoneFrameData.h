@@ -2,7 +2,7 @@
 namespace ROC
 {
 
-class BoneFrameData
+class BoneFrameData final
 {
 public:
     glm::vec3 m_position;

@@ -1,6 +1,6 @@
 #pragma once
 
-class GLShader
+class GLShader final
 {
     GLuint m_program;
     GLuint m_vertex;

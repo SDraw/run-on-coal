@@ -1,6 +1,6 @@
 #pragma once
 
-class GLViewport
+class GLViewport final
 {
     __declspec(thread) static GLint ms_positionX;
     __declspec(thread) static GLint ms_positionY;

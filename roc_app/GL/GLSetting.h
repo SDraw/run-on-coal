@@ -1,6 +1,6 @@
 #pragma once
 
-class GLSetting
+class GLSetting final
 {
     __declspec(thread) static std::map<GLenum, bool> *ms_settings;
     __declspec(thread) static bool ms_depthMask;

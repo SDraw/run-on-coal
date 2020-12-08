@@ -1,6 +1,6 @@
 #pragma once
 
-class GLRenderbuffer
+class GLRenderbuffer final
 {
     GLuint m_name;
 

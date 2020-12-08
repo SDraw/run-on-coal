@@ -4,8 +4,6 @@
 namespace ROC
 {
 
-class CustomArgument;
-
 class Element : public virtual IElement
 {
     std::vector<Element*> m_children;

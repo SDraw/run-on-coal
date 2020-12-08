@@ -4,6 +4,7 @@
 
 GLTextureCubemap::GLTextureCubemap()
 {
+    m_internalType = GL_TEXTURE_CUBE_MAP;
 }
 
 GLTextureCubemap::~GLTextureCubemap()
@@ -28,46 +29,5 @@ bool GLTextureCubemap::Create(GLsizei f_width, GLsizei f_height, GLint f_format,
             if(ms_activeName[ms_activeSlot] != 0U) glBindTexture(ms_activeNameType[ms_activeSlot], ms_activeName[ms_activeSlot]);
         }
     }
-    return (m_name != 0U);
-}
-
-bool GLTextureCubemap::Destroy()
-{
-    if(m_name != 0U)
-    {
-        for(size_t i = 0U; i < 16U; i++)
-        {
-            if(ms_activeName[i] == m_name)
-            {
-                ms_activeName[i] = 0U;
-                ms_activeNameType[i] = GL_NONE;
-                break;
-            }
-        }
-
-        glDeleteTextures(1, &m_name);
-        m_name = 0U;
-    }
-    return (m_name == 0U);
-}
-
-bool GLTextureCubemap::Bind(GLenum f_slot)
-{
-    if(m_name != 0U)
-    {
-        if(ms_activeSlot != f_slot)
-        {
-            glActiveTexture(f_slot);
-            ms_activeSlot = f_slot;
-        }
-
-        if(ms_activeName[ms_activeSlot] != m_name)
-        {
-            ms_activeName[ms_activeSlot] = m_name;
-            ms_activeNameType[ms_activeSlot] = GL_TEXTURE_CUBE_MAP;
-            glBindTexture(GL_TEXTURE_CUBE_MAP, m_name);
-        }
-    }
-
     return (m_name != 0U);
 }

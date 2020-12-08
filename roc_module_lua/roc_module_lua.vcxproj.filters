@@ -186,6 +186,9 @@
     <ClInclude Include="Core\Core.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Lua\LuaFunction.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lua">

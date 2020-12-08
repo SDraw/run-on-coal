@@ -1,6 +1,6 @@
 #pragma once
 
-class GLFramebuffer
+class GLFramebuffer final
 {
     GLuint m_name;
 

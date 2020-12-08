@@ -1,6 +1,6 @@
 #pragma once
 
-class GLState
+class GLState final
 {
     GLState() = delete;
     GLState(const GLState &that) = delete;

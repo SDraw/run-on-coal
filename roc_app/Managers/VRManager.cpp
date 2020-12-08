@@ -12,6 +12,7 @@
 #include "Elements/Camera.h"
 #include "Interfaces/IModule.h"
 #include "GL/GLState.h"
+#include "GL/GLTexture.h"
 #include "GL/GLTexture2D.h"
 #include "Utils/MathUtils.h"
 
@@ -241,6 +242,7 @@ void ROC::VRManager::Render()
 {
     if(m_vrStage == VRS_None)
     {
+        // Left eye pass
         m_vrStage = VRS_Left;
         m_renderTargets[VRE_Left]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_renderTargets[VRE_Left]);
@@ -249,6 +251,9 @@ void ROC::VRManager::Render()
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments->Clear();
 
+        m_renderTargets[VRE_Left]->Disable();
+
+        // Right eye pass
         m_vrStage = VRS_Right;
         m_renderTargets[VRE_Right]->Enable();
         RenderTarget::SetFallbackRenderTarget(m_renderTargets[VRE_Right]);
@@ -257,14 +262,18 @@ void ROC::VRManager::Render()
         m_core->GetModuleManager()->SignalGlobalEvent(IModule::ME_OnVRRender, m_arguments);
         m_arguments->Clear();
 
-        m_vrStage = VRS_None;
         m_renderTargets[VRE_Right]->Disable();
+
+        // Restore
+        m_vrStage = VRS_None;
         RenderTarget::SetFallbackRenderTarget(nullptr);
 
         vr::VRCompositor()->WaitGetPoses(m_trackedPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
         vr::VRCompositor()->Submit(vr::Eye_Left, &m_vrTextures[0U]);
         vr::VRCompositor()->Submit(vr::Eye_Right, &m_vrTextures[1U]);
         GLState::Flush();
+
+        GLTexture::Rebind(); // vrcompositor binds texture with name 0 for unknown reason, need to restore what engine has set before
     }
 }
 
@@ -347,7 +356,7 @@ bool ROC::VRManager::DoPulse()
             // Update poses
             float l_lastVSync;
             m_vrSystem->GetTimeSinceLastVsync(&l_lastVSync, NULL);
-            m_vrSystem->GetDeviceToAbsoluteTrackingPose(vr::TrackingUniverseRawAndUncalibrated, m_hmdFramePrediction - l_lastVSync, m_trackedPoses, vr::k_unMaxTrackedDeviceCount);
+            m_vrSystem->GetDeviceToAbsoluteTrackingPose(vr::TrackingUniverseStanding, m_hmdFramePrediction - l_lastVSync, m_trackedPoses, vr::k_unMaxTrackedDeviceCount);
         }
     }
 

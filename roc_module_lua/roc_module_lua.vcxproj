@@ -198,6 +198,7 @@
     <ClInclude Include="Lua\LuaDefs\LuaTextureDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaUtilsDef.h" />
     <ClInclude Include="Lua\LuaDefs\LuaVRDef.h" />
+    <ClInclude Include="Lua\LuaFunction.h" />
     <ClInclude Include="Lua\LuaVM.h" />
     <ClInclude Include="Core\EventHandler.h" />
     <ClInclude Include="Core\Core.h" />

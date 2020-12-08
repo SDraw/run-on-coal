@@ -1,6 +1,6 @@
 #pragma once
 
-class GLArrayBuffer
+class GLArrayBuffer final
 {
     GLuint m_name;
 

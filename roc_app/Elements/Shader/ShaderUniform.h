@@ -3,7 +3,7 @@
 namespace ROC
 {
 
-class ShaderUniform
+class ShaderUniform final
 {
     GLint m_uniformName;
     unsigned char m_type;
