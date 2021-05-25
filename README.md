@@ -1,4 +1,4 @@
-# ![](/.github/roc_icon.png) ROC Engine  [![Build status](https://ci.appveyor.com/api/projects/status/vtcu06ofwqf4xe2s?svg=true)](https://ci.appveyor.com/project/SDraw/run-on-coal) [![Release](http://img.shields.io/github/release/SDraw/run-on-coal.svg)](../../releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+# ![](/.github/roc_icon.png) ROC Engine [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 Simple and light-weight 3D game engine.
 
